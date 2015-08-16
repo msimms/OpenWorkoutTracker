@@ -1,0 +1,26 @@
+# Exert
+Exert is an open source workout tracker. It was initially written as a bike computer, but it also supports numerous other activities. This includes strength exercises, such as pull-ups and push-ups, as well as aerobic sports like running.
+
+I wrote it because I was not satisfied with any of the closed-source workout trackers that were available.
+
+### Version
+Beta
+
+### Tech
+Exert use of one other source project to work properly:
+
+* [core-plot] - A graph plotting framework for iOS
+
+### Development
+Want to contribute? That's awesome. Exert is written in a combination of Objective-C and C++ and targets the Apple iPhone.
+
+### Todos
+ - Unit Tests
+ - Broadcast Feature
+ - Ability to upload to Strava
+ - Ability to upload to Runkeeper
+ - Watch App
+
+License
+----
+MPL 2.0 (Mozilla Public License)

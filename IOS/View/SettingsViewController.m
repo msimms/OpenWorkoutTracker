@@ -1,0 +1,738 @@
+// Created by Michael Simms on 11/12/12.
+// Copyright (c) 2012 Michael J. Simms. All rights reserved.
+
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+#import "SettingsViewController.h"
+#import "AppDelegate.h"
+#import "CloudPreferences.h"
+#import "FacebookClient.h"
+#import "Preferences.h"
+#import "Segues.h"
+#import "TwitterClient.h"
+
+typedef enum SettingsSections
+{
+	SECTION_UNITS = 0,
+	SECTION_BACKUP,
+	SECTION_SOCIAL,
+	SECTION_AUTOUPLOAD,
+	SECTION_BROADCAST,
+	NUM_SETTINGS_SECTIONS
+} SettingsSections;
+
+typedef enum SettingsRowsUnits
+{
+	SETTINGS_ROW_UNIT = 0,
+	NUM_SETTINGS_ROWS_UNITS
+} SettingsRowsUnits;
+
+typedef enum SettingsRowsBackup
+{
+	SETTINGS_ROW_ICLOUD_BACKUP = 0,
+	SETTINGS_ROW_LINK_DROPBOX,
+	NUM_SETTINGS_ROWS_BACKUP
+} SettingsRowsBackup;
+
+typedef enum SettingsRowsShare
+{
+	SETTINGS_ROW_LINK_GARMIN_CONNECT = 0,
+	SETTINGS_ROW_LINK_RUNKEEPER,
+	SETTINGS_ROW_LINK_STRAVA,
+	SETTINGS_ROW_LINK_TWITTER,
+	SETTINGS_ROW_TWEET_START,
+	SETTINGS_ROW_TWEET_STOP,
+	SETTINGS_ROW_TWEET_RUN_SPLITS,
+	NUM_SETTINGS_ROWS_LINK
+} SettingsRowsShare;
+
+typedef enum SettingsRowsBroadcast
+{
+	SETTINGS_ROW_LOCAL_BROADCAST = 0,
+	SETTINGS_ROW_GLOBAL_BROADCAST,
+	SETTINGS_ROW_BROADCAST_RATE,
+	SETTINGS_ROW_MANAGE_FOLLOWING,
+	SETTINGS_ROW_MANAGE_FOLLOWED_BY,
+	NUM_SETTINGS_ROWS_BROADCAST
+} SettingsRowsBroadcast;
+
+#define TITLE                        NSLocalizedString(@"Settings", nil)
+#define UNIT_TITLE                   NSLocalizedString(@"Units", nil)
+#define UNIT_TITLE_US_CUSTOMARY      NSLocalizedString(@"US Customary Units", nil)
+#define UNIT_TITLE_METRIC            NSLocalizedString(@"Metric", nil)
+#define ICLOUD_BACKUP                NSLocalizedString(@"iCloud Backup", nil)
+#define CLOUD_BACKUP                 NSLocalizedString(@"Cloud Backup", nil)
+#define SOCIAL                       NSLocalizedString(@"Social", nil)
+#define AUTOUPLOAD                   NSLocalizedString(@"Auto Upload", nil)
+#define BROADCAST                    NSLocalizedString(@"Broadcast", nil)
+#define BROADCAST_LOCALLY            NSLocalizedString(@"To Your Local Group", nil)
+#define BROADCAST_GLOBALLY           NSLocalizedString(@"To the Internet", nil)
+#define BROADCAST_NAME               NSLocalizedString(@"Name", nil)
+#define BROADCAST_RATE               NSLocalizedString(@"Update Rate", nil)
+#define BROADCAST_UNITS              NSLocalizedString(@"Seconds", nil)
+#define MANAGE_FOLLOWING             NSLocalizedString(@"Manage People I'm Following", nil)
+#define MANAGE_FOLLOWED_BY           NSLocalizedString(@"Manage People Following Me", nil)
+#define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
+#define BUTTON_TITLE_COPY            NSLocalizedString(@"Copy", nil)
+#define BUTTON_TITLE_CANCEL          NSLocalizedString(@"Cancel", nil)
+#define ALERT_TITLE_BROADCAST_NAME   NSLocalizedString(@"Enter the name you want to use", nil)
+#define ALERT_TITLE_BROADCAST_RATE   NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
+#define ALERT_TITLE_BROADCAST_WARN   NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
+#define ALERT_TITLE_NOT_IMPLEMENTED  NSLocalizedString(@"Unimplemented Feature", nil)
+#define ALERT_TITLE_CAUTION          NSLocalizedString(@"Caution", nil)
+#define ALERT_MSG_IMPLEMENTED        NSLocalizedString(@"This feature is not implemented.", nil)
+#define ALERT_MSG_NAME               NSLocalizedString(@"", nil)
+#define ALERT_MSG_RATE               NSLocalizedString(@"1", nil)
+#define TWEET_START                  NSLocalizedString(@"Tweet Start of Workout", nil)
+#define TWEET_STOP                   NSLocalizedString(@"Tweet End of Workout", nil)
+#define TWEET_RUN_SPLITS             NSLocalizedString(@"Tweet Run Splits", nil)
+
+@interface SettingsViewController ()
+
+@end
+
+@implementation SettingsViewController
+
+@synthesize settingsTableView;
+
+- (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
+{
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	return self;
+}
+
+- (void)viewDidLoad
+{
+	self.title = TITLE;
+
+	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+	[super viewDidLoad];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+	[self.settingsTableView reloadData];
+	[super viewDidAppear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
+{
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
+			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
+			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
+}
+
+- (BOOL)shouldAutorotate
+{
+	return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (void)deviceOrientationDidChange:(NSNotification*)notification
+{
+}
+
+#pragma mark methods for showing popups
+
+- (void)showUnitsActionSheet
+{
+	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:UNIT_TITLE
+															delegate:self
+												   cancelButtonTitle:nil
+											  destructiveButtonTitle:nil
+												   otherButtonTitles:nil];
+	if (popupQuery)
+	{
+		[popupQuery addButtonWithTitle:UNIT_TITLE_METRIC];
+		[popupQuery addButtonWithTitle:UNIT_TITLE_US_CUSTOMARY];
+		[popupQuery showInView:self.view];
+	}
+}
+
+- (void)showBroadcastNameDialog
+{
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_BROADCAST_NAME
+													message:ALERT_MSG_NAME
+												   delegate:self
+										  cancelButtonTitle:BUTTON_TITLE_OK
+										  otherButtonTitles:nil];
+	if (alert)
+	{
+		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+		[alert show];
+	}
+}
+
+- (void)showBroadcastRateDialog
+{
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_BROADCAST_RATE
+													message:ALERT_MSG_RATE
+												   delegate:self
+										  cancelButtonTitle:BUTTON_TITLE_OK
+										  otherButtonTitles:nil];
+	if (alert)
+	{
+		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+		
+		UITextField* textField = [alert textFieldAtIndex:0];
+		[textField setKeyboardType:UIKeyboardTypeNumberPad];
+		[textField becomeFirstResponder];
+		textField.placeholder = [[NSString alloc] initWithFormat:@"%ld", (long)[Preferences broadcastRate]];
+
+		[alert show];
+	}
+}
+
+#pragma mark UIAlertView methods
+
+- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	NSString* title = [alertView title];
+
+	if ([title isEqualToString:ALERT_TITLE_BROADCAST_NAME])
+	{
+		NSString* text = [[alertView textFieldAtIndex:0] text];
+		[Preferences setBroadcastName:text];
+	}
+	else if ([title isEqualToString:ALERT_TITLE_BROADCAST_RATE])
+	{
+		NSString* text = [[alertView textFieldAtIndex:0] text];
+		NSInteger value = [text integerValue];
+		[Preferences setBroadcastRate:value];
+	}
+	else if ([title isEqualToString:ALERT_TITLE_CAUTION])
+	{
+		[self performSegueWithIdentifier:@SEGUE_TO_SELECT_LOGIN_VIEW sender:self];
+	}
+	[self.settingsTableView reloadData];
+}
+
+#pragma mark UITableView methods
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
+{
+	return NUM_SETTINGS_SECTIONS;
+}
+
+- (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	switch (section)
+	{
+		case SECTION_UNITS:
+			return UNIT_TITLE;
+		case SECTION_BACKUP:
+			if ([appDelegate isFeatureEnabled:FEATURE_ICLOUD] ||
+				[appDelegate isFeatureEnabled:FEATURE_DROPBOX])
+			{
+				return CLOUD_BACKUP;
+			}
+			return @"";
+		case SECTION_SOCIAL:
+			return SOCIAL;
+		case SECTION_AUTOUPLOAD:
+			if ([[appDelegate getEnabledFileExportCloudServices] count] > 0)
+			{
+				return AUTOUPLOAD;
+			}
+			return @"";
+		case SECTION_BROADCAST:
+			if ([appDelegate isFeatureEnabled:FEATURE_LOCAL_BROADCAST] ||
+				[appDelegate isFeatureEnabled:FEATURE_GLOBAL_BROADCAST])
+			{
+				return BROADCAST;
+			}
+			return @"";
+	}
+	return @"";
+}
+
+- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+{
+	NSInteger numRows = 0;
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	switch (section)
+	{
+		case SECTION_UNITS:
+			numRows = NUM_SETTINGS_ROWS_UNITS;
+			break;
+		case SECTION_BACKUP:
+			numRows = NUM_SETTINGS_ROWS_BACKUP;
+
+			if (![appDelegate isFeaturePresent:FEATURE_ICLOUD])
+			{
+				numRows--;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
+			{
+				numRows--;
+			}
+			break;
+		case SECTION_SOCIAL:
+			numRows = NUM_SETTINGS_ROWS_LINK;
+
+			if (![appDelegate isFeaturePresent:FEATURE_GARMIN_CONNECT])
+			{
+				numRows--;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
+			{
+				numRows--;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+			{
+				numRows--;
+			}
+			if (![CloudPreferences usingTwitter])
+			{
+				numRows -= 3;
+			}
+			break;
+		case SECTION_AUTOUPLOAD:
+			numRows = [[appDelegate getEnabledFileExportCloudServices] count];
+			break;
+		case SECTION_BROADCAST:
+			numRows = NUM_SETTINGS_ROWS_BROADCAST;
+
+			if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
+			{
+				numRows--;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_GLOBAL_BROADCAST])
+			{
+				numRows--;
+			}
+			if (!([appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST] ||
+				  [appDelegate isFeaturePresent:FEATURE_GLOBAL_BROADCAST]))
+			{
+				numRows--;
+			}
+			if (![Preferences shouldBroadcastGlobally])
+			{
+				numRows--;
+			}
+			break;
+	}
+	return numRows;
+}
+
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
+{
+	static NSString* CellIdentifier = @"Cell";
+
+	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	if (cell == nil)
+	{
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+	}
+
+	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+
+	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
+
+	switch (section)
+	{
+		case SECTION_UNITS:
+			switch (row)
+			{
+				case SETTINGS_ROW_UNIT:
+					cell.textLabel.text = UNIT_TITLE;
+					switch ([Preferences getPreferredUnitSystem])
+					{
+						case UNIT_SYSTEM_METRIC:
+							cell.detailTextLabel.text = UNIT_TITLE_METRIC;
+							break;
+						case UNIT_SYSTEM_US_CUSTOMARY:
+							cell.detailTextLabel.text = UNIT_TITLE_US_CUSTOMARY;
+							break;
+					}
+					break;
+			}
+			break;
+		case SECTION_BACKUP:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				if (![appDelegate isFeaturePresent:FEATURE_ICLOUD])
+				{
+					row++;
+				}
+				if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
+				{
+					row++;
+				}
+
+				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+				cell.accessoryView = switchview;
+				[switchview setTag:(section * 100) + row];
+
+				switch (row)
+				{
+					case SETTINGS_ROW_ICLOUD_BACKUP:
+						cell.textLabel.text = ICLOUD_BACKUP;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences backupToICloud]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_LINK_DROPBOX:
+						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX];
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingDropbox]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+				}
+			}
+			break;
+		case SECTION_SOCIAL:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				if (![appDelegate isFeaturePresent:FEATURE_GARMIN_CONNECT])
+				{
+					row++;
+				}
+				if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
+				{
+					row++;
+				}
+				if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+				{
+					row++;
+				}
+
+				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+				cell.accessoryView = switchview;
+				[switchview setTag:(section * 100) + row];
+
+				switch (row)
+				{
+					case SETTINGS_ROW_LINK_GARMIN_CONNECT:
+						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_GARMIN_CONNECT];
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingGarminConnect]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_LINK_RUNKEEPER:
+						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER];
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingRunKeeper]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_LINK_STRAVA:
+						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA];
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingStrava]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_LINK_TWITTER:
+						if ([CloudPreferences usingTwitter])
+							cell.textLabel.text = [[NSString alloc] initWithFormat:@"%@ @%@", [appDelegate nameOfCloudService:CLOUD_SERVICE_TWITTER], [CloudPreferences preferredTwitterAcctName]];
+						else
+							cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_TWITTER];
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingTwitter]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_TWEET_START:
+						cell.textLabel.text = TWEET_START;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences shouldTweetWorkoutStart]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_TWEET_STOP:
+						cell.textLabel.text = TWEET_STOP;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences shouldTweetWorkoutStop]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_TWEET_RUN_SPLITS:
+						cell.textLabel.text = TWEET_RUN_SPLITS;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences shouldTweetRunSplits]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+				}
+			}
+			break;
+		case SECTION_AUTOUPLOAD:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				cell.textLabel.text = [[appDelegate getEnabledFileExportCloudServices] objectAtIndex:row];
+				cell.detailTextLabel.text = @"";
+			}
+			break;
+		case SECTION_BROADCAST:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
+				{
+					row++;
+				}
+
+				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
+					(row != SETTINGS_ROW_MANAGE_FOLLOWING) &&
+					(row != SETTINGS_ROW_MANAGE_FOLLOWED_BY))	// these rows don't get toggle switches
+				{
+					cell.accessoryView = switchview;
+					[switchview setTag:(section * 100) + row];
+				}
+
+				switch (row)
+				{
+					case SETTINGS_ROW_LOCAL_BROADCAST:
+						cell.textLabel.text = BROADCAST_LOCALLY;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences shouldBroadcastLocally]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_GLOBAL_BROADCAST:
+						cell.textLabel.text = BROADCAST_GLOBALLY;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences shouldBroadcastGlobally]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_BROADCAST_RATE:
+						cell.textLabel.text = BROADCAST_RATE;
+						cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS];
+						break;
+					case SETTINGS_ROW_MANAGE_FOLLOWING:
+						cell.textLabel.text = MANAGE_FOLLOWING;
+						cell.detailTextLabel.text = @"";
+						break;
+					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
+						cell.textLabel.text = MANAGE_FOLLOWED_BY;
+						cell.detailTextLabel.text = @"";
+						break;
+				}
+			}
+			break;
+		default:
+			cell.textLabel.text = @"";
+			cell.detailTextLabel.text = @"";
+			break;
+	}
+	return cell;
+}
+
+- (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath
+{
+	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
+	
+	switch (section)
+	{
+		case SECTION_UNITS:
+		case SECTION_BACKUP:
+		case SECTION_SOCIAL:
+		case SECTION_AUTOUPLOAD:
+			break;
+		case SECTION_BROADCAST:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
+				{
+					row++;
+				}
+
+				switch (row)
+				{
+					case SETTINGS_ROW_LOCAL_BROADCAST:
+					case SETTINGS_ROW_GLOBAL_BROADCAST:
+					case SETTINGS_ROW_BROADCAST_RATE:
+						break;
+					case SETTINGS_ROW_MANAGE_FOLLOWING:
+					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
+						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+						break;
+				}
+			}
+			break;
+	}
+}
+
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
+{
+	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
+
+	switch (section)
+	{
+		case SECTION_UNITS:
+			switch (row)
+			{
+				case SETTINGS_ROW_UNIT:
+					[self showUnitsActionSheet];
+					break;
+			}
+			break;
+		case SECTION_BACKUP:
+			break;
+		case SECTION_SOCIAL:
+			break;
+		case SECTION_BROADCAST:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
+				{
+					row++;
+				}
+
+				switch (row)
+				{
+					case SETTINGS_ROW_BROADCAST_RATE:
+						[self showBroadcastRateDialog];
+						break;
+					case SETTINGS_ROW_MANAGE_FOLLOWING:
+						[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWING_VIEW sender:self];
+						break;
+					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
+						[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWED_BY_VIEW sender:self];
+						break;
+				}
+			}
+			break;
+	}
+}
+
+#pragma mark UISwitch methods
+
+- (void)switchToggled:(id)sender
+{
+	UISwitch* switchControl = sender;
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	switch (switchControl.tag)
+	{
+		case (SECTION_BACKUP * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
+			break;
+		case (SECTION_BACKUP * 100) + SETTINGS_ROW_LINK_DROPBOX:
+			[CloudPreferences setUsingDropbox:switchControl.isOn];
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_GARMIN_CONNECT:
+			[CloudPreferences setUsingGarminConnect:switchControl.isOn];
+			if (switchControl.isOn)
+			{
+				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
+																message:ALERT_MSG_IMPLEMENTED
+															   delegate:self
+													  cancelButtonTitle:nil
+													  otherButtonTitles:BUTTON_TITLE_OK, nil];
+				if (alert)
+				{
+					[alert show];
+				}
+			}
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_RUNKEEPER:
+			[CloudPreferences setUsingRunKeeper:switchControl.isOn];
+			if (switchControl.isOn)
+			{
+				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
+																message:ALERT_MSG_IMPLEMENTED
+															   delegate:self
+													  cancelButtonTitle:nil
+													  otherButtonTitles:BUTTON_TITLE_OK, nil];
+				if (alert)
+				{
+					[alert show];
+				}
+			}
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_STRAVA:
+			[CloudPreferences setUsingStrava:switchControl.isOn];
+			if (switchControl.isOn)
+			{
+				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
+																message:ALERT_MSG_IMPLEMENTED
+															   delegate:self
+													  cancelButtonTitle:nil
+													  otherButtonTitles:BUTTON_TITLE_OK, nil];
+				if (alert)
+				{
+					[alert show];
+				}
+			}
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_TWITTER:
+			if (switchControl.isOn)
+			{
+				[self performSegueWithIdentifier:@SEQUE_TO_SOCIAL_ACCTS_VIEW sender:self];
+			}
+			else
+			{
+				[CloudPreferences setUsingTwitter:FALSE];
+				[self.settingsTableView reloadData];
+			}
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_START:
+			[Preferences setTweetWorkoutStart:switchControl.isOn];
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_STOP:
+			[Preferences setTweetWorkoutStop:switchControl.isOn];
+			break;
+		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_RUN_SPLITS:
+			[Preferences setTweetRunSplits:switchControl.isOn];
+			break;
+		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_LOCAL_BROADCAST:
+			[Preferences setBroadcastLocally:switchControl.isOn];
+			[appDelegate configureBroadcasting];
+			break;
+		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_GLOBAL_BROADCAST:
+			[Preferences setBroadcastGlobally:switchControl.isOn];
+			[appDelegate configureBroadcasting];
+			if (switchControl.isOn)
+			{
+				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
+																message:ALERT_TITLE_BROADCAST_WARN
+															   delegate:self
+													  cancelButtonTitle:BUTTON_TITLE_OK
+													  otherButtonTitles:nil];
+				if (alert)
+				{
+					[alert show];
+				}
+			}
+			[self.settingsTableView reloadData];
+	}
+}
+
+#pragma mark UIActionSheetDelegate methods
+
+- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	NSString* title = [actionSheet title];
+	NSString* buttonName = [actionSheet buttonTitleAtIndex:buttonIndex];
+	
+	if ([title isEqualToString:UNIT_TITLE])
+	{
+		if ([buttonName isEqualToString:UNIT_TITLE_METRIC])
+		{
+			[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
+		}
+		else if ([buttonName isEqualToString:UNIT_TITLE_US_CUSTOMARY])
+		{
+			[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
+		}
+	}
+
+	[self.settingsTableView reloadData];
+}
+
+@end

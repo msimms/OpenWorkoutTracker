@@ -1,0 +1,49 @@
+// Created by Michael Simms on 10/8/12.
+// Copyright (c) 2012 Michael J. Simms. All rights reserved.
+
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+#ifndef __WALKING__
+#define __WALKING__
+
+#include "ActivityName.h"
+#include "GraphLine.h"
+#include "MovingActivity.h"
+
+class Walking : public MovingActivity
+{
+public:
+	Walking();
+	virtual ~Walking();
+
+	static std::string Name() { return ACTIVITY_NAME_WALKING; };
+	virtual std::string GetName() const { return Walking::Name(); };
+
+	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
+
+	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
+
+	virtual double CaloriesBurned() const;
+
+	virtual uint16_t StepsTaken() const { return m_stepsTaken; };
+
+	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
+	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
+
+protected:
+	virtual bool ProcessGpsReading(const SensorReading& reading);
+	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
+	
+protected:
+	GraphLine m_graphLine;
+	uint16_t  m_stepsTaken;
+	double    m_lastAvgAltitudeM; // previous value of calling RunningAltitudeAverage(), for calorie calculation
+	double    m_currentCalories;
+
+protected:
+	double CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& pt2);
+};
+
+#endif

@@ -1,0 +1,40 @@
+Profiles:
+* Edit user data
+* Add a bike profile
+* Delete a bike profile
+
+Configuring an Activity:
+* Rearrange the items on the screen for cycling
+
+Bluetooth:
+* Start an activity with Bluetooth disabled
+
+Starting an Activity:
+* Go for a bike ride
+* Go for a run
+* Do pull-ups
+* Do pushups
+* Do squats
+
+Resuming an Activity:
+* Start an activity in the simulator
+* Quit the simulator
+* Restart the simulator and resume the activity
+
+Deleting an Activity:
+* Delete by clicking the trash icon
+* Delete by swiping to the left from the History view
+
+Exporting an Activity:
+* Email an activity to yourself
+
+Intervals:
+* Create an interval workout
+
+Settings:
+* Change units
+* Change language
+
+About:
+* Verify copyright notice
+* Verify EULA
