@@ -231,7 +231,7 @@ typedef enum ExportFileTypeButtons
 	return NO;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
 	return UIInterfaceOrientationMaskPortrait;
 }

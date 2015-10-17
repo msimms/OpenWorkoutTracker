@@ -140,7 +140,7 @@ typedef enum GpsSectionItems
 	return NO;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
 	return UIInterfaceOrientationMaskPortrait;
 }

@@ -169,14 +169,6 @@
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		27C0846419BFD063007CE934 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
-		27E2D80B1B193BFA0015774A /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E2D8081B193BFA0015774A /* InterfaceController.m */; };
-		27E2D80C1B193BFA0015774A /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E2D80A1B193BFA0015774A /* NotificationController.m */; };
-		27E2D8101B193C580015774A /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27E2D80E1B193C580015774A /* Interface.storyboard */; };
-		27E2D8121B193C670015774A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27E2D8111B193C670015774A /* Images.xcassets */; };
-		27E2D8141B193C7A0015774A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27E2D8131B193C7A0015774A /* Images.xcassets */; };
-		27E2D8171B193C900015774A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27E2D8151B193C900015774A /* Info.plist */; };
-		27E2D8181B193C900015774A /* PushNotificationPayload.apns in Resources */ = {isa = PBXBuildFile; fileRef = 27E2D8161B193C900015774A /* PushNotificationPayload.apns */; };
-		27E2D81A1B193C9F0015774A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27E2D8191B193C9F0015774A /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -537,16 +529,6 @@
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
 		27C0844C19BFD063007CE934 /* Walking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walking.cpp; path = Activities/Walking.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844D19BFD063007CE934 /* Walking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walking.h; path = Activities/Walking.h; sourceTree = SOURCE_ROOT; };
-		27E2D8071B193BFA0015774A /* InterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterfaceController.h; path = "WatchKit Extension/InterfaceController.h"; sourceTree = SOURCE_ROOT; };
-		27E2D8081B193BFA0015774A /* InterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InterfaceController.m; path = "WatchKit Extension/InterfaceController.m"; sourceTree = SOURCE_ROOT; };
-		27E2D8091B193BFA0015774A /* NotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotificationController.h; path = "WatchKit Extension/NotificationController.h"; sourceTree = SOURCE_ROOT; };
-		27E2D80A1B193BFA0015774A /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NotificationController.m; path = "WatchKit Extension/NotificationController.m"; sourceTree = SOURCE_ROOT; };
-		27E2D80F1B193C580015774A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "WatchKit App/Base.lproj/Interface.storyboard"; sourceTree = SOURCE_ROOT; };
-		27E2D8111B193C670015774A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "WatchKit App/Images.xcassets"; sourceTree = SOURCE_ROOT; };
-		27E2D8131B193C7A0015774A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "WatchKit Extension/Images.xcassets"; sourceTree = SOURCE_ROOT; };
-		27E2D8151B193C900015774A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "WatchKit Extension/Info.plist"; sourceTree = SOURCE_ROOT; };
-		27E2D8161B193C900015774A /* PushNotificationPayload.apns */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = PushNotificationPayload.apns; path = "WatchKit Extension/PushNotificationPayload.apns"; sourceTree = SOURCE_ROOT; };
-		27E2D8191B193C9F0015774A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "WatchKit App/Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -588,48 +570,6 @@
 			name = es.lproj;
 			path = IOS/es.lproj;
 			sourceTree = SOURCE_ROOT;
-		};
-		2743EB0D1B19393600F04369 /* WatchKit Extension */ = {
-			isa = PBXGroup;
-			children = (
-				27E2D8071B193BFA0015774A /* InterfaceController.h */,
-				27E2D8081B193BFA0015774A /* InterfaceController.m */,
-				27E2D8091B193BFA0015774A /* NotificationController.h */,
-				27E2D80A1B193BFA0015774A /* NotificationController.m */,
-				27E2D8131B193C7A0015774A /* Images.xcassets */,
-				2743EB0E1B19393600F04369 /* Supporting Files */,
-			);
-			name = "WatchKit Extension";
-			path = "Exert WatchKit Extension";
-			sourceTree = "<group>";
-		};
-		2743EB0E1B19393600F04369 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				27E2D8151B193C900015774A /* Info.plist */,
-				27E2D8161B193C900015774A /* PushNotificationPayload.apns */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		2743EB1F1B19393600F04369 /* WatchKit App */ = {
-			isa = PBXGroup;
-			children = (
-				27E2D80E1B193C580015774A /* Interface.storyboard */,
-				27E2D8111B193C670015774A /* Images.xcassets */,
-				2743EB201B19393700F04369 /* Supporting Files */,
-			);
-			name = "WatchKit App";
-			path = "Exert WatchKit App";
-			sourceTree = "<group>";
-		};
-		2743EB201B19393700F04369 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				27E2D8191B193C9F0015774A /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
 		};
 		276D5B061AA95468008F55AF /* View Controllers */ = {
 			isa = PBXGroup;
@@ -821,8 +761,6 @@
 				2728FD2319C1248700CE2BAD /* Icon_120px.png */,
 				2797F1B319BFE5C3008F8672 /* CorePlot-CocoaTouch.xcodeproj */,
 				27A3625519BFB0E200F5A17F /* Exert */,
-				2743EB0D1B19393600F04369 /* WatchKit Extension */,
-				2743EB1F1B19393600F04369 /* WatchKit App */,
 				27A3624E19BFB0E200F5A17F /* Frameworks */,
 				27A3624D19BFB0E200F5A17F /* Products */,
 			);
@@ -1174,7 +1112,7 @@
 		27A3624419BFB0E200F5A17F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Michael J Simms Software";
 				TargetAttributes = {
 					27A3624B19BFB0E200F5A17F = {
@@ -1237,7 +1175,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */,
-				27E2D8141B193C7A0015774A /* Images.xcassets in Resources */,
 				2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */,
 				2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */,
 				2729852719C8F57400FE0077 /* BikeMount.jpg in Resources */,
@@ -1246,24 +1183,19 @@
 				2728FD2C19C1250E00CE2BAD /* Icon_120px.png in Resources */,
 				27B44D1719BFF01A0058FE00 /* iPhoneOnArm.jpg in Resources */,
 				27B44D1019BFF01A0058FE00 /* Background1.png in Resources */,
-				27E2D8121B193C670015774A /* Images.xcassets in Resources */,
 				2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */,
-				27E2D8171B193C900015774A /* Info.plist in Resources */,
 				27B44D1B19BFF01A0058FE00 /* WheelSpeedSensor.png in Resources */,
 				27B44D1A19BFF01A0058FE00 /* SimpleScreen.png in Resources */,
 				2729853319C8F69900FE0077 /* Localizable.strings in Resources */,
-				27E2D8101B193C580015774A /* Interface.storyboard in Resources */,
 				27B44D1919BFF01A0058FE00 /* PushUp.jpg in Resources */,
 				27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */,
 				27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */,
-				27E2D81A1B193C9F0015774A /* Info.plist in Resources */,
 				27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */,
 				27B44D1619BFF01A0058FE00 /* FootPod.png in Resources */,
 				27B44D1219BFF01A0058FE00 /* Countdown2.png in Resources */,
 				27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */,
 				27B44D1319BFF01A0058FE00 /* Countdown3.png in Resources */,
 				27B44D1519BFF01A0058FE00 /* Countdown5.png in Resources */,
-				27E2D8181B193C900015774A /* PushNotificationPayload.apns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1318,7 +1250,6 @@
 				276B57E919E21ABD006F47BB /* HealthManager.m in Sources */,
 				27B7CD8A19BFD91C000383E3 /* CorePlotViewController.m in Sources */,
 				27B7CDA319BFD91C000383E3 /* ProfileViewController.m in Sources */,
-				27E2D80C1B193BFA0015774A /* NotificationController.m in Sources */,
 				27B7CDC619BFD953000383E3 /* ChartPoint.m in Sources */,
 				27B7CDF619BFD99B000383E3 /* LeFootPod.m in Sources */,
 				27C0845019BFD063007CE934 /* ActivityMgr.mm in Sources */,
@@ -1348,7 +1279,6 @@
 				27B7CDF419BFD99B000383E3 /* LeBluetoothSensor.m in Sources */,
 				27B7CDC819BFD953000383E3 /* HeartRateLine.m in Sources */,
 				27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */,
-				27E2D80B1B193BFA0015774A /* InterfaceController.m in Sources */,
 				27B7CDF719BFD99B000383E3 /* LeHeartRateMonitor.m in Sources */,
 				27C0845E19BFD063007CE934 /* Run.cpp in Sources */,
 				27B7CD3D19BFD903000383E3 /* ActivityPreferencesViewController.m in Sources */,
@@ -1445,14 +1375,6 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		27E2D80E1B193C580015774A /* Interface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				27E2D80F1B193C580015774A /* Base */,
-			);
-			name = Interface.storyboard;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1474,6 +1396,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1550,6 +1473,7 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjssoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1566,6 +1490,7 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjssoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;

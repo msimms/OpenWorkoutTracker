@@ -77,9 +77,9 @@
 	// Setup plot space.
 	CPTXYPlotSpace* plotSpace       = (CPTXYPlotSpace*)self->graph.defaultPlotSpace;
 	plotSpace.allowsUserInteraction = YES;
-	plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(self->minX) length:CPTDecimalFromFloat(self->maxX)];
-	plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromFloat(self->minY) length:CPTDecimalFromFloat(self->maxY)];
-
+	plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(self->minX) length:@(self->maxX)];
+	plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(self->minY) length:@(self->maxY)];
+    
 	// Axis title style.
 	CPTMutableTextStyle* axisTitleStyle = [CPTMutableTextStyle textStyle];
 	axisTitleStyle.color                = [CPTColor blackColor];
@@ -112,8 +112,8 @@
 	double xHashSpacing             = spreadX / NUM_X_HASH_MARKS;
 	CPTXYAxisSet* axisSet           = (CPTXYAxisSet*)self->graph.axisSet;
 	CPTXYAxis* x                    = axisSet.xAxis;
-	x.majorIntervalLength           = CPTDecimalFromDouble(xHashSpacing);
-	x.orthogonalCoordinateDecimal   = CPTDecimalFromDouble(self->minY);
+	x.majorIntervalLength           = @(xHashSpacing);
+    x.orthogonalPosition            = @(self->minY);
 	x.minorTicksPerInterval         = 0;
 	x.labelingPolicy                = CPTAxisLabelingPolicyNone;
 	x.axisLineStyle                 = axisLineStyle;
@@ -128,9 +128,9 @@
 	double spreadY                  = self->maxY - self->minY;
 	double yHashSpacing             = spreadY / NUM_Y_HASH_MARKS;
 	CPTXYAxis* y                    = axisSet.yAxis;
-	y.majorIntervalLength           = CPTDecimalFromDouble(yHashSpacing);
+	y.majorIntervalLength           = @(yHashSpacing);
 	y.minorTicksPerInterval         = 1;
-	y.orthogonalCoordinateDecimal   = CPTDecimalFromDouble(self->minX);
+    y.orthogonalPosition            = @(self->minX);
 	y.labelingPolicy                = CPTAxisLabelingPolicyNone;
 	y.preferredNumberOfMajorTicks   = NUM_Y_HASH_MARKS;
 	y.axisLineStyle                 = axisLineStyle;
@@ -140,9 +140,9 @@
 	CPTMutableTextStyle* newStyle   = [y.labelTextStyle mutableCopy];
 	newStyle.color                  = [CPTColor redColor];
 	y.labelTextStyle                = newStyle;
-    NSArray* exclusionRanges        = @[[CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(1.99) length:CPTDecimalFromDouble(0.02)],
-                                      [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(0.99) length:CPTDecimalFromDouble(0.02)],
-                                      [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble(3.99) length:CPTDecimalFromDouble(0.02)]];
+    NSArray* exclusionRanges        = @[[CPTPlotRange plotRangeWithLocation:@(1.99) length:@(0.02)],
+                                      [CPTPlotRange plotRangeWithLocation:@(0.99) length:@(0.02)],
+                                      [CPTPlotRange plotRangeWithLocation:@(3.99) length:@(0.02)]];
     y.labelExclusionRanges          = exclusionRanges;
 	y.tickDirection                 = CPTSignNegative;
 	y.title                         = self->yLabelStr;
@@ -163,7 +163,7 @@
 	areaGradient1.angle             = -90.0;
 	CPTFill* areaGradientFill       = [CPTFill fillWithGradient:areaGradient1];
 	boundLinePlot.areaFill          = areaGradientFill;
-	boundLinePlot.areaBaseValue     = [[NSDecimalNumber zero] decimalValue];
+	boundLinePlot.areaBaseValue     = @(0.0);
 
 	// Add hash marks to the x axis.
 	NSMutableSet* xLabels    = [NSMutableSet setWithCapacity:NUM_X_HASH_MARKS];
@@ -175,7 +175,7 @@
 		CPTAxisLabel* label  = [[CPTAxisLabel alloc] initWithText:labelStr textStyle:x.labelTextStyle];
 
 		CGFloat location     = xValue + 1;
-		label.tickLocation   = CPTDecimalFromCGFloat(location);
+		label.tickLocation   = @(location);
 		label.offset         = x.majorTickLength;
 
 		[xLabels addObject:label];
@@ -194,7 +194,7 @@
 		CPTAxisLabel* label  = [[CPTAxisLabel alloc] initWithText:labelStr textStyle:y.labelTextStyle];
 
 		CGFloat location     = yValue;
-		label.tickLocation   = CPTDecimalFromCGFloat(location);
+		label.tickLocation   = @(location);
 		label.offset         = y.majorTickLength;
 
 		[yLabels addObject:label];
