@@ -245,11 +245,11 @@
 				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
 			}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_POWER);
+			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_POWER);
 			if (attr.valid)
 			{
 				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_POWER];
+				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_POWER];
 			}
 
 			NSError* error;

@@ -16,6 +16,7 @@
 #define ACTIVITY_ATTRIBUTE_POWER                      "Power"                   // bicycle power meter reading
 #define ACTIVITY_ATTRIBUTE_AVG_POWER                  "Avg. Power"              // average bicycle power meter reading
 #define ACTIVITY_ATTRIBUTE_MAX_POWER                  "Max. Power"              // maximum bicycle power meter reading
+#define ACTIVITY_ATTRIBUTE_AVG_POWER_3_SEC            "Avg. Power (3 Sec)"      // average bicycle power meter reading over 3 seconds
 #define ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS      "Num. Wheel Revolutions"  // the number of wheel revolutions (from the wheel speed sensor)
 #define ACTIVITY_ATTRIBUTE_WHEEL_SPEED                "Wheel Speed"             // wheel speed
 #define ACTIVITY_ATTRIBUTE_REPS                       "Repetitions"             // number of repetitions (either computed or from theuser)
