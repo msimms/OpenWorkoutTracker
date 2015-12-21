@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "3C9C4934D4B1307F2F7CC9984C749E9D82F2F7B6",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "3C9C4934D4B1307F2F7CC9984C749E9D82F2F7B6" : 0,
+    "8B3D884E5CB77CFCF2CE65E14C999AAC1DC843A5" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1FB79F0C-143C-4E59-8AFD-0A02F0BB9CF4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "3C9C4934D4B1307F2F7CC9984C749E9D82F2F7B6" : "Exert\/",
+    "8B3D884E5CB77CFCF2CE65E14C999AAC1DC843A5" : "Exert\/core-plot\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Exert",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Exert.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/msimms\/Exert.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3C9C4934D4B1307F2F7CC9984C749E9D82F2F7B6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/core-plot\/core-plot",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8B3D884E5CB77CFCF2CE65E14C999AAC1DC843A5"
+    }
+  ]
+}

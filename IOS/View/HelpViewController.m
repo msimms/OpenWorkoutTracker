@@ -94,13 +94,13 @@
 	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_STATIONARY_BIKE])
 	{
 		imgFileName = @"WheelSpeedSensor";
-		imgType = @"png";
+		imgType = @"jpg";
 		text = HELP_STATIONARY_BIKE;
 	}
 	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_TREADMILL])
 	{
 		imgFileName = @"FootPod";
-		imgType = @"png";
+		imgType = @"jpg";
 		text = HELP_TREADMILL;
 	}
 	

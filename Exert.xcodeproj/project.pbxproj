@@ -10,6 +10,8 @@
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
+		2725665E1BD48A9600B5AD03 /* FootPod.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665C1BD48A9600B5AD03 /* FootPod.jpg */; settings = {ASSET_TAGS = (); }; };
+		2725665F1BD48A9600B5AD03 /* WheelSpeedSensor.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */; settings = {ASSET_TAGS = (); }; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
 		2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2619C124CF00CE2BAD /* Default@2x.png */; };
 		2728FD2A19C1250E00CE2BAD /* Icon_58px.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2519C124BE00CE2BAD /* Icon_58px.png */; };
@@ -72,12 +74,10 @@
 		27B44D1319BFF01A0058FE00 /* Countdown3.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0719BFF01A0058FE00 /* Countdown3.png */; };
 		27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0819BFF01A0058FE00 /* Countdown4.png */; };
 		27B44D1519BFF01A0058FE00 /* Countdown5.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0919BFF01A0058FE00 /* Countdown5.png */; };
-		27B44D1619BFF01A0058FE00 /* FootPod.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0A19BFF01A0058FE00 /* FootPod.png */; };
 		27B44D1719BFF01A0058FE00 /* iPhoneOnArm.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0B19BFF01A0058FE00 /* iPhoneOnArm.jpg */; };
 		27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0C19BFF01A0058FE00 /* MappedScreen.png */; };
 		27B44D1919BFF01A0058FE00 /* PushUp.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0D19BFF01A0058FE00 /* PushUp.jpg */; };
 		27B44D1A19BFF01A0058FE00 /* SimpleScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0E19BFF01A0058FE00 /* SimpleScreen.png */; };
-		27B44D1B19BFF01A0058FE00 /* WheelSpeedSensor.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0F19BFF01A0058FE00 /* WheelSpeedSensor.png */; };
 		27B7CD1F19BFD807000383E3 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1719BFD807000383E3 /* Database.cpp */; };
 		27B7CD2019BFD807000383E3 /* DataExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1919BFD807000383E3 /* DataExporter.cpp */; };
 		27B7CD2119BFD807000383E3 /* DataImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1B19BFD807000383E3 /* DataImporter.cpp */; };
@@ -201,6 +201,8 @@
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
 		271D8B0419D0E76C00857109 /* CadenceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CadenceCalculator.h; path = IOS/Sensors/CadenceCalculator.h; sourceTree = SOURCE_ROOT; };
 		271D8B0519D0E76C00857109 /* CadenceCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CadenceCalculator.m; path = IOS/Sensors/CadenceCalculator.m; sourceTree = SOURCE_ROOT; };
+		2725665C1BD48A9600B5AD03 /* FootPod.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = FootPod.jpg; path = Images/FootPod.jpg; sourceTree = SOURCE_ROOT; };
+		2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = WheelSpeedSensor.jpg; path = Images/WheelSpeedSensor.jpg; sourceTree = SOURCE_ROOT; };
 		2728FD2319C1248700CE2BAD /* Icon_120px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_120px.png; path = Images/Icon_120px.png; sourceTree = "<group>"; };
 		2728FD2419C124B000CE2BAD /* Icon_80px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_80px.png; path = Images/Icon_80px.png; sourceTree = "<group>"; };
 		2728FD2519C124BE00CE2BAD /* Icon_58px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_58px.png; path = Images/Icon_58px.png; sourceTree = "<group>"; };
@@ -318,12 +320,10 @@
 		27B44D0719BFF01A0058FE00 /* Countdown3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Countdown3.png; path = Images/Countdown3.png; sourceTree = SOURCE_ROOT; };
 		27B44D0819BFF01A0058FE00 /* Countdown4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Countdown4.png; path = Images/Countdown4.png; sourceTree = SOURCE_ROOT; };
 		27B44D0919BFF01A0058FE00 /* Countdown5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Countdown5.png; path = Images/Countdown5.png; sourceTree = SOURCE_ROOT; };
-		27B44D0A19BFF01A0058FE00 /* FootPod.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FootPod.png; path = Images/FootPod.png; sourceTree = SOURCE_ROOT; };
 		27B44D0B19BFF01A0058FE00 /* iPhoneOnArm.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = iPhoneOnArm.jpg; path = Images/iPhoneOnArm.jpg; sourceTree = SOURCE_ROOT; };
 		27B44D0C19BFF01A0058FE00 /* MappedScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MappedScreen.png; path = Images/MappedScreen.png; sourceTree = SOURCE_ROOT; };
 		27B44D0D19BFF01A0058FE00 /* PushUp.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = PushUp.jpg; path = Images/PushUp.jpg; sourceTree = SOURCE_ROOT; };
 		27B44D0E19BFF01A0058FE00 /* SimpleScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SimpleScreen.png; path = Images/SimpleScreen.png; sourceTree = SOURCE_ROOT; };
-		27B44D0F19BFF01A0058FE00 /* WheelSpeedSensor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WheelSpeedSensor.png; path = Images/WheelSpeedSensor.png; sourceTree = SOURCE_ROOT; };
 		27B7CD1419BFD7C8000383E3 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Bike/Bike.h; sourceTree = SOURCE_ROOT; };
 		27B7CD1719BFD807000383E3 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Database.cpp; path = Data/Database.cpp; sourceTree = SOURCE_ROOT; };
 		27B7CD1819BFD807000383E3 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Database.h; path = Data/Database.h; sourceTree = SOURCE_ROOT; };
@@ -837,12 +837,12 @@
 				27B44D0719BFF01A0058FE00 /* Countdown3.png */,
 				27B44D0819BFF01A0058FE00 /* Countdown4.png */,
 				27B44D0919BFF01A0058FE00 /* Countdown5.png */,
-				27B44D0A19BFF01A0058FE00 /* FootPod.png */,
+				2725665C1BD48A9600B5AD03 /* FootPod.jpg */,
 				27B44D0B19BFF01A0058FE00 /* iPhoneOnArm.jpg */,
 				27B44D0C19BFF01A0058FE00 /* MappedScreen.png */,
 				27B44D0D19BFF01A0058FE00 /* PushUp.jpg */,
 				27B44D0E19BFF01A0058FE00 /* SimpleScreen.png */,
-				27B44D0F19BFF01A0058FE00 /* WheelSpeedSensor.png */,
+				2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1175,6 +1175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */,
+				2725665E1BD48A9600B5AD03 /* FootPod.jpg in Resources */,
 				2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */,
 				2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */,
 				2729852719C8F57400FE0077 /* BikeMount.jpg in Resources */,
@@ -1184,14 +1185,13 @@
 				27B44D1719BFF01A0058FE00 /* iPhoneOnArm.jpg in Resources */,
 				27B44D1019BFF01A0058FE00 /* Background1.png in Resources */,
 				2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */,
-				27B44D1B19BFF01A0058FE00 /* WheelSpeedSensor.png in Resources */,
 				27B44D1A19BFF01A0058FE00 /* SimpleScreen.png in Resources */,
 				2729853319C8F69900FE0077 /* Localizable.strings in Resources */,
 				27B44D1919BFF01A0058FE00 /* PushUp.jpg in Resources */,
 				27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */,
 				27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */,
 				27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */,
-				27B44D1619BFF01A0058FE00 /* FootPod.png in Resources */,
+				2725665F1BD48A9600B5AD03 /* WheelSpeedSensor.jpg in Resources */,
 				27B44D1219BFF01A0058FE00 /* Countdown2.png in Resources */,
 				27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */,
 				27B44D1319BFF01A0058FE00 /* Countdown3.png in Resources */,
