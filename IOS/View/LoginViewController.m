@@ -84,7 +84,7 @@
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
 	if ([responseCode intValue] == 200)
 	{
-		[Preferences setBroadcastName:self->username];
+		[Preferences setBroadcastUserName:self->username];
 		[self.navigationController popToRootViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)

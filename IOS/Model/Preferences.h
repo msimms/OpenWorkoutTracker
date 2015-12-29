@@ -22,8 +22,8 @@
 + (void)writeDoubleValue:(NSString*)key withValue:(double)value;
 + (void)writeStringValue:(NSString*)key withValue:(NSString*)value;
 
-+ (NSString*)getUuid;
-+ (UnitSystem)getPreferredUnitSystem;
++ (NSString*)uuid;
++ (UnitSystem)preferredUnitSystem;
 + (BOOL)backupToICloud;
 + (BOOL)shouldTweetWorkoutStart;
 + (BOOL)shouldTweetWorkoutStop;
@@ -33,6 +33,7 @@
 + (BOOL)shouldBroadcastGlobally;
 + (NSString*)broadcastUserName;
 + (NSInteger)broadcastRate;
++ (NSString*)broadcastHostName;
 + (BOOL)hasShownFirstTimeUseMessage;
 + (BOOL)hasShownPullUpHelp;
 + (BOOL)hasShownPushUpHelp;
@@ -51,8 +52,9 @@
 + (void)setScanForSensors:(BOOL)value;
 + (void)setBroadcastLocally:(BOOL)value;
 + (void)setBroadcastGlobally:(BOOL)value;
-+ (void)setBroadcastName:(NSString*)value;
++ (void)setBroadcastUserName:(NSString*)value;
 + (void)setBroadcastRate:(NSInteger)value;
++ (void)setBroadcastHostName:(NSString*)value;
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value;
 + (void)setHasShownPullUpHelp:(BOOL)value;
 + (void)setHasShownPushUpHelp:(BOOL)value;

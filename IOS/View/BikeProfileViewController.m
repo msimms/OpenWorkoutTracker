@@ -171,7 +171,7 @@
 
 - (void)updateWheelDiameter:(double)diameterMm
 {
-	switch ([Preferences getPreferredUnitSystem])
+	switch ([Preferences preferredUnitSystem])
 	{
 		case UNIT_SYSTEM_METRIC:
 			diameterMm /= (double)10.0;
@@ -200,7 +200,7 @@
 
 			double wheelDiameter = wheelCircumferenceMm / 3.14159;
 
-			switch ([Preferences getPreferredUnitSystem])
+			switch ([Preferences preferredUnitSystem])
 			{
 				case UNIT_SYSTEM_METRIC:
 					self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg];
@@ -223,7 +223,7 @@
 		self.title = TITLE;
 	}
 
-	switch ([Preferences getPreferredUnitSystem])
+	switch ([Preferences preferredUnitSystem])
 	{
 		case UNIT_SYSTEM_METRIC:
 			self->weightUnitsLabel.text = UNITS_KILOGRAMS;
@@ -248,7 +248,7 @@
     double wheelSize = [[self.wheelSizeTextField text] doubleValue];
     wheelSize *= 3.14159;
     
-    switch ([Preferences getPreferredUnitSystem])
+    switch ([Preferences preferredUnitSystem])
     {
         case UNIT_SYSTEM_METRIC:
             break;
@@ -258,7 +258,7 @@
             break;
     }
     
-    ActivityAttributeType weightKg = InitializeActivityAttribute(TYPE_DOUBLE, MEASURE_WEIGHT, [Preferences getPreferredUnitSystem]);
+    ActivityAttributeType weightKg = InitializeActivityAttribute(TYPE_DOUBLE, MEASURE_WEIGHT, [Preferences preferredUnitSystem]);
     weightKg.value.doubleVal = weight;
     ConvertToMetric(&weightKg);
     

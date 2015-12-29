@@ -16,8 +16,9 @@
 #define PREF_NAME_SCAN_FOR_SENSORS               "Scan for Sensors"
 #define PREF_NAME_BROADCAST_LOCAL                "Broadcast Local"
 #define PREF_NAME_BROADCAST_GLOBAL               "Broadcast Global"
-#define PREF_NAME_BROADCAST_USER_NAME            "Broadcast UserName"
+#define PREF_NAME_BROADCAST_USER_NAME            "Broadcast User Name"
 #define PREF_NAME_BROADCAST_RATE                 "Broadcast Rate"
+#define PREF_NAME_BROADCAST_HOST_NAME            "Broadcast Host Name"
 #define PREF_NAME_ALWAYS_CONNECT                 "Always Connect"
 #define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG   "Has Shown First Time Use Message"
 #define PREF_NAME_HAS_SHOWN_PULL_UP_HELP         "Has Shown Pull Up Help"
@@ -103,12 +104,12 @@
 
 #pragma mark get methods
 
-+ (NSString*)getUuid
++ (NSString*)uuid
 {
 	return [self readStringValue:@PREF_NAME_UUID];
 }
 
-+ (UnitSystem)getPreferredUnitSystem
++ (UnitSystem)preferredUnitSystem
 {
 	NSString* str = [Preferences readStringValue:@PREF_NAME_UNITS];
 	if (str != nil)
@@ -169,6 +170,14 @@
 	if (rate <= MAX_BROADCAST_RATE)
 		rate = MAX_BROADCAST_RATE;
 	return rate;
+}
+
++ (NSString*)broadcastHostName
+{
+	NSString* hostName = [self readStringValue:@PREF_NAME_BROADCAST_HOST_NAME];
+	if ((hostName == nil) || ([hostName length] == 0))
+		hostName = @"exert-app.com";
+	return hostName;
 }
 
 + (BOOL)hasShownFirstTimeUseMessage
@@ -266,7 +275,7 @@
 	[self writeBoolValue:@PREF_NAME_BROADCAST_GLOBAL withValue:value];
 }
 
-+ (void)setBroadcastName:(NSString*)value
++ (void)setBroadcastUserName:(NSString*)value
 {
 	[self writeStringValue:@PREF_NAME_BROADCAST_USER_NAME withValue:value];
 }
@@ -276,6 +285,11 @@
 	if (value <= MAX_BROADCAST_RATE)
 		return;
 	[self writeIntValue:@PREF_NAME_BROADCAST_RATE withValue:value];
+}
+
++ (void)setBroadcastHostName:(NSString*)value
+{
+	[self writeStringValue:@PREF_NAME_BROADCAST_HOST_NAME withValue:value];
 }
 
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value

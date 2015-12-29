@@ -233,7 +233,7 @@
 
 - (NSString*)getUuid;
 {
-	NSString* uuid = [Preferences getUuid];
+	NSString* uuid = [Preferences uuid];
 	if ((uuid == nil) || ([uuid length] == 0))
 	{
 		uuid = [[NSUUID UUID] UUIDString];
@@ -352,7 +352,7 @@
 
 - (void)setUnits
 {
-	UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+	UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 	SetUnitSystem(preferredUnits);
 }
 
@@ -385,7 +385,7 @@
 
 - (double)userHeight
 {
-	switch ([Preferences getPreferredUnitSystem])
+	switch ([Preferences preferredUnitSystem])
 	{
 		case UNIT_SYSTEM_METRIC:
 			return [UserProfile heightInCm];
@@ -397,7 +397,7 @@
 
 - (double)userWeight
 {
-	switch ([Preferences getPreferredUnitSystem])
+	switch ([Preferences preferredUnitSystem])
 	{
 		case UNIT_SYSTEM_METRIC:
 			return [UserProfile weightInKg];
@@ -424,7 +424,7 @@
 
 - (void)setUserHeight:(double)height
 {
-	switch ([Preferences getPreferredUnitSystem])
+	switch ([Preferences preferredUnitSystem])
 	{
 		case UNIT_SYSTEM_METRIC:
 			[UserProfile setHeightInCm:height];
@@ -439,7 +439,7 @@
 
 - (void)setUserWeight:(double)weight
 {
-	switch ([Preferences getPreferredUnitSystem])
+	switch ([Preferences preferredUnitSystem])
 	{
 		case UNIT_SYSTEM_METRIC:
 			[UserProfile setWeightInKg:weight];

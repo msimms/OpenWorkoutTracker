@@ -29,6 +29,7 @@
 "Birthdate" = "Birthdate";
 "Bluetooth is powered off. Turn Bluetooth on to scan for sensors." = "Bluetooth is powered off. Turn Bluetooth on to scan for sensors.";
 "Broadcast" = "Broadcast";
+"Broadcast Server" = "Broadcast Server";
 "Cancel" = "Cancel";
 "Caution" = "Caution";
 "Charts" = "Charts";
@@ -243,6 +244,7 @@
 "Walking" = "Walking";
 "Weight" = "Weight";
 "Weight:" = "Weight:";
+"What is the host name of the broadcast server?" = "What is the host name of the broadcast server?";
 "What would you like to edit?" = "What would you like to edit?";
 "What would you like to view?" = "What would you like to view?";
 "Wheel Diameter:" = "Wheel Diameter:";

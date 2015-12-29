@@ -19,12 +19,6 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
-#if TARGET_IPHONE_SIMULATOR
-#define BROADCAST_HOST_NAME "10.0.1.5"
-#else
-#define BROADCAST_HOST_NAME "exert-app.com"
-#endif
-
 @implementation BroadcastManager
 
 - (id)init
@@ -62,8 +56,10 @@
 - (NSString*)getHostName
 {
 	struct addrinfo* result;
+	
+	NSString* broadcastHostName = [Preferences broadcastHostName];
 
-	int error = getaddrinfo(BROADCAST_HOST_NAME, NULL, NULL, &result);
+	int error = getaddrinfo([broadcastHostName UTF8String], NULL, NULL, &result);
 	if (error != 0)
 	{
 		return nil;

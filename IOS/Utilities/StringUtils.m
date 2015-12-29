@@ -94,7 +94,7 @@
 			return nil;
 		case MEASURE_PACE:
 			{
-				UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
 					return NSLocalizedString(@"km/mile", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
@@ -105,7 +105,7 @@
 			break;
 		case MEASURE_SPEED:
 			{
-				UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
 					return NSLocalizedString(@"kph", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
@@ -116,7 +116,7 @@
 			break;
 		case MEASURE_DISTANCE:
 			{
-				UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
 					return NSLocalizedString(@"km", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
@@ -127,7 +127,7 @@
 			break;
 		case MEASURE_WEIGHT:
 			{
-				UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
 					return NSLocalizedString(@"kg", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
@@ -138,7 +138,7 @@
 			break;
 		case MEASURE_HEIGHT:
 			{
-				UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
 					return NSLocalizedString(@"cm", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
@@ -149,7 +149,7 @@
 			break;
 		case MEASURE_ALTITUDE:
 			{
-				UnitSystem preferredUnits = [Preferences getPreferredUnitSystem];
+				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
 					return NSLocalizedString(@"meters", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)

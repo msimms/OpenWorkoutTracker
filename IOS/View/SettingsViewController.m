@@ -53,6 +53,7 @@ typedef enum SettingsRowsBroadcast
 	SETTINGS_ROW_LOCAL_BROADCAST = 0,
 	SETTINGS_ROW_GLOBAL_BROADCAST,
 	SETTINGS_ROW_BROADCAST_RATE,
+	SETTINGS_ROW_BROADCAST_HOST,
 	SETTINGS_ROW_MANAGE_FOLLOWING,
 	SETTINGS_ROW_MANAGE_FOLLOWED_BY,
 	NUM_SETTINGS_ROWS_BROADCAST
@@ -71,14 +72,16 @@ typedef enum SettingsRowsBroadcast
 #define BROADCAST_GLOBALLY           NSLocalizedString(@"To the Internet", nil)
 #define BROADCAST_NAME               NSLocalizedString(@"Name", nil)
 #define BROADCAST_RATE               NSLocalizedString(@"Update Rate", nil)
+#define BROADCAST_HOST               NSLocalizedString(@"Broadcast Server", nil)
 #define BROADCAST_UNITS              NSLocalizedString(@"Seconds", nil)
 #define MANAGE_FOLLOWING             NSLocalizedString(@"Manage People I'm Following", nil)
 #define MANAGE_FOLLOWED_BY           NSLocalizedString(@"Manage People Following Me", nil)
 #define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
 #define BUTTON_TITLE_COPY            NSLocalizedString(@"Copy", nil)
 #define BUTTON_TITLE_CANCEL          NSLocalizedString(@"Cancel", nil)
-#define ALERT_TITLE_BROADCAST_NAME   NSLocalizedString(@"Enter the name you want to use", nil)
+#define ALERT_TITLE_BROADCAST_USER   NSLocalizedString(@"Enter the name you want to use", nil)
 #define ALERT_TITLE_BROADCAST_RATE   NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
+#define ALERT_TITLE_BROADCAST_HOST   NSLocalizedString(@"What is the host name of the broadcast server?", nil)
 #define ALERT_TITLE_BROADCAST_WARN   NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
 #define ALERT_TITLE_NOT_IMPLEMENTED  NSLocalizedString(@"Unimplemented Feature", nil)
 #define ALERT_TITLE_CAUTION          NSLocalizedString(@"Caution", nil)
@@ -165,10 +168,10 @@ typedef enum SettingsRowsBroadcast
 	}
 }
 
-- (void)showBroadcastNameDialog
+- (void)showBroadcastUserNameDialog
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_BROADCAST_NAME
-													message:ALERT_MSG_NAME
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:BROADCAST
+													message:ALERT_TITLE_BROADCAST_USER
 												   delegate:self
 										  cancelButtonTitle:BUTTON_TITLE_OK
 										  otherButtonTitles:nil];
@@ -181,8 +184,8 @@ typedef enum SettingsRowsBroadcast
 
 - (void)showBroadcastRateDialog
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_BROADCAST_RATE
-													message:ALERT_MSG_RATE
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:BROADCAST
+													message:ALERT_TITLE_BROADCAST_RATE
 												   delegate:self
 										  cancelButtonTitle:BUTTON_TITLE_OK
 										  otherButtonTitles:nil];
@@ -199,24 +202,43 @@ typedef enum SettingsRowsBroadcast
 	}
 }
 
+- (void)showBroadcastHostNameDialog
+{
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:BROADCAST
+													message:ALERT_TITLE_BROADCAST_HOST
+												   delegate:self
+										  cancelButtonTitle:BUTTON_TITLE_OK
+										  otherButtonTitles:nil];
+	if (alert)
+	{
+		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+		[alert show];
+	}
+}
+
 #pragma mark UIAlertView methods
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	NSString* title = [alertView title];
+	NSString* msg = [alertView message];
 
-	if ([title isEqualToString:ALERT_TITLE_BROADCAST_NAME])
+	if ([msg isEqualToString:ALERT_TITLE_BROADCAST_USER])
 	{
 		NSString* text = [[alertView textFieldAtIndex:0] text];
-		[Preferences setBroadcastName:text];
+		[Preferences setBroadcastUserName:text];
 	}
-	else if ([title isEqualToString:ALERT_TITLE_BROADCAST_RATE])
+	else if ([msg isEqualToString:ALERT_TITLE_BROADCAST_RATE])
 	{
 		NSString* text = [[alertView textFieldAtIndex:0] text];
 		NSInteger value = [text integerValue];
 		[Preferences setBroadcastRate:value];
 	}
-	else if ([title isEqualToString:ALERT_TITLE_CAUTION])
+	else if ([msg isEqualToString:ALERT_TITLE_BROADCAST_HOST])
+	{
+		NSString* text = [[alertView textFieldAtIndex:0] text];
+		[Preferences setBroadcastHostName:text];
+	}
+	else if ([msg isEqualToString:ALERT_TITLE_CAUTION])
 	{
 		[self performSegueWithIdentifier:@SEGUE_TO_SELECT_LOGIN_VIEW sender:self];
 	}
@@ -355,7 +377,7 @@ typedef enum SettingsRowsBroadcast
 			{
 				case SETTINGS_ROW_UNIT:
 					cell.textLabel.text = UNIT_TITLE;
-					switch ([Preferences getPreferredUnitSystem])
+					switch ([Preferences preferredUnitSystem])
 					{
 						case UNIT_SYSTEM_METRIC:
 							cell.detailTextLabel.text = UNIT_TITLE_METRIC;
@@ -487,6 +509,7 @@ typedef enum SettingsRowsBroadcast
 
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
+					(row != SETTINGS_ROW_BROADCAST_HOST) &&
 					(row != SETTINGS_ROW_MANAGE_FOLLOWING) &&
 					(row != SETTINGS_ROW_MANAGE_FOLLOWED_BY))	// these rows don't get toggle switches
 				{
@@ -511,6 +534,10 @@ typedef enum SettingsRowsBroadcast
 					case SETTINGS_ROW_BROADCAST_RATE:
 						cell.textLabel.text = BROADCAST_RATE;
 						cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS];
+						break;
+					case SETTINGS_ROW_BROADCAST_HOST:
+						cell.textLabel.text = BROADCAST_HOST;
+						cell.detailTextLabel.text = [Preferences broadcastHostName];
 						break;
 					case SETTINGS_ROW_MANAGE_FOLLOWING:
 						cell.textLabel.text = MANAGE_FOLLOWING;
@@ -556,6 +583,7 @@ typedef enum SettingsRowsBroadcast
 					case SETTINGS_ROW_LOCAL_BROADCAST:
 					case SETTINGS_ROW_GLOBAL_BROADCAST:
 					case SETTINGS_ROW_BROADCAST_RATE:
+					case SETTINGS_ROW_BROADCAST_HOST:
 						break;
 					case SETTINGS_ROW_MANAGE_FOLLOWING:
 					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
@@ -598,6 +626,9 @@ typedef enum SettingsRowsBroadcast
 				{
 					case SETTINGS_ROW_BROADCAST_RATE:
 						[self showBroadcastRateDialog];
+						break;
+					case SETTINGS_ROW_BROADCAST_HOST:
+						[self showBroadcastHostNameDialog];
 						break;
 					case SETTINGS_ROW_MANAGE_FOLLOWING:
 						[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWING_VIEW sender:self];

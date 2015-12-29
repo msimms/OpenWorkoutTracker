@@ -29,6 +29,7 @@
 "Birthdate" = "Cumpleaño";
 "Bluetooth is powered off. Turn Bluetooth on to scan for sensors." = "Bluetooth está apagado. Activar Bluetooth para buscar los sensores.";
 "Broadcast" = "Broadcast";
+"Broadcast Server" = "Servidor de Emisión";
 "Cancel" = "Cancelar";
 "Caution" = "Precaución";
 "Charts" = "Gráficos";
@@ -243,6 +244,7 @@
 "Walking" = "Caminar";
 "Weight" = "Peso";
 "Weight:" = "Peso:";
+"What is the host name of the broadcast server?" = "¿Cuál es el nombre de host del servidor de emisión?";
 "What would you like to edit?" = "Lo que le gustaría editar?";
 "What would you like to view?" = "Lo que le gustaría ver?";
 "Wheel Diameter:" = "Diámetro de la Rueda:";
