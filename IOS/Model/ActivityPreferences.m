@@ -152,13 +152,13 @@
 	if (value == -1)
 	{
 		if ([activityName isEqualToString:@ACTIVITY_NAME_CYCLING] ||
-			[activityName isEqualToString:@ACTIVITY_NAME_MOUNTAIN_BIKING] ||
 			[activityName isEqualToString:@ACTIVITY_NAME_STATIONARY_BIKE])
 		{
 			return ACTIVITY_VIEW_COMPLEX;
 		}
 		else if ([activityName isEqualToString:@ACTIVITY_NAME_HIKING] ||
-				 [activityName isEqualToString:@ACTIVITY_NAME_WALKING])
+				 [activityName isEqualToString:@ACTIVITY_NAME_WALKING] ||
+				 [activityName isEqualToString:@ACTIVITY_NAME_MOUNTAIN_BIKING])
 		{
 			return ACTIVITY_VIEW_MAPPED;
 		}

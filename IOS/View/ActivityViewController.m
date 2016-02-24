@@ -310,7 +310,7 @@
 	for (NSString* attributeName in attributeNames)
 	{
 		uint8_t viewPos = [self->activityPrefs getAttributePos:activityName withAttributeName:attributeName];
-		if (viewPos != ERROR_ATTRIBUTE_NOT_FOUND)
+		if ((viewPos != ERROR_ATTRIBUTE_NOT_FOUND) && (viewPos < self->titleLabels.count))
 		{
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:viewPos];
 			titleLabel.text = attributeName;
