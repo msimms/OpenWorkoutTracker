@@ -24,5 +24,6 @@
 
 // Energy
 #define CALORIES_PER_JOULE   0.239
+#define JOULES_PER_CALORIE   4.184
 
 #endif

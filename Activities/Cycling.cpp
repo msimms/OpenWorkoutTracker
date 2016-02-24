@@ -8,6 +8,7 @@
 #include "Cycling.h"
 #include "ActivityAttribute.h"
 #include "UnitMgr.h"
+#include "UnitConversionFactors.h"
 
 #include <numeric>
 
@@ -278,22 +279,31 @@ double Cycling::DistanceFromWheelRevsInMeters() const
 
 double Cycling::CaloriesBurned() const
 {
-	double avgHeartRate = AverageHeartRate();
-
-	if (avgHeartRate < (double)1.0)	// data not available, estimate 67% of Max. Heart Rate
+	if (m_totalPowerReadings > 0)
 	{
-		avgHeartRate = (double)0.67 * m_athlete.EstimateMaxHeartRate();
+		double avgPower = AveragePower();
+		double hours = (double)MovingTimeInSeconds() / (double)3600.0;
+		return avgPower * hours * (double)3.6 * JOULES_PER_CALORIE * (double)0.23; // Make an assumption as to the metabolic efficiency
 	}
-
-	// Source: http://www.livestrong.com/article/73356-calculate-calories-burned-cycling/
-	switch (m_athlete.GetGender())
+	else
 	{
-		case GENDER_MALE:
-			return ((0.271 * m_athlete.GetAgeInYears()) + (0.634 * avgHeartRate) + (0.179 * m_athlete.GetLeanBodyMassLbs()) +
-					(0.404 * m_athlete.EstimateVO2Max()) - 95.7735) * MovingTimeInMinutes() / 4.184;
-		case GENDER_FEMALE:
-			return ((0.274 * m_athlete.GetAgeInYears()) + (0.450 * avgHeartRate) + (0.0468 * m_athlete.GetLeanBodyMassLbs()) +
-					(0.380 * m_athlete.EstimateVO2Max()) - 59.3954) * MovingTimeInMinutes() / 4.184;
+		double avgHeartRate = AverageHeartRate();
+
+		if (avgHeartRate < (double)1.0)	// data not available, estimate 67% of Max. Heart Rate
+		{
+			avgHeartRate = (double)0.67 * m_athlete.EstimateMaxHeartRate();
+		}
+
+		// Source: http://www.livestrong.com/article/73356-calculate-calories-burned-cycling/
+		switch (m_athlete.GetGender())
+		{
+			case GENDER_MALE:
+				return ((0.271 * m_athlete.GetAgeInYears()) + (0.634 * avgHeartRate) + (0.179 * m_athlete.GetLeanBodyMassLbs()) +
+						(0.404 * m_athlete.EstimateVO2Max()) - 95.7735) * MovingTimeInMinutes() / 4.184;
+			case GENDER_FEMALE:
+				return ((0.274 * m_athlete.GetAgeInYears()) + (0.450 * avgHeartRate) + (0.0468 * m_athlete.GetLeanBodyMassLbs()) +
+						(0.380 * m_athlete.EstimateVO2Max()) - 59.3954) * MovingTimeInMinutes() / 4.184;
+		}
 	}
 	return (double)0.0;
 }
