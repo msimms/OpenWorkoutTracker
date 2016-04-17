@@ -10,8 +10,8 @@
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
-		2725665E1BD48A9600B5AD03 /* FootPod.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665C1BD48A9600B5AD03 /* FootPod.jpg */; settings = {ASSET_TAGS = (); }; };
-		2725665F1BD48A9600B5AD03 /* WheelSpeedSensor.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */; settings = {ASSET_TAGS = (); }; };
+		2725665E1BD48A9600B5AD03 /* FootPod.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665C1BD48A9600B5AD03 /* FootPod.jpg */; };
+		2725665F1BD48A9600B5AD03 /* WheelSpeedSensor.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
 		2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2619C124CF00CE2BAD /* Default@2x.png */; };
 		2728FD2A19C1250E00CE2BAD /* Icon_58px.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2519C124BE00CE2BAD /* Icon_58px.png */; };
@@ -59,9 +59,7 @@
 		2797F19319BFE48E008F8672 /* TextFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18519BFE48E008F8672 /* TextFileReader.cpp */; };
 		2797F19419BFE48E008F8672 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18719BFE48E008F8672 /* XmlFileReader.cpp */; };
 		2797F19519BFE48E008F8672 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */; };
-		2797F1BC19BFE76B008F8672 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2797F1BB19BFE76B008F8672 /* libxml2.dylib */; };
 		2797F1BE19BFE7A4008F8672 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2797F1BD19BFE7A4008F8672 /* Twitter.framework */; };
-		2797F1C019BFE858008F8672 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2797F1BF19BFE858008F8672 /* libsqlite3.dylib */; };
 		2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */; };
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
@@ -169,6 +167,8 @@
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		27C0846419BFD063007CE934 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
+		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
+		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -302,9 +302,7 @@
 		2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XmlFileWriter.cpp; path = FileLib/XmlFileWriter.cpp; sourceTree = SOURCE_ROOT; };
 		2797F18A19BFE48E008F8672 /* XmlFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XmlFileWriter.h; path = FileLib/XmlFileWriter.h; sourceTree = SOURCE_ROOT; };
 		2797F1B319BFE5C3008F8672 /* CorePlot-CocoaTouch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CorePlot-CocoaTouch.xcodeproj"; path = "core-plot/framework/CorePlot-CocoaTouch.xcodeproj"; sourceTree = "<group>"; };
-		2797F1BB19BFE76B008F8672 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		2797F1BD19BFE7A4008F8672 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		2797F1BF19BFE858008F8672 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MainStoryboard_iPhone.storyboard; path = IOS/Storyboards/MainStoryboard_iPhone.storyboard; sourceTree = SOURCE_ROOT; };
 		2797F1D319BFEAFA008F8672 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		27A3624C19BFB0E200F5A17F /* Exert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Exert.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -529,6 +527,8 @@
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
 		27C0844C19BFD063007CE934 /* Walking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walking.cpp; path = Activities/Walking.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844D19BFD063007CE934 /* Walking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walking.h; path = Activities/Walking.h; sourceTree = SOURCE_ROOT; };
+		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -536,10 +536,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */,
+				27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */,
 				276B57E419E1F3FD006F47BB /* HealthKit.framework in Frameworks */,
 				27B44D0019BFEEB60058FE00 /* libCorePlot-CocoaTouch.a in Frameworks */,
-				2797F1C019BFE858008F8672 /* libsqlite3.dylib in Frameworks */,
-				2797F1BC19BFE76B008F8672 /* libxml2.dylib in Frameworks */,
 				27B44D0219BFEF4E0058FE00 /* Accelerate.framework in Frameworks */,
 				27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */,
 				27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */,
@@ -777,10 +777,10 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27F841B71CC33F8000ACF409 /* libxml2.tbd */,
+				27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */,
 				27B44D0119BFEF4E0058FE00 /* Accelerate.framework */,
 				2797F1D319BFEAFA008F8672 /* GLKit.framework */,
-				2797F1BF19BFE858008F8672 /* libsqlite3.dylib */,
-				2797F1BB19BFE76B008F8672 /* libxml2.dylib */,
 				276B57E319E1F3FD006F47BB /* HealthKit.framework */,
 				27B7CDFC19BFD9AD000383E3 /* MapKit.framework */,
 				27A3624F19BFB0E200F5A17F /* Foundation.framework */,
