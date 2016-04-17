@@ -24,6 +24,7 @@
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
 		self.locationManager.activityType = CLActivityTypeFitness;
+		self.locationManager.allowsBackgroundLocationUpdates = YES;
 		
 		[self.locationManager requestWhenInUseAuthorization];
 //		[self.locationManager requestAlwaysAuthorization];
