@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "FacebookClient.h"
-#import "GarminConnect.h"
 #import "iCloud.h"
 #import "RunKeeper.h"
 #import "Strava.h"
@@ -19,7 +18,6 @@ typedef enum CloudServiceType
 	CLOUD_SERVICE_DROPBOX,
 	CLOUD_SERVICE_RUNKEEPER,
 	CLOUD_SERVICE_STRAVA,
-	CLOUD_SERVICE_GARMIN_CONNECT,
 	CLOUD_SERVICE_TWITTER,
 	CLOUD_SERVICE_FACEBOOK,
 } CloudServiceType;
@@ -30,7 +28,6 @@ typedef enum CloudServiceType
 	NSMutableArray* dataClouds;
 	NSMutableArray* socialClouds;
 
-	GarminConnect*  garminController;
 	iCloud*         iCloudController;
 	RunKeeper*      runKeeperController;
 	Strava*         stravaController;

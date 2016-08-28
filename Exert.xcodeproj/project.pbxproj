@@ -33,7 +33,6 @@
 		276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AEC1AA169AF008F55AF /* FileSharingWebsite.m */; };
 		276D5AF31AA169AF008F55AF /* SocialCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AEE1AA169AF008F55AF /* SocialCloud.m */; };
 		276D5AF61AA169FC008F55AF /* FacebookClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AF51AA169FC008F55AF /* FacebookClient.m */; };
-		276D5AF91AA16A23008F55AF /* GarminConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AF81AA16A23008F55AF /* GarminConnect.m */; };
 		276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFB1AA16A41008F55AF /* iCloud.m */; };
 		276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
 		276D5B021AA16A7D008F55AF /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
@@ -96,7 +95,6 @@
 		27B7CD9119BFD91C000383E3 /* FollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5119BFD91C000383E3 /* FollowingViewController.m */; };
 		27B7CD9219BFD91C000383E3 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5319BFD91C000383E3 /* HelpViewController.m */; };
 		27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5519BFD91C000383E3 /* HistoryViewController.m */; };
-		27B7CD9419BFD91C000383E3 /* ImportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5719BFD91C000383E3 /* ImportViewController.m */; };
 		27B7CD9519BFD91C000383E3 /* IntervalEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5919BFD91C000383E3 /* IntervalEditViewController.m */; };
 		27B7CD9619BFD91C000383E3 /* IntervalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5B19BFD91C000383E3 /* IntervalsViewController.m */; };
 		27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5D19BFD91C000383E3 /* LapTimesViewController.m */; };
@@ -290,8 +288,6 @@
 		276D5AEE1AA169AF008F55AF /* SocialCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SocialCloud.m; path = Cloud/Common/SocialCloud.m; sourceTree = SOURCE_ROOT; };
 		276D5AF41AA169FC008F55AF /* FacebookClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacebookClient.h; path = Cloud/Facebook/FacebookClient.h; sourceTree = SOURCE_ROOT; };
 		276D5AF51AA169FC008F55AF /* FacebookClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FacebookClient.m; path = Cloud/Facebook/FacebookClient.m; sourceTree = SOURCE_ROOT; };
-		276D5AF71AA16A23008F55AF /* GarminConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GarminConnect.h; path = Cloud/Garmin/GarminConnect.h; sourceTree = SOURCE_ROOT; };
-		276D5AF81AA16A23008F55AF /* GarminConnect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GarminConnect.m; path = Cloud/Garmin/GarminConnect.m; sourceTree = SOURCE_ROOT; };
 		276D5AFA1AA16A41008F55AF /* iCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCloud.h; path = Cloud/iCloud/iCloud.h; sourceTree = SOURCE_ROOT; };
 		276D5AFB1AA16A41008F55AF /* iCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCloud.m; path = Cloud/iCloud/iCloud.m; sourceTree = SOURCE_ROOT; };
 		276D5AFD1AA16A67008F55AF /* RunKeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunKeeper.h; path = Cloud/RunKeeper/RunKeeper.h; sourceTree = SOURCE_ROOT; };
@@ -413,8 +409,6 @@
 		27B7CD5319BFD91C000383E3 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HelpViewController.m; path = IOS/View/HelpViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5419BFD91C000383E3 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryViewController.h; path = IOS/View/HistoryViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD5519BFD91C000383E3 /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HistoryViewController.m; path = IOS/View/HistoryViewController.m; sourceTree = SOURCE_ROOT; };
-		27B7CD5619BFD91C000383E3 /* ImportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImportViewController.h; path = IOS/View/ImportViewController.h; sourceTree = SOURCE_ROOT; };
-		27B7CD5719BFD91C000383E3 /* ImportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImportViewController.m; path = IOS/View/ImportViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5819BFD91C000383E3 /* IntervalEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalEditViewController.h; path = IOS/View/IntervalEditViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD5919BFD91C000383E3 /* IntervalEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IntervalEditViewController.m; path = IOS/View/IntervalEditViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5A19BFD91C000383E3 /* IntervalsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalsViewController.h; path = IOS/View/IntervalsViewController.h; sourceTree = SOURCE_ROOT; };
@@ -668,8 +662,6 @@
 				27B7CD5319BFD91C000383E3 /* HelpViewController.m */,
 				27B7CD5419BFD91C000383E3 /* HistoryViewController.h */,
 				27B7CD5519BFD91C000383E3 /* HistoryViewController.m */,
-				27B7CD5619BFD91C000383E3 /* ImportViewController.h */,
-				27B7CD5719BFD91C000383E3 /* ImportViewController.m */,
 				27B7CD5819BFD91C000383E3 /* IntervalEditViewController.h */,
 				27B7CD5919BFD91C000383E3 /* IntervalEditViewController.m */,
 				27B7CD5A19BFD91C000383E3 /* IntervalsViewController.h */,
@@ -916,8 +908,6 @@
 				276D5AF51AA169FC008F55AF /* FacebookClient.m */,
 				276D5AEB1AA169AF008F55AF /* FileSharingWebsite.h */,
 				276D5AEC1AA169AF008F55AF /* FileSharingWebsite.m */,
-				276D5AF71AA16A23008F55AF /* GarminConnect.h */,
-				276D5AF81AA16A23008F55AF /* GarminConnect.m */,
 				276D5AFA1AA16A41008F55AF /* iCloud.h */,
 				276D5AFB1AA16A41008F55AF /* iCloud.m */,
 				276D5AFD1AA16A67008F55AF /* RunKeeper.h */,
@@ -1324,7 +1314,6 @@
 				27055BF21A73227300417D94 /* GoPro.m in Sources */,
 				27345D0A19EDEE4600059FFF /* LeScale.m in Sources */,
 				276D5AF11AA169AF008F55AF /* DataCloud.m in Sources */,
-				27B7CD9419BFD91C000383E3 /* ImportViewController.m in Sources */,
 				276D5AF31AA169AF008F55AF /* SocialCloud.m in Sources */,
 				27B7CD9B19BFD91C000383E3 /* LiveSummaryViewController.m in Sources */,
 				27B7CDF319BFD99B000383E3 /* LeBikeSpeedAndCadence.m in Sources */,
@@ -1405,7 +1394,6 @@
 				27B7CDF919BFD99B000383E3 /* LocationSensor.m in Sources */,
 				2797F15419BFE3B7008F8672 /* Preferences.m in Sources */,
 				27B7CD9619BFD91C000383E3 /* IntervalsViewController.m in Sources */,
-				276D5AF91AA16A23008F55AF /* GarminConnect.m in Sources */,
 				27B7CD8919BFD91C000383E3 /* ComplexActivityViewController.m in Sources */,
 				27B7CD9E19BFD91C000383E3 /* MappedActivityViewController.m in Sources */,
 				27B7CDA919BFD91C000383E3 /* StaticSummaryViewController.m in Sources */,

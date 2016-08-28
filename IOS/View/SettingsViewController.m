@@ -38,8 +38,7 @@ typedef enum SettingsRowsBackup
 
 typedef enum SettingsRowsShare
 {
-	SETTINGS_ROW_LINK_GARMIN_CONNECT = 0,
-	SETTINGS_ROW_LINK_RUNKEEPER,
+	SETTINGS_ROW_LINK_RUNKEEPER = 0,
 	SETTINGS_ROW_LINK_STRAVA,
 	SETTINGS_ROW_LINK_TWITTER,
 	SETTINGS_ROW_TWEET_START,
@@ -310,15 +309,15 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_SOCIAL:
 			numRows = NUM_SETTINGS_ROWS_LINK;
 
-			if (![appDelegate isFeaturePresent:FEATURE_GARMIN_CONNECT])
-			{
-				numRows--;
-			}
 			if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
 			{
 				numRows--;
 			}
 			if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+			{
+				numRows--;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_TWITTER])
 			{
 				numRows--;
 			}
@@ -425,15 +424,15 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_SOCIAL:
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				if (![appDelegate isFeaturePresent:FEATURE_GARMIN_CONNECT])
-				{
-					row++;
-				}
 				if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
 				{
 					row++;
 				}
 				if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+				{
+					row++;
+				}
+				if (![appDelegate isFeaturePresent:FEATURE_TWITTER])
 				{
 					row++;
 				}
@@ -444,12 +443,6 @@ typedef enum SettingsRowsBroadcast
 
 				switch (row)
 				{
-					case SETTINGS_ROW_LINK_GARMIN_CONNECT:
-						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_GARMIN_CONNECT];
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[CloudPreferences usingGarminConnect]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
 					case SETTINGS_ROW_LINK_RUNKEEPER:
 						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER];
 						cell.detailTextLabel.text = @"";
@@ -655,21 +648,6 @@ typedef enum SettingsRowsBroadcast
 			break;
 		case (SECTION_BACKUP * 100) + SETTINGS_ROW_LINK_DROPBOX:
 			[CloudPreferences setUsingDropbox:switchControl.isOn];
-			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_GARMIN_CONNECT:
-			[CloudPreferences setUsingGarminConnect:switchControl.isOn];
-			if (switchControl.isOn)
-			{
-				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
-																message:ALERT_MSG_IMPLEMENTED
-															   delegate:self
-													  cancelButtonTitle:nil
-													  otherButtonTitles:BUTTON_TITLE_OK, nil];
-				if (alert)
-				{
-					[alert show];
-				}
-			}
 			break;
 		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_RUNKEEPER:
 			[CloudPreferences setUsingRunKeeper:switchControl.isOn];

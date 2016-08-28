@@ -766,16 +766,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_CHARTS:
 			{
 				[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-				if ([appDelegate isFeatureEnabled:FEATURE_CORE_PLOT_GRAPHS])
-				{
-					[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
-				}
-				else
-				{
-					[self performSegueWithIdentifier:@SEGUE_TO_CHART_VIEW sender:self];
-				}
+				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
 			}
 			break;
 		case SECTION_ATTRIBUTES:

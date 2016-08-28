@@ -10,7 +10,6 @@
 
 #define SEGUE_TO_ACTIVITY_SUMMARY        "SegueToActivitySummaryView"
 #define SEGUE_TO_BIKE_PROFILE            "SegueToBikeProfileView"
-#define SEGUE_TO_CHART_VIEW              "SegueToChartView"
 #define SEQUE_TO_COMPLEX_VIEW            "SegueToComplexActivityView"
 #define SEGUE_TO_CORE_PLOT_VIEW          "SegueToCorePlotView"
 #define SEGUE_TO_CREATE_LOGIN_VIEW       "SegueToCreateLoginView"
@@ -18,7 +17,6 @@
 #define SEGUE_TO_DROPBOX_VIEW            "SegueToDropboxView"
 #define SEGUE_TO_HELP_VIEW               "SegueToHelpView"
 #define SEQUE_TO_HISTORY_VIEW            "SegueToHistoryView"
-#define SEGUE_TO_IMPORT_VIEW             "SegueToImportActivityViewController"
 #define SEGUE_TO_INTERVAL_EDIT_VIEW      "SegueToIntervalEditViewController"
 #define SEQUE_TO_INTERVALS_VIEW          "SegueToIntervalsView"
 #define SEGUE_TO_LAP_TIMES_VIEW          "SegueToLapTimesView"

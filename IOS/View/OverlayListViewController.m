@@ -7,7 +7,6 @@
 
 #import "OverlayListViewController.h"
 #import "AppDelegate.h"
-#import "ImportViewController.h"
 #import "MapOverviewViewController.h"
 #import "Segues.h"
 
@@ -20,9 +19,7 @@
 
 @implementation OverlayListViewController
 
-@synthesize toolbar;
 @synthesize overlayTableView;
-@synthesize importButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -37,15 +34,12 @@
 	[super viewDidLoad];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	self->overlayNames = NULL;
 	self->selectedSection = 0;
 	self->selectedRow = 0;
-
-	[self.importButton setTitle:BUTTON_TITLE_IMPORT];
 }
 
 - (void)viewDidUnload
@@ -58,8 +52,6 @@
 	[super viewDidAppear:animated];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	[self.overlayTableView reloadData];
 }
 
@@ -103,14 +95,6 @@
 			NSString* fileName = [self->overlayNames objectAtIndex:self->selectedRow];
 			[mapVC setOverlayFile:fileName];
 			[mapVC setMode:MAP_OVERVIEW_OVERLAY];
-		}
-	}
-	else if ([[segue identifier] isEqualToString:@SEGUE_TO_NEW_MAP_OVERLAY])
-	{
-		ImportViewController* importVC = (ImportViewController*)[segue destinationViewController];
-		if (importVC)
-		{
-			[importVC setMode:IMPORT_MAP_OVERLAY];
 		}
 	}
 }

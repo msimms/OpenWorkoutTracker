@@ -50,7 +50,6 @@
 
 - (void)createAll
 {
-	[self createCloudController:CLOUD_SERVICE_GARMIN_CONNECT];
 	[self createCloudController:CLOUD_SERVICE_ICLOUD];
 	[self createCloudController:CLOUD_SERVICE_RUNKEEPER];
 	[self createCloudController:CLOUD_SERVICE_STRAVA];
@@ -83,13 +82,6 @@
 			if (self->stravaController)
 			{
 				[self->dataClouds addObject:self->stravaController];
-			}
-			break;
-		case CLOUD_SERVICE_GARMIN_CONNECT:
-			self->garminController = [[GarminConnect alloc] init];
-			if (self->garminController)
-			{
-				[self->dataClouds addObject:garminController];
 			}
 			break;
 		case CLOUD_SERVICE_TWITTER:
@@ -143,12 +135,6 @@
 				return [self->stravaController isLinked];
 			}
 			break;
-		case CLOUD_SERVICE_GARMIN_CONNECT:
-			if ([CloudPreferences usingGarminConnect] && self->garminController)
-			{
-				return [self->garminController isLinked];
-			}
-			break;
 		case CLOUD_SERVICE_TWITTER:
 			break;
 		case CLOUD_SERVICE_FACEBOOK:
@@ -169,8 +155,6 @@
 			return [self->runKeeperController name];
 		case CLOUD_SERVICE_STRAVA:
 			return [self->stravaController name];
-		case CLOUD_SERVICE_GARMIN_CONNECT:
-			return [self->garminController name];
 		case CLOUD_SERVICE_TWITTER:
 			return [self->twitterClient name];
 		case CLOUD_SERVICE_FACEBOOK:
@@ -187,7 +171,6 @@
 		case CLOUD_SERVICE_DROPBOX:
 		case CLOUD_SERVICE_RUNKEEPER:
 		case CLOUD_SERVICE_STRAVA:
-		case CLOUD_SERVICE_GARMIN_CONNECT:
 		case CLOUD_SERVICE_TWITTER:
 			[self->twitterClient buildAcctNameList];
 			break;

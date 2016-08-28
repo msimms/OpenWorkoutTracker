@@ -6,21 +6,12 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <Foundation/Foundation.h>
+#import "Preferences.h"
 
-@interface CloudPreferences : NSObject
-
-+ (BOOL)readBooleanValue:(NSString*)key;
-+ (NSInteger)readNumericValue:(NSString*)key;
-+ (NSString*)readStringValue:(NSString*)key;
-
-+ (void)writeBoolValue:(NSString*)key withValue:(BOOL)value;
-+ (void)writeIntValue:(NSString*)key withValue:(NSInteger)value;
-+ (void)writeDoubleValue:(NSString*)key withValue:(double)value;
-+ (void)writeStringValue:(NSString*)key withValue:(NSString*)value;
+@interface CloudPreferences : Preferences
 
 + (BOOL)usingDropbox;
 + (BOOL)usingiCloud;
-+ (BOOL)usingGarminConnect;
 + (BOOL)usingRunKeeper;
 + (BOOL)usingStrava;
 + (BOOL)usingFacebook;
@@ -30,7 +21,6 @@
 
 + (void)setUsingDropbox:(BOOL)value;
 + (void)setUsingiCloud:(BOOL)value;
-+ (void)setUsingGarminConnect:(BOOL)value;
 + (void)setUsingRunKeeper:(BOOL)value;
 + (void)setUsingStrava:(BOOL)value;
 + (void)setUsingFacebook:(BOOL)value;

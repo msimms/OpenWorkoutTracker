@@ -18,7 +18,6 @@
 	IBOutlet UITableView* historyTableView;
 	IBOutlet UIActivityIndicatorView* spinner;
 
-	IBOutlet UIBarButtonItem* importButton;
 	IBOutlet UIBarButtonItem* exportButton;
 
 	NSMutableDictionary* historyDictionary;
@@ -36,7 +35,6 @@
 - (void)buildDictionary;
 - (NSNumber*)getActivityIndex:(NSIndexPath*)indexPath;
 
-- (IBAction)onImport:(id)sender;
 - (IBAction)onExportSummary:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
@@ -46,7 +44,6 @@
 @property (nonatomic, retain) IBOutlet UITableView* historyTableView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* importButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* exportButton;
 
 @end

@@ -15,9 +15,7 @@ typedef enum OverlayListMode
 
 @interface OverlayListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
-	IBOutlet UIToolbar*       toolbar;
-	IBOutlet UITableView*     overlayTableView;
-	IBOutlet UIBarButtonItem* importButton;
+	IBOutlet UITableView* overlayTableView;
 
 	NSMutableArray* overlayNames;
 	NSInteger       selectedSection;
@@ -29,8 +27,6 @@ typedef enum OverlayListMode
 
 - (IBAction)onImport:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* overlayTableView;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* importButton;
 
 @end

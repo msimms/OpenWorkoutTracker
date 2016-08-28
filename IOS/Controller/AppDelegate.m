@@ -248,10 +248,6 @@
 {
 	switch (feature)
 	{
-		case FEATURE_IMPORT_DATA:
-			return TRUE;
-		case FEATURE_CORE_PLOT_GRAPHS:
-			return TRUE;
 		case FEATURE_MAP_OVERLAYS:
 			return TRUE;
 		case FEATURE_HEATMAP:
@@ -266,9 +262,9 @@
 			return FALSE;
 		case FEATURE_STRAVA:
 			return FALSE;
-		case FEATURE_GARMIN_CONNECT:
-			return FALSE;
 		case FEATURE_RUNKEEPER:
+			return FALSE;
+		case FEATURE_TWITTER:
 			return FALSE;
 	}
 	return TRUE;
@@ -278,8 +274,6 @@
 {
 	switch (feature)
 	{
-		case FEATURE_IMPORT_DATA:
-		case FEATURE_CORE_PLOT_GRAPHS:
 		case FEATURE_MAP_OVERLAYS:
 		case FEATURE_HEATMAP:
 		case FEATURE_LOCAL_BROADCAST:
@@ -291,10 +285,10 @@
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD];
 		case FEATURE_STRAVA:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_STRAVA];
-		case FEATURE_GARMIN_CONNECT:
-			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_GARMIN_CONNECT];
 		case FEATURE_RUNKEEPER:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_RUNKEEPER];
+		case FEATURE_TWITTER:
+			return TRUE;
 	}
 	return TRUE;
 }
@@ -1236,10 +1230,6 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isFeatureEnabled:FEATURE_DROPBOX])
 		{
 			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_DROPBOX]];
-		}
-		if ([self isFeatureEnabled:FEATURE_GARMIN_CONNECT])
-		{
-			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_GARMIN_CONNECT]];
 		}
 		if ([self isFeatureEnabled:FEATURE_RUNKEEPER])
 		{

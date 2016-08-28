@@ -9,7 +9,6 @@
 
 #define CLOUD_PREF_DROPBOX        "using_dropbox"
 #define CLOUD_PREF_ICLOUD         "using_icloud"
-#define CLOUD_PREF_GARMIN_CONNECT "using_garminconnect"
 #define CLOUD_PREF_RUNKEEPER      "using_runkeeper"
 #define CLOUD_PREF_STRAVA         "using_strava"
 #define CLOUD_PREF_FACEBOOK       "using_facebook"
@@ -19,45 +18,6 @@
 
 @implementation CloudPreferences
 
-+ (BOOL)readBooleanValue:(NSString*)key
-{
-	return [[NSUserDefaults standardUserDefaults] boolForKey:key];
-}
-
-+ (NSInteger)readNumericValue:(NSString*)key
-{
-	return [[NSUserDefaults standardUserDefaults] integerForKey:key];
-}
-
-+ (NSString*)readStringValue:(NSString*)key
-{
-	return [[NSUserDefaults standardUserDefaults] stringForKey:key];
-}
-
-+ (void)writeBoolValue:(NSString*)key withValue:(BOOL)value
-{
-	[[NSUserDefaults standardUserDefaults] setBool:value forKey:key];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (void)writeIntValue:(NSString*)key withValue:(NSInteger)value
-{
-	[[NSUserDefaults standardUserDefaults] setInteger:value forKey:key];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (void)writeDoubleValue:(NSString*)key withValue:(double)value
-{
-	[[NSUserDefaults standardUserDefaults] setDouble:value forKey:key];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (void)writeStringValue:(NSString*)key withValue:(NSString*)value
-{
-	[[NSUserDefaults standardUserDefaults] setValue:value forKey:key];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 + (BOOL)usingDropbox
 {
 	return [self readBooleanValue:@CLOUD_PREF_DROPBOX];
@@ -66,11 +26,6 @@
 + (BOOL)usingiCloud
 {
 	return [self readBooleanValue:@CLOUD_PREF_ICLOUD];
-}
-
-+ (BOOL)usingGarminConnect
-{
-	return [self readBooleanValue:@CLOUD_PREF_GARMIN_CONNECT];
 }
 
 + (BOOL)usingRunKeeper
@@ -111,11 +66,6 @@
 + (void)setUsingiCloud:(BOOL)value
 {
 	[self writeBoolValue:@CLOUD_PREF_ICLOUD withValue:value];
-}
-
-+ (void)setUsingGarminConnect:(BOOL)value
-{
-	[self writeBoolValue:@CLOUD_PREF_GARMIN_CONNECT withValue:value];
 }
 
 + (void)setUsingRunKeeper:(BOOL)value

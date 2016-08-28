@@ -8,7 +8,6 @@
 #import "HistoryViewController.h"
 #import "ActivityMgr.h"
 #import "AppDelegate.h"
-#import "ImportViewController.h"
 #import "Segues.h"
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
@@ -17,12 +16,10 @@
 
 #define ACTION_SHEET_TITLE_ACTIVITY NSLocalizedString(@"Export", nil)
 #define ACTION_SHEET_TITLE_EXPORT   NSLocalizedString(@"Export using", nil)
-#define ACTION_SHEET_TITLE_IMPORT   NSLocalizedString(@"Import from", nil)
 #define ACTION_SHEET_TITLE_ERROR    NSLocalizedString(@"Error", nil)
 #define ACTION_SHEET_BUTTON_CANCEL  NSLocalizedString(@"Cancel", nil)
 #define ACTION_SHEET_BUTTON_OK      NSLocalizedString(@"Ok", nil)
 
-#define BUTTON_TITLE_IMPORT         NSLocalizedString(@"Import", nil)
 #define BUTTON_TITLE_EXPORT         NSLocalizedString(@"Export Summary", nil)
 
 #define MSG_NO_WORKOUTS             NSLocalizedString(@"You have not done any workouts. Get moving!", nil)
@@ -43,7 +40,6 @@
 @synthesize historyTableView;
 @synthesize spinner;
 
-@synthesize importButton;
 @synthesize exportButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -62,24 +58,12 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.searchBar setTintColor:[UIColor blackColor]];
 	
-	[self.importButton setTitle:BUTTON_TITLE_IMPORT];
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
 
 	[self.spinner stopAnimating];
 
 	self->selectedActivityIndex = nil;
 	self->searching = false;
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if (![appDelegate isFeatureEnabled:FEATURE_IMPORT_DATA])
-	{
-		NSMutableArray* newToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
-		if (newToolbar)
-		{
-			[newToolbar removeObjectIdenticalTo:self.importButton];
-			[self.toolbar setItems:newToolbar animated:NO];
-		}
-	}
 }
 
 - (void)viewDidUnload
@@ -143,14 +127,6 @@
 		{
 			NSInteger activityIndex = [self->selectedActivityIndex integerValue];
 			[summaryVC setActivityIndex:activityIndex];
-		}
-	}
-	else if ([[segue identifier] isEqualToString:@SEGUE_TO_IMPORT_VIEW])
-	{
-		ImportViewController* importVC = (ImportViewController*)[segue destinationViewController];
-		if (importVC)
-		{
-			[importVC setMode:IMPORT_ACTIVITY];
 		}
 	}
 }
@@ -449,37 +425,6 @@
 	return FALSE;
 }
 
-- (BOOL)showFileImportSheet
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSMutableArray* fileSites = [appDelegate getEnabledFileImportServices];
-	if ([fileSites count] > 0)
-	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_IMPORT
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
-		{
-			popupQuery.cancelButtonIndex = [fileSites count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-			
-			for (NSString* fileSite in fileSites)
-			{
-				[popupQuery addButtonWithTitle:fileSite];
-			}
-			
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
-			
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-
 #pragma mark export methods
 
 - (void)exportSummary
@@ -519,28 +464,6 @@
 }
 
 #pragma mark button handlers
-
-- (IBAction)onImport:(id)sender
-{
-	bool showActionSheet = false;
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSMutableArray* importServices = [appDelegate getEnabledFileImportServices];
-	if ([importServices count] > 1)
-	{
-		showActionSheet = true;
-	}
-
-	if (showActionSheet)
-	{
-		[self showFileImportSheet];
-	}
-	else
-	{
-		[self performSegueWithIdentifier:@SEGUE_TO_IMPORT_VIEW sender:self];
-	}
-}
 
 - (IBAction)onExportSummary:(id)sender
 {
@@ -632,15 +555,6 @@
 	{
 		self->selectedExportService = [actionSheet buttonTitleAtIndex:buttonIndex];
 		[self exportSummary];
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_IMPORT])
-	{
-		NSString* selectedImportService = [actionSheet buttonTitleAtIndex:buttonIndex];
-
-		if ([selectedImportService isEqualToString:@IMPORT_VIA_URL_STR])
-		{
-			[self performSegueWithIdentifier:@SEGUE_TO_IMPORT_VIEW sender:self];
-		}
 	}
 }
 
