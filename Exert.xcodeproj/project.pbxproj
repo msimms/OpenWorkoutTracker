@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
+		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
 		2725665E1BD48A9600B5AD03 /* FootPod.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665C1BD48A9600B5AD03 /* FootPod.jpg */; };
 		2725665F1BD48A9600B5AD03 /* WheelSpeedSensor.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */; };
@@ -64,7 +65,6 @@
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
 		27AAAC8719F1D479003E2590 /* SocialAcctViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AAAC8619F1D479003E2590 /* SocialAcctViewController.m */; };
-		27B44D0019BFEEB60058FE00 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2797F1BA19BFE5C3008F8672 /* libCorePlot-CocoaTouch.a */; };
 		27B44D0219BFEF4E0058FE00 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B44D0119BFEF4E0058FE00 /* Accelerate.framework */; };
 		27B44D1019BFF01A0058FE00 /* Background1.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0419BFF01A0058FE00 /* Background1.png */; };
 		27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0519BFF01A0058FE00 /* Countdown1.png */; };
@@ -172,12 +172,61 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2797F1B919BFE5C3008F8672 /* PBXContainerItemProxy */ = {
+		27072DFF1D40528B00045624 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 2797F1B319BFE5C3008F8672 /* CorePlot-CocoaTouch.xcodeproj */;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = BC9B83470FB8A0A40035D8DA;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = "CorePlot Mac";
+		};
+		27072E011D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0730F600109492D800E95162;
+			remoteInfo = "UnitTests Mac";
+		};
+		27072E031D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09781A46185200D45436;
+			remoteInfo = "CorePlot iOS";
+		};
+		27072E051D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09821A46185300D45436;
+			remoteInfo = "UnitTests iOS";
+		};
+		27072E071D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09BA1A4619A900D45436;
 			remoteInfo = "CorePlot-CocoaTouch";
+		};
+		27072E091D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C38A09C41A4619A900D45436;
+			remoteInfo = "CorePlot-CocoaTouchTests";
+		};
+		27072E0B1D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C37EA6921BC83F2A0091C8F7;
+			remoteInfo = "CorePlot tvOS";
+		};
+		27072E0D1D40528B00045624 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C37EA6B71BC83F2D0091C8F7;
+			remoteInfo = "UnitTests tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -199,6 +248,7 @@
 		27055BF61A7322AB00417D94 /* GoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GoPro.h; path = IOS/Sensors/GoPro.h; sourceTree = SOURCE_ROOT; };
 		27055BF71A7336D100417D94 /* WiFiDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiDiscovery.h; path = IOS/Sensors/WiFiDiscovery.h; sourceTree = SOURCE_ROOT; };
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
+		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		271D8B0419D0E76C00857109 /* CadenceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CadenceCalculator.h; path = IOS/Sensors/CadenceCalculator.h; sourceTree = SOURCE_ROOT; };
 		271D8B0519D0E76C00857109 /* CadenceCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CadenceCalculator.m; path = IOS/Sensors/CadenceCalculator.m; sourceTree = SOURCE_ROOT; };
 		2725665C1BD48A9600B5AD03 /* FootPod.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = FootPod.jpg; path = Images/FootPod.jpg; sourceTree = SOURCE_ROOT; };
@@ -301,7 +351,6 @@
 		2797F18819BFE48E008F8672 /* XmlFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XmlFileReader.h; path = FileLib/XmlFileReader.h; sourceTree = SOURCE_ROOT; };
 		2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XmlFileWriter.cpp; path = FileLib/XmlFileWriter.cpp; sourceTree = SOURCE_ROOT; };
 		2797F18A19BFE48E008F8672 /* XmlFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XmlFileWriter.h; path = FileLib/XmlFileWriter.h; sourceTree = SOURCE_ROOT; };
-		2797F1B319BFE5C3008F8672 /* CorePlot-CocoaTouch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "CorePlot-CocoaTouch.xcodeproj"; path = "core-plot/framework/CorePlot-CocoaTouch.xcodeproj"; sourceTree = "<group>"; };
 		2797F1BD19BFE7A4008F8672 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MainStoryboard_iPhone.storyboard; path = IOS/Storyboards/MainStoryboard_iPhone.storyboard; sourceTree = SOURCE_ROOT; };
 		2797F1D319BFEAFA008F8672 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
@@ -536,10 +585,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */,
 				27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */,
 				27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */,
 				276B57E419E1F3FD006F47BB /* HealthKit.framework in Frameworks */,
-				27B44D0019BFEEB60058FE00 /* libCorePlot-CocoaTouch.a in Frameworks */,
 				27B44D0219BFEF4E0058FE00 /* Accelerate.framework in Frameworks */,
 				27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */,
 				27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */,
@@ -551,6 +600,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27072DF01D40528B00045624 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27072E001D40528B00045624 /* CorePlot.framework */,
+				27072E021D40528B00045624 /* UnitTests.xctest */,
+				27072E041D40528B00045624 /* CorePlot.framework */,
+				27072E061D40528B00045624 /* UnitTests iOS.xctest */,
+				27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */,
+				27072E0A1D40528B00045624 /* CorePlot-CocoaTouchTests.xctest */,
+				27072E0C1D40528B00045624 /* CorePlot.framework */,
+				27072E0E1D40528B00045624 /* UnitTests tvOS.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2729852819C8F69900FE0077 /* en.lproj */ = {
 			isa = PBXGroup;
 			children = (
@@ -735,14 +799,6 @@
 			name = FileLib;
 			sourceTree = "<group>";
 		};
-		2797F1B419BFE5C3008F8672 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2797F1BA19BFE5C3008F8672 /* libCorePlot-CocoaTouch.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		2797F1C319BFE97E008F8672 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,12 +810,12 @@
 		27A3624319BFB0E200F5A17F = {
 			isa = PBXGroup;
 			children = (
+				27072DEF1D40528B00045624 /* CorePlot.xcodeproj */,
 				2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */,
 				2728FD2619C124CF00CE2BAD /* Default@2x.png */,
 				2728FD2519C124BE00CE2BAD /* Icon_58px.png */,
 				2728FD2419C124B000CE2BAD /* Icon_80px.png */,
 				2728FD2319C1248700CE2BAD /* Icon_120px.png */,
-				2797F1B319BFE5C3008F8672 /* CorePlot-CocoaTouch.xcodeproj */,
 				27A3625519BFB0E200F5A17F /* Exert */,
 				27A3624E19BFB0E200F5A17F /* Frameworks */,
 				27A3624D19BFB0E200F5A17F /* Products */,
@@ -1148,8 +1204,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 2797F1B419BFE5C3008F8672 /* Products */;
-					ProjectRef = 2797F1B319BFE5C3008F8672 /* CorePlot-CocoaTouch.xcodeproj */;
+					ProductGroup = 27072DF01D40528B00045624 /* Products */;
+					ProjectRef = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1160,11 +1216,60 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2797F1BA19BFE5C3008F8672 /* libCorePlot-CocoaTouch.a */ = {
+		27072E001D40528B00045624 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = 27072DFF1D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E021D40528B00045624 /* UnitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = UnitTests.xctest;
+			remoteRef = 27072E011D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E041D40528B00045624 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = 27072E031D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E061D40528B00045624 /* UnitTests iOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "UnitTests iOS.xctest";
+			remoteRef = 27072E051D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = "libCorePlot-CocoaTouch.a";
-			remoteRef = 2797F1B919BFE5C3008F8672 /* PBXContainerItemProxy */;
+			remoteRef = 27072E071D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E0A1D40528B00045624 /* CorePlot-CocoaTouchTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "CorePlot-CocoaTouchTests.xctest";
+			remoteRef = 27072E091D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E0C1D40528B00045624 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = 27072E0B1D40528B00045624 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		27072E0E1D40528B00045624 /* UnitTests tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "UnitTests tvOS.xctest";
+			remoteRef = 27072E0D1D40528B00045624 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
