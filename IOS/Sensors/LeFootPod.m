@@ -19,9 +19,11 @@ typedef struct rsc_measurement
     uint32_t totalDistance;
 } __attribute__((packed)) rsc_measurement;
 
-#define FLAGS_INSTANTANEOUS_STRIDE_LENGTH_PRESENT 0x00
-#define FLAGS_TOTAL_DISTANCE_PRESENT              0x01
-#define FLAGS_WALKING_OR_RUNNING_STATUS_BITS      0x02
+#define FLAGS_INSTANTANEOUS_STRIDE_LENGTH_PRESENT    0x0001
+#define FLAGS_TOTAL_DISTANCE_PRESENT                 0x0002
+#define FLAGS_WALKING_OR_RUNNING_STATUS_BITS         0x0004
+#define FLAGS_SENSOR_CALIBRATION_PROCEDURE_SUPPORTED 0x0008
+#define FLAGS_MULTIPLE_SENSOR_LOCATION_SUPPORTED     0x0010
 
 @implementation LeFootPod
 
