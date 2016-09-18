@@ -8,6 +8,13 @@
 #import "LeHeartRateMonitor.h"
 #import "LeDiscovery.h"
 
+#define ERROR_HEART_RATE_CONTROL_POINT_NO_SUPPORTED  0x80
+
+#define FLAGS_HEART_RATE_VALUE             0x01
+#define FLAGS_SENSOR_CONTACT_STATUS_VALUE  0x02
+#define FLAGS_ENERGY_EXPENDED_STATUS_VALUE 0x04
+#define FLAGS_RR_VALUE                     0x08
+
 typedef struct HeartRateMeasurement
 {
 	uint8_t  flags;
@@ -63,7 +70,7 @@ typedef struct HeartRateMeasurement
 		const HeartRateMeasurement* reportData = [data bytes];
 		if (reportData)
 		{
-			if ((reportData->flags & 0x01) == 0)	// uint8_t
+			if ((reportData->flags & FLAGS_HEART_RATE_VALUE) == 0)
 			{
 				self->currentHeartRate = reportData->value8;
 			}

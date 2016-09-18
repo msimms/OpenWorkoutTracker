@@ -24,11 +24,7 @@
 
 - (void)dealloc
 {
-	if (self->peripheral)
-	{
-		[self->peripheral setDelegate:self];
-		self->peripheral = nil;
-	}
+	self->peripheral = nil;
 }
 
 #pragma mark accessor methods

@@ -29,19 +29,21 @@ typedef struct CyclingPowerMeasurement
 //	uint16_t accumulatedEnergy;
 } __attribute__((packed)) CyclingPowerMeasurement;
 
-#define FLAGS_PEDAL_POWER_BALANCE_PRESENT       0x0000
-#define FLAGS_PEDAL_POWER_BALANCE_REF_UNKNOWN   0x0001
-#define FLAGS_ACCUMULATED_TORQUE_PRESENT        0x0002
-#define FLAGS_ACCUMULATED_TORQUE_SOURCE         0x0004
-#define FLAGS_WHEEL_REVOLUTION_DATA_PRESENT     0x0008
-#define FLAGS_CRANK_REVOLUTION_DATA_PRESENT     0x0010
-#define FLAGS_EXTREME_FORCE_MAGNITUDES_PRESENT  0x0020
-#define FLAGS_EXTREME_TORQUE_MAGNITUDES_PRESENT 0x0040
-#define FLAGS_EXTREME_ANGLES_PRESENT            0x0080
-#define FLAGS_TOP_DEAD_SPOT_ANGLE_PRESENT       0x0100
-#define FLAGS_BOTTOM_DEAD_SPOT_ANGLE_PRESENT    0x0200
-#define FLAGS_ACCUMULATED_ENERGY_PRESENT        0x0400
-#define FLAGS_OFFSET_COMPENSATION_INDICATOR     0x0800
+#define ERROR_INAPPROPRIATE_CONNECTION_PARAMETER 0x80
+
+#define FLAGS_PEDAL_POWER_BALANCE_PRESENT       0x0001
+#define FLAGS_PEDAL_POWER_BALANCE_REFERENCE     0x0002
+#define FLAGS_ACCUMULATED_TORQUE_PRESENT        0x0004
+#define FLAGS_ACCUMULATED_TORQUE_SOURCE         0x0008
+#define FLAGS_WHEEL_REVOLUTION_DATA_PRESENT     0x0010
+#define FLAGS_CRANK_REVOLUTION_DATA_PRESENT     0x0020
+#define FLAGS_EXTREME_FORCE_MAGNITUDES_PRESENT  0x0040
+#define FLAGS_EXTREME_TORQUE_MAGNITUDES_PRESENT 0x0080
+#define FLAGS_EXTREME_ANGLES_PRESENT            0x0100
+#define FLAGS_TOP_DEAD_SPOT_ANGLE_PRESENT       0x0200
+#define FLAGS_BOTTOM_DEAD_SPOT_ANGLE_PRESENT    0x0400
+#define FLAGS_ACCUMULATED_ENERGY_PRESENT        0x0800
+#define FLAGS_OFFSET_COMPENSATION_INDICATOR     0x1000
 
 @implementation LePowerMeter
 
@@ -103,6 +105,7 @@ typedef struct CyclingPowerMeasurement
 		const CyclingPowerMeasurement* reportData = [data bytes];
 		if (reportData)
 		{
+			uint16_t flags = CFSwapInt16LittleToHost(reportData->flags);
 			int16_t power = CFSwapInt16LittleToHost(reportData->instantaneousPower);
 			
 			NSDictionary* powerData = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -114,18 +117,6 @@ typedef struct CyclingPowerMeasurement
 			{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_POWER object:powerData];
 			}
-		}
-	}
-}
-
-- (void)updateWithCadenceData:(NSData*)data
-{
-	if (data)
-	{
-		const CyclingPowerMeasurement* reportData = [data bytes];
-		if (reportData)
-		{
-			uint16_t flags = CFSwapInt16LittleToHost(reportData->flags);
 			
 			if ((flags & FLAGS_CRANK_REVOLUTION_DATA_PRESENT) && self->cadenceCalc)
 			{
@@ -178,14 +169,7 @@ typedef struct CyclingPowerMeasurement
 	{
 		if (characteristic.value || !error)
 		{
-            [self updateWithPowerData:characteristic.value];
-		}
-	}
-	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CSC_MEASUREMENT])
-	{
-		if (characteristic.value || !error)
-		{
-			[self updateWithCadenceData:characteristic.value];
+			[self updateWithPowerData:characteristic.value];
 		}
 	}
 }

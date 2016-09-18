@@ -10,6 +10,12 @@
 
 #import <sys/time.h>
 
+#define ERROR_PROCEDURE_ALREADY_IN_PROGRESS 0x80
+#define ERROR_CLIENT_CHARACTERISTIC_CONFIG_DESC_IMPROPERLY_CONFIGURED 0x81
+
+#define WHEEL_REVOLUTION_DATA_PRESENT 0x01
+#define CRANK_REVOLUTION_DATA_PRESENT 0x02
+
 typedef struct CscMeasurement
 {
 	uint8_t  flags;
@@ -87,7 +93,7 @@ typedef struct RevMeasurement
 		const RevMeasurement* revData = [data bytes];
 		uint64_t curTimeMs = [self currentTimeInMs];
 
-		if (cscData->flags & 0x01)
+		if (cscData->flags & WHEEL_REVOLUTION_DATA_PRESENT)
 		{
 			self->currentWheelRevCount = CFSwapInt16LittleToHost(cscData->cumulativeWheelRevs);
 
@@ -102,7 +108,7 @@ typedef struct RevMeasurement
 			}
 		}
 
-		if (cscData->flags & 0x02)
+		if (cscData->flags & CRANK_REVOLUTION_DATA_PRESENT)
 		{
 			uint16_t currentCrankCount = 0;
 			uint16_t currentCrankTime  = 0;
