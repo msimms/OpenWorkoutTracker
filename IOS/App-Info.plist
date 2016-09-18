@@ -42,6 +42,10 @@
 	<string>Location Services are required to monitor certain activities.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location Services are required to monitor certain activities.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Calories burned during exercise can be written to the Health app.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Calories burned during exercise can be written to the Health app.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
