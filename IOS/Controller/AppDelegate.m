@@ -25,7 +25,7 @@
 
 #include <sys/sysctl.h>
 
-#define DATABASE_NAME               "Exert.sqlite"
+#define DATABASE_NAME               "Activities.sqlite"
 #define MAP_OVERLAY_DIR_NAME        "Map Overlays"
 
 #if TARGET_IPHONE_SIMULATOR

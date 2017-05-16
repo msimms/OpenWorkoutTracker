@@ -100,7 +100,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Exert" id="EAK-eB-3IZ"/>
+                    <navigationItem key="navigationItem" title="Straen" id="EAK-eB-3IZ"/>
                     <connections>
                         <outlet property="editButton" destination="XGp-p1-MzY" id="YTG-tI-5Zr"/>
                         <outlet property="resetButton" destination="EyH-bS-fuV" id="jME-iz-Vrx"/>

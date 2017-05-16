@@ -8,6 +8,7 @@
 #include "DataExporter.h"
 #include "ActivityAttribute.h"
 #include "AxisName.h"
+#include "Defines.h"
 #include "GpxFileWriter.h"
 #include "TcxFileWriter.h"
 #include "CsvFileWriter.h"
@@ -177,7 +178,7 @@ bool DataExporter::ExportToGpx(uint64_t activityId, const std::string& fileName,
 	bool result = false;
 	FileLib::GpxFileWriter writer;
 
-	if (writer.CreateFile(fileName, "Exert App for iPhone"))
+	if (writer.CreateFile(fileName, APP_NAME))
 	{
 		CoordinateList coordinateList;
 		LapSummaryList lapList;

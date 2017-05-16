@@ -249,6 +249,7 @@
 		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		271D8B0419D0E76C00857109 /* CadenceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CadenceCalculator.h; path = IOS/Sensors/CadenceCalculator.h; sourceTree = SOURCE_ROOT; };
 		271D8B0519D0E76C00857109 /* CadenceCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CadenceCalculator.m; path = IOS/Sensors/CadenceCalculator.m; sourceTree = SOURCE_ROOT; };
+		27214EC81ECB6B96007EE338 /* Straen.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Straen.entitlements; sourceTree = SOURCE_ROOT; };
 		2725665C1BD48A9600B5AD03 /* FootPod.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = FootPod.jpg; path = Images/FootPod.jpg; sourceTree = SOURCE_ROOT; };
 		2725665D1BD48A9600B5AD03 /* WheelSpeedSensor.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = WheelSpeedSensor.jpg; path = Images/WheelSpeedSensor.jpg; sourceTree = SOURCE_ROOT; };
 		2728FD2319C1248700CE2BAD /* Icon_120px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_120px.png; path = Images/Icon_120px.png; sourceTree = "<group>"; };
@@ -265,6 +266,7 @@
 		27345D0919EDEE4600059FFF /* LeScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeScale.m; path = IOS/Sensors/LeScale.m; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
+		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
 		276B57E319E1F3FD006F47BB /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
 		276B57E819E21ABD006F47BB /* HealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HealthManager.m; path = IOS/Model/HealthManager.m; sourceTree = SOURCE_ROOT; };
@@ -350,7 +352,7 @@
 		2797F1BD19BFE7A4008F8672 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MainStoryboard_iPhone.storyboard; path = IOS/Storyboards/MainStoryboard_iPhone.storyboard; sourceTree = SOURCE_ROOT; };
 		2797F1D319BFEAFA008F8672 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		27A3624C19BFB0E200F5A17F /* Exert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Exert.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A3624C19BFB0E200F5A17F /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A3624F19BFB0E200F5A17F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		27A3625319BFB0E200F5A17F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -508,7 +510,6 @@
 		27B7CDF019BFD99B000383E3 /* SensorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStyle.h; path = IOS/Sensors/SensorStyle.h; sourceTree = SOURCE_ROOT; };
 		27B7CDF119BFD99B000383E3 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = IOS/Sensors/SensorType.h; sourceTree = SOURCE_ROOT; };
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		27B7CDFE19BFD9C9000383E3 /* Exert.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Exert.entitlements; sourceTree = SOURCE_ROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
 		27C0841219BFD063007CE934 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = SOURCE_ROOT; };
 		27C0841319BFD063007CE934 /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Activity.h; path = Activities/Activity.h; sourceTree = SOURCE_ROOT; };
@@ -628,6 +629,14 @@
 			name = es.lproj;
 			path = IOS/es.lproj;
 			sourceTree = SOURCE_ROOT;
+		};
+		2762BC6A1ECB72EF0052A26E /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2762BC781ECB72FE0052A26E /* Defines.h */,
+			);
+			name = Common;
+			sourceTree = "<group>";
 		};
 		276D5B061AA95468008F55AF /* View Controllers */ = {
 			isa = PBXGroup;
@@ -808,7 +817,7 @@
 				2728FD2519C124BE00CE2BAD /* Icon_58px.png */,
 				2728FD2419C124B000CE2BAD /* Icon_80px.png */,
 				2728FD2319C1248700CE2BAD /* Icon_120px.png */,
-				27A3625519BFB0E200F5A17F /* Exert */,
+				27A3625519BFB0E200F5A17F /* App */,
 				27A3624E19BFB0E200F5A17F /* Frameworks */,
 				27A3624D19BFB0E200F5A17F /* Products */,
 			);
@@ -817,7 +826,7 @@
 		27A3624D19BFB0E200F5A17F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				27A3624C19BFB0E200F5A17F /* Exert.app */,
+				27A3624C19BFB0E200F5A17F /* Straen.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -839,13 +848,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		27A3625519BFB0E200F5A17F /* Exert */ = {
+		27A3625519BFB0E200F5A17F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				27B7CDFE19BFD9C9000383E3 /* Exert.entitlements */,
+				27214EC81ECB6B96007EE338 /* Straen.entitlements */,
 				27C0841119BFD051007CE934 /* Activities */,
 				27C0846519BFD06C007CE934 /* Bike */,
 				27B7CD1519BFD7DF000383E3 /* Cloud */,
+				2762BC6A1ECB72EF0052A26E /* Common */,
 				27B7CD1619BFD7E9000383E3 /* Data */,
 				2797F17219BFE47A008F8672 /* FileLib */,
 				27B7CD2519BFD887000383E3 /* Units */,
@@ -859,7 +869,8 @@
 				2797F1C319BFE97E008F8672 /* Storyboards */,
 				27A3625619BFB0E200F5A17F /* Supporting Files */,
 			);
-			path = Exert;
+			name = App;
+			path = Straen;
 			sourceTree = "<group>";
 		};
 		27A3625619BFB0E200F5A17F /* Supporting Files */ = {
@@ -1134,9 +1145,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		27A3624B19BFB0E200F5A17F /* Exert */ = {
+		27A3624B19BFB0E200F5A17F /* Straen */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Exert" */;
+			buildConfigurationList = 27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Straen" */;
 			buildPhases = (
 				27A3624819BFB0E200F5A17F /* Sources */,
 				27A3624919BFB0E200F5A17F /* Frameworks */,
@@ -1147,9 +1158,9 @@
 			);
 			dependencies = (
 			);
-			name = Exert;
-			productName = Exert;
-			productReference = 27A3624C19BFB0E200F5A17F /* Exert.app */;
+			name = Straen;
+			productName = Straen;
+			productReference = 27A3624C19BFB0E200F5A17F /* Straen.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1180,7 +1191,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Exert" */;
+			buildConfigurationList = 27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Straen" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1200,7 +1211,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				27A3624B19BFB0E200F5A17F /* Exert */,
+				27A3624B19BFB0E200F5A17F /* Straen */,
 			);
 		};
 /* End PBXProject section */
@@ -1571,14 +1582,14 @@
 		27A3627919BFB0E200F5A17F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Exert.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Straen.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjssoftware.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1588,14 +1599,14 @@
 		27A3627A19BFB0E200F5A17F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Exert.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Straen.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjssoftware.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -1605,7 +1616,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Exert" */ = {
+		27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Straen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27A3627619BFB0E200F5A17F /* Debug */,
@@ -1614,7 +1625,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Exert" */ = {
+		27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Straen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27A3627919BFB0E200F5A17F /* Debug */,
