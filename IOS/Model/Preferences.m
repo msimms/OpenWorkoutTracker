@@ -176,7 +176,7 @@
 {
 	NSString* hostName = [self readStringValue:@PREF_NAME_BROADCAST_HOST_NAME];
 	if ((hostName == nil) || ([hostName length] == 0))
-		hostName = @"exert-app.com";
+		hostName = @"straen-app.com";
 	return hostName;
 }
 

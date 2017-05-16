@@ -31,17 +31,17 @@
 #if TARGET_IPHONE_SIMULATOR
 #define BROADCAST_LOGIN_URL         "http://10.0.1.3:8080/login_submit?"
 #define BROADCAST_CREATE_LOGIN_URL  "http://10.0.1.3:8080/create_login_submit?"
-#define BROADCAST_LIST_FOLLOWING    "http://10.0.1.3:8080/liser_users_following"
-#define BROADCAST_LIST_FOLLOWED_BY  "http://10.0.1.3:8080/liser_users_followed_by"
+#define BROADCAST_LIST_FOLLOWING    "http://10.0.1.3:8080/list_users_following"
+#define BROADCAST_LIST_FOLLOWED_BY  "http://10.0.1.3:8080/list_users_followed_by"
 #define BROADCAST_INVITE_TO_FOLLOW  "http://10.0.1.3:8080/invite_to_follow?"
 #define BROADCAST_REQUEST_TO_FOLLOW "http://10.0.1.3:8080/request_to_follow?"
 #else
-#define BROADCAST_LOGIN_URL         "http://exert-app.com:8080/login_submit?"
-#define BROADCAST_CREATE_LOGIN_URL  "http://exert-app.com:8080/create_login_submit?"
-#define BROADCAST_LIST_FOLLOWING    "http://exert-app.com:8080/liser_users_following"
-#define BROADCAST_LIST_FOLLOWED_BY  "http://exert-app.com:8080/liser_users_followed_by"
-#define BROADCAST_INVITE_TO_FOLLOW  "http://exert-app.com:8080/invite_to_follow?"
-#define BROADCAST_REQUEST_TO_FOLLOW "http://exert-app.com:8080/request_to_follow?"
+#define BROADCAST_LOGIN_URL         "http://straen-app.com:8080/login_submit?"
+#define BROADCAST_CREATE_LOGIN_URL  "http://straen-app.com:8080/create_login_submit?"
+#define BROADCAST_LIST_FOLLOWING    "http://straen-app.com:8080/list_users_following"
+#define BROADCAST_LIST_FOLLOWED_BY  "http://straen-app.com:8080/list_users_followed_by"
+#define BROADCAST_INVITE_TO_FOLLOW  "http://straen-app.com:8080/invite_to_follow?"
+#define BROADCAST_REQUEST_TO_FOLLOW "http://straen-app.com:8080/request_to_follow?"
 #endif
 
 @implementation UINavigationController (Rotation_IOS6)
