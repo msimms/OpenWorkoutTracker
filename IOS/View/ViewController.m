@@ -195,7 +195,7 @@
 	}
 }
 
-# pragma mark button handlers
+#pragma mark button handlers
 
 - (IBAction)onNewActivity:(id)sender
 {

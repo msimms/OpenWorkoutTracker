@@ -374,7 +374,7 @@
 	[super onRefreshTimer:timer];
 }
 
-# pragma mark button handlers
+#pragma mark button handlers
 
 - (IBAction)onMap:(id)sender
 {
