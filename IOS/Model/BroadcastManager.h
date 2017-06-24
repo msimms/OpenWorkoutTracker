@@ -9,7 +9,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "BroadcastSessionContainer.h"
 
-@interface BroadcastManager : NSObject
+@interface BroadcastManager : NSObject<NSURLConnectionDelegate>
 {
 	BroadcastSessionContainer* session;
 	NSMutableArray*            cache;
