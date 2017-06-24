@@ -32,7 +32,6 @@
 #define SEGUE_TO_NEW_ACTIVITY            "SegueToNewActivityView"
 #define SEGUE_TO_NEW_MAP_OVERLAY         "SegueToNewMapOverlayViewController"
 #define SEQUE_TO_PROFILE_VIEW            "SegueToProfileView"
-#define SEGUE_TO_SELECT_LOGIN_VIEW       "SegueToSelectLoginView"
 #define SEQUE_TO_SOCIAL_ACCTS_VIEW       "SegueToSocialAcctsView"
 #define SEQUE_TO_SETTINGS_VIEW           "SegueToSettingsView"
 #define SEQUE_TO_SENSORS_VIEW            "SegueToSensorsView"

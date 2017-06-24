@@ -174,9 +174,6 @@
 				[broadcastData setObject:self->activityId forKey:@KEY_NAME_ACTIVITY_ID];
 			}
 
-			NSString* userName = [Preferences broadcastUserName];
-			[broadcastData setObject:userName forKey:@KEY_NAME_USER_NAME];
-
 			char* activityName = GetCurrentActivityName();
 			if (activityName)
 			{
@@ -184,7 +181,13 @@
 				[broadcastData setObject:value forKey:@KEY_NAME_ACTIVITY_NAME];
 				free((void*)activityName);
 			}
-
+			
+			NSString* userName = [Preferences broadcastUserName];
+			if (userName)
+			{
+				[broadcastData setObject:userName forKey:@ACTIVITY_ATTRIBUTE_USER_NAME];
+			}
+			
 			ActivityAttributeType attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 			if (attr.valid)
 			{

@@ -13,7 +13,7 @@
 #define TITLE_ERROR         NSLocalizedString(@"Error", nil)
 #define BUTTON_TITLE_CANCEL NSLocalizedString(@"Cancel", nil)
 #define BUTTON_TITLE_OK     NSLocalizedString(@"OK", nil)
-#define MSG_NO_USERNAME     NSLocalizedString(@"You did not provide a username.", nil)
+#define MSG_NO_EMAIL        NSLocalizedString(@"You did not provide an email address.", nil)
 #define MSG_NO_PASSWORD     NSLocalizedString(@"You did not enter a password.", nil)
 #define MSG_LOGIN_FAILED    NSLocalizedString(@"Failed to login to the account.", nil)
 #define MSG_404             NSLocalizedString(@"There was an error contacting the web service.", nil)
@@ -26,6 +26,8 @@
 
 @synthesize usernameTextField;
 @synthesize passwordTextField;
+@synthesize loginButton;
+@synthesize createLoginButton;
 @synthesize spinner;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -125,7 +127,7 @@
 	if (self.usernameTextField.text.length == 0)
 	{
 		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_USERNAME
+										   message:MSG_NO_EMAIL
 										  delegate:self
 								 cancelButtonTitle:BUTTON_TITLE_CANCEL
 								 otherButtonTitles:BUTTON_TITLE_OK, nil];
@@ -151,6 +153,11 @@
 		self->username = self.usernameTextField.text;
 		[appDelegate login:self.usernameTextField.text withPassword:self.passwordTextField.text];
 	}
+}
+
+- (IBAction)onCreateLogin:(id)sender
+{
+	[self performSegueWithIdentifier:@SEGUE_TO_CREATE_LOGIN_VIEW sender:self];
 }
 
 @end

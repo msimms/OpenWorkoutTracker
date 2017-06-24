@@ -179,7 +179,7 @@
 - (void)requestCloudServiceAcctNames:(CloudServiceType)service;
 
 - (BOOL)login:(NSString*)username withPassword:(NSString*)password;
-- (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withFirstName:(NSString*)firstname withLastName:(NSString*)lastname;
+- (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
 - (BOOL)listFollowingAsync;
 - (BOOL)listFollowedByAsync;
 - (BOOL)inviteToFollow:(NSString*)targetUsername;

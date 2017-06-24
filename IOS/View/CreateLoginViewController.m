@@ -31,8 +31,7 @@
 @synthesize usernameTextField;
 @synthesize passwordTextField;
 @synthesize confirmPasswordTextField;
-@synthesize firstNameTextField;
-@synthesize lastNameTextField;
+@synthesize realNameTextField;
 @synthesize spinner;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -159,18 +158,10 @@
 								 cancelButtonTitle:BUTTON_TITLE_CANCEL
 								 otherButtonTitles:BUTTON_TITLE_OK, nil];
 	}
-	else if (self.firstNameTextField.text.length == 0)
+	else if (self.realNameTextField.text.length == 0)
 	{
 		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
 										   message:MSG_NO_FIRST_NAME
-										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
-	}
-	else if (self.lastNameTextField.text.length == 0)
-	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_LAST_NAME
 										  delegate:self
 								 cancelButtonTitle:BUTTON_TITLE_CANCEL
 								 otherButtonTitles:BUTTON_TITLE_OK, nil];
@@ -187,7 +178,7 @@
 		self->username = self.usernameTextField.text;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate createLogin:self.usernameTextField.text withPassword:self.passwordTextField.text withConfirmation:self.confirmPasswordTextField.text withFirstName:self.firstNameTextField.text withLastName:self.lastNameTextField.text];
+		[appDelegate createLogin:self.usernameTextField.text withPassword:self.passwordTextField.text withConfirmation:self.confirmPasswordTextField.text withRealName:self.realNameTextField.text];
 	}
 }
 

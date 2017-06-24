@@ -33,6 +33,13 @@ typedef enum BikeProfileViewMode
 	BikeProfileViewMode mode;
 }
 
+- (IBAction)onHome:(id)sender;
+- (IBAction)onWheelDiameter:(id)sender;
+- (IBAction)onDelete:(id)sender;
+
+- (void)setBikeId:(uint64_t)newBikeId;
+- (void)setMode:(BikeProfileViewMode)newMode;
+
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* wheelDiameterButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
@@ -45,12 +52,5 @@ typedef enum BikeProfileViewMode
 @property (nonatomic, retain) IBOutlet UILabel* nameLabel;
 @property (nonatomic, retain) IBOutlet UILabel* weightLabel;
 @property (nonatomic, retain) IBOutlet UILabel* wheelSizeLabel;
-
-- (IBAction)onHome:(id)sender;
-- (IBAction)onWheelDiameter:(id)sender;
-- (IBAction)onDelete:(id)sender;
-
-- (void)setBikeId:(uint64_t)newBikeId;
-- (void)setMode:(BikeProfileViewMode)newMode;
 
 @end

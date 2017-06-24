@@ -12,8 +12,7 @@
 	IBOutlet UITextField* usernameTextField;
 	IBOutlet UITextField* passwordTextField;
 	IBOutlet UITextField* confirmPasswordTextField;
-	IBOutlet UITextField* firstNameTextField;
-	IBOutlet UITextField* lastNameTextField;
+	IBOutlet UITextField* realNameTextField;
 	IBOutlet UIActivityIndicatorView* spinner;
 	
 	NSString* username;
@@ -24,8 +23,7 @@
 @property (nonatomic, retain) IBOutlet UITextField* usernameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* passwordTextField;
 @property (nonatomic, retain) IBOutlet UITextField* confirmPasswordTextField;
-@property (nonatomic, retain) IBOutlet UITextField* firstNameTextField;
-@property (nonatomic, retain) IBOutlet UITextField* lastNameTextField;
+@property (nonatomic, retain) IBOutlet UITextField* realNameTextField;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 
 @end

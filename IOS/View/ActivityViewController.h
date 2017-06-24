@@ -53,20 +53,6 @@
 	Coordinate                 autoStartCoordinate;
 }
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
-@property (nonatomic, retain) IBOutlet UIToolbar*        toolbar;
-@property (nonatomic, retain) IBOutlet UIImageView*      countdownImage;
-@property (nonatomic, retain) IBOutlet UILabel*          messagesLabel;
-@property (nonatomic, retain) IBOutlet UIButton*         fullScreenButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  customizeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  bikeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  intervalsButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  lapButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  autoStartButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  startStopButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  weightButton;
-
 - (void)onRefreshTimer:(NSTimer*)timer;
 - (void)startTimer;
 - (void)stopTimer;
@@ -97,5 +83,19 @@
 - (IBAction)onIntervals:(id)sender;
 - (IBAction)onSummary:(id)sender;
 - (IBAction)onFullScreenButton:(id)sender;
+
+@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
+@property (nonatomic, retain) IBOutlet UIToolbar*        toolbar;
+@property (nonatomic, retain) IBOutlet UIImageView*      countdownImage;
+@property (nonatomic, retain) IBOutlet UILabel*          messagesLabel;
+@property (nonatomic, retain) IBOutlet UIButton*         fullScreenButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  customizeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  bikeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  intervalsButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  lapButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  autoStartButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  startStopButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  weightButton;
 
 @end

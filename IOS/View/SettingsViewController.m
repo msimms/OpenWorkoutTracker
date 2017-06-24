@@ -98,6 +98,8 @@ typedef enum SettingsRowsBroadcast
 @implementation SettingsViewController
 
 @synthesize settingsTableView;
+@synthesize loginButton;
+@synthesize createLoginButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -221,12 +223,7 @@ typedef enum SettingsRowsBroadcast
 {
 	NSString* msg = [alertView message];
 
-	if ([msg isEqualToString:ALERT_TITLE_BROADCAST_USER])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-		[Preferences setBroadcastUserName:text];
-	}
-	else if ([msg isEqualToString:ALERT_TITLE_BROADCAST_RATE])
+	if ([msg isEqualToString:ALERT_TITLE_BROADCAST_RATE])
 	{
 		NSString* text = [[alertView textFieldAtIndex:0] text];
 		NSInteger value = [text integerValue];
@@ -237,14 +234,50 @@ typedef enum SettingsRowsBroadcast
 		NSString* text = [[alertView textFieldAtIndex:0] text];
 		[Preferences setBroadcastHostName:text];
 	}
-	else if ([msg isEqualToString:ALERT_TITLE_CAUTION])
-	{
-		[self performSegueWithIdentifier:@SEGUE_TO_SELECT_LOGIN_VIEW sender:self];
-	}
 	[self.settingsTableView reloadData];
 }
 
 #pragma mark UITableView methods
+
+- (NSInteger)numberOfBackupRows
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSInteger numRows = NUM_SETTINGS_ROWS_BACKUP;
+
+	if (![appDelegate isFeaturePresent:FEATURE_ICLOUD])
+	{
+		numRows--;
+	}
+	if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
+	{
+		numRows--;
+	}
+	return numRows;
+}
+
+- (NSInteger)numberOfSocialRows
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSInteger numRows = NUM_SETTINGS_ROWS_LINK;
+
+	if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
+	{
+		numRows--;
+	}
+	if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+	{
+		numRows--;
+	}
+	if (![appDelegate isFeaturePresent:FEATURE_TWITTER])
+	{
+		numRows--;
+	}
+	if (![CloudPreferences usingTwitter])
+	{
+		numRows -= 3;
+	}
+	return numRows;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
@@ -259,14 +292,17 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_UNITS:
 			return UNIT_TITLE;
 		case SECTION_BACKUP:
-			if ([appDelegate isFeatureEnabled:FEATURE_ICLOUD] ||
-				[appDelegate isFeatureEnabled:FEATURE_DROPBOX])
+			if ([self numberOfBackupRows] > 0)
 			{
 				return CLOUD_BACKUP;
 			}
 			return @"";
 		case SECTION_SOCIAL:
-			return SOCIAL;
+			if ([self numberOfSocialRows] > 0)
+			{
+				return SOCIAL;
+			}
+			return @"";
 		case SECTION_AUTOUPLOAD:
 			if ([[appDelegate getEnabledFileExportCloudServices] count] > 0)
 			{
@@ -274,12 +310,7 @@ typedef enum SettingsRowsBroadcast
 			}
 			return @"";
 		case SECTION_BROADCAST:
-			if ([appDelegate isFeatureEnabled:FEATURE_LOCAL_BROADCAST] ||
-				[appDelegate isFeatureEnabled:FEATURE_GLOBAL_BROADCAST])
-			{
-				return BROADCAST;
-			}
-			return @"";
+			return BROADCAST;
 	}
 	return @"";
 }
@@ -295,60 +326,16 @@ typedef enum SettingsRowsBroadcast
 			numRows = NUM_SETTINGS_ROWS_UNITS;
 			break;
 		case SECTION_BACKUP:
-			numRows = NUM_SETTINGS_ROWS_BACKUP;
-
-			if (![appDelegate isFeaturePresent:FEATURE_ICLOUD])
-			{
-				numRows--;
-			}
-			if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
-			{
-				numRows--;
-			}
+			numRows = [self numberOfBackupRows];
 			break;
 		case SECTION_SOCIAL:
-			numRows = NUM_SETTINGS_ROWS_LINK;
-
-			if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
-			{
-				numRows--;
-			}
-			if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
-			{
-				numRows--;
-			}
-			if (![appDelegate isFeaturePresent:FEATURE_TWITTER])
-			{
-				numRows--;
-			}
-			if (![CloudPreferences usingTwitter])
-			{
-				numRows -= 3;
-			}
+			numRows = [self numberOfSocialRows];
 			break;
 		case SECTION_AUTOUPLOAD:
 			numRows = [[appDelegate getEnabledFileExportCloudServices] count];
 			break;
 		case SECTION_BROADCAST:
 			numRows = NUM_SETTINGS_ROWS_BROADCAST;
-
-			if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
-			{
-				numRows--;
-			}
-			if (![appDelegate isFeaturePresent:FEATURE_GLOBAL_BROADCAST])
-			{
-				numRows--;
-			}
-			if (!([appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST] ||
-				  [appDelegate isFeaturePresent:FEATURE_GLOBAL_BROADCAST]))
-			{
-				numRows--;
-			}
-			if (![Preferences shouldBroadcastGlobally])
-			{
-				numRows--;
-			}
 			break;
 	}
 	return numRows;
@@ -494,12 +481,6 @@ typedef enum SettingsRowsBroadcast
 			break;
 		case SECTION_BROADCAST:
 			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
-				{
-					row++;
-				}
-
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
 					(row != SETTINGS_ROW_BROADCAST_HOST) &&
@@ -564,27 +545,18 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_AUTOUPLOAD:
 			break;
 		case SECTION_BROADCAST:
+			switch (row)
 			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
-				{
-					row++;
-				}
-
-				switch (row)
-				{
-					case SETTINGS_ROW_LOCAL_BROADCAST:
-					case SETTINGS_ROW_GLOBAL_BROADCAST:
-					case SETTINGS_ROW_BROADCAST_RATE:
-					case SETTINGS_ROW_BROADCAST_HOST:
-						break;
-					case SETTINGS_ROW_MANAGE_FOLLOWING:
-					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
-						cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-						break;
-				}
+				case SETTINGS_ROW_LOCAL_BROADCAST:
+				case SETTINGS_ROW_GLOBAL_BROADCAST:
+				case SETTINGS_ROW_BROADCAST_RATE:
+				case SETTINGS_ROW_BROADCAST_HOST:
+					break;
+				case SETTINGS_ROW_MANAGE_FOLLOWING:
+				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					break;
 			}
-			break;
 	}
 }
 
@@ -608,28 +580,20 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_SOCIAL:
 			break;
 		case SECTION_BROADCAST:
+			switch (row)
 			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				if (![appDelegate isFeaturePresent:FEATURE_LOCAL_BROADCAST])
-				{
-					row++;
-				}
-
-				switch (row)
-				{
-					case SETTINGS_ROW_BROADCAST_RATE:
-						[self showBroadcastRateDialog];
-						break;
-					case SETTINGS_ROW_BROADCAST_HOST:
-						[self showBroadcastHostNameDialog];
-						break;
-					case SETTINGS_ROW_MANAGE_FOLLOWING:
-						[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWING_VIEW sender:self];
-						break;
-					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
-						[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWED_BY_VIEW sender:self];
-						break;
-				}
+				case SETTINGS_ROW_BROADCAST_RATE:
+					[self showBroadcastRateDialog];
+					break;
+				case SETTINGS_ROW_BROADCAST_HOST:
+					[self showBroadcastHostNameDialog];
+					break;
+				case SETTINGS_ROW_MANAGE_FOLLOWING:
+					[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWING_VIEW sender:self];
+					break;
+				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
+					[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWED_BY_VIEW sender:self];
+					break;
 			}
 			break;
 	}
@@ -742,6 +706,18 @@ typedef enum SettingsRowsBroadcast
 	}
 
 	[self.settingsTableView reloadData];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onLogin:(id)sender
+{
+	[self performSegueWithIdentifier:@SEGUE_TO_LOGIN_VIEW sender:self];
+}
+
+- (IBAction)onCreateLogin:(id)sender
+{
+	[self performSegueWithIdentifier:@SEGUE_TO_CREATE_LOGIN_VIEW sender:self];
 }
 
 @end

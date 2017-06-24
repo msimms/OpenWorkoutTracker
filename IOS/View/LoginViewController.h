@@ -11,15 +11,24 @@
 {
 	IBOutlet UITextField* usernameTextField;
 	IBOutlet UITextField* passwordTextField;
+	
+	IBOutlet UIBarButtonItem* loginButton;
+	IBOutlet UIBarButtonItem* createLoginButton;
+
 	IBOutlet UIActivityIndicatorView* spinner;
 
 	NSString* username;
 }
 
-- (IBAction)onLogin:(id)sender;
-
 @property (nonatomic, retain) IBOutlet UITextField* usernameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* passwordTextField;
+
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* loginButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* createLoginButton;
+
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
+
+- (IBAction)onLogin:(id)sender;
+- (IBAction)onCreateLogin:(id)sender;
 
 @end

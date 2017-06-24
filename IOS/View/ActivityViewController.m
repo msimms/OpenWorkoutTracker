@@ -114,6 +114,7 @@
 
 	[self->autoStartButton setTintColor:[UIColor blackColor]];
 	[self->fullScreenButton setHidden:TRUE];
+	[self->countdownImage setHidden:TRUE];
 }
 
 - (void)viewDidUnload
@@ -231,6 +232,7 @@
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
 		NSString* imgPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
 		[self->countdownImage setImage:[UIImage imageWithContentsOfFile:imgPath]];
+		[self->countdownImage setHidden:false];
 		[self playPingSound];
 		self->countdownSecs--;
 	}
@@ -238,6 +240,7 @@
 	{
 		[self doStart];
 		[self->countdownImage setImage:nil];
+		[self->countdownImage setHidden:true];
 		[self->countdownTimer invalidate];
 		self->countdownTimer = nil;
 	}

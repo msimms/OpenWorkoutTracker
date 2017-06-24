@@ -10,8 +10,15 @@
 @interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UITableView* settingsTableView;
+	IBOutlet UIBarButtonItem* loginButton;
+	IBOutlet UIBarButtonItem* createLoginButton;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView* settingsTableView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* loginButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* createLoginButton;
+
+- (IBAction)onLogin:(id)sender;
+- (IBAction)onCreateLogin:(id)sender;
 
 @end
