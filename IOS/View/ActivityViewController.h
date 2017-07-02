@@ -21,9 +21,7 @@
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar*        toolbar;
-	IBOutlet UIImageView*      countdownImage;
 	IBOutlet UILabel*          messagesLabel;
-	IBOutlet UIButton*         fullScreenButton;
 	IBOutlet UIBarButtonItem*  moreButton;
 	IBOutlet UIBarButtonItem*  customizeButton;
 	IBOutlet UIBarButtonItem*  bikeButton;
@@ -51,6 +49,7 @@
 	bool                       autoStartEnabled;
 	bool                       autoStartCoordinateSet;
 	Coordinate                 autoStartCoordinate;
+	NSInteger                  tappedButtonIndex;
 }
 
 - (void)onRefreshTimer:(NSTimer*)timer;
@@ -59,6 +58,8 @@
 
 - (void)initializeLabelText;
 - (void)initializeLabelColor;
+
+- (void)addTapGestureRecognizersToAllLabels;
 
 - (void)playBeepSound;
 - (void)playPingSound;
@@ -82,13 +83,10 @@
 - (IBAction)onBike:(id)sender;
 - (IBAction)onIntervals:(id)sender;
 - (IBAction)onSummary:(id)sender;
-- (IBAction)onFullScreenButton:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UIToolbar*        toolbar;
-@property (nonatomic, retain) IBOutlet UIImageView*      countdownImage;
 @property (nonatomic, retain) IBOutlet UILabel*          messagesLabel;
-@property (nonatomic, retain) IBOutlet UIButton*         fullScreenButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  customizeButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  bikeButton;

@@ -131,6 +131,12 @@
 		}
 	}
 
+	// Create the swipe gesture recognizer.
+	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
+	self.swipe.direction = UISwipeGestureRecognizerDirectionLeft;
+	[self.view addGestureRecognizer:self.swipe];
+	self.swipe.delegate = self;
+
 	if (IsActivityInProgress())
 	{
 		[self setUIForStartedActivity];
@@ -140,12 +146,10 @@
 		[self setUIForStoppedActivity];
 	}
 
-	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-	if (self.swipe)
-	{
-		self.swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-		[[self view] addGestureRecognizer:self.swipe];
-	}
+	// Add tap gesture recognizers to every value display. The user can tap a value to change what is displayed.
+	[self addTapGestureRecognizersToAllLabels];
+
+	self.view.userInteractionEnabled = YES;
 }
 
 - (void)viewDidUnload

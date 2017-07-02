@@ -44,18 +44,12 @@
 	[self.spinner stopAnimating];
 
 	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-	if (self.leftSwipe)
-	{
-		self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
-		[[self view] addGestureRecognizer:self.leftSwipe];
-	}
+	self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+	[[self view] addGestureRecognizer:self.leftSwipe];
 
 	self.rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
-	if (self.rightSwipe)
-	{
-		self.rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
-		[[self view] addGestureRecognizer:self.rightSwipe];
-	}
+	self.rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+	[[self view] addGestureRecognizer:self.rightSwipe];
 
 	[self.mapButton setTitle:BUTTON_TITLE_MAP];
 }

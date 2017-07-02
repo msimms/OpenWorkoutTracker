@@ -21,47 +21,48 @@
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
 
-#define ALERT_TITLE_STOP             NSLocalizedString(@"Stop", nil)
-#define ALERT_TITLE_WEIGHT           NSLocalizedString(@"Additional Weight", nil)
-#define ALERT_TITLE_ERROR            NSLocalizedString(@"Error", nil)
+#define ALERT_TITLE_STOP              NSLocalizedString(@"Stop", nil)
+#define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
+#define ALERT_TITLE_ERROR             NSLocalizedString(@"Error", nil)
 
-#define ACTION_SHEET_TITLE_BIKE      NSLocalizedString(@"Bike", nil)
-#define ACTION_SHEET_BUTTON_CANCEL   NSLocalizedString(@"Cancel", nil)
-#define ACTION_SHEET_TITLE_INTERVALS NSLocalizedString(@"Interval Workouts", nil)
+#define ACTION_SHEET_TITLE_BIKE       NSLocalizedString(@"Bike", nil)
+#define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
+#define ACTION_SHEET_TITLE_ATTRIBUTES NSLocalizedString(@"Attributes", nil)
+#define ACTION_SHEET_BUTTON_CANCEL    NSLocalizedString(@"Cancel", nil)
 
-#define ALERT_MSG_STOP               NSLocalizedString(@"Are you sure you want to stop?", nil)
-#define ALERT_MSG_WEIGHT             NSLocalizedString(@"Enter the amount of weight being used", nil)
-#define ALERT_MSG_NO_BIKE            NSLocalizedString(@"You need to choose a bike.", nil)
-#define ALERT_MSG_NO_FOOT_POD        NSLocalizedString(@"You need a foot pod to use this app with a treadmill.", nil)
+#define ALERT_MSG_STOP                NSLocalizedString(@"Are you sure you want to stop?", nil)
+#define ALERT_MSG_WEIGHT              NSLocalizedString(@"Enter the amount of weight being used", nil)
+#define ALERT_MSG_NO_BIKE             NSLocalizedString(@"You need to choose a bike.", nil)
+#define ALERT_MSG_NO_FOOT_POD         NSLocalizedString(@"You need a foot pod to use this app with a treadmill.", nil)
 
-#define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
-#define BUTTON_TITLE_YES             NSLocalizedString(@"Yes", nil)
-#define BUTTON_TITLE_NO              NSLocalizedString(@"No", nil)
-#define BUTTON_TITLE_PAUSE           NSLocalizedString(@"Pause", nil)
-#define BUTTON_TITLE_MORE            NSLocalizedString(@"More", nil)
-#define BUTTON_TITLE_LAP             NSLocalizedString(@"Lap", nil)
-#define BUTTON_TITLE_WEIGHT          NSLocalizedString(@"Weight", nil)
-#define BUTTON_TITLE_CUSTOMIZE       NSLocalizedString(@"Customize", nil)
-#define BUTTON_TITLE_BIKE            NSLocalizedString(@"Bike", nil)
-#define BUTTON_TITLE_INTERVALS       NSLocalizedString(@"Intervals", nil)
-#define BUTTON_TITLE_AUTOSTART       NSLocalizedString(@"AutoStart", nil)
+#define BUTTON_TITLE_OK               NSLocalizedString(@"Ok", nil)
+#define BUTTON_TITLE_YES              NSLocalizedString(@"Yes", nil)
+#define BUTTON_TITLE_NO               NSLocalizedString(@"No", nil)
+#define BUTTON_TITLE_PAUSE            NSLocalizedString(@"Pause", nil)
+#define BUTTON_TITLE_MORE             NSLocalizedString(@"More", nil)
+#define BUTTON_TITLE_LAP              NSLocalizedString(@"Lap", nil)
+#define BUTTON_TITLE_WEIGHT           NSLocalizedString(@"Weight", nil)
+#define BUTTON_TITLE_CUSTOMIZE        NSLocalizedString(@"Customize", nil)
+#define BUTTON_TITLE_BIKE             NSLocalizedString(@"Bike", nil)
+#define BUTTON_TITLE_INTERVALS        NSLocalizedString(@"Intervals", nil)
+#define BUTTON_TITLE_AUTOSTART        NSLocalizedString(@"AutoStart", nil)
 
-#define UNSPECIFIED_INTERVAL         NSLocalizedString(@"Waiting for screen touch", nil)
-#define UNITS_SECONDS                NSLocalizedString(@"Seconds", nil)
-#define UNITS_METERS                 NSLocalizedString(@"Meters", nil)
-#define UNITS_KILOMETERS             NSLocalizedString(@"Kilometers", nil)
-#define UNITS_FEET                   NSLocalizedString(@"Feet", nil)
-#define UNITS_YARDS                  NSLocalizedString(@"Yards", nil)
-#define UNITS_MILES                  NSLocalizedString(@"Miles", nil)
-#define UNITS_SETS                   NSLocalizedString(@"Sets", nil)
-#define UNITS_REPS                   NSLocalizedString(@"Reps", nil)
+#define UNSPECIFIED_INTERVAL          NSLocalizedString(@"Waiting for screen touch", nil)
+#define UNITS_SECONDS                 NSLocalizedString(@"Seconds", nil)
+#define UNITS_METERS                  NSLocalizedString(@"Meters", nil)
+#define UNITS_KILOMETERS              NSLocalizedString(@"Kilometers", nil)
+#define UNITS_FEET                    NSLocalizedString(@"Feet", nil)
+#define UNITS_YARDS                   NSLocalizedString(@"Yards", nil)
+#define UNITS_MILES                   NSLocalizedString(@"Miles", nil)
+#define UNITS_SETS                    NSLocalizedString(@"Sets", nil)
+#define UNITS_REPS                    NSLocalizedString(@"Reps", nil)
 
-#define INTERVAL_COMPLETE            NSLocalizedString(@"Interval Workout Complete", nil)
+#define INTERVAL_COMPLETE             NSLocalizedString(@"Interval Workout Complete", nil)
 
-#define MESSAGE_BAD_GPS              NSLocalizedString(@"Poor GPS Signal", nil)
-#define MESSAGE_NO_LOCATION_SERVICES NSLocalizedString(@"Location Services is disabled", nil)
+#define MESSAGE_BAD_GPS               NSLocalizedString(@"Poor GPS Signal", nil)
+#define MESSAGE_NO_LOCATION_SERVICES  NSLocalizedString(@"Location Services is disabled", nil)
 
-#define SECS_PER_MESSAGE             3
+#define SECS_PER_MESSAGE              3
 
 @interface ActivityViewController ()
 
@@ -71,9 +72,7 @@
 
 @synthesize navItem;
 @synthesize toolbar;
-@synthesize countdownImage;
 @synthesize messagesLabel;
-@synthesize fullScreenButton;
 @synthesize moreButton;
 @synthesize customizeButton;
 @synthesize bikeButton;
@@ -113,8 +112,6 @@
 	[self.autoStartButton setTitle:BUTTON_TITLE_AUTOSTART];
 
 	[self->autoStartButton setTintColor:[UIColor blackColor]];
-	[self->fullScreenButton setHidden:TRUE];
-	[self->countdownImage setHidden:TRUE];
 }
 
 - (void)viewDidUnload
@@ -210,6 +207,29 @@
 	}
 }
 
+#pragma mark method for showing the attributes menu
+
+- (void)showAttributesMenu
+{
+	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_ATTRIBUTES
+															delegate:self
+												   cancelButtonTitle:nil
+											  destructiveButtonTitle:nil
+												   otherButtonTitles:nil];
+	if (popupQuery)
+	{
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
+		for (NSString* attribute in attributeNames)
+		{
+			[popupQuery addButtonWithTitle:attribute];
+		}
+		[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
+		[popupQuery setCancelButtonIndex:[attributeNames count]];
+		[popupQuery showInView:self.view];
+	}
+}
+
 #pragma mark method for showing the help screen
 
 - (void)showHelp
@@ -231,16 +251,15 @@
 	{
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
 		NSString* imgPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
-		[self->countdownImage setImage:[UIImage imageWithContentsOfFile:imgPath]];
-		[self->countdownImage setHidden:false];
+		UIImageView* backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
+		[self.view addSubview:backgroundImage];
+		[self.view sendSubviewToBack:backgroundImage];
 		[self playPingSound];
 		self->countdownSecs--;
 	}
 	else
 	{
 		[self doStart];
-		[self->countdownImage setImage:nil];
-		[self->countdownImage setHidden:true];
 		[self->countdownTimer invalidate];
 		self->countdownTimer = nil;
 	}
@@ -343,6 +362,20 @@
 	self.view.backgroundColor = backgroundColor;
 }
 
+- (void)addTapGestureRecognizersToAllLabels
+{
+	NSInteger position = 0;
+
+	for (UILabel* label in self->valueLabels)
+	{
+		UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
+		[tap setNumberOfTapsRequired:1];
+		[label addGestureRecognizer:tap];
+		[label setTag:position++];
+		tap.delegate = self;
+	}
+}
+
 #pragma mark sound methods
 
 - (void)playBeepSound
@@ -377,7 +410,7 @@
 	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
 }
 
-# pragma mark button handlers
+#pragma mark button handlers
 
 - (void)doStart
 {
@@ -436,7 +469,7 @@
 	}
 }
 
-# pragma mark UIAlertView methods
+#pragma mark UIAlertView methods
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -467,7 +500,7 @@
 	}
 }
 
-# pragma mark button handlers
+#pragma mark button handlers
 
 - (IBAction)onAutoStart:(id)sender
 {
@@ -656,11 +689,6 @@
 - (IBAction)onSummary:(id)sender
 {
 	[self performSegueWithIdentifier:@SEGUE_TO_LIVE_SUMMARY_VIEW sender:self];
-}
-
-- (IBAction)onFullScreenButton:(id)sender
-{
-	AdvanceCurrentIntervalWorkout();
 }
 
 #pragma mark
@@ -915,7 +943,21 @@
 		{
 			SetCurrentIntervalWorkout([intervalName UTF8String]);
 			[self->intervalsButton setTitle:intervalName];
-			[self->fullScreenButton setHidden:FALSE];
+		}
+	}
+	else if ([title isEqualToString:ACTION_SHEET_TITLE_ATTRIBUTES])
+	{
+		NSString* attributeName = [actionSheet buttonTitleAtIndex:buttonIndex];
+		if (attributeName)
+		{
+			ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+			NSString* activityName = [appDelegate getCurrentActivityName];
+			NSString* oldAttributeName = [prefs getAttributeName:activityName withPos:self->tappedButtonIndex];
+			[prefs setViewAttributePosition:activityName withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			[prefs setViewAttributePosition:activityName withAttributeName:attributeName withPos:self->tappedButtonIndex];
+
+			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
+			titleLabel.text = attributeName;
 		}
 	}
 }
@@ -926,14 +968,29 @@
 {
 	if (sender.state == UIGestureRecognizerStateBegan)
 	{
+		AdvanceCurrentIntervalWorkout();
 	}
 }
 
-#pragma mark UIGestureRecognizerDelegate methods
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-	return YES;
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)recognizer shouldReceiveTouch:(UITouch*)touch
+{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)recognizer shouldReceivePress:(UIPress*)touch
+{
+    return YES;
+}
+
+- (void)handleTapFrom:(UITapGestureRecognizer*)recognizer
+{
+	self->tappedButtonIndex = recognizer.view.tag;
+	[self showAttributesMenu];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer

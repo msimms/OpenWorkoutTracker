@@ -10,6 +10,7 @@
 "Add Bike Profile" = "Añadir Perfil Bicicleta";
 "Add a New Interval" = "Añadir un Intervalo Nuevo";
 "Additional Weight" = "Peso Additional";
+"Attributes" = "Atributos";
 "An unfinished activity has been found. Do you wish to resume it?" = "Se ha encontrado una actividad inacabada. ¿Deseas detenerlo?";
 "Are you sure you want to clear the wheel size?" = "¿Está seguro que desea reajustar el diámetro de la rueda?";
 "Are you sure you want to delete this bike profile?" = "¿Está seguro que desea eliminar este perfil?";
@@ -23,7 +24,7 @@
 "Autoscale Off" = "Discapacitado Autoescala";
 "Bicycle Power Meter" = "Medidor de Energía de Bicicletas";
 "Bicycle Speed and Cadence" = "Velocidad y Cadencia de Bicicleta";
-"Biggest" = "Mayor";
+"Biggest" = "Más Grande";
 "Bike" = "Bicicleta";
 "Bikes" = "Bicicletas";
 "Birthdate" = "Cumpleaño";

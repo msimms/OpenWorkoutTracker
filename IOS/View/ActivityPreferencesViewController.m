@@ -17,7 +17,6 @@
 #define TITLE_GPS             NSLocalizedString(@"GPS", nil)
 #define TITLE_AUTOLOCK        NSLocalizedString(@"Autolock", nil)
 #define TITLE_COUNTDOWN       NSLocalizedString(@"Countdown Timer", nil)
-#define TITLE_POSITION        NSLocalizedString(@"Position", nil)
 #define TITLE_GPS_FREQUENCY   NSLocalizedString(@"GPS Sample Frequency", nil)
 #define TITLE_GPS_ACCURACY    NSLocalizedString(@"Minimum GPS Accuracy", nil)
 #define TITLE_GPS_FILTER      NSLocalizedString(@"GPS Filter Options", nil)
@@ -42,7 +41,6 @@ typedef enum SectionType
 	SECTION_COLORS,
 	SECTION_SOUNDS,
 	SECTION_GPS,
-	SECTION_ATTRIBUTES,
 	NUM_SECTIONS
 } SectionType;
 
@@ -108,9 +106,6 @@ typedef enum GpsSectionItems
 	self->accuracySettings       = [NSArray arrayWithObjects:LABEL_NO_FILTERING, @"5 Meters", @"10 Meters", @"20 Meters", nil];
 	self->gpsFilterOptions       = [NSArray arrayWithObjects:@"Warn", @"Discard", nil];
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->attributeNames = [appDelegate getCurrentActivityAttributes];
-
 	[self.homeButton setTitle:BUTTON_TITLE_HOME];
 }
 
@@ -169,8 +164,6 @@ typedef enum GpsSectionItems
 			return TITLE_COLORS;
 		case SECTION_SOUNDS:
 			return TITLE_SOUNDS;
-		case SECTION_ATTRIBUTES:
-			return TITLE_POSITION;
 	}
 	return @"";
 }
@@ -187,8 +180,6 @@ typedef enum GpsSectionItems
 			return NUM_SOUND_ITEMS;
 		case SECTION_GPS:
 			return NUM_GPS_ITEMS;
-		case SECTION_ATTRIBUTES:
-			return [self->attributeNames count];
 	}
 	return 0;
 }
@@ -328,22 +319,6 @@ typedef enum GpsSectionItems
 						break;
 				}
 				break;
-			case SECTION_ATTRIBUTES:
-				{
-					NSString* attributeName = [self->attributeNames objectAtIndex:row];
-					cell.textLabel.text = attributeName;
-
-					uint8_t viewPos = [prefs getAttributePos:activityName withAttributeName:attributeName];
-					if (viewPos != ERROR_ATTRIBUTE_NOT_FOUND)
-					{
-						cell.detailTextLabel.text = [NSString stringWithFormat:@"Position: %u", viewPos + 1];
-					}
-					else
-					{
-						cell.detailTextLabel.text = @"";
-					}
-				}
-				break;
 			default:
 				cell.textLabel.text = @"";
 				cell.detailTextLabel.text = @"";
@@ -425,10 +400,6 @@ typedef enum GpsSectionItems
 			}
 			break;
 		case SECTION_GPS:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			cell.accessoryView = nil;
-			break;
-		case SECTION_ATTRIBUTES:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.accessoryView = nil;
 			break;
@@ -525,14 +496,6 @@ typedef enum GpsSectionItems
 					buttonNames = self->gpsFilterOptions;
 					break;
 			}
-			break;
-		case SECTION_ATTRIBUTES:
-			popupQuery = [[UIActionSheet alloc] initWithTitle:TITLE_POSITION
-													 delegate:self
-											cancelButtonTitle:nil
-									   destructiveButtonTitle:nil
-											otherButtonTitles:nil];
-			buttonNames = self->positionStrings;
 			break;
 	}
 
@@ -679,17 +642,6 @@ typedef enum GpsSectionItems
 			if (buttonIndex < [self->countdownStrings count])
 			{
 				[prefs setCountdown:activityName withSeconds:buttonIndex];
-			}
-		}
-		else if ([title isEqualToString:TITLE_POSITION])
-		{
-			if (buttonIndex < [self->positionStrings count])
-			{
-				NSString* attributeName = [self->attributeNames objectAtIndex:self->selectedRow];
-				NSString* oldAttributeName = [prefs getAttributeName:activityName withPos:buttonIndex];
-
-				[prefs setViewAttributePosition:activityName withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
-				[prefs setViewAttributePosition:activityName withAttributeName:attributeName withPos:buttonIndex];
 			}
 		}
 	}
