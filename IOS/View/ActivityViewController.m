@@ -247,21 +247,30 @@
 
 - (void)onCountdownTimer:(NSTimer*)timer
 {
+	if (self->lastCountdownImage)
+	{
+		[self->lastCountdownImage removeFromSuperview];
+	}
+	
 	if (self->countdownSecs > 0)
 	{
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
 		NSString* imgPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
-		UIImageView* backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
-		[self.view addSubview:backgroundImage];
-		[self.view sendSubviewToBack:backgroundImage];
+		self->lastCountdownImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
+		self->lastCountdownImage.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+
+		[self.view addSubview:self->lastCountdownImage];
 		[self playPingSound];
+
 		self->countdownSecs--;
 	}
 	else
 	{
 		[self doStart];
+
 		[self->countdownTimer invalidate];
 		self->countdownTimer = nil;
+		self->lastCountdownImage = nil;
 	}
 }
 

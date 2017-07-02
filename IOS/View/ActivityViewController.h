@@ -35,6 +35,7 @@
 	NSTimer*                   countdownTimer;
 	NSTimer*                   refreshTimer;
 	NSInteger                  screenHeight;
+	UIImageView*               lastCountdownImage;
 	NSMutableArray*            attributesToDisplay;
 	NSMutableArray*            valueLabels;
 	NSMutableArray*            titleLabels;
