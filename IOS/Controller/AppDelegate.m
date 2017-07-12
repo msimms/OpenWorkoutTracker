@@ -443,7 +443,10 @@
 {
 	if ([Preferences shouldBroadcastLocally] || [Preferences shouldBroadcastGlobally])
 	{
-		self->broadcastMgr = [[BroadcastManager alloc] init];
+		if (!self->broadcastMgr)
+		{
+			self->broadcastMgr = [[BroadcastManager alloc] init];
+		}
 	}
 	else
 	{
