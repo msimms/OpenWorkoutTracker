@@ -8,27 +8,6 @@
 #import "LePowerMeter.h"
 #import "LeDiscovery.h"
 
-typedef struct CyclingPowerMeasurement
-{
-    uint16_t flags;
-	int16_t  instantaneousPower;  // Unit is in watts with a resolution of 1.
-	uint8_t  pedalPowerBalance;   // Unit is in percentage with a resolution of 1/2.
-	uint16_t accumulatedTorque;   // Unit is in newton metres with a resolution of 1/32.
-	uint32_t cumulativeWheelRevs;
-	uint16_t lastWheelEventTime;  // Unit is in seconds with a resolution of 1/2048.
-	uint16_t cumulativeCrankRevs;
-	uint16_t lastCrankEventTime;  // Unit is in seconds with a resolution of 1/1024.
-	int16_t  maxForceMagnitude;   // Unit is in newtons with a resolution of 1.
-	int16_t  minForceMagnitude;   // Unit is in newtons with a resolution of 1.
-	int16_t  maxTorqueMagnitude;  // Unit is in newton metres with a resolution of 1/32.
-	int16_t  minTorqueMagnitude;  // Unit is in newton metres with a resolution of 1/32.
-//	uint12_t maxAngle;
-//	uint12_t minAngle;
-//	uint16_t topDeadSpotAngle;
-//	uint16_t bottomDeadSpotAngle;
-//	uint16_t accumulatedEnergy;
-} __attribute__((packed)) CyclingPowerMeasurement;
-
 #define ERROR_INAPPROPRIATE_CONNECTION_PARAMETER 0x80
 
 #define FLAGS_PEDAL_POWER_BALANCE_PRESENT       0x0001
@@ -100,31 +79,61 @@ typedef struct CyclingPowerMeasurement
 
 - (void)updateWithPowerData:(NSData*)data
 {
-	if (data)
+	if (data == nil)
 	{
-		const CyclingPowerMeasurement* reportData = [data bytes];
-		if (reportData)
+		return;
+	}
+	
+	const uint8_t* reportBytes = [data bytes];
+	size_t reportBytesIndex = 0;
+	NSUInteger reportLen = [data length];
+
+	if (reportBytes && (reportLen > 4))
+	{
+		uint16_t flags = CFSwapInt16LittleToHost(*(uint16_t*)reportBytes);
+		reportBytesIndex += sizeof(uint16_t);
+
+		const uint8_t* powerBytes = reportBytes + reportBytesIndex;
+		int16_t power = CFSwapInt16LittleToHost(*(uint16_t*)powerBytes);
+		reportBytesIndex += sizeof(int16_t);
+		
+		if (flags & FLAGS_PEDAL_POWER_BALANCE_PRESENT)
 		{
-			uint16_t flags = CFSwapInt16LittleToHost(reportData->flags);
-			int16_t power = CFSwapInt16LittleToHost(reportData->instantaneousPower);
+			reportBytesIndex += sizeof(uint8_t);
+		}
+		if (flags & FLAGS_ACCUMULATED_TORQUE_PRESENT)
+		{
+			reportBytesIndex += sizeof(uint16_t);
+		}
+		if (flags & FLAGS_WHEEL_REVOLUTION_DATA_PRESENT)
+		{
+			reportBytesIndex += sizeof(uint32_t);
+			reportBytesIndex += sizeof(uint16_t);
+		}
+		if ((flags & FLAGS_CRANK_REVOLUTION_DATA_PRESENT) && (reportBytesIndex <= reportLen - sizeof(uint16_t) - sizeof(uint16_t)))
+		{
+			const uint8_t* crankRevsBytes = reportBytes + reportBytesIndex;
+			uint16_t crankRevs = CFSwapInt16LittleToHost(*(uint16_t*)crankRevsBytes);
+			reportBytesIndex += sizeof(uint16_t);
+
+			const uint8_t* lastCrankTimeBytes = reportBytes + reportBytesIndex;
+			uint16_t lastCrankTime = CFSwapInt16LittleToHost(*(uint16_t*)lastCrankTimeBytes);
+			reportBytesIndex += sizeof(uint16_t);
 			
-			NSDictionary* powerData = [[NSDictionary alloc] initWithObjectsAndKeys:
-									   [NSNumber numberWithLong:power], @KEY_NAME_POWER,
-									   [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_POWER_TIMESTAMP_MS,
-									   self->peripheral, @KEY_NAME_POWER_PERIPHERAL_OBJ,
-									   nil];
-			if (powerData)
+			if (self->cadenceCalc)
 			{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_POWER object:powerData];
+				[self->cadenceCalc update:[self currentTimeInMs] withCrankCount:crankRevs withCrankTime:lastCrankTime fromPeripheral:self->peripheral];
 			}
-			
-			if ((flags & FLAGS_CRANK_REVOLUTION_DATA_PRESENT) && self->cadenceCalc)
-			{
-				[self->cadenceCalc update:[self currentTimeInMs]
-						   withCrankCount:CFSwapInt16LittleToHost(reportData->cumulativeCrankRevs)
-							withCrankTime:CFSwapInt16LittleToHost(reportData->lastCrankEventTime)
-						   fromPeripheral:self->peripheral];
-			}
+		}
+
+		NSDictionary* powerData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								   [NSNumber numberWithLong:power], @KEY_NAME_POWER,
+								   [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_POWER_TIMESTAMP_MS,
+								   self->peripheral, @KEY_NAME_POWER_PERIPHERAL_OBJ,
+								   nil];
+		if (powerData)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_POWER object:powerData];
 		}
 	}
 }
@@ -165,6 +174,11 @@ typedef struct CyclingPowerMeasurement
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
+	if (characteristic == nil)
+	{
+		return;
+	}
+
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_MEASUREMENT])
 	{
 		if (characteristic.value || !error)
