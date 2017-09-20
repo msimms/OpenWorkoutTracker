@@ -36,8 +36,8 @@ extern "C" {
 	// Functions for managing the database.
 	void Initialize(const char* const dbFileName);
 	void DeleteActivity(uint64_t activityId);
-	void ResetDatabase();
-	void CloseDatabase();
+	void ResetDatabase(void);
+	void CloseDatabase(void);
 
 	// Functions for managing tags.
 	bool GetTags(uint64_t activityId, TagCallback callback, void* context);
@@ -50,7 +50,7 @@ extern "C" {
 	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm);
 
 	// Functions for managing bike profiles.
-	void InitializeBikeProfileList();
+	void InitializeBikeProfileList(void);
 	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm);
 	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm);
 	bool DeleteBikeProfile(uint64_t bikeId);
@@ -65,15 +65,15 @@ extern "C" {
 
 	// Functions for managing the currently set interval workout.
 	bool SetCurrentIntervalWorkout(const char* const workoutName);
-	bool CheckCurrentIntervalWorkout();
+	bool CheckCurrentIntervalWorkout(void);
 	bool GetCurrentIntervalWorkoutSegment(uint32_t* quantity, IntervalUnit* units);
-	bool IsIntervalWorkoutComplete();
-	void AdvanceCurrentIntervalWorkout();
+	bool IsIntervalWorkoutComplete(void);
+	void AdvanceCurrentIntervalWorkout(void);
 
 	// Functions for managing interval workouts.
 	bool CreateNewIntervalWorkout(const char* const workoutName);
 	bool DeleteIntervalWorkout(const char* const workoutName);
-	void InitializeIntervalWorkoutList();
+	void InitializeIntervalWorkoutList(void);
 	char* GetIntervalWorkoutName(size_t workoutIndex);
 
 	// Functions for managing interval workout segments.
@@ -90,18 +90,18 @@ extern "C" {
 	size_t ConvertActivityIdToActivityIndex(uint64_t activityId);
 
 	// Functions for loading history.
-	void InitializeHistoricalActivityList();
+	void InitializeHistoricalActivityList(void);
 	void CreateHistoricalActivityObject(size_t activityIndex);
-	void CreateAllHistoricalActivityObjects();
+	void CreateAllHistoricalActivityObjects(void);
 	bool LoadHistoricalActivityLapData(size_t activityIndex);
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context);
 	bool LoadAllHistoricalActivitySensorData(size_t activityIndex);
-	bool LoadAllHistoricalActivitySummaryData();
+	bool LoadAllHistoricalActivitySummaryData(void);
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex);
 	bool SaveHistoricalActivitySummaryData(size_t activityIndex);
 
 	// Functions for unloading history.
-	void FreeHistoricalActivityList();
+	void FreeHistoricalActivityList(void);
 	void FreeHistoricalActivityObject(size_t activityIndex);
 	void FreeHistoricalActivitySensorData(size_t activityIndex);
 	void FreeHistoricalActivitySummaryData(size_t activityIndex);
@@ -114,7 +114,7 @@ extern "C" {
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex);
-	size_t GetNumHistoricalActivities();
+	size_t GetNumHistoricalActivities(void);
 	size_t GetNumHistoricalActivitiesByType(const char* const activityType);
 	void SetHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName, ActivityAttributeType attributeValue);
 
@@ -146,29 +146,29 @@ extern "C" {
 	// Functions for creating and destroying the current activity.
 	void CreateActivity(const char* const activityType);
 	void ReCreateOrphanedActivity(size_t activityIndex);
-	void DestroyCurrentActivity();
-	char* GetCurrentActivityName();
-	uint64_t GetCurrentActivityId();
+	void DestroyCurrentActivity(void);
+	char* GetCurrentActivityName(void);
+	uint64_t GetCurrentActivityId(void);
 
 	// Functions for starting/stopping the current activity.
-	bool StartActivity();
-	bool StopCurrentActivity();
-	bool PauseCurrentActivity();
-	bool StartNewLap();
-	bool SaveActivitySummaryData();
+	bool StartActivity(void);
+	bool StopCurrentActivity(void);
+	bool PauseCurrentActivity(void);
+	bool StartNewLap(void);
+	bool SaveActivitySummaryData(void);
 
 	// Functions for querying the status of the current activity.
-	bool IsActivityCreated();
-	bool IsActivityInProgress();
+	bool IsActivityCreated(void);
+	bool IsActivityInProgress(void);
 	bool IsActivityOrphaned(size_t* activityIndex);
-	bool IsActivityPaused();
-	bool IsMovingActivity();
-	bool IsCyclingActivity();
+	bool IsActivityPaused(void);
+	bool IsMovingActivity(void);
+	bool IsCyclingActivity(void);
 
 	// Functions for managing social networks.
-	char* GetSocialNetworkStartingPostStr();
-	char* GetSocialNetworkStoppingPostStr();
-	char* GetSocialNetworkSplitPostStr();
+	char* GetSocialNetworkStartingPostStr(void);
+	char* GetSocialNetworkStoppingPostStr(void);
+	char* GetSocialNetworkSplitPostStr(void);
 
 	// Functions for importing/exporting activities.
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType);
