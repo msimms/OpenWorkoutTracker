@@ -145,6 +145,7 @@
 	@synchronized(self.spinner)
 	{
 		self.spinner.hidden = FALSE;
+		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
 	}
 }

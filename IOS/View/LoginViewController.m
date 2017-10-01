@@ -44,6 +44,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginProcessed:) name:@NOTIFICATION_NAME_LOGIN_PROCESSED object:nil];
 
 	self.usernameTextField.text = [Preferences broadcastUserName];
+	self.spinner.center = self.view.center;
 }
 
 - (void)viewDidUnload
@@ -86,7 +87,6 @@
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
 	if ([responseCode intValue] == 200)
 	{
-		[Preferences setBroadcastUserName:self->username];
 		[self.navigationController popToRootViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)
@@ -94,7 +94,7 @@
 		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
 														message:MSG_404
 													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_CANCEL
+											  cancelButtonTitle:nil
 											  otherButtonTitles:BUTTON_TITLE_OK, nil];
 		[alert show];
 	}
@@ -103,7 +103,7 @@
 		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
 														message:MSG_LOGIN_FAILED
 													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_CANCEL
+											  cancelButtonTitle:nil
 											  otherButtonTitles:BUTTON_TITLE_OK, nil];
 		[alert show];
 	}
@@ -129,7 +129,7 @@
 		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
 										   message:MSG_NO_EMAIL
 										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
+								 cancelButtonTitle:nil
 								 otherButtonTitles:BUTTON_TITLE_OK, nil];
 	}
 	else if (self.passwordTextField.text.length == 0)
@@ -137,7 +137,7 @@
 		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
 										   message:MSG_NO_PASSWORD
 										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
+								 cancelButtonTitle:nil
 								 otherButtonTitles:BUTTON_TITLE_OK, nil];
 	}
 
@@ -147,6 +147,7 @@
 	}
 	else
 	{
+		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
 		
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

@@ -173,6 +173,7 @@
 	}
 	else
 	{
+		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
 
 		self->username = self.usernameTextField.text;
