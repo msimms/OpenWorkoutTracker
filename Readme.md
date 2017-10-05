@@ -21,6 +21,10 @@ Want to contribute? That's awesome. The app is written in a combination of Objec
  - Watch App
  - Android Version
 
+Social
+----
+Twitter: [@StraenApp](https://twitter.com/StraenApp)
+
 License
 ----
 MPL 2.0 (Mozilla Public License)
