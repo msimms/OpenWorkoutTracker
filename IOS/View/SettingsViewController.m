@@ -213,6 +213,10 @@ typedef enum SettingsRowsBroadcast
 	if (alert)
 	{
 		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+
+		UITextField* textField = [alert textFieldAtIndex:0];
+		textField.text = [Preferences broadcastHostName];
+
 		[alert show];
 	}
 }
