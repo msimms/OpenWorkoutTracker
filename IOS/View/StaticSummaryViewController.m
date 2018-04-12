@@ -204,11 +204,6 @@ typedef enum ExportFileTypeButtons
 	}
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];

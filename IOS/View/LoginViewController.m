@@ -47,11 +47,6 @@
 	self.spinner.center = self.view.center;
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -62,11 +57,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (BOOL)shouldAutorotate

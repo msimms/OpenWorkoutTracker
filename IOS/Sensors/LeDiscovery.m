@@ -435,10 +435,6 @@
 {
 }
 
-- (void)peripheralDidUpdateRSSI:(CBPeripheral*)peripheral error:(NSError*)error
-{
-}
-
 #pragma mark accessor methods
 
 - (NSMutableArray*)discoveredSensorsOfType:(BluetoothService)serviceType

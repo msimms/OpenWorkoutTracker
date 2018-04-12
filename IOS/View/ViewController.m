@@ -71,11 +71,6 @@
 	[self.resetButton setTitle:BUTTON_TITLE_RESET forState:UIControlStateNormal];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -101,11 +96,6 @@
 	[super viewDidDisappear:animated];
 	self.navigationController.navigationBarHidden = FALSE;
 	[super viewWillDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (BOOL)shouldAutorotate

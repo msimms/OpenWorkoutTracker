@@ -74,11 +74,6 @@ typedef enum ProfileRows
 	[self.bikeProfileButton setTitle:BUTTON_TITLE_BIKE_PROFILE];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -107,13 +102,6 @@ typedef enum ProfileRows
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
 }
 
 - (BOOL)shouldAutorotate

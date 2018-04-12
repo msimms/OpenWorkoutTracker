@@ -188,11 +188,6 @@
 	self.view.userInteractionEnabled = YES;
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -215,11 +210,6 @@
 	{
 		StopCurrentActivity();
 	}
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (BOOL)shouldAutorotate

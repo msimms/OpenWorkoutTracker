@@ -93,11 +93,6 @@
 	[self->weightTextField setDelegate:self];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -115,17 +110,6 @@
 {
 	[self save];
 	[super viewWillDisappear:animated];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
 }
 
 - (BOOL)shouldAutorotate

@@ -105,12 +105,6 @@ MapViewController* g_ptrToMapViewCtrl;
 	self->autoScale = true;
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -121,11 +115,6 @@ MapViewController* g_ptrToMapViewCtrl;
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (BOOL)shouldAutorotate

@@ -111,17 +111,6 @@ typedef enum SettingsSections
 	[appDelegate removeSensorDiscoveryDelegate:self];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;

@@ -236,11 +236,6 @@
 	self->graph.plotAreaFrame.masksToBorder = NO;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return YES;
-}
-
 - (void)didReceiveMemoryWarning
 {
 	[super didReceiveMemoryWarning];

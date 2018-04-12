@@ -85,11 +85,6 @@ typedef enum SectionType
 	[super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;

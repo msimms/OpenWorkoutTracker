@@ -48,11 +48,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createLoginProcessed:) name:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:nil];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -63,11 +58,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (BOOL)shouldAutorotate

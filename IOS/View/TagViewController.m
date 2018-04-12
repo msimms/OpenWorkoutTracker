@@ -52,11 +52,6 @@
 	self->tags = [appDelegate getTagsForActivity:self->activityId];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -70,17 +65,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
 }
 
 - (BOOL)shouldAutorotate

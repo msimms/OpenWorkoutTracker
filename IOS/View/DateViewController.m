@@ -34,11 +34,6 @@
 	[self.datePicker addTarget:self action:@selector(updateLabel:) forControlEvents:UIControlEventValueChanged];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -51,13 +46,6 @@
 {
 	[super viewDidDisappear:animated];
 	self->date = [self.datePicker date];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
 }
 
 - (BOOL)shouldAutorotate

@@ -54,10 +54,6 @@
 	[self.mapButton setTitle:BUTTON_TITLE_MAP];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -80,17 +76,6 @@
 	{
 		[self.spinner stopAnimating];
 	}
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(NSTimeInterval)duration
-{
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return ((interfaceOrientation == UIInterfaceOrientationPortrait) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeLeft) ||
-			(interfaceOrientation == UIInterfaceOrientationLandscapeRight));
 }
 
 - (BOOL)shouldAutorotate

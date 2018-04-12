@@ -152,11 +152,6 @@
 	self.view.userInteractionEnabled = YES;
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];

@@ -114,11 +114,6 @@
 	[self->autoStartButton setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidUnload
-{
-	[super viewDidUnload];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -167,11 +162,6 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[self stopTimer];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (BOOL)shouldAutorotate
