@@ -28,8 +28,8 @@
 #define DATABASE_NAME               "Activities.sqlite"
 #define MAP_OVERLAY_DIR_NAME        "Map Overlays"
 
-#define BROADCAST_LOGIN_URL         "login_submit?"
-#define BROADCAST_CREATE_LOGIN_URL  "create_login_submit?"
+#define BROADCAST_LOGIN_URL         "login_submit"
+#define BROADCAST_CREATE_LOGIN_URL  "create_login_submit"
 #define BROADCAST_LIST_FOLLOWING    "list_users_following?"
 #define BROADCAST_LIST_FOLLOWED_BY  "list_users_followed_by?"
 #define BROADCAST_INVITE_TO_FOLLOW  "invite_to_follow?"
