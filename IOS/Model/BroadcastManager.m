@@ -69,7 +69,7 @@
 	
 	if (numToSend > 0)
 	{
-		NSString* urlStr = [NSString stringWithFormat:@"http://%@:8081/api/v1/addlocations", hostName];
+		NSString* urlStr = [NSString stringWithFormat:@"http://%@:8080/api/1.0/update_location", hostName];
 		NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
 		NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 		[request setURL:[NSURL URLWithString:urlStr]];
