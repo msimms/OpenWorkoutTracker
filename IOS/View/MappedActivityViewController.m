@@ -331,17 +331,6 @@
 	}
 }
 
-#pragma mark MkMapView methods
-
-- (MKOverlayRenderer*)mapView:(MKMapView*)mapView viewForOverlay:(id<MKOverlay>)overlay
-{
-	if (!self->crumbView)
-	{
-		self->crumbView = [[CrumbPathRenderer alloc] initWithOverlay:overlay];
-	}
-	return self->crumbView;
-}
-
 #pragma mark UISwipeGestureRecognizer methods
 
 - (void)handleLeftSwipe:(UISwipeGestureRecognizer*)recognizer
