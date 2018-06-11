@@ -55,6 +55,7 @@ typedef enum SettingsRowsBroadcast
 	SETTINGS_ROW_BROADCAST_HOST,
 	SETTINGS_ROW_MANAGE_FOLLOWING,
 	SETTINGS_ROW_MANAGE_FOLLOWED_BY,
+	SETTINGS_ROW_DEVICE_ID,
 	NUM_SETTINGS_ROWS_BROADCAST
 } SettingsRowsBroadcast;
 
@@ -75,6 +76,7 @@ typedef enum SettingsRowsBroadcast
 #define BROADCAST_UNITS              NSLocalizedString(@"Seconds", nil)
 #define MANAGE_FOLLOWING             NSLocalizedString(@"Manage People I'm Following", nil)
 #define MANAGE_FOLLOWED_BY           NSLocalizedString(@"Manage People Following Me", nil)
+#define DEVICE_ID                    NSLocalizedString(@"Device ID", nil)
 #define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
 #define BUTTON_TITLE_COPY            NSLocalizedString(@"Copy", nil)
 #define BUTTON_TITLE_CANCEL          NSLocalizedString(@"Cancel", nil)
@@ -479,7 +481,8 @@ typedef enum SettingsRowsBroadcast
 				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
 					(row != SETTINGS_ROW_BROADCAST_HOST) &&
 					(row != SETTINGS_ROW_MANAGE_FOLLOWING) &&
-					(row != SETTINGS_ROW_MANAGE_FOLLOWED_BY))	// these rows don't get toggle switches
+					(row != SETTINGS_ROW_MANAGE_FOLLOWED_BY) &&
+					(row != SETTINGS_ROW_DEVICE_ID))	// these rows don't get toggle switches
 				{
 					cell.accessoryView = switchview;
 					[switchview setTag:(section * 100) + row];
@@ -515,6 +518,12 @@ typedef enum SettingsRowsBroadcast
 						cell.textLabel.text = MANAGE_FOLLOWED_BY;
 						cell.detailTextLabel.text = @"";
 						break;
+					case SETTINGS_ROW_DEVICE_ID:
+						{
+							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+							cell.textLabel.text = DEVICE_ID;
+							cell.detailTextLabel.text = [appDelegate getUuid];
+						}
 				}
 			}
 			break;
@@ -549,6 +558,8 @@ typedef enum SettingsRowsBroadcast
 				case SETTINGS_ROW_MANAGE_FOLLOWING:
 				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					break;
+				case SETTINGS_ROW_DEVICE_ID:
 					break;
 			}
 	}
