@@ -73,7 +73,7 @@ extern "C" {
 		{
 			g_pDatabase->DeleteActivity(activityId);
 		}
-		if (g_pCurrentActivity && (g_pCurrentActivity->GetId() == activityId))
+		if (g_pCurrentActivity && (g_pCurrentActivity->GetId().compare(activityId) == 0))
 		{
 			DestroyCurrentActivity();
 		}
@@ -415,7 +415,7 @@ extern "C" {
 				const Bike& bike = (*iter);
 				if (bike.name.compare(name) == 0)
 				{
-					SetActivityBikeProfile(g_pCurrentActivity->GetId().c_str(), bike.id);
+					SetActivityBikeProfile(g_pCurrentActivity->GetIdCStr(), bike.id);
 
 					Cycling* pCycling = dynamic_cast<Cycling*>(g_pCurrentActivity);
 					if (pCycling)

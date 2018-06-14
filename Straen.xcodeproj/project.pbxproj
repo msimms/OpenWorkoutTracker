@@ -519,7 +519,6 @@
 		27C0841719BFD063007CE934 /* ActivityFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityFactory.h; path = Activities/ActivityFactory.h; sourceTree = SOURCE_ROOT; };
 		27C0841819BFD063007CE934 /* ActivityMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityMgr.h; path = Activities/ActivityMgr.h; sourceTree = SOURCE_ROOT; };
 		27C0841919BFD063007CE934 /* ActivityMgr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ActivityMgr.mm; path = Activities/ActivityMgr.mm; sourceTree = SOURCE_ROOT; };
-		27C0841A19BFD063007CE934 /* ActivityName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityName.h; path = Activities/ActivityName.h; sourceTree = SOURCE_ROOT; };
 		27C0841B19BFD063007CE934 /* ActivitySummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivitySummary.h; path = Activities/ActivitySummary.h; sourceTree = SOURCE_ROOT; };
 		27C0841C19BFD063007CE934 /* ActivityType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityType.h; path = Activities/ActivityType.h; sourceTree = SOURCE_ROOT; };
 		27C0841D19BFD063007CE934 /* ActivityViewType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityViewType.h; path = Activities/ActivityViewType.h; sourceTree = SOURCE_ROOT; };
@@ -1078,7 +1077,6 @@
 				27C0841719BFD063007CE934 /* ActivityFactory.h */,
 				27C0841819BFD063007CE934 /* ActivityMgr.h */,
 				27C0841919BFD063007CE934 /* ActivityMgr.mm */,
-				27C0841A19BFD063007CE934 /* ActivityName.h */,
 				27C0841B19BFD063007CE934 /* ActivitySummary.h */,
 				27C0841C19BFD063007CE934 /* ActivityType.h */,
 				27C0841D19BFD063007CE934 /* ActivityViewType.h */,
