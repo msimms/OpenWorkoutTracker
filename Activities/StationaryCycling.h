@@ -8,7 +8,6 @@
 #ifndef __STATIONARYCYCLING__
 #define __STATIONARYCYCLING__
 
-#include "ActivityName.h"
 #include "Cycling.h"
 
 class StationaryCycling : public Cycling
@@ -17,8 +16,8 @@ public:
 	StationaryCycling();
 	virtual ~StationaryCycling();
 	
-	static std::string Name() { return ACTIVITY_NAME_STATIONARY_BIKE; };
-	virtual std::string GetName() const { return StationaryCycling::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_STATIONARY_BIKE; };
+	virtual std::string GetType() const { return StationaryCycling::Type(); };
 
 	virtual SegmentType CurrentPace() const;
 	virtual SegmentType CurrentSpeed() const;

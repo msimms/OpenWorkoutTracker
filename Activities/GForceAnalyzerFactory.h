@@ -22,8 +22,8 @@ public:
 	GForceAnalyzerFactory();
 	virtual ~GForceAnalyzerFactory();
 
-	static GForceAnalyzer* CreateAnalyzerForActivity(const std::string& name, Database& database);
-	static GForceAnalyzer* GetAnalyzerForActivity(const std::string& name, Database& database);
+	static GForceAnalyzer* CreateAnalyzerForActivity(const std::string& type, Database& database);
+	static GForceAnalyzer* GetAnalyzerForActivity(const std::string& type, Database& database);
 
 private:
 	static GForceAnalyzerMap m_analyzers;

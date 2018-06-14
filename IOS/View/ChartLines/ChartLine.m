@@ -13,7 +13,7 @@
 
 @implementation ChartLine
 
-- (void)setActivityId:(uint64_t)newId
+- (void)setActivityId:(NSString*)newId
 {
 	self->activityId = newId;
 }

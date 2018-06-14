@@ -8,7 +8,7 @@
 #ifndef __WALKING__
 #define __WALKING__
 
-#include "ActivityName.h"
+#include "ActivityType.h"
 #include "GraphLine.h"
 #include "MovingActivity.h"
 
@@ -18,8 +18,8 @@ public:
 	Walking();
 	virtual ~Walking();
 
-	static std::string Name() { return ACTIVITY_NAME_WALKING; };
-	virtual std::string GetName() const { return Walking::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_WALKING; };
+	virtual std::string GetType() const { return Walking::Type(); };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 

@@ -77,7 +77,7 @@ MovingActivity::~MovingActivity()
 
 std::string MovingActivity::GetSocialNetworkStartingPostStr() const
 {
-	std::string name = GetName();
+	std::string name = GetType();
 	std::transform(name.begin(), name.end(), name.begin(), tolower);
 	
 	std::ostringstream str;
@@ -88,7 +88,7 @@ std::string MovingActivity::GetSocialNetworkStartingPostStr() const
 
 std::string MovingActivity::GetSocialNetworkStoppingPostStr() const
 {
-	std::string name = GetName();
+	std::string name = GetType();
 	std::transform(name.begin(), name.end(), name.begin(), tolower);
 	
 	std::ostringstream str;

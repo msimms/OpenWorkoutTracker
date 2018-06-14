@@ -628,11 +628,11 @@ void startSensorCallback(SensorType type, void* context)
 
 	NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
 
-	NSString* activityName = [self getCurrentActivityName];
+	NSString* activityType = [self getCurrentActivityType];
 
 	BOOL tempBadGps = FALSE;
 
-	uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityName];
+	uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
 	if (minHAccuracy != (uint8_t)-1)
 	{
 		uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
@@ -642,7 +642,7 @@ void startSensorCallback(SensorType type, void* context)
 		}
 	}
 	
-	uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityName];
+	uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
 	if (minVAccuracy != (uint8_t)-1)
 	{
 		uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
@@ -656,14 +656,14 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (IsActivityInProgress())
 	{
-		uint8_t freq = [self->activityPrefs getGpsSampleFrequency:activityName];
+		uint8_t freq = [self->activityPrefs getGpsSampleFrequency:activityType];
 		time_t nextUpdateTimeSec = self->lastLocationUpdateTime + freq;
 		time_t currentTimeSec = (time_t)([gpsTimestampMs longLongValue] / 1000);
 
 		if (currentTimeSec >= nextUpdateTimeSec)
 		{
 			BOOL shouldProcessReading = TRUE;
-			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityName];
+			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
 
 			if (filterOption == GPS_FILTER_DROP && self->badGps)
 			{
@@ -705,14 +705,13 @@ void startSensorCallback(SensorType type, void* context)
 	if (IsActivityInProgress())
 	{
 		NSDictionary* heartRateData = [notification object];
-
 		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
 
-			uint8_t freq = [self->activityPrefs getHeartRateSampleFrequency:[self getCurrentActivityName]];
+			uint8_t freq = [self->activityPrefs getHeartRateSampleFrequency:[self getCurrentActivityType]];
 			time_t nextUpdateTimeSec = self->lastHeartRateUpdateTime + freq;
 			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
 
@@ -739,14 +738,13 @@ void startSensorCallback(SensorType type, void* context)
 	if (IsActivityInProgress())
 	{
 		NSDictionary* cadenceData = [notification object];
-
 		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [cadenceData objectForKey:@KEY_NAME_CADENCE_TIMESTAMP_MS];
 
-			uint8_t freq = [self->activityPrefs getCadenceSampleFrequency:[self getCurrentActivityName]];
+			uint8_t freq = [self->activityPrefs getCadenceSampleFrequency:[self getCurrentActivityType]];
 			time_t nextUpdateTimeSec = self->lastCadenceUpdateTime + freq;
 			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
 
@@ -768,14 +766,13 @@ void startSensorCallback(SensorType type, void* context)
 	if (IsActivityInProgress())
 	{
 		NSDictionary* wheelSpeedData = [notification object];
-
 		CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS];
 
-			uint8_t freq = [self->activityPrefs getWheelSpeedSampleFrequency:[self getCurrentActivityName]];
+			uint8_t freq = [self->activityPrefs getWheelSpeedSampleFrequency:[self getCurrentActivityType]];
 			time_t nextUpdateTimeSec = self->lastWheelSpeedUpdateTime + freq;
 			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
 
@@ -797,17 +794,16 @@ void startSensorCallback(SensorType type, void* context)
 	if (IsActivityInProgress())
 	{
 		NSDictionary* powerData = [notification object];
-
 		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_POWER_TIMESTAMP_MS];
 
-			uint8_t freq = [self->activityPrefs getPowerSampleFrequency:[self getCurrentActivityName]];
+			uint8_t freq = [self->activityPrefs getPowerSampleFrequency:[self getCurrentActivityType]];
 			time_t nextUpdateTimeSec = self->lastPowerUpdateTime + freq;
 			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
-			
+
 			if (currentTimeSec >= nextUpdateTimeSec)
 			{
 				NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
@@ -826,7 +822,6 @@ void startSensorCallback(SensorType type, void* context)
 	if (IsActivityInProgress())
 	{
 		NSDictionary* strideData = [notification object];
-
 		CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 		if ([Preferences shouldUsePeripheral:idStr])
@@ -846,7 +841,6 @@ void startSensorCallback(SensorType type, void* context)
 	if (IsActivityInProgress())
 	{
 		NSDictionary* distanceData = [notification object];
-
 		CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 		if ([Preferences shouldUsePeripheral:idStr])
@@ -913,7 +907,8 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)startActivity
 {
-	BOOL result = StartActivity();
+	NSString* activityId = [[NSUUID UUID] UUIDString];
+	BOOL result = StartActivity([activityId UTF8String]);
 	if (result)
 	{
 		if ([Preferences shouldTweetWorkoutStart])
@@ -931,12 +926,13 @@ void startSensorCallback(SensorType type, void* context)
 		}
 
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
-		NSString* activityName = [self getCurrentActivityName];
+		NSString* activityType = [self getCurrentActivityType];
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 
 		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								   [NSNumber numberWithLongLong:GetCurrentActivityId()],@KEY_NAME_ACTIVITY_ID,
-								   activityName,@KEY_NAME_ACTIVITY_NAME,
-								   [NSNumber numberWithLongLong:startTime.value.intVal],@KEY_NAME_START_TIME,
+								   activityId, @KEY_NAME_ACTIVITY_ID,
+								   activityType, @KEY_NAME_ACTIVITY_TYPE,
+								   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								   nil];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
@@ -956,8 +952,6 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)stopActivity
 {
-	uint64_t activityId = GetCurrentActivityId();
-
 	BOOL result = StopCurrentActivity();
 	if (result)
 	{
@@ -965,8 +959,9 @@ void startSensorCallback(SensorType type, void* context)
 		ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
 		ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
-		NSString* activityName = [self getCurrentActivityName];
-		
+		NSString* activityType = [self getCurrentActivityType];
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+
 		SaveActivitySummaryData();
 
 		if ([Preferences shouldTweetWorkoutStop])
@@ -984,12 +979,12 @@ void startSensorCallback(SensorType type, void* context)
 		}
 
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								  [NSNumber numberWithLongLong:activityId],@KEY_NAME_ACTIVITY_ID,
-								  activityName,@KEY_NAME_ACTIVITY_NAME,
-								  [NSNumber numberWithLongLong:startTime.value.intVal],@KEY_NAME_START_TIME,
-								  [NSNumber numberWithLongLong:endTime.value.intVal],@KEY_NAME_END_TIME,
-								  [NSNumber numberWithDouble:distance.value.doubleVal],@KEY_NAME_DISTANCE,
-								  [NSNumber numberWithDouble:calories.value.doubleVal],@KEY_NAME_CALORIES,
+								  activityId, @KEY_NAME_ACTIVITY_ID,
+								  activityType, @KEY_NAME_ACTIVITY_TYPE,
+								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
+								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
+								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 								  nil];
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
@@ -1029,7 +1024,7 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			LoadHistoricalActivitySummaryData(activityIndex);
 			LoadHistoricalActivityLapData(activityIndex);
-			
+
 			result = TRUE;
 		}
 	}
@@ -1111,7 +1106,7 @@ void startSensorCallback(SensorType type, void* context)
 	return FALSE;
 }
 
-- (BOOL)downloadActivity:(NSString*)urlStr withActivityName:(NSString*)activityName
+- (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType
 {
 	NSURL* url = [NSURL URLWithString:urlStr];
 	NSData* urlData = [NSData dataWithContentsOfURL:url];
@@ -1121,7 +1116,7 @@ void startSensorCallback(SensorType type, void* context)
 		NSString* filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
 		if ([urlData writeToFile:filePath atomically:YES])
 		{
-			BOOL result = ImportActivityFromFile([filePath UTF8String], [activityName UTF8String]);
+			BOOL result = ImportActivityFromFile([filePath UTF8String], [activityType UTF8String]);
 			[self deleteFile:filePath];
 			return result;
 		}
@@ -1155,11 +1150,11 @@ void startSensorCallback(SensorType type, void* context)
 	return exportDir;
 }
 
-- (NSString*)exportActivity:(uint64_t)activityId withFileFormat:(FileFormat)format to:selectedExportLocation
+- (NSString*)exportActivity:(NSString*)activityId withFileFormat:(FileFormat)format to:selectedExportLocation
 {
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
-	char* tempExportFileName = ExportActivity(activityId, format, [exportDir UTF8String]);
+	char* tempExportFileName = ExportActivity([activityId UTF8String], format, [exportDir UTF8String]);
 	if (tempExportFileName)
 	{
 		exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
@@ -1168,11 +1163,11 @@ void startSensorCallback(SensorType type, void* context)
 	return exportFileName;
 }
 
-- (NSString*)exportActivitySummary:(NSString*)activityName
+- (NSString*)exportActivitySummary:(NSString*)activityType
 {	
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
-	char* tempExportFileName = ExportActivitySummary([activityName UTF8String], [exportDir UTF8String]);
+	char* tempExportFileName = ExportActivitySummary([activityType UTF8String], [exportDir UTF8String]);
 	if (tempExportFileName)
 	{
 		exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
@@ -1280,12 +1275,11 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
 	{
-		uint64_t activityId = GetCurrentActivityId();
-		SetActivityBikeProfile(bikeId, activityId);
+		SetActivityBikeProfile(GetCurrentActivityId(), bikeId);
 	}
 }
 
-- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(uint64_t)activityId
+- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId
 {
 	uint64_t bikeId = 0;
 	double weightKg = (double)0.0;
@@ -1293,7 +1287,7 @@ void startSensorCallback(SensorType type, void* context)
 	
 	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
 	{
-		SetActivityBikeProfile(bikeId, activityId);
+		SetActivityBikeProfile([activityId UTF8String], bikeId);
 	}
 }
 
@@ -1315,12 +1309,12 @@ void tagCallback(const char* name, void* context)
 	[names addObject:[[NSString alloc] initWithUTF8String:name]];
 }
 
-- (NSMutableArray*)getTagsForActivity:(uint64_t)activityId
+- (NSMutableArray*)getTagsForActivity:(NSString*)activityId
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		GetTags(activityId, tagCallback, (__bridge void*)names);
+		GetTags([activityId UTF8String], tagCallback, (__bridge void*)names);
 	}
 	return names;
 }
@@ -1364,20 +1358,20 @@ void tagCallback(const char* name, void* context)
 	return names;
 }
 
-void activityNameCallback(const char* name, void* context)
+void activityTypeCallback(const char* type, void* context)
 {
-	NSMutableArray* names = (__bridge NSMutableArray*)context;
-	[names addObject:[[NSString alloc] initWithUTF8String:name]];
+	NSMutableArray* types = (__bridge NSMutableArray*)context;
+	[types addObject:[[NSString alloc] initWithUTF8String:type]];
 }
 
-- (NSMutableArray*)getActivityTypeNames
+- (NSMutableArray*)getActivityTypes
 {
-	NSMutableArray* names = [[NSMutableArray alloc] init];
-	if (names)
+	NSMutableArray* types = [[NSMutableArray alloc] init];
+	if (types)
 	{
-		GetActivityTypeNames(activityNameCallback, (__bridge void*)names);
+		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
 	}
-	return names;
+	return types;
 }
 
 void attributeNameCallback(const char* name, void* context)
@@ -1419,26 +1413,26 @@ void attributeNameCallback(const char* name, void* context)
 	return attributes;
 }
 
-- (NSString*)getCurrentActivityName
+- (NSString*)getCurrentActivityType
 {
-	NSString* activityNameStr = nil;
-	char* activityName = GetCurrentActivityName();
-	if (activityName)
+	NSString* activityTypeStr = nil;
+	char* activityType = GetCurrentActivityType();
+	if (activityType)
 	{
-		activityNameStr = [NSString stringWithFormat:@"%s", activityName];
-		free((void*)activityName);
+		activityTypeStr = [NSString stringWithFormat:@"%s", activityType];
+		free((void*)activityType);
 	}
-	return activityNameStr;
+	return activityTypeStr;
 }
 
-- (NSString*)getHistorialActivityName:(NSInteger)activityIndex
+- (NSString*)getHistorialActivityType:(NSInteger)activityIndex
 {
 	NSString* result = nil;
-	char* activityName = GetHistoricalActivityName((size_t)activityIndex);
-	if (activityName)
+	char* activityType = GetHistoricalActivityType((size_t)activityIndex);
+	if (activityType)
 	{
-		result = [NSString stringWithFormat:@"%s", activityName];
-		free((void*)activityName);
+		result = [NSString stringWithFormat:@"%s", activityType];
+		free((void*)activityType);
 	}
 	return result;
 }
@@ -1447,8 +1441,8 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)setScreenLocking
 {
-	NSString* activityName = [self getCurrentActivityName];
-	BOOL screenLocking = [activityPrefs getScreenAutoLocking:activityName];
+	NSString* activityType = [self getCurrentActivityType];
+	BOOL screenLocking = [activityPrefs getScreenAutoLocking:activityType];
 	[UIApplication sharedApplication].idleTimerDisabled = !screenLocking;
 }
 

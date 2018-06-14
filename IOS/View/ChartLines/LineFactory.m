@@ -88,7 +88,7 @@
 	return list;
 }
 
-+ (ChartLine*)createLine:(NSString*)chartName withActivityId:(uint64_t)activityId
++ (ChartLine*)createLine:(NSString*)chartName withActivityId:(NSString*)activityId
 {
 	ChartLine* line = nil;
 

@@ -8,7 +8,6 @@
 #ifndef __MOUNTAINBIKING__
 #define __MOUNTAINBIKING__
 
-#include "ActivityName.h"
 #include "Cycling.h"
 
 class MountainBiking : public Cycling
@@ -17,8 +16,8 @@ public:
 	MountainBiking();
 	virtual ~MountainBiking();
 	
-	static std::string Name() { return ACTIVITY_NAME_MOUNTAIN_BIKING; };
-	virtual std::string GetName() const { return MountainBiking::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_MOUNTAIN_BIKING; };
+	virtual std::string GetType() const { return MountainBiking::Type(); };
 };
 
 #endif

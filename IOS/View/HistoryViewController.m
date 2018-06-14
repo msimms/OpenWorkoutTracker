@@ -267,11 +267,11 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	size_t activityIndex = [[self getActivityIndex:indexPath] intValue];
-	uint64_t activityId = ConvertActivityIndexToActivityId(activityIndex);
+	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(activityIndex)];
 	uint64_t bikeId = 0;
 	NSString* allTagsStr = @"";
-	
-	GetActivityBikeProfile(activityId, &bikeId);
+
+	GetActivityBikeProfile([activityId UTF8String], &bikeId);
 	if (bikeId > 0)
 	{
 		char* bikeName = NULL;
@@ -306,7 +306,7 @@
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 
-	cell.textLabel.text = NSLocalizedString([appDelegate getHistorialActivityName: activityIndex], nil);
+	cell.textLabel.text = NSLocalizedString([appDelegate getHistorialActivityType: activityIndex], nil);
 
 	return cell;
 }
@@ -336,9 +336,9 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
 		NSNumber* activityIndex = [self getActivityIndex:indexPath];
-		uint64_t activityId = ConvertActivityIndexToActivityId([activityIndex intValue]);
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId([activityIndex intValue])];
 
-		DeleteActivity(activityId);
+		DeleteActivity([activityId UTF8String]);
 		InitializeHistoricalActivityList();
 
 		[self buildDictionary];
@@ -352,8 +352,8 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSMutableArray* activityNames = [appDelegate getActivityTypeNames];
-	if ([activityNames count] > 0)
+	NSMutableArray* activityTypes = [appDelegate getActivityTypes];
+	if ([activityTypes count] > 0)
 	{
 		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_ACTIVITY
 																delegate:self
@@ -362,12 +362,12 @@
 													   otherButtonTitles:nil];
 		if (popupQuery)
 		{
-			popupQuery.cancelButtonIndex = [activityNames count];
+			popupQuery.cancelButtonIndex = [activityTypes count];
 			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
 
-			for (NSString* name in activityNames)
+			for (NSString* type in activityTypes)
 			{
-				[popupQuery addButtonWithTitle:name];
+				[popupQuery addButtonWithTitle:type];
 			}
 
 			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];

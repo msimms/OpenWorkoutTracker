@@ -32,7 +32,7 @@
 #define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
 
 #define KEY_NAME_ACTIVITY_ID                       "ActivityId"
-#define KEY_NAME_ACTIVITY_NAME                     "ActivityName"
+#define KEY_NAME_ACTIVITY_TYPE                     "ActivityType"
 #define KEY_NAME_START_TIME                        "StartTime"
 #define KEY_NAME_END_TIME                          "EndTime"
 #define KEY_NAME_DISTANCE                          "Distance"
@@ -139,18 +139,18 @@
 - (BOOL)deleteFile:(NSString*)fileName;
 
 - (BOOL)downloadMapOverlay:(NSString*)urlStr withName:(NSString*)name;
-- (BOOL)downloadActivity:(NSString*)urlStr withActivityName:(NSString*)activityName;
+- (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType;
 
-- (NSString*)exportActivity:(uint64_t)activityId withFileFormat:(FileFormat)format to:selectedExportLocation;
-- (NSString*)exportActivitySummary:(NSString*)activityName;
+- (NSString*)exportActivity:(NSString*)activityId withFileFormat:(FileFormat)format to:selectedExportLocation;
+- (NSString*)exportActivitySummary:(NSString*)activityType;
 - (void)clearExportDir;
 
 - (void)setBikeForCurrentActivity:(NSString*)bikeName;
-- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(uint64_t)activityId;
+- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId;
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName;
 - (BOOL)deleteBikeProfile:(uint64_t)bikeId;
 
-- (NSMutableArray*)getTagsForActivity:(uint64_t)activityId;
+- (NSMutableArray*)getTagsForActivity:(NSString*)activityId;
 - (NSMutableArray*)getBikeNames;
 - (NSMutableArray*)getIntervalWorkoutNames;
 - (NSMutableArray*)getEnabledFileImportCloudServices;
@@ -158,12 +158,12 @@
 - (NSMutableArray*)getEnabledFileExportCloudServices;
 - (NSMutableArray*)getEnabledFileExportServices;
 - (NSMutableArray*)getMapOverlayList;
-- (NSMutableArray*)getActivityTypeNames;
+- (NSMutableArray*)getActivityTypes;
 - (NSMutableArray*)getCurrentActivityAttributes;
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex;
 
-- (NSString*)getCurrentActivityName;
-- (NSString*)getHistorialActivityName:(NSInteger)activityIndex;
+- (NSString*)getCurrentActivityType;
+- (NSString*)getHistorialActivityType:(NSInteger)activityIndex;
 
 - (void)setScreenLocking;
 - (BOOL)hasBadGps;

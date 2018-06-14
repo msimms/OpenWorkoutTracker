@@ -41,7 +41,7 @@
 	NSString* selectedExportLocation;
 	NSString* selectedRowStr;
 
-	uint64_t activityId;
+	NSString* activityId;
 
 	time_t startTime;
 	time_t endTime;

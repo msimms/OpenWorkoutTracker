@@ -11,6 +11,6 @@
 
 @interface OverlayFactory : NSObject
 
-+ (ChartOverlay*)createOverlay:(NSString*)chartName withActivityId:(uint64_t)activityId;
++ (ChartOverlay*)createOverlay:(NSString*)chartName withActivityId:(NSString*)activityId;
 
 @end

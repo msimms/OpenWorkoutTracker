@@ -27,7 +27,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->activityId = 0;
+		self->activityId = nil;
 	}
 	return self;
 }
@@ -83,7 +83,7 @@
 
 #pragma mark TagViewController methods
 
-- (void)setActivityId:(uint64_t)activityIdent
+- (void)setActivityId:(NSString*)activityIdent
 {
 	self->activityId = activityIdent;
 }
@@ -187,7 +187,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
 		NSString* tag = [self->tags objectAtIndex:indexPath.row];
-		if (DeleteTag(self->activityId, [tag UTF8String]))
+		if (DeleteTag([self->activityId UTF8String], [tag UTF8String]))
 		{
 			[self->tags removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -224,7 +224,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField*)textField
 {
-	StoreTag(self->activityId, [[textField text] UTF8String]);
+	StoreTag([self->activityId UTF8String], [[textField text] UTF8String]);
 }
 
 @end

@@ -26,7 +26,7 @@ LiftingActivity::~LiftingActivity()
 
 std::string LiftingActivity::GetSocialNetworkStartingPostStr() const
 {
-	std::string name = GetName();
+	std::string name = GetType();
 	std::transform(name.begin(), name.end(), name.begin(), tolower);
 	
 	std::ostringstream str;
@@ -37,7 +37,7 @@ std::string LiftingActivity::GetSocialNetworkStartingPostStr() const
 
 std::string LiftingActivity::GetSocialNetworkStoppingPostStr() const
 {
-	std::string name = GetName();
+	std::string name = GetType();
 	std::transform(name.begin(), name.end(), name.begin(), tolower);
 	
 	std::ostringstream str;

@@ -81,7 +81,7 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("bike_activity"))
 	{
-		sql = "create table bike_activity (id integer primary key, bike_id integer, activity_id integer)";
+		sql = "create table bike_activity (id integer primary key, bike_id integer, activity_id text)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("interval_workout"))
@@ -101,59 +101,59 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("activity"))
 	{
-		sql = "create table activity (id integer primary key, user_id integer, type text, start_time unsigned big int, end_time unsigned big int)";
+		sql = "create table activity (id integer primary key, activity_id text, user_id text, type text, name text, start_time unsigned big int, end_time unsigned big int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("lap"))
 	{
-		sql = "create table lap (id integer primary key, activity_id integer, start_time unsigned big int)";
+		sql = "create table lap (id integer primary key, activity_id text, start_time unsigned big int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("gps"))
 	{
-		sql = "create table gps (id integer primary key, activity_id integer, time unsigned big int, latitude double, longitude double, altitude double)";
+		sql = "create table gps (id integer primary key, activity_id text, time unsigned big int, latitude double, longitude double, altitude double)";
 		queries.push_back(sql);
 		sql = "create index gps_index on gps (activity_id)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("accelerometer"))
 	{
-		sql = "create table accelerometer (id integer primary key, activity_id integer, time unsigned big int, x double, y double, z double)";
+		sql = "create table accelerometer (id integer primary key, activity_id text, time unsigned big int, x double, y double, z double)";
 		queries.push_back(sql);
 		sql = "create index accelerometer_index on accelerometer (activity_id)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("cadence"))
 	{
-		sql = "create table cadence (id integer primary key, activity_id integer, time unsigned big int, value double)";
+		sql = "create table cadence (id integer primary key, activity_id text, time unsigned big int, value double)";
 		queries.push_back(sql);
 		sql = "create index cadence_index on cadence (activity_id)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("hrm"))
 	{
-		sql = "create table hrm (id integer primary key, activity_id integer, time unsigned big int, value double)";
+		sql = "create table hrm (id integer primary key, activity_id text, time unsigned big int, value double)";
 		queries.push_back(sql);
 		sql = "create index hrm_index on hrm (activity_id)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("wheel_speed"))
 	{
-		sql = "create table wheel_speed (id integer primary key, activity_id integer, time unsigned big int, value double)";
+		sql = "create table wheel_speed (id integer primary key, activity_id text, time unsigned big int, value double)";
 		queries.push_back(sql);
 		sql = "create index wheel_speed_index on wheel_speed (activity_id)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("power_meter"))
 	{
-		sql = "create table power_meter (id integer primary key, activity_id integer, time unsigned big int, value double)";
+		sql = "create table power_meter (id integer primary key, activity_id text, time unsigned big int, value double)";
 		queries.push_back(sql);
 		sql = "create index power_meter_index on power_meter (activity_id)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("foot_pod"))
 	{
-		sql = "create table foot_pod (id integer primary key, activity_id integer, time unsigned big int, value double)";
+		sql = "create table foot_pod (id integer primary key, activity_id text, time unsigned big int, value double)";
 		queries.push_back(sql);
 		sql = "create index foot_pod_index on foot_pod (activity_id)";
 		queries.push_back(sql);
@@ -165,12 +165,12 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("tag"))
 	{
-		sql = "create table tag (id integer primary key, activity_id integer, tag text)";
+		sql = "create table tag (id integer primary key, activity_id text, tag text)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("activity_summary"))
 	{
-		sql = "create table activity_summary (id integer primary key, activity_id integer, attribute text, value double, start_time unsigned big int, end_time unsigned big int, value_type integer, measure_type integer, units integer, unique(activity_id, attribute) on conflict replace)";
+		sql = "create table activity_summary (id integer primary key, activity_id text, attribute text, value double, start_time unsigned big int, end_time unsigned big int, value_type integer, measure_type integer, units integer, unique(activity_id, attribute) on conflict replace)";
 		queries.push_back(sql);
 	}
 
@@ -315,7 +315,7 @@ bool Database::ListBikes(std::vector<Bike>& bikes)
 	return result;
 }
 
-bool Database::StoreBikeActivity(uint64_t bikeId, uint64_t activityId)
+bool Database::StoreBikeActivity(uint64_t bikeId, const std::string& activityId)
 {
 	sqlite3_stmt* statement = NULL;
 
@@ -323,14 +323,14 @@ bool Database::StoreBikeActivity(uint64_t bikeId, uint64_t activityId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_double(statement, 1, bikeId);
-		sqlite3_bind_double(statement, 2, activityId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::UpdateBikeActivity(uint64_t bikeId, uint64_t activityId)
+bool Database::UpdateBikeActivity(uint64_t bikeId, const std::string& activityId)
 {
 	sqlite3_stmt* statement = NULL;
 
@@ -338,21 +338,21 @@ bool Database::UpdateBikeActivity(uint64_t bikeId, uint64_t activityId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_double(statement, 1, bikeId);
-		sqlite3_bind_double(statement, 2, activityId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::LoadBikeActivity(uint64_t activityId, uint64_t& bikeId)
+bool Database::LoadBikeActivity(const std::string& activityId, uint64_t& bikeId)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
 	if (sqlite3_prepare_v2(m_pDb, "select bike_id from bike_activity where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -502,68 +502,70 @@ bool Database::ListIntervalSegments(uint64_t workoutId, std::vector<IntervalWork
 	return result;	
 }
 
-bool Database::StoreCustomActivity(const std::string& activityName, ActivityViewType viewType)
+bool Database::StoreCustomActivity(const std::string& activityType, ActivityViewType viewType)
 {
 	sqlite3_stmt* statement = NULL;
 
 	int result = sqlite3_prepare_v2(m_pDb, "insert into custom_activity values (NULL,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, activityName.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, activityType.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::DeleteCustomActivity(const std::string& activityName)
+bool Database::DeleteCustomActivity(const std::string& activityType)
 {
 	sqlite3_stmt* statement = NULL;
 	
 	int result = sqlite3_prepare_v2(m_pDb, "delete from custom_activity where name = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, activityName.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, activityType.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::StartActivity(uint64_t userId, const std::string& activityName, time_t startTime, uint64_t& activityId)
+bool Database::StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, time_t startTime)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into activity values (NULL,?,?,?,0)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into activity values (NULL,?,?,?,?,?,0)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, userId);
-		sqlite3_bind_text(statement, 2, activityName.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 3, startTime);
+		std::string activityName;
+
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, userId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 3, activityType.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 4, activityName.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 5, startTime);
 		result = sqlite3_step(statement);
-		if (result == SQLITE_DONE)
-			activityId = sqlite3_last_insert_rowid(m_pDb);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::StopActivity(time_t endTime, uint64_t activityId)
+bool Database::StopActivity(time_t endTime, const std::string& activityId)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "update activity set end_time = ? where id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update activity set end_time = ? where activity_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, endTime);
-		sqlite3_bind_int64(statement, 2, activityId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::DeleteActivity(uint64_t activityId)
+bool Database::DeleteActivity(const std::string& activityId)
 {
 	std::vector<std::string> queries;
 	std::ostringstream sqlStream;
@@ -632,22 +634,22 @@ bool Database::DeleteActivity(uint64_t activityId)
 	return (result == SQLITE_OK || result == SQLITE_DONE);
 }
 
-bool Database::LoadActivity(uint64_t activityId, ActivitySummary& summary)
+bool Database::LoadActivity(const std::string& activityId, ActivitySummary& summary)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
-	
-	if (sqlite3_prepare_v2(m_pDb, "select * from activity where id = ? limit 1", -1, &statement, 0) == SQLITE_OK)
+
+	if (sqlite3_prepare_v2(m_pDb, "select user_id, type, start_time, end_time from activity where activity_id = ? limit 1", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			summary.activityId = sqlite3_column_int64(statement, 0);
-			summary.userId = sqlite3_column_int64(statement, 1);
-			summary.name.append((const char*)sqlite3_column_text(statement, 2));
-			summary.startTime = (time_t)sqlite3_column_int64(statement, 3);
-			summary.endTime = (time_t)sqlite3_column_int64(statement, 4);
+			summary.activityId = activityId;
+			summary.userId = sqlite3_column_int64(statement, 0);
+			summary.type.append((const char*)sqlite3_column_text(statement, 1));
+			summary.startTime = (time_t)sqlite3_column_int64(statement, 2);
+			summary.endTime = (time_t)sqlite3_column_int64(statement, 3);
 			summary.pActivity = NULL;
 		}
 		
@@ -662,15 +664,15 @@ bool Database::ListActivities(ActivitySummaryList& activities)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select * from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select activity_id, user_id, type, start_time, end_time from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			ActivitySummary summary;
 
-			summary.activityId = sqlite3_column_int64(statement, 0);
+			summary.activityId.append((const char*)sqlite3_column_text(statement, 0));
 			summary.userId = sqlite3_column_int64(statement, 1);
-			summary.name.append((const char*)sqlite3_column_text(statement, 2));
+			summary.type.append((const char*)sqlite3_column_text(statement, 2));
 			summary.startTime = (time_t)sqlite3_column_int64(statement, 3);
 			summary.endTime = (time_t)sqlite3_column_int64(statement, 4);
 			summary.pActivity = NULL;
@@ -684,7 +686,7 @@ bool Database::ListActivities(ActivitySummaryList& activities)
 	return result;
 }
 
-bool Database::MergeActivities(uint64_t activityId1, uint64_t activityId2)
+bool Database::MergeActivities(const std::string& activityId1, const std::string& activityId2)
 {
 	std::vector<std::string> queries;
 	std::ostringstream sqlStream;
@@ -753,14 +755,14 @@ bool Database::MergeActivities(uint64_t activityId1, uint64_t activityId2)
 	return (result == SQLITE_OK || result == SQLITE_DONE);
 }
 
-bool Database::LoadActivityStartAndEndTime(uint64_t activityId, time_t& startTime, time_t& endTime)
+bool Database::LoadActivityStartAndEndTime(const std::string& activityId, time_t& startTime, time_t& endTime)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
 	if (sqlite3_prepare_v2(m_pDb, "select start_time,end_time from activity where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -774,7 +776,7 @@ bool Database::LoadActivityStartAndEndTime(uint64_t activityId, time_t& startTim
 	return result;
 }
 
-bool Database::UpdateActivityStartTime(uint64_t activityId, time_t startTime)
+bool Database::UpdateActivityStartTime(const std::string& activityId, time_t startTime)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -782,14 +784,14 @@ bool Database::UpdateActivityStartTime(uint64_t activityId, time_t startTime)
 	if (sqlite3_prepare_v2(m_pDb, "update activity set start_time = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, startTime);
-		sqlite3_bind_int64(statement, 2, activityId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result;
 }
 
-bool Database::UpdateActivityEndTime(uint64_t activityId, time_t endTime)
+bool Database::UpdateActivityEndTime(const std::string& activityId, time_t endTime)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -797,21 +799,21 @@ bool Database::UpdateActivityEndTime(uint64_t activityId, time_t endTime)
 	if (sqlite3_prepare_v2(m_pDb, "update activity set end_time = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, endTime);
-		sqlite3_bind_int64(statement, 2, activityId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result;
 }
 
-bool Database::StartNewLap(uint64_t activityId, uint64_t startTimeMs)
+bool Database::StartNewLap(const std::string& activityId, uint64_t startTimeMs)
 {
 	sqlite3_stmt* statement = NULL;
 
 	int result = sqlite3_prepare_v2(m_pDb, "insert into lap values (NULL,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 2, startTimeMs);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
@@ -819,14 +821,14 @@ bool Database::StartNewLap(uint64_t activityId, uint64_t startTimeMs)
 	return result == SQLITE_DONE;
 }
 
-bool Database::ListLaps(uint64_t activityId, LapSummaryList& laps)
+bool Database::ListLaps(const std::string& activityId, LapSummaryList& laps)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
 	if (sqlite3_prepare_v2(m_pDb, "select start_time from lap where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -841,7 +843,7 @@ bool Database::ListLaps(uint64_t activityId, LapSummaryList& laps)
 	return result;
 }
 
-bool Database::StoreTag(uint64_t activityId, const std::string& tag)
+bool Database::StoreTag(const std::string& activityId, const std::string& tag)
 {
 	sqlite3_stmt* statement = NULL;
 	
@@ -853,7 +855,7 @@ bool Database::StoreTag(uint64_t activityId, const std::string& tag)
 	int result = sqlite3_prepare_v2(m_pDb, "insert into tag values (NULL,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, tag.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
@@ -861,14 +863,14 @@ bool Database::StoreTag(uint64_t activityId, const std::string& tag)
 	return result == SQLITE_DONE;	
 }
 
-bool Database::DeleteTag(uint64_t activityId, const std::string& tag)
+bool Database::DeleteTag(const std::string& activityId, const std::string& tag)
 {
 	sqlite3_stmt* statement = NULL;
 
 	int result = sqlite3_prepare_v2(m_pDb, "delete from tag where activity_id = ? and tag = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, tag.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
@@ -876,14 +878,14 @@ bool Database::DeleteTag(uint64_t activityId, const std::string& tag)
 	return result == SQLITE_DONE;
 }
 
-bool Database::ListTags(uint64_t activityId, std::vector<std::string>& tags)
+bool Database::ListTags(const std::string& activityId, std::vector<std::string>& tags)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
 	if (sqlite3_prepare_v2(m_pDb, "select tag from tag where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -897,7 +899,7 @@ bool Database::ListTags(uint64_t activityId, std::vector<std::string>& tags)
 	return result;
 }
 
-bool Database::SearchForTags(const std::string& searchStr, std::vector<uint64_t>& matchingActivities)
+bool Database::SearchForTags(const std::string& searchStr, std::vector<std::string>& matchingActivities)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -915,7 +917,7 @@ bool Database::SearchForTags(const std::string& searchStr, std::vector<uint64_t>
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			uint64_t id = sqlite3_column_int64(statement, 0);
+			std::string id = (const char*)sqlite3_column_text(statement, 0);
 			matchingActivities.push_back(id);
 		}
 
@@ -925,7 +927,7 @@ bool Database::SearchForTags(const std::string& searchStr, std::vector<uint64_t>
 	return result;
 }
 
-bool Database::StoreSummaryData(uint64_t activityId, const std::string& attribute, ActivityAttributeType value)
+bool Database::StoreSummaryData(const std::string& activityId, const std::string& attribute, ActivityAttributeType value)
 {
 	sqlite3_stmt* statement = NULL;
 	
@@ -943,7 +945,7 @@ bool Database::StoreSummaryData(uint64_t activityId, const std::string& attribut
 	{
 		bool valid = true;
 
-		sqlite3_bind_int64(statement, 1, activityId);
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, attribute.c_str(), -1, SQLITE_TRANSIENT);
 		switch (value.valueType)
 		{
@@ -974,7 +976,7 @@ bool Database::StoreSummaryData(uint64_t activityId, const std::string& attribut
 	return result == SQLITE_DONE;
 }
 
-bool Database::LoadSummaryData(uint64_t activityId, ActivityAttributeMap& values)
+bool Database::LoadSummaryData(const std::string& activityId, ActivityAttributeMap& values)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -983,8 +985,8 @@ bool Database::LoadSummaryData(uint64_t activityId, ActivityAttributeMap& values
 	
 	if (sqlite3_prepare_v2(m_pDb, "select * from activity_summary where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_int64(statement, 1, activityId);
-		
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			std::string attributeName;
@@ -1098,7 +1100,7 @@ bool Database::LoadNewestWeightMeasurement(time_t& measurementTime, double& weig
 	return result;
 }
 
-bool Database::StoreAccelerometerReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreAccelerometerReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 	
@@ -1108,7 +1110,7 @@ bool Database::StoreAccelerometerReading(uint64_t activityId, const SensorReadin
 	
 		if (sqlite3_prepare_v2(m_pDb, "insert into accelerometer values (NULL,?,?,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(AXIS_NAME_X));
 			sqlite3_bind_double(statement, 4, reading.reading.at(AXIS_NAME_Y));
@@ -1124,7 +1126,7 @@ bool Database::StoreAccelerometerReading(uint64_t activityId, const SensorReadin
 	return result == SQLITE_DONE;
 }
 
-bool Database::StoreGpsReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreGpsReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 
@@ -1134,7 +1136,7 @@ bool Database::StoreGpsReading(uint64_t activityId, const SensorReading& reading
 		
 		if (sqlite3_prepare_v2(m_pDb, "insert into gps values (NULL,?,?,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE));
 			sqlite3_bind_double(statement, 4, reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE));
@@ -1150,7 +1152,7 @@ bool Database::StoreGpsReading(uint64_t activityId, const SensorReading& reading
 	return result == SQLITE_DONE;
 }
 
-bool Database::StoreHrmReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreHrmReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 
@@ -1160,7 +1162,7 @@ bool Database::StoreHrmReading(uint64_t activityId, const SensorReading& reading
 		
 		if (sqlite3_prepare_v2(m_pDb, "insert into hrm values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE));
 			
@@ -1174,7 +1176,7 @@ bool Database::StoreHrmReading(uint64_t activityId, const SensorReading& reading
 	return result == SQLITE_DONE;
 }
 
-bool Database::StoreCadenceReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreCadenceReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 
@@ -1184,7 +1186,7 @@ bool Database::StoreCadenceReading(uint64_t activityId, const SensorReading& rea
 
 		if (sqlite3_prepare_v2(m_pDb, "insert into cadence values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE));
 			
@@ -1198,7 +1200,7 @@ bool Database::StoreCadenceReading(uint64_t activityId, const SensorReading& rea
 	return result == SQLITE_DONE;
 }
 
-bool Database::StoreWheelSpeedReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreWheelSpeedReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 
@@ -1208,7 +1210,7 @@ bool Database::StoreWheelSpeedReading(uint64_t activityId, const SensorReading& 
 		
 		if (sqlite3_prepare_v2(m_pDb, "insert into wheel_speed values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS));
 			
@@ -1222,7 +1224,7 @@ bool Database::StoreWheelSpeedReading(uint64_t activityId, const SensorReading& 
 	return result == SQLITE_DONE;
 }
 
-bool Database::StorePowerMeterReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StorePowerMeterReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 	
@@ -1232,7 +1234,7 @@ bool Database::StorePowerMeterReading(uint64_t activityId, const SensorReading& 
 		
 		if (sqlite3_prepare_v2(m_pDb, "insert into power_meter values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_POWER));
 			
@@ -1246,7 +1248,7 @@ bool Database::StorePowerMeterReading(uint64_t activityId, const SensorReading& 
 	return result == SQLITE_DONE;
 }
 
-bool Database::StoreFootPodReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreFootPodReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 	
@@ -1256,7 +1258,7 @@ bool Database::StoreFootPodReading(uint64_t activityId, const SensorReading& rea
 		
 		if (sqlite3_prepare_v2(m_pDb, "insert into foot_pod values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
 		{
-			sqlite3_bind_int64(statement,  1, activityId);
+			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 			sqlite3_bind_int64(statement,  2, reading.time);
 			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_RUN_DISTANCE));
 			
@@ -1293,7 +1295,7 @@ bool Database::ProcessAllCoordinates(coordinateCallback callback, void* context)
 	return result;
 }
 
-bool Database::StoreSensorReading(uint64_t activityId, const SensorReading& reading)
+bool Database::StoreSensorReading(const std::string& activityId, const SensorReading& reading)
 {
 	switch (reading.type)
 	{
@@ -1323,7 +1325,7 @@ bool Database::StoreSensorReading(uint64_t activityId, const SensorReading& read
 	return false;
 }
 
-bool Database::LoadSensorReadingsOfType(uint64_t activityId, SensorType type, SensorReadingList& readings)
+bool Database::LoadSensorReadingsOfType(const std::string& activityId, SensorType type, SensorReadingList& readings)
 {
 	switch (type)
 	{
@@ -1353,7 +1355,7 @@ bool Database::LoadSensorReadingsOfType(uint64_t activityId, SensorType type, Se
 	return false;
 }
 
-bool Database::ListActivityCoordinates(uint64_t activityId, CoordinateList& coordinates)
+bool Database::ListActivityCoordinates(const std::string& activityId, CoordinateList& coordinates)
 {
 	const size_t SIZE_INCREMENT = 2048;
 	
@@ -1364,7 +1366,7 @@ bool Database::ListActivityCoordinates(uint64_t activityId, CoordinateList& coor
 	
 	if (sqlite3_prepare_v2(m_pDb, "select time,latitude,longitude,altitude from gps where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			coordinates.reserve(SIZE_INCREMENT);
 			
@@ -1397,7 +1399,7 @@ bool Database::ListActivityCoordinates(uint64_t activityId, CoordinateList& coor
 	return result;
 }
 
-bool Database::ListActivityPositionReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityPositionReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 2048;
 
@@ -1408,7 +1410,7 @@ bool Database::ListActivityPositionReadings(uint64_t activityId, SensorReadingLi
 
 	if (sqlite3_prepare_v2(m_pDb, "select time,latitude,longitude,altitude from gps where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(SIZE_INCREMENT);
 
@@ -1445,7 +1447,7 @@ bool Database::ListActivityPositionReadings(uint64_t activityId, SensorReadingLi
 	return result;
 }
 
-bool Database::ListActivityAccelerometerReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityAccelerometerReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 4096;
 
@@ -1456,7 +1458,7 @@ bool Database::ListActivityAccelerometerReadings(uint64_t activityId, SensorRead
 	
 	if (sqlite3_prepare_v2(m_pDb, "select time,x,y,z from accelerometer where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(1024);
 
@@ -1493,7 +1495,7 @@ bool Database::ListActivityAccelerometerReadings(uint64_t activityId, SensorRead
 	return result;
 }
 
-bool Database::ListActivityHeartRateMonitorReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityHeartRateMonitorReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 4096;
 
@@ -1504,7 +1506,7 @@ bool Database::ListActivityHeartRateMonitorReadings(uint64_t activityId, SensorR
 
 	if (sqlite3_prepare_v2(m_pDb, "select time,value from hrm where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(1024);
 			
@@ -1536,7 +1538,7 @@ bool Database::ListActivityHeartRateMonitorReadings(uint64_t activityId, SensorR
 	return result;
 }
 
-bool Database::ListActivityCadenceReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityCadenceReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 4096;
 
@@ -1547,7 +1549,7 @@ bool Database::ListActivityCadenceReadings(uint64_t activityId, SensorReadingLis
 
 	if (sqlite3_prepare_v2(m_pDb, "select time,value from cadence where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(1024);
 			
@@ -1579,7 +1581,7 @@ bool Database::ListActivityCadenceReadings(uint64_t activityId, SensorReadingLis
 	return result;
 }
 
-bool Database::ListActivityWheelSpeedReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityWheelSpeedReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 4096;
 	
@@ -1590,7 +1592,7 @@ bool Database::ListActivityWheelSpeedReadings(uint64_t activityId, SensorReading
 
 	if (sqlite3_prepare_v2(m_pDb, "select time,value from wheel_speed where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(1024);
 			
@@ -1622,7 +1624,7 @@ bool Database::ListActivityWheelSpeedReadings(uint64_t activityId, SensorReading
 	return result;
 }
 
-bool Database::ListActivityPowerMeterReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityPowerMeterReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 4096;
 	
@@ -1633,7 +1635,7 @@ bool Database::ListActivityPowerMeterReadings(uint64_t activityId, SensorReading
 	
 	if (sqlite3_prepare_v2(m_pDb, "select time,value from power_meter where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(1024);
 			
@@ -1665,18 +1667,18 @@ bool Database::ListActivityPowerMeterReadings(uint64_t activityId, SensorReading
 	return result;
 }
 
-bool Database::ListActivityFootPodReadings(uint64_t activityId, SensorReadingList& readings)
+bool Database::ListActivityFootPodReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 4096;
 	
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
-	
+
 	readings.clear();
-	
+
 	if (sqlite3_prepare_v2(m_pDb, "select time,value from foot_pod where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		if (sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK)
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
 			readings.reserve(1024);
 			
@@ -1708,7 +1710,7 @@ bool Database::ListActivityFootPodReadings(uint64_t activityId, SensorReadingLis
 	return result;
 }
 
-bool Database::TrimActivityPositionReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityPositionReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -1721,7 +1723,7 @@ bool Database::TrimActivityPositionReadings(uint64_t activityId, uint64_t timeSt
 
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);
@@ -1731,7 +1733,7 @@ bool Database::TrimActivityPositionReadings(uint64_t activityId, uint64_t timeSt
 	return result;
 }
 
-bool Database::TrimActivityAccelerometerReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityAccelerometerReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -1744,7 +1746,7 @@ bool Database::TrimActivityAccelerometerReadings(uint64_t activityId, uint64_t t
 
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);
@@ -1754,7 +1756,7 @@ bool Database::TrimActivityAccelerometerReadings(uint64_t activityId, uint64_t t
 	return result;
 }
 
-bool Database::TrimActivityHeartRateMonitorReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityHeartRateMonitorReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;	
@@ -1767,7 +1769,7 @@ bool Database::TrimActivityHeartRateMonitorReadings(uint64_t activityId, uint64_
 
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);
@@ -1777,7 +1779,7 @@ bool Database::TrimActivityHeartRateMonitorReadings(uint64_t activityId, uint64_
 	return result;
 }
 
-bool Database::TrimActivityCadenceReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityCadenceReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -1790,7 +1792,7 @@ bool Database::TrimActivityCadenceReadings(uint64_t activityId, uint64_t timeSta
 
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);
@@ -1800,7 +1802,7 @@ bool Database::TrimActivityCadenceReadings(uint64_t activityId, uint64_t timeSta
 	return result;
 }
 
-bool Database::TrimActivityWheelSpeedReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityWheelSpeedReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -1813,7 +1815,7 @@ bool Database::TrimActivityWheelSpeedReadings(uint64_t activityId, uint64_t time
 	
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);
@@ -1823,7 +1825,7 @@ bool Database::TrimActivityWheelSpeedReadings(uint64_t activityId, uint64_t time
 	return result;
 }
 
-bool Database::TrimActivityPowerMeterReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityPowerMeterReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -1836,7 +1838,7 @@ bool Database::TrimActivityPowerMeterReadings(uint64_t activityId, uint64_t time
 	
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);
@@ -1846,7 +1848,7 @@ bool Database::TrimActivityPowerMeterReadings(uint64_t activityId, uint64_t time
 	return result;
 }
 
-bool Database::TrimActivityFootPodReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart)
+bool Database::TrimActivityFootPodReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
@@ -1859,7 +1861,7 @@ bool Database::TrimActivityFootPodReadings(uint64_t activityId, uint64_t timeSta
 	
 	if (sqlite3_prepare_v2(m_pDb, query.c_str(), -1, &statement, 0) == SQLITE_OK)
 	{
-		if ((sqlite3_bind_int64(statement, 1, activityId) == SQLITE_OK) &&
+		if ((sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK) &&
 			(sqlite3_bind_int64(statement, 2, timeStamp) == SQLITE_OK))
 		{
 			result = sqlite3_step(statement);

@@ -188,7 +188,7 @@ typedef enum GpsSectionItems
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSString* activityName = [appDelegate getCurrentActivityName];
+	NSString* activityType = [appDelegate getCurrentActivityType];
 
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
@@ -211,7 +211,7 @@ typedef enum GpsSectionItems
 						break;
 					case SCREEN_ITEM_COUNTDOWN_TIMER:
 						{
-							uint8_t value = [prefs getCountdown:activityName];
+							uint8_t value = [prefs getCountdown:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_COUNTDOWN;
 							if (value > 0)
 								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
@@ -230,15 +230,15 @@ typedef enum GpsSectionItems
 				{
 					case COLOR_ITEM_BACKGROUND:
 						cell.textLabel.text = @ACTIVITY_PREF_BACKGROUND_COLOR;
-						cell.detailTextLabel.text = [prefs getBackgroundColorName:activityName];
+						cell.detailTextLabel.text = [prefs getBackgroundColorName:activityType];
 						break;
 					case COLOR_ITEM_LABEL:
 						cell.textLabel.text = @ACTIVITY_PREF_LABEL_COLOR;
-						cell.detailTextLabel.text = [prefs getLabelColorName:activityName];
+						cell.detailTextLabel.text = [prefs getLabelColorName:activityType];
 						break;
 					case COLOR_ITEM_TEXT:
 						cell.textLabel.text = @ACTIVITY_PREF_TEXT_COLOR;
-						cell.detailTextLabel.text = [prefs getTextColorName:activityName];
+						cell.detailTextLabel.text = [prefs getTextColorName:activityType];
 						break;
 					default:
 						cell.textLabel.text = @"";
@@ -264,14 +264,14 @@ typedef enum GpsSectionItems
 				{
 					case GPS_ITEM_SAMPLE_FREQUENCY:
 						{
-							uint8_t value = [prefs getGpsSampleFrequency:activityName];
+							uint8_t value = [prefs getGpsSampleFrequency:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_GPS_SAMPLE_FREQ;
 							cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
 						}
 						break;
 					case GPS_ITEM_HORIZONTAL_ACCURACY:
 						{
-							uint8_t value = [prefs getMinGpsHorizontalAccuracy:activityName];
+							uint8_t value = [prefs getMinGpsHorizontalAccuracy:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY;
 							if (value > 0)
 								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
@@ -281,7 +281,7 @@ typedef enum GpsSectionItems
 						break;
 					case GPS_ITEM_VERTICAL_ACCURACY:
 						{
-							uint8_t value = [prefs getMinGpsVerticalAccuracy:activityName];
+							uint8_t value = [prefs getMinGpsVerticalAccuracy:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY;
 							if (value > 0)
 								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
@@ -291,7 +291,7 @@ typedef enum GpsSectionItems
 						break;
 					case GPS_ITEM_FILTER_OPTIONS:
 						{
-							GpsFilterOption option = [prefs getGpsFilterOption:activityName];
+							GpsFilterOption option = [prefs getGpsFilterOption:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_GPS_FILTER_OPTION;
 							switch (option)
 							{
@@ -335,21 +335,21 @@ typedef enum GpsSectionItems
 			else if (row == SCREEN_ITEM_AUTOLOCK)
 			{
 				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-				NSString* activityName = [appDelegate getCurrentActivityName];
+				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[prefs getScreenAutoLocking:activityName]];
+				[switchview setOn:[prefs getScreenAutoLocking:activityType]];
 				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 			}
 			else if (row == SCREEN_ITEM_SHOW_HR_PERCENT)
 			{
 				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-				NSString* activityName = [appDelegate getCurrentActivityName];
+				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[prefs getShowHeartRatePercent:activityName]];
+				[switchview setOn:[prefs getShowHeartRatePercent:activityType]];
 				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 			}
 			else
@@ -366,21 +366,21 @@ typedef enum GpsSectionItems
 			if (row == SOUND_ITEM_START_STOP_BEEP)
 			{
 				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-				NSString* activityName = [appDelegate getCurrentActivityName];
+				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[prefs getStartStopBeepEnabled:activityName]];
+				[switchview setOn:[prefs getStartStopBeepEnabled:activityType]];
 				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 			}
 			else if (row == SOUND_ITEM_SPLIT_BEEP)
 			{
 				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-				NSString* activityName = [appDelegate getCurrentActivityName];
+				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[prefs getSplitBeepEnabled:activityName]];
+				[switchview setOn:[prefs getSplitBeepEnabled:activityType]];
 				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 			}
 			else
@@ -521,7 +521,7 @@ typedef enum GpsSectionItems
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 	if (prefs)
 	{
-		NSString* activityName = [appDelegate getCurrentActivityName];
+		NSString* activityType = [appDelegate getCurrentActivityType];
 		NSString* title = [actionSheet title];
 
 		if ([title isEqualToString:TITLE_COLOR])
@@ -534,13 +534,13 @@ typedef enum GpsSectionItems
 					switch (self->selectedRow)
 					{
 						case COLOR_ITEM_BACKGROUND:
-							[prefs setBackgroundColor:activityName withColorName:colorStr];
+							[prefs setBackgroundColor:activityType withColorName:colorStr];
 							break;
 						case COLOR_ITEM_LABEL:
-							[prefs setLabelColor:activityName withColorName:colorStr];
+							[prefs setLabelColor:activityType withColorName:colorStr];
 							break;
 						case COLOR_ITEM_TEXT:
-							[prefs setTextColor:activityName withColorName:colorStr];
+							[prefs setTextColor:activityType withColorName:colorStr];
 							break;
 					}
 				}
@@ -553,10 +553,10 @@ typedef enum GpsSectionItems
 				switch (self->selectedRow)
 				{
 					case SOUND_ITEM_START_STOP_BEEP:
-						[prefs setStartStopBeepEnabled:activityName withBool:(buttonIndex == 0)];
+						[prefs setStartStopBeepEnabled:activityType withBool:(buttonIndex == 0)];
 						break;
 					case SOUND_ITEM_SPLIT_BEEP:
-						[prefs setSplitBeepEnabled:activityName withBool:(buttonIndex == 0)];
+						[prefs setSplitBeepEnabled:activityType withBool:(buttonIndex == 0)];
 						break;
 				}
 			}
@@ -568,7 +568,7 @@ typedef enum GpsSectionItems
 				case GPS_ITEM_SAMPLE_FREQUENCY:
 					if (buttonIndex < [self->sampleFrequencies count])
 					{
-						[prefs setGpsSampleFrequency:activityName withSeconds:buttonIndex + 1];
+						[prefs setGpsSampleFrequency:activityType withSeconds:buttonIndex + 1];
 					}
 					break;
 			}
@@ -583,16 +583,16 @@ typedef enum GpsSectionItems
 						switch (buttonIndex)
 						{
 							case 0:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:0];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:0];
 								break;
 							case 1:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:5];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:5];
 								break;
 							case 2:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:10];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:10];
 								break;
 							case 3:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:20];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:20];
 								break;
 						}
 						break;
@@ -600,16 +600,16 @@ typedef enum GpsSectionItems
 						switch (buttonIndex)
 						{
 							case 0:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:0];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:0];
 								break;
 							case 1:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:5];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:5];
 								break;
 							case 2:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:10];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:10];
 								break;
 							case 3:
-								[prefs setMinGpsHorizontalAccuracy:activityName withMeters:20];
+								[prefs setMinGpsHorizontalAccuracy:activityType withMeters:20];
 								break;
 						}
 				}
@@ -620,10 +620,10 @@ typedef enum GpsSectionItems
 			switch (buttonIndex)
 			{
 				case 0:
-					[prefs setGpsFilterOption:activityName withOption:GPS_FILTER_WARN];
+					[prefs setGpsFilterOption:activityType withOption:GPS_FILTER_WARN];
 					break;
 				case 1:
-					[prefs setGpsFilterOption:activityName withOption:GPS_FILTER_DROP];
+					[prefs setGpsFilterOption:activityType withOption:GPS_FILTER_DROP];
 					break;
 			}				
 		}
@@ -631,7 +631,7 @@ typedef enum GpsSectionItems
 		{
 			if (buttonIndex < [self->countdownStrings count])
 			{
-				[prefs setCountdown:activityName withSeconds:buttonIndex];
+				[prefs setCountdown:activityType withSeconds:buttonIndex];
 			}
 		}
 	}
@@ -647,21 +647,21 @@ typedef enum GpsSectionItems
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-	NSString* activityName = [appDelegate getCurrentActivityName];
+	NSString* activityType = [appDelegate getCurrentActivityType];
 
 	switch (switchControl.tag)
 	{
 		case (SECTION_SCREEN * 100) + SCREEN_ITEM_AUTOLOCK:
-			[prefs setScreenAutoLocking:activityName withBool:switchControl.isOn];
+			[prefs setScreenAutoLocking:activityType withBool:switchControl.isOn];
 			break;
 		case (SECTION_SCREEN * 100) + SCREEN_ITEM_SHOW_HR_PERCENT:
-			[prefs setShowHeartRatePercent:activityName withBool:switchControl.isOn];
+			[prefs setShowHeartRatePercent:activityType withBool:switchControl.isOn];
 			break;
 		case (SECTION_SOUNDS * 100) + SOUND_ITEM_START_STOP_BEEP:
-			[prefs setStartStopBeepEnabled:activityName withBool:switchControl.isOn];
+			[prefs setStartStopBeepEnabled:activityType withBool:switchControl.isOn];
 			break;
 		case (SECTION_SOUNDS * 100) + SOUND_ITEM_SPLIT_BEEP:
-			[prefs setSplitBeepEnabled:activityName withBool:switchControl.isOn];
+			[prefs setSplitBeepEnabled:activityType withBool:switchControl.isOn];
 			break;
 	}
 }

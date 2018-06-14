@@ -67,7 +67,7 @@ extern "C" {
 		}
 	}
 
-	void DeleteActivity(uint64_t activityId)
+	void DeleteActivity(const char* const activityId)
 	{
 		if (g_pDatabase)
 		{
@@ -99,7 +99,7 @@ extern "C" {
 	// Functions for managing tags.
 	//
 
-	bool GetTags(uint64_t activityId, TagCallback callback, void* context)
+	bool GetTags(const char* const activityId, TagCallback callback, void* context)
 	{
 		bool result = false;
 
@@ -124,7 +124,7 @@ extern "C" {
 		return result;
 	}
 
-	bool StoreTag(uint64_t activityId, const char* const tag)
+	bool StoreTag(const char* const activityId, const char* const tag)
 	{
 		bool result = false;
 		
@@ -135,7 +135,7 @@ extern "C" {
 		return result;
 	}
 
-	bool DeleteTag(uint64_t activityId, const char* const tag)
+	bool DeleteTag(const char* const activityId, const char* const tag)
 	{
 		bool result = false;
 		
@@ -154,10 +154,10 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			std::vector<uint64_t> matchingActivities;
+			std::vector<std::string> matchingActivities;
 			result = g_pDatabase->SearchForTags(searchStr, matchingActivities);
 			
-			std::vector<uint64_t>::const_iterator iter = matchingActivities.begin();
+			std::vector<std::string>::const_iterator iter = matchingActivities.begin();
 			while (iter != matchingActivities.end())
 			{
 				ActivitySummary summary;
@@ -320,12 +320,12 @@ extern "C" {
 			wheelCircumferenceMm = circumferenceTotalMm / numSamples;
 			result = UpdateBikeProfile(bikeId, bikeName, weightKg, wheelCircumferenceMm);
 		}
-		
+
 		if (bikeName)
 		{
 			free((void*)bikeName);
 		}
-	
+
 		return result;
 	}
 
@@ -379,7 +379,7 @@ extern "C" {
 		return false;
 	}
 
-	bool GetActivityBikeProfile(uint64_t activityId, uint64_t* bikeId)
+	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId)
 	{
 		if (g_pDatabase)
 		{
@@ -388,7 +388,7 @@ extern "C" {
 		return false;
 	}
 
-	void SetActivityBikeProfile(uint64_t bikeId, uint64_t activityId)
+	void SetActivityBikeProfile(const char* const activityId, uint64_t bikeId)
 	{
 		if (g_pDatabase)
 		{
@@ -415,7 +415,7 @@ extern "C" {
 				const Bike& bike = (*iter);
 				if (bike.name.compare(name) == 0)
 				{
-					SetActivityBikeProfile(bike.id, g_pCurrentActivity->GetId());
+					SetActivityBikeProfile(g_pCurrentActivity->GetId().c_str(), bike.id);
 
 					Cycling* pCycling = dynamic_cast<Cycling*>(g_pCurrentActivity);
 					if (pCycling)
@@ -545,7 +545,7 @@ extern "C" {
 	void InitializeIntervalWorkoutList()
 	{
 		g_intervalWorkouts.clear();
-		
+
 		if (g_pDatabase)
 		{
 			if (g_pDatabase->ListIntervalWorkouts(g_intervalWorkouts))
@@ -636,7 +636,7 @@ extern "C" {
 	// Functions for merging historical activities.
 	//
 
-	bool MergeActivities(uint64_t activityId1, uint64_t activityId2)
+	bool MergeActivities(const char* const activityId1, const char* const activityId2)
 	{
 		if (g_pDatabase)
 		{
@@ -649,21 +649,26 @@ extern "C" {
 	// Functions for accessing history (index to id conversions).
 	//
 
-	uint64_t ConvertActivityIndexToActivityId(size_t activityIndex)
+	const char* const ConvertActivityIndexToActivityId(size_t activityIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())
 		{
-			return g_historicalActivityList.at(activityIndex).activityId;
+			return g_historicalActivityList.at(activityIndex).activityId.c_str();
 		}
-		return 0;
+		return NULL;
 	}
 
-	size_t ConvertActivityIdToActivityIndex(uint64_t activityId)
+	size_t ConvertActivityIdToActivityIndex(const char* const activityId)
 	{
+		if (activityId == NULL)
+		{
+			return 0;
+		}
+
 		for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
-			if (summary.activityId == activityId)
+			if (summary.activityId.compare(activityId) == 0)
 			{
 				return activityIndex;
 			}
@@ -864,7 +869,7 @@ extern "C" {
 	bool LoadAllHistoricalActivitySensorData(size_t activityIndex)
 	{
 		bool result = true;
-		
+
 		if ((activityIndex < g_historicalActivityList.size()) && g_pDatabase)
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -898,7 +903,7 @@ extern "C" {
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex)
 	{
 		bool result = false;
-		
+
 		if ((activityIndex < g_historicalActivityList.size()) && g_pDatabase)
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -924,18 +929,18 @@ extern "C" {
 		}
 		return result;
 	}
-	
+
 	bool LoadAllHistoricalActivitySummaryData()
 	{
 		bool result = true;
-		
+
 		for (size_t i = 0; i < g_historicalActivityList.size(); ++i)
 		{
 			result &= LoadHistoricalActivitySummaryData(i);
 		}
 		return result;
 	}
-	
+
 	bool SaveHistoricalActivitySummaryData(size_t activityIndex)
 	{
 		bool result = false;
@@ -990,10 +995,10 @@ extern "C" {
 			summary.cadenceReadings.clear();
 			summary.powerReadings.clear();
 			summary.summaryAttributes.clear();
-			
+
 			++iter;
 		}
-		
+
 		g_historicalActivityList.clear();
 	}
 
@@ -1061,15 +1066,15 @@ extern "C" {
 		}
 	}
 
-	char* GetHistoricalActivityName(size_t activityIndex)
+	char* GetHistoricalActivityType(size_t activityIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())
 		{
-			return strdup(g_historicalActivityList.at(activityIndex).name.c_str());
+			return strdup(g_historicalActivityList.at(activityIndex).type.c_str());
 		}
 		return NULL;
 	}
-	
+
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())
@@ -1153,7 +1158,7 @@ extern "C" {
 		while (iter != g_historicalActivityList.end())
 		{
 			ActivitySummary& summary = (*iter);
-			if (summary.name.compare(pActivityType) == 0)
+			if (summary.type.compare(pActivityType) == 0)
 			{
 				++numActivities;
 			}
@@ -1177,16 +1182,16 @@ extern "C" {
 	//
 	// Functions for accessing historical routes.
 	//
-	
+
 	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate)
 	{
 		bool result = false;
-		
+
 		if (coordinate == NULL)
 		{
 			return false;
 		}
-		
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -1227,17 +1232,17 @@ extern "C" {
 	// Functions for modifying historical activity.
 	//
 
-	bool TrimActivityData(uint64_t activityId, uint64_t newTime, bool fromStart)
+	bool TrimActivityData(const char* const activityId, uint64_t newTime, bool fromStart)
 	{
 		bool result = false;
-		
+
 		if (g_pDatabase)
 		{
 			result  = g_pDatabase->TrimActivityAccelerometerReadings(activityId, newTime, fromStart);
 			result &= g_pDatabase->TrimActivityCadenceReadings(activityId, newTime, fromStart);
 			result &= g_pDatabase->TrimActivityPositionReadings(activityId, newTime, fromStart);
 			result &= g_pDatabase->TrimActivityHeartRateMonitorReadings(activityId, newTime, fromStart);
-			
+
 			if (result)
 			{
 				newTime /= 1000;
@@ -1255,13 +1260,13 @@ extern "C" {
 	// Functions for listing activity types.
 	//
 
-	void GetActivityTypeNames(ActivityNameCallback callback, void* context)
+	void GetActivityTypes(ActivityTypeCallback callback, void* context)
 	{
 		if (g_pActivityFactory)
 		{
-			std::vector<std::string> activityNames = g_pActivityFactory->ListActivityNames();
-			std::vector<std::string>::const_iterator iter = activityNames.begin();
-			while (iter != activityNames.end())
+			std::vector<std::string> activityTypes = g_pActivityFactory->ListActivityTypes();
+			std::vector<std::string>::const_iterator iter = activityTypes.begin();
+			while (iter != activityTypes.end())
 			{
 				callback((*iter).c_str(), context);
 				++iter;
@@ -1281,7 +1286,7 @@ extern "C" {
 
 			g_pCurrentActivity->BuildAttributeList(attributeNames);
 			std::sort(attributeNames.begin(), attributeNames.end());
-			
+
 			std::vector<std::string>::const_iterator iter = attributeNames.begin();
 			while (iter != attributeNames.end())
 			{
@@ -1340,7 +1345,7 @@ extern "C" {
 		{
 			return;
 		}
-		
+
 		if (g_pDatabase)
 		{
 			g_pDatabase->StoreCustomActivity(name, viewType);
@@ -1353,7 +1358,7 @@ extern "C" {
 		{
 			return;
 		}
-		
+
 		if (g_pDatabase)
 		{
 			g_pDatabase->DeleteCustomActivity(name);
@@ -1409,38 +1414,36 @@ extern "C" {
 			g_pCurrentActivity = NULL;
 		}
 	}
-	
-	char* GetCurrentActivityName()
+
+	char* GetCurrentActivityType()
 	{
 		if (g_pCurrentActivity)
 		{
-			return strdup(g_pCurrentActivity->GetName().c_str());
+			return strdup(g_pCurrentActivity->GetType().c_str());
 		}
 		return NULL;
 	}
 
-	uint64_t GetCurrentActivityId()
+	const char* const GetCurrentActivityId()
 	{
 		if (g_pCurrentActivity)
 		{
-			return g_pCurrentActivity->GetId();
+			return g_pCurrentActivity->GetId().c_str();
 		}
-		return 0;
+		return NULL;
 	}
-	
+
 	//
 	// Functions for starting/stopping the current activity.
 	//
-	
-	bool StartActivity()
+
+	bool StartActivity(const char* const activityId)
 	{
 		if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
 		{
 			if (g_pCurrentActivity->Start())
 			{
-				uint64_t activityId = 0;
-
-				if (g_pDatabase->StartActivity(0, g_pCurrentActivity->GetName(), g_pCurrentActivity->GetStartTimeSecs(), activityId))
+				if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
 				{
 					g_pCurrentActivity->SetId(activityId);
 					return true;
@@ -1512,7 +1515,7 @@ extern "C" {
 		}
 		return result;
 	}
-	
+
 	//
 	// Functions for querying the status of the current activity.
 	//
@@ -1592,7 +1595,7 @@ extern "C" {
 		}
 		return NULL;		
 	}
-	
+
 	char* GetSocialNetworkSplitPostStr()
 	{
 		if (g_pCurrentActivity)
@@ -1605,7 +1608,7 @@ extern "C" {
 		}
 		return NULL;
 	}
-	
+
 	//
 	// Functions for importing/exporting activities.
 	//
@@ -1618,7 +1621,7 @@ extern "C" {
 			std::string fileName = pFileName;
 			std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);;
 			DataImporter importer;
-			
+
 			if (fileExtension.compare("gpx") == 0)
 			{
 				result = importer.ImportFromGpx(pFileName, pActivityType, g_pDatabase);
@@ -1638,7 +1641,7 @@ extern "C" {
 		return false;
 	}
 
-	char* ExportActivity(uint64_t activityId, FileFormat format, const char* const pDirName)
+	char* ExportActivity(const char* const activityId, FileFormat format, const char* const pDirName)
 	{
 		const Activity* pActivity = NULL;
 
@@ -1646,7 +1649,7 @@ extern "C" {
 		while (iter != g_historicalActivityList.end())
 		{
 			const ActivitySummary& current = (*iter);
-			if (current.activityId == activityId)
+			if (current.activityId.compare(activityId) == 0)
 			{
 				pActivity = current.pActivity;
 				break;
@@ -1658,7 +1661,7 @@ extern "C" {
 		if (pActivity)
 		{
 			DataExporter exporter;
-			if (exporter.Export(activityId, format, fileName, g_pDatabase, pActivity))
+			if (exporter.Export(format, fileName, g_pDatabase, pActivity))
 			{
 				return strdup(fileName.c_str());
 			}
@@ -1666,15 +1669,15 @@ extern "C" {
 		return NULL;
 	}
 
-	char* ExportActivitySummary(const char* pActivityName, const char* const pDirName)
+	char* ExportActivitySummary(const char* activityType, const char* const dirName)
 	{
-		std::string activityName = pActivityName;
-		std::string fileName = pDirName;
+		std::string activityTypeStr = activityType;
+		std::string dirNameStr = dirName;
 
 		DataExporter exporter;
-		if (exporter.ExportActivitySummary(g_historicalActivityList, activityName, fileName))
+		if (exporter.ExportActivitySummary(g_historicalActivityList, activityTypeStr, dirNameStr))
 		{
-			return strdup(fileName.c_str());
+			return strdup(dirNameStr.c_str());
 		}
 		return NULL;
 	}
@@ -1821,7 +1824,7 @@ extern "C" {
 	//
 	// Accessor functions for the most recent value of a particular attribute.
 	//
-	
+
 	ActivityAttributeType QueryLiveActivityAttribute(const char* const attributeName)
 	{
 		ActivityAttributeType result;
@@ -1925,7 +1928,7 @@ extern "C" {
 		{
 			const ActivitySummary& summary = (*iter);
 
-			if (summary.pActivity && (summary.pActivity->GetName().compare(pActivityType) == 0))
+			if (summary.pActivity && (summary.pActivity->GetType().compare(pActivityType) == 0))
 			{
 				ActivityAttributeMap::const_iterator mapIter = summary.summaryAttributes.find(attributeName);
 				if (mapIter != summary.summaryAttributes.end())
@@ -1961,7 +1964,7 @@ extern "C" {
 		return result;
 	}
 
-	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const pAttributeName, const char* const pActivityType, bool smallestIsBest, uint64_t* pActivityId)
+	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const pAttributeName, const char* const pActivityType, bool smallestIsBest, const char* const activityId)
 	{
 		ActivityAttributeType result;
 
@@ -1970,7 +1973,7 @@ extern "C" {
 		result.unitSystem  = UNIT_SYSTEM_US_CUSTOMARY;
 		result.valid       = false;
 
-		if (!(pAttributeName && pActivityType && pActivityId))
+		if (!(pAttributeName && pActivityType && activityId))
 		{
 			return result;
 		}
@@ -1981,7 +1984,7 @@ extern "C" {
 		{
 			const ActivitySummary& summary = (*iter);
 
-			if (summary.pActivity && (summary.pActivity->GetName().compare(pActivityType) == 0))
+			if (summary.pActivity && (summary.pActivity->GetType().compare(pActivityType) == 0))
 			{
 				ActivityAttributeMap::const_iterator mapIter = summary.summaryAttributes.find(attributeName);
 				if (mapIter != summary.summaryAttributes.end())
@@ -1992,7 +1995,6 @@ extern "C" {
 					{
 						result.valid = true;
 						result = currentResult;
-						*pActivityId = summary.activityId;
 					}
 					else if (result.valueType == currentResult.valueType)
 					{
@@ -2004,13 +2006,11 @@ extern "C" {
 									if (result.value.doubleVal > currentResult.value.doubleVal)
 									{
 										result = currentResult;
-										*pActivityId = summary.activityId;
 									}
 								}
 								else if (result.value.doubleVal < currentResult.value.doubleVal)
 								{
 									result = currentResult;
-									*pActivityId = summary.activityId;
 								}
 								break;
 							case TYPE_INTEGER:
@@ -2019,13 +2019,11 @@ extern "C" {
 									if (result.value.intVal > currentResult.value.intVal)
 									{
 										result = currentResult;
-										*pActivityId = summary.activityId;
 									}
 								}
 								else if (result.value.intVal < currentResult.value.intVal)
 								{
 									result = currentResult;
-									*pActivityId = summary.activityId;
 								}
 								break;
 							case TYPE_TIME:
@@ -2034,13 +2032,11 @@ extern "C" {
 									if (result.value.timeVal > currentResult.value.timeVal)
 									{
 										result = currentResult;
-										*pActivityId = summary.activityId;
 									}
 								}
 								else if (result.value.timeVal < currentResult.value.timeVal)
 								{
 									result = currentResult;
-									*pActivityId = summary.activityId;
 								}
 								break;
 							case TYPE_NOT_SET:
@@ -2108,7 +2104,7 @@ extern "C" {
 	{
 		HeatMap heatMap;
 		HeatMapGenerator generator;
-		
+
 		if (generator.CreateHeatMap((*g_pDatabase), heatMap))
 		{
 			HeatMap::iterator iter = heatMap.begin();

@@ -7,7 +7,7 @@
 
 #import "HelpViewController.h"
 #import "Segues.h"
-#import "ActivityName.h"
+#import "ActivityType.h"
 
 #define HELP_PULLUP          NSLocalizedString(@"This exercise should be performed with the iPhone positioned on the bicep as shown.", nil)
 #define HELP_CYCLING         NSLocalizedString(@"You can mount the iPhone on the bicycle's handlebars, though you you should pay attention to the road and obey all applicable laws.", nil)
@@ -54,45 +54,45 @@
 	NSString* imgType;
 	NSString* text;
 
-	if ([self->activityName isEqualToString:@ACTIVITY_NAME_CHINUP] ||
-		[self->activityName isEqualToString:@ACTIVITY_NAME_PULLUP])
+	if ([self->activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
+		[self->activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
 	{
 		imgFileName = @"iPhoneOnArm";
 		imgType = @"jpg";
 		text = HELP_PULLUP;
 	}
-	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_CYCLING] ||
-			 [self->activityName isEqualToString:@ACTIVITY_NAME_MOUNTAIN_BIKING])
+	else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+			 [self->activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
 	{
 		imgFileName = @"BikeMount";
 		imgType = @"jpg";
 		text = HELP_CYCLING;
 	}
-	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_PUSHUP])
+	else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
 	{
 		imgFileName = @"PushUp";
 		imgType = @"jpg";
 		text = HELP_PUSHUP;
 	}
-	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_RUNNING])
+	else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
 	{
 		imgFileName = @"iPhoneOnArm";
 		imgType = @"jpg";
 		text = HELP_RUNNING;
 	}
-	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_SQUAT])
+	else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
 	{
 		imgFileName = @"iPhoneOnArm";
 		imgType = @"jpg";
 		text = HELP_SQUAT;
 	}
-	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_STATIONARY_BIKE])
+	else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
 	{
 		imgFileName = @"WheelSpeedSensor";
 		imgType = @"jpg";
 		text = HELP_STATIONARY_BIKE;
 	}
-	else if ([self->activityName isEqualToString:@ACTIVITY_NAME_TREADMILL])
+	else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
 	{
 		imgFileName = @"FootPod";
 		imgType = @"jpg";
@@ -128,9 +128,9 @@
 
 #pragma mark accessor methods
 
-- (void)setActivityName:(NSString*)name
+- (void)setActivityType:(NSString*)type
 {
-	self->activityName = name;
+	self->activityType = type;
 }
 
 #pragma mark UIGestureRecognizer methods

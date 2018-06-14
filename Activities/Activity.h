@@ -13,6 +13,7 @@
 #include <time.h>
 
 #include "ActivityAttributeType.h"
+#include "ActivityType.h"
 #include "IntervalWorkout.h"
 #include "SegmentType.h"
 #include "SensorReading.h"
@@ -31,10 +32,10 @@ public:
 	Activity();
 	virtual ~Activity();
 
-	virtual void SetId(uint64_t id) { m_id = id; };
-	virtual uint64_t GetId() const { return m_id; };
+	virtual void SetId(const std::string& id) { m_id = id; };
+	virtual std::string GetId() const { return m_id; };
 
-	virtual std::string GetName() const = 0;
+	virtual std::string GetType() const = 0;
 
 	virtual std::string GetSocialNetworkStartingPostStr() const = 0;
 	virtual std::string GetSocialNetworkStoppingPostStr() const = 0;
@@ -117,7 +118,7 @@ protected:
 	std::string FormatTimeOfDayStr(time_t timeVal) const;
 	
 protected:
-	uint64_t             m_id;                      // database identifier for this activity
+	std::string          m_id;                      // database identifier for this activity
 	User                 m_athlete;                 // user profile
 	IntervalWorkout      m_intervalWorkout;
 	IntervalWorkoutState m_intervalWorkoutState;

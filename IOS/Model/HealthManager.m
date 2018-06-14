@@ -6,8 +6,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "HealthManager.h"
-#import "ActivityName.h"
 #import "ActivityMgr.h"
+#import "ActivityType.h"
 #import "AppDelegate.h"
 #import "LeScale.h"
 #import "UserProfile.h"
@@ -283,7 +283,7 @@
 	NSDictionary* activityData = [notification object];
 	if (activityData)
 	{
-		NSString* activityName = [activityData objectForKey:@KEY_NAME_ACTIVITY_NAME];
+		NSString* activityType = [activityData objectForKey:@KEY_NAME_ACTIVITY_TYPE];
 		NSNumber* startTime = [activityData objectForKey:@KEY_NAME_START_TIME];
 		NSNumber* endTime = [activityData objectForKey:@KEY_NAME_END_TIME];
 		NSNumber* distance = [activityData objectForKey:@KEY_NAME_DISTANCE];
@@ -291,13 +291,13 @@
 		NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:[startTime longLongValue]];
 		NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:[endTime longLongValue]];
 
-		if ([activityName isEqualToString:@ACTIVITY_NAME_CYCLING] ||
-			[activityName isEqualToString:@ACTIVITY_NAME_MOUNTAIN_BIKING])
+		if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+			[activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
 		{
 			[self saveCyclingWorkoutIntoHealthStore:[distance doubleValue] withStartDate:startDate withEndDate:endDate];
 		}
-		else if ([activityName isEqualToString:@ACTIVITY_NAME_RUNNING] ||
-				 [activityName isEqualToString:@ACTIVITY_NAME_WALKING])
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING] ||
+				 [activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
 		{
 			[self saveRunningWorkoutIntoHealthStore:[distance doubleValue] withStartDate:startDate withEndDate:endDate];
 		}

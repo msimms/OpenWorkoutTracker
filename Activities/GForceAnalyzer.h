@@ -33,7 +33,7 @@ public:
 	GForceAnalyzer();
 	virtual ~GForceAnalyzer();
 
-	void Train(const std::string& activityName, Database& database);
+	void Train(const std::string& activityType, Database& database);
 
 	GraphPeakList ProcessAccelerometerReading(const SensorReading& reading);
 

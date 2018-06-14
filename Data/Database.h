@@ -40,9 +40,9 @@ public:
 	bool LoadBike(uint64_t bikeId, Bike& bike);
 	bool ListBikes(std::vector<Bike>& bikes);
 
-	bool StoreBikeActivity(uint64_t bikeId, uint64_t activityId);
-	bool UpdateBikeActivity(uint64_t bikeId, uint64_t activityId);
-	bool LoadBikeActivity(uint64_t activityId, uint64_t& bikeId);
+	bool StoreBikeActivity(uint64_t bikeId, const std::string& activityId);
+	bool UpdateBikeActivity(uint64_t bikeId, const std::string& activityId);
+	bool LoadBikeActivity(const std::string& activityId, uint64_t& bikeId);
 
 	bool StoreIntervalWorkout(const std::string& name);
 	bool GetIntervalWorkoutId(const std::string& name, uint64_t& workoutId);
@@ -54,30 +54,30 @@ public:
 	bool DeleteIntervalSegments(uint64_t workoutId);
 	bool ListIntervalSegments(uint64_t workoutId, std::vector<IntervalWorkoutSegment>& segments);
 
-	bool StoreCustomActivity(const std::string& activityName, ActivityViewType viewType);
-	bool DeleteCustomActivity(const std::string& activityName);
+	bool StoreCustomActivity(const std::string& activityType, ActivityViewType viewType);
+	bool DeleteCustomActivity(const std::string& activityType);
 
-	bool StartActivity(uint64_t userId, const std::string& activityName, time_t startTime, uint64_t& activityId);
-	bool StopActivity(time_t endTime, uint64_t activityId);
-	bool DeleteActivity(uint64_t activityId);
-	bool LoadActivity(uint64_t activityId, ActivitySummary& summary);
+	bool StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, time_t startTime);
+	bool StopActivity(time_t endTime, const std::string& activityId);
+	bool DeleteActivity(const std::string& activityId);
+	bool LoadActivity(const std::string& activityId, ActivitySummary& summary);
 	bool ListActivities(ActivitySummaryList& activities);
-	bool MergeActivities(uint64_t activityId1, uint64_t activityId2);
+	bool MergeActivities(const std::string& activityId1, const std::string& activityId2);
 
-	bool LoadActivityStartAndEndTime(uint64_t activityId, time_t& startTime, time_t& endTime);
-	bool UpdateActivityStartTime(uint64_t activityId, time_t startTime);
-	bool UpdateActivityEndTime(uint64_t activityId, time_t endTime);
+	bool LoadActivityStartAndEndTime(const std::string& activityId, time_t& startTime, time_t& endTime);
+	bool UpdateActivityStartTime(const std::string& activityId, time_t startTime);
+	bool UpdateActivityEndTime(const std::string& activityId, time_t endTime);
 
-	bool StartNewLap(uint64_t activityId, uint64_t startTimeMs);
-	bool ListLaps(uint64_t activityId, LapSummaryList& laps);
+	bool StartNewLap(const std::string& activityId, uint64_t startTimeMs);
+	bool ListLaps(const std::string& activityId, LapSummaryList& laps);
 
-	bool StoreTag(uint64_t activityId, const std::string& tag);
-	bool DeleteTag(uint64_t activityId, const std::string& tag);
-	bool ListTags(uint64_t activityId, std::vector<std::string>& tags);
-	bool SearchForTags(const std::string& searchStr, std::vector<uint64_t>& matchingActivities);
+	bool StoreTag(const std::string& activityId, const std::string& tag);
+	bool DeleteTag(const std::string& activityId, const std::string& tag);
+	bool ListTags(const std::string& activityId, std::vector<std::string>& tags);
+	bool SearchForTags(const std::string& searchStr, std::vector<std::string>& matchingActivities);
 
-	bool StoreSummaryData(uint64_t activityId, const std::string& attribute, ActivityAttributeType value);
-	bool LoadSummaryData(uint64_t activityId, ActivityAttributeMap& values);
+	bool StoreSummaryData(const std::string& activityId, const std::string& attribute, ActivityAttributeType value);
+	bool LoadSummaryData(const std::string& activityId, ActivityAttributeMap& values);
 
 	bool StoreWeightMeasurement(time_t measurementTime, double weightKg);
 	bool LoadNearestWeightMeasurement(time_t measurementTime, double& weightKg);
@@ -86,24 +86,24 @@ public:
 	typedef void (*coordinateCallback)(uint64_t time, double latitude, double longitude, double altitude, void* context);
 	bool ProcessAllCoordinates(coordinateCallback callback, void* context);
 
-	bool StoreSensorReading(uint64_t activityId, const SensorReading& reading);
-	bool LoadSensorReadingsOfType(uint64_t activityId, SensorType type, SensorReadingList& readings);
-	bool ListActivityCoordinates(uint64_t activityId, CoordinateList& coordinates);
-	bool ListActivityPositionReadings(uint64_t activityId, SensorReadingList& readings);
-	bool ListActivityAccelerometerReadings(uint64_t activityId, SensorReadingList& readings);
-	bool ListActivityHeartRateMonitorReadings(uint64_t activityId, SensorReadingList& readings);
-	bool ListActivityCadenceReadings(uint64_t activityId, SensorReadingList& readings);
-	bool ListActivityWheelSpeedReadings(uint64_t activityId, SensorReadingList& readings);
-	bool ListActivityPowerMeterReadings(uint64_t activityId, SensorReadingList& readings);
-	bool ListActivityFootPodReadings(uint64_t activityId, SensorReadingList& readings);
+	bool StoreSensorReading(const std::string& activityId, const SensorReading& reading);
+	bool LoadSensorReadingsOfType(const std::string& activityId, SensorType type, SensorReadingList& readings);
+	bool ListActivityCoordinates(const std::string& activityId, CoordinateList& coordinates);
+	bool ListActivityPositionReadings(const std::string& activityId, SensorReadingList& readings);
+	bool ListActivityAccelerometerReadings(const std::string& activityId, SensorReadingList& readings);
+	bool ListActivityHeartRateMonitorReadings(const std::string& activityId, SensorReadingList& readings);
+	bool ListActivityCadenceReadings(const std::string& activityId, SensorReadingList& readings);
+	bool ListActivityWheelSpeedReadings(const std::string& activityId, SensorReadingList& readings);
+	bool ListActivityPowerMeterReadings(const std::string& activityId, SensorReadingList& readings);
+	bool ListActivityFootPodReadings(const std::string& activityId, SensorReadingList& readings);
 
-	bool TrimActivityPositionReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
-	bool TrimActivityAccelerometerReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
-	bool TrimActivityHeartRateMonitorReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
-	bool TrimActivityCadenceReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
-	bool TrimActivityWheelSpeedReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
-	bool TrimActivityPowerMeterReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
-	bool TrimActivityFootPodReadings(uint64_t activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityPositionReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityAccelerometerReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityHeartRateMonitorReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityCadenceReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityWheelSpeedReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityPowerMeterReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
+	bool TrimActivityFootPodReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
 
 private:
 	sqlite3* m_pDb;
@@ -111,13 +111,13 @@ private:
 	bool DoesTableHaveColumn(const std::string& tableName, const std::string& columnName);
 	bool DoesTableExist(const std::string& tableName);
 
-	bool StoreAccelerometerReading(uint64_t activityId, const SensorReading& reading);
-	bool StoreGpsReading(uint64_t activityId, const SensorReading& reading);
-	bool StoreHrmReading(uint64_t activityId, const SensorReading& reading);
-	bool StoreCadenceReading(uint64_t activityId, const SensorReading& reading);
-	bool StoreWheelSpeedReading(uint64_t activityId, const SensorReading& reading);
-	bool StorePowerMeterReading(uint64_t activityId, const SensorReading& reading);
-	bool StoreFootPodReading(uint64_t activityId, const SensorReading& reading);
+	bool StoreAccelerometerReading(const std::string& activityId, const SensorReading& reading);
+	bool StoreGpsReading(const std::string& activityId, const SensorReading& reading);
+	bool StoreHrmReading(const std::string& activityId, const SensorReading& reading);
+	bool StoreCadenceReading(const std::string& activityId, const SensorReading& reading);
+	bool StoreWheelSpeedReading(const std::string& activityId, const SensorReading& reading);
+	bool StorePowerMeterReading(const std::string& activityId, const SensorReading& reading);
+	bool StoreFootPodReading(const std::string& activityId, const SensorReading& reading);
 
 	int ExecuteQuery(const std::string& query);
 	int ExecuteQueries(const std::vector<std::string>& queries);

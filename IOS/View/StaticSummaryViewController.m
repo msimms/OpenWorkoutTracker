@@ -9,7 +9,7 @@
 #import "AccelerometerLine.h"
 #import "ActivityAttribute.h"
 #import "ActivityMgr.h"
-#import "ActivityName.h"
+#import "ActivityType.h"
 #import "AppDelegate.h"
 #import "CorePlotViewController.h"
 #import "ElevationLine.h"
@@ -139,7 +139,7 @@ typedef enum ExportFileTypeButtons
 		self->activityIndex = 0;
 		self->attributeIndex = 0;
 
-		self->activityId = 0;
+		self->activityId = nil;
 
 		self->startTime = 0;
 		self->endTime = 0;
@@ -174,10 +174,10 @@ typedef enum ExportFileTypeButtons
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-		NSString* activityName = [appDelegate getHistorialActivityName:self->activityIndex];
-		if (!([activityName isEqualToString:@ACTIVITY_NAME_CYCLING] ||
-			  [activityName isEqualToString:@ACTIVITY_NAME_MOUNTAIN_BIKING] ||
-			  [activityName isEqualToString:@ACTIVITY_NAME_STATIONARY_BIKE]))
+		NSString* activityType = [appDelegate getHistorialActivityType:self->activityIndex];
+		if (!([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE]))
 		{
 			[self->movingToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
@@ -241,10 +241,10 @@ typedef enum ExportFileTypeButtons
 	{
 		self->attributeNames = [[NSMutableArray alloc] init];
 		self->recordNames = [[NSMutableArray alloc] init];
-		
-		self->activityId = ConvertActivityIndexToActivityId(self->activityIndex);
+
+		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
 		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
-		
+
 		self->hasGpsData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE).valid;
 		self->hasAccelerometerData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_X).valid;
 		self->hasHeartRateData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_MAX_HEART_RATE).valid;
@@ -268,7 +268,7 @@ typedef enum ExportFileTypeButtons
 		}
 
 		uint64_t bikeId;
-		if (GetActivityBikeProfile(self->activityId, &bikeId))
+		if (GetActivityBikeProfile([self->activityId UTF8String], &bikeId))
 		{
 			char* name = NULL;
 			double weightKg = (double)0.0;
@@ -331,7 +331,7 @@ typedef enum ExportFileTypeButtons
 			}
 		}
 		
-		self.navItem.title = NSLocalizedString([appDelegate getHistorialActivityName:self->activityIndex], nil);
+		self.navItem.title = NSLocalizedString([appDelegate getHistorialActivityType:self->activityIndex], nil);
 		
 		[self drawRoute];
 	}
@@ -1039,7 +1039,7 @@ typedef enum ExportFileTypeButtons
 	{
 		if (buttonIndex == 0)	// Yes
 		{
-			DeleteActivity(self->activityId);
+			DeleteActivity([self->activityId UTF8String]);
 			InitializeHistoricalActivityList();
 			
 			[self.navigationController popViewControllerAnimated:YES];
@@ -1146,32 +1146,32 @@ typedef enum ExportFileTypeButtons
 		if ([buttonName isEqualToString:ACTION_SHEET_TRIM_FIRST_1])
 		{
 			newTime = ((uint64_t)self->startTime + 1) * 1000;
-			trimmed = TrimActivityData(self->activityId, newTime, TRUE);
+			trimmed = TrimActivityData([self->activityId UTF8String], newTime, TRUE);
 		}
 		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_FIRST_5])
 		{
 			newTime = ((uint64_t)self->startTime + 5) * 1000;
-			trimmed = TrimActivityData(self->activityId, newTime, TRUE);
+			trimmed = TrimActivityData([self->activityId UTF8String], newTime, TRUE);
 		}
 		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_FIRST_30])
 		{
 			newTime = ((uint64_t)self->startTime + 30) * 1000;
-			trimmed = TrimActivityData(self->activityId, newTime, TRUE);
+			trimmed = TrimActivityData([self->activityId UTF8String], newTime, TRUE);
 		}
 		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_SECOND_1])
 		{
 			newTime = ((uint64_t)self->endTime - 1) * 1000;
-			trimmed = TrimActivityData(self->activityId, newTime, FALSE);				
+			trimmed = TrimActivityData([self->activityId UTF8String], newTime, FALSE);
 		}
 		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_SECOND_5])
 		{
 			newTime = ((uint64_t)self->endTime - 5) * 1000;
-			trimmed = TrimActivityData(self->activityId, newTime, FALSE);
+			trimmed = TrimActivityData([self->activityId UTF8String], newTime, FALSE);
 		}
 		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_SECOND_30])
 		{
 			newTime = ((uint64_t)self->endTime - 30) * 1000;
-			trimmed = TrimActivityData(self->activityId, newTime, FALSE);
+			trimmed = TrimActivityData([self->activityId UTF8String], newTime, FALSE);
 		}
 		else if ([buttonName isEqualToString:ACTION_SHEET_FIX_REPS])
 		{

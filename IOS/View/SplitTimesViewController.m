@@ -59,7 +59,7 @@ typedef enum SectionType
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->activityId = 0;
+		self->activityId = nil;
 		self->splitTimesKm = nil;
 		self->splitTimesMile = nil;
 	}
@@ -180,11 +180,11 @@ typedef enum SectionType
 	}
 }
 
-- (void)setActivityId:(uint64_t)newId
+- (void)setActivityId:(NSString*)newId
 {
 	self->activityId = newId;
 
-	size_t activityIndex = ConvertActivityIdToActivityIndex(newId);
+	size_t activityIndex = ConvertActivityIdToActivityIndex([newId UTF8String]);
 
 	self->splitTimesKm = [[NSMutableArray alloc] init];
 	self->splitTimesMile = [[NSMutableArray alloc] init];

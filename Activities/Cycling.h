@@ -8,7 +8,6 @@
 #ifndef __CYCLING__
 #define __CYCLING__
 
-#include "ActivityName.h"
 #include "Bike.h"
 #include "MovingActivity.h"
 
@@ -24,8 +23,8 @@ public:
 	Cycling();
 	virtual ~Cycling();
 
-	static std::string Name() { return ACTIVITY_NAME_CYCLING; };
-	virtual std::string GetName() const { return Cycling::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_CYCLING; };
+	virtual std::string GetType() const { return Cycling::Type(); };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 

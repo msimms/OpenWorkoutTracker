@@ -47,74 +47,74 @@ typedef enum GpsFilterOption
 
 - (id)init;
 
-- (NSString*)getValueAsString:(NSString*)activityName withAttributeName:(NSString*)attributeName;
-- (NSInteger)getValueAsInteger:(NSString*)activityName withAttributeName:(NSString*)attributeName;
-- (BOOL)getValueAsBool:(NSString*)activityName withAttributeName:(NSString*)attributeName;
+- (NSString*)getValueAsString:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (NSInteger)getValueAsInteger:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (BOOL)getValueAsBool:(NSString*)activityType withAttributeName:(NSString*)attributeName;
 
-- (void)setValue:(NSString*)activityName withAttributeName:(NSString*)attributeName withString:(NSString*)value;
-- (void)setValue:(NSString*)activityName withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value;
-- (void)setValue:(NSString*)activityName withAttributeName:(NSString*)attributeName withBool:(BOOL)value;
+- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withString:(NSString*)value;
+- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value;
+- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withBool:(BOOL)value;
 
-- (ActivityViewType)getViewType:(NSString*)activityName;
-- (void)setViewType:(NSString*)activityName withViewType:(ActivityViewType)viewType;
+- (ActivityViewType)getViewType:(NSString*)activityType;
+- (void)setViewType:(NSString*)activityType withViewType:(ActivityViewType)viewType;
 
-- (NSString*)getBackgroundColorName:(NSString*)activityName;
-- (NSString*)getLabelColorName:(NSString*)activityName;
-- (NSString*)getTextColorName:(NSString*)pActivityName;
-- (UIColor*)getBackgroundColor:(NSString*)activityName;
-- (UIColor*)getLabelColor:(NSString*)activityName;
-- (UIColor*)getTextColor:(NSString*)activityName;
+- (NSString*)getBackgroundColorName:(NSString*)activityType;
+- (NSString*)getLabelColorName:(NSString*)activityType;
+- (NSString*)getTextColorName:(NSString*)pactivityType;
+- (UIColor*)getBackgroundColor:(NSString*)activityType;
+- (UIColor*)getLabelColor:(NSString*)activityType;
+- (UIColor*)getTextColor:(NSString*)activityType;
 
 - (UIColor*)convertColorNameToObject:(NSString*)colorName;
 
-- (void)setBackgroundColor:(NSString*)activityName withColorName:(NSString*)colorName;
-- (void)setLabelColor:(NSString*)activityName withColorName:(NSString*)colorName;
-- (void)setTextColor:(NSString*)activityName withColorName:(NSString*)colorName;
+- (void)setBackgroundColor:(NSString*)activityType withColorName:(NSString*)colorName;
+- (void)setLabelColor:(NSString*)activityType withColorName:(NSString*)colorName;
+- (void)setTextColor:(NSString*)activityType withColorName:(NSString*)colorName;
 
-- (BOOL)getShowHeartRatePercent:(NSString*)activityName;
-- (void)setShowHeartRatePercent:(NSString*)activityName withBool:(BOOL)value;
+- (BOOL)getShowHeartRatePercent:(NSString*)activityType;
+- (void)setShowHeartRatePercent:(NSString*)activityType withBool:(BOOL)value;
 
-- (BOOL)getStartStopBeepEnabled:(NSString*)activityName;
-- (void)setStartStopBeepEnabled:(NSString*)activityName withBool:(BOOL)value;
+- (BOOL)getStartStopBeepEnabled:(NSString*)activityType;
+- (void)setStartStopBeepEnabled:(NSString*)activityType withBool:(BOOL)value;
 
-- (BOOL)getSplitBeepEnabled:(NSString*)activityName;
-- (void)setSplitBeepEnabled:(NSString*)activityName withBool:(BOOL)value;
+- (BOOL)getSplitBeepEnabled:(NSString*)activityType;
+- (void)setSplitBeepEnabled:(NSString*)activityType withBool:(BOOL)value;
 
-- (NSString*)getAttributeName:(NSString*)activityName withPos:(uint8_t)viewPos;
-- (uint8_t)getAttributePos:(NSString*)activityName withAttributeName:(NSString*)attributeName;
-- (void)setViewAttributePosition:(NSString*)activityName withAttributeName:(NSString*)attributeName withPos:(uint8_t)pos;
+- (NSString*)getAttributeName:(NSString*)activityType withPos:(uint8_t)viewPos;
+- (uint8_t)getAttributePos:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (void)setViewAttributePosition:(NSString*)activityType withAttributeName:(NSString*)attributeName withPos:(uint8_t)pos;
 
-- (BOOL)getScreenAutoLocking:(NSString*)activityName;
-- (void)setScreenAutoLocking:(NSString*)activityName withBool:(BOOL)value;
+- (BOOL)getScreenAutoLocking:(NSString*)activityType;
+- (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value;
 
-- (uint8_t)getCountdown:(NSString*)activityName;
-- (void)setCountdown:(NSString*)activityName withSeconds:(uint8_t)seconds;
+- (uint8_t)getCountdown:(NSString*)activityType;
+- (void)setCountdown:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getGpsSampleFrequency:(NSString*)activityName;
-- (void)setGpsSampleFrequency:(NSString*)activityName withSeconds:(uint8_t)seconds;
+- (uint8_t)getGpsSampleFrequency:(NSString*)activityType;
+- (void)setGpsSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityName;
-- (void)setMinGpsHorizontalAccuracy:(NSString*)activityName withMeters:(uint8_t)seconds;
+- (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityType;
+- (void)setMinGpsHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds;
 
-- (uint8_t)getMinGpsVerticalAccuracy:(NSString*)activityName;
-- (void)setMinGpsVerticalAccuracy:(NSString*)activityName withMeters:(uint8_t)seconds;
+- (uint8_t)getMinGpsVerticalAccuracy:(NSString*)activityType;
+- (void)setMinGpsVerticalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds;
 
-- (GpsFilterOption)getGpsFilterOption:(NSString*)activityName;
-- (void)setGpsFilterOption:(NSString*)activityName withOption:(GpsFilterOption)option;
+- (GpsFilterOption)getGpsFilterOption:(NSString*)activityType;
+- (void)setGpsFilterOption:(NSString*)activityType withOption:(GpsFilterOption)option;
 
-- (uint8_t)getHeartRateSampleFrequency:(NSString*)activityName;
-- (void)setHeartRateSampleFrequency:(NSString*)activityName withSeconds:(uint8_t)seconds;
+- (uint8_t)getHeartRateSampleFrequency:(NSString*)activityType;
+- (void)setHeartRateSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getCadenceSampleFrequency:(NSString*)activityName;
-- (void)setCadenceSampleFrequency:(NSString*)activityName withSeconds:(uint8_t)seconds;
+- (uint8_t)getCadenceSampleFrequency:(NSString*)activityType;
+- (void)setCadenceSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getWheelSpeedSampleFrequency:(NSString*)activityName;
-- (void)setWheelSpeedSampleFrequency:(NSString*)activityName withSeconds:(uint8_t)seconds;
+- (uint8_t)getWheelSpeedSampleFrequency:(NSString*)activityType;
+- (void)setWheelSpeedSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getPowerSampleFrequency:(NSString*)activityName;
-- (void)setPowerSampleFrequency:(NSString*)activityName withSeconds:(uint8_t)seconds;
+- (uint8_t)getPowerSampleFrequency:(NSString*)activityType;
+- (void)setPowerSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (BOOL)hasShownHelp:(NSString*)activityName;
-- (void)markHasShownHelp:(NSString*)activityName;
+- (BOOL)hasShownHelp:(NSString*)activityType;
+- (void)markHasShownHelp:(NSString*)activityType;
 
 @end

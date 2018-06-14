@@ -126,7 +126,7 @@ bool GForceAnalyzer::IsData(const std::string& axisName, double peakArea) const
 	return probability > (double)0.5;
 }
 
-void GForceAnalyzer::Train(const std::string& activityName, Database& database)
+void GForceAnalyzer::Train(const std::string& activityType, Database& database)
 {
 	ActivitySummaryList activities;
 	uint16_t manuallyDefinedCount = 0;
@@ -140,7 +140,7 @@ void GForceAnalyzer::Train(const std::string& activityName, Database& database)
 		{
 			ActivitySummary& summary = (*activityIter);
 
-			if (activityName.compare(summary.name) == 0)
+			if (activityType.compare(summary.type) == 0)
 			{
 				try
 				{

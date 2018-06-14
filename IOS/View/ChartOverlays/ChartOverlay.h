@@ -9,13 +9,13 @@
 
 @interface ChartOverlay : NSObject
 {
-	uint64_t activityId;
+	NSString* activityId;
 
 @public
 	NSMutableArray* objects;
 }
 
-- (void)setActivityId:(uint64_t)newId;
+- (void)setActivityId:(NSString*)newId;
 - (void)draw;
 
 @end

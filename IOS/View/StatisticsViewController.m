@@ -7,7 +7,7 @@
 
 #import "StatisticsViewController.h"
 #import "ActivityMgr.h"
-#import "ActivityName.h"
+#import "ActivityType.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
 #import "Segues.h"
@@ -33,7 +33,7 @@
 {
 @public
 	NSString*             name;
-	uint64_t              activityId;
+	NSString*             activityId;
 	ActivityAttributeType value;
 }
 
@@ -46,7 +46,7 @@
 - (id)initWithName:(NSString*)attributeName
 {
 	self->name = attributeName;
-	self->activityId = 0;
+	self->activityId = nil;
 	return self;
 }
 
@@ -66,7 +66,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->activityIdToMap = 0;
+		self->activityIdToMap = nil;
 		self->mapMode = MAP_OVERVIEW_ALL_STARTS;
 	}
 	return self;
@@ -158,8 +158,8 @@
 			NSMutableArray* activityAttributes = [[NSMutableArray alloc] init];
 			if (activityAttributes)
 			{
-				NSMutableArray* activityNames = [appDelegate getActivityTypeNames];
-				if (activityNames)
+				NSMutableArray* activityTypes = [appDelegate getActivityTypes];
+				if (activityTypes)
 				{
 					activityAttributes = [[NSMutableArray alloc] init];
 					if (activityAttributes)
@@ -171,9 +171,9 @@
 						[self->attributeDictionary setObject:activityAttributes forKey:SECTION_SUMMARY_TITLE];
 					}
 
-					for (NSString* activityName in activityNames)
+					for (NSString* activityType in activityTypes)
 					{
-						if (GetNumHistoricalActivitiesByType([activityName UTF8String]) > 0)
+						if (GetNumHistoricalActivitiesByType([activityType UTF8String]) > 0)
 						{
 							activityAttributes = [[NSMutableArray alloc] init];
 							if (activityAttributes)
@@ -181,7 +181,7 @@
 								[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME]];
 								[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_CALORIES]];
 
-								if ([activityName isEqualToString:@ACTIVITY_NAME_CYCLING])
+								if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
@@ -194,7 +194,7 @@
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_SPEED]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_PACE]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_HIKING])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_HIKING])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
@@ -204,7 +204,7 @@
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_MIN_ALTITUDE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_MAX_ALTITUDE]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_RUNNING])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
@@ -219,7 +219,7 @@
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_SPEED]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_PACE]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_WALKING])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
@@ -228,24 +228,24 @@
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_KM]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_400M]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_CHINUP])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_REPS]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_PULLUP])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_REPS]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_PUSHUP])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_REPS]];
 								}
-								else if ([activityName isEqualToString:@ACTIVITY_NAME_SQUAT])
+								else if ([activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
 								{
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_REPS]];
 								}
 
-								[self->attributeDictionary setObject:activityAttributes forKey:activityName];
+								[self->attributeDictionary setObject:activityAttributes forKey:activityType];
 							}
 						}
 					}
@@ -291,27 +291,27 @@
 		self->mapMode = MAP_OVERVIEW_ALL_STARTS;
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 	}
-	else if ([sectionName isEqualToString:@ACTIVITY_NAME_RUNNING])
+	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_RUNNING])
 	{
 		self->mapMode = MAP_OVERVIEW_RUN_STARTS;
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 	}
-	else if ([sectionName isEqualToString:@ACTIVITY_NAME_CYCLING])
+	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_CYCLING])
 	{
 		self->mapMode = MAP_OVERVIEW_CYCLING_STARTS;
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 	}
-	else if ([sectionName isEqualToString:@ACTIVITY_NAME_HIKING])
+	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_HIKING])
 	{
 		self->mapMode = MAP_OVERVIEW_HIKING_STARTS;
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 	}
-	else if ([sectionName isEqualToString:@ACTIVITY_NAME_WALKING])
+	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_WALKING])
 	{
 		self->mapMode = MAP_OVERVIEW_WALKING_STARTS;
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 	}
-	self->activityIdToMap = -1;
+	self->activityIdToMap = nil;
 
 	@synchronized(self.spinner)
 	{
@@ -319,7 +319,7 @@
 	}
 }
 
-- (void)showSegmentsMap:(uint64_t)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title
+- (void)showSegmentsMap:(NSString*)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title
 {
 	self->activityIdToMap = activityId;
 	self->segmentToMap = value;
@@ -344,9 +344,9 @@
 
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
-	
+
 	NSString* sectionName = [self->sortedKeys objectAtIndex:section];
-	
+
 	if ([cell.textLabel.text isEqualToString:SUMMARY_MAP])
 	{
 		[self showSummaryMap:sectionName];
@@ -415,16 +415,16 @@
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
-	NSString* activity = [self->sortedKeys objectAtIndex:section];
-	if (activity)
+	NSString* sectionTitle = [self->sortedKeys objectAtIndex:section];
+	if (sectionTitle)
 	{
-		AttrDictItem* attrDictItem = [[self->attributeDictionary objectForKey:activity] objectAtIndex:row];
+		AttrDictItem* attrDictItem = [[self->attributeDictionary objectForKey:sectionTitle] objectAtIndex:row];
 		if (attrDictItem)
 		{
 			NSString* attribute = attrDictItem->name;
 			bool displayValue = true;
 
-			attrDictItem->activityId = -1;
+			attrDictItem->activityId = nil;
 
 			if (section == 0)
 			{
@@ -442,24 +442,24 @@
 				if ([attribute isEqualToString:SUMMARY_MAP])
 					displayValue = false;
 				else if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME])
-					attrDictItem->value = QueryActivityAttributeTotalByActivityType([attribute UTF8String], [activity UTF8String]);
+					attrDictItem->value = QueryActivityAttributeTotalByActivityType([attribute UTF8String], [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_CALORIES])
-					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_CALORIES_BURNED, [activity UTF8String]);
+					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_CALORIES_BURNED, [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE])
-					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [activity UTF8String]);
+					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_MAX_DISTANCE])
-					attrDictItem->value = QueryBestActivityAttributeByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [activity UTF8String], false, &attrDictItem->activityId);
+					attrDictItem->value = QueryBestActivityAttributeByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [sectionTitle UTF8String], false, [attrDictItem->activityId UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_REPS])
-					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_REPS, [activity UTF8String]);
+					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_REPS, [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_FASTEST_SPEED])
-					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [activity UTF8String], false, &attrDictItem->activityId);
+					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [sectionTitle UTF8String], false, [attrDictItem->activityId UTF8String]);
 				else
-					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [activity UTF8String], true, &attrDictItem->activityId);
+					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [sectionTitle UTF8String], true, [attrDictItem->activityId UTF8String]);
 			}
 
 			if (displayValue)
 			{
-				size_t activityIndex = ConvertActivityIdToActivityIndex(attrDictItem->activityId);
+				size_t activityIndex = ConvertActivityIdToActivityIndex([attrDictItem->activityId UTF8String]);
 
 				time_t startTime = 0;
 				time_t endTime = 0;
@@ -475,7 +475,7 @@
 				else
 					detailText = [NSString stringWithFormat:@"%@", valueStr];
 
-				if ((startTime > 0) && (startTimeStr != nil) && (attrDictItem->activityId != -1) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == FALSE))
+				if ((startTime > 0) && (startTimeStr != nil) && (attrDictItem->activityId != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == FALSE))
 					cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\n%@", detailText, startTimeStr];
 				else
 					cell.detailTextLabel.text = detailText;

@@ -28,74 +28,74 @@ ActivityFactory::~ActivityFactory()
 {
 }
 
-std::vector<std::string> ActivityFactory::ListActivityNames()
+std::vector<std::string> ActivityFactory::ListActivityTypes()
 {
-	std::vector<std::string> names;
+	std::vector<std::string> types;
 
-	names.push_back(ChinUp::Name());
-	names.push_back(Cycling::Name());
-	names.push_back(Hike::Name());
-	names.push_back(MountainBiking::Name());
-	names.push_back(PullUp::Name());
-	names.push_back(PushUp::Name());
-	names.push_back(Run::Name());
-	names.push_back(Squat::Name());
-	names.push_back(StationaryCycling::Name());
-	names.push_back(Treadmill::Name());
-	names.push_back(Walking::Name());
-	std::sort(names.begin(), names.end());
-	return names;
+	types.push_back(ChinUp::Type());
+	types.push_back(Cycling::Type());
+	types.push_back(Hike::Type());
+	types.push_back(MountainBiking::Type());
+	types.push_back(PullUp::Type());
+	types.push_back(PushUp::Type());
+	types.push_back(Run::Type());
+	types.push_back(Squat::Type());
+	types.push_back(StationaryCycling::Type());
+	types.push_back(Treadmill::Type());
+	types.push_back(Walking::Type());
+	std::sort(types.begin(), types.end());
+	return types;
 }
 
-Activity* ActivityFactory::CreateActivity(const std::string& name, Database& database)
+Activity* ActivityFactory::CreateActivity(const std::string& type, Database& database)
 {
 	Activity* pActivity = NULL;
 
-	if (name.compare(ChinUp::Name()) == 0)
+	if (type.compare(ChinUp::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(name, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
 		pActivity = new ChinUp(analyzer);
 	}
-	else if (name.compare(Cycling::Name()) == 0)
+	else if (type.compare(Cycling::Type()) == 0)
 	{
 		pActivity = new Cycling();
 	}
-	else if (name.compare(Hike::Name()) == 0)
+	else if (type.compare(Hike::Type()) == 0)
 	{
 		pActivity = new Hike();
 	}
-	else if (name.compare(MountainBiking::Name()) == 0)
+	else if (type.compare(MountainBiking::Type()) == 0)
 	{
 		pActivity = new MountainBiking();
 	}
-	else if (name.compare(PullUp::Name()) == 0)
+	else if (type.compare(PullUp::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(name, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
 		pActivity = new PullUp(analyzer);
 	}
-	else if (name.compare(PushUp::Name()) == 0)
+	else if (type.compare(PushUp::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(name, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
 		pActivity = new PushUp(analyzer);
 	}
-	else if (name.compare(Run::Name()) == 0)
+	else if (type.compare(Run::Type()) == 0)
 	{
 		pActivity = new Run();
 	}
-	else if (name.compare(Squat::Name()) == 0)
+	else if (type.compare(Squat::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(name, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
 		pActivity = new Squat(analyzer);
 	}
-	else if (name.compare(StationaryCycling::Name()) == 0)
+	else if (type.compare(StationaryCycling::Type()) == 0)
 	{
 		pActivity = new StationaryCycling();
 	}
-	else if (name.compare(Treadmill::Name()) == 0)
+	else if (type.compare(Treadmill::Type()) == 0)
 	{
 		pActivity = new Treadmill();
 	}
-	else if (name.compare(Walking::Name()) == 0)
+	else if (type.compare(Walking::Type()) == 0)
 	{
 		pActivity = new Walking();
 	}
@@ -103,7 +103,7 @@ Activity* ActivityFactory::CreateActivity(const std::string& name, Database& dat
 	{
 		// Custom activity
 	}
-	
+
 	if (pActivity)
 	{
 		pActivity->SetAthleteProfile(m_user);
@@ -114,7 +114,7 @@ Activity* ActivityFactory::CreateActivity(const std::string& name, Database& dat
 
 void ActivityFactory::CreateActivity(ActivitySummary& summary, Database& database)
 {
-	summary.pActivity = CreateActivity(summary.name, database);
+	summary.pActivity = CreateActivity(summary.type, database);
 	if (summary.pActivity)
 	{
 		summary.pActivity->SetId(summary.activityId);

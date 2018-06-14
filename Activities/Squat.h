@@ -8,7 +8,7 @@
 #ifndef __SQUAT__
 #define __SQUAT__
 
-#include "ActivityName.h"
+#include "ActivityType.h"
 #include "LiftingActivity.h"
 
 class Squat : public LiftingActivity
@@ -17,8 +17,8 @@ public:
 	Squat(GForceAnalyzer* const analyzer);
 	virtual ~Squat();
 
-	static std::string Name() { return ACTIVITY_NAME_SQUAT; };
-	virtual std::string GetName() const { return Squat::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_SQUAT; };
+	virtual std::string GetType() const { return Squat::Type(); };
 
 	virtual double CaloriesBurned() const;
 };

@@ -7,7 +7,7 @@
 
 #import "MapOverviewViewController.h"
 #import "ActivityMgr.h"
-#import "ActivityName.h"
+#import "ActivityType.h"
 #import "ActivityAttribute.h"
 #import "ActivityAttributeType.h"
 #import "AppDelegate.h"
@@ -34,7 +34,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->activityId = 0;
+		self->activityId = nil;
 		self->mode = MAP_OVERVIEW_ALL_STARTS;
 	}
 	return self;
@@ -57,16 +57,16 @@
 			[self showAllStarts];
 			break;
 		case MAP_OVERVIEW_RUN_STARTS:
-			[self showActivityStarts:@ACTIVITY_NAME_RUNNING];
+			[self showActivityStarts:@ACTIVITY_TYPE_RUNNING];
 			break;
 		case MAP_OVERVIEW_CYCLING_STARTS:
-			[self showActivityStarts:@ACTIVITY_NAME_CYCLING];
+			[self showActivityStarts:@ACTIVITY_TYPE_CYCLING];
 			break;
 		case MAP_OVERVIEW_HIKING_STARTS:
-			[self showActivityStarts:@ACTIVITY_NAME_HIKING];
+			[self showActivityStarts:@ACTIVITY_TYPE_HIKING];
 			break;
 		case MAP_OVERVIEW_WALKING_STARTS:
-			[self showActivityStarts:@ACTIVITY_NAME_WALKING];
+			[self showActivityStarts:@ACTIVITY_TYPE_WALKING];
 			break;
 		case MAP_OVERVIEW_SEGMENT_VIEW:
 			[self showSegments];
@@ -116,7 +116,7 @@
 
 #pragma mark random methods
 
-- (void)setActivityId:(uint64_t)newId
+- (void)setActivityId:(NSString*)newId
 {
 	self->activityId = newId;
 }
@@ -185,7 +185,7 @@
 	}
 }
 
-- (void)showActivityStarts:(NSString*)activityName
+- (void)showActivityStarts:(NSString*)activityType
 {
 	[self.mapView setShowsUserLocation:FALSE];
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
@@ -203,8 +203,8 @@
 		size_t numPins = 0;
 		for (size_t index = 0; index < numHistoricalActivities; ++index)
 		{
-			NSString* currentActivityName = [appDelegate getHistorialActivityName:index];
-			if ([currentActivityName isEqualToString:activityName])
+			NSString* currentActivityType = [appDelegate getHistorialActivityType:index];
+			if ([currentActivityType isEqualToString:activityType])
 			{
 				ActivityAttributeType lat = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE);
 				ActivityAttributeType lon = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE);
@@ -251,7 +251,7 @@
 	[self.mapView setShowsUserLocation:FALSE];
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
-	size_t activityIndex = ConvertActivityIdToActivityIndex(self->activityId);
+	size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 	if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_GPS, NULL, NULL))
 	{
 		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
@@ -362,7 +362,7 @@
 	[self.mapView setShowsUserLocation:FALSE];
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 	
-	size_t activityIndex = ConvertActivityIdToActivityIndex(self->activityId);
+	size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 	if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_GPS, NULL, NULL))
 	{
 		const size_t SCALING_FACTOR = 3;

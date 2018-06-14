@@ -63,8 +63,8 @@
 	[super viewDidLoad];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->activityTypeNames = [appDelegate getActivityTypeNames];
-	
+	self->activityTypes = [appDelegate getActivityTypes];
+
 	[self.startWorkoutButton setTitle:BUTTON_TITLE_START forState:UIControlStateNormal];
 	[self.viewButton setTitle:BUTTON_TITLE_VIEW forState:UIControlStateNormal];
 	[self.editButton setTitle:BUTTON_TITLE_EDIT forState:UIControlStateNormal];
@@ -128,9 +128,9 @@
 	}
 }
 
-- (void)showActivityView:(NSString*)activityName
+- (void)showActivityView:(NSString*)activityType
 {
-	ActivityViewType viewType = [[[ActivityPreferences alloc] init] getViewType:activityName];
+	ActivityViewType viewType = [[[ActivityPreferences alloc] init] getViewType:activityType];
 	switch (viewType)
 	{
 		case ACTIVITY_VIEW_COMPLEX:
@@ -160,11 +160,11 @@
 		{
 			case 0: // Yes (Resume Activity)
 				[appDelegate recreateOrphanedActivity:self->orphanedActivityIndex];
-				[self showActivityView:self->orphanedActivityName];
+				[self showActivityView:self->orphanedActivityType];
 				break;
 			case 1: // No (Stop Activity)
 				[appDelegate loadHistoricalActivity:self->orphanedActivityIndex];
-				[self createActivity:self->newActivityName];
+				[self createActivity:self->newActivityType];
 				break;
 		}
 		[appDelegate startSensors];
@@ -210,12 +210,12 @@
 												   otherButtonTitles:nil];
 	if (popupQuery)
 	{
-		for (NSString* name in self->activityTypeNames)
+		for (NSString* name in self->activityTypes)
 		{
 			[popupQuery addButtonWithTitle:name];
 		}
 		[popupQuery addButtonWithTitle:BUTTON_TITLE_CANCEL];
-		[popupQuery setCancelButtonIndex:[self->activityTypeNames count]];
+		[popupQuery setCancelButtonIndex:[self->activityTypes count]];
 		[popupQuery showInView:self.view];
 	}
 }
@@ -283,32 +283,32 @@
 
 #pragma method to switch to the activity view
 
-- (void)createActivity:(NSString*)activityName
+- (void)createActivity:(NSString*)activityType
 {
-	const char* pActivityName = [activityName cStringUsingEncoding:NSASCIIStringEncoding];
-	if (pActivityName)
+	const char* pActivityType = [activityType cStringUsingEncoding:NSASCIIStringEncoding];
+	if (pActivityType)
 	{
-		CreateActivity(pActivityName);
+		CreateActivity(pActivityType);
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate startSensors];
 
-		[self showActivityView:activityName];
+		[self showActivityView:activityType];
 	}
 }
 
-- (void)startActivity:(NSString*)activityName
+- (void)startActivity:(NSString*)activityType
 {
 	bool isOrphaned = IsActivityOrphaned(&self->orphanedActivityIndex);
 	bool isInProgress = IsActivityInProgress();
 
 	if (isOrphaned || isInProgress)
 	{
-		char* orphanedName = GetHistoricalActivityName(self->orphanedActivityIndex);
-		self->orphanedActivityName = [NSString stringWithFormat:@"%s", orphanedName];
-		free((void*)orphanedName);
+		char* orphanedType = GetHistoricalActivityType(self->orphanedActivityIndex);
+		self->orphanedActivityType = [NSString stringWithFormat:@"%s", orphanedType];
+		free((void*)orphanedType);
 
-		self->newActivityName = activityName;
+		self->newActivityType = activityType;
 
 		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_IN_PROGRESS
 														message:MSG_IN_PROGRESS
@@ -323,11 +323,11 @@
 	else if (IsActivityCreated())
 	{
 		DestroyCurrentActivity();
-		[self createActivity:activityName];
+		[self createActivity:activityType];
 	}
 	else
 	{
-		[self createActivity:activityName];
+		[self createActivity:activityType];
 	}
 }
 

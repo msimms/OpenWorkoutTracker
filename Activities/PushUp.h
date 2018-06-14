@@ -8,7 +8,6 @@
 #ifndef __PUSHUP__
 #define __PUSHUP__
 
-#include "ActivityName.h"
 #include "LiftingActivity.h"
 
 class PushUp : public LiftingActivity
@@ -17,8 +16,8 @@ public:
 	PushUp(GForceAnalyzer* const analyzer);
 	virtual ~PushUp();
 
-	static std::string Name() { return ACTIVITY_NAME_PUSHUP; };
-	virtual std::string GetName() const { return PushUp::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_PUSHUP; };
+	virtual std::string GetType() const { return PushUp::Type(); };
 
 	virtual double CaloriesBurned() const;
 };

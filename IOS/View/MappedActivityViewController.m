@@ -132,7 +132,7 @@
 	}
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityName], nil);
+	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityType], nil);
 
 	// Organize the stopped toolbar.
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];

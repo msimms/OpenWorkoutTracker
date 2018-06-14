@@ -110,7 +110,7 @@
 
 	if (!self->activityId)
 	{
-		self->activityId = [[NSNumber alloc] initWithUnsignedLongLong:GetCurrentActivityId()];
+		self->activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 	}
 
 	NSDictionary* locationData = [notification object];
@@ -142,12 +142,12 @@
 				[broadcastData setObject:self->activityId forKey:@KEY_NAME_ACTIVITY_ID];
 			}
 
-			char* activityName = GetCurrentActivityName();
-			if (activityName)
+			char* activityType = GetCurrentActivityType();
+			if (activityType)
 			{
-				NSString* value = [[NSString alloc] initWithUTF8String:activityName];
-				[broadcastData setObject:value forKey:@KEY_NAME_ACTIVITY_NAME];
-				free((void*)activityName);
+				NSString* value = [[NSString alloc] initWithUTF8String:activityType];
+				[broadcastData setObject:value forKey:@KEY_NAME_ACTIVITY_TYPE];
+				free((void*)activityType);
 			}
 			
 			NSString* userName = [Preferences broadcastUserName];

@@ -17,7 +17,6 @@ Activity::Activity()
 {
 	SegmentType nullSegment = { 0, 0, 0 };
 
-	m_id = 0;
 	m_additionalWeightKg = (double)0.0;
 	m_lastHeartRateUpdateTime = 0;
 	m_currentHeartRateBpm = nullSegment;

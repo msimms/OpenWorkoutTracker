@@ -8,7 +8,6 @@
 #ifndef __RUN__
 #define __RUN__
 
-#include "ActivityName.h"
 #include "Walking.h"
 
 class Run : public Walking
@@ -17,8 +16,8 @@ public:
 	Run();
 	virtual ~Run();
 	
-	static std::string Name() { return ACTIVITY_NAME_RUNNING; };
-	virtual std::string GetName() const { return Run::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_RUNNING; };
+	virtual std::string GetType() const { return Run::Type(); };
 };
 
 #endif

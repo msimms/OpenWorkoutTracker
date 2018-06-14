@@ -51,7 +51,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->activityId = 0;
+		self->activityId = nil;
 		self->lapTimes = nil;
 	}
 	return self;
@@ -90,11 +90,11 @@
 
 #pragma mark random methods
 
-- (void)setActivityId:(uint64_t)newId
+- (void)setActivityId:(NSString*)newId
 {
 	self->activityId = newId;
 
-	size_t activityIndex = ConvertActivityIdToActivityIndex(newId);
+	size_t activityIndex = ConvertActivityIdToActivityIndex([newId UTF8String]);
 	self->lapTimes = [[NSMutableArray alloc] init];
 	[self addLapTimes:activityIndex];
 

@@ -8,7 +8,6 @@
 #ifndef __HIKE__
 #define __HIKE__
 
-#include "ActivityName.h"
 #include "Walking.h"
 
 class Hike : public Walking
@@ -17,8 +16,8 @@ public:
 	Hike();
 	virtual ~Hike();
 	
-	static std::string Name() { return ACTIVITY_NAME_HIKING; };
-	virtual std::string GetName() const { return Hike::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_HIKING; };
+	virtual std::string GetType() const { return Hike::Type(); };
 
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 

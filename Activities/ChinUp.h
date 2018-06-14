@@ -8,7 +8,7 @@
 #ifndef __CHINUP__
 #define __CHINUP__
 
-#include "ActivityName.h"
+#include "ActivityType.h"
 #include "LiftingActivity.h"
 
 class ChinUp : public LiftingActivity
@@ -17,8 +17,8 @@ public:
 	ChinUp(GForceAnalyzer* const analyzer);
 	virtual ~ChinUp();
 
-	static std::string Name() { return ACTIVITY_NAME_CHINUP; };
-	virtual std::string GetName() const { return ChinUp::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_CHINUP; };
+	virtual std::string GetType() const { return ChinUp::Type(); };
 
 	virtual double CaloriesBurned() const;
 };

@@ -21,7 +21,7 @@
 	self->objects = [[NSMutableArray alloc] init];
 	if (self->objects)
 	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex(self->activityId);
+		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 		ActivityAttributeType reps = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS);
 		if (reps.valid)
 		{

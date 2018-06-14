@@ -13,7 +13,7 @@
 	IBOutlet UITableView*      splitTimesTableView;
 	IBOutlet UIBarButtonItem*  homeButton;
 
-	uint64_t activityId;
+	NSString* activityId;
 
 	NSMutableArray* splitTimesKm;
 	NSMutableArray* splitTimesMile;
@@ -21,7 +21,7 @@
 
 - (IBAction)onHome:(id)sender;
 
-- (void)setActivityId:(uint64_t)newId;
+- (void)setActivityId:(NSString*)newId;
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UITableView* splitTimesTableView;

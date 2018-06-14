@@ -14,9 +14,9 @@
 	IBOutlet UIButton* editButton;
 	IBOutlet UIButton* resetButton;
 
-	NSMutableArray* activityTypeNames;
-	NSString*       newActivityName;
-	NSString*       orphanedActivityName;
+	NSMutableArray* activityTypes;
+	NSString*       newActivityType;
+	NSString*       orphanedActivityType;
 	size_t          orphanedActivityIndex;
 }
 
@@ -25,7 +25,7 @@
 - (IBAction)onEdit:(id)sender;
 - (IBAction)onReset:(id)sender;
 
-- (void)showActivityView:(NSString*)activityName;
+- (void)showActivityView:(NSString*)activityType;
 
 @property (nonatomic, retain) UIButton* startWorkoutButton;
 @property (nonatomic, retain) UIButton* viewButton;

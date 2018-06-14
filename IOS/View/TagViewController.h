@@ -18,11 +18,11 @@
 	
 	NSMutableArray* tags;
 
-	uint64_t activityId;
+	NSString* activityId;
 }
 
 - (IBAction)onNewTag:(id)sender;
-- (void)setActivityId:(uint64_t)activityIdent;
+- (void)setActivityId:(NSString*)activityIdent;
 
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* tagTableView;

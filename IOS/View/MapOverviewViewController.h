@@ -30,18 +30,18 @@ typedef enum MapOverviewMode
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar*        toolbar;
 
-	uint64_t              activityId;
+	NSString*             activityId;
 	ActivityAttributeType segmentToHighlight;
 	NSString*             segmentName;
 	MapOverviewMode       mode;
 }
 
-- (void)setActivityId:(uint64_t)newId;
+- (void)setActivityId:(NSString*)newId;
 - (void)setSegment:(ActivityAttributeType)newSegment withSegmentName:(NSString*)newSegmentName;
 - (void)setMode:(MapOverviewMode)newMode;
 
 - (void)showAllStarts;
-- (void)showActivityStarts:(NSString*)activityName;
+- (void)showActivityStarts:(NSString*)activityType;
 - (void)showSegments;
 
 - (IBAction)onHome:(id)sender;

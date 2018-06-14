@@ -10,7 +10,7 @@
 #import "ActivityAttribute.h"
 #import "ActivityViewController.h"
 #import "ActivityPreferences.h"
-#import "ActivityName.h"
+#import "ActivityType.h"
 #import "AppDelegate.h"
 #import "HelpViewController.h"
 #import "LeBikeSpeedAndCadence.h"
@@ -192,7 +192,7 @@
 		if (helpVC)
 		{
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-			[helpVC setActivityName:[appDelegate getCurrentActivityName]];
+			[helpVC setActivityType:[appDelegate getCurrentActivityType]];
 		}
 	}
 }
@@ -225,11 +225,11 @@
 - (void)showHelp
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* activityName = [appDelegate getCurrentActivityName];
-	if (![self->activityPrefs hasShownHelp:activityName])
+	NSString* activityType = [appDelegate getCurrentActivityType];
+	if (![self->activityPrefs hasShownHelp:activityType])
 	{
 		[self performSegueWithIdentifier:@SEGUE_TO_HELP_VIEW sender:self];
-		[self->activityPrefs markHasShownHelp:activityName];
+		[self->activityPrefs markHasShownHelp:activityType];
 	}
 }
 
@@ -320,7 +320,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSString* activityName = [appDelegate getCurrentActivityName];
+	NSString* activityType = [appDelegate getCurrentActivityType];
 	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
 	
 	for (UILabel* label in self->valueLabels)
@@ -330,7 +330,7 @@
 	
 	for (NSString* attributeName in attributeNames)
 	{
-		uint8_t viewPos = [self->activityPrefs getAttributePos:activityName withAttributeName:attributeName];
+		uint8_t viewPos = [self->activityPrefs getAttributePos:activityType withAttributeName:attributeName];
 		if ((viewPos != ERROR_ATTRIBUTE_NOT_FOUND) && (viewPos < self->titleLabels.count))
 		{
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:viewPos];
@@ -343,11 +343,11 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSString* activityName = [appDelegate getCurrentActivityName];
+	NSString* activityType = [appDelegate getCurrentActivityType];
 	
-	UIColor* valueColor      = [self->activityPrefs getTextColor:activityName];
-	UIColor* titleColor      = [self->activityPrefs getLabelColor:activityName];
-	UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:activityName];
+	UIColor* valueColor      = [self->activityPrefs getTextColor:activityType];
+	UIColor* titleColor      = [self->activityPrefs getLabelColor:activityType];
+	UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:activityType];
 	
 	for (UILabel* label in self->valueLabels)
 	{
@@ -415,7 +415,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSString* activityName = [appDelegate getCurrentActivityName];
+	NSString* activityType = [appDelegate getCurrentActivityType];
 	BOOL started = FALSE;
 
 	if (self->bikeName)
@@ -425,7 +425,7 @@
 
 	if (started)
 	{
-		if ([self->activityPrefs getStartStopBeepEnabled:activityName])
+		if ([self->activityPrefs getStartStopBeepEnabled:activityType])
 		{
 			[self playBeepSound];
 		}
@@ -441,9 +441,9 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	if ([appDelegate stopActivity])
 	{
-		NSString* activityName = [appDelegate getCurrentActivityName];
+		NSString* activityType = [appDelegate getCurrentActivityType];
 
-		if ([self->activityPrefs getStartStopBeepEnabled:activityName])
+		if ([self->activityPrefs getStartStopBeepEnabled:activityType])
 		{
 			[self playBeepSound];
 		}
@@ -541,10 +541,10 @@
 	else
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		NSString* activityName = [appDelegate getCurrentActivityName];
+		NSString* activityType = [appDelegate getCurrentActivityType];
 
 		// If using a stationary bike, make sure a bike has been selected as we need to know the wheel size.
-		if ([activityName isEqualToString:@ACTIVITY_NAME_STATIONARY_BIKE] && !self->bikeName)
+		if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE] && !self->bikeName)
 		{
 			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
 															message:ALERT_MSG_NO_BIKE
@@ -558,7 +558,7 @@
 		}
 
 		// If using a treadmill, make sure a footpod sensor has been found.
-		else if ([activityName isEqualToString:@ACTIVITY_NAME_TREADMILL] && ![appDelegate hasLeBluetoothSensor:SENSOR_TYPE_FOOT_POD])
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] && ![appDelegate hasLeBluetoothSensor:SENSOR_TYPE_FOOT_POD])
 		{
 			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
 															message:ALERT_MSG_NO_FOOT_POD
@@ -574,7 +574,7 @@
 		// Everything's ok.
 		else
 		{
-			self->countdownSecs = [self->activityPrefs getCountdown:activityName];
+			self->countdownSecs = [self->activityPrefs getCountdown:activityType];
 
 			if (self->countdownSecs > 0)
 			{
@@ -880,10 +880,10 @@
 			if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_HEART_RATE])
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				NSString* activityName = [appDelegate getCurrentActivityName];
+				NSString* activityType = [appDelegate getCurrentActivityType];
 				ActivityAttributeType zoneValue = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE);
 				
-				if ([self->activityPrefs getShowHeartRatePercent:activityName] && zoneValue.valid)
+				if ([self->activityPrefs getShowHeartRatePercent:activityType] && zoneValue.valid)
 				{
 					[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f (%0.0f%%)", self->lastHeartRateValue, zoneValue.value.doubleVal * (double)100.0]];
 				}
@@ -950,10 +950,10 @@
 		if (attributeName)
 		{
 			ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-			NSString* activityName = [appDelegate getCurrentActivityName];
-			NSString* oldAttributeName = [prefs getAttributeName:activityName withPos:self->tappedButtonIndex];
-			[prefs setViewAttributePosition:activityName withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
-			[prefs setViewAttributePosition:activityName withAttributeName:attributeName withPos:self->tappedButtonIndex];
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			NSString* oldAttributeName = [prefs getAttributeName:activityType withPos:self->tappedButtonIndex];
+			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			[prefs setViewAttributePosition:activityType withAttributeName:attributeName withPos:self->tappedButtonIndex];
 
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
 			titleLabel.text = attributeName;

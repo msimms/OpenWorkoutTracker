@@ -39,7 +39,7 @@ void SpeedDataCallback(size_t activityIndex, void* context)
 	self->points = [[NSMutableArray alloc] init];
 	if (self->points)
 	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex(self->activityId);
+		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 
 		FreeHistoricalActivityObject(activityIndex);
 		FreeHistoricalActivitySensorData(activityIndex);

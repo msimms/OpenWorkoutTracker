@@ -15,7 +15,7 @@
 	NSMutableArray*            cache;
 	time_t                     lastCacheFlush;
 	NSString*                  deviceId;
-	NSNumber*                  activityId;
+	NSString*                  activityId;
 	CLLocation*                lastBroadcastLoc;
 }
 

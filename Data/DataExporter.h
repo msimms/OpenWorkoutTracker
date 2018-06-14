@@ -24,11 +24,11 @@ public:
 	DataExporter();
 	virtual ~DataExporter();
 
-	bool ExportToTcx(uint64_t activityId, const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-	bool ExportToGpx(uint64_t activityId, const std::string& fileName, Database* const pDatabase);
-	bool ExportToCsv(uint64_t activityId, const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
 
-	bool Export(uint64_t activityId, FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool Export(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
 
 	bool ExportActivitySummary(const ActivitySummaryList& activities, std::string& activityType, std::string& fileName);
 
@@ -36,9 +36,9 @@ private:
 	bool NearestSensorReading(uint64_t time, const SensorReadingList& list, SensorReadingList::const_iterator& iter);
 
 	bool ExportPositionDataToCsv(FileLib::CsvFileWriter& writer, const MovingActivity* const pMovingActivity);
-	bool ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, uint64_t activityId, Database* const pDatabase);
-	bool ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, uint64_t activityId, Database* const pDatabase);
-	bool ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, uint64_t activityId, Database* const pDatabase);
+	bool ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
+	bool ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
+	bool ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
 };
 
 #endif

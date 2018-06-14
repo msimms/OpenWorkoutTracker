@@ -8,7 +8,7 @@
 #ifndef __PULLUP__
 #define __PULLUP__
 
-#include "ActivityName.h"
+#include "ActivityType.h"
 #include "LiftingActivity.h"
 
 class PullUp : public LiftingActivity
@@ -17,8 +17,8 @@ public:
 	PullUp(GForceAnalyzer* const analyzer);
 	virtual ~PullUp();
 
-	static std::string Name() { return ACTIVITY_NAME_PULLUP; };
-	virtual std::string GetName() const { return PullUp::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_PULLUP; };
+	virtual std::string GetType() const { return PullUp::Type(); };
 
 	virtual double CaloriesBurned() const;
 };

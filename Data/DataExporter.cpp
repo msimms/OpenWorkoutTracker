@@ -43,7 +43,7 @@ bool DataExporter::NearestSensorReading(uint64_t timeMs, const SensorReadingList
 	return (timeDiff < 3000);
 }
 
-bool DataExporter::ExportToTcx(uint64_t activityId, const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	const MovingActivity* const pMovingActivity = dynamic_cast<const MovingActivity* const>(pActivity);
 	if (!pMovingActivity)
@@ -56,14 +56,14 @@ bool DataExporter::ExportToTcx(uint64_t activityId, const std::string& fileName,
 
 	if (writer.CreateFile(fileName))
 	{
-		if (writer.StartActivity(pActivity->GetName()))
+		if (writer.StartActivity(pActivity->GetType()))
 		{
 			const CoordinateList& coordinateList = pMovingActivity->GetCoordinates();
 			const TimeDistancePairList& distanceList = pMovingActivity->GetDistances();
 			LapSummaryList lapList;
 			SensorReadingList hrList;
 			SensorReadingList cadenceList;
-			
+
 			pDatabase->ListLaps(pActivity->GetId(), lapList);
 			pDatabase->LoadSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_HEART_RATE_MONITOR, hrList);
 			pDatabase->LoadSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_CADENCE, cadenceList);
@@ -173,7 +173,7 @@ bool DataExporter::ExportToTcx(uint64_t activityId, const std::string& fileName,
 	return result;
 }
 
-bool DataExporter::ExportToGpx(uint64_t activityId, const std::string& fileName, Database* const pDatabase)
+bool DataExporter::ExportToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	bool result = false;
 	FileLib::GpxFileWriter writer;
@@ -185,6 +185,7 @@ bool DataExporter::ExportToGpx(uint64_t activityId, const std::string& fileName,
 		SensorReadingList hrList;
 		SensorReadingList cadenceList;
 		SensorReadingList powerList;
+		std::string activityId = pActivity->GetId();
 		
 		pDatabase->ListActivityCoordinates(activityId, coordinateList);
 		pDatabase->ListLaps(activityId, lapList);
@@ -351,7 +352,7 @@ bool DataExporter::ExportPositionDataToCsv(FileLib::CsvFileWriter& writer, const
 	return result;
 }
 
-bool DataExporter::ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, uint64_t activityId, Database* const pDatabase)
+bool DataExporter::ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase)
 {
 	SensorReadingList accelList;
 	bool loaded = pDatabase->LoadSensorReadingsOfType(activityId, SENSOR_TYPE_ACCELEROMETER, accelList);
@@ -391,7 +392,7 @@ bool DataExporter::ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, 
 	return result;
 }
 
-bool DataExporter::ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, uint64_t activityId, Database* const pDatabase)
+bool DataExporter::ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase)
 {
 	SensorReadingList hrList;
 	bool loaded = pDatabase->LoadSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE_MONITOR, hrList);
@@ -425,7 +426,7 @@ bool DataExporter::ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, uint
 	return result;
 }
 
-bool DataExporter::ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, uint64_t activityId, Database* const pDatabase)
+bool DataExporter::ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase)
 {
 	SensorReadingList cadenceList;
 	bool loaded = pDatabase->LoadSensorReadingsOfType(activityId, SENSOR_TYPE_CADENCE, cadenceList);
@@ -459,7 +460,7 @@ bool DataExporter::ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, uint64
 	return result;
 }
 
-bool DataExporter::ExportToCsv(uint64_t activityId, const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	bool result = false;
 	FileLib::CsvFileWriter writer;
@@ -485,7 +486,7 @@ bool DataExporter::ExportToCsv(uint64_t activityId, const std::string& fileName,
 	return result;
 }
 
-bool DataExporter::Export(uint64_t activityId, FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::Export(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	if (pActivity)
 	{
@@ -497,7 +498,7 @@ bool DataExporter::Export(uint64_t activityId, FileFormat format, std::string& f
 		fileName.append("/");
 		fileName.append(buf);
 		fileName.append("-");
-		fileName.append(pActivity->GetName());
+		fileName.append(pActivity->GetType());
 
 		switch (format)
 		{
@@ -507,13 +508,13 @@ bool DataExporter::Export(uint64_t activityId, FileFormat format, std::string& f
 				return false;
 			case FILE_TCX:
 				fileName.append(".tcx");
-				return ExportToTcx(activityId, fileName, pDatabase, pActivity);
+				return ExportToTcx(fileName, pDatabase, pActivity);
 			case FILE_GPX:
 				fileName.append(".gpx");
-				return ExportToGpx(activityId, fileName, pDatabase);
+				return ExportToGpx(fileName, pDatabase, pActivity);
 			case FILE_CSV:
 				fileName.append(".csv");
-				return ExportToCsv(activityId, fileName, pDatabase, pActivity);
+				return ExportToCsv(fileName, pDatabase, pActivity);
 			default:
 				return false;
 		}
@@ -547,7 +548,8 @@ bool DataExporter::ExportActivitySummary(const ActivitySummaryList& activities, 
 		while (activityIter != activities.end())
 		{
 			const ActivitySummary& summary = (*activityIter);
-			if (summary.name.compare(activityType) == 0)
+
+			if (summary.type.compare(activityType) == 0)
 			{
 				const Activity* pActivity = summary.pActivity;
 

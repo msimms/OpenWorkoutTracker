@@ -15,7 +15,7 @@
 
 	NSMutableDictionary*  attributeDictionary;
 	NSMutableArray*       sortedKeys;
-	uint64_t              activityIdToMap;
+	NSString*             activityIdToMap;
 	ActivityAttributeType segmentToMap;
 	NSString*             segmentNameToMap;
 	MapOverviewMode       mapMode;
@@ -23,7 +23,7 @@
 
 - (void)buildAttributeDictionary;
 - (void)showSummaryMap:(NSString*)sectionName;
-- (void)showSegmentsMap:(uint64_t)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title;
+- (void)showSegmentsMap:(NSString*)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title;
 
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 

@@ -15,7 +15,7 @@
 
 @implementation OverlayFactory
 
-+ (ChartOverlay*)createOverlay:(NSString*)chartName withActivityId:(uint64_t)activityId
++ (ChartOverlay*)createOverlay:(NSString*)chartName withActivityId:(NSString*)activityId
 {
 	ChartOverlay* overlay = nil;
 

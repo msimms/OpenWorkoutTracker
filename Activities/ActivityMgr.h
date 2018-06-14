@@ -29,20 +29,20 @@ extern "C" {
 	typedef void (*KmlCoordinateCallback)(Coordinate coordinate, void* context);
 	typedef void (*HeadMapPointCallback)(Coordinate coordinate, uint32_t count, void* context);
 	typedef void (*TagCallback)(const char* name, void* context);
-	typedef void (*ActivityNameCallback)(const char* name, void* context);
+	typedef void (*ActivityTypeCallback)(const char* name, void* context);
 	typedef void (*AttributeNameCallback)(const char* name, void* context);
 	typedef void (*SensorTypeCallback)(SensorType type, void* context);
 
 	// Functions for managing the database.
 	void Initialize(const char* const dbFileName);
-	void DeleteActivity(uint64_t activityId);
+	void DeleteActivity(const char* const activityId);
 	void ResetDatabase(void);
 	void CloseDatabase(void);
 
 	// Functions for managing tags.
-	bool GetTags(uint64_t activityId, TagCallback callback, void* context);
-	bool StoreTag(uint64_t activityId, const char* const tag);
-	bool DeleteTag(uint64_t activityId, const char* const tag);
+	bool GetTags(const char* const activityId, TagCallback callback, void* context);
+	bool StoreTag(const char* const activityId, const char* const tag);
+	bool DeleteTag(const char* const activityId, const char* const tag);
 	bool SearchForTags(const char* const searchStr);
 
 	// Functions for controlling user preferences.
@@ -58,8 +58,8 @@ extern "C" {
 	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm);
 	bool GetBikeProfileByIndex(size_t bikeIndex, char** const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm);
 	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm);
-	bool GetActivityBikeProfile(uint64_t activityId, uint64_t* bikeId);
-	void SetActivityBikeProfile(uint64_t activityId, uint64_t bikeId);
+	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId);
+	void SetActivityBikeProfile(const char* const activityId, uint64_t bikeId);
 	void SetCurrentBicycle(const char* const name);
 	uint64_t GetBikeIdFromName(const char* const name);
 
@@ -83,11 +83,11 @@ extern "C" {
 	bool GetIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex, uint32_t* quantity, IntervalUnit* units);
 
 	// Functions for merging historical activities.
-	bool MergeActivities(uint64_t activityId1, uint64_t activityId2);
+	bool MergeActivities(const char* const activityId1, const char* const activityId2);
 
 	// Functions for accessing history (index to id conversions).
-	uint64_t ConvertActivityIndexToActivityId(size_t activityIndex);
-	size_t ConvertActivityIdToActivityIndex(uint64_t activityId);
+	const char* const ConvertActivityIndexToActivityId(size_t activityIndex);
+	size_t ConvertActivityIdToActivityIndex(const char* const activityId);
 
 	// Functions for loading history.
 	void InitializeHistoricalActivityList(void);
@@ -109,7 +109,7 @@ extern "C" {
 	// Functions for accessing historical data.
 	void GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime);
 	void FixHistoricalActivityEndTime(size_t activityIndex);
-	char* GetHistoricalActivityName(size_t activityIndex);
+	char* GetHistoricalActivityType(size_t activityIndex);
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex);
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
@@ -123,10 +123,10 @@ extern "C" {
 	bool GetActivityPoint(size_t pointIndex, Coordinate* const coordinate);
 
 	// Functions for modifying historical activity.
-	bool TrimActivityData(uint64_t activityId, uint64_t newTime, bool fromStart);
+	bool TrimActivityData(const char* const activityId, uint64_t newTime, bool fromStart);
 
 	// Functions for listing activity types.
-	void GetActivityTypeNames(ActivityNameCallback callback, void* context);
+	void GetActivityTypes(ActivityTypeCallback callback, void* context);
 
 	// Functions for listing attributes of the current activity.
 	void GetActivityAttributeNames(AttributeNameCallback callback, void* context);
@@ -147,11 +147,11 @@ extern "C" {
 	void CreateActivity(const char* const activityType);
 	void ReCreateOrphanedActivity(size_t activityIndex);
 	void DestroyCurrentActivity(void);
-	char* GetCurrentActivityName(void);
-	uint64_t GetCurrentActivityId(void);
+	char* GetCurrentActivityType(void);
+	const char* const GetCurrentActivityId(void);
 
 	// Functions for starting/stopping the current activity.
-	bool StartActivity(void);
+	bool StartActivity(const char* const activityId);
 	bool StopCurrentActivity(void);
 	bool PauseCurrentActivity(void);
 	bool StartNewLap(void);
@@ -172,8 +172,8 @@ extern "C" {
 
 	// Functions for importing/exporting activities.
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType);
-	char* ExportActivity(uint64_t activityId, FileFormat format, const char* const dirName);
-	char* ExportActivitySummary(const char* activityName, const char* const dirName);
+	char* ExportActivity(const char* const activityId, FileFormat format, const char* const dirName);
+	char* ExportActivitySummary(const char* activityType, const char* const dirName);
 
 	// Functions for processing sensor reads.
 	bool ProcessWeightReading(double weightKg, time_t timestamp);
@@ -194,17 +194,17 @@ extern "C" {
 	ActivityAttributeType InitializeActivityAttribute(ActivityAttributeValueType valueType, ActivityAttributeMeasureType measureType, UnitSystem units);
 	ActivityAttributeType QueryActivityAttributeTotal(const char* const attributeName);
 	ActivityAttributeType QueryActivityAttributeTotalByActivityType(const char* const attributeName, const char* const activityType);
-	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, uint64_t* activityId);
+	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, const char* const activityId);
 
 	// Functions for importing KML files.
 	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, KmlCoordinateCallback coordinateCallback, void* context);
 
 	// Functions for creating a heat map.
 	bool CreateHeatMap(HeadMapPointCallback callback, void* context);
-	
+
 	// Functions for doing coordinate calculations.
 	double DistanceBetweenCoordinates(const Coordinate c1, const Coordinate c2);
-	
+
 #ifdef __cplusplus
 }
 #endif

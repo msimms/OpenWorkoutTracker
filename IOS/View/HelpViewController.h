@@ -11,10 +11,10 @@
 {
 	IBOutlet UIImageView* helpImage;
 	IBOutlet UITextView* helpText;
-	NSString* activityName;
+	NSString* activityType;
 }
 
-- (void)setActivityName:(NSString*)name;
+- (void)setActivityType:(NSString*)type;
 
 @property (nonatomic, retain) IBOutlet UIImageView* helpImage;
 @property (nonatomic, retain) IBOutlet UITextView* helpText;

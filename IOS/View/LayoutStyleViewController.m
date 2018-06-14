@@ -67,8 +67,8 @@
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 	if (prefs)
 	{
-		NSString* activityName = [appDelegate getCurrentActivityName];
-		[prefs setViewType:activityName withViewType:ACTIVITY_VIEW_COMPLEX];
+		NSString* activityType = [appDelegate getCurrentActivityType];
+		[prefs setViewType:activityType withViewType:ACTIVITY_VIEW_COMPLEX];
 	}
 	[self.navigationController popViewControllerAnimated:TRUE];
 }
@@ -79,8 +79,8 @@
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 	if (prefs)
 	{
-		NSString* activityName = [appDelegate getCurrentActivityName];
-		[prefs setViewType:activityName withViewType:ACTIVITY_VIEW_MAPPED];
+		NSString* activityType = [appDelegate getCurrentActivityType];
+		[prefs setViewType:activityType withViewType:ACTIVITY_VIEW_MAPPED];
 	}
 	[self.navigationController popViewControllerAnimated:TRUE];
 }
@@ -91,8 +91,8 @@
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 	if (prefs)
 	{
-		NSString* activityName = [appDelegate getCurrentActivityName];
-		[prefs setViewType:activityName withViewType:ACTIVITY_VIEW_SIMPLE];
+		NSString* activityType = [appDelegate getCurrentActivityType];
+		[prefs setViewType:activityType withViewType:ACTIVITY_VIEW_SIMPLE];
 	}
 	[self.navigationController popViewControllerAnimated:TRUE];
 }

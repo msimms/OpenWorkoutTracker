@@ -8,7 +8,6 @@
 #ifndef __TREADMILL__
 #define __TREADMILL__
 
-#include "ActivityName.h"
 #include "Walking.h"
 
 class Treadmill : public Walking
@@ -17,8 +16,8 @@ public:
 	Treadmill();
 	virtual ~Treadmill();
 	
-	static std::string Name() { return ACTIVITY_NAME_TREADMILL; };
-	virtual std::string GetName() const { return Treadmill::Name(); };
+	static std::string Type() { return ACTIVITY_TYPE_TREADMILL; };
+	virtual std::string GetType() const { return Treadmill::Type(); };
 
 protected:
 	virtual bool ProcessGpsReading(const SensorReading& reading);

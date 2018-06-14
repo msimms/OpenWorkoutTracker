@@ -27,46 +27,46 @@ GForceAnalyzerFactory::~GForceAnalyzerFactory()
 	
 }
 
-GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::string& name, Database& database)
+GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::string& type, Database& database)
 {
 	GForceAnalyzer* pAnalyzer = NULL;
 	
-	if (name.compare(ChinUp::Name()) == 0)
+	if (type.compare(ChinUp::Type()) == 0)
 	{
 		pAnalyzer = new ChinUpAnalyzer();
 	}
-	else if (name.compare(PullUp::Name()) == 0)
+	else if (type.compare(PullUp::Type()) == 0)
 	{
 		pAnalyzer = new PullUpAnalyzer();
 	}
-	else if (name.compare(PushUp::Name()) == 0)
+	else if (type.compare(PushUp::Type()) == 0)
 	{
 		pAnalyzer = new PushUpAnalyzer();
 	}
-	else if (name.compare(Squat::Name()) == 0)
+	else if (type.compare(Squat::Type()) == 0)
 	{
 		pAnalyzer = new SquatAnalyzer();
 	}
 
 	if (pAnalyzer)
 	{
-		pAnalyzer->Train(name, database);
+		pAnalyzer->Train(type, database);
 	}
 	return pAnalyzer;
 }
 
-GForceAnalyzer* GForceAnalyzerFactory::GetAnalyzerForActivity(const std::string& name, Database& database)
+GForceAnalyzer* GForceAnalyzerFactory::GetAnalyzerForActivity(const std::string& type, Database& database)
 {
 	GForceAnalyzer* pAnalyzer = NULL;
 
 	try
 	{
-		pAnalyzer = GForceAnalyzerFactory::m_analyzers.at(name);
+		pAnalyzer = GForceAnalyzerFactory::m_analyzers.at(type);
 	}
 	catch (...)
 	{
-		pAnalyzer = CreateAnalyzerForActivity(name, database);
-		GForceAnalyzerFactory::m_analyzers.insert(std::pair<std::string, GForceAnalyzer*>(name, pAnalyzer));
+		pAnalyzer = CreateAnalyzerForActivity(type, database);
+		GForceAnalyzerFactory::m_analyzers.insert(std::pair<std::string, GForceAnalyzer*>(type, pAnalyzer));
 	}
 	return pAnalyzer;
 }
