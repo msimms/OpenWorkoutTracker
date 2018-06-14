@@ -69,6 +69,7 @@
 #define MSG_DELETE_QUESTION            NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
 #define MSG_LOW_MEMORY                 NSLocalizedString(@"Low memory", nil)
+#define MSG_MAIL_DISABLED              NSLocalizedString(@"Sending mail is disabled", nil)
 
 #define BUTTON_TITLE_OK                NSLocalizedString(@"Ok", nil)
 #define BUTTON_TITLE_YES               NSLocalizedString(@"Yes", nil)
@@ -998,6 +999,18 @@ typedef enum ExportFileTypeButtons
 			}
 			
 			[self presentViewController:mailController animated:YES completion:nil];
+		}
+	}
+	else
+	{
+		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
+														message:MSG_MAIL_DISABLED
+													   delegate:self
+											  cancelButtonTitle:nil
+											  otherButtonTitles:BUTTON_TITLE_OK, nil];
+		if (alert)
+		{
+			[alert show];
 		}
 	}
 }
