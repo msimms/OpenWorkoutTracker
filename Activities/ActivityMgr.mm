@@ -1428,7 +1428,7 @@ extern "C" {
 	{
 		if (g_pCurrentActivity)
 		{
-			return g_pCurrentActivity->GetId().c_str();
+			return g_pCurrentActivity->GetIdCStr();
 		}
 		return NULL;
 	}

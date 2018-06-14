@@ -108,157 +108,130 @@
 		return;
 	}
 
-	if (!self->activityId)
-	{
-		self->activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
-	}
-
 	NSDictionary* locationData = [notification object];
 	if (locationData)
 	{
-		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
-		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-		CLLocation* curLoc = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
+		NSMutableDictionary* broadcastData = [locationData mutableCopy];
 
-		bool shouldBroadcast = true;
-
-		// Only broadcast after moving a few meters.
-		if (self->lastBroadcastLoc != nil)
+		if (self->deviceId)
 		{
-			CLLocationDistance dist = [curLoc distanceFromLocation:self->lastBroadcastLoc];
-			shouldBroadcast = dist > 25;
+			[broadcastData setObject:self->deviceId forKey:@KEY_NAME_DEVICE_ID];
 		}
 
-		if (shouldBroadcast)
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		if (activityId)
 		{
-			NSMutableDictionary* broadcastData = [locationData mutableCopy];
+			[broadcastData setObject:activityId forKey:@KEY_NAME_ACTIVITY_ID];
+		}
 
-			if (self->deviceId)
-			{
-				[broadcastData setObject:self->deviceId forKey:@KEY_NAME_DEVICE_ID];
-			}
-			if (self->activityId)
-			{
-				[broadcastData setObject:self->activityId forKey:@KEY_NAME_ACTIVITY_ID];
-			}
+		char* activityType = GetCurrentActivityType();
+		if (activityType)
+		{
+			NSString* value = [[NSString alloc] initWithUTF8String:activityType];
+			[broadcastData setObject:value forKey:@KEY_NAME_ACTIVITY_TYPE];
+			free((void*)activityType);
+		}
 
-			char* activityType = GetCurrentActivityType();
-			if (activityType)
-			{
-				NSString* value = [[NSString alloc] initWithUTF8String:activityType];
-				[broadcastData setObject:value forKey:@KEY_NAME_ACTIVITY_TYPE];
-				free((void*)activityType);
-			}
-			
-			NSString* userName = [Preferences broadcastUserName];
-			if (userName)
-			{
-				[broadcastData setObject:userName forKey:@ACTIVITY_ATTRIBUTE_USER_NAME];
-			}
-			
-			ActivityAttributeType attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED];
-			}
+		NSString* userName = [Preferences broadcastUserName];
+		if (userName)
+		{
+			[broadcastData setObject:userName forKey:@ACTIVITY_ATTRIBUTE_USER_NAME];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_SPEED);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_SPEED];
-			}
-			
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
-			}
-			
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_MOVING_SPEED];
-			}
+		ActivityAttributeType attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_PACE);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_PACE];
-			}
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_SPEED);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_SPEED];
+		}
+		
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
+		}
+		
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_MOVING_SPEED];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_HEART_RATE];
-			}
-			
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_HEART_RATE];
-			}
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_PACE);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_PACE];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
-			}
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_HEART_RATE];
+		}
+		
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_HEART_RATE];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CADENCE);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
-			}
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_POWER);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_POWER];
-			}
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CADENCE);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
+		}
 
-			attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_POWER);
-			if (attr.valid)
-			{
-				NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-				[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_POWER];
-			}
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_POWER);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_POWER];
+		}
 
-			NSError* error;
-			NSData* jsonData = [NSJSONSerialization dataWithJSONObject:broadcastData options:NSJSONWritingPrettyPrinted error:&error];
-			NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_POWER);
+		if (attr.valid)
+		{
+			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_POWER];
+		}
 
-			if ([Preferences shouldBroadcastLocally])
-			{
-				[self broadcastLocally:text];
-			}
-			if ([Preferences shouldBroadcastGlobally])
-			{
-				[self broadcastGlobally:text];
-			}
+		NSError* error;
+		NSData* jsonData = [NSJSONSerialization dataWithJSONObject:broadcastData options:NSJSONWritingPrettyPrinted error:&error];
+		NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-			self->lastBroadcastLoc = curLoc;
+		if ([Preferences shouldBroadcastLocally])
+		{
+			[self broadcastLocally:text];
+		}
+		if ([Preferences shouldBroadcastGlobally])
+		{
+			[self broadcastGlobally:text];
 		}
 	}
 }
 
 - (void)activityStarted:(NSNotification*)notification
 {
-	NSDictionary* activityData = [notification object];
-	if (activityData)
-	{
-		self->activityId = [activityData objectForKey:@KEY_NAME_ACTIVITY_ID];
-	}
-
 	[self->cache removeAllObjects];
 	self->lastCacheFlush = time(NULL);
 }
@@ -266,7 +239,6 @@
 - (void)activityStopped:(NSNotification*)notification
 {
 	[self flushGlobalBroadcastCacheRest];
-	self->activityId = nil;
 }
 
 #pragma mark delegate methods

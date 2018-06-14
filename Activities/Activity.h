@@ -34,6 +34,7 @@ public:
 
 	virtual void SetId(const std::string& id) { m_id = id; };
 	virtual std::string GetId() const { return m_id; };
+	virtual const char* const GetIdCStr() const { return m_id.c_str(); };
 
 	virtual std::string GetType() const = 0;
 
