@@ -110,7 +110,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, uint64_t time
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LATITUDE, lat));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LONGITUDE, lon));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, ele));
-		result = m_pDb->StoreSensorReading(m_activityId, reading);
+		result = m_pDb->CreateSensorReading(m_activityId, reading);
 	}
 	m_lastTime = time;
 	return result;

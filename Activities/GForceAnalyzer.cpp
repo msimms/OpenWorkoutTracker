@@ -131,7 +131,7 @@ void GForceAnalyzer::Train(const std::string& activityType, Database& database)
 	ActivitySummaryList activities;
 	uint16_t manuallyDefinedCount = 0;
 
-	if (database.ListActivities(activities))
+	if (database.RetrieveActivities(activities))
 	{
 		// Extract data from all activities of the appropriate type - at least ones that have been manually corrected.
 
@@ -144,8 +144,8 @@ void GForceAnalyzer::Train(const std::string& activityType, Database& database)
 			{
 				try
 				{
-					if ((database.ListActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings)) &&
-						(database.LoadSummaryData(summary.activityId, summary.summaryAttributes)))
+					if ((database.RetrieveActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings)) &&
+						(database.RetrieveSummaryData(summary.activityId, summary.summaryAttributes)))
 					{
 						// How many reps did the user count?
 						ActivityAttributeType correctedRepsValue = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_REPS_CORRECTED);

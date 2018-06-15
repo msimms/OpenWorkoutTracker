@@ -72,7 +72,7 @@
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
 
 	Initialize([dbFileName UTF8String]);
-	
+
 	[self clearExportDir];
 
 	[Preferences registerDefaultsFromSettingsBundle:@"Root.plist"];
@@ -80,7 +80,7 @@
 	[Preferences registerDefaultsFromSettingsBundle:@"SocialCloud.plist"];
 
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-	
+
 	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 

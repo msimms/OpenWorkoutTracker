@@ -124,7 +124,7 @@ void ActivityFactory::CreateActivity(ActivitySummary& summary, Database& databas
 		User user = m_user;
 		struct tm* pStartTime = localtime(&summary.startTime);
 		double userWeightKg = user.GetWeightKg();
-		database.LoadNearestWeightMeasurement(summary.startTime, userWeightKg);
+		database.RetrieveNearestWeightMeasurement(summary.startTime, userWeightKg);
 		user.SetBaseDateForComputingAge(*pStartTime);
 		user.SetWeightKg(userWeightKg);
 		summary.pActivity->SetAthleteProfile(user);

@@ -107,7 +107,7 @@ extern "C" {
 		{
 			std::vector<std::string> tags;
 
-			if (g_pDatabase->ListTags(activityId, tags))
+			if (g_pDatabase->RetrieveTags(activityId, tags))
 			{
 				std::sort(tags.begin(), tags.end());
 
@@ -126,24 +126,20 @@ extern "C" {
 
 	bool StoreTag(const char* const activityId, const char* const tag)
 	{
-		bool result = false;
-		
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->StoreTag(activityId, tag);
+			return g_pDatabase->CreateTag(activityId, tag);
 		}
-		return result;
+		return false;
 	}
 
 	bool DeleteTag(const char* const activityId, const char* const tag)
 	{
-		bool result = false;
-		
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->DeleteTag(activityId, tag);
+			return g_pDatabase->DeleteTag(activityId, tag);
 		}
-		return result;
+		return false;
 	}
 
 	bool SearchForTags(const char* const searchStr)
@@ -162,7 +158,7 @@ extern "C" {
 			{
 				ActivitySummary summary;
 
-				if (g_pDatabase->LoadActivity((*iter), summary))
+				if (g_pDatabase->RetrieveActivity((*iter), summary))
 				{
 					g_historicalActivityList.push_back(summary);
 				}
@@ -206,7 +202,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			g_pDatabase->ListBikes(g_bikes);
+			g_pDatabase->RetrieveBikes(g_bikes);
 		}
 	}
 
@@ -220,7 +216,7 @@ extern "C" {
 			bike.name = name;
 			bike.weightKg = weightKg;
 			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
-			result = g_pDatabase->StoreBike(bike);
+			result = g_pDatabase->CreateBike(bike);
 			
 			if (result)
 			{
@@ -296,7 +292,7 @@ extern "C" {
 			const ActivitySummary& summary = (*activityIter);
 			uint64_t summaryBikeId = 0;
 
-			if (g_pDatabase->LoadBikeActivity(summary.activityId, summaryBikeId))
+			if (g_pDatabase->RetrieveBikeActivity(summary.activityId, summaryBikeId))
 			{
 				if (bikeId == summaryBikeId)
 				{
@@ -383,7 +379,7 @@ extern "C" {
 	{
 		if (g_pDatabase)
 		{
-			return g_pDatabase->LoadBikeActivity(activityId, (*bikeId));
+			return g_pDatabase->RetrieveBikeActivity(activityId, (*bikeId));
 		}
 		return false;
 	}
@@ -394,13 +390,13 @@ extern "C" {
 		{
 			uint64_t temp;
 
-			if (g_pDatabase->LoadBikeActivity(activityId, temp))
+			if (g_pDatabase->RetrieveBikeActivity(activityId, temp))
 			{
 				g_pDatabase->UpdateBikeActivity(bikeId, activityId);
 			}
 			else
 			{
-				g_pDatabase->StoreBikeActivity(bikeId, activityId);
+				g_pDatabase->CreateBikeActivity(bikeId, activityId);
 			}
 		}
 	}
@@ -523,7 +519,7 @@ extern "C" {
 	{
 		if (g_pDatabase && workoutName)
 		{
-			return g_pDatabase->StoreIntervalWorkout(workoutName);
+			return g_pDatabase->CreateIntervalWorkout(workoutName);
 		}
 		return false;
 	}
@@ -534,7 +530,7 @@ extern "C" {
 		{
 			uint64_t workoutId;
 
-			if (g_pDatabase->GetIntervalWorkoutId(workoutName, workoutId))
+			if (g_pDatabase->RetrieveIntervalWorkoutId(workoutName, workoutId))
 			{
 				return g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegments(workoutId);
 			}
@@ -548,13 +544,13 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			if (g_pDatabase->ListIntervalWorkouts(g_intervalWorkouts))
+			if (g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
 			{
 				std::vector<IntervalWorkout>::iterator iter = g_intervalWorkouts.begin();
 				while (iter != g_intervalWorkouts.end())
 				{
 					IntervalWorkout& workout = (*iter);
-					g_pDatabase->ListIntervalSegments(workout.workoutId, workout.segments);
+					g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments);
 					++iter;
 				}
 			}
@@ -597,7 +593,7 @@ extern "C" {
 			segment.workoutId = pWorkout->workoutId;
 			segment.quantity = quantity;
 			segment.units = units;
-			return g_pDatabase->StoreIntervalSegment(segment);
+			return g_pDatabase->CreateIntervalSegment(segment);
 		}
 		return false;
 	}
@@ -686,7 +682,7 @@ extern "C" {
 		
 		if (g_pDatabase)
 		{
-			g_pDatabase->ListActivities(g_historicalActivityList);
+			g_pDatabase->RetrieveActivities(g_historicalActivityList);
 		}
 	}
 
@@ -723,7 +719,7 @@ extern "C" {
 				if (pMovingActivity)
 				{
 					LapSummaryList laps;
-					result = g_pDatabase->ListLaps(summary.activityId, laps);
+					result = g_pDatabase->RetrieveLaps(summary.activityId, laps);
 					pMovingActivity->SetLaps(laps);
 				}
 			}
@@ -747,7 +743,7 @@ extern "C" {
 					case SENSOR_TYPE_ACCELEROMETER:
 						if (summary.accelerometerReadings.size() == 0)
 						{
-							if (g_pDatabase->ListActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings))
+							if (g_pDatabase->RetrieveActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings))
 							{
 								SensorReadingList::const_iterator iter = summary.accelerometerReadings.begin();
 								while (iter != summary.accelerometerReadings.end())
@@ -768,7 +764,7 @@ extern "C" {
 					case SENSOR_TYPE_GPS:
 						if (summary.locationPoints.size() == 0)
 						{
-							if (g_pDatabase->ListActivityPositionReadings(summary.activityId, summary.locationPoints))
+							if (g_pDatabase->RetrieveActivityPositionReadings(summary.activityId, summary.locationPoints))
 							{
 								SensorReadingList::const_iterator iter = summary.locationPoints.begin();
 								while (iter != summary.locationPoints.end())
@@ -789,7 +785,7 @@ extern "C" {
 					case SENSOR_TYPE_HEART_RATE_MONITOR:
 						if (summary.heartRateMonitorReadings.size() == 0)
 						{
-							if (g_pDatabase->ListActivityHeartRateMonitorReadings(summary.activityId, summary.heartRateMonitorReadings))
+							if (g_pDatabase->RetrieveActivityHeartRateMonitorReadings(summary.activityId, summary.heartRateMonitorReadings))
 							{
 								SensorReadingList::const_iterator iter = summary.heartRateMonitorReadings.begin();
 								while (iter != summary.heartRateMonitorReadings.end())
@@ -810,7 +806,7 @@ extern "C" {
 					case SENSOR_TYPE_CADENCE:
 						if (summary.cadenceReadings.size() == 0)
 						{
-							if (g_pDatabase->ListActivityCadenceReadings(summary.activityId, summary.cadenceReadings))
+							if (g_pDatabase->RetrieveActivityCadenceReadings(summary.activityId, summary.cadenceReadings))
 							{
 								SensorReadingList::const_iterator iter = summary.cadenceReadings.begin();
 								while (iter != summary.cadenceReadings.end())
@@ -834,7 +830,7 @@ extern "C" {
 					case SENSOR_TYPE_POWER_METER:
 						if (summary.powerReadings.size() == 0)
 						{
-							if (g_pDatabase->ListActivityPowerMeterReadings(summary.activityId, summary.powerReadings))
+							if (g_pDatabase->RetrieveActivityPowerMeterReadings(summary.activityId, summary.powerReadings))
 							{
 								SensorReadingList::const_iterator iter = summary.powerReadings.begin();
 								while (iter != summary.powerReadings.end())
@@ -908,7 +904,7 @@ extern "C" {
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
-			if (g_pDatabase->LoadSummaryData(summary.activityId, summary.summaryAttributes))
+			if (g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes))
 			{
 				if (summary.pActivity)
 				{
@@ -963,7 +959,7 @@ extern "C" {
 					if (value.valid)
 					{
 						UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
-						result = g_pDatabase->StoreSummaryData(summary.activityId, attribute, value);
+						result = g_pDatabase->CreateSummaryData(summary.activityId, attribute, value);
 					}
 					++iter;
 				}
@@ -1348,7 +1344,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			g_pDatabase->StoreCustomActivity(name, viewType);
+			g_pDatabase->CreateCustomActivity(name, viewType);
 		}
 	}
 
@@ -1485,7 +1481,7 @@ extern "C" {
 			if (pMovingActivity)
 			{
 				pMovingActivity->StartNewLap();
-				return g_pDatabase->StartNewLap(g_pCurrentActivity->GetId(), pMovingActivity->GetCurrentLapStartTime());
+				return g_pDatabase->CreateNewLap(g_pCurrentActivity->GetId(), pMovingActivity->GetCurrentLapStartTime());
 			}
 		}
 		return false;
@@ -1508,7 +1504,7 @@ extern "C" {
 				if (value.valid)
 				{
 					UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
-					result = g_pDatabase->StoreSummaryData(g_pCurrentActivity->GetId(), attribute, value);
+					result = g_pDatabase->CreateSummaryData(g_pCurrentActivity->GetId(), attribute, value);
 				}
 				++iter;
 			}
@@ -1694,7 +1690,7 @@ extern "C" {
 
 			if (processed && g_pDatabase)
 			{
-				return g_pDatabase->StoreSensorReading(g_pCurrentActivity->GetId(), reading);
+				return g_pDatabase->CreateSensorReading(g_pCurrentActivity->GetId(), reading);
 			}
 		}
 		return false;
@@ -1708,11 +1704,11 @@ extern "C" {
 			double mostRecentWeightKg = (double)0.0;
 
 			// Don't store redundant measurements.
-			if (g_pDatabase->LoadNewestWeightMeasurement(mostRecentWeightTime, mostRecentWeightKg))
+			if (g_pDatabase->RetrieveNewestWeightMeasurement(mostRecentWeightTime, mostRecentWeightKg))
 			{
 				if (mostRecentWeightKg != weightKg)
 				{
-					return g_pDatabase->StoreWeightMeasurement(timestamp, weightKg);
+					return g_pDatabase->CreateWeightMeasurement(timestamp, weightKg);
 				}
 				else
 				{
@@ -1721,7 +1717,7 @@ extern "C" {
 			}
 			else
 			{
-				return g_pDatabase->StoreWeightMeasurement(timestamp, weightKg);
+				return g_pDatabase->CreateWeightMeasurement(timestamp, weightKg);
 			}
 		}
 		return false;
