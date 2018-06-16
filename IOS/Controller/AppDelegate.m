@@ -20,6 +20,7 @@
 #import "LocationSensor.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
+#import "Urls.h"
 #import "UnitConversionFactors.h"
 #import "UserProfile.h"
 
@@ -27,13 +28,6 @@
 
 #define DATABASE_NAME               "Activities.sqlite"
 #define MAP_OVERLAY_DIR_NAME        "Map Overlays"
-
-#define BROADCAST_LOGIN_URL         "login_submit"
-#define BROADCAST_CREATE_LOGIN_URL  "create_login_submit"
-#define BROADCAST_LIST_FOLLOWING    "list_users_following?"
-#define BROADCAST_LIST_FOLLOWED_BY  "list_users_followed_by?"
-#define BROADCAST_INVITE_TO_FOLLOW  "invite_to_follow?"
-#define BROADCAST_REQUEST_TO_FOLLOW "request_to_follow?"
 
 @implementation UINavigationController (Rotation_IOS6)
 
@@ -1512,10 +1506,6 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:self->downloadedData];
 	}
-	else if ([url rangeOfString:@BROADCAST_INVITE_TO_FOLLOW].location != NSNotFound)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INVITE_TO_FOLLOW_RESULT object:self->downloadedData];
-	}
 	else if ([url rangeOfString:@BROADCAST_REQUEST_TO_FOLLOW].location != NSNotFound)
 	{
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:self->downloadedData];
@@ -1562,7 +1552,7 @@ void attributeNameCallback(const char* name, void* context)
 - (BOOL)login:(NSString*)username withPassword:(NSString*)password
 {
 	[Preferences setBroadcastUserName:username];
-	
+
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -1570,14 +1560,14 @@ void attributeNameCallback(const char* name, void* context)
 	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	NSString* urlStr = [NSString stringWithFormat:@"http://%@/%s", [Preferences broadcastHostName], BROADCAST_LOGIN_URL];
+	NSString* urlStr = [NSString stringWithFormat:@"%s://%@/%s", BROADCAST_PROTOCOL, [Preferences broadcastHostName], BROADCAST_LOGIN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 
 - (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
 	[Preferences setBroadcastUserName:username];
-	
+
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -1586,8 +1576,8 @@ void attributeNameCallback(const char* name, void* context)
 	[postData appendData:[[NSString stringWithFormat:@"\"realname\": \"%@\",", realname] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
-	
-	NSString* urlStr = [NSString stringWithFormat:@"http://%@/%s", [Preferences broadcastHostName], BROADCAST_CREATE_LOGIN_URL];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%s://%@/%s", BROADCAST_PROTOCOL, [Preferences broadcastHostName], BROADCAST_CREATE_LOGIN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 
@@ -1596,7 +1586,7 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* username = [Preferences broadcastUserName];
 	NSString* params = [NSString stringWithFormat:@"username=%@", username];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"http://%@/%s%@", [Preferences broadcastHostName], BROADCAST_LIST_FOLLOWING, escapedParams];
+	NSString* str = [NSString stringWithFormat:@"%s://%@/%s%@", BROADCAST_PROTOCOL, [Preferences broadcastHostName], BROADCAST_LIST_FOLLOWING, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
@@ -1605,25 +1595,16 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* username = [Preferences broadcastUserName];
 	NSString* params = [NSString stringWithFormat:@"username=%@", username];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"http://%@/%s%@", [Preferences broadcastHostName], BROADCAST_LIST_FOLLOWED_BY, escapedParams];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
-}
-
-- (BOOL)inviteToFollow:(NSString*)targetUsername
-{
-	NSString* username = [Preferences broadcastUserName];
-	NSString* params = [NSString stringWithFormat:@"username=%@target_username=%@", username, targetUsername];
-	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"http://%@/%s%@", [Preferences broadcastHostName], BROADCAST_INVITE_TO_FOLLOW, escapedParams];
+	NSString* str = [NSString stringWithFormat:@"%s://%@/%s%@", BROADCAST_PROTOCOL, [Preferences broadcastHostName], BROADCAST_LIST_FOLLOWED_BY, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
 - (BOOL)requestToFollow:(NSString*)targetUsername
 {
 	NSString* username = [Preferences broadcastUserName];
-	NSString* params = [NSString stringWithFormat:@"username=%@target_username=%@", username, targetUsername];
+	NSString* params = [NSString stringWithFormat:@"username=%@target_email=%@", username, targetUsername];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"http://%@/%s%@", [Preferences broadcastHostName], BROADCAST_REQUEST_TO_FOLLOW, escapedParams];
+	NSString* str = [NSString stringWithFormat:@"%s://%@/%s%@", BROADCAST_PROTOCOL, [Preferences broadcastHostName], BROADCAST_REQUEST_TO_FOLLOW, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 

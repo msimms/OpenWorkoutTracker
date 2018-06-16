@@ -13,8 +13,6 @@
 	NSMutableArray*       users;
 }
 
-- (IBAction)onInvite:(id)sender;
-
 @property (nonatomic, retain) IBOutlet UITableView* usersTableView;
 
 @end

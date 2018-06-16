@@ -13,7 +13,6 @@
 	IBOutlet UITextField* passwordTextField;
 	
 	IBOutlet UIBarButtonItem* loginButton;
-	IBOutlet UIBarButtonItem* createLoginButton;
 
 	IBOutlet UIActivityIndicatorView* spinner;
 
@@ -24,11 +23,9 @@
 @property (nonatomic, retain) IBOutlet UITextField* passwordTextField;
 
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* loginButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* createLoginButton;
 
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 
 - (IBAction)onLogin:(id)sender;
-- (IBAction)onCreateLogin:(id)sender;
 
 @end

@@ -28,7 +28,6 @@
 #define NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED "FollowedByListUpdated"
 #define NOTIFICATION_NAME_LOGIN_PROCESSED          "LoginProcessed"
 #define NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED   "CreateLoginProcessed"
-#define NOTIFICATION_NAME_INVITE_TO_FOLLOW_RESULT  "InviteToFollowResult"
 #define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
 
 #define KEY_NAME_ACTIVITY_ID                       "ActivityId"
@@ -182,7 +181,6 @@
 - (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
 - (BOOL)listFollowingAsync;
 - (BOOL)listFollowedByAsync;
-- (BOOL)inviteToFollow:(NSString*)targetUsername;
 - (BOOL)requestToFollow:(NSString*)targetUsername;
 
 @property (strong, nonatomic) UIWindow* window;

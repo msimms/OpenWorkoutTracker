@@ -8,10 +8,6 @@
 #import "FollowedByViewController.h"
 #import "AppDelegate.h"
 
-#define ALERT_TITLE_INVITE NSLocalizedString(@"Invite", nil)
-#define ALERT_MSG_INVITE   NSLocalizedString(@"Enter the email address of the person you would like to invite", nil)
-#define BUTTON_TITLE_OK    NSLocalizedString(@"Ok", nil)
-
 @interface FollowedByViewController ()
 
 @end
@@ -32,7 +28,6 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userListUpdated:) name:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(inviteResult:) name:@NOTIFICATION_NAME_INVITE_TO_FOLLOW_RESULT object:nil];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate listFollowedByAsync];
@@ -59,27 +54,6 @@
 	return UIInterfaceOrientationMaskPortrait;
 }
 
-#pragma button handlers
-
-- (IBAction)onInvite:(id)sender
-{
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_INVITE
-													message:ALERT_MSG_INVITE
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_OK
-										  otherButtonTitles:nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-		
-		UITextField* textField = [alert textFieldAtIndex:0];
-		[textField setKeyboardType:UIKeyboardTypeEmailAddress];
-		[textField becomeFirstResponder];
-		
-		[alert show];
-	}
-}
-
 #pragma mark update notification
 
 - (void)userListUpdated:(NSNotification*)notification
@@ -97,21 +71,6 @@
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
 	if ([responseCode intValue] == 200)
 	{
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [alertView title];
-	
-	if ([title isEqualToString:ALERT_TITLE_INVITE])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate inviteToFollow:text];
 	}
 }
 

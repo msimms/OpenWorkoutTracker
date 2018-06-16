@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "LocationSensor.h"
 #import "Preferences.h"
+#import "Urls.h"
 
 @implementation BroadcastManager
 
@@ -66,16 +67,16 @@
 		++numToSend;
 	}
 	[postData appendData:[[NSString stringWithFormat:@"]}\n"] dataUsingEncoding:NSASCIIStringEncoding]];
-	
+
 	if (numToSend > 0)
 	{
-		NSString* urlStr = [NSString stringWithFormat:@"https://%@/api/1.0/update_location", hostName];
+		NSString* urlStr = [NSString stringWithFormat:@"%s://%@/%s", BROADCAST_PROTOCOL, hostName, BROADCAST_UPDATE_LOCATION_URL];
 		NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
 		NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 		[request setURL:[NSURL URLWithString:urlStr]];
 		[request setHTTPMethod:@"POST"];
 		[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-		[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+		[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 		[request setHTTPBody:postData];
 
 		NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];

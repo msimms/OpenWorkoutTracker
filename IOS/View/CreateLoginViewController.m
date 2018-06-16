@@ -79,7 +79,7 @@
 	if ([responseCode intValue] == 200)
 	{
 		[Preferences setBroadcastUserName:self->username];
-		[self.navigationController popToRootViewControllerAnimated:TRUE];
+		[self.navigationController popViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)
 	{

@@ -27,7 +27,6 @@
 @synthesize usernameTextField;
 @synthesize passwordTextField;
 @synthesize loginButton;
-@synthesize createLoginButton;
 @synthesize spinner;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -77,7 +76,7 @@
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
 	if ([responseCode intValue] == 200)
 	{
-		[self.navigationController popToRootViewControllerAnimated:TRUE];
+		[self.navigationController popViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)
 	{
@@ -144,11 +143,6 @@
 		self->username = self.usernameTextField.text;
 		[appDelegate login:self.usernameTextField.text withPassword:self.passwordTextField.text];
 	}
-}
-
-- (IBAction)onCreateLogin:(id)sender
-{
-	[self performSegueWithIdentifier:@SEGUE_TO_CREATE_LOGIN_VIEW sender:self];
 }
 
 @end

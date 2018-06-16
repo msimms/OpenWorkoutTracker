@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Copperplate.ttc">
-            <string>Copperplate</string>
-        </array>
-        <array key="HelveticaNeueExtras.ttc">
-            <string>HelveticaNeue-CondensedBold</string>
-        </array>
-        <array key="HelveticaNeueLights.ttc">
-            <string>HelveticaNeue-Thin</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--SegueToNewActivityView-->
         <scene sceneID="5">
@@ -324,15 +313,6 @@
                                     <action selector="onLogin:" destination="BmG-cT-RrP" eventType="touchUpInside" id="fDY-0y-YwX"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="aJ6-vV-ZXx">
-                                <rect key="frame" x="18" y="292" width="335" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Create Login"/>
-                                <connections>
-                                    <action selector="onCreateLogin:" destination="BmG-cT-RrP" eventType="touchUpInside" id="FgW-BW-Xfd"/>
-                                </connections>
-                            </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="yB7-Ck-VdY" userLabel="Large Activity Indicator">
                                 <rect key="frame" x="23" y="315" width="320" height="37"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -346,7 +326,6 @@
                         <outlet property="passwordTextField" destination="DYt-YB-u6W" id="CPr-yw-IGD"/>
                         <outlet property="spinner" destination="yB7-Ck-VdY" id="P0a-g5-m7I"/>
                         <outlet property="usernameTextField" destination="2dr-je-Xiw" id="UP5-oK-jA4"/>
-                        <segue destination="fWI-Ns-4ZW" kind="push" identifier="SegueToCreateLoginView" id="Um4-Ga-Zhv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y4h-Ts-Nx1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2221,13 +2200,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Ooe-7E-rDW">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem title="Invite to Follow" id="Fef-lZ-9wY">
-                                        <connections>
-                                            <action selector="onInvite:" destination="3D7-f0-elt" id="hkT-KE-dQV"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
+                                <items/>
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2255,7 +2228,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <segue reference="j4b-oo-ykq"/>
         <segue reference="mpc-lI-yFA"/>
         <segue reference="PhW-xp-et3"/>
-        <segue reference="Um4-Ga-Zhv"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
