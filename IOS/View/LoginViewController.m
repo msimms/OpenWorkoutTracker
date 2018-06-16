@@ -89,8 +89,11 @@
 	}
 	else
 	{
+		NSData* data = [loginData objectForKey:@KEY_NAME_DATA];
+		NSString* dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
 		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-														message:MSG_LOGIN_FAILED
+														message:dataStr
 													   delegate:self
 											  cancelButtonTitle:nil
 											  otherButtonTitles:BUTTON_TITLE_OK, nil];
