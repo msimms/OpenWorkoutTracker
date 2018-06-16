@@ -247,7 +247,7 @@
 		27055BF71A7336D100417D94 /* WiFiDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiDiscovery.h; path = IOS/Sensors/WiFiDiscovery.h; sourceTree = SOURCE_ROOT; };
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
 		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
-		271C5E2920D43E4000DE759C /* Urls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Urls.h; sourceTree = SOURCE_ROOT; };
+		271C5E3820D59C2700DE759C /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = SOURCE_ROOT; };
 		271D8B0419D0E76C00857109 /* CadenceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CadenceCalculator.h; path = IOS/Sensors/CadenceCalculator.h; sourceTree = SOURCE_ROOT; };
 		271D8B0519D0E76C00857109 /* CadenceCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CadenceCalculator.m; path = IOS/Sensors/CadenceCalculator.m; sourceTree = SOURCE_ROOT; };
 		27214EC81ECB6B96007EE338 /* Straen.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Straen.entitlements; sourceTree = SOURCE_ROOT; };
@@ -634,7 +634,7 @@
 			isa = PBXGroup;
 			children = (
 				2762BC781ECB72FE0052A26E /* Defines.h */,
-				271C5E2920D43E4000DE759C /* Urls.h */,
+				271C5E3820D59C2700DE759C /* Urls.h */,
 			);
 			name = Common;
 			sourceTree = "<group>";
