@@ -669,8 +669,20 @@ typedef enum SettingsRowsBroadcast
 			[Preferences setTweetRunSplits:switchControl.isOn];
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_LOCAL_BROADCAST:
-			[Preferences setBroadcastLocally:switchControl.isOn];
-			[appDelegate configureBroadcasting];
+//			[Preferences setBroadcastLocally:switchControl.isOn];
+//			[appDelegate configureBroadcasting];
+			if (switchControl.isOn)
+			{
+				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
+																message:ALERT_MSG_IMPLEMENTED
+															   delegate:self
+													  cancelButtonTitle:BUTTON_TITLE_OK
+													  otherButtonTitles:nil];
+				if (alert)
+				{
+					[alert show];
+				}
+			}
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_GLOBAL_BROADCAST:
 			[Preferences setBroadcastGlobally:switchControl.isOn];
