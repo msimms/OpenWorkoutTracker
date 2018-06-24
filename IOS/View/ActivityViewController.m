@@ -690,7 +690,7 @@
 	[self performSegueWithIdentifier:@SEGUE_TO_LIVE_SUMMARY_VIEW sender:self];
 }
 
-#pragma mark
+#pragma mark sensor update methods
 
 - (void)locationUpdated:(NSNotification*)notification
 {

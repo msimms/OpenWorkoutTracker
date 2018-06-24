@@ -286,6 +286,8 @@
 			[self.mapView setRegion:region animated:YES];
 		}
 	}
+	
+	[super locationUpdated:notification];
 }
 
 - (void)addNewLocation:(CLLocation*)newLocation
