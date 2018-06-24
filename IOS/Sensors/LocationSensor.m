@@ -27,7 +27,7 @@
 		self.locationManager.allowsBackgroundLocationUpdates = YES;
 		
 		[self.locationManager requestWhenInUseAuthorization];
-//		[self.locationManager requestAlwaysAuthorization];
+		[self.locationManager requestAlwaysAuthorization];
 	}
 	return self;
 }
@@ -68,6 +68,10 @@
 									  nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOCATION object:locationData];
 	}
+}
+
+- (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
 }
 
 - (void)locationManager:(CLLocationManager*)manager didFailWithError:(NSError*)error

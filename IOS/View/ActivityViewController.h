@@ -47,7 +47,6 @@
 	double                     lastPowerValue;
 	ActivityPreferences*       activityPrefs;
 	NSString*                  bikeName;
-	bool                       autoStartEnabled;
 	bool                       autoStartCoordinateSet;
 	Coordinate                 autoStartCoordinate;
 	NSInteger                  tappedButtonIndex;

@@ -33,6 +33,7 @@ extern "C" {
 	Activity*        g_pCurrentActivity = NULL;
 	ActivityFactory* g_pActivityFactory = NULL;
 	Database*        g_pDatabase = NULL;
+	bool             g_autoStartEnabled = false;
 
 	ActivitySummaryList          g_historicalActivityList;
 	std::vector<Bike>            g_bikes;
@@ -1513,9 +1514,23 @@ extern "C" {
 	}
 
 	//
-	// Functions for querying the status of the current activity.
+	// Functions for managing the autostart state.
 	//
 
+	bool IsAutoStartEnabled()
+	{
+		return g_autoStartEnabled;
+	}
+	
+	void SetAutoStart(bool value)
+	{
+		g_autoStartEnabled = value;
+	}
+
+	//
+	// Functions for querying the status of the current activity.
+	//
+	
 	bool IsActivityCreated()
 	{
 		return (g_pCurrentActivity != NULL);

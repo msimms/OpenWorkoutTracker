@@ -503,9 +503,9 @@
 
 - (IBAction)onAutoStart:(id)sender
 {
-	self->autoStartEnabled = !self->autoStartEnabled;
+	SetAutoStart(!IsAutoStartEnabled());
 
-	if (self->autoStartEnabled)
+	if (IsAutoStartEnabled())
 	{
 		[self->autoStartButton setTintColor:[UIColor redColor]];
 	}
@@ -517,7 +517,7 @@
 
 - (IBAction)onStartStop:(id)sender
 {
-	self->autoStartEnabled = false;
+	SetAutoStart(false);
 
 	if (IsActivityInProgress())
 	{
@@ -718,7 +718,7 @@
 		}
 	}
 	
-	if (self->autoStartEnabled)
+	if (IsAutoStartEnabled())
 	{
 		NSDictionary* locationData = [notification object];
 
@@ -732,10 +732,12 @@
 
 		if (self->autoStartCoordinateSet)
 		{
+			const double MIN_AUTOSTART_DISTANCE = (double)30.0;
+
 			double distance = DistanceBetweenCoordinates(coord, self->autoStartCoordinate);
-			if (distance >= (double)10.0)
+			if (distance >= MIN_AUTOSTART_DISTANCE)
 			{
-				self->autoStartEnabled = false;
+				SetAutoStart(false);
 				self->autoStartCoordinateSet = false;
 
 				[self onStartStop:nil];

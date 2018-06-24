@@ -1,2 +1,5 @@
 /* Localized versions of Info.plist keys */
 
+NSLocationAlwaysUsageDescription = "Se requieren servicios de ubicación para monitorear ciertas actividades."
+NSLocationAlwaysAndWhenInUseUsageDescription = "Se requieren servicios de ubicación para monitorear ciertas actividades."
+NSLocationWhenInUseUsageDescription = "Se requieren servicios de ubicación para monitorear ciertas actividades."

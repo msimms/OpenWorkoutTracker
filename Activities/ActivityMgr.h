@@ -157,6 +157,10 @@ extern "C" {
 	bool StartNewLap(void);
 	bool SaveActivitySummaryData(void);
 
+	// Functions for managing the autostart state.
+	bool IsAutoStartEnabled(void);
+	void SetAutoStart(bool value);
+
 	// Functions for querying the status of the current activity.
 	bool IsActivityCreated(void);
 	bool IsActivityInProgress(void);
