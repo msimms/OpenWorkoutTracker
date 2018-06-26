@@ -49,8 +49,7 @@ typedef enum SettingsRowsShare
 
 typedef enum SettingsRowsBroadcast
 {
-	SETTINGS_ROW_LOCAL_BROADCAST = 0,
-	SETTINGS_ROW_GLOBAL_BROADCAST,
+	SETTINGS_ROW_GLOBAL_BROADCAST = 0,
 	SETTINGS_ROW_BROADCAST_RATE,
 	SETTINGS_ROW_BROADCAST_HOST,
 	SETTINGS_ROW_MANAGE_FOLLOWING,
@@ -490,12 +489,6 @@ typedef enum SettingsRowsBroadcast
 
 				switch (row)
 				{
-					case SETTINGS_ROW_LOCAL_BROADCAST:
-						cell.textLabel.text = BROADCAST_LOCALLY;
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[Preferences shouldBroadcastLocally]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
 					case SETTINGS_ROW_GLOBAL_BROADCAST:
 						cell.textLabel.text = BROADCAST_GLOBALLY;
 						cell.detailTextLabel.text = @"";
@@ -550,7 +543,6 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_BROADCAST:
 			switch (row)
 			{
-				case SETTINGS_ROW_LOCAL_BROADCAST:
 				case SETTINGS_ROW_GLOBAL_BROADCAST:
 				case SETTINGS_ROW_BROADCAST_RATE:
 				case SETTINGS_ROW_BROADCAST_HOST:
@@ -667,22 +659,6 @@ typedef enum SettingsRowsBroadcast
 			break;
 		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_RUN_SPLITS:
 			[Preferences setTweetRunSplits:switchControl.isOn];
-			break;
-		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_LOCAL_BROADCAST:
-//			[Preferences setBroadcastLocally:switchControl.isOn];
-//			[appDelegate configureBroadcasting];
-			if (switchControl.isOn)
-			{
-				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
-																message:ALERT_MSG_IMPLEMENTED
-															   delegate:self
-													  cancelButtonTitle:BUTTON_TITLE_OK
-													  otherButtonTitles:nil];
-				if (alert)
-				{
-					[alert show];
-				}
-			}
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_GLOBAL_BROADCAST:
 			[Preferences setBroadcastGlobally:switchControl.isOn];

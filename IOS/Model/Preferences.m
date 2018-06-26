@@ -14,7 +14,6 @@
 #define PREF_NAME_TWEET_STOP                     "Tweet Stop"
 #define PREF_NAME_TWEET_RUN_SPLITS               "Tweet Run Splits"
 #define PREF_NAME_SCAN_FOR_SENSORS               "Scan for Sensors"
-#define PREF_NAME_BROADCAST_LOCAL                "Broadcast Local"
 #define PREF_NAME_BROADCAST_GLOBAL               "Broadcast Global"
 #define PREF_NAME_BROADCAST_USER_NAME            "Broadcast User Name"
 #define PREF_NAME_BROADCAST_RATE                 "Broadcast Rate"
@@ -147,11 +146,6 @@
 	return [self readBooleanValue:@PREF_NAME_SCAN_FOR_SENSORS];
 }
 
-+ (BOOL)shouldBroadcastLocally
-{
-	return [self readBooleanValue:@PREF_NAME_BROADCAST_LOCAL];
-}
-
 + (BOOL)shouldBroadcastGlobally
 {
 	return [self readBooleanValue:@PREF_NAME_BROADCAST_GLOBAL];
@@ -263,11 +257,6 @@
 + (void)setScanForSensors:(BOOL)value
 {
 	[self writeBoolValue:@PREF_NAME_SCAN_FOR_SENSORS withValue:value];
-}
-
-+ (void)setBroadcastLocally:(BOOL)value
-{
-	[self writeBoolValue:@PREF_NAME_BROADCAST_LOCAL withValue:value];
 }
 
 + (void)setBroadcastGlobally:(BOOL)value

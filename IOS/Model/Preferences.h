@@ -29,7 +29,6 @@
 + (BOOL)shouldTweetWorkoutStop;
 + (BOOL)shouldTweetRunSplits;
 + (BOOL)shouldScanForSensors;
-+ (BOOL)shouldBroadcastLocally;
 + (BOOL)shouldBroadcastGlobally;
 + (NSString*)broadcastUserName;
 + (NSInteger)broadcastRate;
@@ -50,7 +49,6 @@
 + (void)setTweetWorkoutStop:(BOOL)value;
 + (void)setTweetRunSplits:(BOOL)value;
 + (void)setScanForSensors:(BOOL)value;
-+ (void)setBroadcastLocally:(BOOL)value;
 + (void)setBroadcastGlobally:(BOOL)value;
 + (void)setBroadcastUserName:(NSString*)value;
 + (void)setBroadcastRate:(NSInteger)value;

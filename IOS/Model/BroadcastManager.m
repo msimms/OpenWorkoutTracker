@@ -220,10 +220,6 @@
 		NSData* jsonData = [NSJSONSerialization dataWithJSONObject:broadcastData options:NSJSONWritingPrettyPrinted error:&error];
 		NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-		if ([Preferences shouldBroadcastLocally])
-		{
-			[self broadcastLocally:text];
-		}
 		if ([Preferences shouldBroadcastGlobally])
 		{
 			[self broadcastGlobally:text];

@@ -435,7 +435,7 @@
 
 - (void)configureBroadcasting
 {
-	if ([Preferences shouldBroadcastLocally] || [Preferences shouldBroadcastGlobally])
+	if ([Preferences shouldBroadcastGlobally])
 	{
 		if (!self->broadcastMgr)
 		{
