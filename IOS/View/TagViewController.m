@@ -224,7 +224,15 @@
 
 - (void)textFieldDidEndEditing:(UITextField*)textField
 {
-	StoreTag([self->activityId UTF8String], [[textField text] UTF8String]);
+	NSString* tag = [textField text];
+	if (StoreTag([self->activityId UTF8String], [tag UTF8String]))
+	{
+		NSDictionary* tagData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								 self->activityId, @KEY_NAME_ACTIVITY_ID,
+								 tag, @KEY_NAME_TAG,
+								 nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_TAG_CREATED object:tagData];
+	}
 }
 
 @end

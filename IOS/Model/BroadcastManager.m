@@ -22,6 +22,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStarted:) name:@NOTIFICATION_NAME_ACTIVITY_STARTED object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagCreated:) name:@NOTIFICATION_NAME_TAG_CREATED object:nil];
 
 		self->session = [[BroadcastSessionContainer alloc] init];
 		self->cache = [[NSMutableArray alloc] init];
@@ -47,6 +48,19 @@
 	}
 }
 
+- (NSURLConnection*)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
+{
+	NSString* urlStr = [NSString stringWithFormat:@"%s://%@/%s", BROADCAST_PROTOCOL, hostName, path];
+	NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
+	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
+	[request setURL:[NSURL URLWithString:urlStr]];
+	[request setHTTPMethod:@"POST"];
+	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setHTTPBody:data];
+	return [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
 - (void)flushGlobalBroadcastCacheRest
 {
 	NSString* hostName = [Preferences broadcastHostName];
@@ -70,16 +84,7 @@
 
 	if (numToSend > 0)
 	{
-		NSString* urlStr = [NSString stringWithFormat:@"%s://%@/%s", BROADCAST_PROTOCOL, hostName, BROADCAST_UPDATE_LOCATION_URL];
-		NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
-		NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
-		[request setURL:[NSURL URLWithString:urlStr]];
-		[request setHTTPMethod:@"POST"];
-		[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-		[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-		[request setHTTPBody:postData];
-
-		NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+		NSURLConnection* conn = [self sendToServer:hostName withPath:BROADCAST_UPDATE_LOCATION_URL withData:postData];
 		if (conn != nil)
 		{
 			NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, numToSend - 1)];
@@ -236,6 +241,23 @@
 - (void)activityStopped:(NSNotification*)notification
 {
 	[self flushGlobalBroadcastCacheRest];
+}
+
+- (void)tagCreated:(NSNotification*)notification
+{
+	NSString* hostName = [Preferences broadcastHostName];
+	if (hostName == nil)
+	{
+		return;
+	}
+
+	NSDictionary* tagData = [notification object];
+	NSString* tag = [tagData objectForKey:@KEY_NAME_TAG];
+	NSString* activityId = [tagData objectForKey:@KEY_NAME_ACTIVITY_ID];
+	NSString* escapedTag = [tag stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+	NSString* post = [NSString stringWithFormat:@"{\"tag\": \"%@\", \"activity id\":\"%@\"}\n", escapedTag, activityId];
+	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+	[self sendToServer:hostName withPath:BROADCAST_CREATE_TAG_URL withData:postData];
 }
 
 #pragma mark delegate methods

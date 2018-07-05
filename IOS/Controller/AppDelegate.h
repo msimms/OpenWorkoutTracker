@@ -29,6 +29,7 @@
 #define NOTIFICATION_NAME_LOGIN_PROCESSED          "LoginProcessed"
 #define NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED   "CreateLoginProcessed"
 #define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
+#define NOTIFICATION_NAME_TAG_CREATED              "TagCreated"
 
 #define KEY_NAME_ACTIVITY_ID                       "ActivityId"
 #define KEY_NAME_ACTIVITY_TYPE                     "ActivityType"
@@ -39,6 +40,7 @@
 #define KEY_NAME_RESPONSE_CODE                     "ResponseCode"
 #define KEY_NAME_DATA                              "Data"
 #define KEY_NAME_URL                               "URL"
+#define KEY_NAME_TAG                               "Tag"
 
 #define NOTIFICATION_NAME_INTERVAL_UPDATED         "IntervalUpdated"
 #define NOTIFICATION_NAME_INTERVAL_COMPLETE        "IntervalComplete"
