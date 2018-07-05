@@ -10,13 +10,14 @@
 #import "Preferences.h"
 #import "Segues.h"
 
-#define TITLE_ERROR         NSLocalizedString(@"Error", nil)
-#define BUTTON_TITLE_CANCEL NSLocalizedString(@"Cancel", nil)
-#define BUTTON_TITLE_OK     NSLocalizedString(@"OK", nil)
-#define MSG_NO_EMAIL        NSLocalizedString(@"You did not provide an email address.", nil)
-#define MSG_NO_PASSWORD     NSLocalizedString(@"You did not enter a password.", nil)
-#define MSG_LOGIN_FAILED    NSLocalizedString(@"Failed to login to the account.", nil)
-#define MSG_404             NSLocalizedString(@"There was an error contacting the web service.", nil)
+#define TITLE_ERROR          NSLocalizedString(@"Error", nil)
+#define BUTTON_TITLE_CANCEL  NSLocalizedString(@"Cancel", nil)
+#define BUTTON_TITLE_OK      NSLocalizedString(@"OK", nil)
+#define MSG_NO_EMAIL         NSLocalizedString(@"You did not provide an email address.", nil)
+#define MSG_NO_PASSWORD      NSLocalizedString(@"You did not enter a password.", nil)
+#define MSG_LOGIN_FAILED     NSLocalizedString(@"Failed to login to the account.", nil)
+#define MSG_404              NSLocalizedString(@"There was an error contacting the web service.", nil)
+#define MSG_SUCCESSFUL_LOGIN NSLocalizedString(@"Successful login.", nil)
 
 @interface LoginViewController ()
 
@@ -74,8 +75,16 @@
 {
 	NSDictionary* loginData = [notification object];
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+
 	if ([responseCode intValue] == 200)
 	{
+		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@""
+														message:MSG_SUCCESSFUL_LOGIN
+													   delegate:self
+											  cancelButtonTitle:nil
+											  otherButtonTitles:BUTTON_TITLE_OK, nil];
+		[alert show];
+
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)

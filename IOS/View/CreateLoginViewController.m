@@ -21,6 +21,7 @@
 #define MSG_NO_LAST_NAME           NSLocalizedString(@"You did not enter your last name.", nil)
 #define MSG_LOGIN_FAILED           NSLocalizedString(@"Failed to create the account.", nil)
 #define MSG_404                    NSLocalizedString(@"There was an error contacting the web service.", nil)
+#define MSG_SUCCESSFUL_LOGIN       NSLocalizedString(@"Successful login.", nil)
 
 @interface CreateLoginViewController ()
 
@@ -76,9 +77,18 @@
 {
 	NSDictionary* loginData = [notification object];
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+
 	if ([responseCode intValue] == 200)
 	{
 		[Preferences setBroadcastUserName:self->username];
+
+		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@""
+														message:MSG_SUCCESSFUL_LOGIN
+													   delegate:self
+											  cancelButtonTitle:nil
+											  otherButtonTitles:BUTTON_TITLE_OK, nil];
+		[alert show];
+
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)
