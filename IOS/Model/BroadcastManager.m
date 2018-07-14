@@ -63,33 +63,47 @@
 
 - (void)flushGlobalBroadcastCacheRest
 {
+	// No host name set, just return.
 	NSString* hostName = [Preferences broadcastHostName];
 	if (hostName == nil)
 	{
 		return;
 	}
+	
+	// Still waiting for a response from the last attempt to send, so just hold off for now.
+	if (self->currentLocationConnection)
+	{
+		self->lastCacheFlush = time(NULL);
+		return;
+	}
 
 	NSString* post = [NSString stringWithFormat:@"{\"locations\": ["];
+	if (!post)
+	{
+		self->lastCacheFlush = time(NULL);
+		return;
+	}
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	size_t numToSend = 0;
+	if (!postData)
+	{
+		self->lastCacheFlush = time(NULL);
+		return;
+	}
+
+	self->numLocObjsBeingSent = 0;
 
 	for (NSString* text in self->cache)
 	{
-		if (numToSend > 0)
+		if (self->numLocObjsBeingSent > 0)
 			[postData appendData:[[NSString stringWithFormat:@",\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 		[postData appendData:[text dataUsingEncoding:NSASCIIStringEncoding]];
-		++numToSend;
+		++self->numLocObjsBeingSent;
 	}
 	[postData appendData:[[NSString stringWithFormat:@"]}\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	if (numToSend > 0)
+	if (self->numLocObjsBeingSent > 0)
 	{
-		NSURLConnection* conn = [self sendToServer:hostName withPath:BROADCAST_UPDATE_LOCATION_URL withData:postData];
-		if (conn != nil)
-		{
-			NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, numToSend - 1)];
-			[self->cache removeObjectsAtIndexes:indexSet];
-		}
+		self->currentLocationConnection = [self sendToServer:hostName withPath:BROADCAST_UPDATE_LOCATION_URL withData:postData];
 	}
 
 	self->lastCacheFlush = time(NULL);
@@ -260,10 +274,22 @@
 	[self sendToServer:hostName withPath:BROADCAST_CREATE_TAG_URL withData:postData];
 }
 
-#pragma mark delegate methods
+#pragma mark NSURLConnectionDataDelegate methods
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
+	if (connection == self->currentLocationConnection)
+	{
+		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+		if ([httpResponse statusCode] == 200)
+		{
+			NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self->numLocObjsBeingSent)];
+			[self->cache removeObjectsAtIndexes:indexSet];
+			self->numLocObjsBeingSent = 0;
+		}
+
+		self->currentLocationConnection = nil;
+	}
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
@@ -272,6 +298,10 @@
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
 {
+	if (connection == self->currentLocationConnection)
+	{
+		self->currentLocationConnection = nil;
+	}
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection

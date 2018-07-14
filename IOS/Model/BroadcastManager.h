@@ -15,6 +15,8 @@
 	NSMutableArray*            cache;
 	time_t                     lastCacheFlush;
 	NSString*                  deviceId;
+	NSURLConnection*           currentLocationConnection; // Only want to create one connection at a time.
+	size_t                     numLocObjsBeingSent;       // Number of location objects being sent.
 }
 
 @end
