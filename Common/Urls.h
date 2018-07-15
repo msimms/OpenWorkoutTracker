@@ -7,7 +7,6 @@
 
 #pragma once
 
-#define BROADCAST_PROTOCOL            "https"
 #define BROADCAST_LOGIN_URL           "api/1.0/login_submit"
 #define BROADCAST_CREATE_LOGIN_URL    "api/1.0/create_login_submit"
 #define BROADCAST_LIST_FOLLOWING      "api/1.0/list_users_following?"

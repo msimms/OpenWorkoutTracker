@@ -50,7 +50,8 @@
 
 - (NSURLConnection*)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
 {
-	NSString* urlStr = [NSString stringWithFormat:@"%s://%@/%s", BROADCAST_PROTOCOL, hostName, path];
+	NSString* protocolStr = [Preferences broadcastProtocol];
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", protocolStr, hostName, path];
 	NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
 	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 	[request setURL:[NSURL URLWithString:urlStr]];

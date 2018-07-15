@@ -51,6 +51,7 @@ typedef enum SettingsRowsBroadcast
 {
 	SETTINGS_ROW_GLOBAL_BROADCAST = 0,
 	SETTINGS_ROW_BROADCAST_RATE,
+	SETTINGS_ROW_BROADCAST_PROTOCOL,
 	SETTINGS_ROW_BROADCAST_HOST,
 	SETTINGS_ROW_MANAGE_FOLLOWING,
 	SETTINGS_ROW_MANAGE_FOLLOWED_BY,
@@ -71,6 +72,7 @@ typedef enum SettingsRowsBroadcast
 #define BROADCAST_GLOBALLY           NSLocalizedString(@"To the Internet", nil)
 #define BROADCAST_NAME               NSLocalizedString(@"Name", nil)
 #define BROADCAST_RATE               NSLocalizedString(@"Update Rate", nil)
+#define BROADCAST_HTTPS              NSLocalizedString(@"Use HTTPS", nil)
 #define BROADCAST_HOST               NSLocalizedString(@"Broadcast Server", nil)
 #define BROADCAST_UNITS              NSLocalizedString(@"Seconds", nil)
 #define MANAGE_FOLLOWING             NSLocalizedString(@"Manage People I'm Following", nil)
@@ -499,6 +501,13 @@ typedef enum SettingsRowsBroadcast
 						cell.textLabel.text = BROADCAST_RATE;
 						cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS];
 						break;
+					case SETTINGS_ROW_BROADCAST_PROTOCOL:
+						cell.textLabel.text = BROADCAST_HTTPS;
+						cell.detailTextLabel.text = @"";
+						bool usingHttps = [[Preferences broadcastProtocol] isEqualToString: @"https"];
+						[switchview setOn:usingHttps];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
 					case SETTINGS_ROW_BROADCAST_HOST:
 						cell.textLabel.text = BROADCAST_HOST;
 						cell.detailTextLabel.text = [Preferences broadcastHostName];
@@ -517,6 +526,7 @@ typedef enum SettingsRowsBroadcast
 							cell.textLabel.text = DEVICE_ID;
 							cell.detailTextLabel.text = [appDelegate getUuid];
 						}
+						break;
 				}
 			}
 			break;
@@ -545,6 +555,7 @@ typedef enum SettingsRowsBroadcast
 			{
 				case SETTINGS_ROW_GLOBAL_BROADCAST:
 				case SETTINGS_ROW_BROADCAST_RATE:
+				case SETTINGS_ROW_BROADCAST_PROTOCOL:
 				case SETTINGS_ROW_BROADCAST_HOST:
 					break;
 				case SETTINGS_ROW_MANAGE_FOLLOWING:
@@ -676,6 +687,10 @@ typedef enum SettingsRowsBroadcast
 				}
 			}
 			[self.settingsTableView reloadData];
+			break;
+		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_PROTOCOL:
+			[Preferences setBroadcastProtocol:switchControl.isOn ? @"https" : @"http"];
+			break;
 	}
 }
 

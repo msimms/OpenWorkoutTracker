@@ -32,6 +32,7 @@
 + (BOOL)shouldBroadcastGlobally;
 + (NSString*)broadcastUserName;
 + (NSInteger)broadcastRate;
++ (NSString*)broadcastProtocol;
 + (NSString*)broadcastHostName;
 + (BOOL)hasShownFirstTimeUseMessage;
 + (BOOL)hasShownPullUpHelp;
@@ -52,6 +53,7 @@
 + (void)setBroadcastGlobally:(BOOL)value;
 + (void)setBroadcastUserName:(NSString*)value;
 + (void)setBroadcastRate:(NSInteger)value;
++ (void)setBroadcastProtocol:(NSString*)value;
 + (void)setBroadcastHostName:(NSString*)value;
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value;
 + (void)setHasShownPullUpHelp:(BOOL)value;

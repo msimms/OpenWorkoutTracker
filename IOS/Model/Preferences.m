@@ -17,6 +17,7 @@
 #define PREF_NAME_BROADCAST_GLOBAL               "Broadcast Global"
 #define PREF_NAME_BROADCAST_USER_NAME            "Broadcast User Name"
 #define PREF_NAME_BROADCAST_RATE                 "Broadcast Rate"
+#define PREF_NAME_BROADCAST_PROTOCOL             "Broadcast Protocol"
 #define PREF_NAME_BROADCAST_HOST_NAME            "Broadcast Host Name"
 #define PREF_NAME_ALWAYS_CONNECT                 "Always Connect"
 #define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG   "Has Shown First Time Use Message"
@@ -166,6 +167,14 @@
 	return rate;
 }
 
++ (NSString*)broadcastProtocol
+{
+	NSString* protocol = [self readStringValue:@PREF_NAME_BROADCAST_PROTOCOL];
+	if ((protocol == nil) || ([protocol length] == 0))
+		protocol = @"https";
+	return protocol;
+}
+
 + (NSString*)broadcastHostName
 {
 	NSString* hostName = [self readStringValue:@PREF_NAME_BROADCAST_HOST_NAME];
@@ -274,6 +283,11 @@
 	if (value <= MAX_BROADCAST_RATE)
 		return;
 	[self writeIntValue:@PREF_NAME_BROADCAST_RATE withValue:value];
+}
+
++ (void)setBroadcastProtocol:(NSString*)value
+{
+	[self writeStringValue:@PREF_NAME_BROADCAST_PROTOCOL withValue:value];
 }
 
 + (void)setBroadcastHostName:(NSString*)value
