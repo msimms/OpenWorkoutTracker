@@ -25,7 +25,8 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagCreated:) name:@NOTIFICATION_NAME_TAG_CREATED object:nil];
 
 		self->session = [[BroadcastSessionContainer alloc] init];
-		self->cache = [[NSMutableArray alloc] init];
+		self->locationCache = [[NSMutableArray alloc] init];
+		self->accelerometerCache = [[NSMutableArray alloc] init];
 		self->lastCacheFlush = 0;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -78,6 +79,7 @@
 		return;
 	}
 
+	// Write cached location data to the JSON string.
 	NSString* post = [NSString stringWithFormat:@"{\"locations\": ["];
 	if (!post)
 	{
@@ -90,17 +92,49 @@
 		self->lastCacheFlush = time(NULL);
 		return;
 	}
-
 	self->numLocObjsBeingSent = 0;
-
-	for (NSString* text in self->cache)
+	for (NSString* text in self->locationCache)
 	{
 		if (self->numLocObjsBeingSent > 0)
 			[postData appendData:[[NSString stringWithFormat:@",\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 		[postData appendData:[text dataUsingEncoding:NSASCIIStringEncoding]];
 		++self->numLocObjsBeingSent;
 	}
-	[postData appendData:[[NSString stringWithFormat:@"]}\n"] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
+	
+	// Write cached acclerometer data to the JSON string.
+	[postData appendData:[[NSString stringWithFormat:@", \"accelerometer\": ["] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
+
+	// Add the device ID to the JSON string.
+	if (self->deviceId)
+	{
+		[postData appendData:[[NSString stringWithFormat:@",\n\"%s\":\"%@\"", KEY_NAME_DEVICE_ID, self->deviceId] dataUsingEncoding:NSASCIIStringEncoding]];
+	}
+
+	// Add the activity ID to the JSON string.
+	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+	if (activityId)
+	{
+		[postData appendData:[[NSString stringWithFormat:@",\n\"%s\":\"%@\"", KEY_NAME_ACTIVITY_ID, activityId] dataUsingEncoding:NSASCIIStringEncoding]];
+	}
+
+	// Add the activity type to the JSON string.
+	char* activityType = GetCurrentActivityType();
+	if (activityType)
+	{
+		[postData appendData:[[NSString stringWithFormat:@",\n\"%s\":\"%s\"", KEY_NAME_ACTIVITY_TYPE, activityType] dataUsingEncoding:NSASCIIStringEncoding]];
+		free((void*)activityType);
+	}
+
+	// Add the user name to the JSON string.
+	NSString* userName = [Preferences broadcastUserName];
+	if (userName)
+	{
+		[postData appendData:[[NSString stringWithFormat:@",\n\"%s\":\"%@\"", ACTIVITY_ATTRIBUTE_USER_NAME, userName] dataUsingEncoding:NSASCIIStringEncoding]];
+	}
+
+	[postData appendData:[[NSString stringWithFormat:@"}\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	if (self->numLocObjsBeingSent > 0)
 	{
@@ -112,11 +146,11 @@
 
 - (void)broadcastGlobally:(NSString*)text
 {
-	[self->cache addObject:text];
+	[self->locationCache addObject:text];
 
 	// Flush at the user-specified interval. Default to 60 seconds if one was not specified.
 	NSInteger rate = [Preferences broadcastRate];
-	if ([self->cache count] > 0 && (time(NULL) - self->lastCacheFlush > rate))
+	if ([self->locationCache count] > 0 && (time(NULL) - self->lastCacheFlush > rate))
 	{
 		[self flushGlobalBroadcastCacheRest];
 	}
@@ -133,31 +167,6 @@
 	if (locationData)
 	{
 		NSMutableDictionary* broadcastData = [locationData mutableCopy];
-
-		if (self->deviceId)
-		{
-			[broadcastData setObject:self->deviceId forKey:@KEY_NAME_DEVICE_ID];
-		}
-
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
-		if (activityId)
-		{
-			[broadcastData setObject:activityId forKey:@KEY_NAME_ACTIVITY_ID];
-		}
-
-		char* activityType = GetCurrentActivityType();
-		if (activityType)
-		{
-			NSString* value = [[NSString alloc] initWithUTF8String:activityType];
-			[broadcastData setObject:value forKey:@KEY_NAME_ACTIVITY_TYPE];
-			free((void*)activityType);
-		}
-
-		NSString* userName = [Preferences broadcastUserName];
-		if (userName)
-		{
-			[broadcastData setObject:userName forKey:@ACTIVITY_ATTRIBUTE_USER_NAME];
-		}
 
 		ActivityAttributeType attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 		if (attr.valid)
@@ -249,7 +258,8 @@
 
 - (void)activityStarted:(NSNotification*)notification
 {
-	[self->cache removeAllObjects];
+	[self->locationCache removeAllObjects];
+	[self->accelerometerCache removeAllObjects];
 	self->lastCacheFlush = time(NULL);
 }
 
@@ -285,7 +295,7 @@
 		if ([httpResponse statusCode] == 200)
 		{
 			NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self->numLocObjsBeingSent)];
-			[self->cache removeObjectsAtIndexes:indexSet];
+			[self->locationCache removeObjectsAtIndexes:indexSet];
 			self->numLocObjsBeingSent = 0;
 		}
 

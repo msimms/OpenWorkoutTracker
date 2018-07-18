@@ -12,7 +12,8 @@
 @interface BroadcastManager : NSObject<NSURLConnectionDelegate>
 {
 	BroadcastSessionContainer* session;
-	NSMutableArray*            cache;
+	NSMutableArray*            locationCache;
+	NSMutableArray*            accelerometerCache;
 	time_t                     lastCacheFlush;
 	NSString*                  deviceId;
 	NSURLConnection*           currentLocationConnection; // Only want to create one connection at a time.
