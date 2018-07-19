@@ -167,6 +167,7 @@ extern "C" {
 	bool IsActivityOrphaned(size_t* activityIndex);
 	bool IsActivityPaused(void);
 	bool IsMovingActivity(void);
+	bool IsLiftingActivity(void);
 	bool IsCyclingActivity(void);
 
 	// Functions for managing social networks.

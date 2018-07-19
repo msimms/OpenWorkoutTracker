@@ -12,5 +12,5 @@
 #define BROADCAST_LIST_FOLLOWING      "api/1.0/list_users_following?"
 #define BROADCAST_LIST_FOLLOWED_BY    "api/1.0/list_users_followed_by?"
 #define BROADCAST_REQUEST_TO_FOLLOW   "api/1.0/request_to_follow?"
-#define BROADCAST_UPDATE_LOCATION_URL "api/1.0/update_location"
+#define BROADCAST_UPDATE_STATUS_URL   "api/1.0/update_status"
 #define BROADCAST_CREATE_TAG_URL      "api/1.0/create_tag"

@@ -18,6 +18,7 @@
 	NSString*                  deviceId;
 	NSURLConnection*           currentLocationConnection; // Only want to create one connection at a time.
 	size_t                     numLocObjsBeingSent;       // Number of location objects being sent.
+	size_t                     numAccelObjsBeingSent;     // Number of accelerometer objects being sent.
 }
 
 @end

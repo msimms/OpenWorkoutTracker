@@ -18,6 +18,7 @@
 
 #include "Cycling.h"
 #include "Hike.h"
+#include "LiftingActivity.h"
 #include "MountainBiking.h"
 #include "Run.h"
 #include "UnitMgr.h"
@@ -1571,6 +1572,16 @@ extern "C" {
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
 			return pMovingActivity != NULL;
+		}
+		return false;
+	}
+
+	bool IsLiftingActivity()
+	{
+		if (g_pCurrentActivity)
+		{
+			LiftingActivity* pLiftingActivity = dynamic_cast<LiftingActivity*>(g_pCurrentActivity);
+			return pLiftingActivity != NULL;
 		}
 		return false;
 	}

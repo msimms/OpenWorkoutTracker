@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "BroadcastManager.h"
+#import "Accelerometer.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
@@ -19,6 +20,7 @@
 {
 	if (self = [super init])
 	{
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStarted:) name:@NOTIFICATION_NAME_ACTIVITY_STARTED object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
@@ -101,9 +103,17 @@
 		++self->numLocObjsBeingSent;
 	}
 	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
-	
+
 	// Write cached acclerometer data to the JSON string.
 	[postData appendData:[[NSString stringWithFormat:@", \"accelerometer\": ["] dataUsingEncoding:NSASCIIStringEncoding]];
+	self->numAccelObjsBeingSent = 0;
+	for (NSString* text in self->accelerometerCache)
+	{
+		if (self->numAccelObjsBeingSent > 0)
+			[postData appendData:[[NSString stringWithFormat:@",\n"] dataUsingEncoding:NSASCIIStringEncoding]];
+		[postData appendData:[text dataUsingEncoding:NSASCIIStringEncoding]];
+		++self->numAccelObjsBeingSent;
+	}
 	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	// Add the device ID to the JSON string.
@@ -136,124 +146,150 @@
 
 	[postData appendData:[[NSString stringWithFormat:@"}\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	if (self->numLocObjsBeingSent > 0)
+	if ((self->numLocObjsBeingSent > 0) || (self->numAccelObjsBeingSent > 0))
 	{
-		self->currentLocationConnection = [self sendToServer:hostName withPath:BROADCAST_UPDATE_LOCATION_URL withData:postData];
+		self->currentLocationConnection = [self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:postData];
 	}
 
 	self->lastCacheFlush = time(NULL);
 }
 
-- (void)broadcastGlobally:(NSString*)text
+- (void)broadcast
 {
-	[self->locationCache addObject:text];
-
 	// Flush at the user-specified interval. Default to 60 seconds if one was not specified.
 	NSInteger rate = [Preferences broadcastRate];
-	if ([self->locationCache count] > 0 && (time(NULL) - self->lastCacheFlush > rate))
+	if (([self->locationCache count] > 0 || [self->accelerometerCache count] > 0) && (time(NULL) - self->lastCacheFlush > rate))
 	{
 		[self flushGlobalBroadcastCacheRest];
 	}
 }
 
+- (void)accelerometerUpdated:(NSNotification*)notification
+{
+	if (![Preferences shouldBroadcastGlobally])
+	{
+		return;
+	}
+	if (!IsActivityInProgress())
+	{
+		return;
+	}
+	if (!IsLiftingActivity())
+	{
+		return;
+	}
+
+	NSDictionary* accelerometerData = [notification object];
+
+	NSError* error;
+	NSData* jsonData = [NSJSONSerialization dataWithJSONObject:accelerometerData options:NSJSONWritingPrettyPrinted error:&error];
+	NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+	[self->accelerometerCache addObject:text];
+	[self broadcast];
+}
+
 - (void)locationUpdated:(NSNotification*)notification
 {
+	if (![Preferences shouldBroadcastGlobally])
+	{
+		return;
+	}
 	if (!IsActivityInProgress())
+	{
+		return;
+	}
+	if (!IsMovingActivity())
 	{
 		return;
 	}
 
 	NSDictionary* locationData = [notification object];
-	if (locationData)
+	NSMutableDictionary* broadcastData = [locationData mutableCopy];
+
+	ActivityAttributeType attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+	if (attr.valid)
 	{
-		NSMutableDictionary* broadcastData = [locationData mutableCopy];
-
-		ActivityAttributeType attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_SPEED);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_SPEED];
-		}
-		
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
-		}
-		
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_MOVING_SPEED];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_PACE);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_PACE];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_HEART_RATE];
-		}
-		
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_HEART_RATE];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CADENCE);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_POWER);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_POWER];
-		}
-
-		attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_POWER);
-		if (attr.valid)
-		{
-			NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
-			[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_POWER];
-		}
-
-		NSError* error;
-		NSData* jsonData = [NSJSONSerialization dataWithJSONObject:broadcastData options:NSJSONWritingPrettyPrinted error:&error];
-		NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
-		if ([Preferences shouldBroadcastGlobally])
-		{
-			[self broadcastGlobally:text];
-		}
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED];
 	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_SPEED);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_SPEED];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_MOVING_SPEED];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_PACE);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_PACE];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_HEART_RATE];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_HEART_RATE];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CADENCE);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_CADENCE];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_POWER);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_POWER];
+	}
+
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_POWER);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_POWER];
+	}
+
+	NSError* error;
+	NSData* jsonData = [NSJSONSerialization dataWithJSONObject:broadcastData options:NSJSONWritingPrettyPrinted error:&error];
+	NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+	[self->locationCache addObject:text];
+	[self broadcast];
 }
 
 - (void)activityStarted:(NSNotification*)notification
@@ -297,6 +333,7 @@
 			NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self->numLocObjsBeingSent)];
 			[self->locationCache removeObjectsAtIndexes:indexSet];
 			self->numLocObjsBeingSent = 0;
+			self->numAccelObjsBeingSent = 0;
 		}
 
 		self->currentLocationConnection = nil;
