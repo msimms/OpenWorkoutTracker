@@ -71,11 +71,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-	}
+	[self.spinner stopAnimating];
 }
 
 - (BOOL)shouldAutorotate
@@ -96,21 +92,11 @@
 {
 	if ([[segue identifier] isEqualToString:@SEGUE_TO_LIVE_MAP_VIEW])
 	{
-		[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
-	}
-	[super prepareForSegue:segue sender:sender];
-}
-
-#pragma mark random methods
-
-- (void)threadStartAnimating:(id)data
-{
-	@synchronized(self.spinner)
-	{
 		self.spinner.hidden = FALSE;
 		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
 	}
+	[super prepareForSegue:segue sender:sender];
 }
 
 #pragma mark button handlers

@@ -1602,7 +1602,7 @@
                         <outlet property="historyTableView" destination="5zW-R0-NSW" id="7Ce-lF-zNi"/>
                         <outlet property="navItem" destination="QoA-rf-lPm" id="PAX-5f-66j"/>
                         <outlet property="searchBar" destination="Ye8-WC-EvB" id="3Ob-jj-gr5"/>
-                        <outlet property="spinner" destination="Acj-HM-0Y7" id="CPb-UB-ZPW"/>
+                        <outlet property="spinner" destination="Acj-HM-0Y7" id="7qx-KN-bat"/>
                         <outlet property="toolbar" destination="JGP-tQ-dfp" id="L1c-Ip-ewo"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="Zfp-Rg-OxX"/>
                     </connections>
@@ -1698,7 +1698,7 @@
                         <outlet property="mapButton" destination="2o1-zv-u06" id="Pbw-4b-mZc"/>
                         <outlet property="mapView" destination="jPf-SE-mfk" id="HZB-lx-KDS"/>
                         <outlet property="navItem" destination="tMM-Bs-yS7" id="AwI-W0-Mez"/>
-                        <outlet property="spinner" destination="1ax-kD-CMV" id="F5t-jo-Rwd"/>
+                        <outlet property="spinner" destination="1ax-kD-CMV" id="d1h-gM-m7n"/>
                         <outlet property="summaryTableView" destination="M6E-Tx-gxb" id="7DR-Ah-880"/>
                         <outlet property="tagsButton" destination="yi4-Xp-L31" id="7HC-fd-lpV"/>
                         <outlet property="toolbar" destination="jfP-Xt-Jaz" id="k50-dG-hFR"/>
@@ -2222,10 +2222,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="SimpleScreen.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Fkk-BX-ZoX"/>
+        <segue reference="fcj-0g-8wt"/>
         <segue reference="rmC-zq-awJ"/>
         <segue reference="E2b-lU-9dF"/>
-        <segue reference="j4b-oo-ykq"/>
+        <segue reference="Zfp-Rg-OxX"/>
         <segue reference="mpc-lI-yFA"/>
         <segue reference="PhW-xp-et3"/>
     </inferredMetricsTieBreakers>

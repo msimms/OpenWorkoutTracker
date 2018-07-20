@@ -58,7 +58,9 @@ typedef enum SettingsSections
 {
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
-	[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+	self.spinner.hidden = FALSE;
+	self.spinner.center = self.view.center;
+	[self.spinner startAnimating];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate requestCloudServiceAcctNames:CLOUD_SERVICE_TWITTER];
@@ -85,18 +87,6 @@ typedef enum SettingsSections
 {
 }
 
-#pragma mark spinner control methods
-
-- (void)threadStartAnimating:(id)data
-{
-	@synchronized(self.spinner)
-	{
-		self.spinner.hidden = FALSE;
-		self.spinner.center = self.view.center;
-		[self.spinner startAnimating];
-	}
-}
-
 #pragma mark methods for updating social media account lists
 
 - (void)twitterAcctList:(NSNotification*)notification
@@ -117,11 +107,8 @@ typedef enum SettingsSections
 		}
 	}
 	
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-		self.spinner.hidden = TRUE;
-	}
+	[self.spinner stopAnimating];
+	self.spinner.hidden = TRUE;
 	
 	[self.acctTableView reloadData];
 }
@@ -130,11 +117,8 @@ typedef enum SettingsSections
 {
 	self->accountNames = [notification object];
 	
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-		self.spinner.hidden = TRUE;
-	}
+	[self.spinner stopAnimating];
+	self.spinner.hidden = TRUE;
 	
 	[self.acctTableView reloadData];
 }

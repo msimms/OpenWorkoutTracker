@@ -402,15 +402,6 @@ typedef enum ExportFileTypeButtons
 
 #pragma mark random methods
 
-- (void)threadStartAnimating:(id)data
-{
-	@synchronized(self.spinner)
-	{
-		self.spinner.hidden = FALSE;
-		[self.spinner startAnimating];
-	}
-}
-
 - (BOOL)isRecordName:(NSString*)name
 {
 	return (([name rangeOfString:@"Fastest"].location != NSNotFound) ||
@@ -745,18 +736,21 @@ typedef enum ExportFileTypeButtons
 		case SECTION_LAP_AND_SPLIT_TIMES:
 			if (row == ROW_SPLIT_TIMES)
 			{
-				[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+				self.spinner.hidden = FALSE;
+				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_SPLIT_TIMES_VIEW sender:self];
 			}
 			else if (row == ROW_LAP_TIMES)
 			{
-				[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+				self.spinner.hidden = FALSE;
+				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_LAP_TIMES_VIEW sender:self];
 			}
 			break;
 		case SECTION_CHARTS:
 			{
-				[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+				self.spinner.hidden = FALSE;
+				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
 			}
 			break;
@@ -766,16 +760,14 @@ typedef enum ExportFileTypeButtons
 			if ([self superlativeHasSegue:cell])
 			{
 				self->mapMode = MAP_OVERVIEW_SEGMENT_VIEW;
-				[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+				self.spinner.hidden = FALSE;
+				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 			}
 			break;
 	}
 
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-	}
+	[self.spinner stopAnimating];
 }
 
 #pragma mark UITableView methods

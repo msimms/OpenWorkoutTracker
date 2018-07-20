@@ -131,16 +131,6 @@
 
 #pragma mark random methods
 
-- (void)threadStartAnimating:(id)data
-{
-	@synchronized(self.spinner)
-	{
-		self.spinner.hidden = FALSE;
-		self.spinner.center = self.view.center;
-		[self.spinner startAnimating];
-	}
-}
-
 - (void)buildAttributeDictionary
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -284,7 +274,9 @@
 
 - (void)showSummaryMap:(NSString*)sectionName
 {
-	[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+	self.spinner.hidden = FALSE;
+	self.spinner.center = self.view.center;
+	[self.spinner startAnimating];
 
 	if ([sectionName isEqualToString:SECTION_SUMMARY_TITLE])
 	{
@@ -313,10 +305,7 @@
 	}
 	self->activityIdToMap = nil;
 
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-	}
+	[self.spinner stopAnimating];
 }
 
 - (void)showSegmentsMap:(NSString*)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title
@@ -326,14 +315,13 @@
 	self->segmentNameToMap = title;
 	self->mapMode = MAP_OVERVIEW_SEGMENT_VIEW;
 
-	[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+	self.spinner.hidden = FALSE;
+	self.spinner.center = self.view.center;
+	[self.spinner startAnimating];
 
 	[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-	}
+	[self.spinner stopAnimating];
 }
 
 #pragma mark called when the user selects a row

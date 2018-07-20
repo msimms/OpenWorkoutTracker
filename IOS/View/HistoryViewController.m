@@ -122,18 +122,6 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-#pragma mark spinner control methods
-
-- (void)threadStartAnimating:(id)data
-{
-	@synchronized(self.spinner)
-	{
-		self.spinner.hidden = FALSE;
-		self.spinner.center = self.view.center;
-		[self.spinner startAnimating];
-	}
-}
-
 #pragma mark random methods
 
 - (void)buildDictionary
@@ -209,14 +197,13 @@
 {
 	self->selectedActivityIndex = [self getActivityIndex:indexPath];
 
-	[NSThread detachNewThreadSelector:@selector(threadStartAnimating:) toTarget:self withObject:nil];
+	self.spinner.hidden = FALSE;
+	self.spinner.center = self.view.center;
+	[self.spinner startAnimating];
 
 	[self performSegueWithIdentifier:@SEGUE_TO_ACTIVITY_SUMMARY sender:self];
 
-	@synchronized(self.spinner)
-	{
-		[self.spinner stopAnimating];
-	}
+	[self.spinner stopAnimating];
 }
 
 #pragma mark UITableView methods
