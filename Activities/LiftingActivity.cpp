@@ -154,7 +154,7 @@ ActivityAttributeType LiftingActivity::QueryActivityAttribute(const std::string&
 				GraphPeak peak = m_computedRepList.at(num - 1);
 				result.valueType = TYPE_INTEGER;
 				result.measureType = MEASURE_INDEX;
-				result.value.intVal = peak.peak.index;
+				result.value.intVal = 0;
 				result.valid = true;
 			}
 			else

@@ -13,12 +13,18 @@
 #include <stdint.h>
 #include <vector>
 
-#include "EdgeDirection.h"
 #include "GraphPeak.h"
-#include "GraphPoint.h"
 
-#define DEFAULT_WINDOW_SIZE 20
+#define DEFAULT_WINDOW_SIZE 5
 #define INDEX_NOT_SET       0
+
+typedef enum EdgeDirection
+{
+	EDGE_DIRECTION_UNKNOWN = 0,
+	EDGE_DIRECTION_STILL,
+	EDGE_DIRECTION_RISING,
+	EDGE_DIRECTION_FALLING
+} EdgeDirection;
 
 typedef std::vector<GraphPoint> GraphPointList;
 
@@ -146,13 +152,37 @@ public:
 
 	void AppendValue(uint64_t time, double value)
 	{
-		GraphPoint newPoint;
-		newPoint.index = m_values.size();
-		newPoint.x = time;
-		newPoint.y = value;
-		m_values.push_back(newPoint);
+		GraphPoint newPoint(time, value);
 
-		m_runningTotal += value;
+		if (m_windowSize <= 1)
+		{
+			m_values.push_back(newPoint);
+			m_runningTotal += value;
+		}
+		else
+		{
+			m_averagingWindow.push_back(newPoint);
+
+			if (m_averagingWindow.size() >= m_windowSize)
+			{
+				GraphPoint avgPoint(time, (double)0.0);
+
+				// Compute the average of the items in the window.
+				auto iter = m_averagingWindow.begin();
+				while (iter != m_averagingWindow.end())
+				{
+					avgPoint.y += (*iter).y;
+					++iter;
+				}
+				avgPoint.y = avgPoint.y / m_averagingWindow.size();
+
+				// Pop the first item out of the window.
+				m_averagingWindow.erase(m_averagingWindow.begin());
+
+				m_values.push_back(newPoint);
+				m_runningTotal += avgPoint.y;
+			}
+		}
 	}
 
 	void SelfTest()
@@ -210,8 +240,9 @@ public:
 	
 private:
 	GraphPointList m_values;
-	double         m_runningTotal;  // used for mean calculation
-	size_t         m_windowSize;
+	GraphPointList m_averagingWindow; // used when smoothing out the values
+	double         m_runningTotal;    // used for mean calculation
+	size_t         m_windowSize;      // the size of the averaging window
 	size_t         m_leftTroughIndex;
 	size_t         m_peakIndex;
 	size_t         m_rightTroughIndex;

@@ -530,7 +530,6 @@
 		27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChinUpAnalyzer.h; path = Activities/ChinUpAnalyzer.h; sourceTree = SOURCE_ROOT; };
 		27C0842319BFD063007CE934 /* Cycling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cycling.cpp; path = Activities/Cycling.cpp; sourceTree = SOURCE_ROOT; };
 		27C0842419BFD063007CE934 /* Cycling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cycling.h; path = Activities/Cycling.h; sourceTree = SOURCE_ROOT; };
-		27C0842519BFD063007CE934 /* EdgeDirection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EdgeDirection.h; path = Activities/EdgeDirection.h; sourceTree = SOURCE_ROOT; };
 		27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GForceAnalyzer.cpp; path = Activities/GForceAnalyzer.cpp; sourceTree = SOURCE_ROOT; };
 		27C0842719BFD063007CE934 /* GForceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GForceAnalyzer.h; path = Activities/GForceAnalyzer.h; sourceTree = SOURCE_ROOT; };
 		27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GForceAnalyzerFactory.cpp; path = Activities/GForceAnalyzerFactory.cpp; sourceTree = SOURCE_ROOT; };
@@ -1089,7 +1088,6 @@
 				27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */,
 				27C0842319BFD063007CE934 /* Cycling.cpp */,
 				27C0842419BFD063007CE934 /* Cycling.h */,
-				27C0842519BFD063007CE934 /* EdgeDirection.h */,
 				27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */,
 				27C0842719BFD063007CE934 /* GForceAnalyzer.h */,
 				27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */,

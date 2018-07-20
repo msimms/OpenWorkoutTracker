@@ -13,27 +13,29 @@
 class GraphPoint
 {
 public:
-	size_t   index;
 	uint64_t x;
 	double   y;
-	
+
 	GraphPoint()
 	{
-		index = 0;
 		x = 0;
 		y = (double)0.0;
 	}
-
+	
+	GraphPoint(uint64_t newX, double newY)
+	{
+		x = newX;
+		y = newY;
+	}
+	
 	GraphPoint(const GraphPoint& rhs)
 	{
-		index = rhs.index;
 		x = rhs.x;
 		y = rhs.y;
 	}
 
 	GraphPoint& operator=(const GraphPoint& rhs)
 	{
-		index = rhs.index;
 		x = rhs.x;
 		y = rhs.y;
 		return *this;
