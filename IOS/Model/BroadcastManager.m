@@ -57,6 +57,7 @@
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", protocolStr, hostName, path];
 	NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
 	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
+	request.timeoutInterval = 30.0;
 	[request setURL:[NSURL URLWithString:urlStr]];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
@@ -71,12 +72,14 @@
 	NSString* hostName = [Preferences broadcastHostName];
 	if (hostName == nil)
 	{
+		NSLog(@"Broadcast host name not specified.");
 		return;
 	}
 	
 	// Still waiting for a response from the last attempt to send, so just hold off for now.
-	if (self->currentLocationConnection)
+	if (self->currentStatusConnection)
 	{
+		NSLog(@"Not flushing the broadcast cache because of a pending connection.");
 		self->lastCacheFlush = time(NULL);
 		return;
 	}
@@ -85,12 +88,14 @@
 	NSString* post = [NSString stringWithFormat:@"{\"locations\": ["];
 	if (!post)
 	{
+		NSLog(@"Out of memory.");
 		self->lastCacheFlush = time(NULL);
 		return;
 	}
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 	if (!postData)
 	{
+		NSLog(@"Out of memory.");
 		self->lastCacheFlush = time(NULL);
 		return;
 	}
@@ -148,7 +153,7 @@
 
 	if ((self->numLocObjsBeingSent > 0) || (self->numAccelObjsBeingSent > 0))
 	{
-		self->currentLocationConnection = [self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:postData];
+		self->currentStatusConnection = [self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:postData];
 	}
 
 	self->lastCacheFlush = time(NULL);
@@ -297,11 +302,13 @@
 	[self->locationCache removeAllObjects];
 	[self->accelerometerCache removeAllObjects];
 	self->lastCacheFlush = time(NULL);
+	NSLog(@"Activity started.");
 }
 
 - (void)activityStopped:(NSNotification*)notification
 {
 	[self flushGlobalBroadcastCacheRest];
+	NSLog(@"Activity stopped.");
 }
 
 - (void)tagCreated:(NSNotification*)notification
@@ -309,6 +316,7 @@
 	NSString* hostName = [Preferences broadcastHostName];
 	if (hostName == nil)
 	{
+		NSLog(@"Broadcast host name not specified.");
 		return;
 	}
 
@@ -325,7 +333,7 @@
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
 {
-	if (connection == self->currentLocationConnection)
+	if (connection == self->currentStatusConnection)
 	{
 		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
 		if ([httpResponse statusCode] == 200)
@@ -336,24 +344,32 @@
 			self->numAccelObjsBeingSent = 0;
 		}
 
-		self->currentLocationConnection = nil;
+		self->currentStatusConnection = nil;
 	}
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
 {
+	if (connection == self->currentStatusConnection)
+	{
+		self->currentStatusConnection = nil;
+	}
 }
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
 {
-	if (connection == self->currentLocationConnection)
+	if (connection == self->currentStatusConnection)
 	{
-		self->currentLocationConnection = nil;
+		self->currentStatusConnection = nil;
 	}
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection
 {
+	if (connection == self->currentStatusConnection)
+	{
+		self->currentStatusConnection = nil;
+	}
 }
 
 @end
