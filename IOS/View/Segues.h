@@ -15,7 +15,6 @@
 #define SEGUE_TO_CREATE_LOGIN_VIEW       "SegueToCreateLoginView"
 #define SEGUE_TO_DATE_VIEW               "SegueToDatePickerViewController"
 #define SEGUE_TO_DROPBOX_VIEW            "SegueToDropboxView"
-#define SEGUE_TO_HELP_VIEW               "SegueToHelpView"
 #define SEQUE_TO_HISTORY_VIEW            "SegueToHistoryView"
 #define SEGUE_TO_INTERVAL_EDIT_VIEW      "SegueToIntervalEditViewController"
 #define SEQUE_TO_INTERVALS_VIEW          "SegueToIntervalsView"

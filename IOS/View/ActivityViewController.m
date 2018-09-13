@@ -12,7 +12,6 @@
 #import "ActivityPreferences.h"
 #import "ActivityType.h"
 #import "AppDelegate.h"
-#import "HelpViewController.h"
 #import "LeBikeSpeedAndCadence.h"
 #import "LeHeartRateMonitor.h"
 #import "LePowerMeter.h"
@@ -24,6 +23,7 @@
 #define ALERT_TITLE_STOP              NSLocalizedString(@"Stop", nil)
 #define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
 #define ALERT_TITLE_ERROR             NSLocalizedString(@"Error", nil)
+#define ALERT_TITLE_CAUTION           NSLocalizedString(@"Caution", nil)
 
 #define ACTION_SHEET_TITLE_BIKE       NSLocalizedString(@"Bike", nil)
 #define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
@@ -56,6 +56,14 @@
 #define UNITS_MILES                   NSLocalizedString(@"Miles", nil)
 #define UNITS_SETS                    NSLocalizedString(@"Sets", nil)
 #define UNITS_REPS                    NSLocalizedString(@"Reps", nil)
+
+#define HELP_PULLUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
+#define HELP_CYCLING                  NSLocalizedString(@"You can mount the phone on the bicycle's handlebars, though you you should pay attention to the road and obey all applicable laws.", nil)
+#define HELP_PUSHUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
+#define HELP_RUNNING                  NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
+#define HELP_SQUAT                    NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
+#define HELP_STATIONARY_BIKE          NSLocalizedString(@"Stationary cycling requires the use of a Bluetooth wheel speed sensor.", nil)
+#define HELP_TREADMILL                NSLocalizedString(@"Treadmill running requires the use of a Bluetooth foot pod.", nil)
 
 #define INTERVAL_COMPLETE             NSLocalizedString(@"Interval Workout Complete", nil)
 
@@ -186,15 +194,6 @@
 			[summaryVC setActivityIndex:activityIndex];
 		}
 	}
-	else if ([[segue identifier] isEqualToString:@SEGUE_TO_HELP_VIEW])
-	{
-		HelpViewController* helpVC = (HelpViewController*)[segue destinationViewController];
-		if (helpVC)
-		{
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-			[helpVC setActivityType:[appDelegate getCurrentActivityType]];
-		}
-	}
 }
 
 #pragma mark method for showing the attributes menu
@@ -228,7 +227,52 @@
 	NSString* activityType = [appDelegate getCurrentActivityType];
 	if (![self->activityPrefs hasShownHelp:activityType])
 	{
-		[self performSegueWithIdentifier:@SEGUE_TO_HELP_VIEW sender:self];
+		NSString* text = nil;
+
+		if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
+			[activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
+		{
+			text = HELP_PULLUP;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+				 [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+		{
+			text = HELP_CYCLING;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
+		{
+			text = HELP_PUSHUP;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
+		{
+			text = HELP_RUNNING;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
+		{
+			text = HELP_SQUAT;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
+		{
+			text = HELP_STATIONARY_BIKE;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
+		{
+			text = HELP_TREADMILL;
+		}
+		
+		if (text)
+		{
+			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
+															message:text
+														   delegate:self
+												  cancelButtonTitle:BUTTON_TITLE_OK
+												  otherButtonTitles:nil];
+			if (alert)
+			{
+				[alert show];
+			}
+		}
+
 		[self->activityPrefs markHasShownHelp:activityType];
 	}
 }
