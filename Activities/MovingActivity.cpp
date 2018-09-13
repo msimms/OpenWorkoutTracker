@@ -435,11 +435,11 @@ bool MovingActivity::ProcessGpsReading(const SensorReading& reading)
 			SegmentType currentPace = CurrentPace();
 			SegmentType currentSpeed = CurrentSpeed();
 
-			if ((m_fastestPace.value.doubleVal < (double)0.00001) || (currentPace.value.doubleVal < m_fastestPace.value.doubleVal))
+			if ((currentPace.startTime > 0) && ((currentPace.value.doubleVal < m_fastestPace.value.doubleVal) || (m_fastestPace.startTime == 0)))
 			{
 				m_fastestPace = currentPace;
 			}
-			if ((m_fastestSpeed.value.doubleVal < (double)0.00001) || (currentSpeed.value.doubleVal > m_fastestSpeed.value.doubleVal))
+			if ((currentSpeed.startTime > 0) && (currentSpeed.value.doubleVal > m_fastestSpeed.value.doubleVal))
 			{
 				m_fastestSpeed = currentSpeed;
 			}
@@ -982,49 +982,51 @@ SegmentType MovingActivity::CurrentPace() const
 		
 		if (elapsedTimeMS > 0)
 		{
-			segment.startTime = tdPair2.time;
-			segment.endTime   = tdPair2.time;
-
 			while (values.size() >= NUM_POINTS)
 			{
 				values.erase(values.begin());
 			}
 
 			double convertedDistance = UnitMgr::ConvertToPreferredDistanceFromMeters(tdPair2.distanceM);
-			if (convertedDistance > (double)0.01)
+			double currentPace = (double)elapsedTimeMS / convertedDistance;
+			currentPace       /= (double)1000.0;
+
+			values.push_back(currentPace);
+
+			if (tdPair2.distanceM >= MIN_METERS_MOVED)
 			{
-				double currentPace       = (double)elapsedTimeMS / convertedDistance;
-				currentPace             /= (double)1000.0;
-
-				values.push_back(currentPace);
-
-				if (tdPair2.distanceM >= MIN_METERS_MOVED)
+				double sum = (double)0.0;
+				NumericList::const_iterator iter = values.begin();
+				while (iter != values.end())
 				{
-					double sum = (double)0.0;
-					NumericList::const_iterator iter = values.begin();
-					while (iter != values.end())
-					{
-						sum += (*iter);
-						iter++;
-					}
-					segment.value.doubleVal = sum / values.size();
-					stationaryMS = 0;
+					sum += (*iter);
+					iter++;
 				}
-				else if (stationaryMS >= 3000)
-				{
-					segment.value.doubleVal = (double)0.0;
-					stationaryMS += elapsedTimeMS;
-				}
+				segment.startTime = tdPair1.time;
+				segment.endTime = tdPair2.time;
+				segment.value.doubleVal = sum / values.size();
+				stationaryMS = 0;
+			}
+			else if (stationaryMS >= 3000)
+			{
+				segment.startTime = 0;
+				segment.endTime = 0;
+				segment.value.doubleVal = (double)0.0;
+				stationaryMS += elapsedTimeMS;
 			}
 		}
 
 		// Sanity check.
 		if (segment.value.doubleVal < (double)0.0)
 		{
+			segment.startTime = 0;
+			segment.endTime = 0;
 			segment.value.doubleVal = (double)0.0;
 		}
 		else if (segment.value.doubleVal > (double)86400.0)
 		{
+			segment.startTime = 0;
+			segment.endTime = 0;
 			segment.value.doubleVal = (double)0.0;
 		}
 	}
