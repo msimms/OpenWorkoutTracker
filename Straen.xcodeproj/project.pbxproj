@@ -1504,8 +1504,10 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"core-plot/**",
 					"${SDKROOT}/usr/include/libxml2",
+					"core-plot/framework/iPhoneOnly",
+					"core-plot/framework/Source/**",
+					"core-plot/framework/",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1557,8 +1559,10 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"core-plot/**",
 					"${SDKROOT}/usr/include/libxml2",
+					"core-plot/framework/iPhoneOnly",
+					"core-plot/framework/Source/**",
+					"core-plot/framework/",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
