@@ -9,10 +9,8 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "CloudPreferences.h"
-#import "FacebookClient.h"
 #import "Preferences.h"
 #import "Segues.h"
-#import "TwitterClient.h"
 
 typedef enum SettingsSections
 {
@@ -41,10 +39,6 @@ typedef enum SettingsRowsShare
 {
 	SETTINGS_ROW_LINK_RUNKEEPER = 0,
 	SETTINGS_ROW_LINK_STRAVA,
-	SETTINGS_ROW_LINK_TWITTER,
-	SETTINGS_ROW_TWEET_START,
-	SETTINGS_ROW_TWEET_STOP,
-	SETTINGS_ROW_TWEET_RUN_SPLITS,
 	NUM_SETTINGS_ROWS_LINK
 } SettingsRowsShare;
 
@@ -88,9 +82,6 @@ typedef enum SettingsRowsBroadcast
 #define ALERT_MSG_IMPLEMENTED        NSLocalizedString(@"This feature is not implemented.", nil)
 #define ALERT_MSG_NAME               NSLocalizedString(@"", nil)
 #define ALERT_MSG_RATE               NSLocalizedString(@"1", nil)
-#define TWEET_START                  NSLocalizedString(@"Tweet Start of Workout", nil)
-#define TWEET_STOP                   NSLocalizedString(@"Tweet End of Workout", nil)
-#define TWEET_RUN_SPLITS             NSLocalizedString(@"Tweet Run Splits", nil)
 
 @interface SettingsViewController ()
 
@@ -243,14 +234,6 @@ typedef enum SettingsRowsBroadcast
 	{
 		numRows--;
 	}
-	if (![appDelegate isFeaturePresent:FEATURE_TWITTER])
-	{
-		numRows--;
-	}
-	if (![CloudPreferences usingTwitter])
-	{
-		numRows -= 3;
-	}
 	return numRows;
 }
 
@@ -394,10 +377,6 @@ typedef enum SettingsRowsBroadcast
 				{
 					row++;
 				}
-				if (![appDelegate isFeaturePresent:FEATURE_TWITTER])
-				{
-					row++;
-				}
 
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -415,33 +394,6 @@ typedef enum SettingsRowsBroadcast
 						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA];
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[CloudPreferences usingStrava]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_LINK_TWITTER:
-						if ([CloudPreferences usingTwitter])
-							cell.textLabel.text = [[NSString alloc] initWithFormat:@"%@ @%@", [appDelegate nameOfCloudService:CLOUD_SERVICE_TWITTER], [CloudPreferences preferredTwitterAcctName]];
-						else
-							cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_TWITTER];
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[CloudPreferences usingTwitter]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_TWEET_START:
-						cell.textLabel.text = TWEET_START;
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[Preferences shouldTweetWorkoutStart]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_TWEET_STOP:
-						cell.textLabel.text = TWEET_STOP;
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[Preferences shouldTweetWorkoutStop]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_TWEET_RUN_SPLITS:
-						cell.textLabel.text = TWEET_RUN_SPLITS;
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[Preferences shouldTweetRunSplits]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 				}
@@ -612,26 +564,6 @@ typedef enum SettingsRowsBroadcast
 			{
 				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
-			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_TWITTER:
-			if (switchControl.isOn)
-			{
-				[self performSegueWithIdentifier:@SEQUE_TO_SOCIAL_ACCTS_VIEW sender:self];
-			}
-			else
-			{
-				[CloudPreferences setUsingTwitter:FALSE];
-				[self.settingsTableView reloadData];
-			}
-			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_START:
-			[Preferences setTweetWorkoutStart:switchControl.isOn];
-			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_STOP:
-			[Preferences setTweetWorkoutStop:switchControl.isOn];
-			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_TWEET_RUN_SPLITS:
-			[Preferences setTweetRunSplits:switchControl.isOn];
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_GLOBAL_BROADCAST:
 			[Preferences setBroadcastGlobally:switchControl.isOn];

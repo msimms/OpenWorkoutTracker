@@ -1597,41 +1597,6 @@ extern "C" {
 	}
 
 	//
-	// Functions for managing social networks.
-	//
-
-	char* GetSocialNetworkStartingPostStr()
-	{
-		if (g_pCurrentActivity)
-		{
-			return strdup(g_pCurrentActivity->GetSocialNetworkStartingPostStr().c_str());
-		}
-		return NULL;
-	}
-
-	char* GetSocialNetworkStoppingPostStr()
-	{
-		if (g_pCurrentActivity)
-		{
-			return strdup(g_pCurrentActivity->GetSocialNetworkStoppingPostStr().c_str());
-		}
-		return NULL;		
-	}
-
-	char* GetSocialNetworkSplitPostStr()
-	{
-		if (g_pCurrentActivity)
-		{
-			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
-			if (pMovingActivity)
-			{
-				return strdup(pMovingActivity->GetSocialNetworkSplitPostStr().c_str());
-			}
-		}
-		return NULL;
-	}
-
-	//
 	// Functions for importing/exporting activities.
 	//
 

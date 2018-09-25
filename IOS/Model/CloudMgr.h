@@ -6,11 +6,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <Foundation/Foundation.h>
-#import "FacebookClient.h"
 #import "iCloud.h"
 #import "RunKeeper.h"
 #import "Strava.h"
-#import "TwitterClient.h"
 
 typedef enum CloudServiceType
 {
@@ -18,28 +16,22 @@ typedef enum CloudServiceType
 	CLOUD_SERVICE_DROPBOX,
 	CLOUD_SERVICE_RUNKEEPER,
 	CLOUD_SERVICE_STRAVA,
-	CLOUD_SERVICE_TWITTER,
-	CLOUD_SERVICE_FACEBOOK,
 } CloudServiceType;
 
 @interface CloudMgr : NSObject
 {
 	NSMutableArray* fileClouds;
 	NSMutableArray* dataClouds;
-	NSMutableArray* socialClouds;
 
 	iCloud*         iCloudController;
 	RunKeeper*      runKeeperController;
 	Strava*         stravaController;
-	FacebookClient* facebookClient;
-	TwitterClient*  twitterClient;
 }
 
 - (id)init;
 
 - (NSMutableArray*)listFileClouds;
 - (NSMutableArray*)listDataClouds;
-- (NSMutableArray*)listSocialClouds;
 
 - (BOOL)isLinked:(CloudServiceType)service;
 - (NSString*)nameOf:(CloudServiceType)service;
@@ -47,6 +39,5 @@ typedef enum CloudServiceType
 
 - (void)uploadFile:(NSString*)fileName;
 - (void)uploadActivity:(NSString*)name;
-- (void)postUpdate:(NSString*)text;
 
 @end

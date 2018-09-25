@@ -25,9 +25,6 @@
 + (NSString*)uuid;
 + (UnitSystem)preferredUnitSystem;
 + (BOOL)backupToICloud;
-+ (BOOL)shouldTweetWorkoutStart;
-+ (BOOL)shouldTweetWorkoutStop;
-+ (BOOL)shouldTweetRunSplits;
 + (BOOL)shouldScanForSensors;
 + (BOOL)shouldBroadcastGlobally;
 + (NSString*)broadcastUserName;
@@ -47,9 +44,6 @@
 + (void)setUuid:(NSString*)value;
 + (void)setPreferredUnitSystem:(UnitSystem)system;
 + (void)setBackupToICloud:(BOOL)value;
-+ (void)setTweetWorkoutStart:(BOOL)value;
-+ (void)setTweetWorkoutStop:(BOOL)value;
-+ (void)setTweetRunSplits:(BOOL)value;
 + (void)setScanForSensors:(BOOL)value;
 + (void)setBroadcastGlobally:(BOOL)value;
 + (void)setBroadcastUserName:(NSString*)value;

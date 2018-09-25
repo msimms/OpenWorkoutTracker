@@ -19,9 +19,6 @@ public:
 
 	virtual void SetGForceAnalyzer(GForceAnalyzer* const analyzer);
 
-	virtual std::string GetSocialNetworkStartingPostStr() const;
-	virtual std::string GetSocialNetworkStoppingPostStr() const;
-
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;

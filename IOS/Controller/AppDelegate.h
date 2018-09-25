@@ -64,7 +64,6 @@
 	HealthManager*       healthMgr;
 	NSTimer*             intervalTimer;
 
-	BOOL                 shouldTweetSplitTimes;
 	BOOL                 badGps;
 
 	time_t               lastLocationUpdateTime;
@@ -174,7 +173,6 @@
 
 - (NSMutableArray*)listFileClouds;
 - (NSMutableArray*)listDataClouds;
-- (NSMutableArray*)listSocialClouds;
 - (BOOL)isCloudServiceLinked:(CloudServiceType)service;
 - (NSString*)nameOfCloudService:(CloudServiceType)service;
 - (void)requestCloudServiceAcctNames:(CloudServiceType)service;

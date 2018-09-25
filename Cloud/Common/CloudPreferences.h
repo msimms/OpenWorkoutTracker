@@ -14,18 +14,10 @@
 + (BOOL)usingiCloud;
 + (BOOL)usingRunKeeper;
 + (BOOL)usingStrava;
-+ (BOOL)usingFacebook;
-+ (BOOL)usingTwitter;
-+ (NSString*)preferredFacebookAcctName;
-+ (NSString*)preferredTwitterAcctName;
 
 + (void)setUsingDropbox:(BOOL)value;
 + (void)setUsingiCloud:(BOOL)value;
 + (void)setUsingRunKeeper:(BOOL)value;
 + (void)setUsingStrava:(BOOL)value;
-+ (void)setUsingFacebook:(BOOL)value;
-+ (void)setUsingTwitter:(BOOL)value;
-+ (void)setPreferredFacebookAcctName:(NSString*)name;
-+ (void)setPreferredTwitterAcctName:(NSString*)name;
 
 @end

@@ -86,7 +86,6 @@
 	}
 
 	self->activityPrefs = [[ActivityPreferences alloc] init];
-	self->shouldTweetSplitTimes = FALSE;
 	self->badGps = FALSE;
 
 	self->lastLocationUpdateTime = 0;
@@ -120,8 +119,6 @@
 	[self startHealthMgr];
 
 	self->cloudMgr = [[CloudMgr alloc] init];
-
-	self->shouldTweetSplitTimes = [Preferences shouldTweetRunSplits];
 
 	[self setUnits];
 	[self setUserProfile];
@@ -244,8 +241,6 @@
 			return FALSE;
 		case FEATURE_RUNKEEPER:
 			return FALSE;
-		case FEATURE_TWITTER:
-			return FALSE;
 	}
 	return TRUE;
 }
@@ -267,8 +262,6 @@
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_STRAVA];
 		case FEATURE_RUNKEEPER:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_RUNKEEPER];
-		case FEATURE_TWITTER:
-			return TRUE;
 	}
 	return TRUE;
 }
@@ -664,26 +657,6 @@ void startSensorCallback(SensorType type, void* context)
 				ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
 			}
 
-			if (self->shouldTweetSplitTimes)
-			{
-				ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
-				ActivityAttributeType prevDistance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_PREVIOUS_DISTANCE_TRAVELED);
-
-				if ((unsigned long)prevDistance.value.doubleVal < (unsigned long)distance.value.doubleVal)
-				{
-					char* pPostStr = GetSocialNetworkSplitPostStr();
-					if (pPostStr)
-					{
-						NSString* postStr = [NSString stringWithFormat:@"%s", pPostStr];
-						if (postStr != nil)
-						{
-							[self->cloudMgr postUpdate:postStr];
-						}
-						free((void*)pPostStr);
-					}
-				}
-			}
-
 			self->lastLocationUpdateTime = currentTimeSec;
 		}
 	}
@@ -900,20 +873,6 @@ void startSensorCallback(SensorType type, void* context)
 	BOOL result = StartActivity([activityId UTF8String]);
 	if (result)
 	{
-		if ([Preferences shouldTweetWorkoutStart])
-		{
-			char* pPostStr = GetSocialNetworkStartingPostStr();
-			if (pPostStr != nil)
-			{
-				NSString* postStr = [NSString stringWithFormat:@"%s", pPostStr];
-				if (postStr != nil)
-				{
-					[self->cloudMgr postUpdate:postStr];
-				}
-				free((void*)pPostStr);
-			}
-		}
-
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
@@ -952,20 +911,6 @@ void startSensorCallback(SensorType type, void* context)
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 
 		SaveActivitySummaryData();
-
-		if ([Preferences shouldTweetWorkoutStop])
-		{
-			char* pPostStr = GetSocialNetworkStoppingPostStr();
-			if (pPostStr != nil)
-			{
-				NSString* postStr = [NSString stringWithFormat:@"%s", pPostStr];
-				if (postStr != nil)
-				{
-					[self->cloudMgr postUpdate:postStr];
-				}
-				free((void*)pPostStr);
-			}
-		}
 
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								  activityId, @KEY_NAME_ACTIVITY_ID,
@@ -1450,11 +1395,6 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)listDataClouds
 {
 	return [self->cloudMgr listDataClouds];
-}
-
-- (NSMutableArray*)listSocialClouds
-{
-	return [self->cloudMgr listSocialClouds];
 }
 
 - (BOOL)isCloudServiceLinked:(CloudServiceType)service

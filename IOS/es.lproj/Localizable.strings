@@ -185,7 +185,6 @@
 "Screen" = "Pantalla";
 "Seconds" = "Segundos";
 "Sedentary" = "Sedentario";
-"Select a Twitter account to use" = "Seleccione una cuenta de Twitter para utilizar";
 "Select the map type" = "Seleccione el tipo de mapa";
 "Select the overlay" = "Seleccione la superposición";
 "Select the workout to perform." = "Seleccione el entrenamiento.";
@@ -213,7 +212,6 @@
 "Tag" = "Etiqueta";
 "TCX File" = "TCX Archivo";
 "The data file is attached." = "Se adjunta el archivo.";
-"There are no connected Twitter accounts." = "No hay cuentas de Twitter conectados.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "Hay riesgos con el ejercicio. No comience un programa de ejercicios sin consultar a su médico.";
 "There was an error contacting the web service." = "Hubo un error al ponerse en contacto con el servicio Web.";
 "There was an error creating the overlay." = "Se ha producido un error al crear el superposición.";
@@ -231,10 +229,6 @@
 "Total Reps" = "Repeticións Totales";
 "Treadmill running requires the use of a Bluetooth foot pod." = "Correr Cinta de correr requiere el uso de un podómetro Bluetooth.";
 "Trim" = "Recortar";
-"Tweet Start of Workout" = "Tweet Inicio de Entrenamiento";
-"Tweet End of Workout" = "Tweet Fin de Entrenamiento";
-"Tweet Run Splits" = "Tweet Run Splits";
-"Twitter" = "Twitter";
 "Update" = "Actualizar";
 "Update Rate" = "Frecuencia de Actualización";
 "Upload to Strava" = "Subir a Strava";

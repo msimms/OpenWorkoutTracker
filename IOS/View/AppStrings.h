@@ -43,10 +43,6 @@
 #define STR_RESET_PREFS       NSLocalizedString(@"Reset Settings", nil)
 #define STR_RESET_DATA        NSLocalizedString(@"Reset Data", nil)
 
-#define STR_ACCOUNT_NAMES     NSLocalizedString(@"Account Names", nil)
-#define STR_TWITTER           NSLocalizedString(@"Twitter", nil)
-#define STR_MSG_NO_TWITTER    NSLocalizedString(@"There are no connected Twitter accounts.", nil)
-
 #define SUMMARY_MAP                      NSLocalizedString(@"Map", nil)
 #define SUMMARY_ATTRIBUTE_TOTAL_DISTANCE NSLocalizedString(@"Total Distance", nil)
 #define SUMMARY_ATTRIBUTE_MAX_DISTANCE   NSLocalizedString(@"Max. Distance", nil)

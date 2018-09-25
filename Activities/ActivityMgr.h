@@ -170,11 +170,6 @@ extern "C" {
 	bool IsLiftingActivity(void);
 	bool IsCyclingActivity(void);
 
-	// Functions for managing social networks.
-	char* GetSocialNetworkStartingPostStr(void);
-	char* GetSocialNetworkStoppingPostStr(void);
-	char* GetSocialNetworkSplitPostStr(void);
-
 	// Functions for importing/exporting activities.
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType);
 	char* ExportActivity(const char* const activityId, FileFormat format, const char* const dirName);

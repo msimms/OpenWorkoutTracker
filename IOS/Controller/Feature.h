@@ -18,7 +18,6 @@ typedef enum Feature
 	FEATURE_ICLOUD,
 	FEATURE_STRAVA,
 	FEATURE_RUNKEEPER,
-	FEATURE_TWITTER
 } Feature;
 
 #endif

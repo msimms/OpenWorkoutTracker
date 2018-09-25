@@ -36,10 +36,6 @@ public:
 	MovingActivity();
 	virtual ~MovingActivity();
 
-	virtual std::string GetSocialNetworkStartingPostStr() const;
-	virtual std::string GetSocialNetworkStoppingPostStr() const;
-	virtual std::string GetSocialNetworkSplitPostStr() const;
-
 	virtual void StartNewLap();
 	virtual void SetLaps(const LapSummaryList& laps) { m_laps = laps; };
 	virtual uint64_t GetCurrentLapStartTime();

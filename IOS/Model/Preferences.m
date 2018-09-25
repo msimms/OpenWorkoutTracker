@@ -10,9 +10,6 @@
 #define PREF_NAME_UUID                           "UUID"
 #define PREF_NAME_UNITS                          "Units"
 #define PREF_NAME_BACKUP_TO_ICLOUD               "Backup to iCloud"
-#define PREF_NAME_TWEET_START                    "Tweet Start"
-#define PREF_NAME_TWEET_STOP                     "Tweet Stop"
-#define PREF_NAME_TWEET_RUN_SPLITS               "Tweet Run Splits"
 #define PREF_NAME_SCAN_FOR_SENSORS               "Scan for Sensors"
 #define PREF_NAME_BROADCAST_GLOBAL               "Broadcast Global"
 #define PREF_NAME_BROADCAST_USER_NAME            "Broadcast User Name"
@@ -128,21 +125,6 @@
 	return [self readBooleanValue:@PREF_NAME_BACKUP_TO_ICLOUD];
 }
 
-+ (BOOL)shouldTweetWorkoutStart
-{
-	return [self readBooleanValue:@PREF_NAME_TWEET_START];
-}
-
-+ (BOOL)shouldTweetWorkoutStop
-{
-	return [self readBooleanValue:@PREF_NAME_TWEET_STOP];
-}
-
-+ (BOOL)shouldTweetRunSplits
-{
-	return [self readBooleanValue:@PREF_NAME_TWEET_RUN_SPLITS];
-}
-
 + (BOOL)shouldScanForSensors
 {
 	return [self readBooleanValue:@PREF_NAME_SCAN_FOR_SENSORS];
@@ -252,21 +234,6 @@
 + (void)setBackupToICloud:(BOOL)value
 {
 	[self writeBoolValue:@PREF_NAME_BACKUP_TO_ICLOUD withValue:value];
-}
-
-+ (void)setTweetWorkoutStart:(BOOL)value
-{
-	[self writeBoolValue:@PREF_NAME_TWEET_START withValue:value];
-}
-
-+ (void)setTweetWorkoutStop:(BOOL)value
-{
-	[self writeBoolValue:@PREF_NAME_TWEET_STOP withValue:value];
-}
-
-+ (void)setTweetRunSplits:(BOOL)value
-{
-	[self writeBoolValue:@PREF_NAME_TWEET_RUN_SPLITS withValue:value];
 }
 
 + (void)setScanForSensors:(BOOL)value

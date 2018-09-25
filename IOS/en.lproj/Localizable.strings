@@ -185,7 +185,6 @@
 "Screen" = "Screen";
 "Seconds" = "Seconds";
 "Sedentary" = "Sedentary";
-"Select a Twitter account to use" = "Select a Twitter account to use";
 "Select the map type" = "Select the map type";
 "Select the overlay" = "Select the overlay";
 "Select the workout to perform." = "Select the workout to perform.";
@@ -213,7 +212,6 @@
 "Tag" = "Tag";
 "TCX File" = "TCX File";
 "The data file is attached." = "The data file is attached.";
-"There are no connected Twitter accounts." = "There are no connected Twitter accounts.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "There are risks with exercise. Do not start an exercise program without consulting your doctor.";
 "There was an error contacting the web service." = "There was an error contacting the web service.";
 "There was an error creating the overlay." = "There was an error creating the overlay.";
@@ -231,10 +229,6 @@
 "Total Reps" = "Total Reps";
 "Treadmill running requires the use of a Bluetooth foot pod." = "Treadmill running requires the use of a Bluetooth foot pod.";
 "Trim" = "Trim";
-"Tweet Start of Workout" = "Tweet Start of Workout";
-"Tweet End of Workout" = "Tweet End of Workout";
-"Tweet Run Splits" = "Tweet Run Splits";
-"Twitter" = "Twitter";
 "Update" = "Update";
 "Update Rate" = "Update Rate";
 "Upload to Strava" = "Upload to Strava";

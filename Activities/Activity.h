@@ -38,9 +38,6 @@ public:
 
 	virtual std::string GetType() const = 0;
 
-	virtual std::string GetSocialNetworkStartingPostStr() const = 0;
-	virtual std::string GetSocialNetworkStoppingPostStr() const = 0;
-
 	virtual void SetAthleteProfile(const User& athlete) { m_athlete = athlete; };
 
 	virtual void SetIntervalWorkout(const IntervalWorkout& workout) { m_intervalWorkout = workout; };

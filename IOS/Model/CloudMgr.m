@@ -17,7 +17,6 @@
 	{
 		self->fileClouds   = [[NSMutableArray alloc] init];
 		self->dataClouds   = [[NSMutableArray alloc] init];
-		self->socialClouds = [[NSMutableArray alloc] init];
 
 		[self createAll];
 	}
@@ -40,21 +39,11 @@
 	return list;
 }
 
-- (NSMutableArray*)listSocialClouds
-{
-	NSMutableArray* list = [[NSMutableArray alloc] init];
-	for (SocialCloud* site in self->socialClouds)
-		[list addObject:[site name]];
-	return list;
-}
-
 - (void)createAll
 {
 	[self createCloudController:CLOUD_SERVICE_ICLOUD];
 	[self createCloudController:CLOUD_SERVICE_RUNKEEPER];
 	[self createCloudController:CLOUD_SERVICE_STRAVA];
-	[self createCloudController:CLOUD_SERVICE_FACEBOOK];
-	[self createCloudController:CLOUD_SERVICE_TWITTER];
 }
 
 - (void)createCloudController:(CloudServiceType)service
@@ -84,30 +73,6 @@
 				[self->dataClouds addObject:self->stravaController];
 			}
 			break;
-		case CLOUD_SERVICE_TWITTER:
-			self->twitterClient = [[TwitterClient alloc] init];
-			if (self->twitterClient)
-			{
-				[self->socialClouds addObject:self->twitterClient];
-
-				if ([CloudPreferences usingTwitter])
-				{
-					[self->twitterClient buildAcctNameList];
-				}
-			}
-			break;
-		case CLOUD_SERVICE_FACEBOOK:
-			self->facebookClient = [[FacebookClient alloc] init];
-			if (self->facebookClient)
-			{
-				[self->socialClouds addObject:self->facebookClient];
-
-				if ([CloudPreferences usingFacebook])
-				{
-					[self->facebookClient buildAcctNameList];
-				}
-			}
-			break;
 	}
 }
 
@@ -135,10 +100,6 @@
 				return [self->stravaController isLinked];
 			}
 			break;
-		case CLOUD_SERVICE_TWITTER:
-			break;
-		case CLOUD_SERVICE_FACEBOOK:
-			break;
 	}
 	return FALSE;
 }
@@ -155,10 +116,6 @@
 			return [self->runKeeperController name];
 		case CLOUD_SERVICE_STRAVA:
 			return [self->stravaController name];
-		case CLOUD_SERVICE_TWITTER:
-			return [self->twitterClient name];
-		case CLOUD_SERVICE_FACEBOOK:
-			return [self->facebookClient name];
 	}
 	return nil;
 }
@@ -171,11 +128,6 @@
 		case CLOUD_SERVICE_DROPBOX:
 		case CLOUD_SERVICE_RUNKEEPER:
 		case CLOUD_SERVICE_STRAVA:
-		case CLOUD_SERVICE_TWITTER:
-			[self->twitterClient buildAcctNameList];
-			break;
-		case CLOUD_SERVICE_FACEBOOK:
-			[self->facebookClient buildAcctNameList];
 			break;
 	}
 }
@@ -188,11 +140,6 @@
 - (void)uploadActivity:(NSString*)name
 {
 	[self->dataClouds makeObjectsPerformSelector:@selector(uploadActivity:) withObject:(NSString*)name];
-}
-
-- (void)postUpdate:(NSString*)text
-{
-	[self->socialClouds makeObjectsPerformSelector:@selector(postUpdate:) withObject:(NSString*)text];
 }
 
 @end
