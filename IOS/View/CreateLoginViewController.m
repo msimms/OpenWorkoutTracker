@@ -7,12 +7,10 @@
 
 #import "CreateLoginViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "Preferences.h"
 #import "Segues.h"
 
-#define TITLE_ERROR                NSLocalizedString(@"Error", nil)
-#define BUTTON_TITLE_CANCEL        NSLocalizedString(@"Cancel", nil)
-#define BUTTON_TITLE_OK            NSLocalizedString(@"OK", nil)
 #define MSG_NO_USERNAME            NSLocalizedString(@"You did not provide an email address.", nil)
 #define MSG_NO_PASSWORD            NSLocalizedString(@"You did not enter a password.", nil)
 #define MSG_PASSWORD_NOT_CONFIRMED NSLocalizedString(@"You did not confirm the password.", nil)
@@ -82,32 +80,28 @@
 	{
 		[Preferences setBroadcastUserName:self->username];
 
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@""
-														message:MSG_SUCCESSFUL_LOGIN
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		[alert show];
-
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:MSG_SUCCESSFUL_LOGIN
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-														message:MSG_404
-													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_CANCEL
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		[alert show];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_404
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-														message:MSG_LOGIN_FAILED
-													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_CANCEL
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		[alert show];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_LOGIN_FAILED
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	[self.spinner stopAnimating];
 }
@@ -124,52 +118,45 @@
 
 - (IBAction)onCreate:(id)sender
 {
-	UIAlertView* alert = nil;
-	
 	if (self.usernameTextField.text.length == 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_USERNAME
-										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_NO_USERNAME
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if (self.passwordTextField.text.length == 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_PASSWORD
-										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_NO_PASSWORD
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if (self.confirmPasswordTextField.text.length == 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_PASSWORD_NOT_CONFIRMED
-										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_PASSWORD_NOT_CONFIRMED
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if ([self.confirmPasswordTextField.text compare:self.passwordTextField.text] != 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_PASSWORDS_DONT_MATCH
-										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_PASSWORDS_DONT_MATCH
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if (self.realNameTextField.text.length == 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_FIRST_NAME
-										  delegate:self
-								 cancelButtonTitle:BUTTON_TITLE_CANCEL
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
-	}
-
-	if (alert)
-	{
-		[alert show];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_NO_FIRST_NAME
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else
 	{

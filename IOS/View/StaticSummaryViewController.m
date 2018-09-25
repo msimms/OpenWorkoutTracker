@@ -10,6 +10,7 @@
 #import "ActivityAttribute.h"
 #import "ActivityMgr.h"
 #import "ActivityType.h"
+#import "AppStrings.h"
 #import "AppDelegate.h"
 #import "CorePlotViewController.h"
 #import "ElevationLine.h"
@@ -47,21 +48,12 @@
 
 #define ACTION_SHEET_TITLE_EXPORT      NSLocalizedString(@"Export using", nil)
 #define ACTION_SHEET_TITLE_FILE_FORMAT NSLocalizedString(@"Export as", nil)
-#define ACTION_SHEET_TITLE_MAP_TYPE    NSLocalizedString(@"Select the map type", nil)
-#define ACTION_SHEET_TITLE_BIKE        NSLocalizedString(@"Bike", nil)
 #define ACTION_SHEET_TITLE_EDIT        NSLocalizedString(@"Edit", nil)
-
-#define ACTION_SHEET_BUTTON_CANCEL     NSLocalizedString(@"Cancel", nil)
 
 #define START_PIN_NAME                 NSLocalizedString(@"Start", nil)
 #define FINISH_PIN_NAME                NSLocalizedString(@"Finish", nil)
-
-#define FASTEST                        NSLocalizedString(@"Fastest", nil)
-#define BIGGEST                        NSLocalizedString(@"Biggest", nil)
 #define TIME                           NSLocalizedString(@"Time", nil)
 
-#define ALERT_TITLE_ERROR              NSLocalizedString(@"Error", nil)
-#define ALERT_TITLE_CAUTION            NSLocalizedString(@"Caution", nil)
 #define ALERT_TITLE_FIX_REPS           NSLocalizedString(@"Repetitions", nil)
 
 #define EXPORT_FAILED                  NSLocalizedString(@"Export failed!", nil)
@@ -70,17 +62,6 @@
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
 #define MSG_LOW_MEMORY                 NSLocalizedString(@"Low memory", nil)
 #define MSG_MAIL_DISABLED              NSLocalizedString(@"Sending mail is disabled", nil)
-
-#define BUTTON_TITLE_OK                NSLocalizedString(@"Ok", nil)
-#define BUTTON_TITLE_YES               NSLocalizedString(@"Yes", nil)
-#define BUTTON_TITLE_NO                NSLocalizedString(@"No", nil)
-
-#define BUTTON_TITLE_DELETE            NSLocalizedString(@"Delete", nil)
-#define BUTTON_TITLE_EXPORT            NSLocalizedString(@"Export", nil)
-#define BUTTON_TITLE_EDIT              NSLocalizedString(@"Edit", nil)
-#define BUTTON_TITLE_MAP               NSLocalizedString(@"Map", nil)
-#define BUTTON_TITLE_BIKE              NSLocalizedString(@"Bike", nil)
-#define BUTTON_TITLE_TAG               NSLocalizedString(@"Tag", nil)
 
 #define EMAIL_TITLE                    NSLocalizedString(@"Workout Data", nil)
 #define EMAIL_CONTENTS                 NSLocalizedString(@"The data file is attached.", nil)
@@ -163,12 +144,12 @@ typedef enum ExportFileTypeButtons
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
-	[self.deleteButton setTitle:BUTTON_TITLE_DELETE];
-	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
-	[self.editButton setTitle:BUTTON_TITLE_EDIT];
-	[self.mapButton setTitle:BUTTON_TITLE_MAP];
-	[self.bikeButton setTitle:BUTTON_TITLE_BIKE];
-	[self.tagsButton setTitle:BUTTON_TITLE_TAG];
+	[self.deleteButton setTitle:STR_DELETE];
+	[self.exportButton setTitle:STR_EXPORT];
+	[self.editButton setTitle:STR_EDIT];
+	[self.mapButton setTitle:STR_MAP];
+	[self.bikeButton setTitle:STR_BIKE];
+	[self.tagsButton setTitle:STR_TAG];
 
 	self->movingToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->movingToolbar)
@@ -416,41 +397,46 @@ typedef enum ExportFileTypeButtons
 {
 	if (GetNumHistoricalActivities() > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_FILE_FORMAT
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:ACTION_SHEET_TITLE_FILE_FORMAT
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		LoadAllHistoricalActivitySensorData(self->activityIndex);
+
+		if (GetNumHistoricalActivityLocationPoints(self->activityIndex) > 0)
 		{
-			popupQuery.cancelButtonIndex = 1;
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_GPX to:self->selectedExportLocation];
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_TCX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_TCX to:self->selectedExportLocation];
+			}]];
+		}
+		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_CSV to:self->selectedExportLocation];
+		}]];
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
 
-			if (GetNumHistoricalActivityLocationPoints(self->activityIndex) > 0)
+		[self presentViewController:alertController animated:YES completion:nil];
+
+		if (self->exportedFileName)
+		{
+			if ([self->selectedExportLocation isEqualToString:@"Email"])
 			{
-				[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_GPX];
-				[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_TCX];
-				popupQuery.cancelButtonIndex += 2;
+				[self displayEmailComposerSheet];
 			}
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CSV];
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-
-			[popupQuery showInView:self.view];
-
-			return TRUE;
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
 		}
 	}
 	else
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-														message:MSG_LOW_MEMORY
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		if (alert)
-		{
-			[alert show];
-		}
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOW_MEMORY];
 	}
 	return FALSE;
 }
@@ -458,30 +444,26 @@ typedef enum ExportFileTypeButtons
 - (BOOL)showCloudSheet
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSMutableArray* fileSites = [appDelegate getEnabledFileExportServices];
+	
+	NSMutableArray* fileSites = [appDelegate getBikeNames];
 	if ([fileSites count] > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_EXPORT
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:ACTION_SHEET_TITLE_EXPORT
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		for (NSString* fileSite in fileSites)
 		{
-			popupQuery.cancelButtonIndex = [fileSites count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-
-			for (NSString* fileSite in fileSites)
-			{
-				[popupQuery addButtonWithTitle:fileSite];
-			}
-
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
-
-			return TRUE;
+			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->selectedExportLocation = fileSite;
+				[self showFileFormatSheet];
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
+		
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -619,15 +601,18 @@ typedef enum ExportFileTypeButtons
 
 - (IBAction)onDelete:(id)sender
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
-													message:MSG_DELETE_QUESTION
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_YES
-										  otherButtonTitles:BUTTON_TITLE_NO, nil];
-	if (alert)
-	{
-		[alert show];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_CAUTION
+																			 message:MSG_DELETE_QUESTION
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		DeleteActivity([self->activityId UTF8String]);
+		InitializeHistoricalActivityList();
+		[self.navigationController popViewControllerAnimated:YES];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onExport:(id)sender
@@ -651,32 +636,80 @@ typedef enum ExportFileTypeButtons
 
 - (IBAction)onEdit:(id)sender
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_EDIT
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																			 message:ACTION_SHEET_TITLE_EDIT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_1 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		uint64_t newTime = ((uint64_t)self->startTime + 1) * 1000;
+		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
+		InitializeHistoricalActivityList();		
+		[self redraw];
+		[self.summaryTableView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_5 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		uint64_t newTime = ((uint64_t)self->startTime + 5) * 1000;
+		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
+		InitializeHistoricalActivityList();		
+		[self redraw];
+		[self.summaryTableView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_30 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		uint64_t newTime = ((uint64_t)self->startTime + 30) * 1000;
+		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
+		InitializeHistoricalActivityList();		
+		[self redraw];
+		[self.summaryTableView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_SECOND_1 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		uint64_t newTime = ((uint64_t)self->endTime - 1) * 1000;
+		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
+		InitializeHistoricalActivityList();		
+		[self redraw];
+		[self.summaryTableView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_SECOND_5 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		uint64_t newTime = ((uint64_t)self->endTime - 5) * 1000;
+		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
+		InitializeHistoricalActivityList();		
+		[self redraw];
+		[self.summaryTableView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_SECOND_30 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		uint64_t newTime = ((uint64_t)self->endTime - 30) * 1000;
+		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
+		InitializeHistoricalActivityList();		
+		[self redraw];
+		[self.summaryTableView reloadData];
+	}]];
+	ActivityAttributeType repsValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS);
+	if (repsValue.valid)
 	{
-		popupQuery.cancelButtonIndex = 6;
-		popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_FIX_REPS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			UIAlertController* repsAlertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_FIX_REPS
+																					 message:MSG_FIX_REPS
+																			  preferredStyle:UIAlertControllerStyleAlert];
+			[repsAlertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+				textField.placeholder = [[NSString alloc] initWithFormat:@"%llu", repsValue.value.intVal];
+				textField.keyboardType = UIKeyboardTypeNumberPad;
+			}];
+			[repsAlertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				UITextField* field = repsAlertController.textFields.firstObject;
 
-		[popupQuery addButtonWithTitle:ACTION_SHEET_TRIM_FIRST_1];
-		[popupQuery addButtonWithTitle:ACTION_SHEET_TRIM_FIRST_5];
-		[popupQuery addButtonWithTitle:ACTION_SHEET_TRIM_FIRST_30];
-		[popupQuery addButtonWithTitle:ACTION_SHEET_TRIM_SECOND_1];
-		[popupQuery addButtonWithTitle:ACTION_SHEET_TRIM_SECOND_5];
-		[popupQuery addButtonWithTitle:ACTION_SHEET_TRIM_SECOND_30];
+				ActivityAttributeType value;
+				value.value.intVal = [[field text] intValue];
+				value.valueType = TYPE_INTEGER;
+				value.measureType = MEASURE_COUNT;
 
-		if (QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS).valid)
-		{
-			[popupQuery addButtonWithTitle:ACTION_SHEET_FIX_REPS];
-			popupQuery.cancelButtonIndex++;
-		}
-
-		[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-		[popupQuery showInView:self.view];
+				SetHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, value);
+				SaveHistoricalActivitySummaryData(self->activityIndex);
+			}]];
+			[self presentViewController:repsAlertController animated:YES completion:nil];
+		}]];
 	}
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onTag:(id)sender
@@ -691,24 +724,20 @@ typedef enum ExportFileTypeButtons
 	NSMutableArray* fileSites = [appDelegate getBikeNames];
 	if ([fileSites count] > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_BIKE
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:STR_BIKE
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		for (NSString* fileSite in fileSites)
 		{
-			popupQuery.cancelButtonIndex = [fileSites count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-			
-			for (NSString* fileSite in fileSites)
-			{
-				[popupQuery addButtonWithTitle:fileSite];
-			}
-			
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
+			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[self->bikeButton setTitle:fileSite];
+				[appDelegate setBikeForActivityId:fileSite withActivityId:self->activityId];
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -995,15 +1024,7 @@ typedef enum ExportFileTypeButtons
 	}
 	else
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-														message:MSG_MAIL_DISABLED
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		if (alert)
-		{
-			[alert show];
-		}
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_MAIL_DISABLED];
 	}
 }
 
@@ -1032,183 +1053,6 @@ typedef enum ExportFileTypeButtons
 	[appDelegate deleteFile:self->exportedFileName];
 
 	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-# pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* message = [alertView message];
-
-	if ([message isEqualToString:MSG_DELETE_QUESTION])
-	{
-		if (buttonIndex == 0)	// Yes
-		{
-			DeleteActivity([self->activityId UTF8String]);
-			InitializeHistoricalActivityList();
-			
-			[self.navigationController popViewControllerAnimated:YES];
-		}
-	}
-	else if ([message isEqualToString:MSG_FIX_REPS])
-	{
-		if (buttonIndex == 0)	// Yes
-		{
-			NSString* text = [[alertView textFieldAtIndex:0] text];
-
-			ActivityAttributeType value;
-			value.value.intVal = [text intValue];
-			value.valueType = TYPE_INTEGER;
-			value.measureType = MEASURE_COUNT;
-
-			SetHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, value);
-			SaveHistoricalActivitySummaryData(self->activityIndex);
-		}
-	}
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* buttonName = [actionSheet buttonTitleAtIndex:buttonIndex];
-
-	if (buttonIndex == [actionSheet cancelButtonIndex])
-	{
-		return;
-	}
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSString* title = [actionSheet title];
-
-	if ([title isEqualToString:ACTION_SHEET_TITLE_EXPORT])
-	{
-		self->selectedExportLocation = [actionSheet buttonTitleAtIndex:buttonIndex];
-		[self showFileFormatSheet];
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_FILE_FORMAT])
-	{
-		LoadAllHistoricalActivitySensorData(self->activityIndex);
-
-		if ([buttonName isEqualToString:ACTION_SHEET_BUTTON_GPX])
-		{
-			self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_GPX to:self->selectedExportLocation];
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_BUTTON_TCX])
-		{
-			self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_TCX to:self->selectedExportLocation];
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_BUTTON_CSV])
-		{
-			self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_CSV to:self->selectedExportLocation];
-		}
-		else
-		{
-			self->exportedFileName = nil;
-		}
-
-		if (self->exportedFileName)
-		{
-			if ([self->selectedExportLocation isEqualToString:@"Email"])
-			{
-				[self displayEmailComposerSheet];
-			}
-		}
-		else
-		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-															message:EXPORT_FAILED
-														   delegate:self
-												  cancelButtonTitle:nil
-												  otherButtonTitles:BUTTON_TITLE_OK, nil];
-			if (alert)
-			{
-				[alert show];
-			}
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_MAP_TYPE])
-	{
-		switch (buttonIndex)
-		{
-			case 0:
-				self->mapView.mapType = MKMapTypeStandard;
-				break;
-			case 1:
-				self->mapView.mapType = MKMapTypeSatellite;
-				break;
-			case 2:
-				self->mapView.mapType = MKMapTypeHybrid;
-				break;
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_EDIT])
-	{
-		uint64_t newTime = 0;
-		bool trimmed = false;
-		
-		if ([buttonName isEqualToString:ACTION_SHEET_TRIM_FIRST_1])
-		{
-			newTime = ((uint64_t)self->startTime + 1) * 1000;
-			trimmed = TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_FIRST_5])
-		{
-			newTime = ((uint64_t)self->startTime + 5) * 1000;
-			trimmed = TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_FIRST_30])
-		{
-			newTime = ((uint64_t)self->startTime + 30) * 1000;
-			trimmed = TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_SECOND_1])
-		{
-			newTime = ((uint64_t)self->endTime - 1) * 1000;
-			trimmed = TrimActivityData([self->activityId UTF8String], newTime, FALSE);
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_SECOND_5])
-		{
-			newTime = ((uint64_t)self->endTime - 5) * 1000;
-			trimmed = TrimActivityData([self->activityId UTF8String], newTime, FALSE);
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_TRIM_SECOND_30])
-		{
-			newTime = ((uint64_t)self->endTime - 30) * 1000;
-			trimmed = TrimActivityData([self->activityId UTF8String], newTime, FALSE);
-		}
-		else if ([buttonName isEqualToString:ACTION_SHEET_FIX_REPS])
-		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_FIX_REPS message:MSG_FIX_REPS delegate:self cancelButtonTitle:BUTTON_TITLE_OK otherButtonTitles:nil];
-			if (alert)
-			{
-				alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-				
-				UITextField* textField = [alert textFieldAtIndex:0];
-				[textField setKeyboardType:UIKeyboardTypeNumberPad];
-				[textField becomeFirstResponder];
-				
-				ActivityAttributeType value = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS);
-				textField.placeholder = [[NSString alloc] initWithFormat:@"%llu", value.value.intVal];
-				
-				[alert show];
-			}
-		}
-		
-		if (trimmed)
-		{
-			InitializeHistoricalActivityList();
-
-			[self redraw];
-			[self.summaryTableView reloadData];
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_BIKE])
-	{
-		[self->bikeButton setTitle:buttonName];
-		[appDelegate setBikeForActivityId:buttonName withActivityId:self->activityId];
-	}
 }
 
 #pragma mark UIGestureRecognizer methods

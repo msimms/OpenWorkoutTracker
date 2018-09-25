@@ -14,7 +14,6 @@
 	IBOutlet UITableView* intervalTableView;
 
 	NSString* name;
-	IntervalUnit selectedUnits;
 }
 
 - (IBAction)onAddInterval:(id)sender;

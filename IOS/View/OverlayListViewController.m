@@ -35,8 +35,6 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
-
 	self->overlayNames = NULL;
 	self->selectedSection = 0;
 	self->selectedRow = 0;

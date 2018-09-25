@@ -7,12 +7,12 @@
 
 #import "LiveSummaryViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "Segues.h"
 #import "StringUtils.h"
 #import "TagViewController.h"
 
-#define TITLE            NSLocalizedString(@"Summary", nil)
-#define BUTTON_TITLE_MAP NSLocalizedString(@"Map", nil)
+#define TITLE NSLocalizedString(@"Summary", nil)
 
 @interface LiveSummaryViewController ()
 
@@ -51,7 +51,7 @@
 	self.rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
 	[[self view] addGestureRecognizer:self.rightSwipe];
 
-	[self.mapButton setTitle:BUTTON_TITLE_MAP];
+	[self.mapButton setTitle:STR_MAP];
 }
 
 

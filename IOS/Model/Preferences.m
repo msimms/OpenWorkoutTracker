@@ -19,6 +19,7 @@
 #define PREF_NAME_BROADCAST_RATE                 "Broadcast Rate"
 #define PREF_NAME_BROADCAST_PROTOCOL             "Broadcast Protocol"
 #define PREF_NAME_BROADCAST_HOST_NAME            "Broadcast Host Name"
+#define PREF_NAME_BROADCAST_SESSION_COOKIE       "Broadcast Session Cookie"
 #define PREF_NAME_ALWAYS_CONNECT                 "Always Connect"
 #define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG   "Has Shown First Time Use Message"
 #define PREF_NAME_HAS_SHOWN_PULL_UP_HELP         "Has Shown Pull Up Help"
@@ -183,6 +184,11 @@
 	return hostName;
 }
 
++ (NSString*)broadcastSessionCookie
+{
+	return [self readStringValue:@PREF_NAME_BROADCAST_SESSION_COOKIE];
+}
+
 + (BOOL)hasShownFirstTimeUseMessage
 {
 	return [self readBooleanValue:@PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG];
@@ -293,6 +299,11 @@
 + (void)setBroadcastHostName:(NSString*)value
 {
 	[self writeStringValue:@PREF_NAME_BROADCAST_HOST_NAME withValue:value];
+}
+
++ (void)setBroadcastSessionCookie:(NSString*)value
+{
+	[self writeStringValue:@PREF_NAME_BROADCAST_SESSION_COOKIE withValue:value];
 }
 
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value

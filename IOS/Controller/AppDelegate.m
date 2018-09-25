@@ -209,11 +209,6 @@
 {
 }
 
-- (BOOL)application:(UIApplication*)application handleOpenURL:(NSURL*)url
-{
-	return NO;
-}
-
 #pragma mark 
 
 - (NSString*)getUuid;

@@ -34,6 +34,7 @@
 + (NSInteger)broadcastRate;
 + (NSString*)broadcastProtocol;
 + (NSString*)broadcastHostName;
++ (NSString*)broadcastSessionCookie;
 + (BOOL)hasShownFirstTimeUseMessage;
 + (BOOL)hasShownPullUpHelp;
 + (BOOL)hasShownPushUpHelp;
@@ -55,6 +56,7 @@
 + (void)setBroadcastRate:(NSInteger)value;
 + (void)setBroadcastProtocol:(NSString*)value;
 + (void)setBroadcastHostName:(NSString*)value;
++ (void)setBroadcastSessionCookie:(NSString*)value;
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value;
 + (void)setHasShownPullUpHelp:(BOOL)value;
 + (void)setHasShownPushUpHelp:(BOOL)value;

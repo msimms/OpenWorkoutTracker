@@ -7,6 +7,7 @@
 
 #import "SocialAcctViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "CloudPreferences.h"
 #import "FacebookClient.h"
 #import "Preferences.h"
@@ -18,11 +19,6 @@ typedef enum SettingsSections
 	SECTION_ACCOUNTS = 0,
 	NUM_SETTINGS_SECTIONS
 } SettingsSections;
-
-#define TITLE                  NSLocalizedString(@"Account Names", nil)
-#define BUTTON_TITLE_OK        NSLocalizedString(@"Ok", nil)
-#define ALERT_TITLE_NO_TWITTER NSLocalizedString(@"Twitter", nil)
-#define ALERT_MSG_NO_TWITTER   NSLocalizedString(@"There are no connected Twitter accounts.", nil)
 
 @interface SocialAcctViewController ()
 
@@ -45,7 +41,7 @@ typedef enum SettingsSections
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_ACCOUNT_NAMES;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(twitterAcctList:) name:@NOTIFICATION_TWITTER_ACCT_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fbAcctList:) name:@NOTIFICATION_FB_ACCT_LIST_UPDATED object:nil];
@@ -95,16 +91,14 @@ typedef enum SettingsSections
 	if ([self->accountNames count] == 0)
 	{
 		[CloudPreferences setUsingTwitter:FALSE];
-		
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NO_TWITTER
-														message:ALERT_MSG_NO_TWITTER
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		if (alert)
-		{
-			[alert show];
-		}
+
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_TWITTER
+																				 message:STR_MSG_NO_TWITTER
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	
 	[self.spinner stopAnimating];
@@ -197,18 +191,6 @@ typedef enum SettingsSections
 				[self.navigationController popViewControllerAnimated:TRUE];
 			}
 			break;
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [alertView title];
-	
-	if ([title isEqualToString:ALERT_TITLE_NO_TWITTER])
-	{
-		[self.navigationController popViewControllerAnimated:YES];
 	}
 }
 

@@ -8,6 +8,7 @@
 #import "MappedActivityViewController.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "LocationSensor.h"
 #import "StringUtils.h"
 
@@ -17,9 +18,6 @@
 #define OPTION_STANDARD_VIEW            NSLocalizedString(@"Standard View", nil)
 #define OPTION_SATELLITE_VIEW           NSLocalizedString(@"Satellite View", nil)
 #define OPTION_HYBRID_VIEW              NSLocalizedString(@"Hybrid View", nil)
-
-#define BUTTON_TITLE_MAP                NSLocalizedString(@"Map", nil)
-#define BUTTON_TITLE_SCALE              NSLocalizedString(@"Scale", nil)
 
 @interface MappedActivityViewController ()
 
@@ -73,8 +71,8 @@
 
 	[self.mapView setDelegate:self];
 
-	[self.mapButton setTitle:BUTTON_TITLE_MAP];
-	[self.scaleButton setTitle:BUTTON_TITLE_SCALE];
+	[self.mapButton setTitle:STR_MAP];
+	[self.scaleButton setTitle:STR_SCALE];
 
 	self->valueLabels = [[NSMutableArray alloc] init];
 	if (self->valueLabels)
@@ -363,47 +361,25 @@
 
 - (IBAction)onMap:(id)sender
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_MAP_OPTIONS
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:OPTION_AUTO_SCALE_ON, OPTION_AUTO_SCALE_OFF, OPTION_STANDARD_VIEW, OPTION_SATELLITE_VIEW, OPTION_HYBRID_VIEW, nil];
-	if (popupQuery)
-	{
-		popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-		[popupQuery showInView:self.view];
-	}
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if ([[actionSheet title] isEqualToString:ACTION_SHEET_TITLE_MAP_OPTIONS])
-	{
-		switch (buttonIndex)
-		{
-			case 0:
-				self->autoScale = true;
-				break;
-			case 1:
-				self->autoScale = false;
-				break;
-			case 2:
-				self->mapView.mapType = MKMapTypeStandard;
-				break;
-			case 3:
-				self->mapView.mapType = MKMapTypeSatellite;
-				break;
-			case 4:
-				self->mapView.mapType = MKMapTypeHybrid;
-				break;
-		}
-	}
-	else
-	{
-		[super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_MAP_OPTIONS
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->autoScale = true;
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->autoScale = false;
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeStandard;
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_SATELLITE_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeSatellite;
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeHybrid;
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 @end

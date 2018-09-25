@@ -7,12 +7,10 @@
 
 #import "LoginViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "Preferences.h"
 #import "Segues.h"
 
-#define TITLE_ERROR          NSLocalizedString(@"Error", nil)
-#define BUTTON_TITLE_CANCEL  NSLocalizedString(@"Cancel", nil)
-#define BUTTON_TITLE_OK      NSLocalizedString(@"OK", nil)
 #define MSG_NO_EMAIL         NSLocalizedString(@"You did not provide an email address.", nil)
 #define MSG_NO_PASSWORD      NSLocalizedString(@"You did not enter a password.", nil)
 #define MSG_LOGIN_FAILED     NSLocalizedString(@"Failed to login to the account.", nil)
@@ -78,35 +76,18 @@
 
 	if ([responseCode intValue] == 200)
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@""
-														message:MSG_SUCCESSFUL_LOGIN
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		[alert show];
-
-		[self.navigationController popViewControllerAnimated:TRUE];
+		[super showOneButtonAlert:@"" withMsg:MSG_SUCCESSFUL_LOGIN];
+		[Preferences setBroadcastSessionCookie: [loginData objectForKey:@KEY_NAME_DATA]];
 	}
 	else if ([responseCode intValue] == 404)
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-														message:MSG_404
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		[alert show];
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_404];
 	}
 	else
 	{
 		NSData* data = [loginData objectForKey:@KEY_NAME_DATA];
 		NSString* dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-														message:dataStr
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		[alert show];
+		[super showOneButtonAlert:STR_ERROR withMsg:dataStr];
 	}
 	[self.spinner stopAnimating];
 }
@@ -123,28 +104,13 @@
 
 - (IBAction)onLogin:(id)sender
 {
-	UIAlertView* alert = nil;
-
 	if (self.usernameTextField.text.length == 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_EMAIL
-										  delegate:self
-								 cancelButtonTitle:nil
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_NO_EMAIL];
 	}
 	else if (self.passwordTextField.text.length == 0)
 	{
-		alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-										   message:MSG_NO_PASSWORD
-										  delegate:self
-								 cancelButtonTitle:nil
-								 otherButtonTitles:BUTTON_TITLE_OK, nil];
-	}
-
-	if (alert)
-	{
-		[alert show];
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_NO_PASSWORD];
 	}
 	else
 	{

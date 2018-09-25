@@ -10,7 +10,6 @@
 @interface ActivityPreferencesViewController : UIViewController <UIActionSheetDelegate>
 {
 	IBOutlet UITableView* optionsTableView;
-	IBOutlet UIBarButtonItem* homeButton;
 	
 	NSArray* enabledDisabledStrings;
 	NSArray* countdownStrings;
@@ -25,9 +24,6 @@
 	NSMutableArray* attributeNames;
 }
 
-- (IBAction)onHome:(id)sender;
-
 @property (nonatomic, retain) IBOutlet UITableView* optionsTableView;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 
 @end

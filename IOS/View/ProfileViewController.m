@@ -7,6 +7,7 @@
 
 #import "ProfileViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "DateViewController.h"
 #import "Segues.h"
 #import "StringUtils.h"
@@ -34,17 +35,11 @@ typedef enum ProfileRows
 #define TITLE_BIKES                       NSLocalizedString(@"Bikes", nil)
 
 #define ACTION_SHEET_TITLE_ACTIVITY_LEVEL NSLocalizedString(@"Activity Level", nil)
-#define ACTION_SHEET_TITLE_GENDER         NSLocalizedString(@"Gender", nil)
 #define ACTION_SHEET_TITLE_BIRTHDATE      NSLocalizedString(@"Enter your birthdate", nil)
-#define ALERT_TITLE_HEIGHT                NSLocalizedString(@"Height", nil)
-#define ALERT_TITLE_WEIGHT                NSLocalizedString(@"Weight", nil)
 #define ALERT_MSG_HEIGHT                  NSLocalizedString(@"Please enter your height", nil)
 #define ALERT_MSG_WEIGHT                  NSLocalizedString(@"Please enter your weight", nil)
 #define TITLE_BIRTHDATE                   NSLocalizedString(@"Birthdate", nil)
 
-#define BUTTON_TITLE_CANCEL               NSLocalizedString(@"Cancel", nil)
-#define BUTTON_TITLE_CONTINUE             NSLocalizedString(@"Continue", nil)
-#define BUTTON_TITLE_OK                   NSLocalizedString(@"Ok", nil)
 #define BUTTON_TITLE_BIKE_PROFILE         NSLocalizedString(@"Add Bike Profile", nil)
 
 @interface ProfileViewController ()
@@ -156,31 +151,6 @@ typedef enum ProfileRows
 	self->bikeNames = [appDelegate getBikeNames];
 }
 
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* title = [alertView title];
-	
-	if ([title isEqualToString:ALERT_TITLE_HEIGHT])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-		double height = [text doubleValue];
-		if (height > (double)0.0)
-			[appDelegate setUserHeight:height];
-	}
-	else if ([title isEqualToString:ALERT_TITLE_WEIGHT])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-		double weight = [text doubleValue];
-		if (weight > (double)0.0)
-			[appDelegate setUserWeight:weight];
-	}
-
-	[self.profileTableView reloadData];
-}
-
 #pragma mark UITableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
@@ -238,7 +208,7 @@ typedef enum ProfileRows
 						cell.detailTextLabel.text = [StringUtils activityLevelToStr:[appDelegate userActivityLevel]];
 						break;
 					case ROW_GENDER:
-						cell.textLabel.text = ACTION_SHEET_TITLE_GENDER;
+						cell.textLabel.text = STR_GENDER;
 						cell.detailTextLabel.text = [StringUtils genderToStr:[appDelegate userGender]];
 						break;
 					case ROW_BIRTHDATE:
@@ -251,14 +221,14 @@ typedef enum ProfileRows
 					case ROW_HEIGHT:
 						{
 							double height = [appDelegate userHeight];
-							cell.textLabel.text = ALERT_TITLE_HEIGHT;
+							cell.textLabel.text = STR_HEIGHT;
 							cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", height, [StringUtils formatActivityMeasureType:MEASURE_HEIGHT]];
 						}
 						break;
 					case ROW_WEIGHT:
 						{
 							double weight = [appDelegate userWeight];
-							cell.textLabel.text = ALERT_TITLE_WEIGHT;
+							cell.textLabel.text = STR_WEIGHT;
 							cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
 						}
 						break;
@@ -324,44 +294,53 @@ typedef enum ProfileRows
 	if (section == SECTION_USER)
 	{
 		NSInteger row = [indexPath row];
-		
+
 		switch (row)
 		{
 			case ROW_ACTIVITY_LEVEL:
 				{
-					UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
-																			delegate:self
-																   cancelButtonTitle:nil
-															  destructiveButtonTitle:nil
-																   otherButtonTitles:
-												 [StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY],
-												 [StringUtils activityLevelToStr:ACTIVITY_LEVEL_LIGHT],
-												 [StringUtils activityLevelToStr:ACTIVITY_LEVEL_MODERATE],
-												 [StringUtils activityLevelToStr:ACTIVITY_LEVEL_ACTIVE],
-												 [StringUtils activityLevelToStr:ACTIVITY_LEVEL_EXTREME],
-																					 nil];
-					if (popupQuery)
-					{
-						popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-						[popupQuery showInView:self.view];
-					}
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																							 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_SEDENTARY];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_LIGHT] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_LIGHT];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_MODERATE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_MODERATE];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_ACTIVE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_ACTIVE];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_EXTREME] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_EXTREME];
+						[self.profileTableView reloadData];
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
 			case ROW_GENDER:
 				{
-					UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_GENDER
-																			delegate:self
-																   cancelButtonTitle:nil
-															  destructiveButtonTitle:nil
-																   otherButtonTitles:
-												 [StringUtils genderToStr:GENDER_MALE],
-												 [StringUtils genderToStr:GENDER_FEMALE],
-																					 nil];
-					if (popupQuery)
-					{
-						popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-						[popupQuery showInView:self.view];
-					}
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																							 message:STR_GENDER
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserGender:GENDER_MALE];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_FEMALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserGender:GENDER_FEMALE];
+						[self.profileTableView reloadData];
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
 			case ROW_BIRTHDATE:
@@ -371,46 +350,49 @@ typedef enum ProfileRows
 				break;
 			case ROW_HEIGHT:
 				{
-					UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_HEIGHT
-																	message:ALERT_MSG_HEIGHT
-																   delegate:self
-														  cancelButtonTitle:BUTTON_TITLE_OK
-														  otherButtonTitles:nil];
-					if (alert)
-					{
-						alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_HEIGHT
+																							 message:ALERT_MSG_HEIGHT
+																					  preferredStyle:UIAlertControllerStyleAlert];
 
-						UITextField* textField = [alert textFieldAtIndex:0];
-						[textField setKeyboardType:UIKeyboardTypeNumberPad];
-						[textField becomeFirstResponder];
-
+					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 						AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
-
-						[alert show];
-					}
+						textField.keyboardType = UIKeyboardTypeNumberPad;
+					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						UITextField* field = alertController.textFields.firstObject;
+						double height = [[field text] doubleValue];
+						if (height > (double)0.0)
+						{
+							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+							[appDelegate setUserHeight:height];
+							[self.profileTableView reloadData];
+						}
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
 			case ROW_WEIGHT:
 				{
-					UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_WEIGHT
-																	message:ALERT_MSG_WEIGHT
-																   delegate:self
-														  cancelButtonTitle:BUTTON_TITLE_OK
-														  otherButtonTitles:nil];
-					if (alert)
-					{
-						alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-
-						UITextField* textField = [alert textFieldAtIndex:0];
-						[textField setKeyboardType:UIKeyboardTypeNumberPad];
-						[textField becomeFirstResponder];
-
-						AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_WEIGHT
+																							 message:ALERT_MSG_WEIGHT
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					
+					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
-
-						[alert show];
-					}
+						textField.keyboardType = UIKeyboardTypeNumberPad;
+					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						UITextField* field = alertController.textFields.firstObject;
+						double weight = [[field text] doubleValue];
+						if (weight > (double)0.0)
+						{
+							[appDelegate setUserWeight:weight];
+							[self.profileTableView reloadData];
+						}
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
 			case NUM_PROFILE_ROWS:
@@ -427,25 +409,6 @@ typedef enum ProfileRows
 
 - (void)tableView:(UITableView*)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
 {
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* title = [actionSheet title];
-	
-	if ([title isEqualToString:ACTION_SHEET_TITLE_ACTIVITY_LEVEL])
-	{
-		[appDelegate setUserActivityLevel:(ActivityLevel)buttonIndex];
-		[self.profileTableView reloadData];
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_GENDER])
-	{
-		[appDelegate setUserGender:(Gender)buttonIndex];
-		[self.profileTableView reloadData];
-	}
 }
 
 #pragma mark button handlers

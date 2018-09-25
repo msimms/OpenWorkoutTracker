@@ -7,22 +7,17 @@
 
 #import "BikeProfileViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "ActivityMgr.h"
 #import "Preferences.h"
 #import "UnitConversionFactors.h"
 
 #define TITLE                            NSLocalizedString(@"New Bike", nil)
-#define ALERT_TITLE_ERROR                NSLocalizedString(@"Error", nil)
-#define ALERT_TITLE_CAUTION              NSLocalizedString(@"Caution", nil)
 
 #define ACTION_SHEET_TITLE_WHEEL_SIZE    NSLocalizedString(@"Wheel Size", nil)
 
-#define BUTTON_TITLE_OK                  NSLocalizedString(@"Ok", nil)
-#define BUTTON_TITLE_YES                 NSLocalizedString(@"Yes", nil)
-#define BUTTON_TITLE_NO                  NSLocalizedString(@"No", nil)
 #define BUTTON_TITLE_SAVE                NSLocalizedString(@"Save", nil)
 #define BUTTON_TITLE_UPDATE              NSLocalizedString(@"Update", nil)
-#define BUTTON_TITLE_HOME                NSLocalizedString(@"Home", nil)
 
 // See http://www.slowtwitch.com/Tech/Wheel_Size_Wars_3682.html for more on wheel sizes
 #define BUTTON_TITLE_ISO_622             NSLocalizedString(@"29\" / 700c (ISO 622mm)", nil)
@@ -34,7 +29,6 @@
 
 #define BUTTON_TITLE_COMPUTE             NSLocalizedString(@"Compute", nil)
 #define BUTTON_TITLE_CLEAR               NSLocalizedString(@"Clear", nil)
-#define BUTTON_TITLE_CANCEL              NSLocalizedString(@"Cancel", nil)
 
 #define LABEL_NAME                       NSLocalizedString(@"Name:", nil)
 #define LABEL_WEIGHT                     NSLocalizedString(@"Weight:", nil)
@@ -58,7 +52,6 @@
 @synthesize toolbar;
 @synthesize wheelDiameterButton;
 @synthesize deleteButton;
-@synthesize homeButton;
 @synthesize nameTextField;
 @synthesize weightTextField;
 @synthesize wheelSizeTextField;
@@ -82,8 +75,6 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-
-	[self.homeButton setTitle:BUTTON_TITLE_HOME];
 
 	[self.nameLabel setText:LABEL_NAME];
 	[self.weightLabel setText:LABEL_WEIGHT];
@@ -135,27 +126,47 @@
 
 - (void)showWheelDiameterSheet
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_WHEEL_SIZE
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
-	{
-		popupQuery.cancelButtonIndex = 6;
-		popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_ISO_622];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_ISO_584];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_ISO_571];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_ISO_559];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_ISO_406];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_COMPUTE];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_CLEAR];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_CANCEL];
-
-		[popupQuery showInView:self.view];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_WHEEL_SIZE
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_ISO_622 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self updateWheelDiameter:(double)622.0];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_ISO_584 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self updateWheelDiameter:(double)584.0];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_ISO_584 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self updateWheelDiameter:(double)571.0];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_ISO_571 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self updateWheelDiameter:(double)559.0];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_ISO_559 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self updateWheelDiameter:(double)406.0];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_COMPUTE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		if (ComputeWheelCircumference(self->bikeId))
+		{
+			[self displayValues];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_FAILED_TO_COMPUTE_WHEEL_SIZE];
+		}
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_CLEAR style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UIAlertController* alertController2 = [UIAlertController alertControllerWithTitle:STR_CAUTION
+																				  message:MSG_CLEAR_WHEEL_SIZE
+																		   preferredStyle:UIAlertControllerStyleAlert];
+		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self updateWheelDiameter:(double)0.0];			
+		}]];
+		[self presentViewController:alertController2 animated:YES completion:nil];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)updateWheelDiameter:(double)diameterMm
@@ -268,95 +279,6 @@
     return saved;
 }
 
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* buttonName = [actionSheet buttonTitleAtIndex:buttonIndex];
-	
-	if (buttonIndex == [actionSheet cancelButtonIndex])
-	{
-		return;
-	}
-
-	if ([buttonName isEqualToString:BUTTON_TITLE_ISO_622])
-	{
-		[self updateWheelDiameter:(double)622.0];
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_ISO_584])
-	{
-		[self updateWheelDiameter:(double)584.0];
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_ISO_571])
-	{
-		[self updateWheelDiameter:(double)571.0];
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_ISO_559])
-	{
-		[self updateWheelDiameter:(double)559.0];
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_ISO_406])
-	{
-		[self updateWheelDiameter:(double)406.0];
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_COMPUTE])
-	{
-		if (ComputeWheelCircumference(self->bikeId))
-		{
-			[self displayValues];
-		}
-		else
-		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-															message:MSG_FAILED_TO_COMPUTE_WHEEL_SIZE
-														   delegate:self
-												  cancelButtonTitle:nil
-												  otherButtonTitles:BUTTON_TITLE_OK, nil];
-			if (alert)
-			{
-				[alert show];
-			}
-		}
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_CLEAR])
-	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
-														message:MSG_CLEAR_WHEEL_SIZE
-													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_NO
-											  otherButtonTitles:BUTTON_TITLE_YES, nil];
-		if (alert)
-		{
-			[alert show];
-		}
-	}
-	else if ([buttonName isEqualToString:BUTTON_TITLE_CANCEL])
-	{
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* message = [alertView message];
-	
-	if (buttonIndex == [alertView cancelButtonIndex])
-	{
-		return;
-	}
-
-	if ([message isEqualToString:MSG_DELETE_QUESTION])
-	{
-		DeleteBikeProfile(self->bikeId);
-		[self.navigationController popViewControllerAnimated:YES];
-	}
-	else if ([message isEqualToString:MSG_CLEAR_WHEEL_SIZE])
-	{
-		[self updateWheelDiameter:(double)0.0];
-	}
-}
-
 #pragma mark button handlers
 
 - (IBAction)onHome:(id)sender
@@ -378,15 +300,16 @@
 			break;
 		case BIKE_PROFILE_UPDATE:
 			{
-				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
-																message:MSG_DELETE_QUESTION
-															   delegate:self
-													  cancelButtonTitle:BUTTON_TITLE_NO
-													  otherButtonTitles:BUTTON_TITLE_YES, nil];
-				if (alert)
-				{
-					[alert show];
-				}
+				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_CAUTION
+																						 message:MSG_DELETE_QUESTION
+																				  preferredStyle:UIAlertControllerStyleAlert];
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					DeleteBikeProfile(self->bikeId);
+					[self.navigationController popViewControllerAnimated:YES];
+				}]];
+				[self presentViewController:alertController animated:YES completion:nil];
 			}
 			break;
 		default:

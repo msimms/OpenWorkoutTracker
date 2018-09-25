@@ -8,9 +8,7 @@
 #import "TagViewController.h"
 #import "ActivityMgr.h"
 #import "AppDelegate.h"
-
-#define TITLE   NSLocalizedString(@"Tags", nil)
-#define NEW_TAG NSLocalizedString(@"New Tag", nil)
+#import "AppStrings.h"
 
 @interface TagViewController ()
 
@@ -34,16 +32,14 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_TAGS;
 
 	[super viewDidLoad];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
-	[self.tagButton setTitle:NEW_TAG];
-
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	[self.tagButton setTitle:STR_NEW_TAG];
 
 	self->selectedSection = 0;
 	self->selectedRow = 0;
@@ -92,7 +88,7 @@
 
 - (IBAction)onNewTag:(id)sender
 {
-	[self->tags insertObject:NEW_TAG atIndex:0];
+	[self->tags insertObject:STR_NEW_TAG atIndex:0];
 
 	NSArray* newData = [NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil];
 	[self.tagTableView insertRowsAtIndexPaths:newData withRowAnimation:UITableViewRowAnimationNone];

@@ -5,7 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
 typedef enum BikeProfileViewMode
 {
@@ -13,13 +13,12 @@ typedef enum BikeProfileViewMode
 	BIKE_PROFILE_UPDATE
 } BikeProfileViewMode;
 
-@interface BikeProfileViewController : UIViewController <UITextFieldDelegate, UIActionSheetDelegate>
+@interface BikeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UIToolbar* toolbar;
 	IBOutlet UIBarButtonItem* saveButton;
 	IBOutlet UIBarButtonItem* wheelDiameterButton;
 	IBOutlet UIBarButtonItem* deleteButton;
-	IBOutlet UIBarButtonItem* homeButton;
 	IBOutlet UITextField* nameTextField;
 	IBOutlet UITextField* weightTextField;
 	IBOutlet UITextField* wheelSizeTextField;

@@ -10,24 +10,9 @@
 #import "ActivityType.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "Segues.h"
 #import "StringUtils.h"
-
-#define TITLE                            NSLocalizedString(@"Statistics", nil)
-
-#define SECTION_SUMMARY_TITLE            NSLocalizedString(@"Summary", nil)
-
-#define SUMMARY_MAP                      NSLocalizedString(@"Map", nil)
-#define SUMMARY_ATTRIBUTE_TOTAL_DISTANCE NSLocalizedString(@"Total Distance", nil)
-#define SUMMARY_ATTRIBUTE_MAX_DISTANCE   NSLocalizedString(@"Max. Distance", nil)
-#define SUMMARY_ATTRIBUTE_TOTAL_CALORIES NSLocalizedString(@"Total Calories", nil)
-#define SUMMARY_ATTRIBUTE_TOTAL_REPS     NSLocalizedString(@"Total Reps", nil)
-
-#define ALERT_TITLE_ERROR                NSLocalizedString(@"Error", nil)
-#define BUTTON_TITLE_OK                  NSLocalizedString(@"Ok", nil)
-#define MSG_NO_WORKOUTS                  NSLocalizedString(@"You do not have done any workouts. Get moving!", nil)
-
-#define TEXT_FASTEST                     NSLocalizedString(@"Fastest", nil)
 
 @interface AttrDictItem : NSObject
 {
@@ -74,7 +59,7 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_SUMMARY;
 
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
@@ -158,7 +143,7 @@
 						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
 						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_CALORIES]];
-						[self->attributeDictionary setObject:activityAttributes forKey:SECTION_SUMMARY_TITLE];
+						[self->attributeDictionary setObject:activityAttributes forKey:STR_SUMMARY];
 					}
 
 					for (NSString* activityType in activityTypes)
@@ -251,24 +236,25 @@
 					NSEnumerator* enumerator = [keys reverseObjectEnumerator];
 					for (id key in enumerator)
 					{
-						if (![key isEqualToString:SECTION_SUMMARY_TITLE])
+						if (![key isEqualToString:STR_SUMMARY])
 						{
 							[self->sortedKeys insertObject:key atIndex:0];
 						}
 					}
-					[self->sortedKeys insertObject:SECTION_SUMMARY_TITLE atIndex:0];
+					[self->sortedKeys insertObject:STR_SUMMARY atIndex:0];
 				}
 			}
 		}
 	}
 	else
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-														message:MSG_NO_WORKOUTS
-													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_OK
-											  otherButtonTitles:nil];
-		[alert show];		
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_NO_WORKOUTS
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -278,7 +264,7 @@
 	self.spinner.center = self.view.center;
 	[self.spinner startAnimating];
 
-	if ([sectionName isEqualToString:SECTION_SUMMARY_TITLE])
+	if ([sectionName isEqualToString:STR_SUMMARY])
 	{
 		self->mapMode = MAP_OVERVIEW_ALL_STARTS;
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
@@ -348,13 +334,6 @@
 			[self showSegmentsMap:attrDictItem->activityId withAttribute:attrDictItem->value withString:cell.textLabel.text];
 		}
 	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	[self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark UITableView methods
@@ -490,7 +469,7 @@
 	{
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
-	else if (([cell.textLabel.text rangeOfString:TEXT_FASTEST].location != NSNotFound) &&
+	else if (([cell.textLabel.text rangeOfString:STR_FASTEST].location != NSNotFound) &&
 			 ([cell.detailTextLabel.text isEqualToString:@VALUE_NOT_SET_STR] == false))
 	{
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

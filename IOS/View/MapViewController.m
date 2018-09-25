@@ -8,6 +8,7 @@
 #import "MapViewController.h"
 #import "ActivityMgr.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "LocationSensor.h"
 #import "OverlayListViewController.h"
 #import "Pin.h"
@@ -18,20 +19,15 @@
 #define ACTION_SHEET_TITLE_MAP_TYPE  NSLocalizedString(@"Select the map type", nil)
 #define ACTION_SHEET_TITLE_OVERLAY   NSLocalizedString(@"Select the overlay", nil)
 
-#define BUTTON_TITLE_ON              NSLocalizedString(@"On", nil)
-#define BUTTON_TITLE_OFF             NSLocalizedString(@"Off", nil)
-#define BUTTON_TITLE_CANCEL          NSLocalizedString(@"Cancel", nil)
 #define BUTTON_TITLE_IMPORT          NSLocalizedString(@"Import", nil)
 #define BUTTON_TITLE_MAP_TYPE        NSLocalizedString(@"Map Type", nil)
 #define BUTTON_TITLE_OVERLAY         NSLocalizedString(@"Overlay", nil)
 #define BUTTON_TITLE_HOME            NSLocalizedString(@"Home", nil)
-#define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
 
 #define OPTION_STANDARD_VIEW         NSLocalizedString(@"Standard View", nil)
 #define OPTION_SATELLITE_VIEW        NSLocalizedString(@"Satellite View", nil)
 #define OPTION_HYBRID_VIEW           NSLocalizedString(@"Hybrid View", nil)
 
-#define TITLE_ERROR                  NSLocalizedString(@"Error", nil)
 #define MSG_KML_ERROR                NSLocalizedString(@"There was an error creating the overlay.", nil)
 
 #define MAX_TEMP_LINE_SIZE 512
@@ -228,15 +224,7 @@ void KmlPlacemarkEnd(const char* name, void* context)
 
 	if (!ImportKmlFile([self->overlayFileName UTF8String], KmlPlacemarkStart, KmlPlacemarkEnd, KmlCoordinateReceived, NULL))
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_ERROR
-														message:MSG_KML_ERROR
-													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_OK
-											  otherButtonTitles:nil];
-		if (alert)
-		{
-			[alert show];
-		}
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_KML_ERROR];
 	}
 }
 
@@ -350,54 +338,62 @@ void KmlPlacemarkEnd(const char* name, void* context)
 
 - (IBAction)onAutoScale:(id)sender
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_AUTOSCALE
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:BUTTON_TITLE_ON, BUTTON_TITLE_OFF, nil];
-	if (popupQuery)
-	{
-		popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-		[popupQuery showInView:self.view];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																			 message:ACTION_SHEET_TITLE_MAP_TYPE
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->autoScale = true;
+		[[self mapView] setUserTrackingMode:MKUserTrackingModeFollow];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->autoScale = false;
+		[[self mapView] setUserTrackingMode:MKUserTrackingModeNone];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onMapType:(id)sender
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_MAP_TYPE
-											 delegate:self
-									cancelButtonTitle:nil
-							   destructiveButtonTitle:nil
-									otherButtonTitles:OPTION_STANDARD_VIEW, OPTION_SATELLITE_VIEW, OPTION_HYBRID_VIEW, nil];
-	if (popupQuery)
-	{
-		popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-		[popupQuery showInView:self.view];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																			 message:ACTION_SHEET_TITLE_MAP_TYPE
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeStandard;
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_SATELLITE_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeSatellite;
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeHybrid;
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onOverlay:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* allOverlayFiles = [appDelegate getMapOverlayList];
 	if ([allOverlayFiles count] > 0)
 	{
-		UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_OVERLAY
-														   delegate:self
-												  cancelButtonTitle:BUTTON_TITLE_CANCEL
-											 destructiveButtonTitle:nil
-												  otherButtonTitles:nil, nil];
-		if (sheet)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:ACTION_SHEET_TITLE_OVERLAY
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		for (NSString* overlayName in allOverlayFiles)
 		{
-			sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-			for (NSString* overlayName in allOverlayFiles)
-			{
-				[sheet addButtonWithTitle:[overlayName lastPathComponent]];
-			}
-			[sheet addButtonWithTitle:BUTTON_TITLE_IMPORT];
-			[sheet showInView:self.view];
+			[alertController addAction:[UIAlertAction actionWithTitle:overlayName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->overlayFileName = [[appDelegate getOverlayDir] stringByAppendingPathComponent:overlayName];
+				[self showOverlay];
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_IMPORT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
+		}]];
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else
 	{
@@ -435,63 +431,6 @@ void KmlPlacemarkEnd(const char* name, void* context)
 
 - (void)mapView:(MKMapView*)mapView didUpdateUserLocation:(MKUserLocation*)userLocation
 {
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [actionSheet title];
-
-	if (buttonIndex == [actionSheet cancelButtonIndex])
-	{
-		return;
-	}
-	
-	if ([title isEqualToString:ACTION_SHEET_TITLE_AUTOSCALE])
-	{
-		switch (buttonIndex)
-		{
-			case 0:
-				self->autoScale = true;
-				[[self mapView] setUserTrackingMode:MKUserTrackingModeFollow];
-				break;
-			case 1:
-				self->autoScale = false;
-				[[self mapView] setUserTrackingMode:MKUserTrackingModeNone];
-				break;
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_MAP_TYPE])
-	{
-		switch (buttonIndex)
-		{
-			case 0:
-				self->mapView.mapType = MKMapTypeStandard;
-				break;
-			case 1:
-				self->mapView.mapType = MKMapTypeSatellite;
-				break;
-			case 2:
-				self->mapView.mapType = MKMapTypeHybrid;
-				break;
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_OVERLAY])
-	{
-		NSString* buttonName = [actionSheet buttonTitleAtIndex:buttonIndex];
-
-		if ([buttonName isEqualToString:BUTTON_TITLE_IMPORT])
-		{
-			[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
-		}
-		else
-		{
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-			self->overlayFileName = [[appDelegate getOverlayDir] stringByAppendingPathComponent:buttonName];
-			[self showOverlay];
-		}
-	}
 }
 
 @end

@@ -7,10 +7,10 @@
 
 #import "FollowingViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 
 #define ALERT_TITLE_REQUEST NSLocalizedString(@"Request", nil)
 #define ALERT_MSG_REQUEST   NSLocalizedString(@"Enter the email address of the person you would like to follow", nil)
-#define BUTTON_TITLE_OK     NSLocalizedString(@"Ok", nil)
 
 @interface FollowingViewController ()
 
@@ -63,21 +63,20 @@
 
 - (IBAction)onRequestToFollow:(id)sender
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_REQUEST
-													message:ALERT_MSG_REQUEST
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_OK
-										  otherButtonTitles:nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-		
-		UITextField* textField = [alert textFieldAtIndex:0];
-		[textField setKeyboardType:UIKeyboardTypeEmailAddress];
-		[textField becomeFirstResponder];
-		
-		[alert show];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_REQUEST
+																			 message:ALERT_MSG_REQUEST
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate requestToFollow:[field text]];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark update notification
@@ -97,21 +96,6 @@
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
 	if ([responseCode intValue] == 200)
 	{
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [alertView title];
-	
-	if ([title isEqualToString:ALERT_TITLE_REQUEST])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate requestToFollow:text];
 	}
 }
 

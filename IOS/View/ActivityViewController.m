@@ -12,6 +12,7 @@
 #import "ActivityPreferences.h"
 #import "ActivityType.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "LeBikeSpeedAndCadence.h"
 #import "LeHeartRateMonitor.h"
 #import "LePowerMeter.h"
@@ -22,40 +23,23 @@
 
 #define ALERT_TITLE_STOP              NSLocalizedString(@"Stop", nil)
 #define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
-#define ALERT_TITLE_ERROR             NSLocalizedString(@"Error", nil)
-#define ALERT_TITLE_CAUTION           NSLocalizedString(@"Caution", nil)
 
-#define ACTION_SHEET_TITLE_BIKE       NSLocalizedString(@"Bike", nil)
 #define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
 #define ACTION_SHEET_TITLE_ATTRIBUTES NSLocalizedString(@"Attributes", nil)
-#define ACTION_SHEET_BUTTON_CANCEL    NSLocalizedString(@"Cancel", nil)
 
 #define ALERT_MSG_STOP                NSLocalizedString(@"Are you sure you want to stop?", nil)
 #define ALERT_MSG_WEIGHT              NSLocalizedString(@"Enter the amount of weight being used", nil)
 #define ALERT_MSG_NO_BIKE             NSLocalizedString(@"You need to choose a bike.", nil)
 #define ALERT_MSG_NO_FOOT_POD         NSLocalizedString(@"You need a foot pod to use this app with a treadmill.", nil)
 
-#define BUTTON_TITLE_OK               NSLocalizedString(@"Ok", nil)
-#define BUTTON_TITLE_YES              NSLocalizedString(@"Yes", nil)
-#define BUTTON_TITLE_NO               NSLocalizedString(@"No", nil)
 #define BUTTON_TITLE_PAUSE            NSLocalizedString(@"Pause", nil)
 #define BUTTON_TITLE_MORE             NSLocalizedString(@"More", nil)
 #define BUTTON_TITLE_LAP              NSLocalizedString(@"Lap", nil)
-#define BUTTON_TITLE_WEIGHT           NSLocalizedString(@"Weight", nil)
 #define BUTTON_TITLE_CUSTOMIZE        NSLocalizedString(@"Customize", nil)
-#define BUTTON_TITLE_BIKE             NSLocalizedString(@"Bike", nil)
 #define BUTTON_TITLE_INTERVALS        NSLocalizedString(@"Intervals", nil)
 #define BUTTON_TITLE_AUTOSTART        NSLocalizedString(@"AutoStart", nil)
 
 #define UNSPECIFIED_INTERVAL          NSLocalizedString(@"Waiting for screen touch", nil)
-#define UNITS_SECONDS                 NSLocalizedString(@"Seconds", nil)
-#define UNITS_METERS                  NSLocalizedString(@"Meters", nil)
-#define UNITS_KILOMETERS              NSLocalizedString(@"Kilometers", nil)
-#define UNITS_FEET                    NSLocalizedString(@"Feet", nil)
-#define UNITS_YARDS                   NSLocalizedString(@"Yards", nil)
-#define UNITS_MILES                   NSLocalizedString(@"Miles", nil)
-#define UNITS_SETS                    NSLocalizedString(@"Sets", nil)
-#define UNITS_REPS                    NSLocalizedString(@"Reps", nil)
 
 #define HELP_PULLUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
 #define HELP_CYCLING                  NSLocalizedString(@"You can mount the phone on the bicycle's handlebars, though you you should pay attention to the road and obey all applicable laws.", nil)
@@ -113,9 +97,9 @@
 
 	[self.moreButton setTitle:BUTTON_TITLE_MORE];
 	[self.lapButton setTitle:BUTTON_TITLE_LAP];
-	[self.weightButton setTitle:BUTTON_TITLE_WEIGHT];
+	[self.weightButton setTitle:STR_WEIGHT];
 	[self.customizeButton setTitle:BUTTON_TITLE_CUSTOMIZE];
-	[self.bikeButton setTitle:BUTTON_TITLE_BIKE];
+	[self.bikeButton setTitle:STR_BIKE];
 	[self.intervalsButton setTitle:BUTTON_TITLE_INTERVALS];
 	[self.autoStartButton setTitle:BUTTON_TITLE_AUTOSTART];
 
@@ -200,23 +184,27 @@
 
 - (void)showAttributesMenu
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_ATTRIBUTES
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
+
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_ATTRIBUTES
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	for (NSString* attribute in attributeNames)
 	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
-		for (NSString* attribute in attributeNames)
-		{
-			[popupQuery addButtonWithTitle:attribute];
-		}
-		[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-		[popupQuery setCancelButtonIndex:[attributeNames count]];
-		[popupQuery showInView:self.view];
+		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			NSString* oldAttributeName = [prefs getAttributeName:activityType withPos:self->tappedButtonIndex];
+			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			[prefs setViewAttributePosition:activityType withAttributeName:attribute withPos:self->tappedButtonIndex];
+			
+			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
+			titleLabel.text = attribute;
+		}]];
 	}
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark method for showing the help screen
@@ -262,15 +250,7 @@
 		
 		if (text)
 		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
-															message:text
-														   delegate:self
-												  cancelButtonTitle:BUTTON_TITLE_OK
-												  otherButtonTitles:nil];
-			if (alert)
-			{
-				[alert show];
-			}
+			[super showOneButtonAlert:STR_CAUTION withMsg:text];
 		}
 
 		[self->activityPrefs markHasShownHelp:activityType];
@@ -513,37 +493,6 @@
 	}
 }
 
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [alertView title];
-	NSString* buttonName = [alertView buttonTitleAtIndex:buttonIndex];
-
-	if ([title isEqualToString:ALERT_TITLE_STOP])
-	{
-		if ([buttonName isEqualToString:BUTTON_TITLE_YES])
-		{
-			[self doStop];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_PAUSE])
-		{
-			[self doPause];
-		}
-	}
-	else if ([title isEqualToString:ALERT_TITLE_WEIGHT])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-
-		ActivityAttributeType value;
-		value.value.doubleVal = [text doubleValue];
-		value.valueType = TYPE_DOUBLE;
-		value.measureType = MEASURE_WEIGHT;
-		
-		SetLiveActivityAttribute(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT, value);
-	}
-}
-
 #pragma mark button handlers
 
 - (IBAction)onAutoStart:(id)sender
@@ -572,15 +521,18 @@
 		}
 		else
 		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_STOP
-															message:ALERT_MSG_STOP
-														   delegate:self
-												  cancelButtonTitle:BUTTON_TITLE_NO
-												  otherButtonTitles:BUTTON_TITLE_YES, BUTTON_TITLE_PAUSE, nil];
-			if (alert)
-			{
-				[alert show];
-			}
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_STOP
+																					 message:ALERT_MSG_STOP
+																			  preferredStyle:UIAlertControllerStyleAlert];           
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[self doStop];
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_PAUSE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[self doPause];
+			}]];
+			[self presentViewController:alertController animated:YES completion:nil];
 		}
 	}
 	else
@@ -591,29 +543,21 @@
 		// If using a stationary bike, make sure a bike has been selected as we need to know the wheel size.
 		if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE] && !self->bikeName)
 		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-															message:ALERT_MSG_NO_BIKE
-														   delegate:self
-												  cancelButtonTitle:BUTTON_TITLE_OK
-												  otherButtonTitles:nil];
-			if (alert)
-			{
-				[alert show];
-			}
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																					 message:ALERT_MSG_NO_BIKE
+																			  preferredStyle:UIAlertControllerStyleAlert];           
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+			[self presentViewController:alertController animated:YES completion:nil];
 		}
 
 		// If using a treadmill, make sure a footpod sensor has been found.
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] && ![appDelegate hasLeBluetoothSensor:SENSOR_TYPE_FOOT_POD])
 		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-															message:ALERT_MSG_NO_FOOT_POD
-														   delegate:self
-												  cancelButtonTitle:BUTTON_TITLE_OK
-												  otherButtonTitles:nil];
-			if (alert)
-			{
-				[alert show];
-			}
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																					 message:ALERT_MSG_NO_FOOT_POD
+																			  preferredStyle:UIAlertControllerStyleAlert];           
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+			[self presentViewController:alertController animated:YES completion:nil];
 		}
 		
 		// Everything's ok.
@@ -646,22 +590,24 @@
 
 - (IBAction)onWeight:(id)sender
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_WEIGHT
-													message:ALERT_MSG_WEIGHT
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_OK
-										  otherButtonTitles:nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-		
-		UITextField* textField = [alert textFieldAtIndex:0];
-		[textField setKeyboardType:UIKeyboardTypeNumberPad];
-		[textField becomeFirstResponder];
-		textField.placeholder = [[NSString alloc] initWithFormat:@"0.0"];
-		
-		[alert show];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_WEIGHT
+																			 message:ALERT_MSG_WEIGHT
+																	  preferredStyle:UIAlertControllerStyleAlert];
+
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+		textField.keyboardType = UIKeyboardTypeNumberPad;
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+    	UITextField* field = alertController.textFields.firstObject;
+
+		ActivityAttributeType value;
+		value.value.doubleVal = [[field text] doubleValue];
+		value.valueType = TYPE_DOUBLE;
+		value.measureType = MEASURE_WEIGHT;
+
+		SetLiveActivityAttribute(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT, value);
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onLap:(id)sender
@@ -681,24 +627,18 @@
 	NSMutableArray* bikeNames = [appDelegate getBikeNames];
 	if ([bikeNames count] > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_BIKE
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																				 message:STR_BIKE
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		for (NSString* name in bikeNames)
 		{
-			popupQuery.cancelButtonIndex = [bikeNames count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-			
-			for (NSString* name in bikeNames)
-			{
-				[popupQuery addButtonWithTitle:name];
-			}
-			
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
+			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[self->bikeButton setTitle:self->bikeName];
+				[appDelegate setBikeForCurrentActivity:self->bikeName];
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -709,24 +649,18 @@
 	NSMutableArray* workoutNames = [appDelegate getIntervalWorkoutNames];
 	if ([workoutNames count] > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_INTERVALS
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																				 message:ACTION_SHEET_TITLE_INTERVALS
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		for (NSString* name in workoutNames)
 		{
-			popupQuery.cancelButtonIndex = [workoutNames count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-			
-			for (NSString* name in workoutNames)
-			{
-				[popupQuery addButtonWithTitle:name];
-			}
-			
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
+			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				SetCurrentIntervalWorkout([name UTF8String]);
+				[self->intervalsButton setTitle:name];
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -865,28 +799,28 @@
 				msg = UNSPECIFIED_INTERVAL;
 				break;
 			case INTERVAL_UNIT_SECONDS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_SECONDS];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_SECONDS];
 				break;
 			case INTERVAL_UNIT_METERS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_METERS];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_METERS];
 				break;
 			case INTERVAL_UNIT_KILOMETERS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_KILOMETERS];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_KILOMETERS];
 				break;
 			case INTERVAL_UNIT_FEET:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_FEET];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_FEET];
 				break;
 			case INTERVAL_UNIT_YARDS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_YARDS];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_YARDS];
 				break;
 			case INTERVAL_UNIT_MILES:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_MILES];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_MILES];
 				break;
 			case INTERVAL_UNIT_SETS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_SETS];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_SETS];
 				break;
 			case INTERVAL_UNIT_REPS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], UNITS_REPS];
+				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_REPS];
 				break;
 		}
 
@@ -919,17 +853,17 @@
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
 		UILabel* valueLabel = [self->valueLabels objectAtIndex:i];
 		UILabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
-		
+
 		if (titleLabel && valueLabel)
 		{
 			ActivityAttributeType value = QueryLiveActivityAttribute([titleLabel.text cStringUsingEncoding:NSASCIIStringEncoding]);
-			
+
 			if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_HEART_RATE])
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				ActivityAttributeType zoneValue = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE);
-				
+
 				if ([self->activityPrefs getShowHeartRatePercent:activityType] && zoneValue.valid)
 				{
 					[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f (%0.0f%%)", self->lastHeartRateValue, zoneValue.value.doubleVal * (double)100.0]];
@@ -951,59 +885,12 @@
 			{
 				[valueLabel setText:[StringUtils formatActivityViewType:value]];
 			}
-			
+
 			if (unitsLabel)
 			{
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
 				[unitsLabel setText:unitsStr];
 			}
-		}
-	}
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (buttonIndex == [actionSheet cancelButtonIndex])
-	{
-		return;
-	}
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* title = [actionSheet title];
-	
-	if ([title isEqualToString:ACTION_SHEET_TITLE_BIKE])
-	{
-		self->bikeName = [actionSheet buttonTitleAtIndex:buttonIndex];
-		if (self->bikeName)
-		{
-			[self->bikeButton setTitle:self->bikeName];
-			[appDelegate setBikeForCurrentActivity:self->bikeName];
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_INTERVALS])
-	{
-		NSString* intervalName = [actionSheet buttonTitleAtIndex:buttonIndex];
-		if (intervalName)
-		{
-			SetCurrentIntervalWorkout([intervalName UTF8String]);
-			[self->intervalsButton setTitle:intervalName];
-		}
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_ATTRIBUTES])
-	{
-		NSString* attributeName = [actionSheet buttonTitleAtIndex:buttonIndex];
-		if (attributeName)
-		{
-			ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
-			NSString* activityType = [appDelegate getCurrentActivityType];
-			NSString* oldAttributeName = [prefs getAttributeName:activityType withPos:self->tappedButtonIndex];
-			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
-			[prefs setViewAttributePosition:activityType withAttributeName:attributeName withPos:self->tappedButtonIndex];
-
-			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
-			titleLabel.text = attributeName;
 		}
 	}
 }

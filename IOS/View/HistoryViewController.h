@@ -9,7 +9,9 @@
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
-@interface HistoryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+#import "CommonViewController.h"
+
+@interface HistoryViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar* toolbar;

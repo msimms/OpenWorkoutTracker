@@ -9,6 +9,7 @@
 #import "ActivityMgr.h"
 #import "ActivityPreferences.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "MapOverviewViewController.h"
 #import "OverlayListViewController.h"
 #import "Preferences.h"
@@ -27,24 +28,13 @@
 #define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Intervals", nil)
 #define BUTTON_TITLE_EDIT_OVERLAYS   NSLocalizedString(@"Map Overlays", nil)
 
-#define BUTTON_TITLE_CONTINUE        NSLocalizedString(@"Continue", nil)
-#define BUTTON_TITLE_CANCEL          NSLocalizedString(@"Cancel", nil)
-#define BUTTON_TITLE_YES             NSLocalizedString(@"Yes", nil)
-#define BUTTON_TITLE_NO              NSLocalizedString(@"No", nil)
-#define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
-#define BUTTON_TITLE_RESET_PREFS     NSLocalizedString(@"Reset Settings", nil)
-#define BUTTON_TITLE_RESET_DATA      NSLocalizedString(@"Reset Data", nil)
-
 #define MSG_IN_PROGRESS              NSLocalizedString(@"An unfinished activity has been found. Do you wish to resume it?", nil)
 #define MSG_RESET                    NSLocalizedString(@"This will delete all of your data. Do you wish to continue? This cannot be undone.", nil)
+#define MSG_SELECT_NEW               NSLocalizedString(@"Select the workout to perform.", nil)
+#define MSG_SELECT_VIEW              NSLocalizedString(@"What would you like to view?", nil)
+#define MSG_SELECT_EDIT              NSLocalizedString(@"What would you like to edit?", nil)
 
-#define TITLE_SELECT_NEW             NSLocalizedString(@"Select the workout to perform", nil)
-#define TITLE_SELECT_VIEW            NSLocalizedString(@"What would you like to view?", nil)
-#define TITLE_SELECT_EDIT            NSLocalizedString(@"What would you like to edit?", nil)
 #define TITLE_IN_PROGRESS            NSLocalizedString(@"Workout In Progress", nil)
-#define TITLE_RESET                  NSLocalizedString(@"Reset", nil)
-
-#define TITLE_FIRST_TIME_USING       NSLocalizedString(@"Caution", nil)
 #define MSG_FIRST_TIME_USING         NSLocalizedString(@"There are risks with exercise. Do not start an exercise program without consulting your doctor.", nil)
 
 @interface ViewController ()
@@ -147,138 +137,85 @@
 	}
 }
 
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [alertView title];
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	if ([title isEqualToString:TITLE_IN_PROGRESS])
-	{
-		switch (buttonIndex)
-		{
-			case 0: // Yes (Resume Activity)
-				[appDelegate recreateOrphanedActivity:self->orphanedActivityIndex];
-				[self showActivityView:self->orphanedActivityType];
-				break;
-			case 1: // No (Stop Activity)
-				[appDelegate loadHistoricalActivity:self->orphanedActivityIndex];
-				[self createActivity:self->newActivityType];
-				break;
-		}
-		[appDelegate startSensors];
-	}
-	else if ([title isEqualToString:TITLE_RESET])
-	{
-		switch (buttonIndex)
-		{
-			case 0:
-				break;
-			case 1:
-				[appDelegate resetPreferences];
-				break;
-			case 2:
-				[appDelegate resetDatabase];
-				break;
-		}
-	}
-}
-
 #pragma mark button handlers
 
 - (IBAction)onNewActivity:(id)sender
 {
+	// Display the first time warning message.
 	if (![Preferences hasShownFirstTimeUseMessage])
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_FIRST_TIME_USING
-														message:MSG_FIRST_TIME_USING
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		if (alert)
-		{
-			[Preferences setHashShownFirstTimeUseMessage:TRUE];
-			[alert show];
-		}
+		[super showOneButtonAlert:STR_CAUTION withMsg:MSG_FIRST_TIME_USING];
+		[Preferences setHashShownFirstTimeUseMessage:TRUE];
 	}
 
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:TITLE_SELECT_NEW
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
+	// Display the list of activities from which the user may choose.
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:MSG_SELECT_NEW
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	for (NSString* name in self->activityTypes)
 	{
-		for (NSString* name in self->activityTypes)
-		{
-			[popupQuery addButtonWithTitle:name];
-		}
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_CANCEL];
-		[popupQuery setCancelButtonIndex:[self->activityTypes count]];
-		[popupQuery showInView:self.view];
+		[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self startActivity:name];
+		}]];
 	}
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onView:(id)sender
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:TITLE_SELECT_VIEW
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
-	{
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_VIEW_HISTORY];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_VIEW_STATISTICS];
-
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		if (appDelegate && [appDelegate isFeatureEnabled:FEATURE_HEATMAP])
-		{
-			[popupQuery addButtonWithTitle:BUTTON_TITLE_VIEW_HEATMAP];
-			[popupQuery setCancelButtonIndex:3];
-		}
-		else
-		{
-			[popupQuery setCancelButtonIndex:2];
-		}
-
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_CANCEL];
-		[popupQuery showInView:self.view];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:MSG_SELECT_VIEW
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_HISTORY_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_STATISTICS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_STATISTICS_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (IBAction)onEdit:(id)sender
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:TITLE_SELECT_EDIT
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
-	{
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_EDIT_PROFILE];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_EDIT_SETTINGS];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_EDIT_SENSORS];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_EDIT_INTERVALS];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_EDIT_OVERLAYS];
-		[popupQuery addButtonWithTitle:BUTTON_TITLE_CANCEL];
-		[popupQuery setCancelButtonIndex:5];
-		[popupQuery showInView:self.view];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:MSG_SELECT_EDIT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_PROFILE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_PROFILE_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_SETTINGS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_SETTINGS_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_SENSORS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_SENSORS_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_INTERVALS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_INTERVALS_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_OVERLAYS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
-
+	
 - (IBAction)onReset:(id)sender
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_RESET
-													message:MSG_RESET
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_CANCEL
-										  otherButtonTitles:BUTTON_TITLE_RESET_PREFS, BUTTON_TITLE_RESET_DATA, nil];
-	if (alert)
-	{
-		[alert show];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:MSG_RESET
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_RESET_DATA style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate resetDatabase];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_RESET_PREFS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate resetPreferences];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma method to switch to the activity view
@@ -310,15 +247,20 @@
 
 		self->newActivityType = activityType;
 
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:TITLE_IN_PROGRESS
-														message:MSG_IN_PROGRESS
-													   delegate:self
-											  cancelButtonTitle:BUTTON_TITLE_YES
-											  otherButtonTitles:BUTTON_TITLE_NO, nil];
-		if (alert)
-		{
-			[alert show];
-		}
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:TITLE_IN_PROGRESS
+																				 message:MSG_IN_PROGRESS
+																		  preferredStyle:UIAlertControllerStyleAlert];
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+			[appDelegate recreateOrphanedActivity:self->orphanedActivityIndex];
+			[self showActivityView:self->orphanedActivityType];
+		}]];
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+			[appDelegate loadHistoricalActivity:self->orphanedActivityIndex];
+			[self createActivity:self->newActivityType];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if (IsActivityCreated())
 	{
@@ -328,60 +270,6 @@
 	else
 	{
 		[self createActivity:activityType];
-	}
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [actionSheet title];
-	NSString* buttonName = [actionSheet buttonTitleAtIndex:buttonIndex];
-	
-	if ([title isEqualToString:TITLE_SELECT_NEW])
-	{
-		if (![buttonName isEqualToString:BUTTON_TITLE_CANCEL])
-		{
-			[self startActivity:buttonName];
-		}
-	}
-	else if ([title isEqualToString:TITLE_SELECT_VIEW])
-	{
-		if ([buttonName isEqualToString:BUTTON_TITLE_VIEW_HISTORY])
-		{
-			[self performSegueWithIdentifier:@SEQUE_TO_HISTORY_VIEW sender:self];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_VIEW_STATISTICS])
-		{
-			[self performSegueWithIdentifier:@SEQUE_TO_STATISTICS_VIEW sender:self];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_VIEW_HEATMAP])
-		{
-			[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-		}
-	}
-	else if ([title isEqualToString:TITLE_SELECT_EDIT])
-	{
-		if ([buttonName isEqualToString:BUTTON_TITLE_EDIT_PROFILE])
-		{
-			[self performSegueWithIdentifier:@SEQUE_TO_PROFILE_VIEW sender:self];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_EDIT_SETTINGS])
-		{
-			[self performSegueWithIdentifier:@SEQUE_TO_SETTINGS_VIEW sender:self];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_EDIT_SENSORS])
-		{
-			[self performSegueWithIdentifier:@SEQUE_TO_SENSORS_VIEW sender:self];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_EDIT_INTERVALS])
-		{
-			[self performSegueWithIdentifier:@SEQUE_TO_INTERVALS_VIEW sender:self];
-		}
-		else if ([buttonName isEqualToString:BUTTON_TITLE_EDIT_OVERLAYS])
-		{
-			[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
-		}
 	}
 }
 

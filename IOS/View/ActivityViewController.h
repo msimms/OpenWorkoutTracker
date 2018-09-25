@@ -5,8 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import <UIKit/UIKit.h>
-
+#import "CommonViewController.h"
 #import "ActivityPreferences.h"
 #import "Segues.h"
 #import "ActivityMgr.h"
@@ -17,7 +16,7 @@
 #define ACTIVITY_BUTTON_PAUSE     NSLocalizedString(@"Pause", nil)
 #define ACTIVITY_BUTTON_RESUME    NSLocalizedString(@"Resume", nil)
 
-@interface ActivityViewController : UIViewController <UIActionSheetDelegate, UIGestureRecognizerDelegate>
+@interface ActivityViewController : CommonViewController <UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar*        toolbar;

@@ -7,10 +7,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "CommonViewController.h"
 #import "CrumbPath.h"
 #import "CrumbPathRenderer.h"
 
-@interface MapViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate>
+@interface MapViewController : CommonViewController <MKMapViewDelegate, UIActionSheetDelegate>
 {
 	IBOutlet MKMapView*       mapView;
 	IBOutlet UIBarButtonItem* mapTypeButton;

@@ -5,9 +5,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
+@interface SettingsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UITableView* settingsTableView;
 	IBOutlet UIBarButtonItem* loginButton;

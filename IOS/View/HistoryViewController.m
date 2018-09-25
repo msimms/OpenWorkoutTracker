@@ -8,6 +8,7 @@
 #import "HistoryViewController.h"
 #import "ActivityMgr.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "Segues.h"
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
@@ -16,14 +17,7 @@
 
 #define ACTION_SHEET_TITLE_ACTIVITY NSLocalizedString(@"Export", nil)
 #define ACTION_SHEET_TITLE_EXPORT   NSLocalizedString(@"Export using", nil)
-#define ACTION_SHEET_TITLE_ERROR    NSLocalizedString(@"Error", nil)
-#define ACTION_SHEET_BUTTON_CANCEL  NSLocalizedString(@"Cancel", nil)
-#define ACTION_SHEET_BUTTON_OK      NSLocalizedString(@"Ok", nil)
-
 #define BUTTON_TITLE_EXPORT         NSLocalizedString(@"Export Summary", nil)
-
-#define MSG_NO_WORKOUTS             NSLocalizedString(@"You have not done any workouts. Get moving!", nil)
-
 #define EMAIL_TITLE                 NSLocalizedString(@"Workout Summary Data", nil)
 #define EMAIL_CONTENTS              NSLocalizedString(@"The data file is attached.", nil)
 
@@ -115,13 +109,6 @@
 	}
 }
 
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	[self.navigationController popViewControllerAnimated:YES];
-}
-
 #pragma mark random methods
 
 - (void)buildDictionary
@@ -165,20 +152,15 @@
 			self->sortedKeys = [[self->sortedKeys reverseObjectEnumerator] allObjects];
 		}
 	}
-	else
+	else if (!self->searching)
 	{
-		if (!self->searching)
-		{
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ACTION_SHEET_TITLE_ERROR
-															message:MSG_NO_WORKOUTS
-														   delegate:self
-												  cancelButtonTitle:ACTION_SHEET_BUTTON_OK
-												  otherButtonTitles:nil];
-			if (alert)
-			{
-				[alert show];
-			}
-		}
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MSG_NO_WORKOUTS
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -342,26 +324,30 @@
 	NSMutableArray* activityTypes = [appDelegate getActivityTypes];
 	if ([activityTypes count] > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_ACTIVITY
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:ACTION_SHEET_TITLE_ACTIVITY
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		for (NSString* type in activityTypes)
 		{
-			popupQuery.cancelButtonIndex = [activityTypes count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-
-			for (NSString* type in activityTypes)
-			{
-				[popupQuery addButtonWithTitle:type];
-			}
-
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
-
-			return TRUE;
+			[alertController addAction:[UIAlertAction actionWithTitle:type style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->selectedExportActivity = type;
+				
+				NSMutableArray* exportServices = [appDelegate getEnabledFileExportServices];
+				if ([exportServices count] == 1)
+				{
+					self->selectedExportService = [exportServices objectAtIndex:0];
+					[self exportSummary];
+				}
+				else
+				{
+					[self showFileExportSheet];
+				}
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	return FALSE;
 }
@@ -369,30 +355,24 @@
 - (BOOL)showFileExportSheet
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
+	
 	NSMutableArray* fileSites = [appDelegate getEnabledFileExportServices];
 	if ([fileSites count] > 0)
 	{
-		UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:ACTION_SHEET_TITLE_EXPORT
-																delegate:self
-													   cancelButtonTitle:nil
-												  destructiveButtonTitle:nil
-													   otherButtonTitles:nil];
-		if (popupQuery)
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																				 message:ACTION_SHEET_TITLE_EXPORT
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		for (NSString* fileSite in fileSites)
 		{
-			popupQuery.cancelButtonIndex = [fileSites count];
-			popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-			
-			for (NSString* fileSite in fileSites)
-			{
-				[popupQuery addButtonWithTitle:fileSite];
-			}
-
-			[popupQuery addButtonWithTitle:ACTION_SHEET_BUTTON_CANCEL];
-			[popupQuery showInView:self.view];
-
-			return TRUE;
+			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->selectedExportService = fileSite;
+				[self exportSummary];
+			}]];
 		}
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	return FALSE;
 }
@@ -493,41 +473,6 @@
 	[appDelegate deleteFile:self->exportedFileName];
 
 	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (buttonIndex == [actionSheet cancelButtonIndex])
-	{
-		return;
-	}
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSString* title = [actionSheet title];
-
-	if ([title isEqualToString:ACTION_SHEET_TITLE_ACTIVITY])
-	{
-		self->selectedExportActivity = [actionSheet buttonTitleAtIndex:buttonIndex];
-
-		NSMutableArray* exportServices = [appDelegate getEnabledFileExportServices];
-		if ([exportServices count] == 1)
-		{
-			self->selectedExportService = [exportServices objectAtIndex:0];
-			[self exportSummary];
-		}
-		else
-		{
-			[self showFileExportSheet];
-		}			
-	}
-	else if ([title isEqualToString:ACTION_SHEET_TITLE_EXPORT])
-	{
-		self->selectedExportService = [actionSheet buttonTitleAtIndex:buttonIndex];
-		[self exportSummary];
-	}
 }
 
 @end

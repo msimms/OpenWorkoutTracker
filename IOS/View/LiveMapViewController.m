@@ -7,11 +7,11 @@
 
 #import "LiveMapViewController.h"
 #import "ActivityMgr.h"
+#import "AppStrings.h"
 #import "AppDelegate.h"
 #import "LocationSensor.h"
 #import "StringUtils.h"
 
-#define TITLE                   NSLocalizedString(@"Map", nil)
 #define BUTTON_TITLE_AUTO_SCALE NSLocalizedString(@"Autoscale", nil)
 
 @interface LiveMapViewController ()
@@ -33,7 +33,7 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_MAP;
 
 	[super viewDidLoad];
 

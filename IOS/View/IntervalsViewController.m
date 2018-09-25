@@ -8,6 +8,7 @@
 #import "IntervalsViewController.h"
 #import "ActivityMgr.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "IntervalEditViewController.h"
 #import "Segues.h"
 
@@ -16,8 +17,6 @@
 #define ADD_INTERVAL             NSLocalizedString(@"Add Interval Workout", nil)
 #define ALERT_TITLE_NEW_INTERVAL NSLocalizedString(@"New Interval Workout", nil)
 #define ALERT_MSG_NEW_INTERVAL   NSLocalizedString(@"Name this interval workout", nil)
-#define BUTTON_TITLE_CANCEL      NSLocalizedString(@"Cancel", nil)
-#define BUTTON_TITLE_OK          NSLocalizedString(@"Ok", nil)
 
 @interface IntervalsViewController ()
 
@@ -45,8 +44,6 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	[self.intervalButton setTitle:ADD_INTERVAL];
-
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -106,44 +103,25 @@
 
 - (IBAction)onAddInterval:(id)sender
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NEW_INTERVAL message:ALERT_MSG_NEW_INTERVAL delegate:self cancelButtonTitle:BUTTON_TITLE_CANCEL otherButtonTitles:BUTTON_TITLE_OK, nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-		
-		UITextField* textField = [alert textFieldAtIndex:0];
-		[textField setKeyboardType:UIKeyboardTypeAlphabet];
-		[textField becomeFirstResponder];
-		
-		[alert show];
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [alertView title];
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_NEW_INTERVAL
+																			 message:ALERT_MSG_NEW_INTERVAL
+																	  preferredStyle:UIAlertControllerStyleAlert];
 	
-	if ([title isEqualToString:ALERT_TITLE_NEW_INTERVAL])
-	{
-		switch (buttonIndex)
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		NSString* text = [field text];
+		if (CreateNewIntervalWorkout([text UTF8String]))
 		{
-			case 0:
-				break;
-			case 1:
-				{
-					NSString* text = [[alertView textFieldAtIndex:0] text];
-					if (CreateNewIntervalWorkout([text UTF8String]))
-					{
-						self->selectedWorkoutName = text;
-						[self updateWorkoutNames];
-						[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
-					}
-				}
-				break;
+			self->selectedWorkoutName = text;
+			[self updateWorkoutNames];
+			[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
 		}
-	}
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark UITableView methods

@@ -9,15 +9,10 @@
 
 @interface LayoutStyleViewController : UIViewController
 {
-	IBOutlet UIBarButtonItem* homeButton;
 }
-
-- (IBAction)onHome:(id)sender;
 
 - (IBAction)onComplexActivityView:(id)sender;
 - (IBAction)onMappedActivityView:(id)sender;
 - (IBAction)onSimpleActivityView:(id)sender;
-
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 
 @end

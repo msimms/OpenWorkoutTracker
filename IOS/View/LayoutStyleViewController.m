@@ -9,15 +9,11 @@
 #import "ActivityPreferences.h"
 #import "AppDelegate.h"
 
-#define BUTTON_TITLE_HOME NSLocalizedString(@"Home", nil)
-
 @interface LayoutStyleViewController ()
 
 @end
 
 @implementation LayoutStyleViewController
-
-@synthesize homeButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -29,7 +25,6 @@
 {
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.homeButton setTitle:BUTTON_TITLE_HOME];
 }
 
 
@@ -52,13 +47,6 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
 	return UIInterfaceOrientationMaskPortrait;
-}
-
-#pragma mark button handlers
-
-- (IBAction)onHome:(id)sender
-{
-	[self.navigationController popToRootViewControllerAnimated:TRUE];
 }
 
 - (IBAction)onComplexActivityView:(id)sender

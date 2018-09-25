@@ -60,6 +60,7 @@
 		2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */; };
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
+		27A71FDA2158556C00995B56 /* CommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A71FD92158556C00995B56 /* CommonViewController.m */; };
 		27AAAC8719F1D479003E2590 /* SocialAcctViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AAAC8619F1D479003E2590 /* SocialAcctViewController.m */; };
 		27B44D0219BFEF4E0058FE00 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B44D0119BFEF4E0058FE00 /* Accelerate.framework */; };
 		27B44D1019BFF01A0058FE00 /* Background1.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0419BFF01A0058FE00 /* Background1.png */; };
@@ -259,6 +260,7 @@
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
+		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
 		276B57E319E1F3FD006F47BB /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
 		276B57E819E21ABD006F47BB /* HealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HealthManager.m; path = IOS/Model/HealthManager.m; sourceTree = SOURCE_ROOT; };
@@ -348,6 +350,7 @@
 		27A3624F19BFB0E200F5A17F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		27A3625319BFB0E200F5A17F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		27A71FD92158556C00995B56 /* CommonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CommonViewController.m; path = IOS/View/CommonViewController.m; sourceTree = SOURCE_ROOT; };
 		27AAAC8519F1D479003E2590 /* SocialAcctViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SocialAcctViewController.h; path = IOS/View/SocialAcctViewController.h; sourceTree = SOURCE_ROOT; };
 		27AAAC8619F1D479003E2590 /* SocialAcctViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SocialAcctViewController.m; path = IOS/View/SocialAcctViewController.m; sourceTree = SOURCE_ROOT; };
 		27B44D0119BFEF4E0058FE00 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -557,6 +560,7 @@
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
 		27C0844C19BFD063007CE934 /* Walking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walking.cpp; path = Activities/Walking.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844D19BFD063007CE934 /* Walking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walking.h; path = Activities/Walking.h; sourceTree = SOURCE_ROOT; };
+		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -634,8 +638,11 @@
 				27B7CD3719BFD903000383E3 /* ActivityPreferencesViewController.m */,
 				27B7CD3819BFD903000383E3 /* ActivityViewController.h */,
 				27B7CD3919BFD903000383E3 /* ActivityViewController.m */,
+				27EA8F772159833600E3FB75 /* AppStrings.h */,
 				27B7CD3A19BFD903000383E3 /* BikeProfileViewController.h */,
 				27B7CD3B19BFD903000383E3 /* BikeProfileViewController.m */,
+				2764E28D2158736B007A1419 /* CommonViewController.h */,
+				27A71FD92158556C00995B56 /* CommonViewController.m */,
 				27B7CD4019BFD91C000383E3 /* ComplexActivityViewController.h */,
 				27B7CD4119BFD91C000383E3 /* ComplexActivityViewController.m */,
 				27B7CD4219BFD91C000383E3 /* CorePlotViewController.h */,
@@ -1338,6 +1345,7 @@
 				27B7CDD619BFD979000383E3 /* RepititionOverlay.m in Sources */,
 				2797F19219BFE48E008F8672 /* TcxFileWriter.cpp in Sources */,
 				2797F19319BFE48E008F8672 /* TextFileReader.cpp in Sources */,
+				27A71FDA2158556C00995B56 /* CommonViewController.m in Sources */,
 				2797F18D19BFE48E008F8672 /* GpxFileReader.cpp in Sources */,
 				27B7CDCC19BFD953000383E3 /* VerticalSpeedLine.m in Sources */,
 				27C0844E19BFD063007CE934 /* Activity.cpp in Sources */,
@@ -1581,7 +1589,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1599,7 +1607,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

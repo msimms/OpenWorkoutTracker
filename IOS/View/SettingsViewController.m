@@ -7,6 +7,7 @@
 
 #import "SettingsViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "CloudPreferences.h"
 #import "FacebookClient.h"
 #import "Preferences.h"
@@ -78,15 +79,12 @@ typedef enum SettingsRowsBroadcast
 #define MANAGE_FOLLOWING             NSLocalizedString(@"Manage People I'm Following", nil)
 #define MANAGE_FOLLOWED_BY           NSLocalizedString(@"Manage People Following Me", nil)
 #define DEVICE_ID                    NSLocalizedString(@"Device ID", nil)
-#define BUTTON_TITLE_OK              NSLocalizedString(@"Ok", nil)
 #define BUTTON_TITLE_COPY            NSLocalizedString(@"Copy", nil)
-#define BUTTON_TITLE_CANCEL          NSLocalizedString(@"Cancel", nil)
 #define ALERT_TITLE_BROADCAST_USER   NSLocalizedString(@"Enter the name you want to use", nil)
 #define ALERT_TITLE_BROADCAST_RATE   NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
 #define ALERT_TITLE_BROADCAST_HOST   NSLocalizedString(@"What is the host name of the broadcast server?", nil)
 #define ALERT_TITLE_BROADCAST_WARN   NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
 #define ALERT_TITLE_NOT_IMPLEMENTED  NSLocalizedString(@"Unimplemented Feature", nil)
-#define ALERT_TITLE_CAUTION          NSLocalizedString(@"Caution", nil)
 #define ALERT_MSG_IMPLEMENTED        NSLocalizedString(@"This feature is not implemented.", nil)
 #define ALERT_MSG_NAME               NSLocalizedString(@"", nil)
 #define ALERT_MSG_RATE               NSLocalizedString(@"1", nil)
@@ -149,89 +147,69 @@ typedef enum SettingsRowsBroadcast
 
 - (void)showUnitsActionSheet
 {
-	UIActionSheet* popupQuery = [[UIActionSheet alloc] initWithTitle:UNIT_TITLE
-															delegate:self
-												   cancelButtonTitle:nil
-											  destructiveButtonTitle:nil
-												   otherButtonTitles:nil];
-	if (popupQuery)
-	{
-		[popupQuery addButtonWithTitle:UNIT_TITLE_METRIC];
-		[popupQuery addButtonWithTitle:UNIT_TITLE_US_CUSTOMARY];
-		[popupQuery showInView:self.view];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+																			 message:UNIT_TITLE
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	[alertController addAction:[UIAlertAction actionWithTitle:UNIT_TITLE_METRIC style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:UNIT_TITLE_US_CUSTOMARY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)showBroadcastUserNameDialog
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:BROADCAST
-													message:ALERT_TITLE_BROADCAST_USER
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_OK
-										  otherButtonTitles:nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-		[alert show];
-	}
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
+																			 message:ALERT_TITLE_BROADCAST_USER
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		[Preferences setBroadcastUserName:[field text]];
+		[self.settingsTableView reloadData];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)showBroadcastRateDialog
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:BROADCAST
-													message:ALERT_TITLE_BROADCAST_RATE
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_OK
-										  otherButtonTitles:nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-		
-		UITextField* textField = [alert textFieldAtIndex:0];
-		[textField setKeyboardType:UIKeyboardTypeNumberPad];
-		[textField becomeFirstResponder];
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
+																			 message:ALERT_TITLE_BROADCAST_RATE
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.placeholder = [[NSString alloc] initWithFormat:@"%ld", (long)[Preferences broadcastRate]];
-
-		[alert show];
-	}
+		textField.keyboardType = UIKeyboardTypeNumberPad;
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		NSInteger value = [[field text] integerValue];
+		[Preferences setBroadcastRate:value];
+		[self.settingsTableView reloadData];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)showBroadcastHostNameDialog
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:BROADCAST
-													message:ALERT_TITLE_BROADCAST_HOST
-												   delegate:self
-										  cancelButtonTitle:BUTTON_TITLE_OK
-										  otherButtonTitles:nil];
-	if (alert)
-	{
-		alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-
-		UITextField* textField = [alert textFieldAtIndex:0];
-		textField.text = [Preferences broadcastHostName];
-
-		[alert show];
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* msg = [alertView message];
-
-	if ([msg isEqualToString:ALERT_TITLE_BROADCAST_RATE])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-		NSInteger value = [text integerValue];
-		[Preferences setBroadcastRate:value];
-	}
-	else if ([msg isEqualToString:ALERT_TITLE_BROADCAST_HOST])
-	{
-		NSString* text = [[alertView textFieldAtIndex:0] text];
-		[Preferences setBroadcastHostName:text];
-	}
-	[self.settingsTableView reloadData];
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
+																			 message:ALERT_TITLE_BROADCAST_HOST
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+		textField.placeholder = [Preferences broadcastHostName];
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		[Preferences setBroadcastHostName:[field text]];
+		[self.settingsTableView reloadData];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark UITableView methods
@@ -625,30 +603,14 @@ typedef enum SettingsRowsBroadcast
 			[CloudPreferences setUsingRunKeeper:switchControl.isOn];
 			if (switchControl.isOn)
 			{
-				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
-																message:ALERT_MSG_IMPLEMENTED
-															   delegate:self
-													  cancelButtonTitle:nil
-													  otherButtonTitles:BUTTON_TITLE_OK, nil];
-				if (alert)
-				{
-					[alert show];
-				}
+				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
 			break;
 		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_STRAVA:
 			[CloudPreferences setUsingStrava:switchControl.isOn];
 			if (switchControl.isOn)
 			{
-				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_NOT_IMPLEMENTED
-																message:ALERT_MSG_IMPLEMENTED
-															   delegate:self
-													  cancelButtonTitle:nil
-													  otherButtonTitles:BUTTON_TITLE_OK, nil];
-				if (alert)
-				{
-					[alert show];
-				}
+				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
 			break;
 		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_TWITTER:
@@ -676,15 +638,7 @@ typedef enum SettingsRowsBroadcast
 			[appDelegate configureBroadcasting];
 			if (switchControl.isOn)
 			{
-				UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_CAUTION
-																message:ALERT_TITLE_BROADCAST_WARN
-															   delegate:self
-													  cancelButtonTitle:BUTTON_TITLE_OK
-													  otherButtonTitles:nil];
-				if (alert)
-				{
-					[alert show];
-				}
+				[super showOneButtonAlert:STR_CAUTION withMsg:ALERT_TITLE_BROADCAST_WARN];
 			}
 			[self.settingsTableView reloadData];
 			break;
@@ -692,28 +646,6 @@ typedef enum SettingsRowsBroadcast
 			[Preferences setBroadcastProtocol:switchControl.isOn ? @"https" : @"http"];
 			break;
 	}
-}
-
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* title = [actionSheet title];
-	NSString* buttonName = [actionSheet buttonTitleAtIndex:buttonIndex];
-	
-	if ([title isEqualToString:UNIT_TITLE])
-	{
-		if ([buttonName isEqualToString:UNIT_TITLE_METRIC])
-		{
-			[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
-		}
-		else if ([buttonName isEqualToString:UNIT_TITLE_US_CUSTOMARY])
-		{
-			[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
-		}
-	}
-
-	[self.settingsTableView reloadData];
 }
 
 #pragma mark button handlers

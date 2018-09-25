@@ -5,9 +5,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface LoginViewController : UIViewController <UITextFieldDelegate>
+@interface LoginViewController : CommonViewController <UITextFieldDelegate>
 {
 	IBOutlet UITextField* usernameTextField;
 	IBOutlet UITextField* passwordTextField;

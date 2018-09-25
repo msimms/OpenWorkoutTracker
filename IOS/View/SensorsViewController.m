@@ -7,6 +7,7 @@
 
 #import "SensorsViewController.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "LeBikeSpeedAndCadence.h"
 #import "LeFootPod.h"
 #import "LeHeartRateMonitor.h"
@@ -17,8 +18,6 @@
 
 #define TITLE                       NSLocalizedString(@"Sensors", nil)
 
-#define ALERT_TITLE_ERROR           NSLocalizedString(@"Error", nil)
-#define BUTTON_TITLE_OK             NSLocalizedString(@"Ok", nil)
 #define BUTTON_TITLE_SCAN           NSLocalizedString(@"Scan", nil)
 
 #define CONNECTED                   NSLocalizedString(@"Connected", nil)
@@ -71,15 +70,13 @@ typedef enum SettingsSections
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	if (appDelegate && ![appDelegate hasLeBluetooth])
 	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-														message:MESSAGE_NO_BT_SMART
-													   delegate:self
-											  cancelButtonTitle:nil
-											  otherButtonTitles:BUTTON_TITLE_OK, nil];
-		if (alert)
-		{
-			[alert show];
-		}
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
+																				 message:MESSAGE_NO_BT_SMART
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -191,27 +188,7 @@ typedef enum SettingsSections
 
 - (void)discoveryStatePoweredOff
 {
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ALERT_TITLE_ERROR
-													message:MESSAGE_BT_POWERED_OFF
-												   delegate:self
-										  cancelButtonTitle:nil
-										  otherButtonTitles:BUTTON_TITLE_OK, nil];
-	if (alert)
-	{
-		[alert show];
-	}
-}
-
-#pragma mark UIAlertView methods
-
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	NSString* msg = [alertView message];
-	
-	if ([msg isEqualToString:MESSAGE_NO_BT_SMART])
-	{
-		[self.navigationController popViewControllerAnimated:YES];
-	}
+	[super showOneButtonAlert:STR_ERROR withMsg:MESSAGE_BT_POWERED_OFF];
 }
 
 #pragma mark UITableView methods
