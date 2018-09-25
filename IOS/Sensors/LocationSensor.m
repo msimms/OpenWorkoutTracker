@@ -52,7 +52,7 @@
 		CLLocationDegrees lat = newLocation.coordinate.latitude;
 		CLLocationDegrees lon = newLocation.coordinate.longitude;
 		CLLocationDegrees alt = newLocation.altitude;
-		
+
 		CLLocationAccuracy horizontalAccuracy = newLocation.horizontalAccuracy;
 		CLLocationAccuracy verticalAccuracy = newLocation.verticalAccuracy;
 
@@ -72,6 +72,17 @@
 
 - (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
+	switch (status)
+	{
+		case kCLAuthorizationStatusNotDetermined:
+		case kCLAuthorizationStatusRestricted:
+		case kCLAuthorizationStatusDenied:
+			{
+			}
+			break;
+		default:
+			break;
+	}
 }
 
 - (void)locationManager:(CLLocationManager*)manager didFailWithError:(NSError*)error
