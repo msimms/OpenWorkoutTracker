@@ -234,7 +234,7 @@
 
 - (void)onScanTimer:(NSTimer*)timer
 {
-	if (self->centralManager && (self->centralManager.state == CBCentralManagerStatePoweredOn))
+	if (self->centralManager && (self->centralManager.state == CBManagerStatePoweredOn))
 	{
 		NSDictionary* options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:CBCentralManagerScanOptionAllowDuplicatesKey];
 		[self->centralManager scanForPeripheralsWithServices:nil options:options];	// scan for all periperals as some may not properly advertise their services
@@ -320,15 +320,15 @@
 {
 	switch (central.state)
 	{
-		case CBCentralManagerStateUnknown:
-		case CBCentralManagerStateResetting:
-		case CBCentralManagerStateUnsupported:
-		case CBCentralManagerStateUnauthorized:
-		case CBCentralManagerStatePoweredOff:
+		case CBManagerStateUnknown:
+		case CBManagerStateResetting:
+		case CBManagerStateUnsupported:
+		case CBManagerStateUnauthorized:
+		case CBManagerStatePoweredOff:
 			[self->scanTimer invalidate];
 			self->scanTimer = NULL;
 			break;
-		case CBCentralManagerStatePoweredOn:
+		case CBManagerStatePoweredOn:
 			self->scanTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 3.0]
 													   interval:1
 														 target:self
