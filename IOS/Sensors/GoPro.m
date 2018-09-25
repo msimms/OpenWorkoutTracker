@@ -43,7 +43,12 @@
 {
 	NSString* urlStr = [[NSString alloc] initWithFormat:@"http://%s/camera/%@?t=%@=%@", GOPRO_IP_ADDR, group, self->password, action];
 	NSURL* url = [[NSURL alloc] initWithString:urlStr];
-	[[UIApplication sharedApplication] openURL:url];
+	UIApplication* application = [UIApplication sharedApplication];
+	
+	if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+		[application openURL:url options:@{} completionHandler:^(BOOL success) {
+		}];
+	}
 }
 
 - (void)setPassword:(NSString*)newPassword
@@ -110,16 +115,24 @@
 {
 	NSString* urlStr = [[NSString alloc] initWithFormat:@"10.5.5.9:8080/live/amba.m3u8"];
 	NSURL* url = [[NSURL alloc] initWithString:urlStr];
-	[[UIApplication sharedApplication] openURL:url];
+	UIApplication* application = [UIApplication sharedApplication];
+	
+	if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+		[application openURL:url options:@{} completionHandler:^(BOOL success) {
+		}];
+	}
 }
 
 - (void)listImageFiles
 {
 	NSString* urlStr = [[NSString alloc] initWithFormat:@"http://10.5.5.9:8080/videos/DCIM/115GOPRO/"];
 	NSURL* url = [[NSURL alloc] initWithString:urlStr];
-	[[UIApplication sharedApplication] openURL:url];
+	UIApplication* application = [UIApplication sharedApplication];
 
-
+	if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+		[application openURL:url options:@{} completionHandler:^(BOOL success) {
+	   }];
+	}
 }
 
 @end
