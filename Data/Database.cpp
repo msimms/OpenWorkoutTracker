@@ -570,62 +570,62 @@ bool Database::DeleteActivity(const std::string& activityId)
 	std::vector<std::string> queries;
 	std::ostringstream sqlStream;
 
-	sqlStream << "delete from bike_activity where activity_id = " << activityId;
+	sqlStream << "delete from bike_activity where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from activity where id = " << activityId;
+	sqlStream << "delete from activity where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from lap where activity_id = " << activityId;
+	sqlStream << "delete from lap where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from gps where activity_id = " << activityId;
+	sqlStream << "delete from gps where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from accelerometer where activity_id = " << activityId;
+	sqlStream << "delete from accelerometer where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from cadence where activity_id = " << activityId;
+	sqlStream << "delete from cadence where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from hrm where activity_id = " << activityId;
+	sqlStream << "delete from hrm where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from wheel_speed where activity_id = " << activityId;
+	sqlStream << "delete from wheel_speed where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "delete from power_meter where activity_id = " << activityId;
+	sqlStream << "delete from power_meter where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "delete from foot_pod where activity_id = " << activityId;
+	sqlStream << "delete from foot_pod where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "delete from tag where activity_id = " << activityId;
+	sqlStream << "delete from tag where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from activity_summary where activity_id = " << activityId;
+	sqlStream << "delete from activity_summary where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
