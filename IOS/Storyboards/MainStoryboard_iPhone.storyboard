@@ -576,7 +576,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="jpK-Fj-dH3">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="jpK-Fj-dH3">
                                 <rect key="frame" x="20" y="247" width="222" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -593,12 +593,17 @@
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem title="Wheel Diameter" id="JqR-TZ-l3k">
+                                    <barButtonItem title="Wheel Size" id="kYC-Hp-SS2">
                                         <connections>
-                                            <action selector="onWheelDiameter:" destination="nMS-ks-hnh" id="hml-7s-lQ1"/>
+                                            <action selector="onWheelSize:" destination="nMS-ks-hnh" id="Gdx-IC-MVn"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="tUO-fK-udb"/>
+                                    <barButtonItem systemItem="save" id="iac-ss-GGD">
+                                        <connections>
+                                            <action selector="onSave:" destination="nMS-ks-hnh" id="MCf-Dx-BvZ"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem systemItem="trash" id="D6E-9d-cRX">
                                         <connections>
                                             <action selector="onDelete:" destination="nMS-ks-hnh" id="xAG-YB-Pn1"/>
@@ -640,11 +645,12 @@
                         <outlet property="deleteButton" destination="D6E-9d-cRX" id="AxF-sZ-ES7"/>
                         <outlet property="nameLabel" destination="p0P-kX-EM3" id="fgb-D4-ha4"/>
                         <outlet property="nameTextField" destination="Rac-m7-0mq" id="poW-th-0z4"/>
+                        <outlet property="saveButton" destination="iac-ss-GGD" id="5cu-3m-vWU"/>
                         <outlet property="toolbar" destination="8eE-42-8Mw" id="DjL-KO-ZHq"/>
                         <outlet property="weightLabel" destination="Dro-in-ghc" id="0JG-Ei-8JL"/>
                         <outlet property="weightTextField" destination="4fI-Zz-gnh" id="nOK-hR-oOa"/>
                         <outlet property="weightUnitsLabel" destination="c05-uh-Xln" id="zAi-LH-07v"/>
-                        <outlet property="wheelDiameterButton" destination="JqR-TZ-l3k" id="Tih-cN-IGL"/>
+                        <outlet property="wheelSizeButton" destination="kYC-Hp-SS2" id="U68-Xl-HBo"/>
                         <outlet property="wheelSizeLabel" destination="H1W-n5-nzY" id="61F-kZ-sMW"/>
                         <outlet property="wheelSizeTextField" destination="jpK-Fj-dH3" id="nsB-oa-29M"/>
                         <outlet property="wheelSizeUnitsLabel" destination="ebM-eo-HlB" id="ZWY-t3-a9c"/>

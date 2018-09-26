@@ -16,9 +16,6 @@
 
 #define ACTION_SHEET_TITLE_WHEEL_SIZE    NSLocalizedString(@"Wheel Size", nil)
 
-#define BUTTON_TITLE_SAVE                NSLocalizedString(@"Save", nil)
-#define BUTTON_TITLE_UPDATE              NSLocalizedString(@"Update", nil)
-
 // See http://www.slowtwitch.com/Tech/Wheel_Size_Wars_3682.html for more on wheel sizes
 #define BUTTON_TITLE_ISO_622             NSLocalizedString(@"29\" / 700c (ISO 622mm)", nil)
 #define BUTTON_TITLE_ISO_590             NSLocalizedString(@"26\" x 1 3/8\" / E.A.3 (ISO 590mm)", nil)
@@ -50,7 +47,7 @@
 @implementation BikeProfileViewController
 
 @synthesize toolbar;
-@synthesize wheelDiameterButton;
+@synthesize saveButton;
 @synthesize deleteButton;
 @synthesize nameTextField;
 @synthesize weightTextField;
@@ -281,14 +278,15 @@
 
 #pragma mark button handlers
 
-- (IBAction)onHome:(id)sender
-{
-	[self.navigationController popToRootViewControllerAnimated:TRUE];
-}
-
-- (IBAction)onWheelDiameter:(id)sender
+- (IBAction)onWheelSize:(id)sender
 {
 	[self showWheelDiameterSheet];
+}
+
+- (IBAction)onSave:(id)sender
+{
+	[self save];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)onDelete:(id)sender

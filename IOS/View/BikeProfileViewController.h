@@ -16,8 +16,8 @@ typedef enum BikeProfileViewMode
 @interface BikeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UIToolbar* toolbar;
+	IBOutlet UIBarButtonItem* wheelSizeButton;
 	IBOutlet UIBarButtonItem* saveButton;
-	IBOutlet UIBarButtonItem* wheelDiameterButton;
 	IBOutlet UIBarButtonItem* deleteButton;
 	IBOutlet UITextField* nameTextField;
 	IBOutlet UITextField* weightTextField;
@@ -32,17 +32,17 @@ typedef enum BikeProfileViewMode
 	BikeProfileViewMode mode;
 }
 
-- (IBAction)onHome:(id)sender;
-- (IBAction)onWheelDiameter:(id)sender;
+- (IBAction)onWheelSize:(id)sender;
+- (IBAction)onSave:(id)sender;
 - (IBAction)onDelete:(id)sender;
 
 - (void)setBikeId:(uint64_t)newBikeId;
 - (void)setMode:(BikeProfileViewMode)newMode;
 
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* wheelDiameterButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* wheelSizeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* saveButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 @property (nonatomic, retain) IBOutlet UITextField* nameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* weightTextField;
 @property (nonatomic, retain) IBOutlet UITextField* wheelSizeTextField;
