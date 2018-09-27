@@ -124,7 +124,7 @@
 - (void)updateUsersAge
 {
 	NSError* error;
-	NSDate* dateOfBirth = [self.healthStore dateOfBirthWithError:&error];
+	NSDateComponents* dateOfBirth = [self.healthStore dateOfBirthComponentsWithError:&error];
 	if (dateOfBirth)
 	{
 		[UserProfile setBirthDate:dateOfBirth];
