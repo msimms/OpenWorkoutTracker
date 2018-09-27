@@ -112,11 +112,9 @@
 	[Preferences writeIntValue:@KEY_BIRTH_YEAR withValue:year];
 }
 
-+ (void)setBirthDate:(NSDateComponents*)birthday
++ (void)setBirthDate:(NSDate*)birthday
 {
-	NSCalendar* gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-	NSDate* tempDate = [gregorianCalendar dateFromComponents:birthday];
-	NSTimeInterval dateInterval = [tempDate timeIntervalSince1970];
+	NSTimeInterval dateInterval = [birthday timeIntervalSince1970];
 	time_t dateInt = (time_t)dateInterval;
 	struct tm* dateStruct = localtime(&dateInt);
 	

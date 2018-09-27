@@ -15,7 +15,7 @@
 
 + (void)setActivityLevel:(ActivityLevel)level;
 + (void)setGender:(Gender)gender;
-+ (void)setBirthDate:(NSDateComponents*)birthday;
++ (void)setBirthDate:(NSDate*)birthday;
 + (void)setHeightInCm:(double)height;
 + (void)setWeightInKg:(double)weight;
 + (void)setHeightInInches:(double)height;

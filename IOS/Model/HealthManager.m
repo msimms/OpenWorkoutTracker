@@ -127,7 +127,9 @@
 	NSDateComponents* dateOfBirth = [self.healthStore dateOfBirthComponentsWithError:&error];
 	if (dateOfBirth)
 	{
-		[UserProfile setBirthDate:dateOfBirth];
+		NSCalendar* gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+		NSDate* tempDate = [gregorianCalendar dateFromComponents:dateOfBirth];
+		[UserProfile setBirthDate:tempDate];
 	}
 }
 
