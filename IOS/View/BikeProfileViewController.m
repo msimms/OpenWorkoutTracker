@@ -47,6 +47,7 @@
 @implementation BikeProfileViewController
 
 @synthesize toolbar;
+@synthesize wheelSizeButton;
 @synthesize saveButton;
 @synthesize deleteButton;
 @synthesize nameTextField;
