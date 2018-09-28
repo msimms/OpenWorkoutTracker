@@ -26,36 +26,23 @@
 	NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://mikesimms.net/Workouts.sqlite"]];
 	[request setHTTPMethod:@"GET"];
 
-	[NSURLConnection connectionWithRequest:request delegate:self];
-}
-
-- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
-{
-	self->floatTotalData = [[NSString stringWithFormat:@"%lli",[response expectedContentLength]] floatValue];
-}
-
-- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
-{
-	self->floatReceivedData += [data length];
-
-	NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath: self.strFileNameWithPath];
-	[fileHandle seekToEndOfFile];
-	[fileHandle writeData: data];
-	[fileHandle closeFile];
-
-	if ([self.delegate respondsToSelector:@selector(didReceiveData:)])
-		[self.delegate didReceiveData:self];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection*)connection
-{
-	if ([self.delegate respondsToSelector:@selector(didLoadData:)])
-		[self.delegate didLoadData:self];
-}
-
-- (float)getProgressInPercent
-{
-	return (self->floatReceivedData / self->floatTotalData) * 100.0f;
+	NSURLSession* session = [NSURLSession sharedSession];
+	NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
+												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
+									  {
+										  self->floatReceivedData += [data length];
+										  
+										  NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath: self.strFileNameWithPath];
+										  [fileHandle seekToEndOfFile];
+										  [fileHandle writeData: data];
+										  [fileHandle closeFile];
+										  
+										  if ([self.delegate respondsToSelector:@selector(didReceiveData:)])
+											  [self.delegate didReceiveData:self];
+										  if ([self.delegate respondsToSelector:@selector(didLoadData:)])
+											  [self.delegate didLoadData:self];
+									  }];
+	[dataTask resume];
 }
 
 @end

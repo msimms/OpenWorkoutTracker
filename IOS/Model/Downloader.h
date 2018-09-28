@@ -23,7 +23,6 @@
 @property(nonatomic, retain) id <DownloaderDelegate> delegate;
 
 - (void)loadData;
-- (float)getProgressInPercent;
 
 @end
 
