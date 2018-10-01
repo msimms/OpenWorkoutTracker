@@ -57,6 +57,7 @@
 "Delete Last Thirty Seconds" = "Delete Last Thirty Seconds";
 "Disabled" = "Disabled";
 "Distance Interval" = "Distance Interval";
+"Do not include the protocol in the URL." = "Do not include the protocol in the URL.";
 "Edit" = "Edit";
 "Edit ..." = "Edit ...";
 "Enabled" = "Enabled";

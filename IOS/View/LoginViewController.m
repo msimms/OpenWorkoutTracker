@@ -74,20 +74,27 @@
 	NSDictionary* loginData = [notification object];
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
 
-	if ([responseCode intValue] == 200)
+	if (responseCode && [responseCode intValue] == 200)
 	{
 		[super showOneButtonAlert:@"" withMsg:MSG_SUCCESSFUL_LOGIN];
-		[Preferences setBroadcastSessionCookie: [loginData objectForKey:@KEY_NAME_DATA]];
+		[self.navigationController popViewControllerAnimated:TRUE];
 	}
-	else if ([responseCode intValue] == 404)
+	else if (responseCode && [responseCode intValue] == 404)
 	{
 		[super showOneButtonAlert:STR_ERROR withMsg:MSG_404];
 	}
 	else
 	{
 		NSData* data = [loginData objectForKey:@KEY_NAME_DATA];
-		NSString* dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		[super showOneButtonAlert:STR_ERROR withMsg:dataStr];
+		if (data && [data length] > 0)
+		{
+			NSString* dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+			[super showOneButtonAlert:STR_ERROR withMsg:dataStr];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOGIN_FAILED];
+		}
 	}
 	[self.spinner stopAnimating];
 }
@@ -117,8 +124,9 @@
 		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
 		
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		self->username = self.usernameTextField.text;
+
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate login:self.usernameTextField.text withPassword:self.passwordTextField.text];
 	}
 }

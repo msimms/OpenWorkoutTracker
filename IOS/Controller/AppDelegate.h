@@ -53,7 +53,7 @@
 #define EXPORT_TO_EMAIL_STR                        "Email"
 #define IMPORT_VIA_URL_STR                         "URL"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDataDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
 	SensorMgr*           sensorMgr;
 	LeDiscovery*         leSensorFinder;

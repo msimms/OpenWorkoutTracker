@@ -80,6 +80,7 @@ typedef enum SettingsRowsBroadcast
 #define ALERT_TITLE_BROADCAST_WARN   NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
 #define ALERT_TITLE_NOT_IMPLEMENTED  NSLocalizedString(@"Unimplemented Feature", nil)
 #define ALERT_MSG_IMPLEMENTED        NSLocalizedString(@"This feature is not implemented.", nil)
+#define ALERT_NO_PROTOCOL            NSLocalizedString(@"Do not include the protocol in the URL.", nil)
 #define ALERT_MSG_NAME               NSLocalizedString(@"", nil)
 #define ALERT_MSG_RATE               NSLocalizedString(@"1", nil)
 
@@ -197,8 +198,16 @@ typedef enum SettingsRowsBroadcast
 	}];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
-		[Preferences setBroadcastHostName:[field text]];
-		[self.settingsTableView reloadData];
+		NSString* hostname = [field text];
+		if ([hostname rangeOfString:@"://"].location == NSNotFound)
+		{
+			[Preferences setBroadcastHostName:hostname];
+			[self.settingsTableView reloadData];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:ALERT_NO_PROTOCOL];
+		}
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }

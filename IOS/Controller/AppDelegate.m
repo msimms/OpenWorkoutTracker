@@ -1412,55 +1412,6 @@ void attributeNameCallback(const char* name, void* context)
 	[self->cloudMgr requestCloudServiceAcctNames:service];
 }
 
-#pragma mark NSURLConnectionDataDelegate methods
-
-- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
-{
-	NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-	[self->downloadedData setObject:[[NSNumber alloc] initWithInteger:[httpResponse statusCode]] forKey:@KEY_NAME_RESPONSE_CODE];
-	[self->downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection*)connection
-{
-	NSString* url = [self->downloadedData objectForKey:@KEY_NAME_URL];
-
-	if ([url rangeOfString:@BROADCAST_LOGIN_URL].location != NSNotFound)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_PROCESSED object:self->downloadedData];
-	}
-	else if ([url rangeOfString:@BROADCAST_CREATE_LOGIN_URL].location != NSNotFound)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:self->downloadedData];
-	}
-	else if ([url rangeOfString:@BROADCAST_LIST_FOLLOWING].location != NSNotFound)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED object:self->downloadedData];
-	}
-	else if ([url rangeOfString:@BROADCAST_LIST_FOLLOWED_BY].location != NSNotFound)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:self->downloadedData];
-	}
-	else if ([url rangeOfString:@BROADCAST_REQUEST_TO_FOLLOW].location != NSNotFound)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:self->downloadedData];
-	}
-
-	self->downloadedData = nil;
-}
-
-- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
-{
-	NSMutableData* dataObj = [self->downloadedData objectForKey:@KEY_NAME_DATA];
-	[dataObj appendData:data];
-}
-
-- (NSCachedURLResponse*)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse*)cachedResponse
-{
-	// Return nil to indicate not necessary to store a cached response for this connection
-	return nil;
-}
-
 #pragma mark broadcast options
 
 - (BOOL)makeRequest:(NSString*)urlStr withMethod:(NSString*)method withPostData:(NSMutableData*)postData
@@ -1480,8 +1431,49 @@ void attributeNameCallback(const char* name, void* context)
 		[request setHTTPBody:postData];
 	}
 
-	NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-	return conn != nil;
+	NSURLSession* session = [NSURLSession sharedSession];
+	NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
+												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
+	{
+		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+		NSInteger httpCode = [httpResponse statusCode];
+
+		[self->downloadedData setObject:[[NSNumber alloc] initWithInteger:httpCode] forKey:@KEY_NAME_RESPONSE_CODE];
+		[self->downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
+
+		if ([urlStr rangeOfString:@BROADCAST_LOGIN_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_PROCESSED object:self->downloadedData]; } );
+			if (httpCode == 200)
+			{
+//				[Preferences setBroadcastSessionCookie: [loginData objectForKey:@KEY_NAME_DATA]];
+			}
+		}
+		else if ([urlStr rangeOfString:@BROADCAST_CREATE_LOGIN_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:self->downloadedData]; } );
+		}
+		else if ([urlStr rangeOfString:@BROADCAST_LIST_FOLLOWING].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED object:self->downloadedData]; } );
+		}
+		else if ([urlStr rangeOfString:@BROADCAST_LIST_FOLLOWED_BY].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:self->downloadedData]; } );
+		}
+		else if ([urlStr rangeOfString:@BROADCAST_REQUEST_TO_FOLLOW].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:self->downloadedData]; } );
+		}
+	}];
+	[dataTask resume];
+	
+	return TRUE;
 }
 
 - (BOOL)login:(NSString*)username withPassword:(NSString*)password
