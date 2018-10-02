@@ -80,18 +80,19 @@
 	{
 		[Preferences setBroadcastUserName:self->username];
 
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_OK
 																				 message:MSG_SUCCESSFUL_LOGIN
 																		  preferredStyle:UIAlertControllerStyleAlert];           
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:TRUE];
+		}]];
 		[self presentViewController:alertController animated:YES completion:nil];
-		[self.navigationController popViewControllerAnimated:TRUE];
 	}
 	else if ([responseCode intValue] == 404)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																				 message:MSG_404
-																		  preferredStyle:UIAlertControllerStyleAlert];           
+																		  preferredStyle:UIAlertControllerStyleAlert];
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
@@ -99,7 +100,7 @@
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																				 message:MSG_LOGIN_FAILED
-																		  preferredStyle:UIAlertControllerStyleAlert];           
+																		  preferredStyle:UIAlertControllerStyleAlert];
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
 		[self presentViewController:alertController animated:YES completion:nil];
 	}

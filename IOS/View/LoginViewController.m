@@ -76,8 +76,13 @@
 
 	if (responseCode && [responseCode intValue] == 200)
 	{
-		[super showOneButtonAlert:@"" withMsg:MSG_SUCCESSFUL_LOGIN];
-		[self.navigationController popViewControllerAnimated:TRUE];
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_OK
+																				 message:MSG_SUCCESSFUL_LOGIN
+																		  preferredStyle:UIAlertControllerStyleAlert];           
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:TRUE];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if (responseCode && [responseCode intValue] == 404)
 	{
