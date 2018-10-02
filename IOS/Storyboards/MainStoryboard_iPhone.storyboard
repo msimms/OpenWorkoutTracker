@@ -1747,6 +1747,7 @@
                         <outlet property="toolbar" destination="R4m-tl-6wx" id="gHz-cU-Pef"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="D1W-a8-Nen"/>
                         <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="Y2u-2b-CLK"/>
+                        <segue destination="egv-46-qMa" kind="push" identifier="SegueToNewMapOverlayViewController" id="qkZ-Lo-zIf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IhX-cY-HKz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2205,10 +2206,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="SimpleScreen.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fcj-0g-8wt"/>
+        <segue reference="qkZ-Lo-zIf"/>
         <segue reference="rmC-zq-awJ"/>
-        <segue reference="E2b-lU-9dF"/>
-        <segue reference="Zfp-Rg-OxX"/>
+        <segue reference="Y2u-2b-CLK"/>
+        <segue reference="D1W-a8-Nen"/>
         <segue reference="mpc-lI-yFA"/>
         <segue reference="PhW-xp-et3"/>
     </inferredMetricsTieBreakers>
