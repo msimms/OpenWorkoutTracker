@@ -324,7 +324,7 @@
 	NSMutableArray* activityTypes = [appDelegate getActivityTypes];
 	if ([activityTypes count] > 0)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_ACTIVITY
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
@@ -359,7 +359,7 @@
 	NSMutableArray* fileSites = [appDelegate getEnabledFileExportServices];
 	if ([fileSites count] > 0)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_EXPORT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 		

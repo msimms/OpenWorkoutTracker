@@ -69,6 +69,7 @@ typedef enum SectionType
 - (void)viewDidLoad
 {
 	self.title = TITLE;
+
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.homeButton setTitle:BUTTON_TITLE_HOME];
 	[super viewDidLoad];

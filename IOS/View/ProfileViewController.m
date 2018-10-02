@@ -300,7 +300,7 @@ typedef enum ProfileRows
 			case ROW_ACTIVITY_LEVEL:
 				{
 					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																							 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
 																					  preferredStyle:UIAlertControllerStyleAlert];
 					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -329,7 +329,7 @@ typedef enum ProfileRows
 			case ROW_GENDER:
 				{
 					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																							 message:STR_GENDER
 																					  preferredStyle:UIAlertControllerStyleAlert];
 					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {

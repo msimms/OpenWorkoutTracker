@@ -139,7 +139,7 @@ typedef enum SettingsRowsBroadcast
 
 - (void)showUnitsActionSheet
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:UNIT_TITLE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	

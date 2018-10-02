@@ -64,7 +64,6 @@ typedef enum SettingsSections
 	self.title = TITLE;
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-
 	[super viewDidLoad];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

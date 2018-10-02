@@ -338,7 +338,7 @@ void KmlPlacemarkEnd(const char* name, void* context)
 
 - (IBAction)onAutoScale:(id)sender
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_MAP_TYPE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
@@ -355,7 +355,7 @@ void KmlPlacemarkEnd(const char* name, void* context)
 
 - (IBAction)onMapType:(id)sender
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_MAP_TYPE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
@@ -377,7 +377,7 @@ void KmlPlacemarkEnd(const char* name, void* context)
 	NSMutableArray* allOverlayFiles = [appDelegate getMapOverlayList];
 	if ([allOverlayFiles count] > 0)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_OVERLAY
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 

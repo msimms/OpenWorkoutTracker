@@ -399,7 +399,7 @@ typedef enum ExportFileTypeButtons
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_FILE_FORMAT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 		
@@ -448,7 +448,7 @@ typedef enum ExportFileTypeButtons
 	NSMutableArray* fileSites = [appDelegate getBikeNames];
 	if ([fileSites count] > 0)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_EXPORT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 		
@@ -636,7 +636,7 @@ typedef enum ExportFileTypeButtons
 
 - (IBAction)onEdit:(id)sender
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_EDIT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
@@ -724,7 +724,7 @@ typedef enum ExportFileTypeButtons
 	NSMutableArray* fileSites = [appDelegate getBikeNames];
 	if ([fileSites count] > 0)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@""
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:STR_BIKE
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
