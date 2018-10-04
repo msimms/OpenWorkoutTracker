@@ -11,7 +11,6 @@
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
-		27094211215ABE3D00C3BCBE /* App-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 276C937B19BFDE3B00D96E7F /* App-Info.plist */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
 		2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2619C124CF00CE2BAD /* Default@2x.png */; };
@@ -1141,7 +1140,7 @@
 								enabled = 1;
 							};
 							com.apple.iCloud = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.iOS = {
 								enabled = 1;
@@ -1239,7 +1238,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27094211215ABE3D00C3BCBE /* App-Info.plist in Resources */,
 				2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */,
 				2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */,
 				2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */,
