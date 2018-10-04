@@ -30,6 +30,7 @@
 		self->locationCache = [[NSMutableArray alloc] init];
 		self->accelerometerCache = [[NSMutableArray alloc] init];
 		self->lastCacheFlush = 0;
+		self->errorSending = FALSE;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		self->deviceId = [appDelegate getUuid];
@@ -51,7 +52,7 @@
 	}
 }
 
-- (NSURLConnection*)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
+- (void)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
 {
 	NSString* protocolStr = [Preferences broadcastProtocol];
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", protocolStr, hostName, path];
@@ -63,7 +64,25 @@
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPBody:data];
-	return [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	self->dataBeingSent = data;
+
+	NSURLSession* session = [NSURLSession sharedSession];
+	NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
+												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
+	{
+		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+		if ([httpResponse statusCode] == 200)
+		{
+			self->dataBeingSent = nil;
+			self->errorSending = FALSE;
+		}
+		else
+		{
+			self->errorSending = TRUE;
+		}
+	}];
+	[dataTask resume];
 }
 
 - (void)flushGlobalBroadcastCacheRest
@@ -76,11 +95,18 @@
 		return;
 	}
 	
-	// Still waiting for a response from the last attempt to send, so just hold off for now.
-	if (self->currentStatusConnection)
+	// Still waiting on last data to be sent.
+	if (self->dataBeingSent)
 	{
-		NSLog(@"Not flushing the broadcast cache because of a pending connection.");
-		self->lastCacheFlush = time(NULL);
+		if (self->errorSending)
+		{
+			[self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:self->dataBeingSent];
+			NSLog(@"Resending.");
+		}
+		else
+		{
+			NSLog(@"Waiting on previous data to be sent.");
+		}
 		return;
 	}
 
@@ -99,26 +125,28 @@
 		self->lastCacheFlush = time(NULL);
 		return;
 	}
-	self->numLocObjsBeingSent = 0;
+	size_t numLocObjsBeingSent = 0;
 	for (NSString* text in self->locationCache)
 	{
-		if (self->numLocObjsBeingSent > 0)
+		if (numLocObjsBeingSent > 0)
 			[postData appendData:[[NSString stringWithFormat:@",\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 		[postData appendData:[text dataUsingEncoding:NSASCIIStringEncoding]];
-		++self->numLocObjsBeingSent;
+		++numLocObjsBeingSent;
 	}
+	[self->locationCache removeAllObjects];
 	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	// Write cached acclerometer data to the JSON string.
 	[postData appendData:[[NSString stringWithFormat:@", \"accelerometer\": ["] dataUsingEncoding:NSASCIIStringEncoding]];
-	self->numAccelObjsBeingSent = 0;
+	size_t numAccelObjsBeingSent = 0;
 	for (NSString* text in self->accelerometerCache)
 	{
-		if (self->numAccelObjsBeingSent > 0)
+		if (numAccelObjsBeingSent > 0)
 			[postData appendData:[[NSString stringWithFormat:@",\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 		[postData appendData:[text dataUsingEncoding:NSASCIIStringEncoding]];
-		++self->numAccelObjsBeingSent;
+		++numAccelObjsBeingSent;
 	}
+	[self->accelerometerCache removeAllObjects];
 	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	// Add the device ID to the JSON string.
@@ -151,9 +179,9 @@
 
 	[postData appendData:[[NSString stringWithFormat:@"}\n"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	if ((self->numLocObjsBeingSent > 0) || (self->numAccelObjsBeingSent > 0))
+	if ((numLocObjsBeingSent > 0) || (numAccelObjsBeingSent > 0))
 	{
-		self->currentStatusConnection = [self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:postData];
+		[self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:postData];
 	}
 
 	self->lastCacheFlush = time(NULL);
@@ -327,49 +355,6 @@
 	NSString* post = [NSString stringWithFormat:@"{\"tag\": \"%@\", \"activity id\":\"%@\"}\n", escapedTag, activityId];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 	[self sendToServer:hostName withPath:BROADCAST_CREATE_TAG_URL withData:postData];
-}
-
-#pragma mark NSURLConnectionDataDelegate methods
-
-- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response
-{
-	if (connection == self->currentStatusConnection)
-	{
-		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-		if ([httpResponse statusCode] == 200)
-		{
-			NSIndexSet* indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self->numLocObjsBeingSent)];
-			[self->locationCache removeObjectsAtIndexes:indexSet];
-			self->numLocObjsBeingSent = 0;
-			self->numAccelObjsBeingSent = 0;
-		}
-
-		self->currentStatusConnection = nil;
-	}
-}
-
-- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
-{
-	if (connection == self->currentStatusConnection)
-	{
-		self->currentStatusConnection = nil;
-	}
-}
-
-- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error
-{
-	if (connection == self->currentStatusConnection)
-	{
-		self->currentStatusConnection = nil;
-	}
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection*)connection
-{
-	if (connection == self->currentStatusConnection)
-	{
-		self->currentStatusConnection = nil;
-	}
 }
 
 @end
