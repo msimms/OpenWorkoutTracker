@@ -25,9 +25,6 @@
 		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
 		self.locationManager.activityType = CLActivityTypeFitness;
 		self.locationManager.allowsBackgroundLocationUpdates = YES;
-		
-		[self.locationManager requestWhenInUseAuthorization];
-		[self.locationManager requestAlwaysAuthorization];
 	}
 	return self;
 }
@@ -47,26 +44,14 @@
 
 - (void)locationManager:(CLLocationManager*)manager didUpdateToLocation:(CLLocation*)newLocation fromLocation:(CLLocation*)oldLocation
 {
-	if ([self isValidLocation:newLocation])
+	[self processNewLocation:newLocation];
+}
+
+- (void)locationManager:(CLLocationManager*)manager didUpdateLocations:(NSArray<CLLocation*>*)locations
+{
+	for (CLLocation* newLocation in locations)
 	{
-		CLLocationDegrees lat = newLocation.coordinate.latitude;
-		CLLocationDegrees lon = newLocation.coordinate.longitude;
-		CLLocationDegrees alt = newLocation.altitude;
-
-		CLLocationAccuracy horizontalAccuracy = newLocation.horizontalAccuracy;
-		CLLocationAccuracy verticalAccuracy = newLocation.verticalAccuracy;
-
-		uint64_t theTimeMs = (uint64_t)([newLocation.timestamp timeIntervalSince1970] * (double)1000.0);
-		
-		NSDictionary* locationData = [[NSDictionary alloc] initWithObjectsAndKeys:
-									  [NSNumber numberWithDouble:lat],@KEY_NAME_LATITUDE,
-									  [NSNumber numberWithDouble:lon],@KEY_NAME_LONGITUDE,
-									  [NSNumber numberWithDouble:alt],@KEY_NAME_ALTITUDE,
-									  [NSNumber numberWithDouble:horizontalAccuracy],@KEY_NAME_HORIZONTAL_ACCURACY,
-									  [NSNumber numberWithDouble:verticalAccuracy],@KEY_NAME_VERTICAL_ACCURACY,
-									  [NSNumber numberWithLongLong:theTimeMs],@KEY_NAME_GPS_TIMESTAMP_MS,
-									  nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOCATION object:locationData];
+		[self processNewLocation:newLocation];
 	}
 }
 
@@ -77,8 +62,12 @@
 		case kCLAuthorizationStatusNotDetermined:
 		case kCLAuthorizationStatusRestricted:
 		case kCLAuthorizationStatusDenied:
-			{
-			}
+			break;
+		case kCLAuthorizationStatusAuthorizedWhenInUse:
+			[self.locationManager requestAlwaysAuthorization];
+			break;
+		case kCLAuthorizationStatusAuthorizedAlways:
+			[self.locationManager startUpdatingLocation];
 			break;
 		default:
 			break;
@@ -90,9 +79,6 @@
 	if (error.code == kCLErrorDenied)
 	{
 		[self.locationManager stopUpdatingLocation];
-	}
-	else if (error.code == kCLErrorLocationUnknown)
-	{
 	}
 }
 
@@ -119,20 +105,39 @@
 {
 }
 
+- (void)processNewLocation:(CLLocation*)newLocation
+{
+	if ([self isValidLocation:newLocation])
+	{
+		CLLocationDegrees lat = newLocation.coordinate.latitude;
+		CLLocationDegrees lon = newLocation.coordinate.longitude;
+		CLLocationDegrees alt = newLocation.altitude;
+		
+		CLLocationAccuracy horizontalAccuracy = newLocation.horizontalAccuracy;
+		CLLocationAccuracy verticalAccuracy = newLocation.verticalAccuracy;
+		
+		uint64_t theTimeMs = (uint64_t)([newLocation.timestamp timeIntervalSince1970] * (double)1000.0);
+		
+		NSDictionary* locationData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									  [NSNumber numberWithDouble:lat],@KEY_NAME_LATITUDE,
+									  [NSNumber numberWithDouble:lon],@KEY_NAME_LONGITUDE,
+									  [NSNumber numberWithDouble:alt],@KEY_NAME_ALTITUDE,
+									  [NSNumber numberWithDouble:horizontalAccuracy],@KEY_NAME_HORIZONTAL_ACCURACY,
+									  [NSNumber numberWithDouble:verticalAccuracy],@KEY_NAME_VERTICAL_ACCURACY,
+									  [NSNumber numberWithLongLong:theTimeMs],@KEY_NAME_GPS_TIMESTAMP_MS,
+									  nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOCATION object:locationData];
+	}
+}
+
 - (void)startUpdates
 {
-	if (self.locationManager != nil)
-	{
-		[self.locationManager startUpdatingLocation];
-	}
+	[self.locationManager requestAlwaysAuthorization];
 }
 
 - (void)stopUpdates
 {
-	if (self.locationManager != nil)
-	{
-		[self.locationManager stopUpdatingLocation];
-	}
+	[self.locationManager stopUpdatingLocation];
 }
 
 - (void)update

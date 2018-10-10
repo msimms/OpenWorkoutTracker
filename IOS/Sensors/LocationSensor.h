@@ -35,6 +35,8 @@
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager*)manager;
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager*)manager;
 
+- (void)processNewLocation:(CLLocation*)newLocation;
+
 - (void)startUpdates;
 - (void)stopUpdates;
 - (void)update;
