@@ -50,8 +50,7 @@ namespace FileLib
 		str += tagName;
 		str += " ";
 		
-		XmlKeyValueList::const_iterator iter = keyValues.begin();
-		while (iter != keyValues.end())
+		for (auto iter = keyValues.begin(); iter != keyValues.end(); ++iter)
 		{
 			if (valuesOnIndividualLines)
 			{
@@ -67,7 +66,6 @@ namespace FileLib
 			str += "=\"";
 			str += (*iter).value;
 			str += "\"";
-			iter++;
 		}
 		str += ">\n";
 		

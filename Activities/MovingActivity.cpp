@@ -964,11 +964,9 @@ SegmentType MovingActivity::CurrentPace() const
 			if (tdPair2.distanceM >= MIN_METERS_MOVED)
 			{
 				double sum = (double)0.0;
-				NumericList::const_iterator iter = values.begin();
-				while (iter != values.end())
+				for (auto iter = values.begin(); iter != values.end(); ++iter)
 				{
 					sum += (*iter);
-					iter++;
 				}
 				segment.startTime = tdPair1.time;
 				segment.endTime = tdPair2.time;

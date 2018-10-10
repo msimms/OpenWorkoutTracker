@@ -1887,12 +1887,9 @@ int Database::ExecuteQuery(const std::string& query)
 int Database::ExecuteQueries(const std::vector<std::string>& queries)
 {
 	int result = SQLITE_OK;
-	std::vector<std::string>::const_iterator iter = queries.begin();
-
-	while (iter != queries.end())
+	for (auto iter = queries.begin(); iter != queries.end(); ++iter)
 	{
 		result = ExecuteQuery((*iter));
-		iter++;
 	}
 	return result;
 }

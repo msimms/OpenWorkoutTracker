@@ -155,9 +155,8 @@ extern "C" {
 		{
 			std::vector<std::string> matchingActivities;
 			result = g_pDatabase->SearchForTags(searchStr, matchingActivities);
-			
-			std::vector<std::string>::const_iterator iter = matchingActivities.begin();
-			while (iter != matchingActivities.end())
+
+			for (auto iter = matchingActivities.begin(); iter != matchingActivities.end(); ++iter)
 			{
 				ActivitySummary summary;
 
@@ -165,7 +164,6 @@ extern "C" {
 				{
 					g_historicalActivityList.push_back(summary);
 				}
-				++iter;
 			}
 		}
 		return result;
@@ -289,8 +287,7 @@ extern "C" {
 
 		InitializeHistoricalActivityList();
 
-		ActivitySummaryList::const_iterator activityIter = g_historicalActivityList.begin();
-		while (activityIter != g_historicalActivityList.end())
+		for (auto activityIter = g_historicalActivityList.begin(); activityIter != g_historicalActivityList.end(); ++activityIter)
 		{
 			const ActivitySummary& summary = (*activityIter);
 			uint64_t summaryBikeId = 0;
@@ -310,8 +307,6 @@ extern "C" {
 					}
 				}
 			}
-
-			++activityIter;
 		}
 
 		if (numSamples > 0)
@@ -330,8 +325,7 @@ extern "C" {
 
 	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm)
 	{
-		std::vector<Bike>::const_iterator iter = g_bikes.begin();
-		while (iter != g_bikes.end())
+		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
 			if (bike.id == bikeId)
@@ -341,7 +335,6 @@ extern "C" {
 				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
 				return true;
 			}
-			++iter;
 		}
 		return false;
 	}
@@ -362,8 +355,7 @@ extern "C" {
 
 	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm)
 	{
-		std::vector<Bike>::const_iterator iter = g_bikes.begin();
-		while (iter != g_bikes.end())
+		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
 			if (bike.name.compare(name) == 0)
@@ -373,7 +365,6 @@ extern "C" {
 				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
 				return true;
 			}
-			++iter;
 		}
 		return false;
 	}
@@ -408,8 +399,7 @@ extern "C" {
 	{
 		if (g_pCurrentActivity)
 		{
-			std::vector<Bike>::const_iterator iter = g_bikes.begin();
-			while (iter != g_bikes.end())
+			for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 			{
 				const Bike& bike = (*iter);
 				if (bike.name.compare(name) == 0)
@@ -423,22 +413,19 @@ extern "C" {
 					}
 					break;
 				}
-				++iter;
 			}
 		}
 	}
 
 	uint64_t GetBikeIdFromName(const char* const name)
 	{
-		std::vector<Bike>::const_iterator iter = g_bikes.begin();
-		while (iter != g_bikes.end())
+		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
 			if (bike.name.compare(name) == 0)
 			{
 				return bike.id;
 			}
-			++iter;
 		}
 		return 0;
 	}
@@ -451,15 +438,13 @@ extern "C" {
 	{
 		if (workoutName)
 		{
-			std::vector<IntervalWorkout>::const_iterator iter = g_intervalWorkouts.begin();
-			while (iter != g_intervalWorkouts.end())
+			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
 				const IntervalWorkout& workout = (*iter);
 				if (workout.name.compare(workoutName) == 0)
 				{
 					return &workout;
 				}
-				++iter;
 			}
 		}
 		return NULL;
@@ -549,12 +534,10 @@ extern "C" {
 		{
 			if (g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
 			{
-				std::vector<IntervalWorkout>::iterator iter = g_intervalWorkouts.begin();
-				while (iter != g_intervalWorkouts.end())
+				for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 				{
 					IntervalWorkout& workout = (*iter);
 					g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments);
-					++iter;
 				}
 			}
 		}
@@ -748,13 +731,11 @@ extern "C" {
 						{
 							if (g_pDatabase->RetrieveActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings))
 							{
-								SensorReadingList::const_iterator iter = summary.accelerometerReadings.begin();
-								while (iter != summary.accelerometerReadings.end())
+								for (auto iter = summary.accelerometerReadings.begin(); iter != summary.accelerometerReadings.end(); ++iter)
 								{
 									summary.pActivity->ProcessSensorReading((*iter));
 									if (callback)
 										callback(activityIndex, context);
-									++iter;
 								}
 								result = true;
 							}
@@ -769,13 +750,11 @@ extern "C" {
 						{
 							if (g_pDatabase->RetrieveActivityPositionReadings(summary.activityId, summary.locationPoints))
 							{
-								SensorReadingList::const_iterator iter = summary.locationPoints.begin();
-								while (iter != summary.locationPoints.end())
+								for (auto iter = summary.locationPoints.begin(); iter != summary.locationPoints.end(); ++iter)
 								{
 									summary.pActivity->ProcessSensorReading((*iter));
 									if (callback)
 										callback(activityIndex, context);
-									++iter;
 								}
 								result = true;
 							}
@@ -790,13 +769,11 @@ extern "C" {
 						{
 							if (g_pDatabase->RetrieveActivityHeartRateMonitorReadings(summary.activityId, summary.heartRateMonitorReadings))
 							{
-								SensorReadingList::const_iterator iter = summary.heartRateMonitorReadings.begin();
-								while (iter != summary.heartRateMonitorReadings.end())
+								for (auto iter = summary.heartRateMonitorReadings.begin(); iter != summary.heartRateMonitorReadings.end(); ++iter)
 								{
 									summary.pActivity->ProcessSensorReading((*iter));
 									if (callback)
 										callback(activityIndex, context);
-									++iter;
 								}
 								result = true;
 							}
@@ -811,13 +788,11 @@ extern "C" {
 						{
 							if (g_pDatabase->RetrieveActivityCadenceReadings(summary.activityId, summary.cadenceReadings))
 							{
-								SensorReadingList::const_iterator iter = summary.cadenceReadings.begin();
-								while (iter != summary.cadenceReadings.end())
+								for (auto iter = summary.cadenceReadings.begin(); iter != summary.cadenceReadings.end(); ++iter)
 								{
 									summary.pActivity->ProcessSensorReading((*iter));
 									if (callback)
 										callback(activityIndex, context);
-									++iter;
 								}
 								result = true;
 							}
@@ -835,13 +810,11 @@ extern "C" {
 						{
 							if (g_pDatabase->RetrieveActivityPowerMeterReadings(summary.activityId, summary.powerReadings))
 							{
-								SensorReadingList::const_iterator iter = summary.powerReadings.begin();
-								while (iter != summary.powerReadings.end())
+								for (auto iter = summary.powerReadings.begin(); iter != summary.powerReadings.end(); ++iter)
 								{
 									summary.pActivity->ProcessSensorReading((*iter));
 									if (callback)
 										callback(activityIndex, context);
-									++iter;
 								}
 								result = true;
 							}
@@ -877,14 +850,12 @@ extern "C" {
 				std::vector<SensorType> sensorTypes;
 				summary.pActivity->ListUsableSensors(sensorTypes);
 
-				std::vector<SensorType>::const_iterator iter = sensorTypes.begin();
-				while (iter != sensorTypes.end() && result)
+				for (auto iter = sensorTypes.begin(); iter != sensorTypes.end() && result; ++iter)
 				{
 					if (!LoadHistoricalActivitySensorData(activityIndex, (*iter), NULL, NULL))
 					{
 						result = false;
 					}
-					++iter;
 				}
 			}
 			else
@@ -911,15 +882,12 @@ extern "C" {
 			{
 				if (summary.pActivity)
 				{
-					ActivityAttributeMap::const_iterator attributeIter = summary.summaryAttributes.begin();
-					while (attributeIter != summary.summaryAttributes.end())
+					for (auto attributeIter = summary.summaryAttributes.begin(); attributeIter != summary.summaryAttributes.end(); ++attributeIter)
 					{
 						const std::string& attributeName = (*attributeIter).first;
 						const ActivityAttributeType& value = (*attributeIter).second;
 						
 						summary.pActivity->SetActivityAttribute(attributeName, value);
-						
-						++attributeIter;
 					}
 					
 					result = true;
@@ -954,8 +922,7 @@ extern "C" {
 
 				result = true;
 
-				std::vector<std::string>::const_iterator iter = attributes.begin();
-				while (iter != attributes.end() && result)
+				for (auto iter = attributes.begin(); iter != attributes.end() && result; ++iter)
 				{
 					const std::string& attribute = (*iter);
 					ActivityAttributeType value = summary.pActivity->QueryActivityAttribute(attribute);
@@ -964,7 +931,6 @@ extern "C" {
 						UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
 						result = g_pDatabase->CreateSummaryData(summary.activityId, attribute, value);
 					}
-					++iter;
 				}
 			}
 		}
@@ -977,8 +943,7 @@ extern "C" {
 
 	void FreeHistoricalActivityList()
 	{
-		ActivitySummaryList::iterator iter = g_historicalActivityList.begin();
-		while (iter != g_historicalActivityList.end())
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			ActivitySummary& summary = (*iter);
 
@@ -994,8 +959,6 @@ extern "C" {
 			summary.cadenceReadings.clear();
 			summary.powerReadings.clear();
 			summary.summaryAttributes.clear();
-
-			++iter;
 		}
 
 		g_historicalActivityList.clear();
@@ -1153,15 +1116,13 @@ extern "C" {
 	size_t GetNumHistoricalActivitiesByType(const char* const pActivityType)
 	{
 		size_t numActivities = 0;
-		ActivitySummaryList::iterator iter = g_historicalActivityList.begin();
-		while (iter != g_historicalActivityList.end())
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			ActivitySummary& summary = (*iter);
 			if (summary.type.compare(pActivityType) == 0)
 			{
 				++numActivities;
 			}
-			++iter;
 		}
 		return numActivities;
 	}
@@ -1264,11 +1225,9 @@ extern "C" {
 		if (g_pActivityFactory)
 		{
 			std::vector<std::string> activityTypes = g_pActivityFactory->ListActivityTypes();
-			std::vector<std::string>::const_iterator iter = activityTypes.begin();
-			while (iter != activityTypes.end())
+			for (auto iter = activityTypes.begin(); iter != activityTypes.end(); ++iter)
 			{
 				callback((*iter).c_str(), context);
-				++iter;
 			}
 		}
 	}
@@ -1286,11 +1245,9 @@ extern "C" {
 			g_pCurrentActivity->BuildAttributeList(attributeNames);
 			std::sort(attributeNames.begin(), attributeNames.end());
 
-			std::vector<std::string>::const_iterator iter = attributeNames.begin();
-			while (iter != attributeNames.end())
+			for (auto iter = attributeNames.begin(); iter != attributeNames.end(); ++iter)
 			{
 				callback((*iter).c_str(), context);
-				++iter;
 			}
 		}
 	}
@@ -1306,11 +1263,9 @@ extern "C" {
 			std::vector<SensorType> sensorTypes;
 			g_pCurrentActivity->ListUsableSensors(sensorTypes);
 
-			std::vector<SensorType>::const_iterator iter = sensorTypes.begin();
-			while (iter != sensorTypes.end())
+			for (auto iter = sensorTypes.begin(); iter != sensorTypes.end(); ++iter)
 			{
 				callback((*iter), context);
-				++iter;
 			}
 		}
 	}
@@ -1499,8 +1454,7 @@ extern "C" {
 			std::vector<std::string> attributes;
 			g_pCurrentActivity->BuildSummaryAttributeList(attributes);
 
-			std::vector<std::string>::const_iterator iter = attributes.begin();
-			while (iter != attributes.end())
+			for (auto iter = attributes.begin(); iter != attributes.end(); ++iter)
 			{
 				const std::string& attribute = (*iter);
 				ActivityAttributeType value = g_pCurrentActivity->QueryActivityAttribute(attribute);
@@ -1509,7 +1463,6 @@ extern "C" {
 					UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
 					result = g_pDatabase->CreateSummaryData(g_pCurrentActivity->GetId(), attribute, value);
 				}
-				++iter;
 			}
 		}
 		return result;
@@ -1633,8 +1586,7 @@ extern "C" {
 	{
 		const Activity* pActivity = NULL;
 
-		ActivitySummaryList::const_iterator iter = g_historicalActivityList.begin();
-		while (iter != g_historicalActivityList.end())
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& current = (*iter);
 			if (current.activityId.compare(activityId) == 0)
@@ -1642,7 +1594,6 @@ extern "C" {
 				pActivity = current.pActivity;
 				break;
 			}
-			++iter;
 		}
 
 		std::string fileName = pDirName;
@@ -1863,8 +1814,7 @@ extern "C" {
 		result.unitSystem  = UNIT_SYSTEM_US_CUSTOMARY;
 
 		std::string attributeName = pAttributeName;
-		ActivitySummaryList::const_iterator iter = g_historicalActivityList.begin();
-		while (iter != g_historicalActivityList.end())
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& summary = (*iter);
 
@@ -1896,7 +1846,6 @@ extern "C" {
 					}
 				}
 			}
-			++iter;
 		}
 		return result;
 	}
@@ -1911,8 +1860,7 @@ extern "C" {
 		result.valid       = false;
 
 		std::string attributeName = pAttributeName;
-		ActivitySummaryList::const_iterator iter = g_historicalActivityList.begin();
-		while (iter != g_historicalActivityList.end())
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& summary = (*iter);
 
@@ -1947,7 +1895,6 @@ extern "C" {
 					}
 				}
 			}
-			++iter;
 		}
 		return result;
 	}
@@ -1967,8 +1914,7 @@ extern "C" {
 		}
 
 		std::string attributeName = pAttributeName;
-		ActivitySummaryList::const_iterator iter = g_historicalActivityList.begin();
-		while (iter != g_historicalActivityList.end())
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& summary = (*iter);
 
@@ -2033,7 +1979,6 @@ extern "C" {
 					}
 				}
 			}
-			++iter;
 		}
 		return result;
 	}
@@ -2051,14 +1996,12 @@ extern "C" {
 
 		if (importer.ImportFromKml(pFileName, placemarks))
 		{
-			std::vector<FileLib::KmlPlacemark>::const_iterator placemarkIter = placemarks.begin();
-			while (placemarkIter != placemarks.end())
+			for (auto placemarkIter = placemarks.begin(); placemarkIter != placemarks.end(); ++placemarkIter)
 			{
 				const FileLib::KmlPlacemark& currentPlacemark = (*placemarkIter);
 				placemarkStartCallback(currentPlacemark.name.c_str(), context);
 
-				std::vector<FileLib::KmlCoordinate>::const_iterator coordinateIter = currentPlacemark.coordinates.begin();
-				while (coordinateIter != currentPlacemark.coordinates.end())
+				for (auto coordinateIter = currentPlacemark.coordinates.begin(); coordinateIter != currentPlacemark.coordinates.end(); ++coordinateIter)
 				{
 					const FileLib::KmlCoordinate& currentCoordinate = (*coordinateIter);
 
@@ -2070,13 +2013,9 @@ extern "C" {
 					coordinate.verticalAccuracy = (double)0.0;
 					coordinate.time = 0;
 					coordinateCallback(coordinate, context);
-
-					++coordinateIter;
 				}
 
 				placemarkEndCallback(currentPlacemark.name.c_str(), context);
-
-				++placemarkIter;
 			}
 
 			result = true;
@@ -2095,12 +2034,10 @@ extern "C" {
 
 		if (generator.CreateHeatMap((*g_pDatabase), heatMap))
 		{
-			HeatMap::iterator iter = heatMap.begin();
-			while (iter != heatMap.end())
+			for (auto iter = heatMap.begin(); iter != heatMap.end(); ++iter)
 			{
 				HeatMapValue& value = (*iter);
 				callback(value.coord, value.count, context);
-				++iter;
 			}
 			return true;
 		}
