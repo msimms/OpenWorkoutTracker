@@ -8,7 +8,7 @@
 #include "Walking.h"
 #include "ActivityAttribute.h"
 #include "AxisName.h"
-#include "CoordinateCalculator.h"
+#include "Distance.h"
 #include "UnitMgr.h"
 
 Walking::Walking() : MovingActivity()
@@ -111,7 +111,7 @@ double Walking::CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& p
 	// Compute grade.
 	if (m_altitudeBuffer.size() > 7) // Don't bother computing the slope until we have reasonabe altitude data.
 	{
-		double runM = CoordinateCalculator::HaversineDistanceIgnoreAltitude(pt2, pt2);
+		double runM = LibMath::Distance::haversineDistance(pt2.latitude, pt2.longitude, (double)0.0, pt1.latitude, pt1.longitude, (double)0.0);
 		if (runM > (double)0.5)
 		{
 			double riseM = avgAltitudeM - m_lastAvgAltitudeM;

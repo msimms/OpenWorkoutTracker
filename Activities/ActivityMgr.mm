@@ -13,6 +13,7 @@
 #include "Database.h"
 #include "DataExporter.h"
 #include "DataImporter.h"
+#include "Distance.h"
 #include "HeatMapGenerator.h"
 #include "IntervalWorkout.h"
 
@@ -2112,7 +2113,7 @@ extern "C" {
 
 	double DistanceBetweenCoordinates(const Coordinate c1, const Coordinate c2)
 	{
-		return CoordinateCalculator::HaversineDistance(c1, c2);
+		return LibMath::Distance::haversineDistance(c1.latitude, c1.longitude, c1.altitude, c2.latitude, c2.longitude, c2.altitude);
 	}
 	
 #ifdef __cplusplus

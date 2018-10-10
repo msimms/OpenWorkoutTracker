@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "HeatMapGenerator.h"
+#include "Distance.h"
 
 #include <math.h>
 
@@ -31,7 +32,7 @@ void HeatMapDatabaseCallback(uint64_t time, double latitude, double longitude, d
 		if ((fabs(oldCoordinate.latitude - newCoordinate.latitude) < 0.005) &&
 			(fabs(oldCoordinate.longitude - newCoordinate.longitude) < 0.005))
 		{
-			double distance = CoordinateCalculator::HaversineDistance(newCoordinate, oldCoordinate);
+			double distance = LibMath::Distance::haversineDistance(newCoordinate.latitude, newCoordinate.longitude, newCoordinate.altitude, oldCoordinate.latitude, oldCoordinate.longitude, oldCoordinate.altitude);
 			if (distance < 100)
 			{
 				(*iter).count++;

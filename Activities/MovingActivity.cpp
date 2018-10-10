@@ -10,8 +10,8 @@
 
 #include "MovingActivity.h"
 #include "ActivityAttribute.h"
-#include "CoordinateCalculator.h"
 #include "Defines.h"
+#include "Distance.h"
 #include "UnitConverter.h"
 #include "UnitConversionFactors.h"
 #include "UnitMgr.h"
@@ -391,7 +391,7 @@ bool MovingActivity::ProcessGpsReading(const SensorReading& reading)
 	{
 		TimeDistancePair distanceInfo;
 		distanceInfo.verticalDistanceM = m_currentLoc.altitude - m_previousLoc.altitude;
-		distanceInfo.distanceM = CoordinateCalculator::HaversineDistance(m_previousLoc, m_currentLoc);
+		distanceInfo.distanceM = LibMath::Distance::haversineDistance(m_previousLoc.latitude, m_previousLoc.longitude, m_previousLoc.altitude, m_currentLoc.latitude, m_currentLoc.longitude, m_currentLoc.altitude);
 		distanceInfo.time = reading.time;
 		m_distances.push_back(distanceInfo);
 

@@ -8,7 +8,6 @@
 #ifndef __HEATMAPGENERATOR__
 #define __HEATMAPGENERATOR__
 
-#include "CoordinateCalculator.h"
 #include "Database.h"
 
 #include <list>
