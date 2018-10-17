@@ -82,7 +82,7 @@
 		}
 		if (hasPowerData)
 		{
-			[list addObject:@ACTIVITY_ATTRIBUTE_POWER];
+			[list addObject:@ACTIVITY_ATTRIBUTE_3_SEC_POWER];
 		}
 	}
 	return list;

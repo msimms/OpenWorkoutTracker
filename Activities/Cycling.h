@@ -10,6 +10,7 @@
 
 #include "Bike.h"
 #include "MovingActivity.h"
+#include "Statistics.h"
 
 typedef enum SpeedDataSource
 {
@@ -43,9 +44,9 @@ public:
 	virtual double MaximumCadence() const { return m_maximumCadence; };
 
 	virtual double CurrentPower() const { return m_currentPower; };
+	virtual double ThreeSecPower() const { return LibMath::Statistics::averageDouble(m_recentPowerReadings); };
 	virtual double AveragePower() const { return m_numPowerReadings > 0 ? (m_totalPowerReadings / m_numPowerReadings) : (double)0.0; };
 	virtual double MaximumPower() const { return m_maximumPower; };
-    virtual double RunningAveragePower(size_t numSamples) const;
 
 	virtual uint16_t NumWheelRevolutions() const { return m_currentWheelSpeedReading - m_firstWheelSpeedReading; };
 
@@ -71,7 +72,7 @@ private:
 	double              m_currentPower;
 	double              m_maximumPower;
 	double              m_totalPowerReadings;
-    std::vector<double> m_lastTenPowerReadings;
+	std::vector<double> m_recentPowerReadings; // used for 3 second average power
 
 	uint16_t            m_numCadenceReadings;
 	uint16_t            m_numPowerReadings;

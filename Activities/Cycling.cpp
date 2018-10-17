@@ -133,10 +133,10 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 			m_totalPowerReadings += m_currentPower;
 			m_numPowerReadings++;
 
-			m_lastTenPowerReadings.push_back(m_currentPower);
-			if (m_lastTenPowerReadings.size() > 10)
+			m_recentPowerReadings.push_back(m_currentPower);
+			if (m_recentPowerReadings.size() > 3)
 			{
-				m_lastTenPowerReadings.erase(m_lastTenPowerReadings.begin());
+				m_recentPowerReadings.erase(m_recentPowerReadings.begin());
 			}
 
 			if (m_currentPower > m_maximumPower)
@@ -195,6 +195,17 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.measureType = MEASURE_POWER;
 		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_3_SEC_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = ThreeSecPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_POWER) == 0)
 	{
 		result.value.doubleVal = AveragePower();
@@ -205,13 +216,6 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_MAX_POWER) == 0)
 	{
 		result.value.doubleVal = MaximumPower();
-		result.valueType = TYPE_DOUBLE;
-		result.measureType = MEASURE_POWER;
-		result.valid = m_numPowerReadings > 0;
-	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_POWER_3_SEC) == 0)
-	{
-		result.value.doubleVal = RunningAveragePower(3);
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_POWER;
 		result.valid = m_numPowerReadings > 0;
@@ -265,13 +269,6 @@ SegmentType Cycling::CurrentSpeedFromWheelSpeed() const
 	return result;
 }
 
-double Cycling::RunningAveragePower(size_t numSamples) const
-{
-	size_t samplesToUse = m_lastTenPowerReadings.size() >= numSamples ? numSamples : m_lastTenPowerReadings.size();
-	double sum = std::accumulate(m_lastTenPowerReadings.end() - samplesToUse, m_lastTenPowerReadings.end(), 0);
-	return sum / samplesToUse;
-}
-
 double Cycling::DistanceFromWheelRevsInMeters() const
 {
 	return ((double)NumWheelRevolutions() * m_bike.computedWheelCircumferenceMm) / (double)1000.0;
@@ -313,8 +310,8 @@ void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_3_SEC_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER_3_SEC);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS);

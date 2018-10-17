@@ -20,11 +20,11 @@ void PowerDataCallback(size_t activityIndex, void* context)
 {
 	PowerLine* ptrToPowerChart = (__bridge PowerLine*)context;
 
-	ActivityAttributeType speedValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_POWER);
-	if (speedValue.valid)
+	ActivityAttributeType powerValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_3_SEC_POWER);
+	if (powerValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToPowerChart->points count]];
-		NSNumber* y = [[NSNumber alloc] initWithDouble:speedValue.value.doubleVal];
+		NSNumber* y = [[NSNumber alloc] initWithDouble:powerValue.value.doubleVal];
 
 		ChartPoint* point = [[ChartPoint alloc] initWithValues:x :y];
 		if (point)
