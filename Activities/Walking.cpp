@@ -54,21 +54,22 @@ bool Walking::ProcessAccelerometerReading(const SensorReading& reading)
 	{
 		if (reading.reading.count(AXIS_NAME_Y) > 0)
 		{
-			double value = reading.reading.at(AXIS_NAME_Y);
-			value += (double)10.0;	// make positive
-
-			m_graphLine.AppendValue(reading.time, value);
+			m_graphLine.push_back(LibMath::GraphPoint(reading.time, reading.reading.at(AXIS_NAME_Y)));
 			
-			GraphPeakList newPeaks = m_graphLine.FindNewPeaks();
-			GraphPeakList::iterator newPeakIter = newPeaks.begin();
-			while (newPeakIter != newPeaks.end())
+			if (m_lastPeakCalculationTime - reading.time > 1000)
 			{
-				GraphPeak& curPeak = (*newPeakIter);
-				if (curPeak.area > (double)50.0)
+				m_stepsTaken = 0;
+				
+				LibMath::GraphPeakList peaks = m_peakFinder.findPeaks(m_graphLine);
+				for (auto peakIter = peaks.begin(); peakIter != peaks.end(); ++peakIter)
 				{
-					++m_stepsTaken;
+					LibMath::GraphPeak& curPeak = (*peakIter);
+					if (curPeak.area > (double)40.0)
+					{
+						++m_stepsTaken;
+					}
 				}
-				++newPeakIter;
+				m_lastPeakCalculationTime = reading.time;
 			}
 		}
 	}

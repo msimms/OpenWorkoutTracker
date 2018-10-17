@@ -11,20 +11,11 @@
 #include <string>
 
 #include "Database.h"
-#include "GraphLine.h"
+#include "Peaks.h"
 #include "SensorReading.h"
 
-typedef struct GraphPeakAttrs
-{
-	double initialMean;
-	double initialStdDev;
-	double dataMean;
-	double dataStdDev;
-	double noiseMean;
-	double noiseStdDev;
-} GraphPeakAttrs;
-
-typedef std::map<std::string, GraphPeakAttrs> GraphPeakAttrsMap;
+typedef std::map<std::string, LibMath::GraphPeakList> GraphPeakListMap;
+typedef std::map<std::string, LibMath::GraphLine> GraphLineMap;
 typedef std::vector<std::string> AxisList;
 
 class GForceAnalyzer
@@ -33,29 +24,18 @@ public:
 	GForceAnalyzer();
 	virtual ~GForceAnalyzer();
 
-	void Train(const std::string& activityType, Database& database);
+	void Clear();
 
-	GraphPeakList ProcessAccelerometerReading(const SensorReading& reading);
+	LibMath::GraphPeakList ProcessAccelerometerReading(const SensorReading& reading);
 
 	virtual std::string PrimaryAxis() const = 0;
 	virtual std::string SecondaryAxis() const = 0;
 
-	virtual double DefaultPeakAreaMean(const std::string& axisName) const = 0;
-	virtual double DefaultPeakAreaStdDev(const std::string& axisName) const = 0;
-
 protected:
-	GraphPeakListMap  m_peaks;
-	GraphPeakAttrsMap m_data;
-	GraphLineMap      m_graphLines;
-
-protected:
-	double Probability(double peakArea, double mean, double stddev) const;
-	double ProbabilityOfMatchingInitialCondition(const std::string& axisName, double peakArea) const;
-	double ProbabilityOfBeingData(const std::string& axisName, double peakArea) const;
-	double ProbabilityOfBeingNoise(const std::string& axisName, double peakArea) const;
-
-	void ComputePeakListMeanAndStdDev(const GraphPeakList& list, double& mean, double& stddev) const;
-	bool IsData(const std::string& axisName, double peakArea) const;
+	GraphPeakListMap m_peaks;
+	GraphLineMap     m_graphLines;
+	LibMath::Peaks   m_peakFinder;
+	uint64_t         m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
 };
 
 #endif

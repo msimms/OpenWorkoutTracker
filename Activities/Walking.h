@@ -9,8 +9,8 @@
 #define __WALKING__
 
 #include "ActivityType.h"
-#include "GraphLine.h"
 #include "MovingActivity.h"
+#include "GForceAnalyzer.h"
 
 class Walking : public MovingActivity
 {
@@ -37,10 +37,12 @@ protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 	
 protected:
-	GraphLine m_graphLine;
-	uint16_t  m_stepsTaken;
-	double    m_lastAvgAltitudeM; // previous value of calling RunningAltitudeAverage(), for calorie calculation
-	double    m_currentCalories;
+	LibMath::GraphLine m_graphLine;
+	LibMath::Peaks     m_peakFinder;
+	uint64_t m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
+	uint16_t m_stepsTaken;
+	double   m_lastAvgAltitudeM; // previous value of calling RunningAltitudeAverage(), for calorie calculation
+	double   m_currentCalories;
 
 protected:
 	double CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& pt2);

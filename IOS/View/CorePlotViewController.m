@@ -88,7 +88,7 @@
 
 	// Axis line style.
 	CPTMutableLineStyle* axisLineStyle  = [CPTMutableLineStyle lineStyle];
-	axisLineStyle.lineWidth             = 2.0f;
+	axisLineStyle.lineWidth             = 3.0f;
 	axisLineStyle.lineColor             = [[CPTColor blackColor] colorWithAlphaComponent:1];
 
 	// Line style for the overlay lines.
@@ -99,8 +99,8 @@
 
 	// Line style for the main line.
 	CPTMutableLineStyle* lineStyle  = [CPTMutableLineStyle lineStyle];
-	lineStyle.miterLimit            = 1.0f;
-	lineStyle.lineWidth             = 1.0f;
+	lineStyle.miterLimit            = 2.0f;
+	lineStyle.lineWidth             = 2.0f;
 	lineStyle.lineColor             = [CPTColor blackColor];
 
 	NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];

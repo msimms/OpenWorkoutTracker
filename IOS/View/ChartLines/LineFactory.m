@@ -88,24 +88,34 @@
 	return list;
 }
 
-+ (ChartLine*)createLine:(NSString*)chartName withActivityId:(NSString*)activityId
++ (ChartLine*)createLine:(NSString*)chartName withActivityId:(NSString*)activityId withView:(CorePlotViewController*)view
 {
 	ChartLine* line = nil;
+
+	[view setShowMinLine:TRUE];
+	[view setShowMaxLine:TRUE];
+	[view setShowAvgLine:TRUE];
 
 	if ([chartName isEqualToString:@CHART_NAME_ACCELEROMETER_X])
 	{
 		line = [[AccelerometerLine alloc] init];
 		[(AccelerometerLine*)line setAxis:AXIS_X];
+		[view setShowMinLine:FALSE];
+		[view setShowMaxLine:FALSE];
 	}
 	else if ([chartName isEqualToString:@CHART_NAME_ACCELEROMETER_Y])
 	{
 		line = [[AccelerometerLine alloc] init];
 		[(AccelerometerLine*)line setAxis:AXIS_Y];
+		[view setShowMinLine:FALSE];
+		[view setShowMaxLine:FALSE];
 	}
 	else if ([chartName isEqualToString:@CHART_NAME_ACCELEROMETER_Z])
 	{
 		line = [[AccelerometerLine alloc] init];
 		[(AccelerometerLine*)line setAxis:AXIS_Z];
+		[view setShowMinLine:FALSE];
+		[view setShowMaxLine:FALSE];
 	}
 	else if ([chartName isEqualToString:@CHART_NAME_SPEED])
 	{
@@ -134,6 +144,7 @@
 	if (line)
 	{
 		[line setActivityId:activityId];
+		[line draw];
 	}
 	return line;
 }

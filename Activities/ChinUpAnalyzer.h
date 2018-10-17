@@ -18,9 +18,6 @@ public:
 
 	virtual std::string PrimaryAxis() const;
 	virtual std::string SecondaryAxis() const;
-	
-	virtual double DefaultPeakAreaMean(const std::string& axisName) const;
-	virtual double DefaultPeakAreaStdDev(const std::string& axisName) const;
 };
 
 #endif

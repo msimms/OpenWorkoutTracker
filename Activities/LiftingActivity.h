@@ -17,6 +17,9 @@ public:
 	LiftingActivity(GForceAnalyzer* const analyzer);
 	virtual ~LiftingActivity();
 
+	virtual bool Start();
+	virtual void Clear();
+	
 	virtual void SetGForceAnalyzer(GForceAnalyzer* const analyzer);
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
@@ -34,22 +37,16 @@ public:
 	virtual uint16_t Sets() const;
 	virtual time_t Pace() const;
 
-	virtual double GetPeakAreaMean() const;
-	virtual double GetPeakAreaStdDev() const;
-
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
 
 protected:
 	GForceAnalyzer* m_analyzer;
-	GraphPeakList   m_computedRepList;
-	uint16_t        m_repsCorrected;
-	uint16_t        m_sets;
-	uint64_t        m_lastRepTime;
-	uint64_t        m_restingTimeMs;
-	double          m_peakAreaTotal;
-	double          m_peakAreaMean;
-	double          m_peakAreaStdDev;
+	LibMath::GraphPeakList m_computedRepList;
+	uint16_t m_repsCorrected;
+	uint16_t m_sets;
+	uint64_t m_lastRepTime;
+	uint64_t m_restingTimeMs;
 
 protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);

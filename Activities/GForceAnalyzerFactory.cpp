@@ -19,12 +19,10 @@ GForceAnalyzerMap GForceAnalyzerFactory::m_analyzers;
 
 GForceAnalyzerFactory::GForceAnalyzerFactory()
 {
-
 }
 
 GForceAnalyzerFactory::~GForceAnalyzerFactory()
-{
-	
+{	
 }
 
 GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::string& type, Database& database)
@@ -46,11 +44,6 @@ GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::stri
 	else if (type.compare(Squat::Type()) == 0)
 	{
 		pAnalyzer = new SquatAnalyzer();
-	}
-
-	if (pAnalyzer)
-	{
-		pAnalyzer->Train(type, database);
 	}
 	return pAnalyzer;
 }

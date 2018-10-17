@@ -10,6 +10,7 @@
 		2704717A216D997000EE47FF /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
 		2704717B216D997000EE47FF /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047177216D997000EE47FF /* Peaks.cpp */; };
 		2704717C216D997000EE47FF /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047178216D997000EE47FF /* Distance.cpp */; };
+		2704717F216E253B00EE47FF /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
@@ -239,6 +240,8 @@
 		27047177216D997000EE47FF /* Peaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Peaks.cpp; path = LibMath/cpp/Peaks.cpp; sourceTree = SOURCE_ROOT; };
 		27047178216D997000EE47FF /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = LibMath/cpp/Distance.cpp; sourceTree = SOURCE_ROOT; };
 		27047179216D997000EE47FF /* Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Statistics.h; path = LibMath/cpp/Statistics.h; sourceTree = SOURCE_ROOT; };
+		2704717D216E253A00EE47FF /* KMeans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KMeans.h; path = LibMath/cpp/KMeans.h; sourceTree = SOURCE_ROOT; };
+		2704717E216E253B00EE47FF /* KMeans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KMeans.cpp; path = LibMath/cpp/KMeans.cpp; sourceTree = SOURCE_ROOT; };
 		27055BF11A73227300417D94 /* GoPro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GoPro.m; path = IOS/Sensors/GoPro.m; sourceTree = SOURCE_ROOT; };
 		27055BF61A7322AB00417D94 /* GoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GoPro.h; path = IOS/Sensors/GoPro.h; sourceTree = SOURCE_ROOT; };
 		27055BF71A7336D100417D94 /* WiFiDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiDiscovery.h; path = IOS/Sensors/WiFiDiscovery.h; sourceTree = SOURCE_ROOT; };
@@ -514,9 +517,6 @@
 		27C0842719BFD063007CE934 /* GForceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GForceAnalyzer.h; path = Activities/GForceAnalyzer.h; sourceTree = SOURCE_ROOT; };
 		27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GForceAnalyzerFactory.cpp; path = Activities/GForceAnalyzerFactory.cpp; sourceTree = SOURCE_ROOT; };
 		27C0842919BFD063007CE934 /* GForceAnalyzerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GForceAnalyzerFactory.h; path = Activities/GForceAnalyzerFactory.h; sourceTree = SOURCE_ROOT; };
-		27C0842A19BFD063007CE934 /* GraphLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphLine.h; path = Activities/GraphLine.h; sourceTree = SOURCE_ROOT; };
-		27C0842B19BFD063007CE934 /* GraphPeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphPeak.h; path = Activities/GraphPeak.h; sourceTree = SOURCE_ROOT; };
-		27C0842C19BFD063007CE934 /* GraphPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphPoint.h; path = Activities/GraphPoint.h; sourceTree = SOURCE_ROOT; };
 		27C0842D19BFD063007CE934 /* Hike.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hike.cpp; path = Activities/Hike.cpp; sourceTree = SOURCE_ROOT; };
 		27C0842E19BFD063007CE934 /* Hike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hike.h; path = Activities/Hike.h; sourceTree = SOURCE_ROOT; };
 		27C0842F19BFD063007CE934 /* IntervalWorkout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalWorkout.h; path = Activities/IntervalWorkout.h; sourceTree = SOURCE_ROOT; };
@@ -579,6 +579,8 @@
 			children = (
 				27047178216D997000EE47FF /* Distance.cpp */,
 				27047174216D996F00EE47FF /* Distance.h */,
+				2704717E216E253B00EE47FF /* KMeans.cpp */,
+				2704717D216E253A00EE47FF /* KMeans.h */,
 				27047177216D997000EE47FF /* Peaks.cpp */,
 				27047176216D997000EE47FF /* Peaks.h */,
 				27047175216D997000EE47FF /* Statistics.cpp */,
@@ -1070,9 +1072,6 @@
 				27C0842719BFD063007CE934 /* GForceAnalyzer.h */,
 				27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */,
 				27C0842919BFD063007CE934 /* GForceAnalyzerFactory.h */,
-				27C0842A19BFD063007CE934 /* GraphLine.h */,
-				27C0842B19BFD063007CE934 /* GraphPeak.h */,
-				27C0842C19BFD063007CE934 /* GraphPoint.h */,
 				27C0842D19BFD063007CE934 /* Hike.cpp */,
 				27C0842E19BFD063007CE934 /* Hike.h */,
 				27C0842F19BFD063007CE934 /* IntervalWorkout.h */,
@@ -1381,6 +1380,7 @@
 				27B7CD9E19BFD91C000383E3 /* MappedActivityViewController.m in Sources */,
 				27B7CDA919BFD91C000383E3 /* StaticSummaryViewController.m in Sources */,
 				2797F15019BFE3B7008F8672 /* BroadcastMessage.m in Sources */,
+				2704717F216E253B00EE47FF /* KMeans.cpp in Sources */,
 				27C0845619BFD063007CE934 /* Hike.cpp in Sources */,
 				27B7CD8D19BFD91C000383E3 /* CrumbPathRenderer.m in Sources */,
 				27B7CD9819BFD91C000383E3 /* LayoutStyleViewController.m in Sources */,

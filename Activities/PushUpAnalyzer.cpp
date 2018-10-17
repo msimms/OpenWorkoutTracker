@@ -25,25 +25,3 @@ std::string PushUpAnalyzer::SecondaryAxis() const
 {
 	return AXIS_NAME_Y;
 }
-
-double PushUpAnalyzer::DefaultPeakAreaMean(const std::string& axisName) const
-{
-	if (axisName.compare(AXIS_NAME_X) == 0)
-		return (double)84.14051958070185;
-	if (axisName.compare(AXIS_NAME_Y) == 0)
-		return (double)80.40113386626028;
-	if (axisName.compare(AXIS_NAME_Z) == 0)
-		return (double)75.2215750932148;
-	return (double)0.0;
-}
-
-double PushUpAnalyzer::DefaultPeakAreaStdDev(const std::string& axisName) const
-{
-	if (axisName.compare(AXIS_NAME_X) == 0)
-		return (double)53.01158711189985;
-	if (axisName.compare(AXIS_NAME_Y) == 0)
-		return (double)43.5654318887151;
-	if (axisName.compare(AXIS_NAME_Z) == 0)
-		return (double)48.70331505385085;
-	return (double)0.0;
-}

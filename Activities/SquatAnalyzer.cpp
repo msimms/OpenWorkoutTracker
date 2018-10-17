@@ -25,25 +25,3 @@ std::string SquatAnalyzer::SecondaryAxis() const
 {
 	return AXIS_NAME_Y;
 }
-
-double SquatAnalyzer::DefaultPeakAreaMean(const std::string& axisName) const
-{
-	if (axisName.compare(AXIS_NAME_X) == 0)
-		return (double)170.2819034923207;
-	if (axisName.compare(AXIS_NAME_Y) == 0)
-		return (double)140.9160338661887;
-	if (axisName.compare(AXIS_NAME_Z) == 0)
-		return (double)125.4988403320313;
-	return (double)0.0;
-}
-
-double SquatAnalyzer::DefaultPeakAreaStdDev(const std::string& axisName) const
-{
-	if (axisName.compare(AXIS_NAME_X) == 0)
-		return (double)41.16210640317168;
-	if (axisName.compare(AXIS_NAME_Y) == 0)
-		return (double)55.53704700994466;
-	if (axisName.compare(AXIS_NAME_Z) == 0)
-		return (double)62.73538815303598;
-	return (double)0.0;
-}

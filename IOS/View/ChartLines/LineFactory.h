@@ -9,11 +9,12 @@
 
 #import "ChartPoint.h"
 #import "ChartLine.h"
+#import "CorePlotViewController.h"
 
 @interface LineFactory : NSObject
 
 + (NSMutableArray*)getLineNames:(bool)hasGpsData withBool:(bool)hasAccelerometerData withBool:(bool)hasHeartRateData withBool:(bool)hasCadenceData withBool:(bool)hasPowerData;
 + (NSMutableArray*)getLineActivityTypes:(bool)hasGpsData withBool:(bool)hasAccelerometerData withBool:(bool)hasHeartRateData withBool:(bool)hasCadenceData withBool:(bool)hasPowerData;
-+ (ChartLine*)createLine:(NSString*)chartName withActivityId:(NSString*)activityId;
++ (ChartLine*)createLine:(NSString*)chartName withActivityId:(NSString*)activityId withView:(CorePlotViewController*)view;
 
 @end

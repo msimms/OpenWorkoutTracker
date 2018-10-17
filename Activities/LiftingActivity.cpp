@@ -13,15 +13,12 @@
 LiftingActivity::LiftingActivity(GForceAnalyzer* const analyzer)
 	:  m_analyzer(analyzer), Activity()
 {
-	m_repsCorrected = 0;
-	m_sets = 0;
-	m_lastRepTime = 0;
-	m_restingTimeMs = 0;
+	Clear();
 }
 
 LiftingActivity::~LiftingActivity()
 {
-	m_computedRepList.clear();
+	Clear();
 }
 
 void LiftingActivity::SetGForceAnalyzer(GForceAnalyzer* const analyzer)
@@ -30,6 +27,25 @@ void LiftingActivity::SetGForceAnalyzer(GForceAnalyzer* const analyzer)
 	{
 		m_analyzer = analyzer;
 	}
+}
+
+bool LiftingActivity::Start()
+{
+	Clear();
+	return Activity::Start();
+}
+
+void LiftingActivity::Clear()
+{
+	if (m_analyzer)
+	{
+		m_analyzer->Clear();
+	}
+	m_computedRepList.clear();
+	m_repsCorrected = 0;
+	m_sets = 0;
+	m_lastRepTime = 0;
+	m_restingTimeMs = 0;
 }
 
 void LiftingActivity::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
@@ -43,28 +59,30 @@ bool LiftingActivity::ProcessAccelerometerReading(const SensorReading& reading)
 	{
 		if (m_analyzer)
 		{
-			GraphPeakList dataPeaks = m_analyzer->ProcessAccelerometerReading(reading);
-			GraphPeakList::iterator dataPeaksIter = dataPeaks.begin();
-			while (dataPeaksIter != dataPeaks.end())
-			{
-				GraphPeak& curPeak = (*dataPeaksIter);
-				m_computedRepList.push_back(curPeak);
+			m_computedRepList = m_analyzer->ProcessAccelerometerReading(reading);
+			m_sets = 0;
+			m_lastRepTime = 0;
+			m_restingTimeMs = 0;
 
-				uint64_t elapsedTime = reading.time - m_lastRepTime;
-				if (elapsedTime > 1000)
+			for (auto peakIter = m_computedRepList.begin(); peakIter != m_computedRepList.end(); ++peakIter)
+			{
+				LibMath::GraphPeak& curPeak = (*peakIter);
+				uint64_t currentRepTime = curPeak.peak.x;
+				uint64_t timeSinceLastRep = currentRepTime - m_lastRepTime;
+
+				if (timeSinceLastRep > 1000)
 				{
 					if (m_lastRepTime > 0)
 					{
-						m_restingTimeMs += elapsedTime;
+						m_restingTimeMs += timeSinceLastRep;
 					}
-					if (elapsedTime > 100000)
+					if (timeSinceLastRep > 100000)
 					{
 						++m_sets;
 					}
 				}
 
-				m_lastRepTime = reading.time;
-				++dataPeaksIter;
+				m_lastRepTime = currentRepTime;
 			}
 		}
 	}
@@ -95,22 +113,14 @@ ActivityAttributeType LiftingActivity::QueryActivityAttribute(const std::string&
 		result.value.intVal = ComputedTotal();
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_COUNT;
-		result.valid = result.value.intVal > 0;
+		result.valid = true;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_REPS_CORRECTED) == 0)
 	{
 		result.value.intVal = CorrectedTotal();
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_COUNT;
-		result.valid = result.value.intVal > 0;
-	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_CURRENT_PACE) == 0)
-	{
-		uint16_t total = Total();
-		result.value.timeVal = Pace();
-		result.valueType = TYPE_TIME;
-		result.measureType = MEASURE_TIME;
-		result.valid = total > 0;
+		result.valid = true;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_SETS) == 0)
 	{
@@ -129,7 +139,7 @@ ActivityAttributeType LiftingActivity::QueryActivityAttribute(const std::string&
 			
 			if ((num > 0) && (num <= m_computedRepList.size()))
 			{
-				GraphPeak peak = m_computedRepList.at(num - 1);
+				LibMath::GraphPeak peak = m_computedRepList.at(num - 1);
 				result.valueType = TYPE_INTEGER;
 				result.measureType = MEASURE_INDEX;
 				result.value.intVal = 0;
@@ -144,22 +154,6 @@ ActivityAttributeType LiftingActivity::QueryActivityAttribute(const std::string&
 		{
 			result.valid = false;
 		}
-	}
-	else if (attributeName.find(ACTIVITY_ATTRIBUTE_MEAN_PEAK_AREA) == 0)
-	{
-		uint16_t total = Total();
-		result.value.doubleVal = GetPeakAreaMean();
-		result.valueType = TYPE_DOUBLE;
-		result.measureType = MEASURE_NOT_SET;
-		result.valid = total > 0;
-	}
-	else if (attributeName.find(ACTIVITY_ATTRIBUTE_STDDEV_PEAK_AREA) == 0)
-	{
-		uint16_t total = Total();
-		result.value.doubleVal = GetPeakAreaStdDev();
-		result.valueType = TYPE_DOUBLE;
-		result.measureType = MEASURE_NOT_SET;
-		result.valid = total > 0;
 	}
 	else
 	{
@@ -195,50 +189,6 @@ time_t LiftingActivity::Pace() const
 		return ElapsedTimeInSeconds() / total;
 	}
 	return 0;
-}
-
-double LiftingActivity::GetPeakAreaMean() const
-{
-	double mean = (double)0.0;
-
-	if (m_computedRepList.size() > 0)
-	{
-		GraphPeakList::const_iterator dataPeaksIter = m_computedRepList.begin();
-		while (dataPeaksIter != m_computedRepList.end())
-		{
-			const GraphPeak& curPeak = (*dataPeaksIter);
-			mean += curPeak.area;
-			++dataPeaksIter;
-		}
-		mean /= m_computedRepList.size();
-	}
-	return mean;
-}
-
-double LiftingActivity::GetPeakAreaStdDev() const
-{
-	double stdDev = (double)0.0;
-
-	if (m_computedRepList.size() > 0)
-	{
-		double mean = GetPeakAreaMean();
-
-		if (mean > (double)0.01)
-		{
-			GraphPeakList::const_iterator dataPeaksIter = m_computedRepList.begin();
-			while (dataPeaksIter != m_computedRepList.end())
-			{
-				const GraphPeak& curPeak = (*dataPeaksIter);
-				double temp = curPeak.area - mean;
-				temp *= temp;
-				stdDev += temp;
-				++dataPeaksIter;
-			}
-			stdDev /= m_computedRepList.size();
-			stdDev = sqrt(stdDev);
-		}
-	}
-	return stdDev;
 }
 
 void LiftingActivity::BuildAttributeList(std::vector<std::string>& attributes) const

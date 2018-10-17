@@ -337,14 +337,10 @@ typedef enum ExportFileTypeButtons
 		CorePlotViewController* plotVC = (CorePlotViewController*)[segue destinationViewController];
 		if (plotVC)
 		{
-			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId];
+			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId withView:plotVC];
 			if (line)
 			{
-				[line draw];
 				[plotVC appendChartLine:line withXLabel:TIME withYLabel:self->selectedRowStr];
-				[plotVC setShowMinLine:TRUE];
-				[plotVC setShowMaxLine:TRUE];
-				[plotVC setShowAvgLine:TRUE];
 				[plotVC setTitle:self->selectedRowStr];
 			}
 		}
