@@ -22,7 +22,6 @@
 
 @synthesize attrTableView;
 @synthesize mapButton;
-@synthesize spinner;
 @synthesize leftSwipe;
 @synthesize rightSwipe;
 
@@ -41,8 +40,6 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
-	[self.spinner stopAnimating];
-
 	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
 	self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
 	[[self view] addGestureRecognizer:self.leftSwipe];
@@ -53,7 +50,6 @@
 
 	[self.mapButton setTitle:STR_MAP];
 }
-
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -71,7 +67,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-	[self.spinner stopAnimating];
 }
 
 - (BOOL)shouldAutorotate
@@ -86,17 +81,6 @@
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
 {
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
-{
-	if ([[segue identifier] isEqualToString:@SEGUE_TO_LIVE_MAP_VIEW])
-	{
-		self.spinner.hidden = FALSE;
-		self.spinner.center = self.view.center;
-		[self.spinner startAnimating];
-	}
-	[super prepareForSegue:segue sender:sender];
 }
 
 #pragma mark button handlers
@@ -146,7 +130,10 @@
 
 - (void)onRefreshTimer:(NSTimer*)timer
 {
-	[self.attrTableView reloadData];
+	if (!(attrTableView.isDragging || attrTableView.isTracking))
+	{
+		[self.attrTableView reloadData];
+	}
 	[super onRefreshTimer:timer];
 }
 

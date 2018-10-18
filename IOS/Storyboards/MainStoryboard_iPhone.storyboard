@@ -1797,15 +1797,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="quJ-1G-jU0">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="2uT-mo-S6M" id="CN7-bJ-UaB"/>
-                                    <outlet property="delegate" destination="2uT-mo-S6M" id="id7-Al-3Lw"/>
-                                </connections>
-                            </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="B6A-yM-QsV">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -1818,10 +1809,15 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" id="aBL-Er-Wbk">
-                                <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </activityIndicatorView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="quJ-1G-jU0">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="2uT-mo-S6M" id="9ep-q0-hiq"/>
+                                    <outlet property="delegate" destination="2uT-mo-S6M" id="IhA-fg-5tT"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -1837,14 +1833,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="attrTableView" destination="quJ-1G-jU0" id="z9E-MX-eGR"/>
+                        <outlet property="attrTableView" destination="quJ-1G-jU0" id="Ly2-eh-Wy0"/>
                         <outlet property="leftSwipe" destination="0bA-x0-UdY" id="Iyy-bC-Uoh"/>
                         <outlet property="mapButton" destination="gcD-fm-X6j" id="9PX-ic-97t"/>
                         <outlet property="navItem" destination="peu-un-pCT" id="xaX-5R-6Kt"/>
                         <outlet property="rightSwipe" destination="YmB-iS-Fdy" id="gnA-df-WUO"/>
-                        <outlet property="spinner" destination="aBL-Er-Wbk" id="2dw-SA-h6d"/>
                         <outlet property="startStopButton" destination="D1T-Y2-TQK" id="uQT-qf-s2R"/>
                         <outlet property="toolbar" destination="B6A-yM-QsV" id="oCr-uB-yvC"/>
+                        <outlet property="view" destination="WBa-ha-auX" id="jsm-cr-X5l"/>
                         <segue destination="QwX-jv-wQc" kind="push" identifier="SegueToLiveMapView" id="p2F-p9-PZz"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="YPO-0d-PeY"/>
                     </connections>
@@ -2206,12 +2202,12 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="SimpleScreen.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qkZ-Lo-zIf"/>
-        <segue reference="rmC-zq-awJ"/>
+        <segue reference="PRo-Bb-13x"/>
+        <segue reference="2hX-Kx-fHg"/>
         <segue reference="Y2u-2b-CLK"/>
-        <segue reference="D1W-a8-Nen"/>
-        <segue reference="mpc-lI-yFA"/>
-        <segue reference="PhW-xp-et3"/>
+        <segue reference="YPO-0d-PeY"/>
+        <segue reference="YOw-2o-8H3"/>
+        <segue reference="JTB-vA-I5O"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

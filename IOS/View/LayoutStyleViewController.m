@@ -27,7 +27,6 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 }
 
-
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];

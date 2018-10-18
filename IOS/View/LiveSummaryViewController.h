@@ -31,7 +31,6 @@
 
 @property (nonatomic, retain) IBOutlet UITableView* attrTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* mapButton;
-@property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 @property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* leftSwipe;
 @property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
