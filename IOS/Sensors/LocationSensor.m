@@ -22,8 +22,8 @@
 		self.locationManager = [[CLLocationManager alloc] init];
 		self.locationManager.delegate = self;
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
 		self.locationManager.activityType = CLActivityTypeFitness;
+		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
 		self.locationManager.allowsBackgroundLocationUpdates = YES;
 	}
 	return self;
@@ -68,6 +68,8 @@
 			break;
 		case kCLAuthorizationStatusAuthorizedAlways:
 			[self.locationManager startUpdatingLocation];
+			self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
+			self.locationManager.allowsBackgroundLocationUpdates = YES;
 			break;
 		default:
 			break;
