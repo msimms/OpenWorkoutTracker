@@ -5,6 +5,7 @@ Straen is an open source workout tracker. It was initially written as a bike com
 Why develop a workout tracker when there are so many closed-source options available?
 * The existing apps function poorly as bike computers, in my opinion. Using the phone as a bike computer makes a lot of sense, since dedicated bike computers are expensive and you probably have your phone with you anyway.
 * Lack of support for strength-based exercises.
+* Other applications require you to create an account to do anything.
 * I think users should have control over their own data and this is only possible with an open source application.
 
 ## Major Features
