@@ -13,6 +13,7 @@
 	IBOutlet UITableView* peripheralTableView;
 
 	NSMutableArray* discoveredHRMs;
+	NSMutableArray* discoveredScales;
 	NSMutableArray* discoveredCadenceWheelSpeedSensors;
 	NSMutableArray* discoveredPowerMeters;
 	NSMutableArray* discoveredFootPods;

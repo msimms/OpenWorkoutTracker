@@ -33,6 +33,7 @@
 #define NAME_CADENCE_WHEEL_SPEED    NSLocalizedString(@"Bicycle Speed and Cadence", nil)
 #define NAME_POWER_METER            NSLocalizedString(@"Bicycle Power Meter", nil)
 #define NAME_FOOT_POD               NSLocalizedString(@"Running Speed and Cadence", nil)
+#define NAME_SCALE                  NSLocalizedString(@"Scale", nil)
 
 typedef enum SettingsSections
 {
@@ -41,6 +42,7 @@ typedef enum SettingsSections
 	SECTION_CADENCE_WHEEL_SPEED,
 	SECTION_POWER_METER,
 	SECTION_FOOT_POD,
+	SECTION_SCALE,
 	SECTION_GO_PRO,
 	NUM_SETTINGS_SECTIONS
 } SettingsSections;
@@ -143,6 +145,11 @@ typedef enum SettingsSections
 		else
 			[appDelegate stopSensorDiscovery];
 	}
+	else if (switchControl.tag >= (SECTION_SCALE * 100))
+	{
+		NSUInteger index = switchControl.tag - (SECTION_SCALE * 100);
+		peripheral = [self->discoveredScales objectAtIndex:index];
+	}
 	else if (switchControl.tag >= (SECTION_FOOT_POD * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_FOOT_POD * 100);
@@ -211,6 +218,8 @@ typedef enum SettingsSections
 			return ([self->discoveredPowerMeters count] > 0) ? NAME_POWER_METER : @"";
 		case SECTION_FOOT_POD:
 			return ([self->discoveredFootPods count] > 0) ? NAME_FOOT_POD : @"";
+		case SECTION_SCALE:
+			return ([self->discoveredScales count] > 0) ? NAME_SCALE : @"";
 		case SECTION_GO_PRO:
 			break;
 		case NUM_SETTINGS_SECTIONS:
@@ -238,6 +247,9 @@ typedef enum SettingsSections
 		case SECTION_FOOT_POD:
 			self->discoveredFootPods = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
 			return [self->discoveredFootPods count];
+		case SECTION_SCALE:
+			self->discoveredScales = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_WEIGHT];
+			return [self->discoveredScales count];
 		case SECTION_GO_PRO:
 			break;
 		case NUM_SETTINGS_SECTIONS:
@@ -318,8 +330,21 @@ typedef enum SettingsSections
 				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchView;
 				cell.textLabel.text = [[self->discoveredFootPods objectAtIndex:row] name];
-
+				
 				CBPeripheral* peripheral = [self->discoveredFootPods objectAtIndex:row];
+				NSString* idStr = [[peripheral identifier] UUIDString];
+				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
+				[switchView setTag:(section * 100) + row];
+				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+			}
+			break;
+		case SECTION_SCALE:
+			{
+				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
+				cell.accessoryView = switchView;
+				cell.textLabel.text = [[self->discoveredScales objectAtIndex:row] name];
+				
+				CBPeripheral* peripheral = [self->discoveredScales objectAtIndex:row];
 				NSString* idStr = [[peripheral identifier] UUIDString];
 				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
 				[switchView setTag:(section * 100) + row];
