@@ -76,7 +76,7 @@
 
 	if (responseCode && [responseCode intValue] == 200)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_OK
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_AUTHENTICATION
 																				 message:MSG_SUCCESSFUL_LOGIN
 																		  preferredStyle:UIAlertControllerStyleAlert];           
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {

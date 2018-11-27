@@ -10,6 +10,7 @@
 #define STR_NO                NSLocalizedString(@"No", nil)
 #define STR_ON                NSLocalizedString(@"On", nil)
 #define STR_OFF               NSLocalizedString(@"Off", nil)
+#define STR_AUTHENTICATION    NSLocalizedString(@"Authentication", nil)
 #define STR_CAUTION           NSLocalizedString(@"Caution", nil)
 #define STR_CONTINUE          NSLocalizedString(@"Continue", nil)
 #define STR_CANCEL            NSLocalizedString(@"Cancel", nil)
