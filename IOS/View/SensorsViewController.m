@@ -12,6 +12,7 @@
 #import "LeFootPod.h"
 #import "LeHeartRateMonitor.h"
 #import "LePowerMeter.h"
+#import "LeScale.h"
 #import "Preferences.h"
 #import "Segues.h"
 #import "StringUtils.h"
@@ -86,6 +87,7 @@ typedef enum SettingsSections
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self->peripheralTableView reloadData];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cadenceUpdated:) name:@NOTIFICATION_NAME_BIKE_CADENCE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wheelSpeedUpdated:) name:@NOTIFICATION_NAME_BIKE_WHEEL_SPEED object:nil];
@@ -376,6 +378,24 @@ typedef enum SettingsSections
 }
 
 #pragma mark sensor update methods
+
+- (void)weightUdpated:(NSNotification*)notification
+{
+	NSDictionary* data = [notification object];
+	if (data)
+	{
+		NSObject* peripheral = [data objectForKey:@KEY_NAME_SCALE_PERIPHERAL_OBJ];
+		NSNumber* value = [data objectForKey:@KEY_NAME_WEIGHT_KG];
+		if (peripheral && value)
+		{
+			NSInteger row = [self->discoveredScales indexOfObject:peripheral];
+			NSUInteger newIndex[] = { SECTION_SCALE, row };
+			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
+			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
+		}
+	}
+}
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {

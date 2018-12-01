@@ -126,6 +126,11 @@ typedef struct HeartRateMeasurement
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
+	if (characteristic == nil)
+	{
+		return;
+	}
+	
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_HEART_RATE_MEASUREMENT])
 	{
 		if (characteristic.value || !error)

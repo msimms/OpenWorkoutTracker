@@ -11,9 +11,11 @@
 #import "CadenceCalculator.h"
 #import "LeBluetoothSensor.h"
 
-#define NOTIFICATION_NAME_WEIGHT_UPDATED "WeightUpdated"
-#define KEY_NAME_WEIGHT_KG               "WeightKg"
-#define KEY_NAME_TIME                    "Time"
+#define NOTIFICATION_NAME_LIVE_WEIGHT_READING       "LiveWeightReading"
+#define NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING "HistoricalWeightReading"
+#define KEY_NAME_WEIGHT_KG                          "WeightKg"
+#define KEY_NAME_TIME                               "Time"
+#define KEY_NAME_SCALE_PERIPHERAL_OBJ               "Peripheral"
 
 @interface LeScale : LeBluetoothSensor
 {

@@ -121,6 +121,10 @@
 {
 }
 
+- (void)peripheral:(CBPeripheral*)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices
+{
+}
+
 #pragma mark utility methods
 
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withBTChar:(BluetoothCharacteristic)char2

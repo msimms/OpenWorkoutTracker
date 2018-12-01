@@ -163,6 +163,11 @@ typedef struct RevMeasurement
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
+	if (characteristic == nil)
+	{
+		return;
+	}
+	
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CSC_MEASUREMENT])
 	{
 		if (characteristic.value || !error)

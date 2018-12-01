@@ -169,7 +169,7 @@
 										  [NSNumber numberWithDouble:usersWeight],@KEY_NAME_WEIGHT_KG,
 										  [NSNumber numberWithLongLong:time(NULL)],@KEY_NAME_TIME,
 										  nil];
-			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_WEIGHT_UPDATED object:weightData];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:weightData];
 		}
 	 }];
 }

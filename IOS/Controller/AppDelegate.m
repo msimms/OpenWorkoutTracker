@@ -81,8 +81,8 @@
 	self->sensorMgr = [SensorMgr sharedInstance];
 	if (self->sensorMgr)
 	{
-		[self->sensorMgr addSensor:(accelerometerController)];
-		[self->sensorMgr addSensor:(locationController)];
+		[self->sensorMgr addSensor:accelerometerController];
+		[self->sensorMgr addSensor:locationController];
 	}
 
 	self->activityPrefs = [[ActivityPreferences alloc] init];
@@ -94,7 +94,7 @@
 	self->lastWheelSpeedUpdateTime = 0;
 	self->lastPowerUpdateTime = 0;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightUpdated:) name:@NOTIFICATION_NAME_WEIGHT_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
@@ -565,14 +565,13 @@ void startSensorCallback(SensorType type, void* context)
 {
 	if (self->sensorMgr)
 	{
-		[self->sensorMgr stopSensors];
 		GetUsableSensorTypes(startSensorCallback, (__bridge void*)self->sensorMgr);
 	}
 }
 
 #pragma mark sensor update methods
 
-- (void)weightUpdated:(NSNotification*)notification
+- (void)weightHistoryUpdated:(NSNotification*)notification
 {
 	NSDictionary* weightData = [notification object];
 

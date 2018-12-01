@@ -85,7 +85,12 @@ typedef enum BluetoothCharacteristic
 	BT_CHARACTERISTIC_CYCLING_POWER_VECTOR =                                0x2A64,
 	BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_FEATURE =                       0x2A65,
 	BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_POINT =                         0x2A66,
-	BT_CHARACTERISTIC_WEIGHT_MEASUREMENT =                                  0x2B01
+	BT_CHARACTERISTIC_WEIGHT =                                              0x2A98,	
+	BT_CHARACTERISTIC_WEIGHT_MEASUREMENT =                                  0x2A9D,
+	BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE =                                0x2A9E,
+	BT_CHARACTERISTIC_WEIGHT_LIVE =                                         0x2B01
+	
 } BluetoothCharacteristic;
 
 #endif
+

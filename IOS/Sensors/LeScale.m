@@ -7,11 +7,37 @@
 
 #import "LeScale.h"
 
-typedef struct ScaleReading
+typedef struct TimeDateReading
 {
-    uint16_t flags;
-	uint32_t weight;
-} __attribute__((packed)) ScaleReading;
+	uint16_t year;
+	uint8_t month;
+	uint8_t day;
+	uint8_t hour;
+	uint8_t minute;
+	uint8_t second;
+} __attribute__((packed)) TimeDateReading;
+
+typedef struct Weight
+{
+	uint32_t weight; // Unit is in kilograms with a resolution of 0.005
+} __attribute__((packed)) Weight;
+
+typedef struct WeightMeasurement
+{
+	uint8_t flags;
+	uint16_t weightSI; // Unit is in kilograms with a resolution of 0.005
+	uint16_t weightImperial; // Unit is in pounds with a resolution of 0.01
+	uint8_t userId;
+	TimeDateReading timeDate;
+	uint16_t bmi; // Unit is unitless with a resolution of 0.1
+	uint16_t heightSI; // Unit is in meters with a resolution of 0.001
+	uint16_t heightImperial; // Unit is in inches with a resolution of 0.1,
+} __attribute__((packed)) WeightMeasurement;
+
+typedef struct WeightScaleFeature
+{
+	uint32_t flags;
+} __attribute__((packed)) WeightScaleFeature;
 
 @implementation LeScale
 
@@ -58,10 +84,37 @@ typedef struct ScaleReading
 
 #pragma mark CBPeripheral methods
 
+- (void)updateWithScaleFeature:(NSData*)data
+{
+	if (data && ([data length] >= sizeof(WeightScaleFeature)))
+	{
+//		const WeightScaleFeature* reportData = [data bytes];
+	}
+}
+
+- (void)updateWithWeightMeasurementData:(NSData*)data
+{
+	if (data && ([data length] >= sizeof(WeightMeasurement)))
+	{
+//		const WeightMeasurement* reportData = [data bytes];
+//		uint32_t weight = CFSwapInt16LittleToHost(reportData->weightSI);
+	}
+}
+
 - (void)updateWithWeightData:(NSData*)data
 {
-	if (data && ([data length] >= sizeof(ScaleReading)))
+	if (data && ([data length] >= sizeof(Weight)))
 	{
+		const Weight* reportData = [data bytes];
+		float weightKg = (float)CFSwapInt32LittleToHost(reportData->weight) / (float)1000.0;
+		NSDictionary* weightData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									   [NSNumber numberWithFloat:weightKg], @KEY_NAME_WEIGHT_KG,
+									   self->peripheral, @KEY_NAME_SCALE_PERIPHERAL_OBJ,
+									   nil];
+		if (weightData)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:weightData];
+		}
 	}
 }
 
@@ -71,15 +124,33 @@ typedef struct ScaleReading
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
-	if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT])
+	if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT_SCALE])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT])
+			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE])
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
+			else if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT])
+			{
+				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
+			}
+			else if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
+			{
+				[self->peripheral readValueForCharacteristic:aChar];
+			}
+		}
+	}
+	else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT])
+	{
+		for (CBCharacteristic* aChar in service.characteristics)
+		{
+			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT])
+			{
+				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
+			}
+			else if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
 			{
 				[self->peripheral readValueForCharacteristic:aChar];
 			}
@@ -89,11 +160,30 @@ typedef struct ScaleReading
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
-	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT])
+	if (characteristic == nil)
+	{
+		return;
+	}
+	
+	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE])
 	{
 		if (characteristic.value || !error)
 		{
-            [self updateWithWeightData:characteristic.value];
+			[self updateWithScaleFeature:characteristic.value];
+		}
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT])
+	{
+		if (characteristic.value || !error)
+		{
+			[self updateWithWeightMeasurementData:characteristic.value];
+		}
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
+	{
+		if (characteristic.value || !error)
+		{
+			[self updateWithWeightData:characteristic.value];
 		}
 	}
 }

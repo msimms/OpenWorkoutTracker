@@ -112,7 +112,7 @@
 - (void)stopSensors;
 - (void)startSensors;
 
-- (void)weightUpdated:(NSNotification*)notification;
+- (void)weightHistoryUpdated:(NSNotification*)notification;
 - (void)accelerometerUpdated:(NSNotification*)notification;
 - (void)locationUpdated:(NSNotification*)notification;
 - (void)heartRateUpdated:(NSNotification*)notification;

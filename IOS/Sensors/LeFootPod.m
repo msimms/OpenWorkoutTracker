@@ -148,6 +148,11 @@ typedef struct rsc_measurement
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
+	if (characteristic == nil)
+	{
+		return;
+	}
+	
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_RSC_MEASUREMENT])
 	{
 		if (characteristic.value || !error)
