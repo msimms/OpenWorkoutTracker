@@ -56,19 +56,10 @@ bool Walking::ProcessAccelerometerReading(const SensorReading& reading)
 		{
 			m_graphLine.push_back(LibMath::GraphPoint(reading.time, reading.reading.at(AXIS_NAME_Y)));
 			
-			if (reading.time - m_lastPeakCalculationTime > 3000)
+			if (reading.time - m_lastPeakCalculationTime > 5000)
 			{
-				m_stepsTaken = 0;
-				
-				LibMath::GraphPeakList peaks = m_peakFinder.findPeaks(m_graphLine);
-				for (auto peakIter = peaks.begin(); peakIter != peaks.end(); ++peakIter)
-				{
-					const LibMath::GraphPeak& curPeak = (*peakIter);
-					if (curPeak.area > (double)40.0)
-					{
-						++m_stepsTaken;
-					}
-				}
+				LibMath::GraphPeakList peaks = m_peakFinder.findPeaksOfSize(m_graphLine, (double)40.0);
+				m_stepsTaken = peaks.size();
 				m_lastPeakCalculationTime = reading.time;
 			}
 		}
