@@ -35,4 +35,4 @@ The app is written in a combination of Objective-C and C++ and targets the Apple
 Twitter: [@StraenApp](https://twitter.com/StraenApp)
 
 ## License
-MPL 2.0 (Mozilla Public License)
+MPL 2.0 (Mozilla Public License) - There are no restrictions for non-commercial use (i.e. personal or academic). Commercial use of the code in this repository is prohibited by the MPL 2.0 license; however, I still posses the original, unlicensed version of the repository, for whatever that is worth.
