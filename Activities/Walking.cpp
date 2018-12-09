@@ -28,6 +28,24 @@ void Walking::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 	MovingActivity::ListUsableSensors(sensorTypes);
 }
 
+bool Walking::Stop()
+{
+	CalculateStepsTaken();
+	return Activity::Stop();
+}
+
+void Walking::Pause()
+{
+	CalculateStepsTaken();
+	Activity::Pause();
+}
+
+void Walking::OnFinishedLoadingSensorData()
+{
+	CalculateStepsTaken();
+	Activity::OnFinishedLoadingSensorData();
+}
+
 bool Walking::ProcessGpsReading(const SensorReading& reading)
 {
 	bool result = false;
@@ -56,11 +74,14 @@ bool Walking::ProcessAccelerometerReading(const SensorReading& reading)
 		{
 			m_graphLine.push_back(LibMath::GraphPoint(reading.time, reading.reading.at(AXIS_NAME_Y)));
 			
-			if (reading.time - m_lastPeakCalculationTime > 5000)
+			time_t endTime = GetEndTimeSecs();
+			if (endTime == 0) // Activity is in progress; if loading from the database we'll do all the calculations at the end.
 			{
-				LibMath::GraphPeakList peaks = m_peakFinder.findPeaksOfSize(m_graphLine, (double)40.0);
-				m_stepsTaken = peaks.size();
-				m_lastPeakCalculationTime = reading.time;
+				if (reading.time - m_lastPeakCalculationTime > 5000)
+				{
+					CalculateStepsTaken();
+					m_lastPeakCalculationTime = reading.time;
+				}
 			}
 		}
 	}
@@ -153,4 +174,10 @@ void Walking::BuildSummaryAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_MARATHON);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_HALF_MARATHON);
 	MovingActivity::BuildSummaryAttributeList(attributes);
+}
+
+void Walking::CalculateStepsTaken()
+{
+	LibMath::GraphPeakList peaks = m_peakFinder.findPeaksOfSize(m_graphLine, (double)40.0);
+	m_stepsTaken = peaks.size();
 }

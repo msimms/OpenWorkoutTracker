@@ -857,6 +857,8 @@ extern "C" {
 						result = false;
 					}
 				}
+				
+				summary.pActivity->OnFinishedLoadingSensorData();
 			}
 			else
 			{

@@ -39,7 +39,6 @@ public:
 	virtual std::string GetType() const = 0;
 
 	virtual void SetAthleteProfile(const User& athlete) { m_athlete = athlete; };
-
 	virtual void SetIntervalWorkout(const IntervalWorkout& workout) { m_intervalWorkout = workout; };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const = 0;
@@ -65,6 +64,7 @@ public:
 	virtual bool HasStopped() const { return GetEndTimeSecs() != 0; };
 
 	virtual bool ProcessSensorReading(const SensorReading& reading);
+	virtual void OnFinishedLoadingSensorData() {}; // Called when done loading sensor data from the database
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 	virtual void SetActivityAttribute(const std::string& attributeName, ActivityAttributeType attributeValue);

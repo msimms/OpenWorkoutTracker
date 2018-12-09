@@ -23,6 +23,11 @@ public:
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
+	virtual bool Stop();
+	virtual void Pause();
+
+	virtual void OnFinishedLoadingSensorData();
+
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
 	virtual double CaloriesBurned() const;
@@ -46,6 +51,7 @@ protected:
 
 protected:
 	double CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& pt2);
+	void CalculateStepsTaken();
 };
 
 #endif
