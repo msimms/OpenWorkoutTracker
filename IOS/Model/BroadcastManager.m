@@ -57,6 +57,7 @@
 	NSString* protocolStr = [Preferences broadcastProtocol];
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", protocolStr, hostName, path];
 	NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[data length]];
+
 	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 	request.timeoutInterval = 30.0;
 	[request setURL:[NSURL URLWithString:urlStr]];
@@ -64,7 +65,7 @@
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
 	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPBody:data];
-	
+
 	self->dataBeingSent = data;
 
 	NSURLSession* session = [NSURLSession sharedSession];
@@ -94,7 +95,7 @@
 		NSLog(@"Broadcast host name not specified.");
 		return;
 	}
-	
+
 	// Still waiting on last data to be sent.
 	if (self->dataBeingSent)
 	{
@@ -107,6 +108,7 @@
 		{
 			NSLog(@"Waiting on previous data to be sent.");
 		}
+		self->lastCacheFlush = time(NULL);
 		return;
 	}
 
