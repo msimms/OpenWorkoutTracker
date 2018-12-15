@@ -74,7 +74,7 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate requestToFollow:[field text]];
+		[appDelegate requestToFollowAsync:[field text]];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
@@ -83,19 +83,34 @@
 
 - (void)userListUpdated:(NSNotification*)notification
 {
-	@synchronized(self->users)
+	NSDictionary* data = [notification object];
+	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
+	NSString* responseDataStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+	if ([responseCode intValue] == 200)
 	{
+		@synchronized(self->users)
+		{
+		}
+		
+		[self.usersTableView reloadData];
 	}
-
-	[self.usersTableView reloadData];
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:responseDataStr];
+	}
 }
 
 - (void)requestResult:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
+	NSString* responseDataStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
 	if ([responseCode intValue] == 200)
 	{
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:responseDataStr];
 	}
 }
 

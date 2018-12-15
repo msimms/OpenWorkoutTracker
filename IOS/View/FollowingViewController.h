@@ -6,8 +6,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface FollowingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface FollowingViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate>
 {
 	IBOutlet UITableView* usersTableView;
 	NSMutableArray*       users;

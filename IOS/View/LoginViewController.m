@@ -90,17 +90,17 @@
 	}
 	else
 	{
-		NSData* data = [loginData objectForKey:@KEY_NAME_DATA];
-		if (data && [data length] > 0)
+		NSString* responseDataStr = [loginData objectForKey:@KEY_NAME_RESPONSE_STR];
+		if (responseDataStr && [responseDataStr length] > 0)
 		{
-			NSString* dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-			[super showOneButtonAlert:STR_ERROR withMsg:dataStr];
+			[super showOneButtonAlert:STR_ERROR withMsg:responseDataStr];
 		}
 		else
 		{
 			[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOGIN_FAILED];
 		}
 	}
+
 	[self.spinner stopAnimating];
 }
 

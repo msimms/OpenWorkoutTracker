@@ -41,6 +41,9 @@
 #define STR_TAGS              NSLocalizedString(@"Tags", nil)
 #define STR_NEW_TAG           NSLocalizedString(@"New Tag", nil)
 
+#define STR_LOGIN             NSLocalizedString(@"Login", nil)
+#define STR_LOGOUT            NSLocalizedString(@"Log Out", nil)
+
 #define STR_RESET_PREFS       NSLocalizedString(@"Reset Settings", nil)
 #define STR_RESET_DATA        NSLocalizedString(@"Reset Data", nil)
 

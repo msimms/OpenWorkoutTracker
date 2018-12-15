@@ -28,6 +28,8 @@
 #define NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED "FollowedByListUpdated"
 #define NOTIFICATION_NAME_LOGIN_PROCESSED          "LoginProcessed"
 #define NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED   "CreateLoginProcessed"
+#define NOTIFICATION_NAME_LOGIN_CHECKED            "LoginChecked"
+#define NOTIFICATION_NAME_LOGGED_OUT               "LogoutProcessed"
 #define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
 #define NOTIFICATION_NAME_TAG_CREATED              "TagCreated"
 
@@ -38,6 +40,7 @@
 #define KEY_NAME_DISTANCE                          "Distance"
 #define KEY_NAME_CALORIES                          "Calories"
 #define KEY_NAME_RESPONSE_CODE                     "ResponseCode"
+#define KEY_NAME_RESPONSE_STR                      "ResponseStr"
 #define KEY_NAME_DATA                              "Data"
 #define KEY_NAME_URL                               "URL"
 #define KEY_NAME_TAG                               "Tag"
@@ -71,8 +74,6 @@
 	time_t               lastCadenceUpdateTime;
 	time_t               lastWheelSpeedUpdateTime;
 	time_t               lastPowerUpdateTime;
-	
-	NSMutableDictionary* downloadedData;
 }
 
 - (NSString*)getUuid;
@@ -179,9 +180,11 @@
 
 - (BOOL)login:(NSString*)username withPassword:(NSString*)password;
 - (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
+- (BOOL)isLoggedInAsync;
+- (BOOL)logoutAsync;
 - (BOOL)listFollowingAsync;
 - (BOOL)listFollowedByAsync;
-- (BOOL)requestToFollow:(NSString*)targetUsername;
+- (BOOL)requestToFollowAsync:(NSString*)targetUsername;
 
 @property (strong, nonatomic) UIWindow* window;
 

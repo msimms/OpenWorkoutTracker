@@ -104,6 +104,11 @@ typedef enum SettingsRowsBroadcast
 {
 	self.title = TITLE;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate isLoggedInAsync];
+
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[super viewDidLoad];
 }
@@ -120,7 +125,6 @@ typedef enum SettingsRowsBroadcast
 	[super viewDidDisappear:animated];
 }
 
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -133,6 +137,23 @@ typedef enum SettingsRowsBroadcast
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
 {
+}
+
+#pragma mark login notification
+
+- (void)loginChecked:(NSNotification*)notification
+{
+	NSDictionary* loginData = [notification object];
+	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+	
+	if (responseCode && [responseCode intValue] == 200)
+	{
+		[self.loginButton setTitle:STR_LOGOUT];
+	}
+	else
+	{
+		[self.loginButton setTitle:STR_LOGIN];
+	}
 }
 
 #pragma mark methods for showing popups
@@ -593,7 +614,15 @@ typedef enum SettingsRowsBroadcast
 
 - (IBAction)onLogin:(id)sender
 {
-	[self performSegueWithIdentifier:@SEGUE_TO_LOGIN_VIEW sender:self];
+	if ([[self.loginButton title] caseInsensitiveCompare:STR_LOGOUT] == NSOrderedSame)
+	{
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate logoutAsync];
+	}
+	else
+	{
+		[self performSegueWithIdentifier:@SEGUE_TO_LOGIN_VIEW sender:self];
+	}
 }
 
 - (IBAction)onCreateLogin:(id)sender
