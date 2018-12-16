@@ -31,7 +31,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userListUpdated:) name:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:nil];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate listFollowedByAsync];
+	[appDelegate serverListFollowedByAsync];
 }
 
 - (void)viewDidAppear:(BOOL)animated

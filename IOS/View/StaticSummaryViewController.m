@@ -602,6 +602,9 @@ typedef enum ExportFileTypeButtons
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate serverDeleteActivityAsync:self->activityId];
+
 		DeleteActivity([self->activityId UTF8String]);
 		InitializeHistoricalActivityList();
 		[self.navigationController popViewControllerAnimated:YES];

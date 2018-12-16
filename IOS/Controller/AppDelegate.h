@@ -180,13 +180,17 @@
 - (NSString*)nameOfCloudService:(CloudServiceType)service;
 - (void)requestCloudServiceAcctNames:(CloudServiceType)service;
 
-- (BOOL)login:(NSString*)username withPassword:(NSString*)password;
-- (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
-- (BOOL)isLoggedInAsync;
-- (BOOL)logoutAsync;
-- (BOOL)listFollowingAsync;
-- (BOOL)listFollowedByAsync;
-- (BOOL)requestToFollowAsync:(NSString*)targetUsername;
+// These methods are used to interact with the server. The app should still function, in all but the obvious ways,
+// if server communications are disabled (which should be the default).
+
+- (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password;
+- (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
+- (BOOL)serverIsLoggedInAsync;
+- (BOOL)serverLogoutAsync;
+- (BOOL)serverListFollowingAsync;
+- (BOOL)serverListFollowedByAsync;
+- (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername;
+- (BOOL)serverDeleteActivityAsync:(NSString*)activityId;
 
 @property (strong, nonatomic) UIWindow* window;
 

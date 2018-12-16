@@ -113,7 +113,7 @@
 	{
 		if (self->errorSending)
 		{
-			[self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:self->dataBeingSent];
+			[self sendToServer:hostName withPath:REMOTE_API_UPDATE_STATUS_URL withData:self->dataBeingSent];
 			NSLog(@"Resending.");
 		}
 		else
@@ -195,7 +195,7 @@
 
 	if ((numLocObjsBeingSent > 0) || (numAccelObjsBeingSent > 0))
 	{
-		[self sendToServer:hostName withPath:BROADCAST_UPDATE_STATUS_URL withData:postData];
+		[self sendToServer:hostName withPath:REMOTE_API_UPDATE_STATUS_URL withData:postData];
 	}
 
 	self->lastCacheFlush = time(NULL);
@@ -368,7 +368,7 @@
 	NSString* escapedTag = [tag stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
 	NSString* post = [NSString stringWithFormat:@"{\"tag\": \"%@\", \"activity id\":\"%@\"}\n", escapedTag, activityId];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[self sendToServer:hostName withPath:BROADCAST_CREATE_TAG_URL withData:postData];
+	[self sendToServer:hostName withPath:REMOTE_API_CREATE_TAG_URL withData:postData];
 }
 
 @end

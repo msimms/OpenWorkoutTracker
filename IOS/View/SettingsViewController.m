@@ -107,7 +107,7 @@ typedef enum SettingsRowsBroadcast
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate isLoggedInAsync];
+	[appDelegate serverIsLoggedInAsync];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[super viewDidLoad];
@@ -621,7 +621,7 @@ typedef enum SettingsRowsBroadcast
 	if ([[self.loginButton title] caseInsensitiveCompare:STR_LOGOUT] == NSOrderedSame)
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate logoutAsync];
+		[appDelegate serverLogoutAsync];
 	}
 	else
 	{

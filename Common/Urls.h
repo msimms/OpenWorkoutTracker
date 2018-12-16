@@ -7,12 +7,13 @@
 
 #pragma once
 
-#define BROADCAST_LOGIN_URL             "api/1.0/login_submit"
-#define BROADCAST_CREATE_LOGIN_URL      "api/1.0/create_login_submit"
-#define BROADCAST_IS_LOGGED_IN_URL      "api/1.0/login_status"
-#define BROADCAST_LOGOUT_URL            "api/1.0/logout"
-#define BROADCAST_LIST_FOLLOWING_URL    "api/1.0/list_users_following"
-#define BROADCAST_LIST_FOLLOWED_BY_URL  "api/1.0/list_users_followed_by"
-#define BROADCAST_REQUEST_TO_FOLLOW_URL "api/1.0/request_to_follow?"
-#define BROADCAST_UPDATE_STATUS_URL     "api/1.0/update_status"
-#define BROADCAST_CREATE_TAG_URL        "api/1.0/create_tag"
+#define REMOTE_API_LOGIN_URL             "api/1.0/login_submit"
+#define REMOTE_API_CREATE_LOGIN_URL      "api/1.0/create_login_submit"
+#define REMOTE_API_IS_LOGGED_IN_URL      "api/1.0/login_status"
+#define REMOTE_API_LOGOUT_URL            "api/1.0/logout"
+#define REMOTE_API_LIST_FOLLOWING_URL    "api/1.0/list_users_following"
+#define REMOTE_API_LIST_FOLLOWED_BY_URL  "api/1.0/list_users_followed_by"
+#define REMOTE_API_REQUEST_TO_FOLLOW_URL "api/1.0/request_to_follow?"
+#define REMOTE_API_UPDATE_STATUS_URL     "api/1.0/update_status"
+#define REMOTE_API_CREATE_TAG_URL        "api/1.0/create_tag"
+#define REMOTE_API_DELETE_ACTIVITY_URL   "api/1.0/delete_activity?"

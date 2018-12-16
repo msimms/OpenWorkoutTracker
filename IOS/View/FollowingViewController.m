@@ -35,7 +35,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestResult:) name:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:nil];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate listFollowingAsync];
+	[appDelegate serverListFollowingAsync];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -74,7 +74,7 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate requestToFollowAsync:[field text]];
+		[appDelegate serverRequestToFollowAsync:[field text]];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }

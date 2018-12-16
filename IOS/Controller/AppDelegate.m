@@ -1449,43 +1449,43 @@ void attributeNameCallback(const char* name, void* context)
 			[downloadedData setObject:[NSString stringWithFormat:@""] forKey:@KEY_NAME_RESPONSE_STR];			
 		[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
 
-		if ([urlStr rangeOfString:@BROADCAST_LOGIN_URL].location != NSNotFound)
+		if ([urlStr rangeOfString:@REMOTE_API_LOGIN_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_PROCESSED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@BROADCAST_CREATE_LOGIN_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_CREATE_LOGIN_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@BROADCAST_IS_LOGGED_IN_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_IS_LOGGED_IN_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_CHECKED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@BROADCAST_LOGOUT_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LOGOUT_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGGED_OUT object:downloadedData];
 			} );
 		}		
-		else if ([urlStr rangeOfString:@BROADCAST_LIST_FOLLOWING_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FOLLOWING_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@BROADCAST_LIST_FOLLOWED_BY_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FOLLOWED_BY_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@BROADCAST_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:downloadedData];
@@ -1497,7 +1497,7 @@ void attributeNameCallback(const char* name, void* context)
 	return TRUE;
 }
 
-- (BOOL)login:(NSString*)username withPassword:(NSString*)password
+- (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password
 {
 	[Preferences setBroadcastUserName:username];
 
@@ -1508,11 +1508,11 @@ void attributeNameCallback(const char* name, void* context)
 	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_LOGIN_URL];
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGIN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 
-- (BOOL)createLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
+- (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
 	[Preferences setBroadcastUserName:username];
 
@@ -1525,39 +1525,47 @@ void attributeNameCallback(const char* name, void* context)
 	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_CREATE_LOGIN_URL];
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_LOGIN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 
-- (BOOL)isLoggedInAsync
+- (BOOL)serverIsLoggedInAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_IS_LOGGED_IN_URL];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_IS_LOGGED_IN_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
-- (BOOL)logoutAsync
+- (BOOL)serverLogoutAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_LOGOUT_URL];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGOUT_URL];
 	return [self makeRequest:str withMethod:@"POST" withPostData:nil];
 }
 
-- (BOOL)listFollowingAsync
+- (BOOL)serverListFollowingAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_LIST_FOLLOWING_URL];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FOLLOWING_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
-- (BOOL)listFollowedByAsync
+- (BOOL)serverListFollowedByAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_LIST_FOLLOWED_BY_URL];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FOLLOWED_BY_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
-- (BOOL)requestToFollowAsync:(NSString*)targetUsername
+- (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername
 {
 	NSString* params = [NSString stringWithFormat:@"target_email=%@", targetUsername];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], BROADCAST_REQUEST_TO_FOLLOW_URL, escapedParams];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_TO_FOLLOW_URL, escapedParams];
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+}
+
+- (BOOL)serverDeleteActivityAsync:(NSString*)activityId
+{
+	NSString* params = [NSString stringWithFormat:@"activity_id=%@", activityId];
+	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_ACTIVITY_URL, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
