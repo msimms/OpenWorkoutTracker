@@ -14,6 +14,8 @@
 #import "Preferences.h"
 #import "Urls.h"
 
+#define MESSAGE_ERROR_SENDING NSLocalizedString(@"Error sending to the server", nil)
+
 @implementation BroadcastManager
 
 - (id)init
@@ -52,6 +54,15 @@
 	}
 }
 
+- (void)displayMessage:(NSString*)text
+{	
+	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:
+							 text, @KEY_NAME_MESSAGE,
+							 nil];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PRINT_MESSAGE object:msgData];
+}
+
 - (void)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
 {
 	NSString* protocolStr = [Preferences broadcastProtocol];
@@ -80,6 +91,7 @@
 		}
 		else
 		{
+			[self displayMessage:MESSAGE_ERROR_SENDING];
 			self->errorSending = TRUE;
 		}
 	}];

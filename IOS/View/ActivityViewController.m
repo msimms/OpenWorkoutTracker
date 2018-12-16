@@ -141,6 +141,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalSegmentUpdated:) name:@NOTIFICATION_NAME_INTERVAL_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutComplete:) name:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(printMessage:) name:@NOTIFICATION_NAME_PRINT_MESSAGE object:nil];
 
 	[self startTimer];
 	[self showHelp];
@@ -841,6 +842,22 @@
 	{
 		[self->messages removeAllObjects];
 		[self->messages addObject:INTERVAL_COMPLETE];
+	}
+}
+
+- (void)printMessage:(NSNotification*)notification
+{
+	NSDictionary* msgData = [notification object];
+	if (msgData)
+	{
+		NSString* msg = [msgData objectForKey:@KEY_NAME_MESSAGE];
+		if (msg)
+		{
+			@synchronized(self->messages)
+			{
+				[self->messages addObject:msg];
+			}
+		}
 	}
 }
 

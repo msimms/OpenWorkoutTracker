@@ -1453,7 +1453,6 @@ void attributeNameCallback(const char* name, void* context)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_PROCESSED object:downloadedData];
-//				[Preferences setBroadcastSessionCookie: [loginData objectForKey:@KEY_NAME_DATA]];
 			} );
 		}
 		else if ([urlStr rangeOfString:@BROADCAST_CREATE_LOGIN_URL].location != NSNotFound)
