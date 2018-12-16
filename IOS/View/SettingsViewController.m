@@ -149,10 +149,14 @@ typedef enum SettingsRowsBroadcast
 	if (responseCode && [responseCode intValue] == 200)
 	{
 		[self.loginButton setTitle:STR_LOGOUT];
+		[self.createLoginButton setEnabled:NO];
+		[self.createLoginButton setTintColor: [UIColor clearColor]];
 	}
 	else
 	{
 		[self.loginButton setTitle:STR_LOGIN];
+		[self.createLoginButton setEnabled:YES];
+		[self.createLoginButton setTintColor:nil];
 	}
 }
 
