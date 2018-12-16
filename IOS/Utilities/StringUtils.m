@@ -56,18 +56,13 @@
 				}
 				else if (attribute.measureType == MEASURE_DEGREES)
 					result = [NSString stringWithFormat:@"%0.6f", attribute.value.doubleVal];
-				else if (attribute.measureType == MEASURE_CALORIES)
-				{
-					NSNumberFormatter* formatter = [NSNumberFormatter new];
-					[formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-					[formatter setMaximumFractionDigits:1];
-					result = [formatter stringFromNumber:[NSNumber numberWithDouble:attribute.value.doubleVal]];
-				}
 				else if (attribute.measureType == MEASURE_PERCENTAGE)
 					result = [NSString stringWithFormat:@"%0.1f", attribute.value.doubleVal * (double)100.0];
 				else if (attribute.measureType == MEASURE_BPM)
 					result = [NSString stringWithFormat:@"%0.0f", attribute.value.doubleVal];
 				else if (attribute.measureType == MEASURE_RPM)
+					result = [NSString stringWithFormat:@"%0.0f", attribute.value.doubleVal];
+				else if (attribute.measureType == MEASURE_CALORIES)
 					result = [NSString stringWithFormat:@"%0.0f", attribute.value.doubleVal];
 				else
 					result = [NSString stringWithFormat:@"%0.1f", attribute.value.doubleVal];

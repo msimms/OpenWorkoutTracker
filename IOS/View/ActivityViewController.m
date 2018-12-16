@@ -863,6 +863,14 @@
 
 #pragma mark method for refreshing screen values
 
+- (void)displayValue:(UILabel*)valueLabel withValue:(double)value
+{
+	if (value < (double)0.1)
+		[valueLabel setText:[[NSString alloc] initWithFormat:@"0.0"]];
+	else
+		[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", value]];
+}
+
 - (void)refreshScreen:(uint8_t)numAttributes
 {
 	for (uint8_t i = 0; i < numAttributes; i++)
@@ -887,16 +895,16 @@
 				}
 				else
 				{
-					[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", self->lastHeartRateValue]];
+					[self displayValue:valueLabel withValue:self->lastHeartRateValue];
 				}
 			}
 			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_CADENCE])
 			{
-				[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", self->lastCadenceValue]];
+				[self displayValue:valueLabel withValue:self->lastCadenceValue];
 			}
 			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_POWER])
 			{
-				[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", self->lastPowerValue]];
+				[self displayValue:valueLabel withValue:self->lastPowerValue];
 			}
 			else
 			{
