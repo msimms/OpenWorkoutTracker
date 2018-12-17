@@ -1442,12 +1442,21 @@ void attributeNameCallback(const char* name, void* context)
 		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
 		NSInteger httpCode = [httpResponse statusCode];
 
-		[downloadedData setObject:[[NSNumber alloc] initWithInteger:httpCode] forKey:@KEY_NAME_RESPONSE_CODE];
-		if (data && [data length] > 0)
-			[downloadedData setObject:[NSString stringWithUTF8String:[data bytes]] forKey:@KEY_NAME_RESPONSE_STR];
-		else
-			[downloadedData setObject:[NSString stringWithFormat:@""] forKey:@KEY_NAME_RESPONSE_STR];			
-		[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
+		if (downloadedData)
+		{
+			[downloadedData setObject:[[NSNumber alloc] initWithInteger:httpCode] forKey:@KEY_NAME_RESPONSE_CODE];
+
+			NSString* dataStr = [NSString stringWithFormat:@""];
+			if (data && [data length] > 0)
+			{
+				NSString* tempStr = [NSString stringWithUTF8String:[data bytes]];
+				if (tempStr)
+					dataStr = tempStr;
+			}
+
+			[downloadedData setObject:dataStr forKey:@KEY_NAME_RESPONSE_STR];
+			[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
+		}
 
 		if ([urlStr rangeOfString:@REMOTE_API_LOGIN_URL].location != NSNotFound)
 		{
@@ -1567,6 +1576,18 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_ACTIVITY_URL, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+}
+
+- (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId
+{
+	NSString* post = [NSString stringWithFormat:@"{"];
+	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_TAG_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 
 #pragma mark reset methods

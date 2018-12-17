@@ -31,7 +31,6 @@
 #define NOTIFICATION_NAME_LOGIN_CHECKED            "LoginChecked"
 #define NOTIFICATION_NAME_LOGGED_OUT               "LogoutProcessed"
 #define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
-#define NOTIFICATION_NAME_TAG_CREATED              "TagCreated"
 #define NOTIFICATION_NAME_PRINT_MESSAGE            "PrintMessage"
 
 #define KEY_NAME_ACTIVITY_ID                       "ActivityId"
@@ -191,6 +190,7 @@
 - (BOOL)serverListFollowedByAsync;
 - (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername;
 - (BOOL)serverDeleteActivityAsync:(NSString*)activityId;
+- (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
 
 @property (strong, nonatomic) UIWindow* window;
 

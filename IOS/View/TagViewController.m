@@ -223,11 +223,8 @@
 	NSString* tag = [textField text];
 	if (StoreTag([self->activityId UTF8String], [tag UTF8String]))
 	{
-		NSDictionary* tagData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								 self->activityId, @KEY_NAME_ACTIVITY_ID,
-								 tag, @KEY_NAME_TAG,
-								 nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_TAG_CREATED object:tagData];
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate serverCreateTagAsync:tag forActivity:self->activityId];
 	}
 }
 

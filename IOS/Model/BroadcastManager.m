@@ -26,7 +26,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStarted:) name:@NOTIFICATION_NAME_ACTIVITY_STARTED object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tagCreated:) name:@NOTIFICATION_NAME_TAG_CREATED object:nil];
 
 		self->session = [[BroadcastSessionContainer alloc] init];
 		self->locationCache = [[NSMutableArray alloc] init];
@@ -351,24 +350,6 @@
 {
 	[self flushGlobalBroadcastCacheRest];
 	NSLog(@"Activity stopped.");
-}
-
-- (void)tagCreated:(NSNotification*)notification
-{
-	NSString* hostName = [Preferences broadcastHostName];
-	if (hostName == nil)
-	{
-		NSLog(@"Broadcast host name not specified.");
-		return;
-	}
-
-	NSDictionary* tagData = [notification object];
-	NSString* tag = [tagData objectForKey:@KEY_NAME_TAG];
-	NSString* activityId = [tagData objectForKey:@KEY_NAME_ACTIVITY_ID];
-	NSString* escapedTag = [tag stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-	NSString* post = [NSString stringWithFormat:@"{\"tag\": \"%@\", \"activity id\":\"%@\"}\n", escapedTag, activityId];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[self sendToServer:hostName withPath:REMOTE_API_CREATE_TAG_URL withData:postData];
 }
 
 @end
