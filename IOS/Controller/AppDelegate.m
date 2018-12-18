@@ -1500,6 +1500,15 @@ void attributeNameCallback(const char* name, void* context)
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:downloadedData];
 			} );
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_UPDATE_STATUS_URL].location != NSNotFound)
+		{
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_CREATE_TAG_URL].location != NSNotFound)
+		{
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_DELETE_TAG_URL].location != NSNotFound)
+		{
+		}
 	}];
 	[dataTask resume];
 	
@@ -1587,6 +1596,18 @@ void attributeNameCallback(const char* name, void* context)
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_TAG_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+}
+
+- (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId
+{
+	NSString* post = [NSString stringWithFormat:@"{"];
+	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+	
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_TAG_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 

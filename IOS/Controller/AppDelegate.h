@@ -191,6 +191,7 @@
 - (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername;
 - (BOOL)serverDeleteActivityAsync:(NSString*)activityId;
 - (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
+- (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
 
 @property (strong, nonatomic) UIWindow* window;
 

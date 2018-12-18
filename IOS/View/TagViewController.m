@@ -187,6 +187,9 @@
 		{
 			[self->tags removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+			[appDelegate serverDeleteTagAsync:tag forActivity:self->activityId];
 		}
 	}
 }
