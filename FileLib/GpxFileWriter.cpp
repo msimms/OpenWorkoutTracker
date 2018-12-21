@@ -200,7 +200,6 @@ namespace FileLib
 
 	std::string GpxFileWriter::FormatTimeMS(uint64_t t)
 	{
-		std::string result;
 		time_t sec  = (time_t)(t / 1000);
 		uint16_t ms = t % 1000;
 
