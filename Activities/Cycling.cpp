@@ -51,7 +51,7 @@ Cycling::~Cycling()
 void Cycling::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 {
 	sensorTypes.push_back(SENSOR_TYPE_CADENCE);
-	sensorTypes.push_back(SENSOR_TYPE_POWER_METER);
+	sensorTypes.push_back(SENSOR_TYPE_POWER);
 	sensorTypes.push_back(SENSOR_TYPE_WHEEL_SPEED);
 	MovingActivity::ListUsableSensors(sensorTypes);
 }

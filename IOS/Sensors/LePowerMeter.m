@@ -52,7 +52,7 @@
 
 - (SensorType)sensorType
 {
-	return SENSOR_TYPE_POWER_METER;
+	return SENSOR_TYPE_POWER;
 }
 
 - (void)enteredBackground

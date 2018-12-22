@@ -39,7 +39,12 @@ bool DataExporter::NearestSensorReading(uint64_t timeMs, const SensorReadingList
 		return false;
 	}
 	
-	uint64_t timeDiff = (*iter).time - timeMs;
+	uint64_t sensorTime = (*iter).time;
+	uint64_t timeDiff;
+	if (sensorTime > timeMs)
+		timeDiff = sensorTime - timeMs;
+	else
+		timeDiff = timeMs - sensorTime;
 	return (timeDiff < 3000);
 }
 
@@ -63,16 +68,19 @@ bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDat
 			LapSummaryList lapList;
 			SensorReadingList hrList;
 			SensorReadingList cadenceList;
+			SensorReadingList powerList;
 
 			pDatabase->RetrieveLaps(pActivity->GetId(), lapList);
-			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_HEART_RATE_MONITOR, hrList);
+			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_HEART_RATE, hrList);
 			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_CADENCE, cadenceList);
+			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_POWER, powerList);
 
 			CoordinateList::const_iterator coordinateIter = coordinateList.begin();
 			TimeDistancePairList::const_iterator distanceIter = distanceList.begin();
 			LapSummaryList::const_iterator lapIter = lapList.begin();
 			SensorReadingList::const_iterator hrIter = hrList.begin();
 			SensorReadingList::const_iterator cadenceIter = cadenceList.begin();
+			SensorReadingList::const_iterator powerIter = powerList.begin();
 
 			uint64_t lapStartTimeMs = pActivity->GetStartTimeMs();
 			uint64_t lapEndTimeMs = 0;
@@ -124,20 +132,24 @@ bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDat
 
 							bool moreHrData = NearestSensorReading(coordinate.time, hrList, hrIter);
 							bool moreCadenceData = NearestSensorReading(coordinate.time, cadenceList, cadenceIter);
+							bool morePowerData = NearestSensorReading(coordinate.time, powerList, powerIter);
 							
-							if (moreHrData || moreCadenceData)
+							if (moreHrData)
 							{
-								if (moreHrData)
-								{
-									double rate = (*hrIter).reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
-									writer.StoreHeartRateBpm((uint8_t)rate);
-								}
-								
-								if (moreCadenceData)
-								{
-									double cadence = (*cadenceIter).reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
-									writer.StoreCadenceRpm((uint8_t)cadence);
-								}
+								double rate = (*hrIter).reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
+								writer.StoreHeartRateBpm((uint8_t)rate);
+							}							
+							if (moreCadenceData)
+							{
+								double cadence = (*cadenceIter).reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
+								writer.StoreCadenceRpm((uint8_t)cadence);
+							}							
+							if (morePowerData)
+							{
+								double power = (*powerIter).reading.at(ACTIVITY_ATTRIBUTE_POWER);
+								writer.StartTrackpointExtensions();
+								writer.StorePowerInWatts(power);
+								writer.EndTrackpointExtensions();
 							}
 							
 							writer.EndTrackpoint();
@@ -189,9 +201,9 @@ bool DataExporter::ExportToGpx(const std::string& fileName, Database* const pDat
 
 		pDatabase->RetrieveActivityCoordinates(activityId, coordinateList);
 		pDatabase->RetrieveLaps(activityId, lapList);
-		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE_MONITOR, hrList);
+		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE, hrList);
 		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_CADENCE, cadenceList);
-		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_POWER_METER, powerList);
+		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_POWER, powerList);
 
 		CoordinateList::const_iterator coordinateIter = coordinateList.begin();
 		LapSummaryList::const_iterator lapIter = lapList.begin();
@@ -255,14 +267,12 @@ bool DataExporter::ExportToGpx(const std::string& fileName, Database* const pDat
 								double rate = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
 								writer.StoreHeartRateBpm((uint8_t)rate);
 							}
-
 							if (moreCadenceData)
 							{
 								const SensorReading& reading = (*cadenceIter);
 								double cadence = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
 								writer.StoreCadenceRpm((uint8_t)cadence);
 							}
-
 							if (morePowerData)
 							{
 								const SensorReading& reading = (*powerIter);
@@ -395,7 +405,7 @@ bool DataExporter::ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, 
 bool DataExporter::ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase)
 {
 	SensorReadingList hrList;
-	bool loaded = pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE_MONITOR, hrList);
+	bool loaded = pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE, hrList);
 	bool result = true;
 
 	if (loaded && (hrList.size() > 0))

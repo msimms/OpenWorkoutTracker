@@ -764,7 +764,7 @@ extern "C" {
 							result = true;
 						}
 						break;
-					case SENSOR_TYPE_HEART_RATE_MONITOR:
+					case SENSOR_TYPE_HEART_RATE:
 						if (summary.heartRateMonitorReadings.size() == 0)
 						{
 							if (g_pDatabase->RetrieveActivityHeartRateMonitorReadings(summary.activityId, summary.heartRateMonitorReadings))
@@ -805,7 +805,7 @@ extern "C" {
 					case SENSOR_TYPE_WHEEL_SPEED:
 						result = true;
 						break;
-					case SENSOR_TYPE_POWER_METER:
+					case SENSOR_TYPE_POWER:
 						if (summary.powerReadings.size() == 0)
 						{
 							if (g_pDatabase->RetrieveActivityPowerMeterReadings(summary.activityId, summary.powerReadings))
@@ -1695,7 +1695,7 @@ extern "C" {
 	bool ProcessHrmReading(double bpm, uint64_t timestampMs)
 	{
 		SensorReading reading;
-		reading.type = SENSOR_TYPE_HEART_RATE_MONITOR;
+		reading.type = SENSOR_TYPE_HEART_RATE;
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_HEART_RATE, bpm));
 		reading.time = timestampMs;
 		return ProcessSensorReading(reading);
@@ -1738,7 +1738,7 @@ extern "C" {
 	bool ProcessPowerMeterReading(double watts, uint64_t timestampMs)
 	{
 		SensorReading reading;
-		reading.type = SENSOR_TYPE_POWER_METER;
+		reading.type = SENSOR_TYPE_POWER;
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_POWER, watts));
 		reading.time = timestampMs;
 		return ProcessSensorReading(reading);

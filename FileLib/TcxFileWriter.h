@@ -42,13 +42,18 @@ namespace FileLib
 		bool EndTrack();
 
 		bool StartTrackpoint();
+		bool EndTrackpoint();
+
+		bool StartTrackpointExtensions();
+		bool EndTrackpointExtensions();
+
 		bool StoreTime(uint64_t timeMS);
 		bool StoreAltitudeMeters(double altitudeMeters);
 		bool StoreDistanceMeters(double distanceMeters);
 		bool StoreHeartRateBpm(uint8_t heartRateBpm);
 		bool StoreCadenceRpm(uint8_t cadenceRpm);
+		bool StorePowerInWatts(uint32_t powerWatts);
 		bool StorePosition(double lat, double lon);
-		bool EndTrackpoint();
 
 	protected:
 		std::string FormatTimeSec(time_t t);

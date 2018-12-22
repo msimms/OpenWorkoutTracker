@@ -161,6 +161,44 @@ namespace FileLib
 		return OpenTag(TCX_TAG_NAME_TRACKPOINT);
 	}
 
+	bool TcxFileWriter::EndTrackpoint()
+	{
+		if (CurrentTag().compare(TCX_TAG_NAME_TRACKPOINT) == 0)
+			return CloseTag();
+		return false;
+	}
+	
+	bool TcxFileWriter::StartTrackpointExtensions()
+	{
+		if (OpenTag(TCX_TAG_NAME_TRACKPOINT_EXTENSIONS))
+		{
+			XmlKeyValueList attributes;
+			XmlKeyValuePair attribute;
+			
+			attribute.key = "xmlns";
+			attribute.value = "http://www.garmin.com/xmlschemas/ActivityExtension/v2";
+			attributes.push_back(attribute);
+			
+			return OpenTag(TCX_TAG_NAME, attributes);
+		}
+		return false;
+	}
+
+	bool TcxFileWriter::EndTrackpointExtensions()
+	{
+		if (CurrentTag().compare(TCX_TAG_NAME) == 0)
+		{
+			if (CloseTag())
+			{
+				if (CurrentTag().compare(TCX_TAG_NAME_TRACKPOINT_EXTENSIONS) == 0)
+				{
+					return CloseTag();
+				}
+			}
+		}
+		return false;
+	}
+
 	bool TcxFileWriter::StoreTime(uint64_t timeMS)
 	{
 		if (CurrentTag().compare(TCX_TAG_NAME_TRACKPOINT) != 0)
@@ -201,6 +239,13 @@ namespace FileLib
 		return WriteTagAndValue(TCX_TAG_NAME_CADENCE, (uint32_t)cadenceRpm);		
 	}
 
+	bool TcxFileWriter::StorePowerInWatts(uint32_t powerWatts)
+	{
+		if (CurrentTag().compare(TCX_TAG_NAME) != 0)
+			return false;
+		return WriteTagAndValue(TCX_TAG_NAME_POWER, (uint32_t)powerWatts);
+	}
+
 	bool TcxFileWriter::StorePosition(double lat, double lon)
 	{
 		if (CurrentTag().compare(TCX_TAG_NAME_TRACKPOINT) != 0)
@@ -212,13 +257,6 @@ namespace FileLib
 			CloseTag();
 			return true;
 		}
-		return false;
-	}
-
-	bool TcxFileWriter::EndTrackpoint()
-	{
-		if (CurrentTag().compare(TCX_TAG_NAME_TRACKPOINT) == 0)
-			return CloseTag();
 		return false;
 	}
 

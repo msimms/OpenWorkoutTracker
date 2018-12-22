@@ -38,7 +38,7 @@ typedef struct HeartRateMeasurement
 
 - (SensorType)sensorType
 {
-	return SENSOR_TYPE_HEART_RATE_MONITOR;
+	return SENSOR_TYPE_HEART_RATE;
 }
 
 - (void)enteredBackground

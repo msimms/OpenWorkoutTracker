@@ -389,6 +389,21 @@ typedef enum ExportFileTypeButtons
 
 #pragma mark action sheet methods
 
+- (void)handleFileFormatSelection
+{
+	if (self->exportedFileName)
+	{
+		if ([self->selectedExportLocation isEqualToString:@"Email"])
+		{
+			[self displayEmailComposerSheet];
+		}
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
+	}
+}
+
 - (BOOL)showFileFormatSheet
 {
 	if (GetNumHistoricalActivities() > 0)
@@ -405,30 +420,22 @@ typedef enum ExportFileTypeButtons
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_GPX to:self->selectedExportLocation];
+				[self handleFileFormatSelection];
 			}]];
 			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_TCX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_TCX to:self->selectedExportLocation];
+				[self handleFileFormatSelection];
 			}]];
 		}
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_CSV to:self->selectedExportLocation];
+			[self handleFileFormatSelection];
 		}]];
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		}]];
 
-		[self presentViewController:alertController animated:YES completion:nil];
-
-		if (self->exportedFileName)
-		{
-			if ([self->selectedExportLocation isEqualToString:@"Email"])
-			{
-				[self displayEmailComposerSheet];
-			}
-		}
-		else
-		{
-			[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
-		}
+		[self presentViewController:alertController animated:YES completion:^{
+		}];
 	}
 	else
 	{

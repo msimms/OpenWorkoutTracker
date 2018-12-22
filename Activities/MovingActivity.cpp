@@ -94,7 +94,7 @@ uint64_t MovingActivity::GetCurrentLapStartTime()
 void MovingActivity::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 {
 	sensorTypes.push_back(SENSOR_TYPE_GPS);
-	sensorTypes.push_back(SENSOR_TYPE_HEART_RATE_MONITOR);
+	sensorTypes.push_back(SENSOR_TYPE_HEART_RATE);
 }
 
 void MovingActivity::RecomputeRecordTimes()

@@ -128,7 +128,7 @@ bool Activity::ProcessSensorReading(const SensorReading& reading)
 		case SENSOR_TYPE_GPS:
 			processed = ProcessGpsReading(reading);
 			break;
-		case SENSOR_TYPE_HEART_RATE_MONITOR:
+		case SENSOR_TYPE_HEART_RATE:
 			processed = ProcessHrmReading(reading);
 			break;
 		case SENSOR_TYPE_CADENCE:
@@ -137,7 +137,7 @@ bool Activity::ProcessSensorReading(const SensorReading& reading)
 		case SENSOR_TYPE_WHEEL_SPEED:
 			processed = ProcessWheelSpeedReading(reading);
 			break;
-		case SENSOR_TYPE_POWER_METER:
+		case SENSOR_TYPE_POWER:
 			processed = ProcessPowerMeterReading(reading);
 			break;
 		case SENSOR_TYPE_FOOT_POD:

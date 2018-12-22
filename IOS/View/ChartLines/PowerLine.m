@@ -45,7 +45,7 @@ void PowerDataCallback(size_t activityIndex, void* context)
 		FreeHistoricalActivitySensorData(activityIndex);
 
 		CreateHistoricalActivityObject(activityIndex);
-		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_POWER_METER, PowerDataCallback, (__bridge void*)self))
+		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_POWER, PowerDataCallback, (__bridge void*)self))
 		{
 			[super draw];
 		}

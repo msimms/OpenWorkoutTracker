@@ -1305,13 +1305,13 @@ bool Database::CreateSensorReading(const std::string& activityId, const SensorRe
 			return CreateAccelerometerReading(activityId, reading);
 		case SENSOR_TYPE_GPS:
 			return CreateGpsReading(activityId, reading);
-		case SENSOR_TYPE_HEART_RATE_MONITOR:
+		case SENSOR_TYPE_HEART_RATE:
 			return CreateHrmReading(activityId, reading);
 		case SENSOR_TYPE_CADENCE:
 			return CreateCadenceReading(activityId, reading);
 		case SENSOR_TYPE_WHEEL_SPEED:
 			return CreateWheelSpeedReading(activityId, reading);
-		case SENSOR_TYPE_POWER_METER:
+		case SENSOR_TYPE_POWER:
 			return CreatePowerMeterReading(activityId, reading);
 		case SENSOR_TYPE_FOOT_POD:
 			return CreateFootPodReading(activityId, reading);
@@ -1335,13 +1335,13 @@ bool Database::RetrieveSensorReadingsOfType(const std::string& activityId, Senso
 			return RetrieveActivityAccelerometerReadings(activityId, readings);
 		case SENSOR_TYPE_GPS:
 			return RetrieveActivityPositionReadings(activityId, readings);
-		case SENSOR_TYPE_HEART_RATE_MONITOR:
+		case SENSOR_TYPE_HEART_RATE:
 			return RetrieveActivityHeartRateMonitorReadings(activityId, readings);
 		case SENSOR_TYPE_CADENCE:
 			return RetrieveActivityCadenceReadings(activityId, readings);
 		case SENSOR_TYPE_WHEEL_SPEED:
 			return RetrieveActivityWheelSpeedReadings(activityId, readings);
-		case SENSOR_TYPE_POWER_METER:
+		case SENSOR_TYPE_POWER:
 			return RetrieveActivityPowerMeterReadings(activityId, readings);
 		case SENSOR_TYPE_FOOT_POD:
 			return RetrieveActivityFootPodReadings(activityId, readings);
@@ -1517,7 +1517,7 @@ bool Database::RetrieveActivityHeartRateMonitorReadings(const std::string& activ
 				
 				SensorReading reading;
 				
-				reading.type = SENSOR_TYPE_HEART_RATE_MONITOR;
+				reading.type = SENSOR_TYPE_HEART_RATE;
 				reading.time = sqlite3_column_int64(statement, 0);
 				
 				double rate = sqlite3_column_double(statement, 1);
@@ -1646,7 +1646,7 @@ bool Database::RetrieveActivityPowerMeterReadings(const std::string& activityId,
 				
 				SensorReading reading;
 				
-				reading.type = SENSOR_TYPE_POWER_METER;
+				reading.type = SENSOR_TYPE_POWER;
 				reading.time = sqlite3_column_int64(statement, 0);
 				
 				double rate = sqlite3_column_double(statement, 1);
