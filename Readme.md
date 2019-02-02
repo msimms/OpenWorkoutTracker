@@ -25,10 +25,11 @@ Why develop a workout tracker when there are so many closed-source options avail
 Beta
 
 ## Tech
-Straen uses two other source projects to work properly:
+Straen uses three other source projects to work properly:
 
 * [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS
 * [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities, including a peak finding algorithm.
+* [sqlite](https://www.sqlite.org) - Database for storing activities.
 
 The app is written in a combination of Objective-C and C++ and targets the Apple iPhone.
 
