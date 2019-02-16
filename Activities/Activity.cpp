@@ -109,6 +109,20 @@ void Activity::Pause()
 	m_isPaused = !m_isPaused;
 }
 
+uint8_t Activity::HeartRateZone() const
+{
+	double percentage = HeartRatePercentage();
+	if (percentage < (double)0.60)
+		return 1;
+	if (percentage < (double)0.70)
+		return 2;
+	if (percentage < (double)0.80)
+		return 3;
+	if (percentage < (double)0.90)
+		return 4;
+	return 5;
+}
+
 bool Activity::ProcessSensorReading(const SensorReading& reading)
 {
 	if (reading.reading.size() == 0)
@@ -275,11 +289,18 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 		result.endTime = hr.endTime;
 		result.valid = m_numHeartRateReadings > 0;
 	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE) == 0)
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE) == 0)
 	{
-		result.value.doubleVal = HeartRateZone();
+		result.value.doubleVal = HeartRatePercentage();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_PERCENTAGE;
+		result.valid = m_numHeartRateReadings > 0;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE) == 0)
+	{
+		result.value.intVal = HeartRateZone();
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_NOT_SET;
 		result.valid = m_numHeartRateReadings > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_ELAPSED_TIME) == 0)
@@ -565,6 +586,7 @@ void Activity::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_HEART_RATE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MAX_HEART_RATE);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_ELAPSED_TIME);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);

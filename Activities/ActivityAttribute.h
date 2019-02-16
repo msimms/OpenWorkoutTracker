@@ -42,7 +42,8 @@
 #define ACTIVITY_ATTRIBUTE_HEART_RATE                 "Heart Rate"              // current heart rate (bpm)
 #define ACTIVITY_ATTRIBUTE_AVG_HEART_RATE             "Average Heart Rate"      // average heart rate (bpm)
 #define ACTIVITY_ATTRIBUTE_MAX_HEART_RATE             "Maximum Heart Rate"      // highest heart rate (bpm)
-#define ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE            "Heart Rate Zone"         // % of maximum heart rate
+#define ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE      "Heart Rate Percentage"   // % of maximum heart rate
+#define ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE            "Heart Rate Zone"         // % of maximum heart rate, as a zone
 #define ACTIVITY_ATTRIBUTE_ELAPSED_TIME               "Elapsed Time"            // total elapsed time
 #define ACTIVITY_ATTRIBUTE_LATITUDE                   "Latitude"                // current latitude
 #define ACTIVITY_ATTRIBUTE_LONGITUDE                  "Longitude"               // current longitude

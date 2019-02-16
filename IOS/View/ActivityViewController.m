@@ -887,7 +887,7 @@
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 				NSString* activityType = [appDelegate getCurrentActivityType];
-				ActivityAttributeType zoneValue = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE);
+				ActivityAttributeType zoneValue = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE);
 
 				if ([self->activityPrefs getShowHeartRatePercent:activityType] && zoneValue.valid)
 				{

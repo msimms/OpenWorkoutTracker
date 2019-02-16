@@ -77,7 +77,8 @@ public:
 	virtual SegmentType CurrentHeartRate() const { return m_currentHeartRateBpm; };
 	virtual double AverageHeartRate() const { return m_numHeartRateReadings > 0 ? (m_totalHeartRateReadings / m_numHeartRateReadings) : (double)0.0; };
 	virtual SegmentType MaxHeartRate() const { return m_maxHeartRateBpm; };
-	virtual double HeartRateZone() const { return m_currentHeartRateBpm.value.doubleVal / m_athlete.EstimateMaxHeartRate(); };
+	virtual double HeartRatePercentage() const { return m_currentHeartRateBpm.value.doubleVal / m_athlete.EstimateMaxHeartRate(); };
+	virtual uint8_t HeartRateZone() const;
 
 	virtual time_t ElapsedTimeInMinutes() const { return ElapsedTimeInSeconds() / (double)60.0; };
 	virtual time_t ElapsedTimeInSeconds() const { return (time_t)(ElapsedTimeInMs() / 1000); };
