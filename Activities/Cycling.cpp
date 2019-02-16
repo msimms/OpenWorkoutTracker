@@ -226,10 +226,11 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		if (!HasStopped())
 			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
 		
-		result.value.intVal = CurrentPowerZone();
+		uint8_t zone = CurrentPowerZone();
+		result.value.intVal = zone;
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_NOT_SET;
-		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+		result.valid = (zone > 0) && (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS) == 0)
 	{
