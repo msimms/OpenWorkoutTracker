@@ -20,6 +20,7 @@
 + (void)setWeightInKg:(double)weight;
 + (void)setHeightInInches:(double)height;
 + (void)setWeightInLbs:(double)weight;
++ (void)setFtp:(double)ftp;
 
 + (ActivityLevel)activityLevel;
 + (Gender)gender;
@@ -28,5 +29,6 @@
 + (double)weightInKg;
 + (double)heightInInches;
 + (double)weightInLbs;
++ (double)ftp;
 
 @end

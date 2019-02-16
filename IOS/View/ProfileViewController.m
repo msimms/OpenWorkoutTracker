@@ -26,6 +26,7 @@ typedef enum ProfileRows
 	ROW_BIRTHDATE,
 	ROW_HEIGHT,
 	ROW_WEIGHT,
+	ROW_FTP,
 	NUM_PROFILE_ROWS
 } ProfileRows;
 
@@ -38,6 +39,7 @@ typedef enum ProfileRows
 #define ACTION_SHEET_TITLE_BIRTHDATE      NSLocalizedString(@"Enter your birthdate", nil)
 #define ALERT_MSG_HEIGHT                  NSLocalizedString(@"Please enter your height", nil)
 #define ALERT_MSG_WEIGHT                  NSLocalizedString(@"Please enter your weight", nil)
+#define ALERT_MSG_FTP                     NSLocalizedString(@"Please enter your FTP", nil)
 #define TITLE_BIRTHDATE                   NSLocalizedString(@"Birthdate", nil)
 
 #define BUTTON_TITLE_BIKE_PROFILE         NSLocalizedString(@"Add Bike Profile", nil)
@@ -232,6 +234,16 @@ typedef enum ProfileRows
 							cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
 						}
 						break;
+					case ROW_FTP:
+						{
+							double ftp = [appDelegate userFtp];
+							cell.textLabel.text = STR_FTP;
+							if (ftp >= (double)1.0)
+								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", ftp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+							else
+								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"Not Set"];
+						}
+						break;
 					default:
 						break;
 				}
@@ -389,6 +401,29 @@ typedef enum ProfileRows
 						if (weight > (double)0.0)
 						{
 							[appDelegate setUserWeight:weight];
+							[self.profileTableView reloadData];
+						}
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
+				}
+				break;
+			case ROW_FTP:
+				{
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_FTP
+																							 message:ALERT_MSG_FTP
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					
+					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userFtp]];
+						textField.keyboardType = UIKeyboardTypeNumberPad;
+					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						UITextField* field = alertController.textFields.firstObject;
+						double ftp = [[field text] doubleValue];
+						if (ftp > (double)0.0)
+						{
+							[appDelegate setUserFtp:ftp];
 							[self.profileTableView reloadData];
 						}
 					}]];

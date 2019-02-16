@@ -374,6 +374,11 @@
 	return (double)0.0;
 }
 
+- (double)userFtp
+{
+	return [UserProfile ftp];
+}
+
 - (void)setUserActivityLevel:(ActivityLevel)activityLevel
 {
 	[UserProfile setActivityLevel:activityLevel];
@@ -417,6 +422,11 @@
 	}
 
 	[self->healthMgr saveWeightIntoHealthStore:[UserProfile weightInLbs]];
+}
+
+- (void)setUserFtp:(double)ftp
+{
+	[UserProfile setFtp:ftp];
 }
 
 #pragma mark broadcast methods

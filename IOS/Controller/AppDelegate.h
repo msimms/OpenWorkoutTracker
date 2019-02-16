@@ -93,12 +93,14 @@
 - (struct tm)userBirthDate;
 - (double)userHeight;
 - (double)userWeight;
+- (double)userFtp;
 
 - (void)setUserActivityLevel:(ActivityLevel)activityLevel;
 - (void)setUserGender:(Gender)gender;
 - (void)setUserBirthDate:(NSDate*)birthday;
 - (void)setUserHeight:(double)height;
 - (void)setUserWeight:(double)weight;
+- (void)setUserFtp:(double)ftp;
 
 - (void)configureBroadcasting;
 - (void)startHealthMgr;

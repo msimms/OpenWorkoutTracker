@@ -13,6 +13,7 @@
 #define KEY_GENDER         "Gender"
 #define KEY_HEIGHT         "Height"
 #define KEY_WEIGHT         "Weight"
+#define KEY_FTP            "FTP"
 #define KEY_BIRTH_MONTH    "Month"
 #define KEY_BIRTH_DAY      "Day"
 #define KEY_BIRTH_YEAR     "Year"
@@ -131,6 +132,11 @@
 + (void)setWeightInKg:(double)weight
 {
 	[self setWeightInLbs:(weight / (double)0.453592)];
+}
+
++ (void)setFtp:(double)ftp
+{
+	[Preferences writeDoubleValue:@KEY_FTP withValue:ftp];
 }
 
 + (void)setHeightInInches:(double)height
@@ -266,6 +272,11 @@
 		weight = DEFAULT_WEIGHT;
 	}
 	return weight;
+}
+
++ (double)ftp
+{
+	return (double)[Preferences readNumericValue:@KEY_FTP];	// value is stored in watts
 }
 
 @end
