@@ -332,7 +332,8 @@
 	struct tm userBirthDay  = [UserProfile birthDate];
 	double userWeightKg     = [UserProfile weightInKg];
 	double userHeightCm     = [UserProfile heightInCm];
-	SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm);
+	double userFtp          = [UserProfile ftp];
+	SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm, userFtp);
 }
 
 - (ActivityLevel)userActivityLevel

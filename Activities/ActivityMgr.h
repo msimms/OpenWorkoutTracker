@@ -47,7 +47,7 @@ extern "C" {
 
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);
-	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm);
+	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
 
 	// Functions for managing bike profiles.
 	void InitializeBikeProfileList(void);

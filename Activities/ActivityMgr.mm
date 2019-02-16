@@ -178,7 +178,7 @@ extern "C" {
 		UnitMgr::SetUnitSystem(system);
 	}
 
-	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm)
+	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp)
 	{
 		User user;
 		user.SetActivityLevel(level);
@@ -186,6 +186,7 @@ extern "C" {
 		user.SetBirthDate(bday);
 		user.SetWeightKg(weightKg);
 		user.SetHeightCm(heightCm);
+		user.SetFtp(ftp);
 
 		if (g_pActivityFactory)
 		{

@@ -220,6 +220,17 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.measureType = MEASURE_POWER;
 		result.valid = m_numPowerReadings > 0;
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_POWER_ZONE) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.intVal = CurrentPowerZone();
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_NOT_SET;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS) == 0)
 	{
 		result.value.intVal = NumWheelRevolutions();
@@ -305,6 +316,27 @@ double Cycling::CaloriesBurned() const
 	return (double)0.0;
 }
 
+uint8_t Cycling::CurrentPowerZone() const
+{
+	double power = ThreeSecPower();
+	double ftp = m_athlete.GetFtp();
+	if (ftp < (double)1.0)
+		return 0;
+
+	double percentageOfFtp = power / ftp;
+	if (percentageOfFtp < (double)0.55)
+		return 1;
+	if (percentageOfFtp < (double)0.74)
+		return 2;
+	if (percentageOfFtp < (double)0.89)
+		return 3;
+	if (percentageOfFtp < (double)1.04)
+		return 4;
+	if (percentageOfFtp < (double)1.20)
+		return 5;
+	return 6;
+}
+
 void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CADENCE);
@@ -312,6 +344,7 @@ void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_3_SEC_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER_ZONE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS);

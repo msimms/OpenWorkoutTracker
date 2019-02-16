@@ -160,8 +160,9 @@
 "Overlay" = "Superposición";
 "Overview" = "Visión de Conjunto";
 "Pause" = "Pausa";
-"Please enter your height" = "Introduzca su altura";
-"Please enter your weight" = "Introduzca su peso";
+"Please enter your FTP" = "Por favor ingrese su FTP";
+"Please enter your height" = "Por favor ingrese su altura";
+"Please enter your weight" = "Por favor ingrese su peso";
 "Please specify a URL." = "Por favor especificar una URL.";
 "Poor GPS Signal" = "Mala Señal GPS";
 "Position" = "Posición";

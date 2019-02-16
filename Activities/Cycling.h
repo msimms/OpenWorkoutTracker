@@ -47,6 +47,7 @@ public:
 	virtual double ThreeSecPower() const { return LibMath::Statistics::averageDouble(m_recentPowerReadings); };
 	virtual double AveragePower() const { return m_numPowerReadings > 0 ? (m_totalPowerReadings / m_numPowerReadings) : (double)0.0; };
 	virtual double MaximumPower() const { return m_maximumPower; };
+	virtual uint8_t CurrentPowerZone() const;
 
 	virtual uint16_t NumWheelRevolutions() const { return m_currentWheelSpeedReading - m_firstWheelSpeedReading; };
 

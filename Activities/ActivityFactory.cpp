@@ -127,6 +127,7 @@ void ActivityFactory::CreateActivity(ActivitySummary& summary, Database& databas
 		database.RetrieveNearestWeightMeasurement(summary.startTime, userWeightKg);
 		user.SetBaseDateForComputingAge(*pStartTime);
 		user.SetWeightKg(userWeightKg);
+		user.SetFtp(user.GetFtp());
 		summary.pActivity->SetAthleteProfile(user);
 	}
 }

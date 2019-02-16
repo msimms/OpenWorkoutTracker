@@ -32,6 +32,7 @@ void User::SetToDefaults()
 	m_heightCm          = 178.2;
 	m_weightKg          = 88.6;
 	m_leanBodyMassKg    = m_weightKg * .83;
+	m_ftp               = 0.0;
 }
 
 float User::GetAgeInYears() const

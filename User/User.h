@@ -59,6 +59,9 @@ public:
 	float GetLeanBodyMassKg() const { return m_leanBodyMassKg; };
 	float GetLeanBodyMassLbs() const { return UnitConverter::KilogramsToPounds(m_leanBodyMassKg); };
 
+	void SetFtp(float ftp) { m_ftp = ftp; };
+	float GetFtp() const { return m_ftp; };
+	
 	float ComputeBasalMetabolicRate();
 	float ComputeBasalMetabolicRateHarrisBenedict();
 	float ComputeBasalMetabolicRateKatchMcArdle();
@@ -74,6 +77,7 @@ private:
 	float         m_heightCm;
 	float         m_weightKg;
 	float         m_leanBodyMassKg;
+	float         m_ftp;
 
 	float EstimateRestingHeartRateMale() const;
 	float EstimateRestingHeartRateFemale() const;
