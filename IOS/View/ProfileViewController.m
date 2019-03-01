@@ -239,7 +239,7 @@ typedef enum ProfileRows
 							double ftp = [appDelegate userFtp];
 							cell.textLabel.text = STR_FTP;
 							if (ftp >= (double)1.0)
-								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", ftp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@", ftp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 							else
 								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"Not Set"];
 						}
@@ -415,7 +415,7 @@ typedef enum ProfileRows
 																					  preferredStyle:UIAlertControllerStyleAlert];
 					
 					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userFtp]];
+						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userFtp]];
 						textField.keyboardType = UIKeyboardTypeNumberPad;
 					}];
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
