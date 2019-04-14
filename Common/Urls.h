@@ -7,8 +7,8 @@
 
 #pragma once
 
-#define REMOTE_API_LOGIN_URL             "api/1.0/login_submit"
-#define REMOTE_API_CREATE_LOGIN_URL      "api/1.0/create_login_submit"
+#define REMOTE_API_LOGIN_URL             "api/1.0/login"
+#define REMOTE_API_CREATE_LOGIN_URL      "api/1.0/create_login"
 #define REMOTE_API_IS_LOGGED_IN_URL      "api/1.0/login_status"
 #define REMOTE_API_LOGOUT_URL            "api/1.0/logout"
 #define REMOTE_API_LIST_FOLLOWING_URL    "api/1.0/list_users_following"
