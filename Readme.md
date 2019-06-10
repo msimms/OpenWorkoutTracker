@@ -24,6 +24,9 @@ Why develop a workout tracker when there are so many closed-source options avail
 ## Version History
 Beta
 
+## Building
+Straen is built using Apple XCode. Every attempt is made to stay up-to-date with the latest version of XCode and the latest version of iOS. In theory, if you have cloned the source code and initialized the submodules, then you should be able to open the project in XCode, build, and deploy.
+
 ## Tech
 Straen uses three other source projects to work properly:
 
