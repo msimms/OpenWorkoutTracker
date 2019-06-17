@@ -165,6 +165,7 @@
 		27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D622B193B7009A23C2 /* NotificationController.m */; };
 		27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5D822B193B8009A23C2 /* Assets.xcassets */; };
 		27DCF5DE22B193B8009A23C2 /* StraenWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* StraenWatch.app */; };
+		27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -608,6 +609,9 @@
 		27DCF5D822B193B8009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27DCF5DA22B193B8009A23C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		27DCF5F522B70AED009A23C2 /* StraenWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StraenWatch.entitlements; sourceTree = "<group>"; };
+		27DCF5F622B70CAE009A23C2 /* StraenWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "StraenWatch Extension.entitlements"; sourceTree = "<group>"; };
+		27DCF5F722B70CAE009A23C2 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -633,6 +637,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -868,6 +873,8 @@
 		27A3624319BFB0E200F5A17F = {
 			isa = PBXGroup;
 			children = (
+				27DCF5F622B70CAE009A23C2 /* StraenWatch Extension.entitlements */,
+				27DCF5F522B70AED009A23C2 /* StraenWatch.entitlements */,
 				27072DEF1D40528B00045624 /* CorePlot.xcodeproj */,
 				2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */,
 				2728FD2619C124CF00CE2BAD /* Default@2x.png */,
@@ -895,6 +902,7 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27DCF5F722B70CAE009A23C2 /* HealthKit.framework */,
 				2709420F215ABD2200C3BCBE /* HealthKit.framework */,
 				27F841B71CC33F8000ACF409 /* libxml2.tbd */,
 				27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */,
@@ -1302,11 +1310,24 @@
 						CreatedOnToolsVersion = 10.2.1;
 						DevelopmentTeam = F42C985T48;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					27DCF5C922B193B7009A23C2 = {
 						CreatedOnToolsVersion = 10.2.1;
 						DevelopmentTeam = F42C985T48;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes.watchos.extension = {
+								enabled = 1;
+							};
+							com.apple.HealthKit.watchos = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1808,6 +1829,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = StraenWatch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1838,6 +1860,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = StraenWatch.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1869,6 +1892,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "StraenWatch Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = F42C985T48;
@@ -1897,6 +1921,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "StraenWatch Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
