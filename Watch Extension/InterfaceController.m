@@ -5,7 +5,7 @@
 #import "ActivityMgr.h"
 #import "ExtensionDelegate.h"
 
-#define MSG_SELECT_NEW NSLocalizedString(@"Select the workout to perform.", nil)
+#define MSG_SELECT_NEW NSLocalizedString(@"Select the workout", nil)
 
 @interface InterfaceController ()
 
@@ -64,7 +64,7 @@
 		ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 		[extDelegate startSensors];
 		
-		//[self showActivityView:activityType];
+		[self pushControllerWithName:@"WatchActivityViewController" context:nil];
 	}
 }
 

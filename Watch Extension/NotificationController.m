@@ -13,10 +13,8 @@
 
 - (instancetype)init {
 	self = [super init];
-	if (self) {
-		// Initialize variables here.
-		// Configure interface objects here.
-		
+	if (self)
+	{
 	}
 	return self;
 }

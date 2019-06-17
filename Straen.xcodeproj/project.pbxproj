@@ -272,6 +272,7 @@
 		27DCF66122B72F50009A23C2 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15A19BFE3F5008F8672 /* User.cpp */; };
 		27DCF66222B72F50009A23C2 /* User.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15B19BFE3F5008F8672 /* User.h */; };
 		27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF66322B72FBF009A23C2 /* libxml2.tbd */; };
+		27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67522B80661009A23C2 /* WatchActivityViewController.m */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -720,6 +721,8 @@
 		27DCF5F722B70CAE009A23C2 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		27DCF63822B717FE009A23C2 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		27DCF66322B72FBF009A23C2 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
+		27DCF67522B80661009A23C2 /* WatchActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchActivityViewController.m; sourceTree = "<group>"; };
+		27DCF67622B80661009A23C2 /* WatchActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchActivityViewController.h; sourceTree = "<group>"; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -1325,6 +1328,8 @@
 				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
 				27DCF5D522B193B7009A23C2 /* NotificationController.h */,
 				27DCF5D622B193B7009A23C2 /* NotificationController.m */,
+				27DCF67622B80661009A23C2 /* WatchActivityViewController.h */,
+				27DCF67522B80661009A23C2 /* WatchActivityViewController.m */,
 				27DCF5D822B193B8009A23C2 /* Assets.xcassets */,
 				27DCF5DA22B193B8009A23C2 /* Info.plist */,
 				27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */,
@@ -1715,6 +1720,7 @@
 				27DCF65E22B72F50009A23C2 /* ActivityLevel.h in Sources */,
 				27DCF65F22B72F50009A23C2 /* BmrFormula.h in Sources */,
 				27DCF66022B72F50009A23C2 /* Gender.h in Sources */,
+				27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */,
 				27DCF66122B72F50009A23C2 /* User.cpp in Sources */,
 				27DCF66222B72F50009A23C2 /* User.h in Sources */,
 				27DCF65922B72F24009A23C2 /* Coordinate.h in Sources */,
