@@ -166,6 +166,112 @@
 		27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5D822B193B8009A23C2 /* Assets.xcassets */; };
 		27DCF5DE22B193B8009A23C2 /* StraenWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* StraenWatch.app */; };
 		27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
+		27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841819BFD063007CE934 /* ActivityMgr.h */; };
+		27DCF5FA22B7160C009A23C2 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841919BFD063007CE934 /* ActivityMgr.mm */; };
+		27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
+		27DCF5FC22B71628009A23C2 /* Activity.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841319BFD063007CE934 /* Activity.h */; };
+		27DCF5FD22B71628009A23C2 /* ActivityAttribute.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841419BFD063007CE934 /* ActivityAttribute.h */; };
+		27DCF5FE22B71628009A23C2 /* ActivityAttributeType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841519BFD063007CE934 /* ActivityAttributeType.h */; };
+		27DCF5FF22B71628009A23C2 /* ActivityFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841619BFD063007CE934 /* ActivityFactory.cpp */; };
+		27DCF60022B71628009A23C2 /* ActivityFactory.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841719BFD063007CE934 /* ActivityFactory.h */; };
+		27DCF60122B71628009A23C2 /* ActivitySummary.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841B19BFD063007CE934 /* ActivitySummary.h */; };
+		27DCF60222B71628009A23C2 /* ActivityType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841C19BFD063007CE934 /* ActivityType.h */; };
+		27DCF60322B71628009A23C2 /* ActivityViewType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841D19BFD063007CE934 /* ActivityViewType.h */; };
+		27DCF60422B71628009A23C2 /* AxisName.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841E19BFD063007CE934 /* AxisName.h */; };
+		27DCF60522B71628009A23C2 /* ChinUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841F19BFD063007CE934 /* ChinUp.cpp */; };
+		27DCF60622B71628009A23C2 /* ChinUp.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842019BFD063007CE934 /* ChinUp.h */; };
+		27DCF60722B71628009A23C2 /* ChinUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842119BFD063007CE934 /* ChinUpAnalyzer.cpp */; };
+		27DCF60822B71628009A23C2 /* ChinUpAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */; };
+		27DCF60922B71628009A23C2 /* Cycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842319BFD063007CE934 /* Cycling.cpp */; };
+		27DCF60A22B71628009A23C2 /* Cycling.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842419BFD063007CE934 /* Cycling.h */; };
+		27DCF60B22B71628009A23C2 /* GForceAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */; };
+		27DCF60C22B71628009A23C2 /* GForceAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842719BFD063007CE934 /* GForceAnalyzer.h */; };
+		27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */; };
+		27DCF60E22B71628009A23C2 /* GForceAnalyzerFactory.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842919BFD063007CE934 /* GForceAnalyzerFactory.h */; };
+		27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842D19BFD063007CE934 /* Hike.cpp */; };
+		27DCF61022B71628009A23C2 /* Hike.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842E19BFD063007CE934 /* Hike.h */; };
+		27DCF61122B71628009A23C2 /* IntervalWorkout.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842F19BFD063007CE934 /* IntervalWorkout.h */; };
+		27DCF61222B71628009A23C2 /* IntervalWorkoutSegment.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843019BFD063007CE934 /* IntervalWorkoutSegment.h */; };
+		27DCF61322B71628009A23C2 /* LiftingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843119BFD063007CE934 /* LiftingActivity.cpp */; };
+		27DCF61422B71628009A23C2 /* LiftingActivity.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843219BFD063007CE934 /* LiftingActivity.h */; };
+		27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843319BFD063007CE934 /* MountainBiking.cpp */; };
+		27DCF61622B71628009A23C2 /* MountainBiking.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843419BFD063007CE934 /* MountainBiking.h */; };
+		27DCF61722B71628009A23C2 /* MovingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843519BFD063007CE934 /* MovingActivity.cpp */; };
+		27DCF61822B71628009A23C2 /* MovingActivity.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843619BFD063007CE934 /* MovingActivity.h */; };
+		27DCF61922B71628009A23C2 /* PullUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843719BFD063007CE934 /* PullUp.cpp */; };
+		27DCF61A22B71628009A23C2 /* PullUp.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843819BFD063007CE934 /* PullUp.h */; };
+		27DCF61B22B71628009A23C2 /* PullUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843919BFD063007CE934 /* PullUpAnalyzer.cpp */; };
+		27DCF61C22B71628009A23C2 /* PullUpAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843A19BFD063007CE934 /* PullUpAnalyzer.h */; };
+		27DCF61D22B71628009A23C2 /* PushUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843B19BFD063007CE934 /* PushUp.cpp */; };
+		27DCF61E22B71628009A23C2 /* PushUp.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843C19BFD063007CE934 /* PushUp.h */; };
+		27DCF61F22B71628009A23C2 /* PushUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843D19BFD063007CE934 /* PushUpAnalyzer.cpp */; };
+		27DCF62022B71628009A23C2 /* PushUpAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843E19BFD063007CE934 /* PushUpAnalyzer.h */; };
+		27DCF62122B71628009A23C2 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843F19BFD063007CE934 /* Run.cpp */; };
+		27DCF62222B71628009A23C2 /* Run.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844019BFD063007CE934 /* Run.h */; };
+		27DCF62322B71628009A23C2 /* SegmentType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844119BFD063007CE934 /* SegmentType.h */; };
+		27DCF62422B71628009A23C2 /* Squat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844219BFD063007CE934 /* Squat.cpp */; };
+		27DCF62522B71628009A23C2 /* Squat.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844319BFD063007CE934 /* Squat.h */; };
+		27DCF62622B71628009A23C2 /* SquatAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844419BFD063007CE934 /* SquatAnalyzer.cpp */; };
+		27DCF62722B71628009A23C2 /* SquatAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844519BFD063007CE934 /* SquatAnalyzer.h */; };
+		27DCF62822B71628009A23C2 /* StationaryCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844619BFD063007CE934 /* StationaryCycling.cpp */; };
+		27DCF62922B71628009A23C2 /* StationaryCycling.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844719BFD063007CE934 /* StationaryCycling.h */; };
+		27DCF62A22B71628009A23C2 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
+		27DCF62B22B71628009A23C2 /* Treadmill.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844919BFD063007CE934 /* Treadmill.h */; };
+		27DCF62C22B71628009A23C2 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
+		27DCF62D22B71628009A23C2 /* UnitMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844B19BFD063007CE934 /* UnitMgr.h */; };
+		27DCF62E22B71628009A23C2 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
+		27DCF62F22B71628009A23C2 /* Walking.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844D19BFD063007CE934 /* Walking.h */; };
+		27DCF63022B716CB009A23C2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1719BFD807000383E3 /* Database.cpp */; };
+		27DCF63122B716CB009A23C2 /* Database.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1819BFD807000383E3 /* Database.h */; };
+		27DCF63222B716CB009A23C2 /* DataExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1919BFD807000383E3 /* DataExporter.cpp */; };
+		27DCF63322B716CB009A23C2 /* DataExporter.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1A19BFD807000383E3 /* DataExporter.h */; };
+		27DCF63422B716CB009A23C2 /* DataImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1B19BFD807000383E3 /* DataImporter.cpp */; };
+		27DCF63522B716CB009A23C2 /* DataImporter.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1C19BFD807000383E3 /* DataImporter.h */; };
+		27DCF63622B716CB009A23C2 /* HeatMapGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1D19BFD807000383E3 /* HeatMapGenerator.cpp */; };
+		27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1E19BFD807000383E3 /* HeatMapGenerator.h */; };
+		27DCF63922B717FE009A23C2 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF63822B717FE009A23C2 /* libsqlite3.tbd */; };
+		27DCF63A22B72EE0009A23C2 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047178216D997000EE47FF /* Distance.cpp */; };
+		27DCF63B22B72EE0009A23C2 /* Distance.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047174216D996F00EE47FF /* Distance.h */; };
+		27DCF63C22B72EE0009A23C2 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
+		27DCF63D22B72EE0009A23C2 /* KMeans.h in Sources */ = {isa = PBXBuildFile; fileRef = 2704717D216E253A00EE47FF /* KMeans.h */; };
+		27DCF63E22B72EE0009A23C2 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047177216D997000EE47FF /* Peaks.cpp */; };
+		27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047176216D997000EE47FF /* Peaks.h */; };
+		27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
+		27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047179216D997000EE47FF /* Statistics.h */; };
+		27DCF64222B72EFA009A23C2 /* CsvFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17319BFE48E008F8672 /* CsvFileWriter.cpp */; };
+		27DCF64322B72EFA009A23C2 /* CsvFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17419BFE48E008F8672 /* CsvFileWriter.h */; };
+		27DCF64422B72EFA009A23C2 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17519BFE48E008F8672 /* File.cpp */; };
+		27DCF64522B72EFA009A23C2 /* File.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17619BFE48E008F8672 /* File.h */; };
+		27DCF64622B72EFA009A23C2 /* FileFormat.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17719BFE48E008F8672 /* FileFormat.h */; };
+		27DCF64722B72EFA009A23C2 /* GpxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17819BFE48E008F8672 /* GpxFileReader.cpp */; };
+		27DCF64822B72EFA009A23C2 /* GpxFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17919BFE48E008F8672 /* GpxFileReader.h */; };
+		27DCF64922B72EFA009A23C2 /* GpxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17A19BFE48E008F8672 /* GpxFileWriter.cpp */; };
+		27DCF64A22B72EFA009A23C2 /* GpxFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17B19BFE48E008F8672 /* GpxFileWriter.h */; };
+		27DCF64B22B72EFA009A23C2 /* GpxTags.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17C19BFE48E008F8672 /* GpxTags.h */; };
+		27DCF64C22B72EFA009A23C2 /* KmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17D19BFE48E008F8672 /* KmlFileReader.cpp */; };
+		27DCF64D22B72EFA009A23C2 /* KmlFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17E19BFE48E008F8672 /* KmlFileReader.h */; };
+		27DCF64E22B72EFA009A23C2 /* TcxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18019BFE48E008F8672 /* TcxFileReader.cpp */; };
+		27DCF64F22B72EFA009A23C2 /* TcxFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18119BFE48E008F8672 /* TcxFileReader.h */; };
+		27DCF65022B72EFA009A23C2 /* TcxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18219BFE48E008F8672 /* TcxFileWriter.cpp */; };
+		27DCF65122B72EFA009A23C2 /* TcxFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18319BFE48E008F8672 /* TcxFileWriter.h */; };
+		27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18419BFE48E008F8672 /* TcxTags.h */; };
+		27DCF65322B72EFA009A23C2 /* TextFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18519BFE48E008F8672 /* TextFileReader.cpp */; };
+		27DCF65422B72EFA009A23C2 /* TextFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18619BFE48E008F8672 /* TextFileReader.h */; };
+		27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18719BFE48E008F8672 /* XmlFileReader.cpp */; };
+		27DCF65622B72EFA009A23C2 /* XmlFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18819BFE48E008F8672 /* XmlFileReader.h */; };
+		27DCF65722B72EFA009A23C2 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */; };
+		27DCF65822B72EFA009A23C2 /* XmlFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18A19BFE48E008F8672 /* XmlFileWriter.h */; };
+		27DCF65922B72F24009A23C2 /* Coordinate.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5ADC1A9FEDEB008F55AF /* Coordinate.h */; };
+		27DCF65A22B72F24009A23C2 /* UnitConversionFactors.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5ADF1A9FEDEB008F55AF /* UnitConversionFactors.h */; };
+		27DCF65B22B72F24009A23C2 /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
+		27DCF65C22B72F24009A23C2 /* UnitConverter.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE11A9FEDEB008F55AF /* UnitConverter.h */; };
+		27DCF65D22B72F24009A23C2 /* UnitSystem.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE21A9FEDEB008F55AF /* UnitSystem.h */; };
+		27DCF65E22B72F50009A23C2 /* ActivityLevel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15719BFE3F5008F8672 /* ActivityLevel.h */; };
+		27DCF65F22B72F50009A23C2 /* BmrFormula.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15819BFE3F5008F8672 /* BmrFormula.h */; };
+		27DCF66022B72F50009A23C2 /* Gender.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15919BFE3F5008F8672 /* Gender.h */; };
+		27DCF66122B72F50009A23C2 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15A19BFE3F5008F8672 /* User.cpp */; };
+		27DCF66222B72F50009A23C2 /* User.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15B19BFE3F5008F8672 /* User.h */; };
+		27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF66322B72FBF009A23C2 /* libxml2.tbd */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -612,6 +718,8 @@
 		27DCF5F522B70AED009A23C2 /* StraenWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StraenWatch.entitlements; sourceTree = "<group>"; };
 		27DCF5F622B70CAE009A23C2 /* StraenWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "StraenWatch Extension.entitlements"; sourceTree = "<group>"; };
 		27DCF5F722B70CAE009A23C2 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		27DCF63822B717FE009A23C2 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
+		27DCF66322B72FBF009A23C2 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -637,6 +745,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */,
+				27DCF63922B717FE009A23C2 /* libsqlite3.tbd in Frameworks */,
 				27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -902,6 +1012,8 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27DCF66322B72FBF009A23C2 /* libxml2.tbd */,
+				27DCF63822B717FE009A23C2 /* libsqlite3.tbd */,
 				27DCF5F722B70CAE009A23C2 /* HealthKit.framework */,
 				2709420F215ABD2200C3BCBE /* HealthKit.framework */,
 				27F841B71CC33F8000ACF409 /* libxml2.tbd */,
@@ -1600,6 +1712,110 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DCF65E22B72F50009A23C2 /* ActivityLevel.h in Sources */,
+				27DCF65F22B72F50009A23C2 /* BmrFormula.h in Sources */,
+				27DCF66022B72F50009A23C2 /* Gender.h in Sources */,
+				27DCF66122B72F50009A23C2 /* User.cpp in Sources */,
+				27DCF66222B72F50009A23C2 /* User.h in Sources */,
+				27DCF65922B72F24009A23C2 /* Coordinate.h in Sources */,
+				27DCF65A22B72F24009A23C2 /* UnitConversionFactors.h in Sources */,
+				27DCF65B22B72F24009A23C2 /* UnitConverter.cpp in Sources */,
+				27DCF65C22B72F24009A23C2 /* UnitConverter.h in Sources */,
+				27DCF65D22B72F24009A23C2 /* UnitSystem.h in Sources */,
+				27DCF64222B72EFA009A23C2 /* CsvFileWriter.cpp in Sources */,
+				27DCF64322B72EFA009A23C2 /* CsvFileWriter.h in Sources */,
+				27DCF64422B72EFA009A23C2 /* File.cpp in Sources */,
+				27DCF64522B72EFA009A23C2 /* File.h in Sources */,
+				27DCF64622B72EFA009A23C2 /* FileFormat.h in Sources */,
+				27DCF64722B72EFA009A23C2 /* GpxFileReader.cpp in Sources */,
+				27DCF64822B72EFA009A23C2 /* GpxFileReader.h in Sources */,
+				27DCF64922B72EFA009A23C2 /* GpxFileWriter.cpp in Sources */,
+				27DCF64A22B72EFA009A23C2 /* GpxFileWriter.h in Sources */,
+				27DCF64B22B72EFA009A23C2 /* GpxTags.h in Sources */,
+				27DCF64C22B72EFA009A23C2 /* KmlFileReader.cpp in Sources */,
+				27DCF64D22B72EFA009A23C2 /* KmlFileReader.h in Sources */,
+				27DCF64E22B72EFA009A23C2 /* TcxFileReader.cpp in Sources */,
+				27DCF64F22B72EFA009A23C2 /* TcxFileReader.h in Sources */,
+				27DCF65022B72EFA009A23C2 /* TcxFileWriter.cpp in Sources */,
+				27DCF65122B72EFA009A23C2 /* TcxFileWriter.h in Sources */,
+				27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */,
+				27DCF65322B72EFA009A23C2 /* TextFileReader.cpp in Sources */,
+				27DCF65422B72EFA009A23C2 /* TextFileReader.h in Sources */,
+				27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */,
+				27DCF65622B72EFA009A23C2 /* XmlFileReader.h in Sources */,
+				27DCF65722B72EFA009A23C2 /* XmlFileWriter.cpp in Sources */,
+				27DCF65822B72EFA009A23C2 /* XmlFileWriter.h in Sources */,
+				27DCF63A22B72EE0009A23C2 /* Distance.cpp in Sources */,
+				27DCF63B22B72EE0009A23C2 /* Distance.h in Sources */,
+				27DCF63C22B72EE0009A23C2 /* KMeans.cpp in Sources */,
+				27DCF63D22B72EE0009A23C2 /* KMeans.h in Sources */,
+				27DCF63E22B72EE0009A23C2 /* Peaks.cpp in Sources */,
+				27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */,
+				27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */,
+				27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */,
+				27DCF63022B716CB009A23C2 /* Database.cpp in Sources */,
+				27DCF63122B716CB009A23C2 /* Database.h in Sources */,
+				27DCF63222B716CB009A23C2 /* DataExporter.cpp in Sources */,
+				27DCF63322B716CB009A23C2 /* DataExporter.h in Sources */,
+				27DCF63422B716CB009A23C2 /* DataImporter.cpp in Sources */,
+				27DCF63522B716CB009A23C2 /* DataImporter.h in Sources */,
+				27DCF63622B716CB009A23C2 /* HeatMapGenerator.cpp in Sources */,
+				27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */,
+				27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */,
+				27DCF5FC22B71628009A23C2 /* Activity.h in Sources */,
+				27DCF5FD22B71628009A23C2 /* ActivityAttribute.h in Sources */,
+				27DCF5FE22B71628009A23C2 /* ActivityAttributeType.h in Sources */,
+				27DCF5FF22B71628009A23C2 /* ActivityFactory.cpp in Sources */,
+				27DCF60022B71628009A23C2 /* ActivityFactory.h in Sources */,
+				27DCF60122B71628009A23C2 /* ActivitySummary.h in Sources */,
+				27DCF60222B71628009A23C2 /* ActivityType.h in Sources */,
+				27DCF60322B71628009A23C2 /* ActivityViewType.h in Sources */,
+				27DCF60422B71628009A23C2 /* AxisName.h in Sources */,
+				27DCF60522B71628009A23C2 /* ChinUp.cpp in Sources */,
+				27DCF60622B71628009A23C2 /* ChinUp.h in Sources */,
+				27DCF60722B71628009A23C2 /* ChinUpAnalyzer.cpp in Sources */,
+				27DCF60822B71628009A23C2 /* ChinUpAnalyzer.h in Sources */,
+				27DCF60922B71628009A23C2 /* Cycling.cpp in Sources */,
+				27DCF60A22B71628009A23C2 /* Cycling.h in Sources */,
+				27DCF60B22B71628009A23C2 /* GForceAnalyzer.cpp in Sources */,
+				27DCF60C22B71628009A23C2 /* GForceAnalyzer.h in Sources */,
+				27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */,
+				27DCF60E22B71628009A23C2 /* GForceAnalyzerFactory.h in Sources */,
+				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,
+				27DCF61022B71628009A23C2 /* Hike.h in Sources */,
+				27DCF61122B71628009A23C2 /* IntervalWorkout.h in Sources */,
+				27DCF61222B71628009A23C2 /* IntervalWorkoutSegment.h in Sources */,
+				27DCF61322B71628009A23C2 /* LiftingActivity.cpp in Sources */,
+				27DCF61422B71628009A23C2 /* LiftingActivity.h in Sources */,
+				27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */,
+				27DCF61622B71628009A23C2 /* MountainBiking.h in Sources */,
+				27DCF61722B71628009A23C2 /* MovingActivity.cpp in Sources */,
+				27DCF61822B71628009A23C2 /* MovingActivity.h in Sources */,
+				27DCF61922B71628009A23C2 /* PullUp.cpp in Sources */,
+				27DCF61A22B71628009A23C2 /* PullUp.h in Sources */,
+				27DCF61B22B71628009A23C2 /* PullUpAnalyzer.cpp in Sources */,
+				27DCF61C22B71628009A23C2 /* PullUpAnalyzer.h in Sources */,
+				27DCF61D22B71628009A23C2 /* PushUp.cpp in Sources */,
+				27DCF61E22B71628009A23C2 /* PushUp.h in Sources */,
+				27DCF61F22B71628009A23C2 /* PushUpAnalyzer.cpp in Sources */,
+				27DCF62022B71628009A23C2 /* PushUpAnalyzer.h in Sources */,
+				27DCF62122B71628009A23C2 /* Run.cpp in Sources */,
+				27DCF62222B71628009A23C2 /* Run.h in Sources */,
+				27DCF62322B71628009A23C2 /* SegmentType.h in Sources */,
+				27DCF62422B71628009A23C2 /* Squat.cpp in Sources */,
+				27DCF62522B71628009A23C2 /* Squat.h in Sources */,
+				27DCF62622B71628009A23C2 /* SquatAnalyzer.cpp in Sources */,
+				27DCF62722B71628009A23C2 /* SquatAnalyzer.h in Sources */,
+				27DCF62822B71628009A23C2 /* StationaryCycling.cpp in Sources */,
+				27DCF62922B71628009A23C2 /* StationaryCycling.h in Sources */,
+				27DCF62A22B71628009A23C2 /* Treadmill.cpp in Sources */,
+				27DCF62B22B71628009A23C2 /* Treadmill.h in Sources */,
+				27DCF62C22B71628009A23C2 /* UnitMgr.cpp in Sources */,
+				27DCF62D22B71628009A23C2 /* UnitMgr.h in Sources */,
+				27DCF62E22B71628009A23C2 /* Walking.cpp in Sources */,
+				27DCF62F22B71628009A23C2 /* Walking.h in Sources */,
+				27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */,
+				27DCF5FA22B7160C009A23C2 /* ActivityMgr.mm in Sources */,
 				27DCF5D422B193B7009A23C2 /* ExtensionDelegate.m in Sources */,
 				27DCF5D122B193B7009A23C2 /* InterfaceController.m in Sources */,
 				27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */,
