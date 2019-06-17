@@ -157,6 +157,14 @@
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		27C0846419BFD063007CE934 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
+		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
+		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
+		27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		27DCF5D122B193B7009A23C2 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D022B193B7009A23C2 /* InterfaceController.m */; };
+		27DCF5D422B193B7009A23C2 /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */; };
+		27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D622B193B7009A23C2 /* NotificationController.m */; };
+		27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5D822B193B8009A23C2 /* Assets.xcassets */; };
+		27DCF5DE22B193B8009A23C2 /* StraenWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* StraenWatch.app */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -218,6 +226,20 @@
 			remoteGlobalIDString = C37EA6B71BC83F2D0091C8F7;
 			remoteInfo = "UnitTests tvOS";
 		};
+		27DCF5CC22B193B7009A23C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27DCF5C922B193B7009A23C2;
+			remoteInfo = "StraenWatch Extension";
+		};
+		27DCF5DC22B193B8009A23C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27DCF5BD22B193B5009A23C2;
+			remoteInfo = StraenWatch;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -229,6 +251,28 @@
 			files = (
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27DCF5F122B193B8009A23C2 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27DCF5F322B193B8009A23C2 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				27DCF5DE22B193B8009A23C2 /* StraenWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -550,6 +594,20 @@
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
 		27C0844C19BFD063007CE934 /* Walking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walking.cpp; path = Activities/Walking.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844D19BFD063007CE934 /* Walking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walking.h; path = Activities/Walking.h; sourceTree = SOURCE_ROOT; };
+		27DCF5BE22B193B5009A23C2 /* StraenWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StraenWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27DCF5C522B193B7009A23C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "StraenWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27DCF5CF22B193B7009A23C2 /* InterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
+		27DCF5D022B193B7009A23C2 /* InterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
+		27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
+		27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExtensionDelegate.m; sourceTree = "<group>"; };
+		27DCF5D522B193B7009A23C2 /* NotificationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationController.h; sourceTree = "<group>"; };
+		27DCF5D622B193B7009A23C2 /* NotificationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
+		27DCF5D822B193B8009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27DCF5DA22B193B8009A23C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -568,6 +626,13 @@
 				27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */,
 				27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */,
 				27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27DCF5C722B193B7009A23C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -810,6 +875,8 @@
 				2728FD2419C124B000CE2BAD /* Icon_80px.png */,
 				2728FD2319C1248700CE2BAD /* Icon_120px.png */,
 				27A3625519BFB0E200F5A17F /* App */,
+				27DCF5BF22B193B6009A23C2 /* Watch */,
+				27DCF5CE22B193B7009A23C2 /* Watch Extension */,
 				27A3624E19BFB0E200F5A17F /* Frameworks */,
 				27A3624D19BFB0E200F5A17F /* Products */,
 			);
@@ -819,6 +886,8 @@
 			isa = PBXGroup;
 			children = (
 				27A3624C19BFB0E200F5A17F /* Straen.app */,
+				27DCF5BE22B193B5009A23C2 /* StraenWatch.app */,
+				27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1117,6 +1186,32 @@
 			name = Bike;
 			sourceTree = "<group>";
 		};
+		27DCF5BF22B193B6009A23C2 /* Watch */ = {
+			isa = PBXGroup;
+			children = (
+				27DCF5C022B193B6009A23C2 /* Interface.storyboard */,
+				27DCF5C322B193B7009A23C2 /* Assets.xcassets */,
+				27DCF5C522B193B7009A23C2 /* Info.plist */,
+			);
+			path = Watch;
+			sourceTree = "<group>";
+		};
+		27DCF5CE22B193B7009A23C2 /* Watch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				27DCF5CF22B193B7009A23C2 /* InterfaceController.h */,
+				27DCF5D022B193B7009A23C2 /* InterfaceController.m */,
+				27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */,
+				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
+				27DCF5D522B193B7009A23C2 /* NotificationController.h */,
+				27DCF5D622B193B7009A23C2 /* NotificationController.m */,
+				27DCF5D822B193B8009A23C2 /* Assets.xcassets */,
+				27DCF5DA22B193B8009A23C2 /* Info.plist */,
+				27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */,
+			);
+			path = "Watch Extension";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1128,15 +1223,51 @@
 				27A3624919BFB0E200F5A17F /* Frameworks */,
 				27A3624A19BFB0E200F5A17F /* Resources */,
 				2743EB301B19393700F04369 /* Embed App Extensions */,
+				27DCF5F322B193B8009A23C2 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				27DCF5DD22B193B8009A23C2 /* PBXTargetDependency */,
 			);
 			name = Straen;
 			productName = Straen;
 			productReference = 27A3624C19BFB0E200F5A17F /* Straen.app */;
 			productType = "com.apple.product-type.application";
+		};
+		27DCF5BD22B193B5009A23C2 /* StraenWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27DCF5F222B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch" */;
+			buildPhases = (
+				27DCF5BC22B193B5009A23C2 /* Resources */,
+				27DCF5F122B193B8009A23C2 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27DCF5CD22B193B7009A23C2 /* PBXTargetDependency */,
+			);
+			name = StraenWatch;
+			productName = StraenWatch;
+			productReference = 27DCF5BE22B193B5009A23C2 /* StraenWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		27DCF5C922B193B7009A23C2 /* StraenWatch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27DCF5F022B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch Extension" */;
+			buildPhases = (
+				27DCF5C622B193B7009A23C2 /* Sources */,
+				27DCF5C722B193B7009A23C2 /* Frameworks */,
+				27DCF5C822B193B7009A23C2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StraenWatch Extension";
+			productName = "StraenWatch Extension";
+			productReference = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -1167,11 +1298,21 @@
 							};
 						};
 					};
+					27DCF5BD22B193B5009A23C2 = {
+						CreatedOnToolsVersion = 10.2.1;
+						DevelopmentTeam = F42C985T48;
+						ProvisioningStyle = Automatic;
+					};
+					27DCF5C922B193B7009A23C2 = {
+						CreatedOnToolsVersion = 10.2.1;
+						DevelopmentTeam = F42C985T48;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Straen" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -1190,6 +1331,8 @@
 			projectRoot = "";
 			targets = (
 				27A3624B19BFB0E200F5A17F /* Straen */,
+				27DCF5BD22B193B5009A23C2 /* StraenWatch */,
+				27DCF5C922B193B7009A23C2 /* StraenWatch Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -1275,6 +1418,23 @@
 				27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */,
 				27B44D1319BFF01A0058FE00 /* Countdown3.png in Resources */,
 				27B44D1519BFF01A0058FE00 /* Countdown5.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27DCF5BC22B193B5009A23C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */,
+				27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27DCF5C822B193B7009A23C2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1415,7 +1575,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		27DCF5C622B193B7009A23C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27DCF5D422B193B7009A23C2 /* ExtensionDelegate.m in Sources */,
+				27DCF5D122B193B7009A23C2 /* InterfaceController.m in Sources */,
+				27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27DCF5CD22B193B7009A23C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27DCF5C922B193B7009A23C2 /* StraenWatch Extension */;
+			targetProxy = 27DCF5CC22B193B7009A23C2 /* PBXContainerItemProxy */;
+		};
+		27DCF5DD22B193B8009A23C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27DCF5BD22B193B5009A23C2 /* StraenWatch */;
+			targetProxy = 27DCF5DC22B193B8009A23C2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2729852919C8F69900FE0077 /* InfoPlist.strings */ = {
@@ -1448,6 +1631,14 @@
 				2729853119C8F69900FE0077 /* es */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		27DCF5C022B193B6009A23C2 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				27DCF5C122B193B6009A23C2 /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1606,6 +1797,124 @@
 			};
 			name = Release;
 		};
+		27DCF5DF22B193B8009A23C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IBSC_MODULE = StraenWatch_Extension;
+				INFOPLIST_FILE = "$(SRCROOT)/Watch/Info.plist";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 5.2;
+			};
+			name = Debug;
+		};
+		27DCF5E022B193B8009A23C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = F42C985T48;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IBSC_MODULE = StraenWatch_Extension;
+				INFOPLIST_FILE = "$(SRCROOT)/Watch/Info.plist";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 5.2;
+			};
+			name = Release;
+		};
+		27DCF5E122B193B8009A23C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Watch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 5.2;
+			};
+			name = Debug;
+		};
+		27DCF5E222B193B8009A23C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = F42C985T48;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = "$(SRCROOT)/Watch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Straen.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 5.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1623,6 +1932,24 @@
 			buildConfigurations = (
 				27A3627919BFB0E200F5A17F /* Debug */,
 				27A3627A19BFB0E200F5A17F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27DCF5F022B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27DCF5E122B193B8009A23C2 /* Debug */,
+				27DCF5E222B193B8009A23C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27DCF5F222B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27DCF5DF22B193B8009A23C2 /* Debug */,
+				27DCF5E022B193B8009A23C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

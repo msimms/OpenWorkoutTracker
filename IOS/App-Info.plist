@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -40,16 +35,21 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Calories burned during exercise can be written to the Health app.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Calories burned during exercise can be written to the Health app.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location Services are required to monitor certain activities.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location Services are required to monitor certain activities.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Location Services are required to monitor certain activities.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location Services are required to monitor certain activities.</string>
