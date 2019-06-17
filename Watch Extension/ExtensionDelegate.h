@@ -5,4 +5,9 @@
 
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
 
+- (void)stopSensors;
+- (void)startSensors;
+
+- (NSMutableArray*)getActivityTypes;
+
 @end
