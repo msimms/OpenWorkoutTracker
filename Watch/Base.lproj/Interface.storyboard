@@ -14,29 +14,69 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <button width="1" alignment="left" title="Start a Workout..." id="TCK-NT-T02">
+                        <button width="1" alignment="left" title="Start Workout..." id="TCK-NT-T02">
                             <connections>
-                                <action selector="onStartWorkout" destination="AgC-eL-Hgc" id="SdN-tr-D8k"/>
-                                <segue destination="Bpo-6v-NAv" kind="push" id="yxC-Hl-qdZ"/>
+                                <action selector="onStartWorkout" destination="AgC-eL-Hgc" id="edT-cN-Wf1"/>
+                            </connections>
+                        </button>
+                        <button width="1" alignment="left" hidden="YES" title="Button" id="78J-mm-1nB">
+                            <connections>
+                                <segue destination="Bpo-6v-NAv" kind="push" id="Zrf-UY-5z4"/>
                             </connections>
                         </button>
                     </items>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="220" y="345"/>
+            <point key="canvasLocation" x="212" y="345"/>
         </scene>
-        <!--Watch Activity View Controller-->
+        <!--WatchActivityViewController-->
         <scene sceneID="MN4-z0-cxi">
             <objects>
-                <controller id="Bpo-6v-NAv" customClass="WatchActivityViewController">
+                <controller identifier="WatchActivityViewController" id="Bpo-6v-NAv" customClass="WatchActivityViewController">
                     <items>
-                        <label alignment="left" text="Label" id="fm7-ZA-A65"/>
-                        <label alignment="left" text="Label" id="jW7-ae-vrm"/>
-                        <label alignment="left" text="Label" id="0bO-tV-5E7"/>
+                        <group width="1" alignment="left" id="pJ5-uP-Shn">
+                            <items>
+                                <label alignment="left" text="--" id="fm7-ZA-A65"/>
+                                <label alignment="left" text=" Units" id="eHx-Fy-G0d"/>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="PPr-6M-NT3">
+                            <items>
+                                <label alignment="left" text="--" id="jW7-ae-vrm"/>
+                                <label alignment="left" text=" Units" id="lAO-ig-DSV"/>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="8Du-RJ-V9w">
+                            <items>
+                                <label alignment="left" text="--" id="pED-pN-z8m"/>
+                                <label alignment="left" text=" Units" id="pgE-yK-xEC"/>
+                            </items>
+                        </group>
+                        <group width="1" alignment="left" id="rYJ-m7-Avs">
+                            <items>
+                                <label alignment="left" text="--" id="0bO-tV-5E7"/>
+                                <label alignment="left" text=" Units" id="Op7-dq-Abk"/>
+                            </items>
+                        </group>
+                        <button width="1" alignment="left" title="Start" id="75M-0x-o8w">
+                            <connections>
+                                <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
+                            </connections>
+                        </button>
                     </items>
+                    <connections>
+                        <outlet property="units1" destination="eHx-Fy-G0d" id="zCH-nw-7um"/>
+                        <outlet property="units2" destination="lAO-ig-DSV" id="RzN-j0-HBP"/>
+                        <outlet property="units3" destination="pgE-yK-xEC" id="B48-RW-651"/>
+                        <outlet property="units4" destination="Op7-dq-Abk" id="fbP-uf-xYW"/>
+                        <outlet property="value1" destination="fm7-ZA-A65" id="7ul-S0-3uk"/>
+                        <outlet property="value2" destination="jW7-ae-vrm" id="p6w-f3-453"/>
+                        <outlet property="value3" destination="pED-pN-z8m" id="fMI-wz-QUj"/>
+                        <outlet property="value4" destination="0bO-tV-5E7" id="aN7-NR-I4a"/>
+                    </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="621" y="345"/>
+            <point key="canvasLocation" x="607" y="345"/>
         </scene>
     </scenes>
 </document>
