@@ -273,6 +273,8 @@
 		27DCF66222B72F50009A23C2 /* User.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15B19BFE3F5008F8672 /* User.h */; };
 		27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF66322B72FBF009A23C2 /* libxml2.tbd */; };
 		27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67522B80661009A23C2 /* WatchActivityViewController.m */; };
+		27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
+		27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -723,6 +725,8 @@
 		27DCF66322B72FBF009A23C2 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
 		27DCF67522B80661009A23C2 /* WatchActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchActivityViewController.m; sourceTree = "<group>"; };
 		27DCF67622B80661009A23C2 /* WatchActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchActivityViewController.h; sourceTree = "<group>"; };
+		27DCF67922BD6B8F009A23C2 /* HashUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HashUtils.m; path = IOS/Utilities/HashUtils.m; sourceTree = SOURCE_ROOT; };
+		27DCF67C22BD6BE6009A23C2 /* HashUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HashUtils.h; path = IOS/Utilities/HashUtils.h; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -904,6 +908,8 @@
 			children = (
 				2797F13A19BFE2C1008F8672 /* StringUtils.h */,
 				2797F13B19BFE2C1008F8672 /* StringUtils.m */,
+				27DCF67C22BD6BE6009A23C2 /* HashUtils.h */,
+				27DCF67922BD6B8F009A23C2 /* HashUtils.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -1642,6 +1648,7 @@
 				27B7CD9F19BFD91C000383E3 /* MapViewController.m in Sources */,
 				2797F15C19BFE3F5008F8672 /* User.cpp in Sources */,
 				27C0845119BFD063007CE934 /* ChinUp.cpp in Sources */,
+				27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */,
 				27B7CDF519BFD99B000383E3 /* LeDiscovery.m in Sources */,
 				27B7CDCA19BFD953000383E3 /* PowerLine.m in Sources */,
 				27C0845419BFD063007CE934 /* GForceAnalyzer.cpp in Sources */,
@@ -1743,6 +1750,7 @@
 				27DCF64E22B72EFA009A23C2 /* TcxFileReader.cpp in Sources */,
 				27DCF64F22B72EFA009A23C2 /* TcxFileReader.h in Sources */,
 				27DCF65022B72EFA009A23C2 /* TcxFileWriter.cpp in Sources */,
+				27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */,
 				27DCF65122B72EFA009A23C2 /* TcxFileWriter.h in Sources */,
 				27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */,
 				27DCF65322B72EFA009A23C2 /* TextFileReader.cpp in Sources */,
