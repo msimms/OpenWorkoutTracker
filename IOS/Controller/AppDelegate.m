@@ -225,8 +225,6 @@
 {
 	switch (feature)
 	{
-		case FEATURE_MAP_OVERLAYS:
-			return TRUE;
 		case FEATURE_HEATMAP:
 			return FALSE;
 		case FEATURE_LOCAL_BROADCAST:
@@ -249,7 +247,6 @@
 {
 	switch (feature)
 	{
-		case FEATURE_MAP_OVERLAYS:
 		case FEATURE_HEATMAP:
 		case FEATURE_LOCAL_BROADCAST:
 		case FEATURE_GLOBAL_BROADCAST:
