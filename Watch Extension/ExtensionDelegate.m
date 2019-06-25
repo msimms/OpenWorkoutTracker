@@ -3,6 +3,7 @@
 
 #import "ExtensionDelegate.h"
 #import "ActivityMgr.h"
+#import "SensorFactory.h"
 
 #define DATABASE_NAME "Activities.sqlite"
 
@@ -10,11 +11,26 @@
 
 - (void)applicationDidFinishLaunching
 {
-	NSArray*  paths      = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString* docDir     = [paths objectAtIndex: 0];
+	NSArray*  paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString* docDir = [paths objectAtIndex: 0];
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
 	
 	Initialize([dbFileName UTF8String]);
+		
+	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
+	
+	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
+	LocationSensor* locationController = [sensorFactory createLocationSensor];
+
+	self->sensorMgr = [SensorMgr sharedInstance];
+	if (self->sensorMgr)
+	{
+		[self->sensorMgr addSensor:accelerometerController];
+		[self->sensorMgr addSensor:locationController];
+	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 }
 
 - (void)applicationDidBecomeActive
@@ -88,6 +104,52 @@
 {
 }
 
+#pragma mark sensor update methods
+
+- (void)weightHistoryUpdated:(NSNotification*)notification
+{
+	NSDictionary* weightData = [notification object];
+	
+	NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
+	NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
+	
+	ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+}
+
+- (void)accelerometerUpdated:(NSNotification*)notification
+{
+	if (IsActivityInProgress())
+	{
+		NSDictionary* accelerometerData = [notification object];
+		
+		NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
+		NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
+		NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
+		NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
+		
+		ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+	}
+}
+
+- (void)locationUpdated:(NSNotification*)notification
+{
+	NSDictionary* locationData = [notification object];
+
+	NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
+	NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
+	NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
+
+	NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
+	NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
+
+	NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
+
+	if (IsActivityInProgress())
+	{
+
+	}
+}
+
 #pragma mark accessor methods
 
 void activityTypeCallback(const char* type, void* context)
@@ -104,6 +166,18 @@ void activityTypeCallback(const char* type, void* context)
 		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
 	}
 	return types;
+}
+
+- (NSString*)getCurrentActivityType
+{
+	NSString* activityTypeStr = nil;
+	char* activityType = GetCurrentActivityType();
+	if (activityType)
+	{
+		activityTypeStr = [NSString stringWithFormat:@"%s", activityType];
+		free((void*)activityType);
+	}
+	return activityTypeStr;
 }
 
 @end

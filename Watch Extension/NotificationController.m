@@ -11,7 +11,8 @@
 
 @implementation NotificationController
 
-- (instancetype)init {
+- (instancetype)init
+{
 	self = [super init];
 	if (self)
 	{
@@ -19,17 +20,18 @@
 	return self;
 }
 
-- (void)willActivate {
-	// This method is called when watch view controller is about to be visible to user
+- (void)willActivate
+{
 	[super willActivate];
 }
 
-- (void)didDeactivate {
-	// This method is called when watch view controller is no longer visible
+- (void)didDeactivate
+{
 	[super didDeactivate];
 }
 
-- (void)didReceiveNotification:(UNNotification *)notification {
+- (void)didReceiveNotification:(UNNotification*)notification
+{
 	// This method is called when a notification needs to be presented.
 	// Implement it if you use a dynamic notification interface.
 	// Populate your dynamic notification interface as quickly as possible.

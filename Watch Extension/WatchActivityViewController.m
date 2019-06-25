@@ -3,6 +3,8 @@
 
 #import "WatchActivityViewController.h"
 #import "ActivityMgr.h"
+#import "ExtensionDelegate.h"
+#import "StringUtils.h"
 
 @interface WatchActivityViewController ()
 
@@ -11,7 +13,16 @@
 
 @implementation WatchActivityViewController
 
-- (instancetype)init {
+@synthesize activityName;
+@synthesize value1;
+@synthesize value2;
+@synthesize value3;
+@synthesize units1;
+@synthesize units2;
+@synthesize units3;
+
+- (instancetype)init
+{
 	self = [super init];
 	if (self)
 	{
@@ -21,14 +32,112 @@
 
 - (void)willActivate
 {
-	// This method is called when watch view controller is about to be visible to user
 	[super willActivate];
+
+	self->valueLabels = [[NSMutableArray alloc] init];
+	if (self->valueLabels)
+	{
+		[self->valueLabels addObject:self.value1];
+		[self->valueLabels addObject:self.value2];
+		[self->valueLabels addObject:self.value3];
+	}
+
+	self->unitsLabels = [[NSMutableArray alloc] init];
+	if (self->unitsLabels)
+	{
+		[self->unitsLabels addObject:self.units1];
+		[self->unitsLabels addObject:self.units2];
+		[self->unitsLabels addObject:self.units3];
+	}
+
+	[self startTimer];
 }
 
 - (void)didDeactivate
 {
-	// This method is called when watch view controller is no longer visible
 	[super didDeactivate];
+	[self stopTimer];
+}
+
+- (void)didAppear
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	[self->activityName setText:[extDelegate getCurrentActivityType]];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onStartStop
+{
+}
+
+#pragma mark method for refreshing screen values
+
+- (void)displayValue:(WKInterfaceLabel*)valueLabel withValue:(double)value
+{
+	if (value < (double)0.1)
+		[valueLabel setText:[[NSString alloc] initWithFormat:@"0.0"]];
+	else
+		[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", value]];
+}
+
+- (void)refreshScreen:(uint8_t)numAttributes
+{
+	for (uint8_t i = 0; i < numAttributes; i++)
+	{
+		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
+		WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
+		
+		if (valueLabel)
+		{
+/*			ActivityAttributeType value = QueryLiveActivityAttribute([titleLabel.text cStringUsingEncoding:NSASCIIStringEncoding]);
+			
+			[valueLabel setText:[StringUtils formatActivityViewType:value]];
+			
+			if (unitsLabel)
+			{
+				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
+				[unitsLabel setText:unitsStr];
+			} */
+		}
+	}
+}
+
+#pragma mark NSTimer methods
+
+- (void)onRefreshTimer:(NSTimer*)timer
+{
+}
+
+- (void)startTimer
+{	
+	self->refreshTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]
+												  interval:1
+													target:self
+												  selector:@selector(onRefreshTimer:)
+												  userInfo:nil
+												   repeats:YES];
+	
+	NSRunLoop* runner = [NSRunLoop currentRunLoop];
+	if (runner)
+	{
+		[runner addTimer:self->refreshTimer forMode: NSDefaultRunLoopMode];
+	}
+}
+
+- (void)stopTimer
+{
+	if (self->refreshTimer)
+	{
+		[self->refreshTimer invalidate];
+		self->refreshTimer = nil;
+	}
+}
+
+#pragma mark sensor update methods
+
+- (void)locationUpdated:(NSNotification*)notification
+{
 }
 
 @end

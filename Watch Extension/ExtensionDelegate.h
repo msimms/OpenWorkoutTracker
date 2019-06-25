@@ -2,12 +2,17 @@
 //  Copyright © 2019 Michael J Simms Software. All rights reserved.
 
 #import <WatchKit/WatchKit.h>
+#import "SensorMgr.h"
 
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
+{
+	SensorMgr* sensorMgr;
+}
 
 - (void)stopSensors;
 - (void)startSensors;
 
 - (NSMutableArray*)getActivityTypes;
+- (NSString*)getCurrentActivityType;
 
 @end

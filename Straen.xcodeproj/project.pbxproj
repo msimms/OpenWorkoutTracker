@@ -276,6 +276,11 @@
 		27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
 		27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
 		27DCF68222C17261009A23C2 /* LocationSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE919BFD99B000383E3 /* LocationSensor.m */; };
+		27DCF68422C294D4009A23C2 /* SensorFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEC19BFD99B000383E3 /* SensorFactory.m */; };
+		27DCF68522C29577009A23C2 /* Accelerometer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDD919BFD99B000383E3 /* Accelerometer.m */; };
+		27DCF68622C295C5009A23C2 /* SensorMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEE19BFD99B000383E3 /* SensorMgr.m */; };
+		27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
+		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -1726,6 +1731,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DCF65E22B72F50009A23C2 /* ActivityLevel.h in Sources */,
+				27DCF68622C295C5009A23C2 /* SensorMgr.m in Sources */,
 				27DCF65F22B72F50009A23C2 /* BmrFormula.h in Sources */,
 				27DCF66022B72F50009A23C2 /* Gender.h in Sources */,
 				27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */,
@@ -1778,6 +1784,7 @@
 				27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */,
 				27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */,
 				27DCF5FC22B71628009A23C2 /* Activity.h in Sources */,
+				27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */,
 				27DCF5FD22B71628009A23C2 /* ActivityAttribute.h in Sources */,
 				27DCF5FE22B71628009A23C2 /* ActivityAttributeType.h in Sources */,
 				27DCF5FF22B71628009A23C2 /* ActivityFactory.cpp in Sources */,
@@ -1794,16 +1801,19 @@
 				27DCF60A22B71628009A23C2 /* Cycling.h in Sources */,
 				27DCF60B22B71628009A23C2 /* GForceAnalyzer.cpp in Sources */,
 				27DCF60C22B71628009A23C2 /* GForceAnalyzer.h in Sources */,
+				27DCF68522C29577009A23C2 /* Accelerometer.m in Sources */,
 				27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */,
 				27DCF60E22B71628009A23C2 /* GForceAnalyzerFactory.h in Sources */,
 				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,
 				27DCF61022B71628009A23C2 /* Hike.h in Sources */,
 				27DCF61122B71628009A23C2 /* IntervalWorkout.h in Sources */,
+				27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */,
 				27DCF61222B71628009A23C2 /* IntervalWorkoutSegment.h in Sources */,
 				27DCF61322B71628009A23C2 /* LiftingActivity.cpp in Sources */,
 				27DCF61422B71628009A23C2 /* LiftingActivity.h in Sources */,
 				27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */,
 				27DCF61622B71628009A23C2 /* MountainBiking.h in Sources */,
+				27DCF68422C294D4009A23C2 /* SensorFactory.m in Sources */,
 				27DCF61722B71628009A23C2 /* MovingActivity.cpp in Sources */,
 				27DCF61822B71628009A23C2 /* MovingActivity.h in Sources */,
 				27DCF61922B71628009A23C2 /* PullUp.cpp in Sources */,

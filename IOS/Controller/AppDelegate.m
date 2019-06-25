@@ -26,8 +26,8 @@
 
 #include <sys/sysctl.h>
 
-#define DATABASE_NAME               "Activities.sqlite"
-#define MAP_OVERLAY_DIR_NAME        "Map Overlays"
+#define DATABASE_NAME        "Activities.sqlite"
+#define MAP_OVERLAY_DIR_NAME "Map Overlays"
 
 @implementation UINavigationController (Rotation_IOS6)
 
@@ -61,8 +61,8 @@
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {	
-	NSArray*  paths      = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString* docDir     = [paths objectAtIndex: 0];
+	NSArray*  paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString* docDir = [paths objectAtIndex: 0];
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
 
 	Initialize([dbFileName UTF8String]);

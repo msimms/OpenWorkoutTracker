@@ -34,10 +34,15 @@
             <objects>
                 <controller identifier="WatchActivityViewController" id="Bpo-6v-NAv" customClass="WatchActivityViewController">
                     <items>
+                        <label width="1" alignment="left" text="Activity Name" textAlignment="center" id="hJl-Eb-i0H"/>
                         <group width="1" alignment="left" id="pJ5-uP-Shn">
                             <items>
-                                <label alignment="left" text="--" id="fm7-ZA-A65"/>
-                                <label alignment="left" text=" Units" id="eHx-Fy-G0d"/>
+                                <label alignment="left" text="--" id="fm7-ZA-A65">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
+                                </label>
+                                <label alignment="left" text=" Units" id="eHx-Fy-G0d">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
+                                </label>
                             </items>
                         </group>
                         <group width="1" alignment="left" id="PPr-6M-NT3">
@@ -52,12 +57,6 @@
                                 <label alignment="left" text=" Units" id="pgE-yK-xEC"/>
                             </items>
                         </group>
-                        <group width="1" alignment="left" id="rYJ-m7-Avs">
-                            <items>
-                                <label alignment="left" text="--" id="0bO-tV-5E7"/>
-                                <label alignment="left" text=" Units" id="Op7-dq-Abk"/>
-                            </items>
-                        </group>
                         <button width="1" alignment="left" title="Start" id="75M-0x-o8w">
                             <connections>
                                 <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
@@ -65,18 +64,17 @@
                         </button>
                     </items>
                     <connections>
-                        <outlet property="units1" destination="eHx-Fy-G0d" id="zCH-nw-7um"/>
-                        <outlet property="units2" destination="lAO-ig-DSV" id="RzN-j0-HBP"/>
-                        <outlet property="units3" destination="pgE-yK-xEC" id="B48-RW-651"/>
-                        <outlet property="units4" destination="Op7-dq-Abk" id="fbP-uf-xYW"/>
-                        <outlet property="value1" destination="fm7-ZA-A65" id="7ul-S0-3uk"/>
-                        <outlet property="value2" destination="jW7-ae-vrm" id="p6w-f3-453"/>
-                        <outlet property="value3" destination="pED-pN-z8m" id="fMI-wz-QUj"/>
-                        <outlet property="value4" destination="0bO-tV-5E7" id="aN7-NR-I4a"/>
+                        <outlet property="activityName" destination="hJl-Eb-i0H" id="CuC-PR-H3O"/>
+                        <outlet property="units1" destination="eHx-Fy-G0d" id="hrO-PJ-jvf"/>
+                        <outlet property="units2" destination="lAO-ig-DSV" id="uuv-WB-65W"/>
+                        <outlet property="units3" destination="pgE-yK-xEC" id="Ivv-2j-vFU"/>
+                        <outlet property="value1" destination="fm7-ZA-A65" id="Vei-aP-8w9"/>
+                        <outlet property="value2" destination="jW7-ae-vrm" id="cp3-sj-dBI"/>
+                        <outlet property="value3" destination="pED-pN-z8m" id="f4V-Hi-ryb"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="607" y="345"/>
+            <point key="canvasLocation" x="604" y="345"/>
         </scene>
     </scenes>
 </document>
