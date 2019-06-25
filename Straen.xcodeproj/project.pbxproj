@@ -275,6 +275,7 @@
 		27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67522B80661009A23C2 /* WatchActivityViewController.m */; };
 		27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
 		27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
+		27DCF68222C17261009A23C2 /* LocationSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE919BFD99B000383E3 /* LocationSensor.m */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -1812,6 +1813,7 @@
 				27DCF61D22B71628009A23C2 /* PushUp.cpp in Sources */,
 				27DCF61E22B71628009A23C2 /* PushUp.h in Sources */,
 				27DCF61F22B71628009A23C2 /* PushUpAnalyzer.cpp in Sources */,
+				27DCF68222C17261009A23C2 /* LocationSensor.m in Sources */,
 				27DCF62022B71628009A23C2 /* PushUpAnalyzer.h in Sources */,
 				27DCF62122B71628009A23C2 /* Run.cpp in Sources */,
 				27DCF62222B71628009A23C2 /* Run.h in Sources */,

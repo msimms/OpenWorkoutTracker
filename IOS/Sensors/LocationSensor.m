@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "LocationSensor.h"
+#import <TargetConditionals.h>
 
 @implementation LocationSensor
 
@@ -23,7 +24,9 @@
 		self.locationManager.delegate = self;
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 		self.locationManager.activityType = CLActivityTypeFitness;
+#if !TARGET_OS_WATCH
 		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
+#endif
 		self.locationManager.allowsBackgroundLocationUpdates = YES;
 	}
 	return self;
@@ -68,7 +71,9 @@
 			break;
 		case kCLAuthorizationStatusAuthorizedAlways:
 			[self.locationManager startUpdatingLocation];
+#if !TARGET_OS_WATCH
 			self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
+#endif
 			self.locationManager.allowsBackgroundLocationUpdates = YES;
 			break;
 		default:
