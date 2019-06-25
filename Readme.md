@@ -16,13 +16,13 @@ Why develop a workout tracker when there are so many closed-source options avail
 * Integrates with Apple Health.
 
 ## Major Todos
-- Unit Tests
-- Ability to upload to services such as Strava, Garmin Connect, Training Peaks, Endomondo, Runkeeper, etc.
-- Apple Watch Companion App
-- Android Version
+* Unit Tests
+* Ability to upload to services such as Strava, Garmin Connect, Training Peaks, Endomondo, Runkeeper, etc.
+* Apple Watch Companion App (In Progress)
+* Android Version
 
 ## Version History
-Version 1.0 - Initial Release
+2019-06-13 Version 1.0.0 - Initial Release
 
 ## Building
 Straen is built using Apple XCode. Every attempt is made to stay up-to-date with the latest version of XCode and the latest version of iOS. In theory, if you have cloned the source code and initialized the submodules, then you should be able to open the project in XCode, build, and deploy.
@@ -30,7 +30,7 @@ Straen is built using Apple XCode. Every attempt is made to stay up-to-date with
 ## Tech
 Straen uses three other source projects to work properly:
 
-* [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS
+* [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS.
 * [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities, including a peak finding algorithm.
 * [sqlite](https://www.sqlite.org) - Database for storing activities.
 
