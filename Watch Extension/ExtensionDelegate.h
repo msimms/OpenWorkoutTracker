@@ -13,6 +13,7 @@
 - (void)startSensors;
 
 - (NSMutableArray*)getActivityTypes;
+- (NSMutableArray*)getCurrentActivityAttributes;
 - (NSString*)getCurrentActivityType;
 
 @end

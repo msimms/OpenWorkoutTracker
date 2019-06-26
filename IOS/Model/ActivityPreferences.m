@@ -8,7 +8,6 @@
 #import "ActivityPreferences.h"
 #import "ActivityAttribute.h"
 #import "ActivityType.h"
-#import "AppDelegate.h"
 #import "Preferences.h"
 
 #define DEFAULT_SAMPLE_FREQUENCY 2
@@ -18,10 +17,15 @@
 - (id)init
 {
 	self = [super init];
+	return self;
+}
+
+- (id)initWithBT:(BOOL)hasBT
+{
+	self = [super init];
 	if (self != nil)
 	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		if (appDelegate && [appDelegate hasLeBluetooth])
+		if (hasBT)
 		{
 			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
 										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
@@ -176,6 +180,8 @@
 	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE withInteger:(NSInteger)viewType];
 }
 
+#if !TARGET_OS_WATCH
+
 - (NSString*)getBackgroundColorName:(NSString*)activityType
 {
 	NSString* colorName = [self getValueAsString:activityType withAttributeName:@ACTIVITY_PREF_BACKGROUND_COLOR];
@@ -252,6 +258,8 @@
 	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_TEXT_COLOR withString:colorName];
 }
 
+#endif
+
 - (BOOL)getShowHeartRatePercent:(NSString*)activityType
 {
 	return [self getValueAsBool:activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT];
@@ -282,12 +290,9 @@
 	[self setValue: activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP withBool:value];
 }
 
-- (NSString*)getAttributeName:(NSString*)activityType withPos:(uint8_t)viewPos
+- (NSString*)getAttributeName:(NSString*)activityType withAttributeList:(NSMutableArray*)attributeList withPos:(uint8_t)viewPos
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
-	for (NSString* attributeName in attributeNames)
+	for (NSString* attributeName in attributeList)
 	{
 		uint8_t viewPos2 = [self getAttributePos:activityType withAttributeName:attributeName];
 		if (viewPos2 == viewPos)

@@ -85,7 +85,7 @@
 		[self->sensorMgr addSensor:locationController];
 	}
 
-	self->activityPrefs = [[ActivityPreferences alloc] init];
+	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[self hasLeBluetooth]];
 	self->badGps = FALSE;
 
 	self->lastLocationUpdateTime = 0;

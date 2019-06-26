@@ -92,7 +92,8 @@
 	CGRect screenBounds = [[UIScreen mainScreen] bounds];
 	self->screenHeight = screenBounds.size.height;
 
-	self->activityPrefs = [[ActivityPreferences alloc] init];
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	self->messages = [[NSMutableArray alloc] init];
 
 	[self.moreButton setTitle:BUTTON_TITLE_MORE];
@@ -194,9 +195,9 @@
 	for (NSString* attribute in attributeNames)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+			ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 			NSString* activityType = [appDelegate getCurrentActivityType];
-			NSString* oldAttributeName = [prefs getAttributeName:activityType withPos:self->tappedButtonIndex];
+			NSString* oldAttributeName = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:self->tappedButtonIndex];
 			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
 			[prefs setViewAttributePosition:activityType withAttributeName:attribute withPos:self->tappedButtonIndex];
 			
@@ -877,7 +878,6 @@
 	{
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
 		UILabel* valueLabel = [self->valueLabels objectAtIndex:i];
-		UILabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
 
 		if (titleLabel && valueLabel)
 		{
@@ -911,6 +911,7 @@
 				[valueLabel setText:[StringUtils formatActivityViewType:value]];
 			}
 
+			UILabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
 			if (unitsLabel)
 			{
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];

@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
 
 #import "ActivityViewType.h"
 
@@ -46,6 +47,7 @@ typedef enum GpsFilterOption
 }
 
 - (id)init;
+- (id)initWithBT:(BOOL)hasBT;
 
 - (NSString*)getValueAsString:(NSString*)activityType withAttributeName:(NSString*)attributeName;
 - (NSInteger)getValueAsInteger:(NSString*)activityType withAttributeName:(NSString*)attributeName;
@@ -58,6 +60,7 @@ typedef enum GpsFilterOption
 - (ActivityViewType)getViewType:(NSString*)activityType;
 - (void)setViewType:(NSString*)activityType withViewType:(ActivityViewType)viewType;
 
+#if !TARGET_OS_WATCH
 - (NSString*)getBackgroundColorName:(NSString*)activityType;
 - (NSString*)getLabelColorName:(NSString*)activityType;
 - (NSString*)getTextColorName:(NSString*)pactivityType;
@@ -70,6 +73,7 @@ typedef enum GpsFilterOption
 - (void)setBackgroundColor:(NSString*)activityType withColorName:(NSString*)colorName;
 - (void)setLabelColor:(NSString*)activityType withColorName:(NSString*)colorName;
 - (void)setTextColor:(NSString*)activityType withColorName:(NSString*)colorName;
+#endif
 
 - (BOOL)getShowHeartRatePercent:(NSString*)activityType;
 - (void)setShowHeartRatePercent:(NSString*)activityType withBool:(BOOL)value;
@@ -80,7 +84,7 @@ typedef enum GpsFilterOption
 - (BOOL)getSplitBeepEnabled:(NSString*)activityType;
 - (void)setSplitBeepEnabled:(NSString*)activityType withBool:(BOOL)value;
 
-- (NSString*)getAttributeName:(NSString*)activityType withPos:(uint8_t)viewPos;
+- (NSString*)getAttributeName:(NSString*)activityType withAttributeList:(NSMutableArray*)attributeList withPos:(uint8_t)viewPos;
 - (uint8_t)getAttributePos:(NSString*)activityType withAttributeName:(NSString*)attributeName;
 - (void)setViewAttributePosition:(NSString*)activityType withAttributeName:(NSString*)attributeName withPos:(uint8_t)pos;
 

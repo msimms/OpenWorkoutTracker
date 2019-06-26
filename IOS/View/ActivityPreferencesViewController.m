@@ -193,7 +193,7 @@ typedef enum GpsSectionItems
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	if (prefs)
 	{
 		switch (section)
@@ -334,7 +334,7 @@ typedef enum GpsSectionItems
 			}
 			else if (row == SCREEN_ITEM_AUTOLOCK)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -344,7 +344,7 @@ typedef enum GpsSectionItems
 			}
 			else if (row == SCREEN_ITEM_SHOW_HR_PERCENT)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -365,7 +365,7 @@ typedef enum GpsSectionItems
 		case SECTION_SOUNDS:
 			if (row == SOUND_ITEM_START_STOP_BEEP)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -375,7 +375,7 @@ typedef enum GpsSectionItems
 			}
 			else if (row == SOUND_ITEM_SPLIT_BEEP)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -467,7 +467,7 @@ typedef enum GpsSectionItems
 			[alertController addAction:[UIAlertAction actionWithTitle:buttonName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 				if (prefs)
 				{
 					NSString* activityType = [appDelegate getCurrentActivityType];
@@ -586,7 +586,7 @@ typedef enum GpsSectionItems
 	UISwitch* switchControl = sender;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	NSString* activityType = [appDelegate getCurrentActivityType];
 
 	switch (switchControl.tag)

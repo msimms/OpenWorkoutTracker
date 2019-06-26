@@ -168,6 +168,22 @@ void activityTypeCallback(const char* type, void* context)
 	return types;
 }
 
+void attributeNameCallback(const char* name, void* context)
+{
+	NSMutableArray* names = (__bridge NSMutableArray*)context;
+	[names addObject:[[NSString alloc] initWithUTF8String:name]];
+}
+
+- (NSMutableArray*)getCurrentActivityAttributes
+{
+	NSMutableArray* names = [[NSMutableArray alloc] init];
+	if (names)
+	{
+		GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
+	}
+	return names;
+}
+
 - (NSString*)getCurrentActivityType
 {
 	NSString* activityTypeStr = nil;

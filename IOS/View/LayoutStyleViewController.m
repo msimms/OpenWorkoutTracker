@@ -51,7 +51,7 @@
 - (IBAction)onComplexActivityView:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	if (prefs)
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];
@@ -63,7 +63,7 @@
 - (IBAction)onMappedActivityView:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	if (prefs)
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];
@@ -75,7 +75,7 @@
 - (IBAction)onSimpleActivityView:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	if (prefs)
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];

@@ -3,6 +3,7 @@
 
 #import "WatchActivityViewController.h"
 #import "ActivityMgr.h"
+#import "ActivityPreferences.h"
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
 
@@ -81,32 +82,33 @@
 		[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", value]];
 }
 
-- (void)refreshScreen:(uint8_t)numAttributes
-{
-	for (uint8_t i = 0; i < numAttributes; i++)
-	{
-		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
-		WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
-		
-		if (valueLabel)
-		{
-/*			ActivityAttributeType value = QueryLiveActivityAttribute([titleLabel.text cStringUsingEncoding:NSASCIIStringEncoding]);
-			
-			[valueLabel setText:[StringUtils formatActivityViewType:value]];
-			
-			if (unitsLabel)
-			{
-				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
-				[unitsLabel setText:unitsStr];
-			} */
-		}
-	}
-}
-
 #pragma mark NSTimer methods
 
 - (void)onRefreshTimer:(NSTimer*)timer
 {
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
+	NSString* activityType = [extDelegate getCurrentActivityType];
+
+	for (uint8_t i = 0; i < [self->valueLabels count]; i++)
+	{
+		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
+		if (valueLabel)
+		{
+			NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
+			
+			ActivityAttributeType value = QueryLiveActivityAttribute([attribute cStringUsingEncoding:NSASCIIStringEncoding]);
+			[valueLabel setText:[StringUtils formatActivityViewType:value]];
+			
+			WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
+			if (unitsLabel)
+			{
+				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
+				[unitsLabel setText:unitsStr];
+			}
+		}
+	}
 }
 
 - (void)startTimer

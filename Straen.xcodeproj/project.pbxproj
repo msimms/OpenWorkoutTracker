@@ -281,6 +281,7 @@
 		27DCF68622C295C5009A23C2 /* SensorMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEE19BFD99B000383E3 /* SensorMgr.m */; };
 		27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
 		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
+		27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -1769,6 +1770,7 @@
 				27DCF63A22B72EE0009A23C2 /* Distance.cpp in Sources */,
 				27DCF63B22B72EE0009A23C2 /* Distance.h in Sources */,
 				27DCF63C22B72EE0009A23C2 /* KMeans.cpp in Sources */,
+				27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */,
 				27DCF63D22B72EE0009A23C2 /* KMeans.h in Sources */,
 				27DCF63E22B72EE0009A23C2 /* Peaks.cpp in Sources */,
 				27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */,
