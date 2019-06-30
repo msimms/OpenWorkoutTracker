@@ -25,7 +25,6 @@
 #define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
 
 #define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
-#define ACTION_SHEET_TITLE_ATTRIBUTES NSLocalizedString(@"Attributes", nil)
 
 #define ALERT_MSG_STOP                NSLocalizedString(@"Are you sure you want to stop?", nil)
 #define ALERT_MSG_WEIGHT              NSLocalizedString(@"Enter the amount of weight being used", nil)
@@ -190,8 +189,10 @@
 	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
 
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																			 message:ACTION_SHEET_TITLE_ATTRIBUTES
+																			 message:STR_ATTRIBUTES
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add an option for each possible attribute.
 	for (NSString* attribute in attributeNames)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -205,6 +206,8 @@
 			titleLabel.text = attribute;
 		}]];
 	}
+
+	// Add a cancel option.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }

@@ -4,6 +4,7 @@
 #import "WatchActivityViewController.h"
 #import "ActivityMgr.h"
 #import "ActivityPreferences.h"
+#import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
 
@@ -21,6 +22,9 @@
 @synthesize units1;
 @synthesize units2;
 @synthesize units3;
+@synthesize group1;
+@synthesize group2;
+@synthesize group3;
 
 - (instancetype)init
 {
@@ -50,7 +54,15 @@
 		[self->unitsLabels addObject:self.units2];
 		[self->unitsLabels addObject:self.units3];
 	}
-
+	
+	self->groups = [[NSMutableArray alloc] init];
+	if (self->groups)
+	{
+		[self->groups addObject:self.group1];
+		[self->groups addObject:self.group2];
+		[self->groups addObject:self.group3];
+	}
+	
 	[self startTimer];
 }
 
@@ -140,6 +152,39 @@
 
 - (void)locationUpdated:(NSNotification*)notification
 {
+}
+
+#pragma mark method for showing the attributes menu
+
+- (void)showAttributesMenu
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
+	NSMutableArray* actions = [[NSMutableArray alloc] init];
+
+	// Add an option for each possible attribute.
+	for (NSString* attribute in attributeNames)
+	{
+		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleCancel handler:^(void){
+		}];	
+		[actions addObject:action];
+	}
+	
+	// Add a cancel option.
+	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
+	[actions addObject:action];
+	
+	[self presentAlertControllerWithTitle:nil
+								  message:STR_ATTRIBUTES
+						   preferredStyle:WKAlertControllerStyleAlert
+								  actions:actions];
+}
+
+#pragma mark UIGestureRecognizer methods
+
+- (IBAction)handleGesture:(WKTapGestureRecognizer*)gestureRecognizer
+{
+	[self showAttributesMenu];
 }
 
 @end

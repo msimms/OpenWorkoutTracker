@@ -44,18 +44,39 @@
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                             </items>
+                            <gestureRecognizers>
+                                <tapGestureRecognizer id="kvv-3u-htX">
+                                    <connections>
+                                        <action selector="handleGesture:" destination="Bpo-6v-NAv" id="9m1-hm-eIL"/>
+                                    </connections>
+                                </tapGestureRecognizer>
+                            </gestureRecognizers>
                         </group>
                         <group width="1" alignment="left" id="PPr-6M-NT3">
                             <items>
                                 <label alignment="left" text="--" id="jW7-ae-vrm"/>
                                 <label alignment="left" text=" Units" id="lAO-ig-DSV"/>
                             </items>
+                            <gestureRecognizers>
+                                <tapGestureRecognizer id="bbo-Ec-SgR">
+                                    <connections>
+                                        <action selector="handleGesture:" destination="Bpo-6v-NAv" id="EKH-yd-nkr"/>
+                                    </connections>
+                                </tapGestureRecognizer>
+                            </gestureRecognizers>
                         </group>
                         <group width="1" alignment="left" id="8Du-RJ-V9w">
                             <items>
                                 <label alignment="left" text="--" id="pED-pN-z8m"/>
                                 <label alignment="left" text=" Units" id="pgE-yK-xEC"/>
                             </items>
+                            <gestureRecognizers>
+                                <tapGestureRecognizer id="mzW-j1-l4o">
+                                    <connections>
+                                        <action selector="handleGesture:" destination="Bpo-6v-NAv" id="oVs-A4-0r9"/>
+                                    </connections>
+                                </tapGestureRecognizer>
+                            </gestureRecognizers>
                         </group>
                         <button width="1" alignment="left" title="Start" id="75M-0x-o8w">
                             <connections>
@@ -65,6 +86,9 @@
                     </items>
                     <connections>
                         <outlet property="activityName" destination="hJl-Eb-i0H" id="CuC-PR-H3O"/>
+                        <outlet property="group1" destination="pJ5-uP-Shn" id="7RW-cp-4g3"/>
+                        <outlet property="group2" destination="PPr-6M-NT3" id="yeS-ya-6Di"/>
+                        <outlet property="group3" destination="8Du-RJ-V9w" id="vBH-d0-Vsp"/>
                         <outlet property="units1" destination="eHx-Fy-G0d" id="hrO-PJ-jvf"/>
                         <outlet property="units2" destination="lAO-ig-DSV" id="uuv-WB-65W"/>
                         <outlet property="units3" destination="pgE-yK-xEC" id="Ivv-2j-vFU"/>
