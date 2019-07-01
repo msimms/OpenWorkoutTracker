@@ -37,11 +37,11 @@
                         <label width="1" alignment="left" text="Activity Name" textAlignment="center" id="hJl-Eb-i0H"/>
                         <group width="1" alignment="left" id="pJ5-uP-Shn">
                             <items>
-                                <label alignment="left" text="--" id="fm7-ZA-A65">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
+                                <label alignment="center" text="--" id="fm7-ZA-A65">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
                                 </label>
-                                <label alignment="left" text=" Units" id="eHx-Fy-G0d">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
+                                <label alignment="center" text=" Units" id="eHx-Fy-G0d">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
