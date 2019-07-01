@@ -5,6 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#import <TargetConditionals.h>
+
 #import "ActivityPreferences.h"
 #import "ActivityAttribute.h"
 #import "ActivityType.h"
@@ -27,6 +29,18 @@
 	{
 		if (hasBT)
 		{
+#if TARGET_OS_WATCH
+			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
+										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+										  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
+										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+										  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
+										  @ACTIVITY_ATTRIBUTE_CADENCE,
+										  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+										  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+										  nil];
+#else
 			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
 										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
 										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
@@ -37,9 +51,22 @@
 										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
 										  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
 										  nil];
+#endif
 		}
 		else
 		{
+#if TARGET_OS_WATCH
+			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
+										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+										  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
+										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+										  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
+										  @ACTIVITY_ATTRIBUTE_FASTEST_SPEED,
+										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+										  @ACTIVITY_ATTRIBUTE_CURRENT_CLIMB,
+										  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
+										  nil];
+#else
 			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
 										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
 										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
@@ -50,6 +77,7 @@
 										  @ACTIVITY_ATTRIBUTE_CURRENT_CLIMB,
 										  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
 										  nil];
+#endif
 		}
 
 		self->defaultStationaryBikeLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
@@ -67,6 +95,24 @@
 										@ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
 										@ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
 										nil];
+#if TARGET_OS_WATCH
+		self->defaultRunningLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_CURRENT_PACE,
+									  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+									  @ACTIVITY_ATTRIBUTE_AVG_PACE,
+									  @ACTIVITY_ATTRIBUTE_STEPS_TAKEN,
+									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+									  nil];
+		self->defaultHikingLayout  = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
+									  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+									  @ACTIVITY_ATTRIBUTE_STEPS_TAKEN,
+									  nil];
+#else
 		self->defaultRunningLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
 									  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
 									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
@@ -83,6 +129,7 @@
 									  @ACTIVITY_ATTRIBUTE_STEPS_TAKEN,
 									  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
 									  nil];
+#endif
 		self->defaultLiftingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
 									  @ACTIVITY_ATTRIBUTE_REPS,
 									  @ACTIVITY_ATTRIBUTE_SETS,
