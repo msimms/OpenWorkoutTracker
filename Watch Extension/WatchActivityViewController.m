@@ -121,7 +121,11 @@
 
 - (void)doStop
 {
-	[self setUIForStoppedActivity];
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	if ([extDelegate stopActivity])
+	{
+		[self setUIForStoppedActivity];
+	}
 }
 
 - (void)doPause
