@@ -2,7 +2,9 @@
 //  Copyright © 2019 Michael J Simms Software. All rights reserved.
 
 #import "ExtensionDelegate.h"
+#import "ActivityAttribute.h"
 #import "ActivityMgr.h"
+#import "Notifications.h"
 #import "SensorFactory.h"
 
 #define DATABASE_NAME "Activities.sqlite"
@@ -28,6 +30,15 @@
 		[self->sensorMgr addSensor:accelerometerController];
 		[self->sensorMgr addSensor:locationController];
 	}
+
+	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
+	self->badGps = FALSE;
+
+	self->lastLocationUpdateTime = 0;
+	self->lastHeartRateUpdateTime = 0;
+	self->lastCadenceUpdateTime = 0;
+	self->lastWheelSpeedUpdateTime = 0;
+	self->lastPowerUpdateTime = 0;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
@@ -104,6 +115,77 @@
 {
 }
 
+#pragma mark methods for starting and stopping activities, etc.
+
+- (BOOL)startActivity
+{
+	NSString* activityId = [[NSUUID UUID] UUIDString];
+	BOOL result = StartActivity([activityId UTF8String]);
+	if (result)
+	{
+		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+		NSString* activityType = [self getCurrentActivityType];
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		
+		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								   activityId, @KEY_NAME_ACTIVITY_ID,
+								   activityType, @KEY_NAME_ACTIVITY_TYPE,
+								   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+								   nil];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
+	}
+	return result;
+}
+
+- (BOOL)startActivityWithBikeName:(NSString*)bikeName
+{
+	BOOL result = [self startActivity];
+	if (result)
+	{
+		SetCurrentBicycle([bikeName UTF8String]);
+	}
+	return result;
+}
+
+- (BOOL)stopActivity
+{
+	BOOL result = StopCurrentActivity();
+	if (result)
+	{
+		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+		ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
+		ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
+		NSString* activityType = [self getCurrentActivityType];
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		
+		SaveActivitySummaryData();
+		
+		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								  activityId, @KEY_NAME_ACTIVITY_ID,
+								  activityType, @KEY_NAME_ACTIVITY_TYPE,
+								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
+								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
+								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
+								  nil];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
+	}
+	return result;
+}
+
+- (BOOL)pauseActivity
+{
+	return PauseCurrentActivity();
+}
+
+- (BOOL)startNewLap
+{
+	return StartNewLap();
+}
+
 #pragma mark sensor update methods
 
 - (void)weightHistoryUpdated:(NSNotification*)notification
@@ -144,9 +226,33 @@
 
 	NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
 
+	NSString* activityType = [self getCurrentActivityType];
+	
+	BOOL tempBadGps = FALSE;
+
 	if (IsActivityInProgress())
 	{
-
+		uint8_t freq = [self->activityPrefs getGpsSampleFrequency:activityType];
+		time_t nextUpdateTimeSec = self->lastLocationUpdateTime + freq;
+		time_t currentTimeSec = (time_t)([gpsTimestampMs longLongValue] / 1000);
+		
+		if (currentTimeSec >= nextUpdateTimeSec)
+		{
+			BOOL shouldProcessReading = TRUE;
+			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+			
+			if (filterOption == GPS_FILTER_DROP && self->badGps)
+			{
+				shouldProcessReading = FALSE;
+			}
+			
+			if (shouldProcessReading)
+			{
+				ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+			}
+			
+			self->lastLocationUpdateTime = currentTimeSec;
+		}
 	}
 }
 

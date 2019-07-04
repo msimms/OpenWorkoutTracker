@@ -18,6 +18,7 @@
 #import "LePowerMeter.h"
 #import "LeScale.h"
 #import "LocationSensor.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
 #import "Urls.h"

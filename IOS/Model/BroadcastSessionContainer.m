@@ -7,6 +7,7 @@
 
 #import "BroadcastSessionContainer.h"
 #import "AppDelegate.h"
+#import "Notifications.h"
 
 @implementation BroadcastSessionContainer
 

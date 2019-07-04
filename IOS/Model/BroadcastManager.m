@@ -11,6 +11,7 @@
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
 #import "LocationSensor.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "Urls.h"
 

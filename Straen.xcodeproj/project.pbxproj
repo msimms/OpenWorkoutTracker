@@ -734,6 +734,7 @@
 		27DCF67622B80661009A23C2 /* WatchActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchActivityViewController.h; sourceTree = "<group>"; };
 		27DCF67922BD6B8F009A23C2 /* HashUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HashUtils.m; path = IOS/Utilities/HashUtils.m; sourceTree = SOURCE_ROOT; };
 		27DCF67C22BD6BE6009A23C2 /* HashUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HashUtils.h; path = IOS/Utilities/HashUtils.h; sourceTree = SOURCE_ROOT; };
+		27DCF68E22CD483A009A23C2 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
@@ -822,6 +823,7 @@
 			isa = PBXGroup;
 			children = (
 				2762BC781ECB72FE0052A26E /* Defines.h */,
+				27DCF68E22CD483A009A23C2 /* Notifications.h */,
 				271C5E3820D59C2700DE759C /* Urls.h */,
 			);
 			name = Common;

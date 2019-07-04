@@ -17,11 +17,11 @@
 #import "LeHeartRateMonitor.h"
 #import "LePowerMeter.h"
 #import "LocationSensor.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
 
-#define ALERT_TITLE_STOP              NSLocalizedString(@"Stop", nil)
 #define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
 
 #define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
@@ -31,7 +31,6 @@
 #define ALERT_MSG_NO_BIKE             NSLocalizedString(@"You need to choose a bike.", nil)
 #define ALERT_MSG_NO_FOOT_POD         NSLocalizedString(@"You need a foot pod to use this app with a treadmill.", nil)
 
-#define BUTTON_TITLE_PAUSE            NSLocalizedString(@"Pause", nil)
 #define BUTTON_TITLE_MORE             NSLocalizedString(@"More", nil)
 #define BUTTON_TITLE_LAP              NSLocalizedString(@"Lap", nil)
 #define BUTTON_TITLE_CUSTOMIZE        NSLocalizedString(@"Customize", nil)
@@ -526,7 +525,7 @@
 		}
 		else
 		{
-			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_STOP
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_STOP
 																					 message:ALERT_MSG_STOP
 																			  preferredStyle:UIAlertControllerStyleAlert];           
 			[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -534,7 +533,7 @@
 			}]];
 			[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			}]];
-			[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_PAUSE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_PAUSE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				[self doPause];
 			}]];
 			[self presentViewController:alertController animated:YES completion:nil];

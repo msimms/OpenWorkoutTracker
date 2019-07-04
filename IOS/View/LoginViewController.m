@@ -8,6 +8,7 @@
 #import "LoginViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "Segues.h"
 

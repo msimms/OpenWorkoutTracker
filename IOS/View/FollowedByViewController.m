@@ -8,6 +8,7 @@
 #import "FollowedByViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "Notifications.h"
 
 @interface FollowedByViewController ()
 

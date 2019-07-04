@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "CloudPreferences.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "Segues.h"
 

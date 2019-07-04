@@ -8,6 +8,7 @@
 #import "FollowingViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "Notifications.h"
 
 #define ALERT_TITLE_REQUEST NSLocalizedString(@"Request", nil)
 #define ALERT_MSG_REQUEST   NSLocalizedString(@"Enter the email address of the person you would like to follow", nil)

@@ -10,6 +10,7 @@
 #import "ActivityType.h"
 #import "AppDelegate.h"
 #import "LeScale.h"
+#import "Notifications.h"
 #import "UserProfile.h"
 
 @interface HKUnit (HKManager)

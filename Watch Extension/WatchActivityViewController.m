@@ -8,6 +8,12 @@
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
 
+#define ACTIVITY_BUTTON_START  NSLocalizedString(@"Start", nil)
+#define ACTIVITY_BUTTON_STOP   NSLocalizedString(@"Stop", nil)
+#define ACTIVITY_BUTTON_PAUSE  NSLocalizedString(@"Pause", nil)
+#define ACTIVITY_BUTTON_RESUME NSLocalizedString(@"Resume", nil)
+#define ALERT_MSG_STOP         NSLocalizedString(@"Are you sure you want to stop?", nil)
+
 @interface WatchActivityViewController ()
 
 @end
@@ -16,6 +22,7 @@
 @implementation WatchActivityViewController
 
 @synthesize activityName;
+@synthesize startStopButton;
 @synthesize value1;
 @synthesize value2;
 @synthesize value3;
@@ -78,10 +85,86 @@
 	[self->activityName setText:[extDelegate getCurrentActivityType]];
 }
 
+#pragma mark methods for resetting the UI based on activity state
+
+- (void)setUIForStartedActivity
+{
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+}
+
+- (void)setUIForStoppedActivity
+{
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+}
+
+- (void)setUIForPausedActivity
+{
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_RESUME];
+}
+
+- (void)setUIForResumedActivity
+{
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+}
+
 #pragma mark button handlers
+
+- (void)doStart
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	BOOL started = [extDelegate startActivity];
+	if (started)
+	{		
+		[self setUIForStartedActivity];
+	}
+}
+
+- (void)doStop
+{
+	[self setUIForStoppedActivity];
+}
+
+- (void)doPause
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	if ([extDelegate pauseActivity])
+	{
+		[self setUIForPausedActivity];
+	}
+	else
+	{
+		[self setUIForResumedActivity];
+	}
+}
 
 - (IBAction)onStartStop
 {
+	if (IsActivityInProgress())
+	{
+		if (IsActivityPaused())
+		{
+			[self doPause];
+		}
+		else
+		{
+			WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleCancel handler:^(void){
+				[self doStop];
+			}];
+			WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleCancel handler:^(void){
+			}];
+			WKAlertAction* pauseAction = [WKAlertAction actionWithTitle:STR_PAUSE style:WKAlertActionStyleCancel handler:^(void){
+				[self doPause];
+			}];
+
+			NSArray* actions = [NSArray new];
+			actions = @[yesAction, noAction, pauseAction];
+			[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_STOP preferredStyle:WKAlertControllerStyleAlert actions:actions];
+		}
+	}
+	else
+	{
+		[self doStart];
+	}
 }
 
 #pragma mark method for refreshing screen values

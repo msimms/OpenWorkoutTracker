@@ -1,0 +1,35 @@
+// Created by Michael Simms on 7/15/12.
+// Copyright (c) 2012 Michael J. Simms. All rights reserved.
+
+#define NOTIFICATION_NAME_ACTIVITY_STARTED         "ActivityStarted"
+#define NOTIFICATION_NAME_ACTIVITY_STOPPED         "ActivityStopped"
+#define NOTIFICATION_NAME_PEER_LOCATION_UPDATED    "PeerLocationUpdated"
+#define NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED   "FollowingListUpdated"
+#define NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED "FollowedByListUpdated"
+#define NOTIFICATION_NAME_LOGIN_PROCESSED          "LoginProcessed"
+#define NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED   "CreateLoginProcessed"
+#define NOTIFICATION_NAME_LOGIN_CHECKED            "LoginChecked"
+#define NOTIFICATION_NAME_LOGGED_OUT               "LogoutProcessed"
+#define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
+#define NOTIFICATION_NAME_PRINT_MESSAGE            "PrintMessage"
+
+#define KEY_NAME_ACTIVITY_ID                       "ActivityId"
+#define KEY_NAME_ACTIVITY_TYPE                     "ActivityType"
+#define KEY_NAME_START_TIME                        "StartTime"
+#define KEY_NAME_END_TIME                          "EndTime"
+#define KEY_NAME_DISTANCE                          "Distance"
+#define KEY_NAME_CALORIES                          "Calories"
+#define KEY_NAME_RESPONSE_CODE                     "ResponseCode"
+#define KEY_NAME_RESPONSE_STR                      "ResponseStr"
+#define KEY_NAME_DATA                              "Data"
+#define KEY_NAME_URL                               "URL"
+#define KEY_NAME_TAG                               "Tag"
+#define KEY_NAME_MESSAGE                           "Message"
+
+#define NOTIFICATION_NAME_INTERVAL_UPDATED         "IntervalUpdated"
+#define NOTIFICATION_NAME_INTERVAL_COMPLETE        "IntervalComplete"
+
+#define KEY_NAME_INTERVAL_QUANTITY                 "IntervalSegmentQuantity"
+#define KEY_NAME_INTERVAL_UNITS                    "IntervalSegmentUnits"
+#define KEY_NAME_DEVICE_ID                         "DeviceId"
+#define KEY_NAME_USER_NAME                         "Name"
