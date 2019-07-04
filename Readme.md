@@ -1,11 +1,11 @@
 # Straen
-Straen is an open source workout tracker. It was initially written as a bike computer, but it also supports numerous other activities. This includes strength exercises, such as pull-ups and push-ups, as well as aerobic sports like running.
+Straen is an open source workout tracker. It was initially written as a bike computer, but it also supports numerous other activity types. This includes strength exercises, such as pull-ups and push-ups, as well as aerobic sports like running, walking, and hiking.
 
 ## Rationale
 Why develop a workout tracker when there are so many closed-source options available?
-* The existing apps function poorly as bike computers, in my opinion. Using the phone as a bike computer makes a lot of sense, since dedicated bike computers are expensive and you probably have your phone with you anyway.
+* The existing apps on the market function poorly as bike computers, in my opinion. I feel this is because the screens are not customizable, or are hard to read, and the screens won't stay on or prevent the phone from locking.  Using the phone as a bike computer makes a lot of sense, since dedicated bike computers are expensive and you probably have your phone with you anyway.
 * Lack of support for strength-based exercises.
-* Other applications require you to create an account to do anything.
+* Other applications require you to create an account to use the application at all.
 * I think users should have control over their own data and this is only possible with an open source application.
 
 ## Major Features
