@@ -89,6 +89,7 @@
                         <outlet property="group1" destination="pJ5-uP-Shn" id="7RW-cp-4g3"/>
                         <outlet property="group2" destination="PPr-6M-NT3" id="yeS-ya-6Di"/>
                         <outlet property="group3" destination="8Du-RJ-V9w" id="vBH-d0-Vsp"/>
+                        <outlet property="startStopButton" destination="75M-0x-o8w" id="T2n-Oo-agQ"/>
                         <outlet property="units1" destination="eHx-Fy-G0d" id="hrO-PJ-jvf"/>
                         <outlet property="units2" destination="lAO-ig-DSV" id="uuv-WB-65W"/>
                         <outlet property="units3" destination="pgE-yK-xEC" id="Ivv-2j-vFU"/>
