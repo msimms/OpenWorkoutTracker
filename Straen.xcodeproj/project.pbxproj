@@ -15,6 +15,7 @@
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
+		271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
 		2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2619C124CF00CE2BAD /* Default@2x.png */; };
@@ -409,6 +410,8 @@
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
 		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		2709420F215ABD2200C3BCBE /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchHistoryViewController.m; sourceTree = "<group>"; };
+		271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchHistoryViewController.h; sourceTree = "<group>"; };
 		271C5E3820D59C2700DE759C /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = SOURCE_ROOT; };
 		271D8B0419D0E76C00857109 /* CadenceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CadenceCalculator.h; path = IOS/Sensors/CadenceCalculator.h; sourceTree = SOURCE_ROOT; };
 		271D8B0519D0E76C00857109 /* CadenceCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CadenceCalculator.m; path = IOS/Sensors/CadenceCalculator.m; sourceTree = SOURCE_ROOT; };
@@ -1345,6 +1348,8 @@
 				27DCF5D622B193B7009A23C2 /* NotificationController.m */,
 				27DCF67622B80661009A23C2 /* WatchActivityViewController.h */,
 				27DCF67522B80661009A23C2 /* WatchActivityViewController.m */,
+				271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */,
+				271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */,
 				27DCF5D822B193B8009A23C2 /* Assets.xcassets */,
 				27DCF5DA22B193B8009A23C2 /* Info.plist */,
 				27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */,
@@ -1811,6 +1816,7 @@
 				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,
 				27DCF61022B71628009A23C2 /* Hike.h in Sources */,
 				27DCF61122B71628009A23C2 /* IntervalWorkout.h in Sources */,
+				271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */,
 				27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */,
 				27DCF61222B71628009A23C2 /* IntervalWorkoutSegment.h in Sources */,
 				27DCF61322B71628009A23C2 /* LiftingActivity.cpp in Sources */,

@@ -19,6 +19,11 @@
                                 <action selector="onStartWorkout" destination="AgC-eL-Hgc" id="edT-cN-Wf1"/>
                             </connections>
                         </button>
+                        <button width="1" alignment="left" title="View History" id="A6W-ls-Eph">
+                            <connections>
+                                <segue destination="Nkj-f1-gRN" kind="push" id="uoF-Vu-SYm"/>
+                            </connections>
+                        </button>
                         <button width="1" alignment="left" hidden="YES" title="Button" id="78J-mm-1nB">
                             <connections>
                                 <segue destination="Bpo-6v-NAv" kind="push" id="Zrf-UY-5z4"/>
@@ -27,7 +32,7 @@
                     </items>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="212" y="345"/>
+            <point key="canvasLocation" x="180" y="343"/>
         </scene>
         <!--WatchActivityViewController-->
         <scene sceneID="MN4-z0-cxi">
@@ -100,6 +105,23 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="604" y="345"/>
+        </scene>
+        <!--WatchHistoryViewController-->
+        <scene sceneID="AHC-4j-swK">
+            <objects>
+                <controller identifier="WatchHistoryViewController" id="Nkj-f1-gRN" customClass="WatchHistoryViewController">
+                    <items>
+                        <table alignment="left" id="yQn-pj-4a3">
+                            <items>
+                                <tableRow id="wCX-p6-jkK">
+                                    <group key="rootItem" width="1" alignment="left" id="74V-lq-v0z"/>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="604" y="759"/>
         </scene>
     </scenes>
 </document>
