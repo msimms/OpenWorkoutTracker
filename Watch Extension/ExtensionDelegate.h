@@ -26,6 +26,9 @@
 - (BOOL)startActivityWithBikeName:(NSString*)bikeName;
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
+- (BOOL)startNewLap;
+
+- (NSString*)getActivityName:(NSString*)activityId;
 
 - (NSMutableArray*)getActivityTypes;
 - (NSMutableArray*)getCurrentActivityAttributes;

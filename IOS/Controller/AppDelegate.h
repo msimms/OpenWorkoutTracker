@@ -51,7 +51,11 @@
 
 - (NSString*)getPlatformString;
 
+// unit management methods
+
 - (void)setUnits;
+
+// user profile methods
 
 - (void)setUserProfile;
 
@@ -69,12 +73,21 @@
 - (void)setUserWeight:(double)weight;
 - (void)setUserFtp:(double)ftp;
 
+// broadcast methods
+
 - (void)configureBroadcasting;
+
+// healthkit methods
+
 - (void)startHealthMgr;
+
+// bluetooth methods
 
 - (BOOL)hasLeBluetooth;
 - (BOOL)hasLeBluetoothSensor:(SensorType)sensorType;
 - (NSMutableArray*)listDiscoveredBluetoothSensorsOfType:(BluetoothService)type;
+
+// sensor management methods
 
 - (void)startSensorDiscovery;
 - (void)stopSensorDiscovery;
@@ -82,6 +95,8 @@
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate;
 - (void)stopSensors;
 - (void)startSensors;
+
+// sensor update methods
 
 - (void)weightHistoryUpdated:(NSNotification*)notification;
 - (void)accelerometerUpdated:(NSNotification*)notification;
@@ -93,6 +108,8 @@
 - (void)strideLengthUpdated:(NSNotification*)notification;
 - (void)runDistanceUpdated:(NSNotification*)notification;
 
+// methods for starting and stopping activities, etc.
+
 - (BOOL)startActivity;
 - (BOOL)startActivityWithBikeName:(NSString*)bikeName;
 - (BOOL)stopActivity;
@@ -101,25 +118,41 @@
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
 
+// sound methods
+
 - (void)playSound:(NSString*)soundPath;
 - (void)playBeepSound;
 - (void)playPingSound;
 
+// methods for downloading a map overlay
+
 - (NSString*)getOverlayDir;
+- (BOOL)downloadMapOverlay:(NSString*)urlStr withName:(NSString*)name;
+
+// methods for downloading an activity via a URL
+
+- (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType;
+
+// methods for exporting activities
 
 - (BOOL)deleteFile:(NSString*)fileName;
-
-- (BOOL)downloadMapOverlay:(NSString*)urlStr withName:(NSString*)name;
-- (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType;
 
 - (NSString*)exportActivity:(NSString*)activityId withFileFormat:(FileFormat)format to:selectedExportLocation;
 - (NSString*)exportActivitySummary:(NSString*)activityType;
 - (void)clearExportDir;
 
+// methods for managing bikes
+
 - (void)setBikeForCurrentActivity:(NSString*)bikeName;
 - (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId;
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName;
 - (BOOL)deleteBikeProfile:(uint64_t)bikeId;
+
+// methods for managing the activity name
+
+- (NSString*)getActivityName:(NSString*)activityId;
+
+// accessor methods
 
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId;
 - (NSMutableArray*)getBikeNames;
@@ -134,13 +167,14 @@
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex;
 
 - (NSString*)getCurrentActivityType;
-- (NSString*)getHistorialActivityType:(NSInteger)activityIndex;
+- (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
+
+// utility methods
 
 - (void)setScreenLocking;
 - (BOOL)hasBadGps;
 
-- (void)resetDatabase;
-- (void)resetPreferences;
+// cloud methods
 
 - (NSMutableArray*)listFileClouds;
 - (NSMutableArray*)listDataClouds;
@@ -161,6 +195,11 @@
 - (BOOL)serverDeleteActivityAsync:(NSString*)activityId;
 - (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
 - (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
+
+// reset methods
+
+- (void)resetDatabase;
+- (void)resetPreferences;
 
 @property (strong, nonatomic) UIWindow* window;
 

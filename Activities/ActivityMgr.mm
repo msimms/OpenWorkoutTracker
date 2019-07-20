@@ -99,6 +99,33 @@ extern "C" {
 	}
 
 	//
+	// Functions for managing the activity name.
+	//
+
+	bool SetActivityName(const char* const activityId, const char* const name)
+	{
+		if (g_pDatabase)
+		{
+			return g_pDatabase->UpdateActivityName(activityId, name);
+		}
+		return false;
+	}
+
+	const char* GetActivityName(const char* const activityId)
+	{
+		if (g_pDatabase)
+		{
+			std::string name;
+
+			if (g_pDatabase->RetrieveActivityName(activityId, name))
+			{
+				return strdup(name.c_str());
+			}
+		}
+		return NULL;
+	}
+
+	//
 	// Functions for managing tags.
 	//
 
@@ -1040,6 +1067,15 @@ extern "C" {
 		return NULL;
 	}
 
+	char* GetHistoricalActivityName(size_t activityIndex)
+	{
+		if (activityIndex < g_historicalActivityList.size())
+		{
+			return strdup(g_historicalActivityList.at(activityIndex).name.c_str());
+		}
+		return NULL;
+	}
+
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())
@@ -1119,6 +1155,7 @@ extern "C" {
 	size_t GetNumHistoricalActivitiesByType(const char* const pActivityType)
 	{
 		size_t numActivities = 0;
+
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			ActivitySummary& summary = (*iter);

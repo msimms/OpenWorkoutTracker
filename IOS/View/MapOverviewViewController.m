@@ -203,7 +203,7 @@
 		size_t numPins = 0;
 		for (size_t index = 0; index < numHistoricalActivities; ++index)
 		{
-			NSString* currentActivityType = [appDelegate getHistorialActivityType:index];
+			NSString* currentActivityType = [appDelegate getHistoricalActivityType:index];
 			if ([currentActivityType isEqualToString:activityType])
 			{
 				ActivityAttributeType lat = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE);

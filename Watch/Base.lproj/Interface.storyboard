@@ -113,12 +113,22 @@
                     <items>
                         <table alignment="left" id="yQn-pj-4a3">
                             <items>
-                                <tableRow id="wCX-p6-jkK">
-                                    <group key="rootItem" width="1" alignment="left" id="74V-lq-v0z"/>
+                                <tableRow identifier="WatchHistoryRowType" id="wCX-p6-jkK" customClass="WatchHistoryRowController">
+                                    <group key="rootItem" width="1" alignment="left" id="74V-lq-v0z">
+                                        <items>
+                                            <label alignment="left" text="Label" id="0JT-H8-yfj"/>
+                                        </items>
+                                    </group>
+                                    <connections>
+                                        <outlet property="itemLabel" destination="0JT-H8-yfj" id="R9f-78-iGg"/>
+                                    </connections>
                                 </tableRow>
                             </items>
                         </table>
                     </items>
+                    <connections>
+                        <outlet property="historyTable" destination="yQn-pj-4a3" id="PYn-bf-bt2"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="604" y="759"/>

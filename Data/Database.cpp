@@ -639,7 +639,7 @@ bool Database::RetrieveActivity(const std::string& activityId, ActivitySummary& 
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select user_id, type, start_time, end_time from activity where activity_id = ? limit 1", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select user_id, type, name, start_time, end_time from activity where activity_id = ? limit 1", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
@@ -648,8 +648,9 @@ bool Database::RetrieveActivity(const std::string& activityId, ActivitySummary& 
 			summary.activityId = activityId;
 			summary.userId = sqlite3_column_int64(statement, 0);
 			summary.type.append((const char*)sqlite3_column_text(statement, 1));
-			summary.startTime = (time_t)sqlite3_column_int64(statement, 2);
-			summary.endTime = (time_t)sqlite3_column_int64(statement, 3);
+			summary.name.append((const char*)sqlite3_column_text(statement, 2));
+			summary.startTime = (time_t)sqlite3_column_int64(statement, 3);
+			summary.endTime = (time_t)sqlite3_column_int64(statement, 4);
 			summary.pActivity = NULL;
 		}
 		
@@ -664,7 +665,7 @@ bool Database::RetrieveActivities(ActivitySummaryList& activities)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select activity_id, user_id, type, start_time, end_time from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select activity_id, user_id, type, name, start_time, end_time from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -673,8 +674,9 @@ bool Database::RetrieveActivities(ActivitySummaryList& activities)
 			summary.activityId.append((const char*)sqlite3_column_text(statement, 0));
 			summary.userId = sqlite3_column_int64(statement, 1);
 			summary.type.append((const char*)sqlite3_column_text(statement, 2));
-			summary.startTime = (time_t)sqlite3_column_int64(statement, 3);
-			summary.endTime = (time_t)sqlite3_column_int64(statement, 4);
+			summary.name.append((const char*)sqlite3_column_text(statement, 3));
+			summary.startTime = (time_t)sqlite3_column_int64(statement, 4);
+			summary.endTime = (time_t)sqlite3_column_int64(statement, 5);
 			summary.pActivity = NULL;
 
 			activities.push_back(summary);
@@ -799,6 +801,41 @@ bool Database::UpdateActivityEndTime(const std::string& activityId, time_t endTi
 	if (sqlite3_prepare_v2(m_pDb, "update activity set end_time = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, endTime);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveActivityName(const std::string& activityId, std::string& name)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select name from activity where id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		
+		if (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			name = (const char*)sqlite3_column_text(statement, 0);
+		}
+		
+		sqlite3_finalize(statement);
+		result = true;
+	}
+	return result;
+}
+
+bool Database::UpdateActivityName(const std::string& activityId, const std::string& name)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "update activity set name = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);

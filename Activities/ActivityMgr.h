@@ -39,6 +39,10 @@ extern "C" {
 	void ResetDatabase(void);
 	void CloseDatabase(void);
 
+	// Functions for managing the activity name.
+	bool SetActivityName(const char* const activityId, const char* const name);
+	const char* GetActivityName(const char* const activityId);
+
 	// Functions for managing tags.
 	bool GetTags(const char* const activityId, TagCallback callback, void* context);
 	bool StoreTag(const char* const activityId, const char* const tag);
@@ -106,10 +110,11 @@ extern "C" {
 	void FreeHistoricalActivitySensorData(size_t activityIndex);
 	void FreeHistoricalActivitySummaryData(size_t activityIndex);
 
-	// Functions for accessing historical data.
+	// Functions for accessing historical data (accessed by index instead of ID, following a call to InitializeHistoricalActivityList.
 	void GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime);
 	void FixHistoricalActivityEndTime(size_t activityIndex);
 	char* GetHistoricalActivityType(size_t activityIndex);
+	char* GetHistoricalActivityName(size_t activityIndex);
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex);
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);

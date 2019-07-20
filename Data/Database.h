@@ -68,6 +68,9 @@ public:
 	bool UpdateActivityStartTime(const std::string& activityId, time_t startTime);
 	bool UpdateActivityEndTime(const std::string& activityId, time_t endTime);
 
+	bool RetrieveActivityName(const std::string& activityId, std::string& name);
+	bool UpdateActivityName(const std::string& activityId, const std::string& name);
+
 	bool CreateNewLap(const std::string& activityId, uint64_t startTimeMs);
 	bool RetrieveLaps(const std::string& activityId, LapSummaryList& laps);
 

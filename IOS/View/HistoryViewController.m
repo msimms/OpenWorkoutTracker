@@ -109,7 +109,7 @@
 	}
 }
 
-#pragma mark random methods
+#pragma mark methods for loading and sorting activity data
 
 - (void)buildDictionary
 {
@@ -240,6 +240,7 @@
 	uint64_t bikeId = 0;
 	NSString* allTagsStr = @"";
 
+	// If a bike was specified then add that tag to the list of tags.
 	GetActivityBikeProfile([activityId UTF8String], &bikeId);
 	if (bikeId > 0)
 	{
@@ -255,6 +256,7 @@
 		}
 	}
 
+	// Append any other tags that were associated with this activity.
 	NSMutableArray* tags = [appDelegate getTagsForActivity:activityId];
 	for (NSString* tag in tags)
 	{
@@ -262,20 +264,29 @@
 			allTagsStr = [allTagsStr stringByAppendingString:@", "];
 		allTagsStr = [allTagsStr stringByAppendingString:tag];
 	}
+	
+	// Get the activity name.
+	NSString* name = [appDelegate getActivityName:activityId];
+	if ([name length] > 0)
+	{
+		name = [name stringByAppendingString:@": "];
+	}
 
+	// Get the start time.
 	time_t startTime = 0;
 	time_t endTime = 0;
 	GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
 	NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
-
 	if ([allTagsStr length] > 0)
-		cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\n%@", startTimeStr, allTagsStr];
-	else
-		cell.detailTextLabel.text = startTimeStr;
+	{
+		startTimeStr = [startTimeStr stringByAppendingString:@"\n"];
+	}
+
+	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@", name, startTimeStr, allTagsStr];
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 
-	cell.textLabel.text = NSLocalizedString([appDelegate getHistorialActivityType: activityIndex], nil);
+	cell.textLabel.text = NSLocalizedString([appDelegate getHistoricalActivityType: activityIndex], nil);
 
 	return cell;
 }

@@ -4,8 +4,17 @@
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
 
+@interface WatchHistoryRowController : NSObject
+
+@property (weak, nonatomic) IBOutlet WKInterfaceLabel* itemLabel;
+
+@end
+
 @interface WatchHistoryViewController : WKInterfaceController
 {
+	IBOutlet __strong WKInterfaceTable* historyTable;
 }
+
+@property (nonatomic, retain) IBOutlet WKInterfaceTable* historyTable;
 
 @end

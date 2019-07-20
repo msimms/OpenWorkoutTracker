@@ -186,6 +186,20 @@
 	return StartNewLap();
 }
 
+#pragma mark methods for managing the activity name
+
+- (NSString*)getActivityName:(NSString*)activityId
+{
+	NSString* result = nil;
+	const char* activityName = GetActivityName([activityId UTF8String]);
+	if (activityName)
+	{
+		result = [NSString stringWithFormat:@"%s", activityName];
+		free((void*)activityName);
+	}
+	return result;
+}
+
 #pragma mark sensor update methods
 
 - (void)weightHistoryUpdated:(NSNotification*)notification
@@ -227,8 +241,6 @@
 	NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
 
 	NSString* activityType = [self getCurrentActivityType];
-	
-	BOOL tempBadGps = FALSE;
 
 	if (IsActivityInProgress())
 	{

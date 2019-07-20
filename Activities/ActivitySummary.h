@@ -27,6 +27,7 @@ typedef struct ActivitySummary
 	time_t               startTime;                // Start time for the activity (UNIX time)
 	time_t               endTime;                  // End time for the activity (UNIX time) or zero if not set
 	std::string          type;                     // Type of the activity (cycling, running, etc.)
+	std::string          name;                     // Name of the activity
 	SensorReadingList    locationPoints;           // List of all locations
 	SensorReadingList    accelerometerReadings;    // List of all accelerometer readings recorded as part of this activity
 	SensorReadingList    heartRateMonitorReadings; // List of all heart rate monitor readings recorded as part of this activity

@@ -207,7 +207,7 @@
 {
 }
 
-#pragma mark 
+#pragma mark retrieves or creates and retrieves the applications unique identifier
 
 - (NSString*)getUuid;
 {
@@ -1010,7 +1010,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-#pragma mark method for downloading a map overlay
+#pragma mark methods for downloading a map overlay
 
 - (NSString*)getOverlayDir
 {
@@ -1047,6 +1047,8 @@ void startSensorCallback(SensorType type, void* context)
 	}
 	return FALSE;
 }
+
+#pragma mark methods for downloading an activity via a URL
 
 - (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType
 {
@@ -1243,6 +1245,20 @@ void startSensorCallback(SensorType type, void* context)
 	return DeleteBikeProfile(bikeId);
 }
 
+#pragma mark methods for managing the activity name
+
+- (NSString*)getActivityName:(NSString*)activityId
+{
+	NSString* result = nil;
+	const char* activityName = GetActivityName([activityId UTF8String]);
+	if (activityName)
+	{
+		result = [NSString stringWithFormat:@"%s", activityName];
+		free((void*)activityName);
+	}
+	return result;
+}
+
 #pragma mark accessor methods
 
 void tagCallback(const char* name, void* context)
@@ -1367,7 +1383,7 @@ void attributeNameCallback(const char* name, void* context)
 	return activityTypeStr;
 }
 
-- (NSString*)getHistorialActivityType:(NSInteger)activityIndex
+- (NSString*)getHistoricalActivityType:(NSInteger)activityIndex
 {
 	NSString* result = nil;
 	char* activityType = GetHistoricalActivityType((size_t)activityIndex);

@@ -34,9 +34,6 @@
 	bool searching;
 }
 
-- (void)buildDictionary;
-- (NSNumber*)getActivityIndex:(NSIndexPath*)indexPath;
-
 - (IBAction)onExportSummary:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;

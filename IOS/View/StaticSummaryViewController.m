@@ -28,6 +28,7 @@
 #define ROW_TITLE_SPLIT_TIMES          NSLocalizedString(@"Split Times", nil)
 #define ROW_TITLE_LAP_TIMES            NSLocalizedString(@"Lap Times", nil)
 
+#define SECTION_TITLE_NAME             NSLocalizedString(@"Name", nil)
 #define SECTION_TITLE_START_AND_STOP   NSLocalizedString(@"Start and Finish", nil)
 #define SECTION_TITLE_LAP_AND_SPLIT    NSLocalizedString(@"Lap and Split Times", nil)
 #define SECTION_TITLE_CHARTS           NSLocalizedString(@"Charts", nil)
@@ -80,7 +81,8 @@ typedef enum Time2Rows
 
 typedef enum Sections
 {
-	SECTION_START_AND_END_TIME = 0,
+	SECTION_NAME = 0,
+	SECTION_START_AND_END_TIME,
 	SECTION_LAP_AND_SPLIT_TIMES,
 	SECTION_CHARTS,
 	SECTION_ATTRIBUTES,
@@ -156,7 +158,7 @@ typedef enum ExportFileTypeButtons
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-		NSString* activityType = [appDelegate getHistorialActivityType:self->activityIndex];
+		NSString* activityType = [appDelegate getHistoricalActivityType:self->activityIndex];
 		if (!([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE]))
@@ -290,6 +292,9 @@ typedef enum ExportFileTypeButtons
 
 			switch (sectionIndex)
 			{
+				case SECTION_NAME:
+					count = 1;
+					break;
 				case SECTION_START_AND_END_TIME:
 					count = [self->timeSection1RowNames count];
 					break;
@@ -313,7 +318,7 @@ typedef enum ExportFileTypeButtons
 			}
 		}
 		
-		self.navItem.title = NSLocalizedString([appDelegate getHistorialActivityType:self->activityIndex], nil);
+		self.navItem.title = NSLocalizedString([appDelegate getHistoricalActivityType:self->activityIndex], nil);
 		
 		[self drawRoute];
 	}
@@ -766,6 +771,8 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
+		case SECTION_NAME:
+			break;
 		case SECTION_START_AND_END_TIME:
 			break;
 		case SECTION_LAP_AND_SPLIT_TIMES:
@@ -822,6 +829,8 @@ typedef enum ExportFileTypeButtons
 	NSInteger actualSection = self->sectionIndexes[visibleSection];
 	switch (actualSection)
 	{
+		case SECTION_NAME:
+			return SECTION_TITLE_NAME;
 		case SECTION_START_AND_END_TIME:
 			return SECTION_TITLE_START_AND_STOP;
 		case SECTION_LAP_AND_SPLIT_TIMES:
@@ -841,6 +850,8 @@ typedef enum ExportFileTypeButtons
 	NSInteger actualSection = self->sectionIndexes[visibleSection];
 	switch (actualSection)
 	{
+		case SECTION_NAME:
+			return 1;
 		case SECTION_START_AND_END_TIME:
 			return [self->timeSection1RowNames count];
 		case SECTION_LAP_AND_SPLIT_TIMES:
@@ -871,6 +882,15 @@ typedef enum ExportFileTypeButtons
 	
 	switch (actualSection)
 	{
+		case SECTION_NAME:
+			{
+				NSString* name = [NSString stringWithFormat:@"%s", GetHistoricalActivityName(self->activityIndex)];
+				if ([name length] > 0)
+					cell.textLabel.text = name;
+				else
+					cell.textLabel.text = @"--";
+			}
+			break;
 		case SECTION_START_AND_END_TIME:
 			switch (row)
 			{
@@ -966,6 +986,9 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
+		case SECTION_NAME:
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			break;
 		case SECTION_START_AND_END_TIME:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
