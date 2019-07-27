@@ -3,6 +3,7 @@
 
 #import "InterfaceController.h"
 #import "ActivityMgr.h"
+#import "AppStrings.h"
 #import "ExtensionDelegate.h"
 
 #define MSG_SELECT_NEW NSLocalizedString(@"Select the workout", nil)
@@ -35,13 +36,19 @@
 	NSMutableArray* activityTypes = [extDelegate getActivityTypes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
-	for (NSString* name in activityTypes)
+	[activityTypes sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+
+	for (NSString* name in [activityTypes reverseObjectEnumerator])
 	{
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleCancel handler:^(void){
 			[self startActivity:name];
 		}];	
 		[actions addObject:action];
 	}
+
+	// Add the cancel button.
+	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
+	[actions addObject:action];
 
 	[self presentAlertControllerWithTitle:nil
 								  message:MSG_SELECT_NEW
