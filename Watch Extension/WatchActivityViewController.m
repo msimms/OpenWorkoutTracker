@@ -249,8 +249,10 @@
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
+	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+
 	// Add an option for each possible attribute.
-	for (NSString* attribute in attributeNames)
+	for (NSString* attribute in [attributeNames reverseObjectEnumerator])
 	{
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleCancel handler:^(void){
 		}];	
