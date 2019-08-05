@@ -422,15 +422,17 @@
 
 - (void)setUIForStartedActivity
 {
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
 }
 
 - (void)setUIForStoppedActivity
 {
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
 }
 
 - (void)setUIForPausedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+	[self.startStopButton setTitle:ACTIVITY_BUTTON_RESUME];
 }
 
 - (void)setUIForResumedActivity
