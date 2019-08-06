@@ -68,6 +68,13 @@
 
 	Initialize([dbFileName UTF8String]);
 
+	if ([WCSession isSupported])
+	{
+		WCSession* session = [WCSession defaultSession];
+		session.delegate = self;
+		[session activateSession];
+	}
+
 	[self clearExportDir];
 
 	[Preferences registerDefaultsFromSettingsBundle:@"Root.plist"];
@@ -1646,6 +1653,28 @@ void attributeNameCallback(const char* name, void* context)
 - (void)resetPreferences
 {
 	[[NSUserDefaults standardUserDefaults] setPersistentDomain:[NSDictionary dictionary] forName:[[NSBundle mainBundle] bundleIdentifier]];
+}
+
+#pragma mark watch session methods
+
+- (void)session:(WCSession*)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError*)error
+{
+}
+
+- (void)sessionDidBecomeInactive:(WCSession*)session
+{
+}
+
+- (void)sessionDidDeactivate:(WCSession*)session
+{
+}
+
+- (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
+{
+}
+
+- (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
+{
 }
 
 @end

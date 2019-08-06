@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 
 #import "ActivityAttributeType.h"
 #import "ActivityLevel.h"
@@ -24,7 +25,7 @@
 #define EXPORT_TO_EMAIL_STR "Email"
 #define IMPORT_VIA_URL_STR  "URL"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 {
 	SensorMgr*           sensorMgr;
 	LeDiscovery*         leSensorFinder;
@@ -34,6 +35,7 @@
 	BroadcastManager*    broadcastMgr;
 	HealthManager*       healthMgr;
 	NSTimer*             intervalTimer;
+	WCSession*           watchSession;
 
 	BOOL                 badGps;
 
