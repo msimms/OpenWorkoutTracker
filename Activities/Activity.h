@@ -80,6 +80,7 @@ public:
 	virtual double HeartRatePercentage() const { return m_currentHeartRateBpm.value.doubleVal / m_athlete.EstimateMaxHeartRate(); };
 	virtual uint8_t HeartRateZone() const;
 
+	virtual time_t NumSecondsPaused() const;
 	virtual time_t ElapsedTimeInMinutes() const { return ElapsedTimeInSeconds() / (double)60.0; };
 	virtual time_t ElapsedTimeInSeconds() const { return (time_t)(ElapsedTimeInMs() / 1000); };
 	virtual uint64_t ElapsedTimeInMs() const;
@@ -117,26 +118,26 @@ protected:
 	std::string FormatTimeOfDayStr(time_t timeVal) const;
 	
 protected:
-	std::string          m_id;                      // database identifier for this activity
-	User                 m_athlete;                 // user profile
+	std::string          m_id;                        // database identifier for this activity
+	User                 m_athlete;                   // user profile
 	IntervalWorkout      m_intervalWorkout;
 	IntervalWorkoutState m_intervalWorkoutState;
 
 private:
-	double               m_additionalWeightKg;      // weight of barbells, dumbells, etc.
-	uint64_t             m_lastHeartRateUpdateTime; // time the heart rate data was last updated
-	SegmentType          m_currentHeartRateBpm;     // the most recent heart rate monitor sample
-	SegmentType          m_maxHeartRateBpm;         // the hightest single heart rate monitor sample
-	double               m_totalHeartRateReadings;  // the sum of all heart rate monitor samples
-	uint16_t             m_numHeartRateReadings;    // the total number of heart rate monitor samples
-	time_t               m_startTimeSecs;           // clock time at start
-	time_t               m_endTimeSecs;             // clock time at end
-	bool                 m_isPaused;                // TRUE if activity is paused, FALSE otherwise
+	double               m_additionalWeightKg;        // weight of barbells, dumbells, etc.
+	uint64_t             m_lastHeartRateUpdateTime;   // time the heart rate data was last updated
+	SegmentType          m_currentHeartRateBpm;       // the most recent heart rate monitor sample
+	SegmentType          m_maxHeartRateBpm;           // the hightest single heart rate monitor sample
+	double               m_totalHeartRateReadings;    // the sum of all heart rate monitor samples
+	uint16_t             m_numHeartRateReadings;      // the total number of heart rate monitor samples
+	time_t               m_startTimeSecs;             // clock time at start
+	time_t               m_endTimeSecs;               // clock time at end
+	bool                 m_isPaused;                  // TRUE if activity is paused, FALSE otherwise
 	bool                 m_firstIteration;
-	time_t               m_timeWhenPaused;          // clock time when paused
-	time_t               m_secsSpentPaused;         // number of seconds spent paused
+	time_t               m_timeWhenLastPaused;        // clock time when last paused
+	time_t               m_secsPreviouslySpentPaused; // number of seconds spent paused
 	SensorReading        m_lastAccelReading;
-	SensorReading        m_mostRecentSensorReading; // the youngest sensor reading received
+	SensorReading        m_mostRecentSensorReading;   // the youngest sensor reading received
 };
 
 #endif

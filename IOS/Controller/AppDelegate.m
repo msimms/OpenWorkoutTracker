@@ -599,7 +599,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* accelerometerData = [notification object];
 
@@ -651,7 +651,7 @@ void startSensorCallback(SensorType type, void* context)
 	
 	self->badGps = tempBadGps;
 
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		uint8_t freq = [self->activityPrefs getGpsSampleFrequency:activityType];
 		time_t nextUpdateTimeSec = self->lastLocationUpdateTime + freq;
@@ -679,7 +679,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* heartRateData = [notification object];
 		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
@@ -712,7 +712,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)cadenceUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* cadenceData = [notification object];
 		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
@@ -740,7 +740,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)wheelSpeedUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* wheelSpeedData = [notification object];
 		CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
@@ -768,7 +768,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)powerUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* powerData = [notification object];
 		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
@@ -796,7 +796,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)strideLengthUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* strideData = [notification object];
 		CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
@@ -815,7 +815,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)runDistanceUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* distanceData = [notification object];
 		CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];

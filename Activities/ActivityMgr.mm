@@ -1535,6 +1535,11 @@ extern "C" {
 	{
 		return (g_pCurrentActivity && g_pCurrentActivity->HasStarted() && !g_pCurrentActivity->HasStopped());
 	}
+	
+	bool IsActivityInProgressAndNotPaused()
+	{
+		return IsActivityInProgress() && !IsActivityPaused();
+	}
 
 	bool IsActivityOrphaned(size_t* activityIndex)
 	{

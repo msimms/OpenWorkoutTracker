@@ -113,7 +113,14 @@
 	{
 		if (IsActivityInProgress())
 		{
-			[self setUIForStartedActivity];
+			if (IsActivityPaused())
+			{
+				[self setUIForPausedActivity];
+			}
+			else
+			{
+				[self setUIForStartedActivity];
+			}
 		}
 		else
 		{

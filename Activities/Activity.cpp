@@ -27,8 +27,8 @@ Activity::Activity()
 	m_endTimeSecs = 0;
 	m_isPaused = false;
 	m_firstIteration = true;
-	m_timeWhenPaused = 0;
-	m_secsSpentPaused = 0;
+	m_timeWhenLastPaused = 0;
+	m_secsPreviouslySpentPaused = 0;
 	m_intervalWorkout.workoutId = INTERVAL_WORKOUT_ID_NOT_SET;
 	m_intervalWorkoutState.nextSegmentIndex = 0;
 	m_intervalWorkoutState.lastTimeSecs = 0;
@@ -103,9 +103,14 @@ bool Activity::Stop()
 void Activity::Pause()
 {
 	if (m_isPaused)
-		m_secsSpentPaused += CurrentTimeInSeconds() - m_timeWhenPaused;
+	{
+		m_secsPreviouslySpentPaused += CurrentTimeInSeconds() - m_timeWhenLastPaused;
+		m_timeWhenLastPaused = 0;
+	}
 	else
-		m_timeWhenPaused = CurrentTimeInSeconds();
+	{
+		m_timeWhenLastPaused = CurrentTimeInSeconds();
+	}
 	m_isPaused = !m_isPaused;
 }
 
@@ -548,6 +553,17 @@ void Activity::AdvanceIntervalState()
 	m_intervalWorkoutState.shouldAdvance = false;
 }
 
+time_t Activity::NumSecondsPaused() const
+{
+	time_t numSecsPaused = m_secsPreviouslySpentPaused;
+	if (m_timeWhenLastPaused > 0)
+	{
+		uint64_t secsCurrentlyPaused = CurrentTimeInSeconds() - m_timeWhenLastPaused;
+		numSecsPaused += secsCurrentlyPaused;
+	}
+	return numSecsPaused;
+}
+
 uint64_t Activity::ElapsedTimeInMs() const
 {
 	if (m_startTimeSecs == 0)
@@ -556,20 +572,14 @@ uint64_t Activity::ElapsedTimeInMs() const
 	}
 
 	uint64_t endTimeMs = GetEndTimeMs();
-	uint64_t effectiveStartTimeMs = GetStartTimeSecs() + m_secsSpentPaused;
-	effectiveStartTimeMs *= 1000;
+	uint64_t startTimeMs = GetStartTimeSecs() * 1000;
 
-	if (m_isPaused)
-	{
-		uint64_t timeWhenPausedMs = (uint64_t)m_timeWhenPaused * 1000;
-		return endTimeMs == 0 ? (timeWhenPausedMs - effectiveStartTimeMs) : (endTimeMs - effectiveStartTimeMs);
-	}
 	if (endTimeMs == 0)
 	{
 		uint64_t currentTimeMs = CurrentTimeInMs();
-		return (currentTimeMs - effectiveStartTimeMs);
+		return (currentTimeMs - startTimeMs);
 	}
-	return (endTimeMs - effectiveStartTimeMs);
+	return (endTimeMs - startTimeMs);
 }
 
 uint64_t Activity::CurrentTimeInMs() const

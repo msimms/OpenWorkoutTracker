@@ -169,6 +169,7 @@ extern "C" {
 	// Functions for querying the status of the current activity.
 	bool IsActivityCreated(void);
 	bool IsActivityInProgress(void);
+	bool IsActivityInProgressAndNotPaused(void);
 	bool IsActivityOrphaned(size_t* activityIndex);
 	bool IsActivityPaused(void);
 	bool IsMovingActivity(void);
