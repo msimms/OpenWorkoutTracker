@@ -20,11 +20,11 @@ void CadenceDataCallback(size_t activityIndex, void* context)
 {
 	CadenceLine* ptrToCadenceChart = (__bridge CadenceLine*)context;
 
-	ActivityAttributeType speedValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_CADENCE);
-	if (speedValue.valid)
+	ActivityAttributeType cadenceValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_CADENCE);
+	if (cadenceValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToCadenceChart->points count]];
-		NSNumber* y = [[NSNumber alloc] initWithDouble:speedValue.value.doubleVal];
+		NSNumber* y = [[NSNumber alloc] initWithDouble:cadenceValue.value.doubleVal];
 
 		ChartPoint* point = [[ChartPoint alloc] initWithValues:x :y];
 		if (point)

@@ -20,11 +20,11 @@ void HeartRateDataCallback(size_t activityIndex, void* context)
 {
 	HeartRateLine* ptrToHeartRateChart = (__bridge HeartRateLine*)context;
 
-	ActivityAttributeType speedValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_HEART_RATE);
-	if (speedValue.valid)
+	ActivityAttributeType hrValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_HEART_RATE);
+	if (hrValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToHeartRateChart->points count]];
-		NSNumber* y = [[NSNumber alloc] initWithDouble:speedValue.value.doubleVal];
+		NSNumber* y = [[NSNumber alloc] initWithDouble:hrValue.value.doubleVal];
 
 		ChartPoint* point = [[ChartPoint alloc] initWithValues:x :y];
 		if (point)
