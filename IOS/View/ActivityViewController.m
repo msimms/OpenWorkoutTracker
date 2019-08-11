@@ -486,6 +486,8 @@
 			[self playBeepSound];
 		}
 
+		[appDelegate hashCurrentActivity];
+
 		[self setUIForStoppedActivity];
 		[self performSegueWithIdentifier:@SEGUE_TO_ACTIVITY_SUMMARY sender:self];
 	}

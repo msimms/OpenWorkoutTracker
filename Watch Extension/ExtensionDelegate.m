@@ -3,6 +3,7 @@
 
 #import "ExtensionDelegate.h"
 #import "ActivityAttribute.h"
+#import "ActivityHash.h"
 #import "ActivityMgr.h"
 #import "Notifications.h"
 #import "SensorFactory.h"
@@ -184,6 +185,31 @@
 - (BOOL)startNewLap
 {
 	return StartNewLap();
+}
+
+#pragma mark hash methods
+
+- (NSString*)hashActivityWithId:(NSString*)activityId
+{
+	ActivityHash* hash = [[ActivityHash alloc] init];
+	NSString* hashStr = [hash calculateWithActivityId:activityId];
+	if (hashStr)
+	{
+		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+	}
+	return hashStr;
+}
+
+- (NSString*)hashCurrentActivity
+{
+	ActivityHash* hash = [[ActivityHash alloc] init];
+	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+	NSString* hashStr = [hash calculateWithActivityId:activityId];
+	if (hashStr)
+	{
+		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+	}
+	return hashStr;
 }
 
 #pragma mark methods for managing the activity name

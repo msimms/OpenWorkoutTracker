@@ -197,6 +197,16 @@ extern "C" {
 	}
 
 	//
+	// Functions for managing the activity hash.
+	//
+
+	bool StoreHash(const char* const activityId, const char* const hash)
+	{
+		bool result = false;
+		return result;
+	}
+
+	//
 	// Functions for controlling preferences.
 	//
 

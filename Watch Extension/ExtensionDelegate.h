@@ -19,8 +19,12 @@
 	time_t lastPowerUpdateTime;
 }
 
+// sensor management methods
+
 - (void)stopSensors;
 - (void)startSensors;
+
+// methods for starting and stopping activities, etc.
 
 - (BOOL)startActivity;
 - (BOOL)startActivityWithBikeName:(NSString*)bikeName;
@@ -28,7 +32,16 @@
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
 
+// hash methods
+
+- (NSString*)hashActivityWithId:(NSString*)activityId;
+- (NSString*)hashCurrentActivity;
+
+// methods for managing the activity name
+
 - (NSString*)getActivityName:(NSString*)activityId;
+
+// accessor methods
 
 - (NSMutableArray*)getActivityTypes;
 - (NSMutableArray*)getCurrentActivityAttributes;

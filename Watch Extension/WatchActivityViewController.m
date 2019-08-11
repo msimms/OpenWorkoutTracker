@@ -124,6 +124,7 @@
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	if ([extDelegate stopActivity])
 	{
+		[extDelegate hashCurrentActivity];
 		[self setUIForStoppedActivity];
 	}
 }

@@ -48,6 +48,9 @@ extern "C" {
 	bool StoreTag(const char* const activityId, const char* const tag);
 	bool DeleteTag(const char* const activityId, const char* const tag);
 	bool SearchForTags(const char* const searchStr);
+	
+	// Functions for managing the activity hash.
+	bool StoreHash(const char* const activityId, const char* const hash);
 
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);

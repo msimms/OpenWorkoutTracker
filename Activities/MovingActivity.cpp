@@ -601,6 +601,8 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.doubleVal = m_currentLoc.latitude;
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
 		result.measureType = MEASURE_DEGREES;
+		result.startTime = m_currentLoc.time;
+		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_LONGITUDE) == 0)
@@ -608,6 +610,8 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.doubleVal = m_currentLoc.longitude;
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
 		result.measureType = MEASURE_DEGREES;
+		result.startTime = m_currentLoc.time;
+		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HORIZONTAL_ACCURACY) == 0)
@@ -615,6 +619,8 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.doubleVal = m_currentLoc.horizontalAccuracy;
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
 		result.measureType = MEASURE_GPS_ACCURACY;
+		result.startTime = m_currentLoc.time;
+		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_VERTICAL_ACCURACY) == 0)
@@ -622,6 +628,8 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.doubleVal = m_currentLoc.verticalAccuracy;
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
 		result.measureType = MEASURE_GPS_ACCURACY;
+		result.startTime = m_currentLoc.time;
+		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_ALTITUDE) == 0)
@@ -629,6 +637,8 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.doubleVal = UnitMgr::ConvertToPreferredAltitudeFromMeters(m_currentLoc.altitude);
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
 		result.measureType = MEASURE_ALTITUDE;
+		result.startTime = m_currentLoc.time;
+		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE) == 0)

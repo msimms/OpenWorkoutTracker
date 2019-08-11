@@ -120,6 +120,11 @@
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
 
+// hash methods
+
+- (NSString*)hashActivityWithId:(NSString*)activityId;
+- (NSString*)hashCurrentActivity;
+
 // sound methods
 
 - (void)playSound:(NSString*)soundPath;
