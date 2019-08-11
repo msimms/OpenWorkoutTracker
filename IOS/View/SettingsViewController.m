@@ -107,9 +107,6 @@ typedef enum SettingsRowsBroadcast
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate serverIsLoggedInAsync];
-
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[super viewDidLoad];
 }
@@ -119,6 +116,9 @@ typedef enum SettingsRowsBroadcast
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.settingsTableView reloadData];
 	[super viewDidAppear:animated];
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate serverIsLoggedInAsync];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
