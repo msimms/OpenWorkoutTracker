@@ -1516,7 +1516,13 @@ void attributeNameCallback(const char* name, void* context)
 			[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
 		}
 
-		if ([urlStr rangeOfString:@REMOTE_API_LOGIN_URL].location != NSNotFound)
+		if ([urlStr rangeOfString:@REMOTE_API_IS_LOGGED_IN_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_CHECKED object:downloadedData];
+			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_LOGIN_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_PROCESSED object:downloadedData];
@@ -1526,12 +1532,6 @@ void attributeNameCallback(const char* name, void* context)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_IS_LOGGED_IN_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_CHECKED object:downloadedData];
 			} );
 		}
 		else if ([urlStr rangeOfString:@REMOTE_API_LOGOUT_URL].location != NSNotFound)
