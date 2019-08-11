@@ -106,6 +106,7 @@ typedef enum SettingsRowsBroadcast
 	self.title = TITLE;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedOut:) name:@NOTIFICATION_NAME_LOGGED_OUT object:nil];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[super viewDidLoad];
@@ -140,7 +141,7 @@ typedef enum SettingsRowsBroadcast
 {
 }
 
-#pragma mark login notification
+#pragma mark login and logout notifications
 
 - (void)loginChecked:(NSNotification*)notification
 {
@@ -159,6 +160,13 @@ typedef enum SettingsRowsBroadcast
 		[self.createLoginButton setEnabled:YES];
 		[self.createLoginButton setTintColor:nil];
 	}
+}
+
+- (void)loggedOut:(NSNotification*)notification
+{
+	[self.loginButton setTitle:STR_LOGIN];
+	[self.createLoginButton setEnabled:YES];
+	[self.createLoginButton setTintColor:nil];
 }
 
 #pragma mark methods for showing popups
