@@ -286,6 +286,8 @@
 		27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
 		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
 		27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
+		27F6D0782300165100A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
+		27F6D0792300166500A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
 /* End PBXBuildFile section */
@@ -746,6 +748,8 @@
 		27DCF67C22BD6BE6009A23C2 /* HashUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HashUtils.h; path = IOS/Utilities/HashUtils.h; sourceTree = SOURCE_ROOT; };
 		27DCF68E22CD483A009A23C2 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
+		27F6D0692300165100A248BE /* Double.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Double.h; path = LibMath/cpp/Double.h; sourceTree = SOURCE_ROOT; };
+		27F6D0772300165100A248BE /* Double.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Double.cpp; path = LibMath/cpp/Double.cpp; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -784,6 +788,8 @@
 			children = (
 				27047178216D997000EE47FF /* Distance.cpp */,
 				27047174216D996F00EE47FF /* Distance.h */,
+				27F6D0772300165100A248BE /* Double.cpp */,
+				27F6D0692300165100A248BE /* Double.h */,
 				2704717E216E253B00EE47FF /* KMeans.cpp */,
 				2704717D216E253A00EE47FF /* KMeans.h */,
 				27047177216D997000EE47FF /* Peaks.cpp */,
@@ -1686,6 +1692,7 @@
 				2797F18F19BFE48E008F8672 /* KmlFileReader.cpp in Sources */,
 				27B7CDF419BFD99B000383E3 /* LeBluetoothSensor.m in Sources */,
 				27B7CDC819BFD953000383E3 /* HeartRateLine.m in Sources */,
+				27F6D0782300165100A248BE /* Double.cpp in Sources */,
 				27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */,
 				27B7CDF719BFD99B000383E3 /* LeHeartRateMonitor.m in Sources */,
 				27C0845E19BFD063007CE934 /* Run.cpp in Sources */,
@@ -1812,6 +1819,7 @@
 				27DCF5FF22B71628009A23C2 /* ActivityFactory.cpp in Sources */,
 				27DCF60022B71628009A23C2 /* ActivityFactory.h in Sources */,
 				27DCF60122B71628009A23C2 /* ActivitySummary.h in Sources */,
+				27F6D0792300166500A248BE /* Double.cpp in Sources */,
 				27DCF60222B71628009A23C2 /* ActivityType.h in Sources */,
 				27DCF60322B71628009A23C2 /* ActivityViewType.h in Sources */,
 				27DCF60422B71628009A23C2 /* AxisName.h in Sources */,
