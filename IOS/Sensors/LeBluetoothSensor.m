@@ -125,7 +125,27 @@
 {
 }
 
+#pragma mark CBPeripheral methods shared with subclasses
+
+- (void)handleCharacteristicForService:(CBService*)service
+{
+	for (CBCharacteristic* aChar in service.characteristics)
+	{
+		if (([self characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING]) ||
+			([self characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_GAP_DEVICE_NAME]))
+		{
+			[self->peripheral readValueForCharacteristic:aChar];
+		}
+	}
+}
+
 #pragma mark utility methods
+
+- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)serviceType
+{
+	NSString* str = [[NSString alloc] initWithFormat:@"%x", serviceType];
+	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
+}
 
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withBTChar:(BluetoothCharacteristic)char2
 {

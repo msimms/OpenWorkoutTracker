@@ -126,23 +126,14 @@ typedef struct rsc_measurement
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_HEART_RATE_MEASUREMENT])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_BODY_SENSOR_LOCATION])
+			if (([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_HEART_RATE_MEASUREMENT]) ||
+				([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_BODY_SENSOR_LOCATION]) ||
+				([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING]))
 			{
 				[self->peripheral readValueForCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
-			{
-				[self->peripheral readValueForCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_RSC_MEASUREMENT])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
 		}
+		[super handleCharacteristicForService:service];
 	}
 }
 
@@ -152,13 +143,18 @@ typedef struct rsc_measurement
 	{
 		return;
 	}
-	
+	if (!characteristic.value)
+	{
+		return;
+	}
+	if (error)
+	{
+		return;
+	}
+
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_RSC_MEASUREMENT])
 	{
-		if (characteristic.value || !error)
-		{
-            [self updateWithRSCData:characteristic.value];
-		}
+		[self updateWithRSCData:characteristic.value];
 	}
 	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_RSC_FEATURE])
 	{
@@ -175,13 +171,11 @@ typedef struct rsc_measurement
 {
 }
 
-#pragma mark utility methods
-
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2
+- (void)peripheral:(CBPeripheral*)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", service2];
-	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
 }
+
+#pragma mark utility methods
 
 - (uint64_t)currentTimeInMs
 {

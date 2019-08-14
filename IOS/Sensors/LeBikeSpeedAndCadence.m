@@ -145,11 +145,8 @@ typedef struct RevMeasurement
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CSC_FEATURE])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CSC_MEASUREMENT])
+			if (([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CSC_FEATURE]) ||
+				([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CSC_MEASUREMENT]))
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
@@ -158,6 +155,7 @@ typedef struct RevMeasurement
 				[self->peripheral readValueForCharacteristic:aChar];
 			}
 		}
+		[super handleCharacteristicForService:service];
 	}
 }
 
@@ -167,13 +165,18 @@ typedef struct RevMeasurement
 	{
 		return;
 	}
-	
+	if (!characteristic.value)
+	{
+		return;
+	}
+	if (error)
+	{
+		return;
+	}
+
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CSC_MEASUREMENT])
 	{
-		if (characteristic.value || !error)
-		{
-            [self updateWithCadenceAndWheelSpeedData:characteristic.value];
-		}
+		[self updateWithCadenceAndWheelSpeedData:characteristic.value];
 	}
 }
 
@@ -181,13 +184,11 @@ typedef struct RevMeasurement
 {
 }
 
-#pragma mark utility methods
-
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2
+- (void)peripheral:(CBPeripheral*)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", service2];
-	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
 }
+
+#pragma mark utility methods
 
 - (uint64_t)currentTimeInMs
 {

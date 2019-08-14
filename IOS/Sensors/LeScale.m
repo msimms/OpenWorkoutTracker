@@ -120,6 +120,10 @@ typedef struct WeightScaleFeature
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverServices:(NSError*)error
 {
+	for (CBService* service in peripheral.services)
+	{
+		[peripheral discoverCharacteristics:nil forService:service];
+	}
 }
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
@@ -128,33 +132,42 @@ typedef struct WeightScaleFeature
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE])
+			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
-			else if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			else if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
-			{
-				[self->peripheral readValueForCharacteristic:aChar];
-			}
+			[peripheral discoverDescriptorsForCharacteristic:aChar];
 		}
+		[super handleCharacteristicForService:service];
 	}
 	else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT])
+			NSString* result = [aChar.UUID UUIDString];
+			const char* result2 = [result UTF8String];
+
+			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
-			else if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
-			{
-				[self->peripheral readValueForCharacteristic:aChar];
-			}
+			[peripheral discoverDescriptorsForCharacteristic:aChar];
 		}
+		[super handleCharacteristicForService:service];
+	}
+}
+
+- (void)peripheral:(CBPeripheral*)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
+{
+	if (characteristic == nil)
+	{
+		return;
 	}
 }
 
@@ -164,27 +177,26 @@ typedef struct WeightScaleFeature
 	{
 		return;
 	}
+	if (!characteristic.value)
+	{
+		return;
+	}
+	if (error)
+	{
+		return;
+	}
 	
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE])
 	{
-		if (characteristic.value || !error)
-		{
-			[self updateWithScaleFeature:characteristic.value];
-		}
+		[self updateWithScaleFeature:characteristic.value];
 	}
 	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT])
 	{
-		if (characteristic.value || !error)
-		{
-			[self updateWithWeightMeasurementData:characteristic.value];
-		}
+		[self updateWithWeightMeasurementData:characteristic.value];
 	}
 	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
 	{
-		if (characteristic.value || !error)
-		{
-			[self updateWithWeightData:characteristic.value];
-		}
+		[self updateWithWeightData:characteristic.value];
 	}
 }
 
@@ -192,12 +204,8 @@ typedef struct WeightScaleFeature
 {
 }
 
-#pragma mark utility methods
-
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2
+- (void)peripheral:(CBPeripheral*)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", service2];
-	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
 }
 
 @end

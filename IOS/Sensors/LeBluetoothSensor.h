@@ -9,6 +9,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 #import "BluetoothCharacteristics.h"
+#import "BluetoothServices.h"
 #import "Sensor.h"
 
 @interface LeBluetoothSensor : NSObject<Sensor, CBPeripheralDelegate>
@@ -16,6 +17,7 @@
 	CBPeripheral* peripheral;
 	NSString*     deviceName;
 	NSString*     manufacturer;
+	NSString*     serialNumber;
 }
 
 - (id)initWithPeripheral:(CBPeripheral*)newPeripheral;
@@ -37,6 +39,9 @@
 - (void)stopUpdates;
 - (void)update;
 
+- (void)handleCharacteristicForService:(CBService*)service;
+
+- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2;
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withBTChar:(BluetoothCharacteristic)char2;
 
 - (uint64_t)currentTimeInMs;

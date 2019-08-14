@@ -148,27 +148,15 @@
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_MEASUREMENT])
+			if (([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_MEASUREMENT]) ||
+				([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_VECTOR]) ||
+				([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_FEATURE]) ||
+				([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_POINT]))
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_VECTOR])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_FEATURE])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_POINT])
-			{
-				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
-			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
-			{
-				[self->peripheral readValueForCharacteristic:aChar];
 			}
 		}
+		[super handleCharacteristicForService:service];
 	}
 }
 
@@ -178,13 +166,18 @@
 	{
 		return;
 	}
+	if (!characteristic.value)
+	{
+		return;
+	}
+	if (error)
+	{
+		return;
+	}
 
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_MEASUREMENT])
 	{
-		if (characteristic.value || !error)
-		{
-			[self updateWithPowerData:characteristic.value];
-		}
+		[self updateWithPowerData:characteristic.value];
 	}
 }
 
@@ -192,12 +185,8 @@
 {
 }
 
-#pragma mark utility methods
-
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2
+- (void)peripheral:(CBPeripheral*)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", service2];
-	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
 }
 
 @end

@@ -195,7 +195,8 @@
 	CBUUID* runningSCSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_RUNNING_SPEED_AND_CADENCE]];
 	CBUUID* cyclingSCSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_SPEED_AND_CADENCE]];
 	CBUUID* cyclingPowerSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_POWER]];
-	return [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, nil];
+	CBUUID* weightSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_WEIGHT]];
+	return [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, weightSvc, nil];
 }
 
 - (void)retrieveConnectedPeripherals
@@ -386,6 +387,10 @@
 					sensor = [[[SensorFactory alloc] init] createFootPodSensor:peripheral];
 				}
 				else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT])
+				{
+					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
+				}
+				else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT_SCALE])
 				{
 					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
 				}

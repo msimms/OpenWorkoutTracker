@@ -40,6 +40,4 @@
 - (void)stopUpdates;
 - (void)update;
 
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2;
-
 @end

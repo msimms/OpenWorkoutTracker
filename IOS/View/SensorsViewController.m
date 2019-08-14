@@ -87,7 +87,7 @@ typedef enum SettingsSections
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self->peripheralTableView reloadData];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightUpdated:) name:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cadenceUpdated:) name:@NOTIFICATION_NAME_BIKE_CADENCE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wheelSpeedUpdated:) name:@NOTIFICATION_NAME_BIKE_WHEEL_SPEED object:nil];
@@ -379,7 +379,7 @@ typedef enum SettingsSections
 
 #pragma mark sensor update methods
 
-- (void)weightUdpated:(NSNotification*)notification
+- (void)weightUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
 	if (data)
@@ -392,7 +392,7 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_SCALE, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
+			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
 		}
 	}
 }
@@ -410,7 +410,7 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_HRM, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]];
+			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]];
 		}
 	}
 }
@@ -428,7 +428,7 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_CADENCE_WHEEL_SPEED, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]];
+			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]];
 		}
 	}
 }
@@ -458,7 +458,7 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_POWER_METER, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 		}
 	}
 }

@@ -116,11 +116,8 @@ typedef struct HeartRateMeasurement
 				NSData* valData = [NSData dataWithBytes:(void*)&val length:sizeof(val)];
 				[self->peripheral writeValue:valData forCharacteristic:aChar type:CBCharacteristicWriteWithResponse];
 			}
-			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_MANUFACTURER_NAME_STRING])
-			{
-				[self->peripheral readValueForCharacteristic:aChar];
-			}
 		}
+		[super handleCharacteristicForService:service];
 	}
 }
 
@@ -130,13 +127,18 @@ typedef struct HeartRateMeasurement
 	{
 		return;
 	}
-	
+	if (!characteristic.value)
+	{
+		return;
+	}
+	if (error)
+	{
+		return;
+	}
+
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_HEART_RATE_MEASUREMENT])
 	{
-		if (characteristic.value || !error)
-		{
-            [self updateWithHRMData:characteristic.value];
-		}
+		[self updateWithHRMData:characteristic.value];
 	}
 	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_BODY_SENSOR_LOCATION])
 	{
@@ -183,12 +185,8 @@ typedef struct HeartRateMeasurement
 {
 }
 
-#pragma mark utility methods
-
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2
+- (void)peripheral:(CBPeripheral*)peripheral didModifyServices:(NSArray<CBService *> *)invalidatedServices
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", service2];
-	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
 }
 
 @end
