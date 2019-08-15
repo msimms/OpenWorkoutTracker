@@ -157,6 +157,8 @@ typedef enum ProfileRows
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
+	if ([self->bikeNames count] == 0)
+		return NUM_PROFILE_SECTIONS - 1;
 	return NUM_PROFILE_SECTIONS;
 }
 

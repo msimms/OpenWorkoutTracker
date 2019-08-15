@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -307,7 +307,8 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Xk7-K9-X0j">
                                 <rect key="frame" x="18" y="233" width="335" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="28"/>
                                 <state key="normal" title="Login"/>
                                 <connections>
                                     <action selector="onLogin:" destination="BmG-cT-RrP" eventType="touchUpInside" id="fDY-0y-YwX"/>
@@ -484,7 +485,8 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="XJt-tQ-rQL">
                                 <rect key="frame" x="20" y="359" width="335" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="28"/>
                                 <state key="normal" title="Create Login"/>
                                 <connections>
                                     <action selector="onCreate:" destination="fWI-Ns-4ZW" eventType="touchUpInside" id="4y0-DB-MgO"/>
@@ -579,6 +581,7 @@
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="jpK-Fj-dH3">
                                 <rect key="frame" x="20" y="247" width="222" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
@@ -702,7 +705,7 @@
                                 <gestureRecognizers/>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" id="KLi-PK-vfz">
-                                <rect key="frame" x="0.0" y="483" width="320" height="85"/>
+                                <rect key="frame" x="0.0" y="483" width="375" height="85"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -727,7 +730,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1990.4000000000001" y="-1298.9505247376312"/>
+            <point key="canvasLocation" x="1989.5999999999999" y="-1299.400299850075"/>
         </scene>
         <!--Complex Activity View Controller-->
         <scene sceneID="IB4-3H-B1s">
@@ -1159,7 +1162,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="GwT-k9-o3L">
-                                <rect key="frame" x="0.0" y="64" width="319" height="213"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="213"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </mapView>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="AHP-Iq-h0i">
@@ -1341,7 +1344,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gCn-FM-FKF" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="GCW-Lk-NFp"/>
             </objects>
-            <point key="canvasLocation" x="2916.8000000000002" y="-564.01799100449784"/>
+            <point key="canvasLocation" x="2916" y="-564.46776611694156"/>
         </scene>
         <!--Simple Activity View Controller-->
         <scene sceneID="RuB-IT-PLj">
@@ -2027,7 +2030,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="1201"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <string key="text">Copyright (c) 2015, by Michael J. Simms. All rights reserved.
+                                <mutableString key="text">Copyright (c) 2015-2019, by Michael J. Simms. All rights reserved.
 
 Portions of this application are: Copyright (c) 2014, Drew McCormack, Brad Larson, Eric Skroch, Barry Wark, Dirkjan Krijnders, Rick Maddy, Vijay Kalusani, Caleb Cannon, Jeff Buck, Thomas Elstner, Jeroen Leenarts, Craig Hockenberry, Hartwig Wiesmann, Koen van der Drift, Nino Ag, Mike Lischke, Trevor Harmon, Travis Fischer, Graham Mueller, and Rafał Wójcik. All rights reserved.
 
@@ -2038,7 +2041,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
 1. THE SOFTWARE IS LICENSED, NOT SOLD. YOU ACKNOWLEDGE THAT NO TITLE TO THE INTELLECTUAL PROPERTY IN THE SOFTWARE IS TRANSFERRED TO YOU. YOU FURTHER ACKNOWLEDGE THAT TITLE AND FULL OWNERSHIP RIGHTS TO THE SOFTWARE WILL REMAIN THE EXCLUSIVE PROPERTY OF THE DEVELOPER(S), AND YOU WILL NOT ACQUIRE ANY RIGHTS TO THE SOFTWARE, EXCEPT AS EXPRESSLY SET FORTH ABOVE. THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATY PROVISIONS.
 
 2. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</string>
+</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -2203,11 +2206,11 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="PRo-Bb-13x"/>
-        <segue reference="2hX-Kx-fHg"/>
-        <segue reference="Y2u-2b-CLK"/>
-        <segue reference="zxl-cL-SNo"/>
-        <segue reference="YOw-2o-8H3"/>
-        <segue reference="JTB-vA-I5O"/>
+        <segue reference="rmC-zq-awJ"/>
+        <segue reference="E2b-lU-9dF"/>
+        <segue reference="j4b-oo-ykq"/>
+        <segue reference="mpc-lI-yFA"/>
+        <segue reference="PhW-xp-et3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
