@@ -38,12 +38,6 @@
 	WCSession*           watchSession;
 
 	BOOL                 badGps;
-
-	time_t               lastLocationUpdateTime;
-	time_t               lastHeartRateUpdateTime;
-	time_t               lastCadenceUpdateTime;
-	time_t               lastWheelSpeedUpdateTime;
-	time_t               lastPowerUpdateTime;
 }
 
 - (NSString*)getUuid;

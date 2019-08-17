@@ -35,12 +35,6 @@
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
 
-	self->lastLocationUpdateTime = 0;
-	self->lastHeartRateUpdateTime = 0;
-	self->lastCadenceUpdateTime = 0;
-	self->lastWheelSpeedUpdateTime = 0;
-	self->lastPowerUpdateTime = 0;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 }
@@ -270,26 +264,17 @@
 
 	if (IsActivityInProgress())
 	{
-		uint8_t freq = [self->activityPrefs getGpsSampleFrequency:activityType];
-		time_t nextUpdateTimeSec = self->lastLocationUpdateTime + freq;
-		time_t currentTimeSec = (time_t)([gpsTimestampMs longLongValue] / 1000);
+		BOOL shouldProcessReading = TRUE;
+		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
 		
-		if (currentTimeSec >= nextUpdateTimeSec)
+		if (filterOption == GPS_FILTER_DROP && self->badGps)
 		{
-			BOOL shouldProcessReading = TRUE;
-			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
-			
-			if (filterOption == GPS_FILTER_DROP && self->badGps)
-			{
-				shouldProcessReading = FALSE;
-			}
-			
-			if (shouldProcessReading)
-			{
-				ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
-			}
-			
-			self->lastLocationUpdateTime = currentTimeSec;
+			shouldProcessReading = FALSE;
+		}
+		
+		if (shouldProcessReading)
+		{
+			ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
 		}
 	}
 }

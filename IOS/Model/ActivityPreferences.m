@@ -439,19 +439,6 @@
 	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN withInteger:seconds];
 }
 
-- (uint8_t)getGpsSampleFrequency:(NSString*)activityType
-{
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_GPS_SAMPLE_FREQ];
-	if (value == -1)
-		value = DEFAULT_SAMPLE_FREQUENCY;
-	return value;	
-}
-
-- (void)setGpsSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds
-{
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_SAMPLE_FREQ withInteger:seconds];
-}
-
 - (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityType
 {
 	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY];
@@ -489,58 +476,6 @@
 - (void)setGpsFilterOption:(NSString*)activityType withOption:(GpsFilterOption)option
 {
 	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION withInteger:(int)option];
-}
-
-- (uint8_t)getHeartRateSampleFrequency:(NSString*)activityType
-{
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_HEART_RATE_SAMPLE_FREQ];
-	if (value == -1)
-		value = DEFAULT_SAMPLE_FREQUENCY;
-	return value;
-}
-
-- (void)setHeartRateSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds
-{
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_HEART_RATE_SAMPLE_FREQ withInteger:seconds];
-}
-
-- (uint8_t)getCadenceSampleFrequency:(NSString*)activityType
-{
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_CADENCE_SAMPLE_FREQ];
-	if (value == -1)
-		value = DEFAULT_SAMPLE_FREQUENCY;
-	return value;
-}
-
-- (void)setCadenceSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds
-{
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_CADENCE_SAMPLE_FREQ withInteger:seconds];
-}
-
-- (uint8_t)getWheelSpeedSampleFrequency:(NSString*)activityType
-{
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_WHEEL_SPEED_SAMPLE_FREQ];
-	if (value == -1)
-		value = DEFAULT_SAMPLE_FREQUENCY;
-	return value;	
-}
-
-- (void)setWheelSpeedSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds
-{
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_WHEEL_SPEED_SAMPLE_FREQ withInteger:seconds];
-}
-
-- (uint8_t)getPowerSampleFrequency:(NSString*)activityType
-{
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_POWER_SAMPLE_FREQ];
-	if (value == -1)
-		value = DEFAULT_SAMPLE_FREQUENCY;
-	return value;
-}
-
-- (void)setPowerSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds
-{
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_POWER_SAMPLE_FREQ withInteger:seconds];
 }
 
 - (BOOL)hasShownHelp:(NSString*)activityType

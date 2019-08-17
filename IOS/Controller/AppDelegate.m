@@ -97,12 +97,6 @@
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[self hasLeBluetooth]];
 	self->badGps = FALSE;
 
-	self->lastLocationUpdateTime = 0;
-	self->lastHeartRateUpdateTime = 0;
-	self->lastCadenceUpdateTime = 0;
-	self->lastWheelSpeedUpdateTime = 0;
-	self->lastPowerUpdateTime = 0;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
@@ -654,26 +648,17 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (IsActivityInProgressAndNotPaused())
 	{
-		uint8_t freq = [self->activityPrefs getGpsSampleFrequency:activityType];
-		time_t nextUpdateTimeSec = self->lastLocationUpdateTime + freq;
-		time_t currentTimeSec = (time_t)([gpsTimestampMs longLongValue] / 1000);
+		BOOL shouldProcessReading = TRUE;
+		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
 
-		if (currentTimeSec >= nextUpdateTimeSec)
+		if (filterOption == GPS_FILTER_DROP && self->badGps)
 		{
-			BOOL shouldProcessReading = TRUE;
-			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+			shouldProcessReading = FALSE;
+		}
 
-			if (filterOption == GPS_FILTER_DROP && self->badGps)
-			{
-				shouldProcessReading = FALSE;
-			}
-
-			if (shouldProcessReading)
-			{
-				ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
-			}
-
-			self->lastLocationUpdateTime = currentTimeSec;
+		if (shouldProcessReading)
+		{
+			ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
 		}
 	}
 }
@@ -685,26 +670,19 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* heartRateData = [notification object];
 		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
 
-			uint8_t freq = [self->activityPrefs getHeartRateSampleFrequency:[self getCurrentActivityType]];
-			time_t nextUpdateTimeSec = self->lastHeartRateUpdateTime + freq;
-			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
-
-			if (currentTimeSec >= nextUpdateTimeSec)
+			if (rate)
 			{
-				NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
-				if (rate)
-				{
-					ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
-					self->lastHeartRateUpdateTime = currentTimeSec;
+				ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
 
-					if (self->healthMgr)
-					{
-						[self->healthMgr saveHeartRateIntoHealthStore:[rate doubleValue]];
-					}
+				if (self->healthMgr)
+				{
+					[self->healthMgr saveHeartRateIntoHealthStore:[rate doubleValue]];
 				}
 			}
 		}
@@ -718,22 +696,15 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* cadenceData = [notification object];
 		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [cadenceData objectForKey:@KEY_NAME_CADENCE_TIMESTAMP_MS];
+			NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
 
-			uint8_t freq = [self->activityPrefs getCadenceSampleFrequency:[self getCurrentActivityType]];
-			time_t nextUpdateTimeSec = self->lastCadenceUpdateTime + freq;
-			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
-
-			if (currentTimeSec >= nextUpdateTimeSec)
+			if (rate)
 			{
-				NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
-				if (rate)
-				{
-					ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
-					self->lastCadenceUpdateTime = currentTimeSec;
-				}
+				ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
 			}
 		}
 	}
@@ -746,22 +717,15 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* wheelSpeedData = [notification object];
 		CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS];
+			NSNumber* count = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED];
 
-			uint8_t freq = [self->activityPrefs getWheelSpeedSampleFrequency:[self getCurrentActivityType]];
-			time_t nextUpdateTimeSec = self->lastWheelSpeedUpdateTime + freq;
-			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
-
-			if (currentTimeSec >= nextUpdateTimeSec)
+			if (count)
 			{
-				NSNumber* count = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED];
-				if (count)
-				{
-					ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
-					self->lastWheelSpeedUpdateTime = currentTimeSec;
-				}
+				ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
 			}
 		}
 	}
@@ -774,22 +738,15 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* powerData = [notification object];
 		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_POWER_TIMESTAMP_MS];
+			NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
 
-			uint8_t freq = [self->activityPrefs getPowerSampleFrequency:[self getCurrentActivityType]];
-			time_t nextUpdateTimeSec = self->lastPowerUpdateTime + freq;
-			time_t currentTimeSec = (time_t)([timestampMs longLongValue] / 1000);
-
-			if (currentTimeSec >= nextUpdateTimeSec)
+			if (watts)
 			{
-				NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
-				if (watts)
-				{
-					ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
-					self->lastPowerUpdateTime = currentTimeSec;
-				}
+				ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
 			}
 		}
 	}
@@ -802,10 +759,12 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* strideData = [notification object];
 		CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* value = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH];
 			NSNumber* timestampMs = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH_TIMESTAMP_MS];
+
 			if (value)
 			{
 				ProcessRunStrideLengthReading([value doubleValue], [timestampMs longLongValue]);
@@ -821,10 +780,12 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* distanceData = [notification object];
 		CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* value = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE];
 			NSNumber* timestampMs = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE_TIMESTAMP_MS];
+
 			if (value)
 			{
 				ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);

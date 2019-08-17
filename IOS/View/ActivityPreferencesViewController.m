@@ -18,7 +18,6 @@
 #define TITLE_GPS             NSLocalizedString(@"GPS", nil)
 #define TITLE_AUTOLOCK        NSLocalizedString(@"Autolock", nil)
 #define TITLE_COUNTDOWN       NSLocalizedString(@"Countdown Timer", nil)
-#define TITLE_GPS_FREQUENCY   NSLocalizedString(@"GPS Sample Frequency", nil)
 #define TITLE_GPS_ACCURACY    NSLocalizedString(@"Minimum GPS Accuracy", nil)
 #define TITLE_GPS_FILTER      NSLocalizedString(@"GPS Filter Options", nil)
 
@@ -80,8 +79,7 @@ typedef enum ScreenSoundItems
 
 typedef enum GpsSectionItems
 {
-	GPS_ITEM_SAMPLE_FREQUENCY = 0,
-	GPS_ITEM_HORIZONTAL_ACCURACY,
+	GPS_ITEM_HORIZONTAL_ACCURACY = 0,
 	GPS_ITEM_VERTICAL_ACCURACY,
 	GPS_ITEM_FILTER_OPTIONS,
 	NUM_GPS_ITEMS
@@ -111,7 +109,6 @@ typedef enum GpsSectionItems
 	self->countdownStrings       = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
 	self->colorMenuStrings       = [NSArray arrayWithObjects:@"White", @"Gray", @"Black", @"Red", @"Green", @"Blue", @"Yellow", nil];
 	self->positionStrings        = [NSArray arrayWithObjects:@"1 (Top)", @"2 (Row 2 - Left)", @"3 (Row 2 - Right)", @"4 (Row 3 - Left)", @"5 (Row 3 - Right)", @"6 (Row 4 - Left)", @"7 (Row 4 - Right)", @"8 (Row 5 - Left)", @"9 (Row 5 - Right)", nil];
-	self->sampleFrequencies      = [NSArray arrayWithObjects:LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
 	self->accuracySettings       = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, nil];
 	self->gpsFilterOptions       = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
 }
@@ -154,6 +151,8 @@ typedef enum GpsSectionItems
 			return TITLE_COLORS;
 		case SECTION_SOUNDS:
 			return TITLE_SOUNDS;
+		case SECTION_GPS:
+			return TITLE_GPS;
 	}
 	return @"";
 }
@@ -262,13 +261,6 @@ typedef enum GpsSectionItems
 			case SECTION_GPS:
 				switch (row)
 				{
-					case GPS_ITEM_SAMPLE_FREQUENCY:
-						{
-							uint8_t value = [prefs getGpsSampleFrequency:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_GPS_SAMPLE_FREQ;
-							cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
-						}
-						break;
 					case GPS_ITEM_HORIZONTAL_ACCURACY:
 						{
 							uint8_t value = [prefs getMinGpsHorizontalAccuracy:activityType];
@@ -437,21 +429,19 @@ typedef enum GpsSectionItems
 		case SECTION_GPS:
 			switch (self->selectedRow)
 			{
-				case GPS_ITEM_SAMPLE_FREQUENCY:
-					title = TITLE_GPS_FREQUENCY;
-					buttonNames = self->sampleFrequencies;
-					break;
 				case GPS_ITEM_HORIZONTAL_ACCURACY:
-					title = TITLE_GPS_FREQUENCY;
+					title = TITLE_GPS_ACCURACY;
 					buttonNames = self->accuracySettings;
 					break;
 				case GPS_ITEM_VERTICAL_ACCURACY:
-					title = TITLE_GPS_FREQUENCY;
+					title = TITLE_GPS_ACCURACY;
 					buttonNames = self->accuracySettings;
 					break;
 				case GPS_ITEM_FILTER_OPTIONS:
 					title = TITLE_GPS_FILTER;
 					buttonNames = self->gpsFilterOptions;
+					break;
+				default:
 					break;
 			}
 			break;
@@ -496,24 +486,6 @@ typedef enum GpsSectionItems
 								break;
 							case SOUND_ITEM_SPLIT_BEEP:
 								[prefs setSplitBeepEnabled:activityType withBool:[buttonName isEqualToString:LABEL_ENABLED]];
-								break;
-						}
-					}
-					else if ([title isEqualToString:TITLE_GPS_FREQUENCY])
-					{
-						switch (self->selectedRow)
-						{
-							case GPS_ITEM_SAMPLE_FREQUENCY:
-								if ([buttonName isEqualToString:LABEL_1_SECOND])
-									[prefs setGpsSampleFrequency:activityType withSeconds:1];
-								else if ([buttonName isEqualToString:LABEL_2_SECONDS])
-									[prefs setGpsSampleFrequency:activityType withSeconds:2];
-								else if ([buttonName isEqualToString:LABEL_3_SECONDS])
-									[prefs setGpsSampleFrequency:activityType withSeconds:3];
-								else if ([buttonName isEqualToString:LABEL_4_SECONDS])
-									[prefs setGpsSampleFrequency:activityType withSeconds:4];
-								else if ([buttonName isEqualToString:LABEL_5_SECONDS])
-									[prefs setGpsSampleFrequency:activityType withSeconds:5];
 								break;
 						}
 					}

@@ -94,9 +94,6 @@ typedef enum GpsFilterOption
 - (uint8_t)getCountdown:(NSString*)activityType;
 - (void)setCountdown:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getGpsSampleFrequency:(NSString*)activityType;
-- (void)setGpsSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
-
 - (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityType;
 - (void)setMinGpsHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds;
 
@@ -105,18 +102,6 @@ typedef enum GpsFilterOption
 
 - (GpsFilterOption)getGpsFilterOption:(NSString*)activityType;
 - (void)setGpsFilterOption:(NSString*)activityType withOption:(GpsFilterOption)option;
-
-- (uint8_t)getHeartRateSampleFrequency:(NSString*)activityType;
-- (void)setHeartRateSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
-
-- (uint8_t)getCadenceSampleFrequency:(NSString*)activityType;
-- (void)setCadenceSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
-
-- (uint8_t)getWheelSpeedSampleFrequency:(NSString*)activityType;
-- (void)setWheelSpeedSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
-
-- (uint8_t)getPowerSampleFrequency:(NSString*)activityType;
-- (void)setPowerSampleFrequency:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
 - (BOOL)hasShownHelp:(NSString*)activityType;
 - (void)markHasShownHelp:(NSString*)activityType;

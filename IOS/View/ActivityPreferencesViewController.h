@@ -15,7 +15,6 @@
 	NSArray* countdownStrings;
 	NSArray* colorMenuStrings;
 	NSArray* positionStrings;
-	NSArray* sampleFrequencies;
 	NSArray* accuracySettings;
 	NSArray* gpsFilterOptions;
 	
