@@ -147,9 +147,6 @@ typedef struct WeightScaleFeature
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			NSString* result = [aChar.UUID UUIDString];
-			const char* result2 = [result UTF8String];
-
 			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT] ||
 				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT] ||
 				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE] ||
