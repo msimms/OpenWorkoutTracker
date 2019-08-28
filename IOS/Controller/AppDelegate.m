@@ -228,8 +228,6 @@
 {
 	switch (feature)
 	{
-		case FEATURE_HEATMAP:
-			return FALSE;
 		case FEATURE_LOCAL_BROADCAST:
 			return FALSE;
 		case FEATURE_GLOBAL_BROADCAST:
@@ -250,7 +248,6 @@
 {
 	switch (feature)
 	{
-		case FEATURE_HEATMAP:
 		case FEATURE_LOCAL_BROADCAST:
 		case FEATURE_GLOBAL_BROADCAST:
 			return [self isFeaturePresent:feature] && [self isFeaturePresent:feature];
