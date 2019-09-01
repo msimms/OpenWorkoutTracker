@@ -430,12 +430,19 @@
 #pragma mark broadcast methods
 
 - (void)configureBroadcasting
-{
-	if ([Preferences shouldBroadcastGlobally])
+{	
+	if ([self isFeaturePresent:FEATURE_GLOBAL_BROADCAST])
 	{
-		if (!self->broadcastMgr)
+		if ([Preferences shouldBroadcastGlobally])
 		{
-			self->broadcastMgr = [[BroadcastManager alloc] init];
+			if (!self->broadcastMgr)
+			{
+				self->broadcastMgr = [[BroadcastManager alloc] init];
+			}
+		}
+		else
+		{
+			self->broadcastMgr = nil;
 		}
 	}
 	else

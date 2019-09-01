@@ -282,7 +282,14 @@ typedef enum SettingsRowsBroadcast
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
-	return NUM_SETTINGS_SECTIONS;
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSInteger numSections = NUM_SETTINGS_SECTIONS;
+
+	if (![appDelegate isFeaturePresent:FEATURE_GLOBAL_BROADCAST])
+	{
+		numSections--;
+	}
+	return numSections;
 }
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
