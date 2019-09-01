@@ -228,9 +228,7 @@
 {
 	switch (feature)
 	{
-		case FEATURE_LOCAL_BROADCAST:
-			return FALSE;
-		case FEATURE_GLOBAL_BROADCAST:
+		case FEATURE_BROADCAST:
 			return TRUE;
 		case FEATURE_DROPBOX:
 			return FALSE;
@@ -248,8 +246,7 @@
 {
 	switch (feature)
 	{
-		case FEATURE_LOCAL_BROADCAST:
-		case FEATURE_GLOBAL_BROADCAST:
+		case FEATURE_BROADCAST:
 			return [self isFeaturePresent:feature] && [self isFeaturePresent:feature];
 		case FEATURE_DROPBOX:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_DROPBOX];
@@ -431,7 +428,7 @@
 
 - (void)configureBroadcasting
 {	
-	if ([self isFeaturePresent:FEATURE_GLOBAL_BROADCAST])
+	if ([self isFeaturePresent:FEATURE_BROADCAST])
 	{
 		if ([Preferences shouldBroadcastGlobally])
 		{

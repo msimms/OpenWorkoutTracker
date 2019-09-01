@@ -285,7 +285,7 @@ typedef enum SettingsRowsBroadcast
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSInteger numSections = NUM_SETTINGS_SECTIONS;
 
-	if (![appDelegate isFeaturePresent:FEATURE_GLOBAL_BROADCAST])
+	if (![appDelegate isFeaturePresent:FEATURE_BROADCAST])
 	{
 		numSections--;
 	}
