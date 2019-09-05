@@ -2,16 +2,23 @@
 //  Copyright © 2019 Michael J Simms Software. All rights reserved.
 
 #import <WatchKit/WatchKit.h>
+#import <WatchConnectivity/WatchConnectivity.h>
 #import "ActivityPreferences.h"
 #import "SensorMgr.h"
+#import "WatchSessionManager.h"
 
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
 {
 	SensorMgr* sensorMgr;
 	ActivityPreferences* activityPrefs;
+	WatchSessionManager* watchSession;
 
 	BOOL badGps;
 }
+
+// watch sensor methods
+
+- (void)startWatchSession;
 
 // sensor management methods
 

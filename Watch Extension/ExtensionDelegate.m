@@ -17,11 +17,11 @@
 	NSArray*  paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString* docDir = [paths objectAtIndex: 0];
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
-	
+
 	Initialize([dbFileName UTF8String]);
-		
+
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-	
+
 	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 
@@ -98,6 +98,14 @@
 			[task setTaskCompletedWithSnapshot:NO];
 		}
 	}
+}
+
+#pragma mark watch session methods
+
+- (void)startWatchSession
+{
+	self->watchSession = [[WatchSessionManager alloc] init];
+	[self->watchSession startWatchSession];
 }
 
 #pragma mark sensor methods

@@ -69,13 +69,7 @@
 
 	Initialize([dbFileName UTF8String]);
 
-	if ([WCSession isSupported])
-	{
-		WCSession* session = [WCSession defaultSession];
-		session.delegate = self;
-		[session activateSession];
-	}
-
+	[self configureWatchSession];
 	[self clearExportDir];
 
 	[Preferences registerDefaultsFromSettingsBundle:@"Root.plist"];
@@ -422,6 +416,18 @@
 - (void)setUserFtp:(double)ftp
 {
 	[UserProfile setFtp:ftp];
+}
+
+#pragma mark watch methods
+
+- (void)configureWatchSession
+{
+	if ([WCSession isSupported])
+	{
+		self->watchSession = [WCSession defaultSession];
+		self->watchSession.delegate = self;
+		[self->watchSession activateSession];
+	}
 }
 
 #pragma mark broadcast methods
@@ -1657,11 +1663,39 @@ void attributeNameCallback(const char* name, void* context)
 {
 }
 
+- (void)sessionWatchStateDidChange:(WCSession*)session
+{
+}
+
+- (void)sessionReachabilityDidChange:(WCSession*)session
+{
+}
+
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 }
 
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
+{
+}
+
+- (void)session:(WCSession*)session didReceiveMessageData:(NSData*)messageData
+{
+}
+
+- (void)session:(WCSession*)session didReceiveMessageData:(NSData*)messageData replyHandler:(void (^)(NSData *replyMessageData))replyHandler
+{
+}
+
+- (void)session:(WCSession*)session didReceiveFile:(WCSessionFile*)file
+{
+}
+
+- (void)session:(WCSession*)session didReceiveUserInfo:(NSDictionary<NSString *,id> *)userInfo
+{
+}
+
+- (void)session:(WCSession*)session didFinishUserInfoTransfer:(WCSessionUserInfoTransfer *)userInfoTransfer error:(NSError *)error
 {
 }
 

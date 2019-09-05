@@ -69,6 +69,10 @@
 - (void)setUserWeight:(double)weight;
 - (void)setUserFtp:(double)ftp;
 
+// watch methods
+
+- (void)configureWatchSession;
+
 // broadcast methods
 
 - (void)configureBroadcasting;

@@ -5,5 +5,10 @@
 #import <WatchConnectivity/WatchConnectivity.h>
 
 @interface WatchSessionManager : NSObject<WCSessionDelegate>
+{
+	WCSession* watchSession;
+}
+
+- (void)startWatchSession;
 
 @end
