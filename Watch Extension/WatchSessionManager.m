@@ -2,6 +2,8 @@
 //  Copyright © 2019 Michael J Simms Software. All rights reserved.
 
 #import "WatchSessionManager.h"
+#import "WatchMessages.h"
+#import "Notifications.h"
 
 @interface WatchSessionManager ()
 
@@ -15,6 +17,8 @@
 	self->watchSession = [WCSession defaultSession];
 	self->watchSession.delegate = self;
 	[self->watchSession activateSession];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveApplicationContext:(NSDictionary<NSString*, id>*)applicationContext
@@ -31,10 +35,22 @@
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
+	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	}
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
+	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	}
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveMessageData:(NSData*)messageData
@@ -56,4 +72,9 @@
 - (void)session:(nonnull WCSession*)session didFinishUserInfoTransfer:(WCSessionUserInfoTransfer *)userInfoTransfer error:(NSError *)error
 {
 }
+
+- (void)activityStopped:(NSNotification*)notification
+{
+}
+
 @end

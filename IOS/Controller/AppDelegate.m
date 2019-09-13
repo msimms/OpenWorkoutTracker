@@ -25,6 +25,7 @@
 #import "Urls.h"
 #import "UnitConversionFactors.h"
 #import "UserProfile.h"
+#import "WatchMessages.h"
 
 #include <sys/sysctl.h>
 
@@ -1673,10 +1674,22 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
+	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	}
 }
 
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
+	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	}
+	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	}
 }
 
 - (void)session:(WCSession*)session didReceiveMessageData:(NSData*)messageData

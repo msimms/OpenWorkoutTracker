@@ -752,6 +752,7 @@
 		27F6D0772300165100A248BE /* Double.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Double.cpp; path = LibMath/cpp/Double.cpp; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		27F9C33E232C08380077BE2A /* WatchMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchMessages.h; path = Common/WatchMessages.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1365,6 +1366,7 @@
 				27DCF67522B80661009A23C2 /* WatchActivityViewController.m */,
 				271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */,
 				271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */,
+				27F9C33E232C08380077BE2A /* WatchMessages.h */,
 				270547B022EE3BCF0071F3C2 /* WatchSessionManager.h */,
 				270547A122EE3B930071F3C2 /* WatchSessionManager.m */,
 				27DCF5D822B193B8009A23C2 /* Assets.xcassets */,

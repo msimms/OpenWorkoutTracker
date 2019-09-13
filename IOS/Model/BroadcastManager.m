@@ -344,13 +344,11 @@
 	[self->locationCache removeAllObjects];
 	[self->accelerometerCache removeAllObjects];
 	self->lastCacheFlush = time(NULL);
-	NSLog(@"Activity started.");
 }
 
 - (void)activityStopped:(NSNotification*)notification
 {
 	[self flushGlobalBroadcastCacheRest];
-	NSLog(@"Activity stopped.");
 }
 
 @end
