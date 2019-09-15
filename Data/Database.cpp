@@ -173,6 +173,11 @@ bool Database::CreateTables()
 		sql = "create table activity_summary (id integer primary key, activity_id text, attribute text, value double, start_time unsigned big int, end_time unsigned big int, value_type integer, measure_type integer, units integer, unique(activity_id, attribute) on conflict replace)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("activity_hash"))
+	{
+		sql = "create table activity_hash (id integer primary key, activity_id text, hash text)";
+		queries.push_back(sql);
+	}
 
 	int result = ExecuteQueries(queries);
 	return (result == SQLITE_OK || result == SQLITE_DONE);
@@ -1059,6 +1064,42 @@ bool Database::RetrieveSummaryData(const std::string& activityId, ActivityAttrib
 		
 		sqlite3_finalize(statement);
 		result = true;
+	}
+	return result;
+}
+
+bool Database::CreateActivityHash(const std::string& activityId, const std::string& hash)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "insert into activity_hash values (NULL,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, hash.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrieveActivityIdFromHash(const std::string& hash, std::string& activityId)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select activity_id from activity_hash where hash = ? limit 1", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
+		{
+			if (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				activityId = (const char*)sqlite3_column_text(statement, 0);
+				result = true;
+			}
+		}
+
+		sqlite3_finalize(statement);
 	}
 	return result;
 }

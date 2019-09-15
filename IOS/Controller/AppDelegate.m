@@ -894,12 +894,14 @@ void startSensorCallback(SensorType type, void* context)
 		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
 		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		NSString* activityHash = [self hashCurrentActivity];
 
 		SaveActivitySummaryData();
 
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								  activityId, @KEY_NAME_ACTIVITY_ID,
 								  activityType, @KEY_NAME_ACTIVITY_TYPE,
+								  activityHash, @KEY_NAME_ACTIVITY_HASH,
 								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
 								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
@@ -1674,21 +1676,29 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
-	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+		// The watch app wants to know if we have an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+		// The watch app is requesting an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+		// The watch app is sending an activity.
 	}
 }
 
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
-	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+		// The watch app wants to know if we have an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+		// The watch app is requesting an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+		// The watch app is sending an activity.
 	}
 }
 

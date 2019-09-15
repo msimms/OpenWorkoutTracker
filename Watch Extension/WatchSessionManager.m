@@ -3,6 +3,7 @@
 
 #import "WatchSessionManager.h"
 #import "WatchMessages.h"
+#import "ExtensionDelegate.h"
 #import "Notifications.h"
 
 @interface WatchSessionManager ()
@@ -35,21 +36,31 @@
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
-	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+//	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+		// The phone app wants to know if we have an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+		// The phone app is requesting an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+		// The phone app is sending an activity.
 	}
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
-	if ([message objectForKey:@WATCH_MSG_CHECK_ACTIVITY]) {
+//	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+		// The phone app wants to know if we have an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+		// The phone app is requesting an activity.
 	}
-	else if ([message objectForKey:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+		// The phone app is sending an activity.
 	}
 }
 
@@ -75,6 +86,12 @@
 
 - (void)activityStopped:(NSNotification*)notification
 {
+	if (self->watchSession)
+	{
+		NSMutableDictionary* msgData = [[notification object] mutableCopy];
+		[msgData setObject:@WATCH_MSG_CHECK_ACTIVITY forKey:@WATCH_MSG_TYPE];
+		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+	}
 }
 
 @end

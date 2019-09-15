@@ -4,6 +4,7 @@
 #ifndef __WATCH_MESSAGES__
 #define __WATCH_MESSAGES__
 
+#define WATCH_MSG_TYPE "Msg Type"
 #define WATCH_MSG_CHECK_ACTIVITY "Check Activity"
 #define WATCH_MSG_REQUEST_ACTIVITY "Request Activity"
 #define WATCH_MSG_ACTIVITY "Activity"

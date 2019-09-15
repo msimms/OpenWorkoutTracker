@@ -572,7 +572,8 @@ uint64_t Activity::ElapsedTimeInMs() const
 	}
 
 	uint64_t endTimeMs = GetEndTimeMs();
-	uint64_t startTimeMs = GetStartTimeSecs() * 1000;
+	uint64_t startTimeMs = GetStartTimeSecs();
+	startTimeMs = startTimeMs * 1000;
 
 	if (endTimeMs == 0)
 	{

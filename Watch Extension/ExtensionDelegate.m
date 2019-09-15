@@ -155,19 +155,21 @@
 {
 	BOOL result = StopCurrentActivity();
 	if (result)
-	{
+	{		
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 		ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
 		ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
 		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		NSString* activityHash = [self hashCurrentActivity];
 		
 		SaveActivitySummaryData();
 		
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								  activityId, @KEY_NAME_ACTIVITY_ID,
 								  activityType, @KEY_NAME_ACTIVITY_TYPE,
+								  activityHash, @KEY_NAME_ACTIVITY_HASH,
 								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
 								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,

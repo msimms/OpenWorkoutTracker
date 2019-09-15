@@ -82,6 +82,9 @@ public:
 	bool CreateSummaryData(const std::string& activityId, const std::string& attribute, ActivityAttributeType value);
 	bool RetrieveSummaryData(const std::string& activityId, ActivityAttributeMap& values);
 
+	bool CreateActivityHash(const std::string& activityId, const std::string& hash);
+	bool RetrieveActivityIdFromHash(const std::string& hash, std::string& activityId);
+
 	bool CreateWeightMeasurement(time_t measurementTime, double weightKg);
 	bool RetrieveNearestWeightMeasurement(time_t measurementTime, double& weightKg);
 	bool RetrieveNewestWeightMeasurement(time_t& measurementTime, double& weightKg);

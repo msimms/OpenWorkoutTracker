@@ -203,7 +203,26 @@ extern "C" {
 	bool StoreHash(const char* const activityId, const char* const hash)
 	{
 		bool result = false;
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->CreateActivityHash(activityId, hash);
+		}
 		return result;
+	}
+
+	const char* GetActivityIdByHash(const char* const hash)
+	{
+		if (g_pDatabase)
+		{
+			std::string activityId;
+
+			if (g_pDatabase->RetrieveActivityIdFromHash(hash, activityId))
+			{
+				return strdup(activityId.c_str());
+			}
+		}
+		return NULL;
 	}
 
 	//

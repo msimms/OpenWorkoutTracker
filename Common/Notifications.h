@@ -15,6 +15,7 @@
 
 #define KEY_NAME_ACTIVITY_ID                       "ActivityId"
 #define KEY_NAME_ACTIVITY_TYPE                     "ActivityType"
+#define KEY_NAME_ACTIVITY_HASH                     "ActivityHash"
 #define KEY_NAME_START_TIME                        "StartTime"
 #define KEY_NAME_END_TIME                          "EndTime"
 #define KEY_NAME_DISTANCE                          "Distance"
