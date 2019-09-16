@@ -1445,7 +1445,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = "Michael J Simms Software";
+				ORGANIZATIONNAME = "MJ Simms Software LLC";
 				TargetAttributes = {
 					27A3624B19BFB0E200F5A17F = {
 						DevelopmentTeam = F42C985T48;
