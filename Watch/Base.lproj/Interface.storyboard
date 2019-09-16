@@ -14,12 +14,13 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <button width="1" alignment="left" title="Start Workout..." id="TCK-NT-T02">
+                        <label width="1" alignment="left" text="Straen" textAlignment="center" id="435-XN-kT3"/>
+                        <button width="1" alignment="left" verticalAlignment="center" title="Start Workout..." id="TCK-NT-T02">
                             <connections>
                                 <action selector="onStartWorkout" destination="AgC-eL-Hgc" id="edT-cN-Wf1"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" title="View History" id="A6W-ls-Eph">
+                        <button width="1" alignment="left" verticalAlignment="center" title="View History" id="A6W-ls-Eph">
                             <connections>
                                 <segue destination="Nkj-f1-gRN" kind="push" id="uoF-Vu-SYm"/>
                             </connections>
@@ -40,7 +41,7 @@
                 <controller identifier="WatchActivityViewController" id="Bpo-6v-NAv" customClass="WatchActivityViewController">
                     <items>
                         <label width="1" alignment="left" text="Activity Name" textAlignment="center" id="hJl-Eb-i0H"/>
-                        <group width="1" alignment="left" id="pJ5-uP-Shn">
+                        <group width="1" alignment="left" verticalAlignment="center" id="pJ5-uP-Shn">
                             <items>
                                 <label alignment="center" text="--" id="fm7-ZA-A65">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
@@ -57,10 +58,14 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <group width="1" alignment="left" id="PPr-6M-NT3">
+                        <group width="1" alignment="left" verticalAlignment="center" id="PPr-6M-NT3">
                             <items>
-                                <label alignment="left" text="--" id="jW7-ae-vrm"/>
-                                <label alignment="left" text=" Units" id="lAO-ig-DSV"/>
+                                <label alignment="left" text="--" id="jW7-ae-vrm">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                </label>
+                                <label alignment="left" text=" Units" id="lAO-ig-DSV">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                </label>
                             </items>
                             <gestureRecognizers>
                                 <tapGestureRecognizer id="bbo-Ec-SgR">
@@ -70,10 +75,14 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <group width="1" alignment="left" id="8Du-RJ-V9w">
+                        <group width="1" alignment="left" verticalAlignment="center" id="8Du-RJ-V9w">
                             <items>
-                                <label alignment="left" text="--" id="pED-pN-z8m"/>
-                                <label alignment="left" text=" Units" id="pgE-yK-xEC"/>
+                                <label alignment="left" text="--" id="pED-pN-z8m">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                </label>
+                                <label alignment="left" text=" Units" id="pgE-yK-xEC">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                </label>
                             </items>
                             <gestureRecognizers>
                                 <tapGestureRecognizer id="mzW-j1-l4o">
@@ -83,7 +92,7 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <button width="1" alignment="left" title="Start" id="75M-0x-o8w">
+                        <button width="1" alignment="left" verticalAlignment="bottom" title="Start" id="75M-0x-o8w">
                             <connections>
                                 <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
                             </connections>
@@ -106,6 +115,24 @@
             </objects>
             <point key="canvasLocation" x="604" y="345"/>
         </scene>
+        <!--DetailsViewController-->
+        <scene sceneID="smr-zi-axf">
+            <objects>
+                <controller identifier="DetailsViewController" id="TxK-qh-dpe">
+                    <items>
+                        <map height="100" alignment="left" id="IsL-uQ-dqb"/>
+                        <table alignment="left" id="57Q-IQ-iLJ">
+                            <items>
+                                <tableRow id="knk-vf-jP0">
+                                    <group key="rootItem" width="1" alignment="left" id="g7z-iL-IQC"/>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="942" y="537"/>
+        </scene>
         <!--WatchHistoryViewController-->
         <scene sceneID="AHC-4j-swK">
             <objects>
@@ -118,6 +145,9 @@
                                         <items>
                                             <label alignment="left" text="Label" id="0JT-H8-yfj"/>
                                         </items>
+                                        <connections>
+                                            <segue destination="TxK-qh-dpe" kind="push" id="ydp-Jl-cbT"/>
+                                        </connections>
                                     </group>
                                     <connections>
                                         <outlet property="itemLabel" destination="0JT-H8-yfj" id="R9f-78-iGg"/>

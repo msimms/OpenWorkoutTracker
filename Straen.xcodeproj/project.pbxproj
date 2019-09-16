@@ -28,6 +28,7 @@
 		2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852919C8F69900FE0077 /* InfoPlist.strings */; };
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
 		27345D0A19EDEE4600059FFF /* LeScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* LeScale.m */; };
+		274E8A25232FE56400B0792F /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 274E8A23232FE4D900B0792F /* DetailsViewController.m */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
@@ -436,6 +437,8 @@
 		2729853119C8F69900FE0077 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
 		27345D0819EDEE4600059FFF /* LeScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeScale.h; path = IOS/Sensors/LeScale.h; sourceTree = SOURCE_ROOT; };
 		27345D0919EDEE4600059FFF /* LeScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeScale.m; path = IOS/Sensors/LeScale.m; sourceTree = SOURCE_ROOT; };
+		274E8A15232FE4D900B0792F /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
+		274E8A23232FE4D900B0792F /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
@@ -1356,10 +1359,12 @@
 		27DCF5CE22B193B7009A23C2 /* Watch Extension */ = {
 			isa = PBXGroup;
 			children = (
+				274E8A15232FE4D900B0792F /* DetailsViewController.h */,
+				274E8A23232FE4D900B0792F /* DetailsViewController.m */,
+				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
+				27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */,
 				27DCF5CF22B193B7009A23C2 /* InterfaceController.h */,
 				27DCF5D022B193B7009A23C2 /* InterfaceController.m */,
-				27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */,
-				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
 				27DCF5D522B193B7009A23C2 /* NotificationController.h */,
 				27DCF5D622B193B7009A23C2 /* NotificationController.m */,
 				27DCF67622B80661009A23C2 /* WatchActivityViewController.h */,
@@ -1805,6 +1810,7 @@
 				27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */,
 				27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */,
 				27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */,
+				274E8A25232FE56400B0792F /* DetailsViewController.m in Sources */,
 				27DCF63022B716CB009A23C2 /* Database.cpp in Sources */,
 				27DCF63122B716CB009A23C2 /* Database.h in Sources */,
 				27DCF63222B716CB009A23C2 /* DataExporter.cpp in Sources */,
