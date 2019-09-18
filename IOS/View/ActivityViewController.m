@@ -198,6 +198,9 @@
 																			 message:STR_ATTRIBUTES
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
 	// Add an option for each possible attribute.
 	for (NSString* attribute in attributeNames)
 	{
@@ -213,8 +216,7 @@
 		}]];
 	}
 
-	// Add a cancel option.
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	// Show the menu.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -643,6 +645,11 @@
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:STR_BIKE
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+		
+		// Add an option for each bike.
 		for (NSString* name in bikeNames)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -650,7 +657,8 @@
 				[appDelegate setBikeForCurrentActivity:self->bikeName];
 			}]];
 		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+		
+		// Show the menu.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
@@ -665,6 +673,11 @@
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_INTERVALS
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+		
+		// Add an option for each workout.
 		for (NSString* name in workoutNames)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -672,7 +685,8 @@
 				[self->intervalsButton setTitle:name];
 			}]];
 		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+		
+		// Show the menu.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }

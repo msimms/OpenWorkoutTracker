@@ -152,13 +152,13 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_NEW
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 	for (NSString* name in self->activityTypes)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self startActivity:name];
 		}]];
 	}
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -167,13 +167,13 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_VIEW
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_HISTORY_VIEW sender:self];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_STATISTICS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_STATISTICS_VIEW sender:self];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -182,6 +182,7 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_EDIT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_PROFILE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_PROFILE_VIEW sender:self];
 	}]];
@@ -197,7 +198,6 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_OVERLAYS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 	
@@ -206,6 +206,7 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_RESET
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_RESET_DATA style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate resetDatabase];
@@ -214,7 +215,6 @@
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate resetPreferences];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
