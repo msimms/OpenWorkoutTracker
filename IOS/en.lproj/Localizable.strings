@@ -60,7 +60,6 @@
 "Distance Interval" = "Distance Interval";
 "Do not include the protocol in the URL." = "Do not include the protocol in the URL.";
 "Edit" = "Edit";
-"Edit ..." = "Edit ...";
 "Enabled" = "Enabled";
 "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network." = "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.";
 "End" = "End";
@@ -202,7 +201,7 @@
 "Squat" = "Squat";
 "Standard View" = "Standard View";
 "Start" = "Start";
-"Start a Workout" = "Start a Workout ...";
+"Start a Workout" = "Start a Workout";
 "Start of Workout" = "Start of Workout";
 "Started" = "Started";
 "Stationary cycling requires the use of a Bluetooth wheel speed sensor." = "Stationary cycling requires the use of a Bluetooth wheel speed sensor.";
@@ -239,7 +238,7 @@
 "Units" = "Units";
 "US Customary Units" = "US Customary Units";
 "Use HTTPS" = "Use HTTPS";
-"View ..." = "View ...";
+"View" = "View";
 "Wait for screen touch" = "Wait for screen touch";
 "Waiting for screen touch" = "Waiting for screen touch";
 "Walking" = "Walking";

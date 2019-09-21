@@ -60,7 +60,6 @@
 "Distance Interval" = "Intervalo de Distancia";
 "Do not include the protocol in the URL." = "No incluya el protocolo en la URL.";
 "Edit" = "Editar";
-"Edit ..." = "Editar ...";
 "Enabled" = "Activado";
 "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network." = "Al habilitar esta emitirá su posición para que otros puedan seguir. Los datos pueden ser transmitidos, mientras que en la red del proveedor.";
 "End" = "Fin";
@@ -202,7 +201,7 @@
 "Squat" = "Sentadillas";
 "Standard View" = "Estándar Vista";
 "Start" = "Comienzo";
-"Start a Workout" = "Nuevo Entrenamiento ...";
+"Start a Workout" = "Nuevo Entrenamiento";
 "Start of Workout" = "Comienzo del Entrenamiento";
 "Started" = "Comenzado";
 "Stationary cycling requires the use of a Bluetooth wheel speed sensor." = "Bicicleta estacionaria requiere el uso de un sensor de velocidad de la rueda Bluetooth.";
@@ -239,7 +238,7 @@
 "Units" = "Unidades";
 "US Customary Units" = "Las Unidades de EE.UU.";
 "Use HTTPS" = "Usar HTTPS";
-"View ..." = "Ver ...";
+"View" = "Ver";
 "Wait for screen touch" = "Espere a que la pantalla táctil";
 "Waiting for screen touch" = "Espera a que la pantalla táctil";
 "Walking" = "Caminar";

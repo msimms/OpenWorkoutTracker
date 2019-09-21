@@ -15,10 +15,10 @@
 #import "Preferences.h"
 #import "Segues.h"
 
-#define BUTTON_TITLE_START           NSLocalizedString(@"Start a Workout ...", nil)
-#define BUTTON_TITLE_VIEW            NSLocalizedString(@"View ...", nil)
-#define BUTTON_TITLE_EDIT            NSLocalizedString(@"Edit ...", nil)
-#define BUTTON_TITLE_RESET           NSLocalizedString(@"Reset ...", nil)
+#define BUTTON_TITLE_START           NSLocalizedString(@"Start a Workout", nil)
+#define BUTTON_TITLE_VIEW            NSLocalizedString(@"View", nil)
+#define BUTTON_TITLE_EDIT            NSLocalizedString(@"Edit", nil)
+#define BUTTON_TITLE_RESET           NSLocalizedString(@"Reset", nil)
 #define BUTTON_TITLE_VIEW_HISTORY    NSLocalizedString(@"History", nil)
 #define BUTTON_TITLE_VIEW_STATISTICS NSLocalizedString(@"Statistics", nil)
 #define BUTTON_TITLE_VIEW_HEATMAP    NSLocalizedString(@"Heatmap", nil)
