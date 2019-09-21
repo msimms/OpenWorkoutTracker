@@ -287,6 +287,7 @@
 		27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
 		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
 		27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
+		27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27E299532336B25600B864FA /* LaunchScreen.storyboard */; };
 		27F6D0782300165100A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F6D0792300166500A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
@@ -750,6 +751,7 @@
 		27DCF67922BD6B8F009A23C2 /* HashUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HashUtils.m; path = IOS/Utilities/HashUtils.m; sourceTree = SOURCE_ROOT; };
 		27DCF67C22BD6BE6009A23C2 /* HashUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HashUtils.h; path = IOS/Utilities/HashUtils.h; sourceTree = SOURCE_ROOT; };
 		27DCF68E22CD483A009A23C2 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = SOURCE_ROOT; };
+		27E299532336B25600B864FA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IOS/Storyboards/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27F6D0692300165100A248BE /* Double.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Double.h; path = LibMath/cpp/Double.h; sourceTree = SOURCE_ROOT; };
 		27F6D0772300165100A248BE /* Double.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Double.cpp; path = LibMath/cpp/Double.cpp; sourceTree = SOURCE_ROOT; };
@@ -1016,6 +1018,7 @@
 			isa = PBXGroup;
 			children = (
 				2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */,
+				27E299532336B25600B864FA /* LaunchScreen.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -1592,6 +1595,7 @@
 				27B44D1019BFF01A0058FE00 /* Background1.png in Resources */,
 				2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */,
 				27B44D1A19BFF01A0058FE00 /* SimpleScreen.png in Resources */,
+				27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */,
 				2729853319C8F69900FE0077 /* Localizable.strings in Resources */,
 				27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */,
 				27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */,
