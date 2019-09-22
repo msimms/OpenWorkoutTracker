@@ -65,6 +65,13 @@
 {
 	[super viewDidAppear:animated];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+
+	// Display the first time warning message.
+	if (![Preferences hasShownFirstTimeUseMessage])
+	{
+		[super showOneButtonAlert:STR_CAUTION withMsg:MSG_FIRST_TIME_USING];
+		[Preferences setHashShownFirstTimeUseMessage:TRUE];
+	}
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -141,13 +148,6 @@
 
 - (IBAction)onNewActivity:(id)sender
 {
-	// Display the first time warning message.
-	if (![Preferences hasShownFirstTimeUseMessage])
-	{
-		[super showOneButtonAlert:STR_CAUTION withMsg:MSG_FIRST_TIME_USING];
-		[Preferences setHashShownFirstTimeUseMessage:TRUE];
-	}
-
 	// Display the list of activities from which the user may choose.
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_NEW
