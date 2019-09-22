@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14490.70" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
-    <device id="watch38" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14868" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14490.21"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14643"/>
     </dependencies>
     <scenes>
         <!--Interface Controller-->
@@ -118,17 +116,25 @@
         <!--DetailsViewController-->
         <scene sceneID="smr-zi-axf">
             <objects>
-                <controller identifier="DetailsViewController" id="TxK-qh-dpe">
+                <controller identifier="DetailsViewController" id="TxK-qh-dpe" customClass="DetailsViewController">
                     <items>
                         <map height="100" alignment="left" id="IsL-uQ-dqb"/>
                         <table alignment="left" id="57Q-IQ-iLJ">
                             <items>
-                                <tableRow id="knk-vf-jP0">
-                                    <group key="rootItem" width="1" alignment="left" id="g7z-iL-IQC"/>
+                                <tableRow identifier="DetailsRowType" id="knk-vf-jP0">
+                                    <group key="rootItem" width="1" alignment="left" id="g7z-iL-IQC">
+                                        <items>
+                                            <label alignment="left" text="Label" id="Rvz-xw-txr"/>
+                                        </items>
+                                    </group>
                                 </tableRow>
                             </items>
                         </table>
                     </items>
+                    <connections>
+                        <outlet property="detailsTable" destination="57Q-IQ-iLJ" id="mnM-GJ-dE0"/>
+                        <outlet property="map" destination="IsL-uQ-dqb" id="NMf-rs-c9I"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="942" y="537"/>

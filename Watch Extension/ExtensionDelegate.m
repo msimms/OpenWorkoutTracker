@@ -195,6 +195,35 @@
 	return StartNewLap();
 }
 
+- (BOOL)loadHistoricalActivity:(NSInteger)activityIndex
+{
+	BOOL result = FALSE;
+
+	LoadHistoricalActivitySummaryData(activityIndex);
+	CreateHistoricalActivityObject(activityIndex);
+
+	if (LoadAllHistoricalActivitySensorData(activityIndex))
+	{
+		time_t startTime = 0;
+		time_t endTime = 0;
+
+		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+		if (endTime == 0)
+		{
+			FixHistoricalActivityEndTime(activityIndex);
+		}
+
+		if (SaveHistoricalActivitySummaryData(activityIndex))
+		{
+			LoadHistoricalActivitySummaryData(activityIndex);
+			LoadHistoricalActivityLapData(activityIndex);
+
+			result = TRUE;
+		}
+	}
+	return result;
+}
+
 #pragma mark hash methods
 
 - (NSString*)hashActivityWithId:(NSString*)activityId

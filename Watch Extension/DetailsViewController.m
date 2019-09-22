@@ -7,6 +7,7 @@
 
 #import "DetailsViewController.h"
 #import "ExtensionDelegate.h"
+#import "ActivityMgr.h"
 
 @implementation DetailsRowController
 
@@ -22,6 +23,7 @@
 
 @implementation DetailsViewController
 
+@synthesize map;
 @synthesize detailsTable;
 
 - (instancetype)init
@@ -45,6 +47,32 @@
 
 - (void)awakeWithContext:(id)context
 {
+	[super awakeWithContext:context];
+}
+
+#pragma mark accessor methods
+
+- (void)setActivityIndex:(NSInteger)index
+{
+	self->activityIndex = index;
+
+	CreateHistoricalActivityObject(index);
+	LoadHistoricalActivitySummaryData(index);
+}
+
+#pragma mark location handling methods
+
+- (void)redraw
+{	
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	if (extDelegate && [extDelegate loadHistoricalActivity:self->activityIndex])
+	{
+		self->attributeNames = [[NSMutableArray alloc] init];
+		self->recordNames = [[NSMutableArray alloc] init];
+
+		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
+		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
+	}
 }
 
 @end

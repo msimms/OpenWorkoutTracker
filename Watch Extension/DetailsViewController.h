@@ -16,9 +16,22 @@
 
 @interface DetailsViewController : WKInterfaceController
 {
+	IBOutlet __weak WKInterfaceMap* map;
 	IBOutlet __strong WKInterfaceTable* detailsTable;
+
+	NSMutableArray* attributeNames;
+	NSMutableArray* recordNames;
+
+	NSInteger activityIndex;
+	NSString* activityId;
+
+	time_t startTime;
+	time_t endTime;
 }
 
+- (void)setActivityIndex:(NSInteger)index;
+
+@property (weak, nonatomic) IBOutlet WKInterfaceMap* map;
 @property (nonatomic, retain) IBOutlet WKInterfaceTable* detailsTable;
 
 @end

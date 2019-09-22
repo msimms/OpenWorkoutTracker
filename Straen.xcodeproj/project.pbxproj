@@ -1364,8 +1364,8 @@
 			children = (
 				274E8A15232FE4D900B0792F /* DetailsViewController.h */,
 				274E8A23232FE4D900B0792F /* DetailsViewController.m */,
-				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
 				27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */,
+				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
 				27DCF5CF22B193B7009A23C2 /* InterfaceController.h */,
 				27DCF5D022B193B7009A23C2 /* InterfaceController.m */,
 				27DCF5D522B193B7009A23C2 /* NotificationController.h */,

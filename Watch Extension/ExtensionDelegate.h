@@ -36,6 +36,7 @@
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
+- (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 
 // hash methods
 
