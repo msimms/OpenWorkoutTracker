@@ -80,6 +80,7 @@
 		self.value4.hidden = FALSE;
 		self.title4.hidden = FALSE;
 		self.units4.hidden = FALSE;
+		self->numAttributes = 4;
 	}
 	else
 	{
@@ -87,6 +88,7 @@
 		self.value4.hidden = TRUE;
 		self.title4.hidden = TRUE;
 		self.units4.hidden = TRUE;
+		self->numAttributes = 3;
 	}
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -232,14 +234,7 @@
 
 - (void)onRefreshTimer:(NSTimer*)timer
 {
-	uint8_t numAttributes = 3;
-
-	if (self->screenHeight == 568)
-	{
-		numAttributes = 4;
-	}
-	
-	[super refreshScreen:numAttributes];
+	[super refreshScreen];
 	[super onRefreshTimer:timer];
 }
 

@@ -41,6 +41,7 @@
 	NSMutableArray*            unitsLabels;
 	NSMutableArray*            messages;
 	uint8_t                    messageDisplayCounter;
+	uint8_t                    numAttributes;
 	double                     lastHeartRateValue;
 	double                     lastCadenceValue;
 	double                     lastPowerValue;
@@ -72,7 +73,7 @@
 - (void)doStop;
 - (void)doPause;
 
-- (void)refreshScreen:(uint8_t)numAttributes;
+- (void)refreshScreen;
 
 - (IBAction)onAutoStart:(id)sender;
 - (IBAction)onStartStop:(id)sender;

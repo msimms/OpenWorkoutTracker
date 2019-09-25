@@ -897,9 +897,9 @@
 		[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", value]];
 }
 
-- (void)refreshScreen:(uint8_t)numAttributes
+- (void)refreshScreen
 {
-	for (uint8_t i = 0; i < numAttributes; i++)
+	for (uint8_t i = 0; i < self->numAttributes; i++)
 	{
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
 		UILabel* valueLabel = [self->valueLabels objectAtIndex:i];
