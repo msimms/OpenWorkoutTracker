@@ -137,7 +137,22 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="942" y="537"/>
+            <point key="canvasLocation" x="937" y="525"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="80C-Bo-uTA">
+            <objects>
+                <notificationController id="cEA-Zu-qAF" customClass="NotificationController">
+                    <items>
+                        <label alignment="left" text="Alert Label" id="8hf-A4-kVH"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" id="hyb-H2-A6f"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="8hf-A4-kVH" id="dcJ-zW-KUR"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="283" y="759"/>
         </scene>
         <!--WatchHistoryViewController-->
         <scene sceneID="AHC-4j-swK">

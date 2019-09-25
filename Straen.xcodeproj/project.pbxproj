@@ -169,7 +169,7 @@
 		27DCF5D422B193B7009A23C2 /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */; };
 		27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D622B193B7009A23C2 /* NotificationController.m */; };
 		27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5D822B193B8009A23C2 /* Assets.xcassets */; };
-		27DCF5DE22B193B8009A23C2 /* StraenWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* StraenWatch.app */; };
+		27DCF5DE22B193B8009A23C2 /* Straen.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* Straen.app */; };
 		27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
 		27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841819BFD063007CE934 /* ActivityMgr.h */; };
 		27DCF5FA22B7160C009A23C2 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841919BFD063007CE934 /* ActivityMgr.mm */; };
@@ -395,7 +395,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				27DCF5DE22B193B8009A23C2 /* StraenWatch.app in Embed Watch Content */,
+				27DCF5DE22B193B8009A23C2 /* Straen.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -727,7 +727,7 @@
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
 		27C0844C19BFD063007CE934 /* Walking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walking.cpp; path = Activities/Walking.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844D19BFD063007CE934 /* Walking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walking.h; path = Activities/Walking.h; sourceTree = SOURCE_ROOT; };
-		27DCF5BE22B193B5009A23C2 /* StraenWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StraenWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27DCF5BE22B193B5009A23C2 /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27DCF5C522B193B7009A23C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1046,7 +1046,7 @@
 			isa = PBXGroup;
 			children = (
 				27A3624C19BFB0E200F5A17F /* Straen.app */,
-				27DCF5BE22B193B5009A23C2 /* StraenWatch.app */,
+				27DCF5BE22B193B5009A23C2 /* Straen.app */,
 				27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */,
 			);
 			name = Products;
@@ -1421,7 +1421,7 @@
 			);
 			name = StraenWatch;
 			productName = StraenWatch;
-			productReference = 27DCF5BE22B193B5009A23C2 /* StraenWatch.app */;
+			productReference = 27DCF5BE22B193B5009A23C2 /* Straen.app */;
 			productType = "com.apple.product-type.application.watchapp2";
 		};
 		27DCF5C922B193B7009A23C2 /* StraenWatch Extension */ = {
@@ -2127,7 +2127,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Straen;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -2159,7 +2159,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Straen;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -2188,7 +2188,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "${TARGET_NAME}";
+				PRODUCT_NAME = "StraenWatch Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -2218,7 +2218,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "${TARGET_NAME}";
+				PRODUCT_NAME = "StraenWatch Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
