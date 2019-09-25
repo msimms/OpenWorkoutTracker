@@ -74,10 +74,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EyH-bS-fuV">
-                                <rect key="frame" x="20" y="563" width="335" height="43"/>
+                                <rect key="frame" x="20" y="526" width="335" height="43"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="50" right="8"/>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="100" right="8"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
                                 <state key="normal" title="Reset">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -91,10 +91,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XGp-p1-MzY">
-                                <rect key="frame" x="20" y="508" width="335" height="46"/>
+                                <rect key="frame" x="20" y="471" width="335" height="46"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="100" right="8"/>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="150" right="8"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
                                 <state key="normal" title="Edit">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -799,8 +799,8 @@
                                 </items>
                             </toolbar>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U2o-bG-CJ3" userLabel="Messages Label">
-                                <rect key="frame" x="0.0" y="75" width="320" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="0.0" y="75" width="375" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1037,7 +1037,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sh7-9F-bCw" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="jST-vv-9A3"/>
             </objects>
-            <point key="canvasLocation" x="1990.4000000000001" y="-564.01799100449784"/>
+            <point key="canvasLocation" x="1989.5999999999999" y="-564.46776611694156"/>
         </scene>
         <!--Customize Activity View Controller-->
         <scene sceneID="qOW-X7-QId">
@@ -1569,15 +1569,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="5zW-R0-NSW">
-                                <rect key="frame" x="0.0" y="132" width="375" height="491"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="dJZ-L6-U8P" id="2nc-04-VCy"/>
-                                    <outlet property="delegate" destination="dJZ-L6-U8P" id="INz-AC-E3A"/>
-                                </connections>
-                            </tableView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Acj-HM-0Y7" userLabel="Large Activity Indicator">
                                 <rect key="frame" x="23" y="315" width="320" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
@@ -1595,8 +1586,17 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="5zW-R0-NSW">
+                                <rect key="frame" x="-4" y="88" width="379" height="535"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="dJZ-L6-U8P" id="2nc-04-VCy"/>
+                                    <outlet property="delegate" destination="dJZ-L6-U8P" id="INz-AC-E3A"/>
+                                </connections>
+                            </tableView>
                             <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ye8-WC-EvB">
-                                <rect key="frame" x="0.0" y="88" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -1619,7 +1619,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xze-nw-l1D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1989.5999999999999" y="171.42857142857144"/>
+            <point key="canvasLocation" x="1988" y="170.46476761619192"/>
         </scene>
         <!--Static Summary View Controller-->
         <scene sceneID="lkO-8B-NmN">
@@ -1633,14 +1633,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="jPf-SE-mfk">
-                                <rect key="frame" x="0.0" y="64" width="375" height="272"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <gestureRecognizers/>
-                                <connections>
-                                    <outlet property="delegate" destination="xf7-Mc-VJA" id="VSk-JS-F5I"/>
-                                </connections>
-                            </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="M6E-Tx-gxb">
                                 <rect key="frame" x="0.0" y="321" width="375" height="302"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
@@ -1692,6 +1684,14 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="jPf-SE-mfk">
+                                <rect key="frame" x="0.0" y="44" width="375" height="277"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outlet property="delegate" destination="xf7-Mc-VJA" id="VSk-JS-F5I"/>
+                                </connections>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -1725,7 +1725,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCO-8j-efT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2914.4000000000001" y="170.68965517241381"/>
+            <point key="canvasLocation" x="2914.4000000000001" y="170.46476761619192"/>
         </scene>
         <!--Map-->
         <scene sceneID="3QM-XS-JUO">
@@ -2282,10 +2282,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="fcj-0g-8wt"/>
-        <segue reference="UtV-9X-A4d"/>
+        <segue reference="2hX-Kx-fHg"/>
         <segue reference="E2b-lU-9dF"/>
-        <segue reference="V9h-tU-0NS"/>
-        <segue reference="g4d-Zp-BfC"/>
+        <segue reference="zxl-cL-SNo"/>
+        <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
