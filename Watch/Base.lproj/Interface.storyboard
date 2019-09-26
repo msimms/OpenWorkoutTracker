@@ -13,7 +13,7 @@
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
                         <label width="1" alignment="left" text="Straen" textAlignment="center" id="435-XN-kT3"/>
-                        <button width="1" alignment="left" verticalAlignment="center" title="Start Workout..." id="TCK-NT-T02">
+                        <button width="1" alignment="left" verticalAlignment="center" title="Start a Workout" id="TCK-NT-T02">
                             <connections>
                                 <action selector="onStartWorkout" destination="AgC-eL-Hgc" id="edT-cN-Wf1"/>
                             </connections>
@@ -21,11 +21,6 @@
                         <button width="1" alignment="left" verticalAlignment="center" title="View History" id="A6W-ls-Eph">
                             <connections>
                                 <segue destination="Nkj-f1-gRN" kind="push" id="uoF-Vu-SYm"/>
-                            </connections>
-                        </button>
-                        <button width="1" alignment="left" hidden="YES" title="Button" id="78J-mm-1nB">
-                            <connections>
-                                <segue destination="Bpo-6v-NAv" kind="push" id="Zrf-UY-5z4"/>
                             </connections>
                         </button>
                     </items>
@@ -121,12 +116,15 @@
                         <map height="100" alignment="left" id="IsL-uQ-dqb"/>
                         <table alignment="left" id="57Q-IQ-iLJ">
                             <items>
-                                <tableRow identifier="DetailsRowType" id="knk-vf-jP0">
+                                <tableRow identifier="DetailsRowType" id="knk-vf-jP0" customClass="DetailsRowController">
                                     <group key="rootItem" width="1" alignment="left" id="g7z-iL-IQC">
                                         <items>
-                                            <label alignment="left" text="Label" id="Rvz-xw-txr"/>
+                                            <label alignment="left" text="Label" id="Eo7-PD-aJe"/>
                                         </items>
                                     </group>
+                                    <connections>
+                                        <outlet property="itemLabel" destination="Eo7-PD-aJe" id="P3Y-a2-3Ba"/>
+                                    </connections>
                                 </tableRow>
                             </items>
                         </table>
