@@ -57,4 +57,4 @@
 #define SUMMARY_ATTRIBUTE_TOTAL_CALORIES NSLocalizedString(@"Total Calories", nil)
 #define SUMMARY_ATTRIBUTE_TOTAL_REPS     NSLocalizedString(@"Total Reps", nil)
 
-#define MSG_NO_WORKOUTS                  NSLocalizedString(@"You have done any workouts. Get moving!", nil)
+#define MSG_NO_WORKOUTS                  NSLocalizedString(@"You have done any workouts.\nGet moving!", nil)

@@ -40,7 +40,7 @@
 	BOOL                 badGps;
 }
 
-- (NSString*)getUuid;
+- (NSString*)getDeviceId;
 
 - (BOOL)isFeaturePresent:(Feature)feature;
 - (BOOL)isFeatureEnabled:(Feature)feature;

@@ -10,6 +10,7 @@
 #import "ActivityHash.h"
 #import "ActivityMgr.h"
 #import "Notifications.h"
+#import "Preferences.h"
 #import "SensorFactory.h"
 
 #define DATABASE_NAME "Activities.sqlite"
@@ -222,6 +223,64 @@
 		}
 	}
 	return result;
+}
+
+#pragma mark retrieves or creates and retrieves the applications unique identifier
+
+- (NSString*)getDeviceId;
+{
+	NSString* uuid = [Preferences uuid];
+	if ((uuid == nil) || ([uuid length] == 0))
+	{
+		uuid = [[NSUUID UUID] UUIDString];
+		[Preferences setUuid:uuid];
+	}
+	return uuid;
+}
+
+#pragma mark controller methods for this application
+
+- (BOOL)isFeaturePresent:(Feature)feature
+{
+	switch (feature)
+	{
+		case FEATURE_BROADCAST:
+			return TRUE;
+		case FEATURE_DROPBOX:
+			return FALSE;
+		case FEATURE_ICLOUD:
+			return FALSE;
+		case FEATURE_STRAVA:
+			return FALSE;
+		case FEATURE_RUNKEEPER:
+			return FALSE;
+	}
+	return TRUE;
+}
+
+#pragma mark broadcast methods
+
+- (void)configureBroadcasting
+{	
+	if ([self isFeaturePresent:FEATURE_BROADCAST])
+	{
+		if ([Preferences shouldBroadcastGlobally])
+		{
+			if (!self->broadcastMgr)
+			{
+				self->broadcastMgr = [[BroadcastManager alloc] init];
+				[self->broadcastMgr setDeviceId:[self getDeviceId]];
+			}
+		}
+		else
+		{
+			self->broadcastMgr = nil;
+		}
+	}
+	else
+	{
+		self->broadcastMgr = nil;
+	}
 }
 
 #pragma mark hash methods

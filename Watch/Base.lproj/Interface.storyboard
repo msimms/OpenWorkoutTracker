@@ -23,6 +23,11 @@
                                 <segue destination="Nkj-f1-gRN" kind="push" id="uoF-Vu-SYm"/>
                             </connections>
                         </button>
+                        <button width="1" alignment="left" verticalAlignment="bottom" title="Settings" id="vTn-z2-rNd">
+                            <connections>
+                                <segue destination="hJl-mE-pcA" kind="push" id="xRX-5Z-MpU"/>
+                            </connections>
+                        </button>
                     </items>
                 </controller>
             </objects>
@@ -37,10 +42,10 @@
                         <group width="1" alignment="left" verticalAlignment="center" id="pJ5-uP-Shn">
                             <items>
                                 <label alignment="center" text="--" id="fm7-ZA-A65">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
                                 </label>
                                 <label alignment="center" text=" Units" id="eHx-Fy-G0d">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -108,10 +113,10 @@
             </objects>
             <point key="canvasLocation" x="604" y="345"/>
         </scene>
-        <!--DetailsViewController-->
+        <!--WatchDetailsViewController-->
         <scene sceneID="smr-zi-axf">
             <objects>
-                <controller identifier="DetailsViewController" id="TxK-qh-dpe" customClass="DetailsViewController">
+                <controller identifier="WatchDetailsViewController" id="TxK-qh-dpe" customClass="WatchDetailsViewController">
                     <items>
                         <map height="100" alignment="left" id="IsL-uQ-dqb"/>
                         <table alignment="left" id="57Q-IQ-iLJ">
@@ -135,7 +140,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="937" y="525"/>
+            <point key="canvasLocation" x="973" y="759"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="80C-Bo-uTA">
@@ -181,6 +186,17 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="604" y="759"/>
+        </scene>
+        <!--WatchSettingsViewController-->
+        <scene sceneID="aOe-xg-5FN">
+            <objects>
+                <controller identifier="WatchSettingsViewController" id="hJl-mE-pcA" customClass="WatchSettingsViewController">
+                    <items>
+                        <switch width="1" alignment="left" value="YES" title="Broadcast" id="8A2-ad-Uee"/>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="604" y="-25"/>
         </scene>
     </scenes>
 </document>

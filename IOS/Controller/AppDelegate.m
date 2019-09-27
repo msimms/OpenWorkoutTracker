@@ -206,7 +206,7 @@
 
 #pragma mark retrieves or creates and retrieves the applications unique identifier
 
-- (NSString*)getUuid;
+- (NSString*)getDeviceId;
 {
 	NSString* uuid = [Preferences uuid];
 	if ((uuid == nil) || ([uuid length] == 0))
@@ -442,6 +442,7 @@
 			if (!self->broadcastMgr)
 			{
 				self->broadcastMgr = [[BroadcastManager alloc] init];
+				[self->broadcastMgr setDeviceId:[self getDeviceId]];
 			}
 		}
 		else

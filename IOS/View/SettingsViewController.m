@@ -504,7 +504,7 @@ typedef enum SettingsRowsBroadcast
 						{
 							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 							cell.textLabel.text = DEVICE_ID;
-							cell.detailTextLabel.text = [appDelegate getUuid];
+							cell.detailTextLabel.text = [appDelegate getDeviceId];
 						}
 						break;
 				}

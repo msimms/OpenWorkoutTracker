@@ -7,17 +7,17 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-#import "BroadcastSessionContainer.h"
 
 @interface BroadcastManager : NSObject<NSURLConnectionDelegate>
 {
-	BroadcastSessionContainer* session;
-	NSMutableArray*            locationCache;
-	NSMutableArray*            accelerometerCache;
-	time_t                     lastCacheFlush;
-	NSString*                  deviceId;
-	NSMutableData*             dataBeingSent;
-	BOOL                       errorSending;
+	NSMutableArray* locationCache;
+	NSMutableArray* accelerometerCache;
+	time_t          lastCacheFlush;
+	NSString*       deviceId;
+	NSMutableData*  dataBeingSent;
+	BOOL            errorSending;
 }
+
+- (void)setDeviceId:(NSString*)deviceId;
 
 @end

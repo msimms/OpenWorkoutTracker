@@ -156,12 +156,12 @@
 		}
 		else
 		{
-			WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleCancel handler:^(void){
+			WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void){
 				[self doStop];
 			}];
-			WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleCancel handler:^(void){
+			WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
 			}];
-			WKAlertAction* pauseAction = [WKAlertAction actionWithTitle:STR_PAUSE style:WKAlertActionStyleCancel handler:^(void){
+			WKAlertAction* pauseAction = [WKAlertAction actionWithTitle:STR_PAUSE style:WKAlertActionStyleDefault handler:^(void){
 				[self doPause];
 			}];
 
@@ -259,7 +259,7 @@
 	// Add an option for each possible attribute.
 	for (NSString* attribute in [attributeNames reverseObjectEnumerator])
 	{
-		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleCancel handler:^(void){
+		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
 		}];	
 		[actions addObject:action];
 	}

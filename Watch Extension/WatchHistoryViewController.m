@@ -78,6 +78,7 @@
 		{
 			time_t startTime = 0;
 			time_t endTime = 0;
+
 			GetHistoricalActivityStartAndEndTime(i, &startTime, &endTime);
 			NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
 			

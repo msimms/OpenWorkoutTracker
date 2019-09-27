@@ -9,7 +9,6 @@
 #import "Accelerometer.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
-#import "AppDelegate.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
 #import "Preferences.h"
@@ -28,14 +27,11 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStarted:) name:@NOTIFICATION_NAME_ACTIVITY_STARTED object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 
-		self->session = [[BroadcastSessionContainer alloc] init];
 		self->locationCache = [[NSMutableArray alloc] init];
 		self->accelerometerCache = [[NSMutableArray alloc] init];
 		self->lastCacheFlush = 0;
 		self->errorSending = FALSE;
-
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		self->deviceId = [appDelegate getUuid];
+		self->deviceId = NULL;
 	}
 	return self;
 }
@@ -46,12 +42,9 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)broadcastLocally:(NSString*)text
+- (void)setDeviceId:(NSString*)deviceId
 {
-	if (self->session)
-	{
-		[self->session sendMessage:text];
-	}
+	self->deviceId = deviceId;
 }
 
 - (void)displayMessage:(NSString*)text

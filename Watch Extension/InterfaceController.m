@@ -47,7 +47,7 @@
 
 	for (NSString* name in [activityTypes reverseObjectEnumerator])
 	{
-		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleCancel handler:^(void){
+		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
 			[self startActivity:name];
 		}];	
 		[actions addObject:action];

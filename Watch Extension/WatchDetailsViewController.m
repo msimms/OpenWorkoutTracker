@@ -5,23 +5,23 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "DetailsViewController.h"
+#import "WatchDetailsViewController.h"
 #import "ExtensionDelegate.h"
 #import "ActivityMgr.h"
 
-@implementation DetailsRowController
+@implementation WatchDetailsRowController
 
 @synthesize itemLabel;
 
 @end
 
 
-@interface DetailsViewController ()
+@interface WatchDetailsViewController ()
 
 @end
 
 
-@implementation DetailsViewController
+@implementation WatchDetailsViewController
 
 @synthesize map;
 @synthesize detailsTable;

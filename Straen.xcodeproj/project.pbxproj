@@ -28,7 +28,6 @@
 		2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852919C8F69900FE0077 /* InfoPlist.strings */; };
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
 		27345D0A19EDEE4600059FFF /* LeScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* LeScale.m */; };
-		274E8A25232FE56400B0792F /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 274E8A23232FE4D900B0792F /* DetailsViewController.m */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
@@ -40,12 +39,14 @@
 		276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
 		276D5B021AA16A7D008F55AF /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
 		2773EB401A7435C500B088B3 /* WiFiSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2773EB3F1A7435C500B088B3 /* WiFiSensor.m */; };
+		27754B1C233DA154003F2C53 /* WatchDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */; };
+		27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B16233DA0B4003F2C53 /* WatchSettingsViewController.m */; };
+		27754B20233DA8A2003F2C53 /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14119BFE3B7008F8672 /* BroadcastManager.m */; };
 		2790A04D1B0D4DF3000E6205 /* SelectLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */; };
 		2797F13C19BFE2C1008F8672 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
 		2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
 		2797F14F19BFE3B7008F8672 /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14119BFE3B7008F8672 /* BroadcastManager.m */; };
 		2797F15019BFE3B7008F8672 /* BroadcastMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14319BFE3B7008F8672 /* BroadcastMessage.m */; };
-		2797F15119BFE3B7008F8672 /* BroadcastSessionContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14519BFE3B7008F8672 /* BroadcastSessionContainer.m */; };
 		2797F15219BFE3B7008F8672 /* CloudMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14719BFE3B7008F8672 /* CloudMgr.m */; };
 		2797F15319BFE3B7008F8672 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14919BFE3B7008F8672 /* Downloader.m */; };
 		2797F15419BFE3B7008F8672 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
@@ -438,8 +439,6 @@
 		2729853119C8F69900FE0077 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
 		27345D0819EDEE4600059FFF /* LeScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeScale.h; path = IOS/Sensors/LeScale.h; sourceTree = SOURCE_ROOT; };
 		27345D0919EDEE4600059FFF /* LeScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeScale.m; path = IOS/Sensors/LeScale.m; sourceTree = SOURCE_ROOT; };
-		274E8A15232FE4D900B0792F /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
-		274E8A23232FE4D900B0792F /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
@@ -469,6 +468,10 @@
 		2773EB381A74102F00B088B3 /* Discovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Discovery.h; path = IOS/Sensors/Discovery.h; sourceTree = SOURCE_ROOT; };
 		2773EB3C1A74349700B088B3 /* WiFiSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiSensor.h; path = IOS/Sensors/WiFiSensor.h; sourceTree = SOURCE_ROOT; };
 		2773EB3F1A7435C500B088B3 /* WiFiSensor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiSensor.m; path = IOS/Sensors/WiFiSensor.m; sourceTree = SOURCE_ROOT; };
+		27754B16233DA0B4003F2C53 /* WatchSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchSettingsViewController.m; sourceTree = "<group>"; };
+		27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchDetailsViewController.m; sourceTree = "<group>"; };
+		27754B18233DA0B5003F2C53 /* WatchSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchSettingsViewController.h; sourceTree = "<group>"; };
+		27754B19233DA0B5003F2C53 /* WatchDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchDetailsViewController.h; sourceTree = "<group>"; };
 		2790A04B1B0D4DF3000E6205 /* SelectLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectLoginViewController.h; path = IOS/View/SelectLoginViewController.h; sourceTree = SOURCE_ROOT; };
 		2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectLoginViewController.m; path = IOS/View/SelectLoginViewController.m; sourceTree = SOURCE_ROOT; };
 		2797F13A19BFE2C1008F8672 /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StringUtils.h; path = IOS/Utilities/StringUtils.h; sourceTree = SOURCE_ROOT; };
@@ -479,8 +482,6 @@
 		2797F14119BFE3B7008F8672 /* BroadcastManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BroadcastManager.m; path = IOS/Model/BroadcastManager.m; sourceTree = SOURCE_ROOT; };
 		2797F14219BFE3B7008F8672 /* BroadcastMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BroadcastMessage.h; path = IOS/Model/BroadcastMessage.h; sourceTree = SOURCE_ROOT; };
 		2797F14319BFE3B7008F8672 /* BroadcastMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BroadcastMessage.m; path = IOS/Model/BroadcastMessage.m; sourceTree = SOURCE_ROOT; };
-		2797F14419BFE3B7008F8672 /* BroadcastSessionContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BroadcastSessionContainer.h; path = IOS/Model/BroadcastSessionContainer.h; sourceTree = SOURCE_ROOT; };
-		2797F14519BFE3B7008F8672 /* BroadcastSessionContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BroadcastSessionContainer.m; path = IOS/Model/BroadcastSessionContainer.m; sourceTree = SOURCE_ROOT; };
 		2797F14619BFE3B7008F8672 /* CloudMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudMgr.h; path = IOS/Model/CloudMgr.h; sourceTree = SOURCE_ROOT; };
 		2797F14719BFE3B7008F8672 /* CloudMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloudMgr.m; path = IOS/Model/CloudMgr.m; sourceTree = SOURCE_ROOT; };
 		2797F14819BFE3B7008F8672 /* Downloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Downloader.h; path = IOS/Model/Downloader.h; sourceTree = SOURCE_ROOT; };
@@ -956,8 +957,6 @@
 				2797F14119BFE3B7008F8672 /* BroadcastManager.m */,
 				2797F14219BFE3B7008F8672 /* BroadcastMessage.h */,
 				2797F14319BFE3B7008F8672 /* BroadcastMessage.m */,
-				2797F14419BFE3B7008F8672 /* BroadcastSessionContainer.h */,
-				2797F14519BFE3B7008F8672 /* BroadcastSessionContainer.m */,
 				2797F14619BFE3B7008F8672 /* CloudMgr.h */,
 				2797F14719BFE3B7008F8672 /* CloudMgr.m */,
 				2797F14819BFE3B7008F8672 /* Downloader.h */,
@@ -1362,8 +1361,6 @@
 		27DCF5CE22B193B7009A23C2 /* Watch Extension */ = {
 			isa = PBXGroup;
 			children = (
-				274E8A15232FE4D900B0792F /* DetailsViewController.h */,
-				274E8A23232FE4D900B0792F /* DetailsViewController.m */,
 				27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */,
 				27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */,
 				27DCF5CF22B193B7009A23C2 /* InterfaceController.h */,
@@ -1372,11 +1369,15 @@
 				27DCF5D622B193B7009A23C2 /* NotificationController.m */,
 				27DCF67622B80661009A23C2 /* WatchActivityViewController.h */,
 				27DCF67522B80661009A23C2 /* WatchActivityViewController.m */,
+				27754B19233DA0B5003F2C53 /* WatchDetailsViewController.h */,
+				27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */,
 				271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */,
 				271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */,
 				27F9C33E232C08380077BE2A /* WatchMessages.h */,
 				270547B022EE3BCF0071F3C2 /* WatchSessionManager.h */,
 				270547A122EE3B930071F3C2 /* WatchSessionManager.m */,
+				27754B18233DA0B5003F2C53 /* WatchSettingsViewController.h */,
+				27754B16233DA0B4003F2C53 /* WatchSettingsViewController.m */,
 				27DCF5D822B193B8009A23C2 /* Assets.xcassets */,
 				27DCF5DA22B193B8009A23C2 /* Info.plist */,
 				27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */,
@@ -1668,7 +1669,6 @@
 				27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */,
 				276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */,
 				2704717A216D997000EE47FF /* Statistics.cpp in Sources */,
-				2797F15119BFE3B7008F8672 /* BroadcastSessionContainer.m in Sources */,
 				27B7CDAA19BFD91C000383E3 /* StatisticsViewController.m in Sources */,
 				2797F15519BFE3B7008F8672 /* UserProfile.m in Sources */,
 				276B57E919E21ABD006F47BB /* HealthManager.m in Sources */,
@@ -1814,7 +1814,6 @@
 				27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */,
 				27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */,
 				27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */,
-				274E8A25232FE56400B0792F /* DetailsViewController.m in Sources */,
 				27DCF63022B716CB009A23C2 /* Database.cpp in Sources */,
 				27DCF63122B716CB009A23C2 /* Database.h in Sources */,
 				27DCF63222B716CB009A23C2 /* DataExporter.cpp in Sources */,
@@ -1832,6 +1831,7 @@
 				27DCF60022B71628009A23C2 /* ActivityFactory.h in Sources */,
 				27DCF60122B71628009A23C2 /* ActivitySummary.h in Sources */,
 				27F6D0792300166500A248BE /* Double.cpp in Sources */,
+				27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */,
 				27DCF60222B71628009A23C2 /* ActivityType.h in Sources */,
 				27DCF60322B71628009A23C2 /* ActivityViewType.h in Sources */,
 				27DCF60422B71628009A23C2 /* AxisName.h in Sources */,
@@ -1866,12 +1866,14 @@
 				27DCF61C22B71628009A23C2 /* PullUpAnalyzer.h in Sources */,
 				27DCF61D22B71628009A23C2 /* PushUp.cpp in Sources */,
 				27DCF61E22B71628009A23C2 /* PushUp.h in Sources */,
+				27754B1C233DA154003F2C53 /* WatchDetailsViewController.m in Sources */,
 				27DCF61F22B71628009A23C2 /* PushUpAnalyzer.cpp in Sources */,
 				27DCF68222C17261009A23C2 /* LocationSensor.m in Sources */,
 				27DCF62022B71628009A23C2 /* PushUpAnalyzer.h in Sources */,
 				27DCF62122B71628009A23C2 /* Run.cpp in Sources */,
 				27DCF62222B71628009A23C2 /* Run.h in Sources */,
 				27DCF62322B71628009A23C2 /* SegmentType.h in Sources */,
+				27754B20233DA8A2003F2C53 /* BroadcastManager.m in Sources */,
 				27DCF62422B71628009A23C2 /* Squat.cpp in Sources */,
 				27DCF62522B71628009A23C2 /* Squat.h in Sources */,
 				27DCF62622B71628009A23C2 /* SquatAnalyzer.cpp in Sources */,

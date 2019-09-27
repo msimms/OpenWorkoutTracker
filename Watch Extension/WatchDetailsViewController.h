@@ -8,13 +8,13 @@
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
 
-@interface DetailsRowController : NSObject
+@interface WatchDetailsRowController : NSObject
 
 @property (weak, nonatomic) IBOutlet WKInterfaceLabel* itemLabel;
 
 @end
 
-@interface DetailsViewController : WKInterfaceController
+@interface WatchDetailsViewController : WKInterfaceController
 {
 	IBOutlet __weak WKInterfaceMap* map;
 	IBOutlet __strong WKInterfaceTable* detailsTable;

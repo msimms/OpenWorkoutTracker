@@ -8,14 +8,19 @@
 #import <WatchKit/WatchKit.h>
 #import <WatchConnectivity/WatchConnectivity.h>
 #import "ActivityPreferences.h"
+#import "BroadcastManager.h"
+#import "Feature.h"
+#import "HealthManager.h"
 #import "SensorMgr.h"
 #import "WatchSessionManager.h"
 
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
 {
-	SensorMgr* sensorMgr;
+	SensorMgr*           sensorMgr;
 	ActivityPreferences* activityPrefs;
 	WatchSessionManager* watchSession;
+	BroadcastManager*    broadcastMgr;
+	HealthManager*       healthMgr;
 
 	BOOL badGps;
 }
