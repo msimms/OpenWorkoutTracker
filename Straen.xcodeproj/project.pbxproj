@@ -162,6 +162,7 @@
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		27C0846419BFD063007CE934 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
+		27C63293233D950C009BF5CB /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
 		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
 		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
 		27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -170,7 +171,6 @@
 		27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D622B193B7009A23C2 /* NotificationController.m */; };
 		27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5D822B193B8009A23C2 /* Assets.xcassets */; };
 		27DCF5DE22B193B8009A23C2 /* Straen.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* Straen.app */; };
-		27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
 		27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841819BFD063007CE934 /* ActivityMgr.h */; };
 		27DCF5FA22B7160C009A23C2 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841919BFD063007CE934 /* ActivityMgr.mm */; };
 		27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
@@ -780,9 +780,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27C63293233D950C009BF5CB /* HealthKit.framework in Frameworks */,
 				27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */,
 				27DCF63922B717FE009A23C2 /* libsqlite3.tbd in Frameworks */,
-				27DCF5F822B70CAE009A23C2 /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2131,7 +2131,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 5.3;
+				WATCHOS_DEPLOYMENT_TARGET = 4.3;
 			};
 			name = Debug;
 		};
@@ -2163,7 +2163,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 5.3;
+				WATCHOS_DEPLOYMENT_TARGET = 4.3;
 			};
 			name = Release;
 		};
@@ -2192,7 +2192,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 5.3;
+				WATCHOS_DEPLOYMENT_TARGET = 4.3;
 			};
 			name = Debug;
 		};
@@ -2209,7 +2209,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "StraenWatch Extension.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F42C985T48;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2222,7 +2222,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 5.3;
+				WATCHOS_DEPLOYMENT_TARGET = 4.3;
 			};
 			name = Release;
 		};
