@@ -31,6 +31,8 @@
 #define STR_WEIGHT            NSLocalizedString(@"Weight", nil)
 #define STR_GENDER            NSLocalizedString(@"Gender", nil)
 #define STR_FTP               NSLocalizedString(@"FTP", nil)
+#define STR_STARTED           NSLocalizedString(@"Started", nil)
+#define STR_FINISHED          NSLocalizedString(@"Finished", nil)
 
 #define STR_SECONDS           NSLocalizedString(@"Seconds", nil)
 #define STR_METERS            NSLocalizedString(@"Meters", nil)

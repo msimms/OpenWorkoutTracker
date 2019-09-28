@@ -47,6 +47,7 @@
 - (void)applicationDidBecomeActive
 {
 	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+	[self configureBroadcasting];
 }
 
 - (void)applicationWillResignActive
@@ -85,7 +86,7 @@
 			WKURLSessionRefreshBackgroundTask *backgroundTask = (WKURLSessionRefreshBackgroundTask*)task;
 			[backgroundTask setTaskCompletedWithSnapshot:NO];
 		}
-		else if ([task isKindOfClass:[WKRelevantShortcutRefreshBackgroundTask class]])
+/*		else if ([task isKindOfClass:[WKRelevantShortcutRefreshBackgroundTask class]])
 		{
 			// Be sure to complete the relevant-shortcut task once you’re done.
 			WKRelevantShortcutRefreshBackgroundTask *relevantShortcutTask = (WKRelevantShortcutRefreshBackgroundTask*)task;
@@ -96,7 +97,7 @@
 			// Be sure to complete the intent-did-run task once you’re done.
 			WKIntentDidRunRefreshBackgroundTask *intentDidRunTask = (WKIntentDidRunRefreshBackgroundTask*)task;
 			[intentDidRunTask setTaskCompletedWithSnapshot:NO];
-		}
+		} */
 		else
 		{
 			// make sure to complete unhandled task types
@@ -413,6 +414,29 @@ void attributeNameCallback(const char* name, void* context)
 		GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
 	}
 	return names;
+}
+
+- (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex
+{
+	NSMutableArray* attributes = [[NSMutableArray alloc] init];
+	if (attributes)
+	{
+		size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
+		for (size_t i = 0; i < numAttributes; ++i)
+		{
+			char* attrName = GetHistoricalActivityAttributeName(activityIndex, i);
+			if (attrName)
+			{
+				NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", attrName];
+				if (attrTitle)
+				{
+					[attributes addObject:attrTitle];
+				}
+				free((void*)attrName);
+			}
+		}
+	}
+	return attributes;
 }
 
 - (NSString*)getCurrentActivityType

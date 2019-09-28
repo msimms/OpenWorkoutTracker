@@ -9,6 +9,7 @@
 #import "WatchMessages.h"
 #import "ExtensionDelegate.h"
 #import "Notifications.h"
+#import "Preferences.h"
 
 @interface WatchSessionManager ()
 
@@ -32,6 +33,20 @@
 
 - (void)session:(nonnull WCSession*)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError*)error
 {
+	switch (activationState)
+	{
+		case WCSessionActivationStateNotActivated:
+			break;
+		case WCSessionActivationStateInactive:
+			break;
+		case WCSessionActivationStateActivated:
+			{
+				NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+				[msgData setObject:@WATCH_MSG_SYNC_PREFS forKey:@WATCH_MSG_TYPE];
+				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			}
+			break;
+	}
 }
 
 - (void)sessionReachabilityDidChange:(nonnull WCSession*)session
@@ -42,7 +57,10 @@
 {
 //	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+		// The phone app wants to sync preferences.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The phone app wants to know if we have an activity.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
@@ -55,9 +73,12 @@
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
-//	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+		// The phone app wants to sync preferences.
+		[Preferences importPrefs:message];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The phone app wants to know if we have an activity.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {

@@ -133,10 +133,10 @@ private:
 	time_t               m_startTimeSecs;             // clock time at start
 	time_t               m_endTimeSecs;               // clock time at end
 	bool                 m_isPaused;                  // TRUE if activity is paused, FALSE otherwise
-	bool                 m_firstIteration;
+	bool                 m_firstIteration;            // used in managing interval workouts
 	time_t               m_timeWhenLastPaused;        // clock time when last paused
 	time_t               m_secsPreviouslySpentPaused; // number of seconds spent paused
-	SensorReading        m_lastAccelReading;
+	SensorReading        m_lastAccelReading;          // the oldest accelerometer reading received
 	SensorReading        m_mostRecentSensorReading;   // the youngest sensor reading received
 };
 

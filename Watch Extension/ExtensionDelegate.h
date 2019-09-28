@@ -56,6 +56,7 @@
 
 - (NSMutableArray*)getActivityTypes;
 - (NSMutableArray*)getCurrentActivityAttributes;
+- (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex;
 - (NSString*)getCurrentActivityType;
 
 @end

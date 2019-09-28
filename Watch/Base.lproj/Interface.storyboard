@@ -12,18 +12,17 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <label width="1" alignment="left" text="Straen" textAlignment="center" id="435-XN-kT3"/>
-                        <button width="1" alignment="left" verticalAlignment="center" title="Start a Workout" id="TCK-NT-T02">
+                        <button width="1" alignment="left" title="Start a Workout" id="TCK-NT-T02">
                             <connections>
                                 <action selector="onStartWorkout" destination="AgC-eL-Hgc" id="edT-cN-Wf1"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" verticalAlignment="center" title="View History" id="A6W-ls-Eph">
+                        <button width="1" alignment="left" title="View History" id="A6W-ls-Eph">
                             <connections>
                                 <segue destination="Nkj-f1-gRN" kind="push" id="uoF-Vu-SYm"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" verticalAlignment="bottom" title="Settings" id="vTn-z2-rNd">
+                        <button width="1" alignment="left" title="Settings" id="vTn-z2-rNd">
                             <connections>
                                 <segue destination="hJl-mE-pcA" kind="push" id="xRX-5Z-MpU"/>
                             </connections>
@@ -38,7 +37,6 @@
             <objects>
                 <controller identifier="WatchActivityViewController" id="Bpo-6v-NAv" customClass="WatchActivityViewController">
                     <items>
-                        <label width="1" alignment="left" text="Activity Name" textAlignment="center" id="hJl-Eb-i0H"/>
                         <group width="1" alignment="left" verticalAlignment="center" id="pJ5-uP-Shn">
                             <items>
                                 <label alignment="center" text="--" id="fm7-ZA-A65">
@@ -59,10 +57,10 @@
                         <group width="1" alignment="left" verticalAlignment="center" id="PPr-6M-NT3">
                             <items>
                                 <label alignment="left" text="--" id="jW7-ae-vrm">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                                 <label alignment="left" text=" Units" id="lAO-ig-DSV">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -76,10 +74,10 @@
                         <group width="1" alignment="left" verticalAlignment="center" id="8Du-RJ-V9w">
                             <items>
                                 <label alignment="left" text="--" id="pED-pN-z8m">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                                 <label alignment="left" text=" Units" id="pgE-yK-xEC">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -97,7 +95,6 @@
                         </button>
                     </items>
                     <connections>
-                        <outlet property="activityName" destination="hJl-Eb-i0H" id="CuC-PR-H3O"/>
                         <outlet property="group1" destination="pJ5-uP-Shn" id="7RW-cp-4g3"/>
                         <outlet property="group2" destination="PPr-6M-NT3" id="yeS-ya-6Di"/>
                         <outlet property="group3" destination="8Du-RJ-V9w" id="vBH-d0-Vsp"/>

@@ -13,6 +13,8 @@
 
 + (void)registerDefaultsFromSettingsBundle:(NSString*)pListName;
 
+#pragma mark internal accessor methods
+
 + (BOOL)readBooleanValue:(NSString*)key;
 + (NSInteger)readNumericValue:(NSString*)key;
 + (NSString*)readStringValue:(NSString*)key;
@@ -22,16 +24,16 @@
 + (void)writeDoubleValue:(NSString*)key withValue:(double)value;
 + (void)writeStringValue:(NSString*)key withValue:(NSString*)value;
 
+#pragma mark get methods
+
 + (NSString*)uuid;
 + (UnitSystem)preferredUnitSystem;
-+ (BOOL)backupToICloud;
 + (BOOL)shouldScanForSensors;
 + (BOOL)shouldBroadcastGlobally;
 + (NSString*)broadcastUserName;
 + (NSInteger)broadcastRate;
 + (NSString*)broadcastProtocol;
 + (NSString*)broadcastHostName;
-+ (NSString*)broadcastSessionCookie;
 + (BOOL)hasShownFirstTimeUseMessage;
 + (BOOL)hasShownPullUpHelp;
 + (BOOL)hasShownPushUpHelp;
@@ -41,16 +43,16 @@
 + (BOOL)hasShownStationaryBikeHelp;
 + (BOOL)hasShownTreadmillHelp;
 
+#pragma mark set methods
+
 + (void)setUuid:(NSString*)value;
 + (void)setPreferredUnitSystem:(UnitSystem)system;
-+ (void)setBackupToICloud:(BOOL)value;
 + (void)setScanForSensors:(BOOL)value;
 + (void)setBroadcastGlobally:(BOOL)value;
 + (void)setBroadcastUserName:(NSString*)value;
 + (void)setBroadcastRate:(NSInteger)value;
 + (void)setBroadcastProtocol:(NSString*)value;
 + (void)setBroadcastHostName:(NSString*)value;
-+ (void)setBroadcastSessionCookie:(NSString*)value;
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value;
 + (void)setHasShownPullUpHelp:(BOOL)value;
 + (void)setHasShownPushUpHelp:(BOOL)value;
@@ -60,9 +62,16 @@
 + (void)setHasShownStationaryBikeHelp:(BOOL)value;
 + (void)setHasShownTreadmillHelp:(BOOL)value;
 
+#pragma mark methods for managing the list of accessories
+
 + (NSArray*)listPeripheralsToUse;
 + (void)addPeripheralToUse:(NSString*)uuid;
 + (void)removePeripheralFromUseList:(NSString*)uuid;
 + (BOOL)shouldUsePeripheral:(NSString*)uuid;
+
+#pragma mark import and export methods
+
++ (NSMutableDictionary*)exportPrefs;
++ (void)importPrefs:(NSDictionary*)prefs;
 
 @end

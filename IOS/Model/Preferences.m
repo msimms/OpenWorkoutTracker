@@ -9,14 +9,12 @@
 
 #define PREF_NAME_UUID                           "UUID"
 #define PREF_NAME_UNITS                          "Units"
-#define PREF_NAME_BACKUP_TO_ICLOUD               "Backup to iCloud"
 #define PREF_NAME_SCAN_FOR_SENSORS               "Scan for Sensors"
 #define PREF_NAME_BROADCAST_GLOBAL               "Broadcast Global"
 #define PREF_NAME_BROADCAST_USER_NAME            "Broadcast User Name"
 #define PREF_NAME_BROADCAST_RATE                 "Broadcast Rate"
 #define PREF_NAME_BROADCAST_PROTOCOL             "Broadcast Protocol"
 #define PREF_NAME_BROADCAST_HOST_NAME            "Broadcast Host Name"
-#define PREF_NAME_BROADCAST_SESSION_COOKIE       "Broadcast Session Cookie"
 #define PREF_NAME_ALWAYS_CONNECT                 "Always Connect"
 #define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG   "Has Shown First Time Use Message"
 #define PREF_NAME_HAS_SHOWN_PULL_UP_HELP         "Has Shown Pull Up Help"
@@ -32,6 +30,8 @@
 
 #define MAX_BROADCAST_RATE                       5
 #define DEFAULT_BROADCAST_RATE                   30
+#define DEFAULT_PROTOCOL                         "https"
+#define DEFAULT_HOST_NAME                        "straen-app.com"
 
 @implementation Preferences
 
@@ -120,11 +120,6 @@
 	return UNIT_SYSTEM_US_CUSTOMARY;
 }
 
-+ (BOOL)backupToICloud
-{
-	return [self readBooleanValue:@PREF_NAME_BACKUP_TO_ICLOUD];
-}
-
 + (BOOL)shouldScanForSensors
 {
 	return [self readBooleanValue:@PREF_NAME_SCAN_FOR_SENSORS];
@@ -154,7 +149,7 @@
 {
 	NSString* protocol = [self readStringValue:@PREF_NAME_BROADCAST_PROTOCOL];
 	if ((protocol == nil) || ([protocol length] == 0))
-		protocol = @"https";
+		protocol = @DEFAULT_PROTOCOL;
 	return protocol;
 }
 
@@ -162,13 +157,8 @@
 {
 	NSString* hostName = [self readStringValue:@PREF_NAME_BROADCAST_HOST_NAME];
 	if ((hostName == nil) || ([hostName length] == 0))
-		hostName = @"straen-app.com";
+		hostName = @DEFAULT_HOST_NAME;
 	return hostName;
-}
-
-+ (NSString*)broadcastSessionCookie
-{
-	return [self readStringValue:@PREF_NAME_BROADCAST_SESSION_COOKIE];
 }
 
 + (BOOL)hasShownFirstTimeUseMessage
@@ -231,11 +221,6 @@
 	}
 }
 
-+ (void)setBackupToICloud:(BOOL)value
-{
-	[self writeBoolValue:@PREF_NAME_BACKUP_TO_ICLOUD withValue:value];
-}
-
 + (void)setScanForSensors:(BOOL)value
 {
 	[self writeBoolValue:@PREF_NAME_SCAN_FOR_SENSORS withValue:value];
@@ -266,11 +251,6 @@
 + (void)setBroadcastHostName:(NSString*)value
 {
 	[self writeStringValue:@PREF_NAME_BROADCAST_HOST_NAME withValue:value];
-}
-
-+ (void)setBroadcastSessionCookie:(NSString*)value
-{
-	[self writeStringValue:@PREF_NAME_BROADCAST_SESSION_COOKIE withValue:value];
 }
 
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value
@@ -312,6 +292,8 @@
 {
 	[self writeBoolValue:@PREF_NAME_HAS_SHOWN_TREADMILL_HELP withValue:value];
 }
+
+#pragma mark methods for managing the list of accessories
 
 + (NSArray*)listPeripheralsToUse
 {
@@ -357,6 +339,112 @@
 		return (range.location != NSNotFound);
 	}
 	return false;
+}
+
+#pragma mark import and export methods
+
++ (NSMutableDictionary*)exportPrefs
+{
+	NSMutableDictionary* prefs = [[NSMutableDictionary alloc] init];
+	[prefs setObject:[NSNumber numberWithInteger:[self preferredUnitSystem]] forKey:@PREF_NAME_UNITS];
+	[prefs setObject:[NSNumber numberWithBool:[self shouldScanForSensors]] forKey:@PREF_NAME_SCAN_FOR_SENSORS];
+	[prefs setObject:[NSNumber numberWithBool:[self shouldBroadcastGlobally]] forKey:@PREF_NAME_BROADCAST_GLOBAL];
+	NSString* temp = [self broadcastUserName];
+	if (temp)
+		[prefs setObject:temp forKey:@PREF_NAME_BROADCAST_USER_NAME];
+	[prefs setObject:[NSNumber numberWithInteger:[self broadcastRate]] forKey:@PREF_NAME_BROADCAST_RATE];
+	if (temp)
+		temp = [self broadcastProtocol];
+	[prefs setObject:[self broadcastProtocol] forKey:@PREF_NAME_BROADCAST_PROTOCOL];
+	if (temp)
+		temp = [self broadcastHostName];
+	[prefs setObject:[self broadcastHostName] forKey:@PREF_NAME_BROADCAST_HOST_NAME];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownFirstTimeUseMessage]] forKey:@PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownPullUpHelp]] forKey:@PREF_NAME_HAS_SHOWN_PULL_UP_HELP];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownPushUpHelp]] forKey:@PREF_NAME_HAS_SHOWN_PUSH_UP_HELP];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownRunningHelp]] forKey:@PREF_NAME_HAS_SHOWN_RUNNING_HELP];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownCyclingHelp]] forKey:@PREF_NAME_HAS_SHOWN_CYCLING_HELP];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownSquatHelp]] forKey:@PREF_NAME_HAS_SHOWN_SQUAT_HELP];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownStationaryBikeHelp]] forKey:@PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP];
+	[prefs setObject:[NSNumber numberWithBool:[self hasShownTreadmillHelp]] forKey:@PREF_NAME_HAS_SHOWN_TREADMILL_HELP];
+	return prefs;
+}
+
++ (void)importPrefs:(NSDictionary*)prefs
+{
+	for (NSString* key in prefs)
+	{
+		if ([key isEqualToString:@PREF_NAME_UNITS])
+		{
+			UnitSystem value = (UnitSystem)[prefs objectForKey:key];
+			[Preferences setPreferredUnitSystem:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_SCAN_FOR_SENSORS])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setScanForSensors:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_BROADCAST_GLOBAL])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setBroadcastGlobally:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_BROADCAST_USER_NAME])
+		{
+			NSString* value = (NSString*)[prefs objectForKey:key];
+			[Preferences setBroadcastUserName:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_BROADCAST_RATE])
+		{
+			NSInteger value = (NSInteger)[prefs objectForKey:key];
+			[Preferences setBroadcastRate:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_BROADCAST_PROTOCOL])
+		{
+			NSString* value = (NSString*)[prefs objectForKey:key];
+			[Preferences setBroadcastProtocol:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHashShownFirstTimeUseMessage:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_PULL_UP_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownPullUpHelp:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_PUSH_UP_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownPushUpHelp:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_RUNNING_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownRunningHelp:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_CYCLING_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownCyclingHelp:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_SQUAT_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownSquatHelp:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownStationaryBikeHelp:value];
+		}
+		else if ([key isEqualToString:@PREF_NAME_HAS_SHOWN_TREADMILL_HELP])
+		{
+			bool value = (bool)[prefs objectForKey:key];
+			[Preferences setHasShownTreadmillHelp:value];
+		}
+	}
 }
 
 @end

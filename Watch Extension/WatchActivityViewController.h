@@ -10,7 +10,6 @@
 
 @interface WatchActivityViewController : WKInterfaceController
 {
-	IBOutlet __strong WKInterfaceLabel* activityName;
 	IBOutlet __strong WKInterfaceButton* startStopButton;
 	IBOutlet __strong WKInterfaceLabel* value1;
 	IBOutlet __strong WKInterfaceLabel* value2;
@@ -28,7 +27,6 @@
 	NSMutableArray* groups;
 }
 
-@property (nonatomic, retain) IBOutlet WKInterfaceLabel* activityName;
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* startStopButton;
 @property (nonatomic, retain) IBOutlet WKInterfaceLabel* value1;
 @property (nonatomic, retain) IBOutlet WKInterfaceLabel* value2;

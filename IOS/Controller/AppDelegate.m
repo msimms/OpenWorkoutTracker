@@ -1657,6 +1657,20 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)session:(WCSession*)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError*)error
 {
+	switch (activationState)
+	{
+		case WCSessionActivationStateNotActivated:
+			break;
+		case WCSessionActivationStateInactive:
+			break;
+		case WCSessionActivationStateActivated:
+			{
+				NSMutableDictionary* msgData = [Preferences exportPrefs];
+				[msgData setObject:@WATCH_MSG_SYNC_PREFS forKey:@WATCH_MSG_TYPE];
+				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			}
+			break;
+	}
 }
 
 - (void)sessionDidBecomeInactive:(WCSession*)session
@@ -1678,7 +1692,10 @@ void attributeNameCallback(const char* name, void* context)
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+		// The watch app wants to sync preferences.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The watch app wants to know if we have an activity.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
@@ -1692,7 +1709,10 @@ void attributeNameCallback(const char* name, void* context)
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+		// The watch app wants to sync preferences.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The watch app wants to know if we have an activity.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {

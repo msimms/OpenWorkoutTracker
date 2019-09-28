@@ -404,7 +404,7 @@ typedef enum SettingsRowsBroadcast
 					case SETTINGS_ROW_ICLOUD_BACKUP:
 						cell.textLabel.text = ICLOUD_BACKUP;
 						cell.detailTextLabel.text = @"";
-						[switchview setOn:[Preferences backupToICloud]];
+						[switchview setOn:[CloudPreferences usingiCloud]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_LINK_DROPBOX:

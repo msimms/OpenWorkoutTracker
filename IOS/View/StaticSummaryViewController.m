@@ -23,8 +23,6 @@
 #import "StringUtils.h"
 #import "TagViewController.h"
 
-#define ROW_TITLE_STARTED              NSLocalizedString(@"Started", nil)
-#define ROW_TITLE_FINISHED             NSLocalizedString(@"Finished", nil)
 #define ROW_TITLE_SPLIT_TIMES          NSLocalizedString(@"Split Times", nil)
 #define ROW_TITLE_LAP_TIMES            NSLocalizedString(@"Lap Times", nil)
 
@@ -240,8 +238,8 @@ typedef enum ExportFileTypeButtons
 		self->timeSection1RowNames = [[NSMutableArray alloc] init];
 		if (self->timeSection1RowNames)
 		{
-			[self->timeSection1RowNames addObject:ROW_TITLE_STARTED];
-			[self->timeSection1RowNames addObject:ROW_TITLE_FINISHED];
+			[self->timeSection1RowNames addObject:STR_STARTED];
+			[self->timeSection1RowNames addObject:STR_FINISHED];
 		}
 
 		self->timeSection2RowNames = [[NSMutableArray alloc] init];
@@ -895,14 +893,14 @@ typedef enum ExportFileTypeButtons
 			switch (row)
 			{
 				case ROW_START_TIME:
-					cell.textLabel.text = ROW_TITLE_STARTED;
+					cell.textLabel.text = STR_STARTED;
 					if (startTime == 0)
 						cell.detailTextLabel.text = @"--";
 					else
 						cell.detailTextLabel.text = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
 					break;
 				case ROW_END_TIME:
-					cell.textLabel.text = ROW_TITLE_FINISHED;
+					cell.textLabel.text = STR_FINISHED;
 					if (endTime == 0)
 						cell.detailTextLabel.text = @"--";
 					else

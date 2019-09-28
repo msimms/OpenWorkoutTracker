@@ -8,6 +8,7 @@
 #import "WatchDetailsViewController.h"
 #import "ExtensionDelegate.h"
 #import "ActivityMgr.h"
+#import "StringUtils.h"
 
 @implementation WatchDetailsRowController
 
@@ -72,6 +73,14 @@
 
 		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
 		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
+		
+		NSMutableArray* rowStrs = [[NSMutableArray alloc] init];
+		NSString* temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
+		[rowStrs addObject:temp];
+		temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]];
+		[rowStrs addObject:temp];
+
+		[self->detailsTable setNumberOfRows:[rowStrs count] withRowType:@"WatchDetailsRowController"];
 	}
 }
 

@@ -8,17 +8,11 @@
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
 
-@interface WatchSettingsRowController : NSObject
-
-@property (weak, nonatomic) IBOutlet WKInterfaceLabel* itemLabel;
-
-@end
-
 @interface WatchSettingsViewController : WKInterfaceController
 {
-	IBOutlet __strong WKInterfaceTable* settingsTable;
+	IBOutlet __strong WKInterfaceSlider* broadcast;
 }
 
-@property (nonatomic, retain) IBOutlet WKInterfaceTable* settingsTable;
+@property (nonatomic, retain) IBOutlet WKInterfaceSlider* broadcast;
 
 @end

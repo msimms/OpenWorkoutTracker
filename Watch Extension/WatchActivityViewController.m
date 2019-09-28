@@ -25,7 +25,6 @@
 
 @implementation WatchActivityViewController
 
-@synthesize activityName;
 @synthesize startStopButton;
 @synthesize value1;
 @synthesize value2;
@@ -85,8 +84,6 @@
 
 - (void)didAppear
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-	[self->activityName setText:[extDelegate getCurrentActivityType]];
 }
 
 #pragma mark methods for resetting the UI based on activity state

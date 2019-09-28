@@ -9,6 +9,9 @@
 #define __WATCH_MESSAGES__
 
 #define WATCH_MSG_TYPE "Msg Type"
+
+// Possible message types.
+#define WATCH_MSG_SYNC_PREFS "Sync Prefs"
 #define WATCH_MSG_CHECK_ACTIVITY "Check Activity"
 #define WATCH_MSG_REQUEST_ACTIVITY "Request Activity"
 #define WATCH_MSG_ACTIVITY "Activity"

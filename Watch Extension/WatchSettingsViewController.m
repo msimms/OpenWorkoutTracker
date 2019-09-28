@@ -11,13 +11,6 @@
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
 
-@implementation WatchSettingsRowController
-
-@synthesize itemLabel;
-
-@end
-
-
 @interface WatchSettingsViewController ()
 
 @end
@@ -25,7 +18,7 @@
 
 @implementation WatchSettingsViewController
 
-@synthesize settingsTable;
+@synthesize broadcast;
 
 - (instancetype)init
 {
