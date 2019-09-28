@@ -9,8 +9,13 @@
 #import <Foundation/Foundation.h>
 
 @interface WatchDetailsRowController : NSObject
+{
+	IBOutlet __weak WKInterfaceLabel* name;
+	IBOutlet __weak WKInterfaceLabel* value;
+}
 
-@property (weak, nonatomic) IBOutlet WKInterfaceLabel* itemLabel;
+@property (weak, nonatomic) IBOutlet WKInterfaceLabel* name;
+@property (weak, nonatomic) IBOutlet WKInterfaceLabel* value;
 
 @end
 
@@ -19,14 +24,8 @@
 	IBOutlet __weak WKInterfaceMap* map;
 	IBOutlet __strong WKInterfaceTable* detailsTable;
 
-	NSMutableArray* attributeNames;
-	NSMutableArray* recordNames;
-
 	NSInteger activityIndex;
 	NSString* activityId;
-
-	time_t startTime;
-	time_t endTime;
 }
 
 - (void)setActivityIndex:(NSInteger)index;

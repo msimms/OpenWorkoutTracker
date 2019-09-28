@@ -118,14 +118,20 @@
                         <map height="100" alignment="left" id="IsL-uQ-dqb"/>
                         <table alignment="left" id="57Q-IQ-iLJ">
                             <items>
-                                <tableRow identifier="DetailsRowType" id="knk-vf-jP0" customClass="DetailsRowController">
+                                <tableRow identifier="WatchDetailsRowType" id="knk-vf-jP0" customClass="WatchDetailsRowController">
                                     <group key="rootItem" width="1" alignment="left" id="g7z-iL-IQC">
                                         <items>
-                                            <label alignment="left" text="Label" id="Eo7-PD-aJe"/>
+                                            <label alignment="left" text="Label" id="fF5-Fu-kRH" userLabel="Name">
+                                                <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                            </label>
+                                            <label alignment="right" text="Label" id="Rot-Wy-C4z" userLabel="Value">
+                                                <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
+                                            </label>
                                         </items>
                                     </group>
                                     <connections>
-                                        <outlet property="itemLabel" destination="Eo7-PD-aJe" id="P3Y-a2-3Ba"/>
+                                        <outlet property="name" destination="fF5-Fu-kRH" id="ISy-Qq-Ix1"/>
+                                        <outlet property="value" destination="Rot-Wy-C4z" id="B8S-eR-SPf"/>
                                     </connections>
                                 </tableRow>
                             </items>

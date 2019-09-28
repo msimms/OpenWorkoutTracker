@@ -8,11 +8,13 @@
 #import "WatchDetailsViewController.h"
 #import "ExtensionDelegate.h"
 #import "ActivityMgr.h"
+#import "AppStrings.h"
 #import "StringUtils.h"
 
 @implementation WatchDetailsRowController
 
-@synthesize itemLabel;
+@synthesize name;
+@synthesize value;
 
 @end
 
@@ -49,6 +51,7 @@
 - (void)awakeWithContext:(id)context
 {
 	[super awakeWithContext:context];
+	[self redraw];
 }
 
 #pragma mark accessor methods
@@ -68,19 +71,55 @@
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	if (extDelegate && [extDelegate loadHistoricalActivity:self->activityIndex])
 	{
-		self->attributeNames = [[NSMutableArray alloc] init];
-		self->recordNames = [[NSMutableArray alloc] init];
+		NSMutableArray* nameStrs = [[NSMutableArray alloc] init];
+		NSMutableArray* valueStrs = [[NSMutableArray alloc] init];
+		NSMutableArray* attributeNames = [extDelegate getHistoricalActivityAttributes:self->activityIndex];
+
+		time_t startTime;
+		time_t endTime;
 
 		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
-		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
-		
-		NSMutableArray* rowStrs = [[NSMutableArray alloc] init];
-		NSString* temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
-		[rowStrs addObject:temp];
-		temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]];
-		[rowStrs addObject:temp];
+		GetHistoricalActivityStartAndEndTime(self->activityIndex, &startTime, &endTime);
 
-		[self->detailsTable setNumberOfRows:[rowStrs count] withRowType:@"WatchDetailsRowController"];
+		// Format the start time.
+		NSString* temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
+		[nameStrs addObject:STR_STARTED];
+		[valueStrs addObject:temp];
+
+		// Format the end time.
+		temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]];
+		[nameStrs addObject:STR_FINISHED];
+		[valueStrs addObject:temp];
+		
+		// Format the attributes.
+		for (NSString* attributeName in attributeNames)
+		{
+			ActivityAttributeType attr = QueryHistoricalActivityAttribute(self->activityIndex, [attributeName UTF8String]);
+			if (attr.valid)
+			{
+				NSString* valueStr = [StringUtils formatActivityViewType:attr];
+				NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
+				NSString* finalStr;
+
+				if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
+					finalStr = [NSString stringWithFormat:@"%@ %@", valueStr, unitsStr];
+				else
+					finalStr = [NSString stringWithFormat:@"%@", valueStr];
+
+				[nameStrs addObject:NSLocalizedString(attributeName, nil)];
+				[valueStrs addObject:finalStr];
+			}
+		}
+
+		// Configure the table object and set the row controllers.
+		[self->detailsTable setNumberOfRows:[nameStrs count] withRowType:@"WatchDetailsRowType"];
+
+		for (NSInteger i = 0; i < [nameStrs count]; i++)
+		{
+			WatchDetailsRowController* row = [self->detailsTable rowControllerAtIndex:i];
+			[row.name setText:[nameStrs objectAtIndex:i]];
+			[row.value setText:[valueStrs objectAtIndex:i]];
+		}
 	}
 }
 

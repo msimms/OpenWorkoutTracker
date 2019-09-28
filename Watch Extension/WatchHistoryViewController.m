@@ -52,6 +52,14 @@
 
 - (void)awakeWithContext:(id)context
 {
+	[super awakeWithContext:context];
+	[self redraw];
+}
+
+#pragma mark table handling methods
+
+- (void)redraw
+{
 	InitializeHistoricalActivityList();
 	size_t numHistoricalActivities = GetNumHistoricalActivities();
 
@@ -70,7 +78,7 @@
 	}
 	else
 	{
-		// Configure the table object and get the row controllers.
+		// Configure the table object and set the row controllers.
 		[self.historyTable setNumberOfRows:numHistoricalActivities withRowType:@"WatchHistoryRowType"];
 		
 		// Iterate over the rows and set the label and image for each one.
@@ -88,7 +96,7 @@
 			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:i];
 			NSString* rowTitle = [NSString stringWithFormat:@"%s %s %@", type, name, startTimeStr];
 			[row.itemLabel setText:rowTitle];
-			
+
 			if (type)
 			{
 				free((void*)type);
