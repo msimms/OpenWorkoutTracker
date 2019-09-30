@@ -121,10 +121,10 @@
                                 <tableRow identifier="WatchDetailsRowType" id="knk-vf-jP0" customClass="WatchDetailsRowController">
                                     <group key="rootItem" width="1" alignment="left" id="g7z-iL-IQC">
                                         <items>
-                                            <label alignment="left" text="Label" id="fF5-Fu-kRH" userLabel="Name">
+                                            <label width="60" height="1" alignment="left" text="Label" numberOfLines="2" id="fF5-Fu-kRH" userLabel="Name">
                                                 <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
                                             </label>
-                                            <label alignment="right" text="Label" id="Rot-Wy-C4z" userLabel="Value">
+                                            <label width="70" height="1" alignment="right" verticalAlignment="center" text="Label" numberOfLines="2" id="Rot-Wy-C4z" userLabel="Value">
                                                 <fontDescription key="font" style="UICTFontTextStyleCaption2"/>
                                             </label>
                                         </items>
@@ -170,7 +170,7 @@
                                 <tableRow identifier="WatchHistoryRowType" id="wCX-p6-jkK" customClass="WatchHistoryRowController">
                                     <group key="rootItem" width="1" alignment="left" id="74V-lq-v0z">
                                         <items>
-                                            <label alignment="left" text="Label" id="0JT-H8-yfj"/>
+                                            <label width="1" alignment="left" verticalAlignment="center" text="Label" numberOfLines="2" id="0JT-H8-yfj"/>
                                         </items>
                                         <connections>
                                             <segue destination="TxK-qh-dpe" kind="push" id="ydp-Jl-cbT"/>

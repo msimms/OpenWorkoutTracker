@@ -94,7 +94,7 @@
 			char* name = GetHistoricalActivityName(i);
 
 			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:i];
-			NSString* rowTitle = [NSString stringWithFormat:@"%s %s %@", type, name, startTimeStr];
+			NSString* rowTitle = [NSString stringWithFormat:@"%s\n%s %@", type, name, startTimeStr];
 			[row.itemLabel setText:rowTitle];
 
 			if (type)
