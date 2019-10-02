@@ -60,6 +60,12 @@
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
 		// The phone app wants to sync preferences.
 	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+		// The phone app is asking the watch to register itself.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+		// The phone app is sending interval workouts.
+	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The phone app wants to know if we have an activity.
 	}
@@ -77,6 +83,12 @@
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
 		// The phone app wants to sync preferences.
 		[Preferences importPrefs:message];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+		// The phone app is asking the watch to register itself.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+		// The phone app is sending interval workouts.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The phone app wants to know if we have an activity.

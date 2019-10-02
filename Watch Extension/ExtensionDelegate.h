@@ -58,5 +58,6 @@
 - (NSMutableArray*)getCurrentActivityAttributes;
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex;
 - (NSString*)getCurrentActivityType;
+- (NSMutableArray*)getIntervalWorkoutNames;
 
 @end

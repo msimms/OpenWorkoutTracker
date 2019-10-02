@@ -451,4 +451,22 @@ void attributeNameCallback(const char* name, void* context)
 	return activityTypeStr;
 }
 
+- (NSMutableArray*)getIntervalWorkoutNames
+{
+	NSMutableArray* names = [[NSMutableArray alloc] init];
+	if (names)
+	{
+		char* workoutName = NULL;
+		size_t index = 0;
+
+		InitializeIntervalWorkoutList();
+		while ((workoutName = GetIntervalWorkoutName(index++)) != NULL)
+		{
+			[names addObject:[[NSString alloc] initWithUTF8String:workoutName]];
+			free((void*)workoutName);
+		}
+	}
+	return names;
+}
+
 @end

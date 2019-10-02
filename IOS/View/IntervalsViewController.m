@@ -42,7 +42,6 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	[self.intervalButton setTitle:ADD_INTERVAL];
 }
 
@@ -52,9 +51,7 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	[self updateWorkoutNames];
-
 	[self.intervalTableView reloadData];
 }
 
@@ -208,10 +205,6 @@
 		{
 			[self updateWorkoutNames];
 			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-		}
-		else
-		{
-			
 		}
 	}
 }

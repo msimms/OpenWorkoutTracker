@@ -27,6 +27,11 @@
                                 <segue destination="hJl-mE-pcA" kind="push" id="xRX-5Z-MpU"/>
                             </connections>
                         </button>
+                        <button width="1" alignment="left" title="Intervals" id="IvE-jq-NUh">
+                            <connections>
+                                <segue destination="aHE-HE-Bag" kind="push" id="8Ux-PK-3UZ"/>
+                            </connections>
+                        </button>
                     </items>
                 </controller>
             </objects>
@@ -109,6 +114,27 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="604" y="345"/>
+        </scene>
+        <!--WatchIntervalsViewController-->
+        <scene sceneID="2wF-ip-6Vt">
+            <objects>
+                <controller identifier="WatchIntervalsViewController" id="aHE-HE-Bag" customClass="WatchIntervalsViewController">
+                    <items>
+                        <table alignment="left" id="RTR-Bs-42t">
+                            <items>
+                                <tableRow identifier="WatchIntervalsRowController" id="hXl-Mc-5xm">
+                                    <group key="rootItem" width="1" alignment="left" id="eFI-dU-5GQ">
+                                        <items>
+                                            <label alignment="left" text="Label" id="q6H-Ya-w9h"/>
+                                        </items>
+                                    </group>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="-80" y="759"/>
         </scene>
         <!--WatchDetailsViewController-->
         <scene sceneID="smr-zi-axf">

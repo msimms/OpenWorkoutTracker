@@ -1695,6 +1695,12 @@ void attributeNameCallback(const char* name, void* context)
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
 		// The watch app wants to sync preferences.
 	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+		// The watch app wants to register itself.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+		// The watch app wants to download interval workouts.
+	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The watch app wants to know if we have an activity.
 	}
@@ -1711,6 +1717,12 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
 		// The watch app wants to sync preferences.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+		// The watch app wants to register itself.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+		// The watch app wants to download interval workouts.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The watch app wants to know if we have an activity.

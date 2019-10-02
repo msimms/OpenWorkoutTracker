@@ -248,7 +248,6 @@
 					switch (units)
 					{
 						case INTERVAL_UNIT_UNSPECIFIED:
-							cell.textLabel.text = UNSPECIFIED_INTERVAL;
 							break;
 						case INTERVAL_UNIT_SECONDS:
 							unitsStr = STR_SECONDS;
@@ -275,10 +274,14 @@
 							unitsStr = STR_REPS;
 							break;
 					}
-					
+
 					if (units != INTERVAL_UNIT_UNSPECIFIED)
 					{
-						cell.textLabel.text = [NSString stringWithFormat:@"%u %@", quantity, unitsStr];
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %u %@", row + 1, quantity, unitsStr];
+					}
+					else
+					{
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %@", row + 1, UNSPECIFIED_INTERVAL];
 					}
 				}
 			}

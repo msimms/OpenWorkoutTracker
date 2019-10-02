@@ -18,6 +18,7 @@
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
+		271464B42345214D00D1BA20 /* WatchIntervalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271464B22345213C00D1BA20 /* WatchIntervalsViewController.m */; };
 		271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
@@ -422,6 +423,8 @@
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
 		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		2709420F215ABD2200C3BCBE /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		271464A42345213B00D1BA20 /* WatchIntervalsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchIntervalsViewController.h; sourceTree = "<group>"; };
+		271464B22345213C00D1BA20 /* WatchIntervalsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchIntervalsViewController.m; sourceTree = "<group>"; };
 		271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchHistoryViewController.m; sourceTree = "<group>"; };
 		271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchHistoryViewController.h; sourceTree = "<group>"; };
 		271C5E3820D59C2700DE759C /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = SOURCE_ROOT; };
@@ -1373,6 +1376,8 @@
 				27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */,
 				271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */,
 				271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */,
+				271464A42345213B00D1BA20 /* WatchIntervalsViewController.h */,
+				271464B22345213C00D1BA20 /* WatchIntervalsViewController.m */,
 				27F9C33E232C08380077BE2A /* WatchMessages.h */,
 				270547B022EE3BCF0071F3C2 /* WatchSessionManager.h */,
 				270547A122EE3B930071F3C2 /* WatchSessionManager.m */,
@@ -1811,6 +1816,7 @@
 				27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */,
 				27DCF63D22B72EE0009A23C2 /* KMeans.h in Sources */,
 				27DCF63E22B72EE0009A23C2 /* Peaks.cpp in Sources */,
+				271464B42345214D00D1BA20 /* WatchIntervalsViewController.m in Sources */,
 				27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */,
 				27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */,
 				27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */,
