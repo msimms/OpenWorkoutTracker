@@ -163,7 +163,7 @@
 		}]];
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
