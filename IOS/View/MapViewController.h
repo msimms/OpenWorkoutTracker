@@ -15,7 +15,6 @@
 {
 	IBOutlet MKMapView*       mapView;
 	IBOutlet UIBarButtonItem* mapTypeButton;
-	IBOutlet UIBarButtonItem* overlayButton;
 	IBOutlet UIBarButtonItem* homeButton;
 
     CrumbPath*         crumbs;
@@ -33,7 +32,6 @@
 
 - (IBAction)onAutoScale:(id)sender;
 - (IBAction)onMapType:(id)sender;
-- (IBAction)onOverlay:(id)sender;
 
 @property (nonatomic, retain) IBOutlet MKMapView* mapView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* mapTypeButton;

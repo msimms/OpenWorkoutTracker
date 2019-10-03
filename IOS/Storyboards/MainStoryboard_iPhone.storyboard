@@ -156,7 +156,6 @@
                         <segue destination="c7D-r7-Xlg" kind="push" identifier="SegueToIntervalsView" id="PUP-vK-iGk"/>
                         <segue destination="sJ4-y9-qRG" kind="push" identifier="SegueToSettingsView" id="Qdm-QW-9lB"/>
                         <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="E2b-lU-9dF"/>
-                        <segue destination="egv-46-qMa" kind="push" identifier="SegueToMapOverview" id="Fkk-BX-ZoX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -1918,7 +1917,6 @@
                         <outlet property="tagsButton" destination="yi4-Xp-L31" id="7HC-fd-lpV"/>
                         <outlet property="toolbar" destination="jfP-Xt-Jaz" id="k50-dG-hFR"/>
                         <segue destination="jJ2-SU-SfT" kind="push" identifier="SegueToTagViewController" id="EbT-fJ-Wcb"/>
-                        <segue destination="egv-46-qMa" kind="push" identifier="SegueToMapOverview" id="fcj-0g-8wt"/>
                         <segue destination="dpF-uY-DXe" kind="push" identifier="SegueToSplitTimesView" id="hRg-kq-rh5"/>
                         <segue destination="nlb-r6-Zc5" kind="push" identifier="SegueToLapTimesView" id="W2K-DV-FJr"/>
                         <segue destination="Hzl-Rw-NWa" kind="push" identifier="SegueToCorePlotView" id="ksp-tA-xd6"/>
@@ -1956,11 +1954,6 @@
                                             <action selector="onMapType:" destination="QwX-jv-wQc" id="7AO-al-Pxp"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Overlay" id="b0v-M7-f2v">
-                                        <connections>
-                                            <action selector="onOverlay:" destination="QwX-jv-wQc" id="e1O-Dn-nEX"/>
-                                        </connections>
-                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -1983,12 +1976,10 @@
                         <outlet property="mapTypeButton" destination="UGW-7F-n31" id="AGo-eF-cq8"/>
                         <outlet property="mapView" destination="B9f-jE-b3M" id="ruf-kg-ufS"/>
                         <outlet property="navItem" destination="zSW-9f-oGF" id="EXc-JV-3SM"/>
-                        <outlet property="overlayButton" destination="b0v-M7-f2v" id="EgY-2P-0RG"/>
                         <outlet property="swipe" destination="POe-qc-6Tc" id="Yn9-Iz-u5G"/>
                         <outlet property="toolbar" destination="R4m-tl-6wx" id="gHz-cU-Pef"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="D1W-a8-Nen"/>
                         <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="Y2u-2b-CLK"/>
-                        <segue destination="egv-46-qMa" kind="push" identifier="SegueToNewMapOverlayViewController" id="qkZ-Lo-zIf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IhX-cY-HKz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2029,7 +2020,6 @@
                     <navigationItem key="navigationItem" title="Map Overlays" id="fU7-bD-tbz"/>
                     <connections>
                         <outlet property="overlayTableView" destination="akv-r5-H8J" id="f8d-1M-Edl"/>
-                        <segue destination="egv-46-qMa" kind="push" identifier="SegueToMapOverview" id="YYz-Dz-Ho9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rKV-Oz-88g" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2233,70 +2223,11 @@
                     <navigationItem key="navigationItem" title="Statistics" id="Cfq-Ij-STH"/>
                     <connections>
                         <outlet property="spinner" destination="BUf-HZ-dRP" id="uY1-Nn-DgF"/>
-                        <segue destination="egv-46-qMa" kind="push" identifier="SegueToMapOverview" id="PRo-Bb-13x"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HjS-b1-T6R" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1990.4000000000001" y="866.26686656671666"/>
-        </scene>
-        <!--MapOverviewViewController-->
-        <scene sceneID="MCc-OM-49J">
-            <objects>
-                <viewController title="MapOverviewViewController" id="egv-46-qMa" customClass="MapOverviewViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="TUK-7k-Y1Z">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="rCZ-3Z-nOm">
-                                <rect key="frame" x="0.0" y="44" width="375" height="579"/>
-                                <connections>
-                                    <outlet property="delegate" destination="egv-46-qMa" id="uqw-Ya-dbZ"/>
-                                </connections>
-                            </mapView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iko-DQ-CmA">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="6aB-n1-VmE"/>
-                                    <barButtonItem title="Map Type" id="dpq-sI-TxO">
-                                        <connections>
-                                            <action selector="onMapType:" destination="egv-46-qMa" id="EAC-B0-iei"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="rCZ-3Z-nOm" firstAttribute="trailing" secondItem="k6c-sq-Ldu" secondAttribute="trailing" id="4sP-w9-m2M"/>
-                            <constraint firstItem="Iko-DQ-CmA" firstAttribute="leading" secondItem="k6c-sq-Ldu" secondAttribute="leading" id="9qw-uK-f0Y"/>
-                            <constraint firstItem="rCZ-3Z-nOm" firstAttribute="leading" secondItem="k6c-sq-Ldu" secondAttribute="leading" id="HO8-XD-MYb"/>
-                            <constraint firstItem="rCZ-3Z-nOm" firstAttribute="top" secondItem="k6c-sq-Ldu" secondAttribute="top" id="IEw-YC-wPi"/>
-                            <constraint firstItem="rCZ-3Z-nOm" firstAttribute="centerX" secondItem="k6c-sq-Ldu" secondAttribute="centerX" id="Q1p-JX-5fB"/>
-                            <constraint firstItem="Iko-DQ-CmA" firstAttribute="top" secondItem="rCZ-3Z-nOm" secondAttribute="bottom" id="W3j-ii-7Ka"/>
-                            <constraint firstItem="Iko-DQ-CmA" firstAttribute="trailing" secondItem="k6c-sq-Ldu" secondAttribute="trailing" id="j9c-pO-sFF"/>
-                            <constraint firstItem="Iko-DQ-CmA" firstAttribute="bottom" secondItem="k6c-sq-Ldu" secondAttribute="bottom" id="xuF-os-Rcg"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="k6c-sq-Ldu"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Overview" id="F6J-iW-vxV">
-                        <barButtonItem key="rightBarButtonItem" title="Home" id="gal-Um-XVe">
-                            <connections>
-                                <action selector="onHome:" destination="egv-46-qMa" id="Mga-OI-9NO"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="homeButton" destination="gal-Um-XVe" id="3GV-3g-tGX"/>
-                        <outlet property="mapTypeButton" destination="dpq-sI-TxO" id="HU9-aK-cyO"/>
-                        <outlet property="mapView" destination="rCZ-3Z-nOm" id="sc3-TH-DIo"/>
-                        <outlet property="navItem" destination="F6J-iW-vxV" id="W6P-kW-laC"/>
-                        <outlet property="toolbar" destination="Iko-DQ-CmA" id="Hui-jX-j4E"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MMj-vn-fbn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2916.8000000000002" y="866.26686656671666"/>
         </scene>
         <!--About-->
         <scene sceneID="GyZ-tt-XZu">
@@ -2394,7 +2325,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gpV-rz-xaS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2916.8000000000002" y="1566.1169415292354"/>
+            <point key="canvasLocation" x="2921" y="1057"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hBI-zy-UCy">
@@ -2503,10 +2434,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="SimpleScreen.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Fkk-BX-ZoX"/>
         <segue reference="2hX-Kx-fHg"/>
-        <segue reference="E2b-lU-9dF"/>
-        <segue reference="zxl-cL-SNo"/>
+        <segue reference="Y2u-2b-CLK"/>
+        <segue reference="D1W-a8-Nen"/>
         <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

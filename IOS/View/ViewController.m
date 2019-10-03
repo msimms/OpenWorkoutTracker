@@ -26,7 +26,6 @@
 #define BUTTON_TITLE_EDIT_SETTINGS   NSLocalizedString(@"Settings", nil)
 #define BUTTON_TITLE_EDIT_SENSORS    NSLocalizedString(@"Sensors", nil)
 #define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Intervals", nil)
-#define BUTTON_TITLE_EDIT_OVERLAYS   NSLocalizedString(@"Map Overlays", nil)
 
 #define MSG_IN_PROGRESS              NSLocalizedString(@"An unfinished activity has been found. Do you wish to resume it?", nil)
 #define MSG_RESET                    NSLocalizedString(@"This will delete all of your data. Do you wish to continue? This cannot be undone.", nil)
@@ -107,15 +106,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
-	if ([[segue identifier] isEqualToString:@SEGUE_TO_MAP_OVERLAY_LIST])
-	{
-		OverlayListViewController* listVC = (OverlayListViewController*)[segue destinationViewController];
-		if (listVC)
-		{
-			[listVC setMode:OVERLAY_LIST_FOR_PREVIEW];
-		}
-	}
-	else if ([[segue identifier] isEqualToString:@SEGUE_TO_MAP_OVERVIEW])
+	if ([[segue identifier] isEqualToString:@SEGUE_TO_MAP_OVERVIEW])
 	{
 		MapOverviewViewController* mapVC = (MapOverviewViewController*)[segue destinationViewController];
 		if (mapVC)
@@ -194,9 +185,6 @@
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_INTERVALS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_INTERVALS_VIEW sender:self];
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_OVERLAYS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }

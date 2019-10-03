@@ -25,7 +25,6 @@
 #define SEGUE_TO_LOGIN_VIEW              "SegueToLoginView"
 #define SEGUE_TO_MANAGE_FOLLOWING_VIEW   "SegueToManageFollowingView"
 #define SEGUE_TO_MANAGE_FOLLOWED_BY_VIEW "SegueToManageFollowedByView"
-#define SEGUE_TO_MAP_OVERLAY_LIST        "SegueToMapOverlayListViewController"
 #define SEGUE_TO_MAP_OVERVIEW            "SegueToMapOverview"
 #define SEQUE_TO_MAPPED_VIEW             "SegueToMappedActivityView"
 #define SEGUE_TO_NEW_ACTIVITY            "SegueToNewActivityView"

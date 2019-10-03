@@ -22,7 +22,6 @@
 
 #define BUTTON_TITLE_IMPORT          NSLocalizedString(@"Import", nil)
 #define BUTTON_TITLE_MAP_TYPE        NSLocalizedString(@"Map Type", nil)
-#define BUTTON_TITLE_OVERLAY         NSLocalizedString(@"Overlay", nil)
 #define BUTTON_TITLE_HOME            NSLocalizedString(@"Home", nil)
 
 #define OPTION_STANDARD_VIEW         NSLocalizedString(@"Standard View", nil)
@@ -95,7 +94,6 @@ MapViewController* g_ptrToMapViewCtrl;
 	[super viewDidLoad];
 
 	[self.mapTypeButton setTitle:BUTTON_TITLE_MAP_TYPE];
-	[self.overlayButton setTitle:BUTTON_TITLE_OVERLAY];
 	[self.homeButton setTitle:BUTTON_TITLE_HOME];
 
 	self->lines = [[NSMutableArray alloc] init];
@@ -122,18 +120,6 @@ MapViewController* g_ptrToMapViewCtrl;
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
 	return UIInterfaceOrientationMaskPortrait;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
-{
-	if ([[segue identifier] isEqualToString:@SEGUE_TO_MAP_OVERLAY_LIST])
-	{
-		OverlayListViewController* listVC = (OverlayListViewController*)[segue destinationViewController];
-		if (listVC)
-		{
-			[listVC setMode:OVERLAY_LIST_FOR_SELECTION];
-		}
-	}
 }
 
 - (void)didReceiveMemoryWarning
@@ -370,36 +356,6 @@ void KmlPlacemarkEnd(const char* name, void* context)
 		self->mapView.mapType = MKMapTypeHybrid;
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
-}
-
-- (IBAction)onOverlay:(id)sender
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* allOverlayFiles = [appDelegate getMapOverlayList];
-	if ([allOverlayFiles count] > 0)
-	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																				 message:ACTION_SHEET_TITLE_OVERLAY
-																		  preferredStyle:UIAlertControllerStyleActionSheet];
-
-		for (NSString* overlayName in allOverlayFiles)
-		{
-			[alertController addAction:[UIAlertAction actionWithTitle:overlayName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				self->overlayFileName = [[appDelegate getOverlayDir] stringByAppendingPathComponent:overlayName];
-				[self showOverlay];
-			}]];
-		}
-		[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_IMPORT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERLAY_LIST sender:self];
-		}]];
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		}]];
-		[self presentViewController:alertController animated:YES completion:nil];
-	}
-	else
-	{
-		[self performSegueWithIdentifier:@SEGUE_TO_NEW_MAP_OVERLAY sender:self];
-	}
 }
 
 #pragma mark MkMapView methods
