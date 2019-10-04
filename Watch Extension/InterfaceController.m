@@ -45,7 +45,7 @@
 
 	[activityTypes sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
-	for (NSString* name in [activityTypes reverseObjectEnumerator])
+	for (NSString* name in activityTypes)
 	{
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
 			[self startActivity:name];
