@@ -199,14 +199,32 @@
 		{
 			NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
 			
+			// Display the value.
 			ActivityAttributeType value = QueryLiveActivityAttribute([attribute cStringUsingEncoding:NSASCIIStringEncoding]);
 			[valueLabel setText:[StringUtils formatActivityViewType:value]];
-			
+
+			// Display the units.
 			WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
 			if (unitsLabel)
 			{
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
-				[unitsLabel setText:unitsStr];
+				if (unitsStr)
+				{
+					[unitsLabel setText:unitsStr];
+				}
+
+				// For items that don't have units (like sets and reps), display the title instead.
+				// If the main, i.e. first, item does not have units then just skip it so we don't clutter the display.
+				else if (i > 0)
+				{
+					[unitsLabel setText:attribute];
+				}
+				
+				// Just clear the units display.
+				else
+				{
+					[unitsLabel setText:@""];
+				}
 			}
 		}
 	}

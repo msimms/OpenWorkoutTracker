@@ -64,7 +64,7 @@
                                 <label alignment="left" text="--" id="jW7-ae-vrm">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
-                                <label alignment="left" verticalAlignment="center" text=" Units" id="lAO-ig-DSV">
+                                <label alignment="right" verticalAlignment="center" text=" Units" id="lAO-ig-DSV">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
                                 </label>
                             </items>
@@ -81,7 +81,7 @@
                                 <label alignment="left" text="--" id="pED-pN-z8m">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
-                                <label alignment="left" verticalAlignment="center" text=" Units" id="pgE-yK-xEC">
+                                <label alignment="right" verticalAlignment="center" text=" Units" id="pgE-yK-xEC">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
                                 </label>
                             </items>
