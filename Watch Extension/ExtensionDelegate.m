@@ -118,10 +118,24 @@
 
 - (void)stopSensors
 {
+	if (self->sensorMgr)
+	{
+		[self->sensorMgr stopSensors];
+	}
+}
+
+void startSensorCallback(SensorType type, void* context)
+{
+	SensorMgr* mgr = (__bridge SensorMgr*)context;
+	[mgr startSensor:type];
 }
 
 - (void)startSensors
 {
+	if (self->sensorMgr)
+	{
+		GetUsableSensorTypes(startSensorCallback, (__bridge void*)self->sensorMgr);
+	}
 }
 
 #pragma mark methods for starting and stopping activities, etc.
