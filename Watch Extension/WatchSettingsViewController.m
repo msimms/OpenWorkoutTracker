@@ -9,7 +9,7 @@
 #import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
-#import "StringUtils.h"
+#import "Preferences.h"
 
 @interface WatchSettingsViewController ()
 
@@ -45,6 +45,15 @@
 
 - (void)awakeWithContext:(id)context
 {
+	BOOL broadcastOn = [Preferences shouldBroadcastGlobally];
+	[broadcast setOn:broadcastOn];
+}
+
+#pragma mark switch methods
+
+- (IBAction)switchAction:(BOOL)on
+{
+	[Preferences setBroadcastGlobally:on];
 }
 
 @end

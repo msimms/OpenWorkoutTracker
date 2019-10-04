@@ -47,8 +47,8 @@
                                 <label alignment="center" text="--" id="fm7-ZA-A65">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
                                 </label>
-                                <label alignment="center" text=" Units" id="eHx-Fy-G0d">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
+                                <label alignment="center" verticalAlignment="center" text=" Units" id="eHx-Fy-G0d">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -64,8 +64,8 @@
                                 <label alignment="left" text="--" id="jW7-ae-vrm">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
-                                <label alignment="left" text=" Units" id="lAO-ig-DSV">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
+                                <label alignment="left" verticalAlignment="center" text=" Units" id="lAO-ig-DSV">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -81,8 +81,8 @@
                                 <label alignment="left" text="--" id="pED-pN-z8m">
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
-                                <label alignment="left" text=" Units" id="pgE-yK-xEC">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
+                                <label alignment="left" verticalAlignment="center" text=" Units" id="pgE-yK-xEC">
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -134,7 +134,7 @@
                     </items>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="-80" y="759"/>
+            <point key="canvasLocation" x="-48" y="759"/>
         </scene>
         <!--WatchDetailsViewController-->
         <scene sceneID="smr-zi-axf">
@@ -221,11 +221,18 @@
             <objects>
                 <controller identifier="WatchSettingsViewController" id="hJl-mE-pcA" customClass="WatchSettingsViewController">
                     <items>
-                        <switch width="1" alignment="left" value="YES" title="Broadcast" id="8A2-ad-Uee"/>
+                        <switch width="1" alignment="left" value="YES" title="Broadcast" id="8A2-ad-Uee">
+                            <connections>
+                                <action selector="switchAction:" destination="hJl-mE-pcA" id="Hac-M4-mre"/>
+                            </connections>
+                        </switch>
                     </items>
+                    <connections>
+                        <outlet property="broadcast" destination="8A2-ad-Uee" id="W3g-zr-jsL"/>
+                    </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="604" y="-25"/>
+            <point key="canvasLocation" x="604" y="-18"/>
         </scene>
     </scenes>
 </document>

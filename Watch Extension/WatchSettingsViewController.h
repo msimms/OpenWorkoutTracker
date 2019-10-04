@@ -10,9 +10,9 @@
 
 @interface WatchSettingsViewController : WKInterfaceController
 {
-	IBOutlet __strong WKInterfaceSlider* broadcast;
+	IBOutlet __strong WKInterfaceSwitch* broadcast;
 }
 
-@property (nonatomic, retain) IBOutlet WKInterfaceSlider* broadcast;
+@property (nonatomic, retain) IBOutlet WKInterfaceSwitch* broadcast;
 
 @end
