@@ -125,23 +125,32 @@
 		Coordinate startCoordinate;
 		Coordinate endCoordinate;
 		size_t numPoints = GetNumHistoricalActivityLocationPoints(self->activityIndex);
-		if (numPoints > 0)
+		if (numPoints == 0)
 		{
-			if (GetHistoricalActivityPoint(self->activityIndex, 0, &startCoordinate))
-			{
-				CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(startCoordinate.latitude, startCoordinate.longitude);
-				[self.map addAnnotation:startLocation withPinColor: WKInterfaceMapPinColorGreen];
-
-				MKCoordinateSpan coordinateSpan = MKCoordinateSpanMake(1, 1);
-				[self.map setRegion:(MKCoordinateRegionMake(startLocation, coordinateSpan))];
-			}
+			[self.map setHidden:false];
 		}
-		if (numPoints > 1)
+		else
 		{
-			if (GetHistoricalActivityPoint(self->activityIndex, numPoints - 1, &endCoordinate))
+			[self.map setHidden:true];
+
+			if (numPoints > 0)
 			{
-				CLLocationCoordinate2D endLocation = CLLocationCoordinate2DMake(endCoordinate.latitude, endCoordinate.longitude);
-				[self.map addAnnotation:endLocation withPinColor: WKInterfaceMapPinColorRed];
+				if (GetHistoricalActivityPoint(self->activityIndex, 0, &startCoordinate))
+				{
+					CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(startCoordinate.latitude, startCoordinate.longitude);
+					[self.map addAnnotation:startLocation withPinColor: WKInterfaceMapPinColorGreen];
+
+					MKCoordinateSpan coordinateSpan = MKCoordinateSpanMake(1, 1);
+					[self.map setRegion:(MKCoordinateRegionMake(startLocation, coordinateSpan))];
+				}
+			}
+			if (numPoints > 1)
+			{
+				if (GetHistoricalActivityPoint(self->activityIndex, numPoints - 1, &endCoordinate))
+				{
+					CLLocationCoordinate2D endLocation = CLLocationCoordinate2DMake(endCoordinate.latitude, endCoordinate.longitude);
+					[self.map addAnnotation:endLocation withPinColor: WKInterfaceMapPinColorRed];
+				}
 			}
 		}
 	}
