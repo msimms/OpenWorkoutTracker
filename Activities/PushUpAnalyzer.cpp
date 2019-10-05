@@ -18,10 +18,18 @@ PushUpAnalyzer::~PushUpAnalyzer()
 
 std::string PushUpAnalyzer::PrimaryAxis() const
 {
+#if TARGET_OS_WATCH
+	return AXIS_NAME_Y;
+#else
 	return AXIS_NAME_X;
+#endif
 }
 
 std::string PushUpAnalyzer::SecondaryAxis() const
 {
+#if TARGET_OS_WATCH
+	return AXIS_NAME_X;
+#else
 	return AXIS_NAME_Y;
+#endif
 }

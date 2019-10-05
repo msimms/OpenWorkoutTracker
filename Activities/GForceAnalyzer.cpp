@@ -83,12 +83,13 @@ LibMath::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorR
 	{
 		LibMath::GraphPeakList primaryAxisPeaks = m_peaks[PrimaryAxis()];
 		LibMath::GraphPeakList secondaryAxisPeaks = m_peaks[SecondaryAxis()];
+		double minPeakArea = MinPeakArea();
 
 		for (auto primaryPeakIter = primaryAxisPeaks.begin(); primaryPeakIter != primaryAxisPeaks.end(); ++primaryPeakIter)
 		{
 			const LibMath::GraphPeak& primaryPeak = (*primaryPeakIter);
 
-			if (primaryPeak.area > (double)500.0)
+			if (primaryPeak.area > minPeakArea)
 			{
 				bool found = false;
 				

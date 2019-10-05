@@ -31,6 +31,8 @@ public:
 	virtual std::string PrimaryAxis() const = 0;
 	virtual std::string SecondaryAxis() const = 0;
 
+	virtual double MinPeakArea() const { return (double)500.0; }; // Only peaks with an area greater than this will be counted.
+
 protected:
 	GraphPeakListMap m_peaks;
 	GraphLineMap     m_graphLines;
