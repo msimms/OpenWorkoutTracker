@@ -61,6 +61,7 @@
 	NSDictionary* passedData = (NSDictionary*)context;
 	NSNumber* tempActivityIndex = [passedData objectForKey:@"activityIndex"];
 	NSInteger activityIndex = [tempActivityIndex integerValue];
+
 	CreateHistoricalActivityObject(activityIndex);
 	LoadHistoricalActivitySummaryData(activityIndex);
 

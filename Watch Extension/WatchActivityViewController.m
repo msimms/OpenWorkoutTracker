@@ -198,7 +198,7 @@
 		if (valueLabel)
 		{
 			NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
-			
+
 			// Display the value.
 			ActivityAttributeType value = QueryLiveActivityAttribute([attribute cStringUsingEncoding:NSASCIIStringEncoding]);
 			[valueLabel setText:[StringUtils formatActivityViewType:value]];
@@ -219,7 +219,7 @@
 				{
 					[unitsLabel setText:attribute];
 				}
-				
+
 				// Just clear the units display.
 				else
 				{
@@ -255,12 +255,6 @@
 	}
 }
 
-#pragma mark sensor update methods
-
-- (void)locationUpdated:(NSNotification*)notification
-{
-}
-
 #pragma mark method for showing the attributes menu
 
 - (void)showAttributesMenu
@@ -272,21 +266,19 @@
 	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
 	// Add an option for each possible attribute.
-	for (NSString* attribute in [attributeNames reverseObjectEnumerator])
+	for (NSString* attribute in attributeNames)
 	{
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
 		}];	
 		[actions addObject:action];
 	}
-	
+
 	// Add a cancel option.
 	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
 	[actions addObject:action];
-	
-	[self presentAlertControllerWithTitle:nil
-								  message:STR_ATTRIBUTES
-						   preferredStyle:WKAlertControllerStyleAlert
-								  actions:actions];
+
+	// Show the action sheet.
+	[self presentAlertControllerWithTitle:nil message:STR_ATTRIBUTES preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
 #pragma mark UIGestureRecognizer methods
