@@ -7,6 +7,7 @@
 
 #import "WatchDetailsViewController.h"
 #import "ExtensionDelegate.h"
+#import "ActivityAttribute.h"
 #import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "StringUtils.h"
@@ -74,6 +75,8 @@
 
 		time_t startTime;
 		time_t endTime;
+		Coordinate startCoordinate;
+		bool startCoordinateSet = false;
 
 		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(activityIndex)];
 		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
@@ -105,6 +108,16 @@
 
 				[nameStrs addObject:NSLocalizedString(attributeName, nil)];
 				[valueStrs addObject:finalStr];
+
+				if ([attributeName isEqualToString:@ACTIVITY_ATTRIBUTE_STARTING_LATITUDE])
+				{
+					startCoordinate.latitude = attr.value.doubleVal;
+				}
+				else if ([attributeName isEqualToString:@ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE])
+				{
+					startCoordinate.longitude = attr.value.doubleVal;
+					startCoordinateSet = true;
+				}
 			}
 		}
 
@@ -118,37 +131,20 @@
 			[row.value setText:[valueStrs objectAtIndex:i]];
 		}
 		
-		// Add the start and end locations to the map. The watch does not currently have the ability to draw a polyline of the entire route.
-		Coordinate startCoordinate;
-		Coordinate endCoordinate;
-		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
-		if (numPoints == 0)
-		{
-			[self.map setHidden:true];
-		}
-		else
+		// Add the start location to the map. The watch does not currently have the ability to draw a polyline of the entire route.
+		if (startCoordinateSet)
 		{
 			[self.map setHidden:false];
 
-			if (numPoints > 0)
-			{
-				if (GetHistoricalActivityPoint(activityIndex, 0, &startCoordinate))
-				{
-					CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(startCoordinate.latitude, startCoordinate.longitude);
-					[self.map addAnnotation:startLocation withPinColor: WKInterfaceMapPinColorGreen];
+			CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(startCoordinate.latitude, startCoordinate.longitude);
+			[self.map addAnnotation:startLocation withPinColor: WKInterfaceMapPinColorGreen];
 
-					MKCoordinateSpan coordinateSpan = MKCoordinateSpanMake(1, 1);
-					[self.map setRegion:(MKCoordinateRegionMake(startLocation, coordinateSpan))];
-				}
-			}
-			if (numPoints > 1)
-			{
-				if (GetHistoricalActivityPoint(activityIndex, numPoints - 1, &endCoordinate))
-				{
-					CLLocationCoordinate2D endLocation = CLLocationCoordinate2DMake(endCoordinate.latitude, endCoordinate.longitude);
-					[self.map addAnnotation:endLocation withPinColor: WKInterfaceMapPinColorRed];
-				}
-			}
+			MKCoordinateSpan coordinateSpan = MKCoordinateSpanMake(1, 1);
+			[self.map setRegion:(MKCoordinateRegionMake(startLocation, coordinateSpan))];
+		}
+		else
+		{
+			[self.map setHidden:true];
 		}
 	}
 }
