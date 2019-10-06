@@ -887,6 +887,7 @@ typedef enum ExportFileTypeButtons
 					cell.textLabel.text = name;
 				else
 					cell.textLabel.text = @"--";
+				cell.detailTextLabel.text = @"";
 			}
 			break;
 		case SECTION_START_AND_END_TIME:
