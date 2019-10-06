@@ -88,6 +88,7 @@
 		[self.historyTable setNumberOfRows:numHistoricalActivities withRowType:@"WatchHistoryRowType"];
 		
 		// Iterate over the rows and set the label and image for each one.
+		NSInteger rowControllerIndex = self.historyTable.numberOfRows - 1;
 		for (NSInteger i = 0; i < self.historyTable.numberOfRows; ++i)
 		{
 			time_t startTime = 0;
@@ -99,7 +100,9 @@
 			char* type = GetHistoricalActivityType(i);
 			char* name = GetHistoricalActivityName(i);
 
-			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:i];
+			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:rowControllerIndex];
+			--rowControllerIndex;
+
 			NSString* rowTitle = [NSString stringWithFormat:@"%s\n%s %@", type, name, startTimeStr];
 			[row.itemLabel setText:rowTitle];
 
