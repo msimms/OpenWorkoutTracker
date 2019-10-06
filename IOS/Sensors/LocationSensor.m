@@ -139,7 +139,25 @@
 
 - (void)startUpdates
 {
-	[self.locationManager requestAlwaysAuthorization];
+	if ([CLLocationManager locationServicesEnabled])
+	{
+		switch ([CLLocationManager authorizationStatus])
+		{
+		case kCLAuthorizationStatusDenied:
+		case kCLAuthorizationStatusRestricted:
+			[self.locationManager requestAlwaysAuthorization];
+			break;
+		case kCLAuthorizationStatusAuthorizedAlways:
+			break;
+		case kCLAuthorizationStatusAuthorizedWhenInUse:
+			break;
+		case kCLAuthorizationStatusNotDetermined:
+			[self.locationManager requestAlwaysAuthorization];
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 - (void)stopUpdates
