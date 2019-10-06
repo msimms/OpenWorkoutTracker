@@ -51,35 +51,31 @@
 - (void)awakeWithContext:(id)context
 {
 	[super awakeWithContext:context];
-	[self redraw];
-}
-
-#pragma mark accessor methods
-
-- (void)setActivityIndex:(NSInteger)index
-{
-	self->activityIndex = index;
-
-	CreateHistoricalActivityObject(index);
-	LoadHistoricalActivitySummaryData(index);
+	[self redraw:context];
 }
 
 #pragma mark location handling methods
 
-- (void)redraw
+- (void)redraw:(id)context
 {	
+	NSDictionary* passedData = (NSDictionary*)context;
+	NSNumber* tempActivityIndex = [passedData objectForKey:@"activityIndex"];
+	NSInteger activityIndex = [tempActivityIndex integerValue];
+	CreateHistoricalActivityObject(activityIndex);
+	LoadHistoricalActivitySummaryData(activityIndex);
+
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-	if (extDelegate && [extDelegate loadHistoricalActivity:self->activityIndex])
+	if (extDelegate && [extDelegate loadHistoricalActivity:activityIndex])
 	{
 		NSMutableArray* nameStrs = [[NSMutableArray alloc] init];
 		NSMutableArray* valueStrs = [[NSMutableArray alloc] init];
-		NSMutableArray* attributeNames = [extDelegate getHistoricalActivityAttributes:self->activityIndex];
+		NSMutableArray* attributeNames = [extDelegate getHistoricalActivityAttributes:activityIndex];
 
 		time_t startTime;
 		time_t endTime;
 
-		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
-		GetHistoricalActivityStartAndEndTime(self->activityIndex, &startTime, &endTime);
+		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(activityIndex)];
+		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
 
 		// Format the start time.
 		NSString* temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
@@ -94,7 +90,7 @@
 		// Format the attributes.
 		for (NSString* attributeName in attributeNames)
 		{
-			ActivityAttributeType attr = QueryHistoricalActivityAttribute(self->activityIndex, [attributeName UTF8String]);
+			ActivityAttributeType attr = QueryHistoricalActivityAttribute(activityIndex, [attributeName UTF8String]);
 			if (attr.valid)
 			{
 				NSString* valueStr = [StringUtils formatActivityViewType:attr];
@@ -124,18 +120,18 @@
 		// Add the start and end locations to the map. The watch does not currently have the ability to draw a polyline of the entire route.
 		Coordinate startCoordinate;
 		Coordinate endCoordinate;
-		size_t numPoints = GetNumHistoricalActivityLocationPoints(self->activityIndex);
+		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
 		if (numPoints == 0)
 		{
-			[self.map setHidden:false];
+			[self.map setHidden:true];
 		}
 		else
 		{
-			[self.map setHidden:true];
+			[self.map setHidden:false];
 
 			if (numPoints > 0)
 			{
-				if (GetHistoricalActivityPoint(self->activityIndex, 0, &startCoordinate))
+				if (GetHistoricalActivityPoint(activityIndex, 0, &startCoordinate))
 				{
 					CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(startCoordinate.latitude, startCoordinate.longitude);
 					[self.map addAnnotation:startLocation withPinColor: WKInterfaceMapPinColorGreen];
@@ -146,7 +142,7 @@
 			}
 			if (numPoints > 1)
 			{
-				if (GetHistoricalActivityPoint(self->activityIndex, numPoints - 1, &endCoordinate))
+				if (GetHistoricalActivityPoint(activityIndex, numPoints - 1, &endCoordinate))
 				{
 					CLLocationCoordinate2D endLocation = CLLocationCoordinate2DMake(endCoordinate.latitude, endCoordinate.longitude);
 					[self.map addAnnotation:endLocation withPinColor: WKInterfaceMapPinColorRed];

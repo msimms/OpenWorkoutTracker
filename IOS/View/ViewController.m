@@ -213,11 +213,14 @@
 	const char* pActivityType = [activityType cStringUsingEncoding:NSASCIIStringEncoding];
 	if (pActivityType)
 	{
+		// Create the data structures and database entries needed to start an activity.
 		CreateActivity(pActivityType);
 
+		// Initialize any sensors that we are going to use.
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate startSensors];
 
+		// Switch to the activity view.
 		[self showActivityView:activityType];
 	}
 }

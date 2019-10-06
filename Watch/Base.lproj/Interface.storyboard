@@ -198,9 +198,6 @@
                                         <items>
                                             <label width="1" alignment="left" verticalAlignment="center" text="Label" numberOfLines="2" id="0JT-H8-yfj"/>
                                         </items>
-                                        <connections>
-                                            <segue destination="TxK-qh-dpe" kind="push" id="ydp-Jl-cbT"/>
-                                        </connections>
                                     </group>
                                     <connections>
                                         <outlet property="itemLabel" destination="0JT-H8-yfj" id="R9f-78-iGg"/>

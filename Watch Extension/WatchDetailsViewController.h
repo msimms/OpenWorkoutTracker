@@ -24,11 +24,8 @@
 	IBOutlet __weak WKInterfaceMap* map;
 	IBOutlet __strong WKInterfaceTable* detailsTable;
 
-	NSInteger activityIndex;
 	NSString* activityId;
 }
-
-- (void)setActivityIndex:(NSInteger)index;
 
 @property (weak, nonatomic) IBOutlet WKInterfaceMap* map;
 @property (nonatomic, retain) IBOutlet WKInterfaceTable* detailsTable;

@@ -58,6 +58,12 @@
 
 #pragma mark table handling methods
 
+- (void)table:(WKInterfaceTable*)table didSelectRowAtIndex:(NSInteger)rowIndex
+{
+	NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:rowIndex], @"activityIndex", nil];
+	[self pushControllerWithName:@"WatchDetailsViewController" context:dictionary];
+}
+
 - (void)redraw
 {
 	InitializeHistoricalActivityList();

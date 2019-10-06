@@ -57,10 +57,8 @@
 	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
 	[actions addObject:action];
 
-	[self presentAlertControllerWithTitle:nil
-								  message:MSG_SELECT_NEW
-						   preferredStyle:WKAlertControllerStyleAlert
-								  actions:actions];
+	// Show the action sheet.
+	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_NEW preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
 #pragma method to switch to the activity view
@@ -70,11 +68,14 @@
 	const char* pActivityType = [activityType cStringUsingEncoding:NSASCIIStringEncoding];
 	if (pActivityType)
 	{
+		// Create the data structures and database entries needed to start an activity.
 		CreateActivity(pActivityType);
-		
+
+		// Initialize any sensors that we are going to use.
 		ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 		[extDelegate startSensors];
-		
+
+		// Switch to the activity view.
 		[self pushControllerWithName:@"WatchActivityViewController" context:nil];
 	}
 }
