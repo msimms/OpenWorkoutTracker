@@ -46,6 +46,7 @@ public:
 	virtual double CurrentPower() const { return m_currentPower; };
 	virtual double ThreeSecPower() const { return LibMath::Statistics::averageDouble(m_recentPowerReadings); };
 	virtual double AveragePower() const { return m_numPowerReadings > 0 ? (m_totalPowerReadings / m_numPowerReadings) : (double)0.0; };
+	virtual double NormalizedPower() const;
 	virtual double MaximumPower() const { return m_maximumPower; };
 	virtual uint8_t CurrentPowerZone() const;
 
@@ -61,32 +62,35 @@ protected:
 	virtual bool ProcessPowerMeterReading(const SensorReading& reading);
 	
 private:
-	Bike                m_bike;
-	SpeedDataSource     m_speedDataSource;
+	Bike            m_bike;
+	SpeedDataSource m_speedDataSource;
 	
-	double              m_distanceAtFirstWheelSpeedReadingM;
+	double          m_distanceAtFirstWheelSpeedReadingM;
 
-	double              m_currentCadence;
-	double              m_maximumCadence;
-	double              m_totalCadenceReadings;
+	double          m_currentCadence;
+	double          m_maximumCadence;
+	double          m_totalCadenceReadings;
 
-	double              m_currentPower;
-	double              m_maximumPower;
-	double              m_totalPowerReadings;
+	double          m_currentPower;
+	double          m_maximumPower;
+	double          m_totalPowerReadings;
 	std::vector<double> m_recentPowerReadings; // used for 3 second average power
+	std::vector<double> m_normalizedPowerBuffer; // contains 30 second power averages
+	std::vector<double> m_current30SecBuffer; // contains data from the most recent 30 second power block
+	uint64_t        m_current30SecBufferStartTime; // used with the normalized power calculation
 
-	uint16_t            m_numCadenceReadings;
-	uint16_t            m_numPowerReadings;
+	uint16_t        m_numCadenceReadings;
+	uint16_t        m_numPowerReadings;
 
-	uint16_t            m_firstWheelSpeedReading;
-	uint64_t            m_firstWheelSpeedTime;
-	uint16_t            m_currentWheelSpeedReading;
-	uint64_t            m_currentWheelSpeedTime;
-	uint16_t            m_lastWheelSpeedReading;
-	uint64_t            m_lastWheelSpeedTime;
+	uint16_t        m_firstWheelSpeedReading;
+	uint64_t        m_firstWheelSpeedTime;
+	uint16_t        m_currentWheelSpeedReading;
+	uint64_t        m_currentWheelSpeedTime;
+	uint16_t        m_lastWheelSpeedReading;
+	uint64_t        m_lastWheelSpeedTime;
 
-	uint64_t            m_lastCadenceUpdateTime; // time the cadence data was last updated
-	uint64_t            m_lastPowerUpdateTime;   // time the power data was last updated
+	uint64_t        m_lastCadenceUpdateTime; // time the cadence data was last updated
+	uint64_t        m_lastPowerUpdateTime;   // time the power data was last updated
 };
 
 #endif

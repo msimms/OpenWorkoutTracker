@@ -5,12 +5,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include <math.h>
+
 #include "Cycling.h"
 #include "ActivityAttribute.h"
+#include "Statistics.h"
 #include "UnitMgr.h"
 #include "UnitConversionFactors.h"
-
-#include <numeric>
 
 Cycling::Cycling() : MovingActivity()
 {
@@ -25,6 +26,7 @@ Cycling::Cycling() : MovingActivity()
 	m_currentPower                      = (double)0.0;
 	m_maximumPower                      = (double)0.0;
 	m_totalPowerReadings                = (double)0.0;
+	m_current30SecBufferStartTime       = 0;
 
 	m_numCadenceReadings                = 0;
 	m_numPowerReadings                  = 0;
@@ -132,7 +134,7 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 			m_currentPower = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
 			m_totalPowerReadings += m_currentPower;
 			m_numPowerReadings++;
-
+			
 			m_recentPowerReadings.push_back(m_currentPower);
 			if (m_recentPowerReadings.size() > 3)
 			{
@@ -142,6 +144,16 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 			if (m_currentPower > m_maximumPower)
 			{
 				m_maximumPower = m_currentPower;
+			}
+
+			// Things we need for the normalized power calculation.
+			m_current30SecBuffer.push_back(m_currentPower);
+			if (reading.time - this->m_current30SecBufferStartTime > 30000)
+			{
+				double avg30Sec = LibMath::Statistics::averageDouble(m_current30SecBuffer);
+				m_normalizedPowerBuffer.push_back(avg30Sec);
+				m_current30SecBufferStartTime = m_lastPowerUpdateTime;
+				m_current30SecBuffer.clear();
 			}
 		}
 	}
@@ -209,6 +221,13 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_POWER) == 0)
 	{
 		result.value.doubleVal = AveragePower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = m_numPowerReadings > 0;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER) == 0)
+	{
+		result.value.doubleVal = NormalizedPower();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_POWER;
 		result.valid = m_numPowerReadings > 0;
@@ -317,6 +336,26 @@ double Cycling::CaloriesBurned() const
 	return (double)0.0;
 }
 
+double Cycling::NormalizedPower() const
+{
+	if (m_normalizedPowerBuffer.size() > 0)
+	{
+		std::vector<double> tempBuf;
+
+		auto iter = m_normalizedPowerBuffer.begin();
+		++iter; // Skip over the first reading.
+		while (iter != m_normalizedPowerBuffer.end())
+		{
+			double powerCubed = pow((*iter), 4);
+			tempBuf.push_back(powerCubed);
+			++iter;
+		}
+		double avgPow = LibMath::Statistics::averageDouble(tempBuf);
+		return pow(avgPow, 0.25);
+	}
+	return (double)0.0;
+}
+
 uint8_t Cycling::CurrentPowerZone() const
 {
 	double power = ThreeSecPower();
@@ -345,6 +384,7 @@ void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_3_SEC_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER_ZONE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
@@ -357,6 +397,7 @@ void Cycling::BuildSummaryAttributeList(std::vector<std::string>& attributes) co
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS);
