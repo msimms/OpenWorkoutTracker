@@ -56,6 +56,37 @@
 
 - (void)redraw
 {
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSMutableArray* workoutNames = [extDelegate getIntervalWorkoutNames];
+
+	if ([workoutNames count] == 0)
+	{
+		WKAlertAction* action = [WKAlertAction actionWithTitle:@"OK"
+														 style:WKAlertActionStyleDefault
+													   handler:^{
+														   [self popController];
+													   }];
+
+		[self presentAlertControllerWithTitle:STR_ERROR
+									  message:MSG_NO_INTERVAL_WORKOUTS
+							   preferredStyle:WKAlertControllerStyleAlert
+									  actions:@[ action ]];
+	}
+	else
+	{
+		// Configure the table object and set the row controllers.
+		[self.intervalsTable setNumberOfRows:[workoutNames count] withRowType:@"WatchIntervalsRowType"];
+		
+		// Iterate over the rows and set the label and image for each one.
+		NSInteger rowControllerIndex = self.intervalsTable.numberOfRows - 1;
+		for (NSString* workoutName in workoutNames)
+		{
+			WatchIntervalsRowController* row = [self.intervalsTable rowControllerAtIndex:rowControllerIndex];
+			--rowControllerIndex;
+
+			[row.itemLabel setText:workoutName];
+		}
+	}
 }
 
 @end

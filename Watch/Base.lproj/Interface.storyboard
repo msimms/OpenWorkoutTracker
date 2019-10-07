@@ -122,16 +122,22 @@
                     <items>
                         <table alignment="left" id="RTR-Bs-42t">
                             <items>
-                                <tableRow identifier="WatchIntervalsRowController" id="hXl-Mc-5xm">
+                                <tableRow identifier="WatchIntervalsRowType" id="hXl-Mc-5xm" customClass="WatchIntervalsRowController">
                                     <group key="rootItem" width="1" alignment="left" id="eFI-dU-5GQ">
                                         <items>
                                             <label alignment="left" text="Label" id="q6H-Ya-w9h"/>
                                         </items>
                                     </group>
+                                    <connections>
+                                        <outlet property="itemLabel" destination="q6H-Ya-w9h" id="RBt-bu-cqS"/>
+                                    </connections>
                                 </tableRow>
                             </items>
                         </table>
                     </items>
+                    <connections>
+                        <outlet property="intervalsTable" destination="RTR-Bs-42t" id="0yk-5a-7gm"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="-48" y="759"/>
