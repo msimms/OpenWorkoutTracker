@@ -17,5 +17,6 @@
 #define WATCH_MSG_CHECK_ACTIVITY "Check Activity"
 #define WATCH_MSG_REQUEST_ACTIVITY "Request Activity"
 #define WATCH_MSG_ACTIVITY "Activity"
+#define WATCH_MSG_DEVICE_ID "Device ID"
 
 #endif

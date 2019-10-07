@@ -27,6 +27,22 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 }
 
+- (void)sendSyncPrefsMsg
+{
+	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+	[msgData setObject:@WATCH_MSG_SYNC_PREFS forKey:@WATCH_MSG_TYPE];
+	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+}
+
+- (void)sendRegisterDeviceMsg
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+	[msgData setObject:@WATCH_MSG_REGISTER_DEVICE forKey:@WATCH_MSG_TYPE];
+	[msgData setObject:@WATCH_MSG_DEVICE_ID forKey:[extDelegate getDeviceId]];
+	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+}
+
 - (void)session:(nonnull WCSession*)session didReceiveApplicationContext:(NSDictionary<NSString*, id>*)applicationContext
 {
 }
@@ -40,11 +56,8 @@
 		case WCSessionActivationStateInactive:
 			break;
 		case WCSessionActivationStateActivated:
-			{
-				NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
-				[msgData setObject:@WATCH_MSG_SYNC_PREFS forKey:@WATCH_MSG_TYPE];
-				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
-			}
+			[self sendSyncPrefsMsg];
+			[self sendRegisterDeviceMsg];
 			break;
 	}
 }

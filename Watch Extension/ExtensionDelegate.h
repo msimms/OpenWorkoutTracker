@@ -43,6 +43,10 @@
 - (BOOL)startNewLap;
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 
+// retrieves or creates and retrieves the applications unique identifier
+
+- (NSString*)getDeviceId;
+
 // hash methods
 
 - (NSString*)hashActivityWithId:(NSString*)activityId;
