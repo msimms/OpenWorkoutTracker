@@ -60,4 +60,5 @@
 #define SUMMARY_ATTRIBUTE_TOTAL_REPS     NSLocalizedString(@"Total Reps", nil)
 
 #define MSG_NO_WORKOUTS                  NSLocalizedString(@"You have done any workouts.\nGet moving!", nil)
+#define MSG_IN_PROGRESS                  NSLocalizedString(@"An unfinished activity has been found. Do you wish to resume it?", nil)
 #define MSG_NO_INTERVAL_WORKOUTS         NSLocalizedString(@"No interval workouts have been created.", nil)

@@ -82,10 +82,42 @@
 
 - (void)startActivity:(NSString*)activityType
 {
+	bool isOrphaned = IsActivityOrphaned(&self->orphanedActivityIndex);
 	bool isInProgress = IsActivityInProgress();
 
-	if (isInProgress)
+	if (isOrphaned || isInProgress)
 	{
+		char* orphanedType = GetHistoricalActivityType(self->orphanedActivityIndex);
+		self->orphanedActivityType = [NSString stringWithFormat:@"%s", orphanedType];
+		free((void*)orphanedType);
+
+		self->newActivityType = activityType;
+
+		NSMutableArray* actions = [[NSMutableArray alloc] init];
+		WKAlertAction* action;
+
+		// Add the "re-connect to the orphaned activity" option.
+		action = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void){
+			ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+			[extDelegate recreateOrphanedActivity:self->orphanedActivityIndex];
+			[self pushControllerWithName:@"WatchActivityViewController" context:nil];
+		}];
+		[actions addObject:action];
+		
+		// Add the "throw it away and start over" option
+		action = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
+			ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+			[extDelegate loadHistoricalActivity:self->orphanedActivityIndex];
+			[self createActivity:self->newActivityType];
+		}];	
+		[actions addObject:action];
+
+		// Add the cancel button.
+		action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
+		[actions addObject:action];
+
+		// Show the action sheet.
+		[self presentAlertControllerWithTitle:nil message:MSG_IN_PROGRESS preferredStyle:WKAlertControllerStyleAlert actions:actions];
 	}
 	else if (IsActivityCreated())
 	{

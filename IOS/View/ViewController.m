@@ -27,7 +27,6 @@
 #define BUTTON_TITLE_EDIT_SENSORS    NSLocalizedString(@"Sensors", nil)
 #define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Intervals", nil)
 
-#define MSG_IN_PROGRESS              NSLocalizedString(@"An unfinished activity has been found. Do you wish to resume it?", nil)
 #define MSG_RESET                    NSLocalizedString(@"This will delete all of your data. Do you wish to continue? This cannot be undone.", nil)
 #define MSG_SELECT_NEW               NSLocalizedString(@"Select the workout to perform.", nil)
 #define MSG_SELECT_VIEW              NSLocalizedString(@"What would you like to view?", nil)
@@ -241,11 +240,15 @@
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:TITLE_IN_PROGRESS
 																				 message:MSG_IN_PROGRESS
 																		  preferredStyle:UIAlertControllerStyleAlert];
+
+		// Add the "re-connect to the orphaned activity" option.
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 			[appDelegate recreateOrphanedActivity:self->orphanedActivityIndex];
 			[self showActivityView:self->orphanedActivityType];
 		}]];
+
+		// Add the "throw it away and start over" option
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 			[appDelegate loadHistoricalActivity:self->orphanedActivityIndex];

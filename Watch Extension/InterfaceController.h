@@ -9,5 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface InterfaceController : WKInterfaceController
+{
+	NSString* newActivityType;
+	NSString* orphanedActivityType;
+	size_t    orphanedActivityIndex;
+}
 
 @end
