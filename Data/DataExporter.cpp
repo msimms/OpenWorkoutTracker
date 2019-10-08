@@ -525,6 +525,7 @@ bool DataExporter::Export(FileFormat format, std::string& fileName, Database* co
 			case FILE_CSV:
 				fileName.append(".csv");
 				return ExportToCsv(fileName, pDatabase, pActivity);
+			case FILE_ZWO:				
 			default:
 				return false;
 		}

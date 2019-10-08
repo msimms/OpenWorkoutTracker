@@ -16,7 +16,8 @@ typedef enum FileFormat
 	FILE_TEXT,
 	FILE_TCX,
 	FILE_GPX,
-	FILE_CSV
+	FILE_CSV,
+	FILE_ZWO
 } FileFormat;
 
 #endif

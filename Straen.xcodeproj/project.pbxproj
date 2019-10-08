@@ -30,6 +30,7 @@
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
 		27345D0A19EDEE4600059FFF /* LeScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* LeScale.m */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
+		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
@@ -444,6 +445,9 @@
 		27345D0919EDEE4600059FFF /* LeScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeScale.m; path = IOS/Sensors/LeScale.m; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
+		275BA6D8234BC16B0086A50F /* ZwoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileReader.h; path = FileLib/ZwoFileReader.h; sourceTree = SOURCE_ROOT; };
+		275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZwoFileReader.cpp; path = FileLib/ZwoFileReader.cpp; sourceTree = SOURCE_ROOT; };
+		275BA6E8234BC21A0086A50F /* ZwoTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTags.h; path = FileLib/ZwoTags.h; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
 		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
@@ -1012,6 +1016,9 @@
 				2797F18819BFE48E008F8672 /* XmlFileReader.h */,
 				2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */,
 				2797F18A19BFE48E008F8672 /* XmlFileWriter.h */,
+				275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */,
+				275BA6D8234BC16B0086A50F /* ZwoFileReader.h */,
+				275BA6E8234BC21A0086A50F /* ZwoTags.h */,
 			);
 			name = FileLib;
 			sourceTree = "<group>";
@@ -1754,6 +1761,7 @@
 				276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */,
 				27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */,
 				27C0845819BFD063007CE934 /* MountainBiking.cpp in Sources */,
+				275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */,
 				27C0846419BFD063007CE934 /* Walking.cpp in Sources */,
 				2704717C216D997000EE47FF /* Distance.cpp in Sources */,
 				27B7CDA719BFD91C000383E3 /* SimpleActivityViewController.m in Sources */,
