@@ -18,6 +18,9 @@
 
 - (void)start;
 
+- (void)readRunningWorkoutsFromHealthStore;
+- (void)readCyclingWorkoutsFromHealthStore;
+
 - (void)saveHeightIntoHealthStore:(double)heightInInches;
 - (void)saveWeightIntoHealthStore:(double)weightInPounds;
 - (void)saveHeartRateIntoHealthStore:(double)beats;
