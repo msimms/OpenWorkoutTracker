@@ -10,13 +10,14 @@
 
 #define WATCH_MSG_TYPE "Msg Type"
 
-// Possible message types.
+// Possible message types and their parameters.
 #define WATCH_MSG_SYNC_PREFS "Sync Prefs"
 #define WATCH_MSG_REGISTER_DEVICE "Register Device"
+#define WATCH_MSG_DEVICE_ID "Device ID"
 #define WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS "Download Interval Workouts"
 #define WATCH_MSG_CHECK_ACTIVITY "Check Activity"
 #define WATCH_MSG_REQUEST_ACTIVITY "Request Activity"
 #define WATCH_MSG_ACTIVITY "Activity"
-#define WATCH_MSG_DEVICE_ID "Device ID"
+#define WATCH_MSG_ACTIVITY_HASH "Activity Hash"
 
 #endif

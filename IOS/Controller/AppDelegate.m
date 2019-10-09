@@ -1653,6 +1653,16 @@ void attributeNameCallback(const char* name, void* context)
 	[[NSUserDefaults standardUserDefaults] setPersistentDomain:[NSDictionary dictionary] forName:[[NSBundle mainBundle] bundleIdentifier]];
 }
 
+#pragma mark watch management methods
+
+- (void)registerWatch:(NSString*)deviceId
+{
+}
+
+- (void)checkForActivity:(NSString*)activityHash
+{
+}
+
 #pragma mark watch session methods
 
 - (void)session:(WCSession*)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError*)error
@@ -1697,12 +1707,16 @@ void attributeNameCallback(const char* name, void* context)
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
 		// The watch app wants to register itself.
+		NSString* deviceId = [message objectForKey:@WATCH_MSG_DEVICE_ID];
+		[self registerWatch:deviceId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
 		// The watch app wants to download interval workouts.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The watch app wants to know if we have an activity.
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		[self checkForActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
 		// The watch app is requesting an activity.
@@ -1720,12 +1734,16 @@ void attributeNameCallback(const char* name, void* context)
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
 		// The watch app wants to register itself.
+		NSString* deviceId = [message objectForKey:@WATCH_MSG_DEVICE_ID];
+		[self registerWatch:deviceId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
 		// The watch app wants to download interval workouts.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
 		// The watch app wants to know if we have an activity.
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		[self checkForActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
 		// The watch app is requesting an activity.
