@@ -6,8 +6,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "RepititionOverlay.h"
-#import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface RepititionOverlay ()
@@ -21,19 +21,19 @@
 	self->objects = [[NSMutableArray alloc] init];
 	if (self->objects)
 	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
-		ActivityAttributeType reps = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS);
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		ActivityAttributeType reps = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_REPS forActivityId:self->activityId];
 		if (reps.valid)
 		{
 			for (uint32_t i = 1; i <= reps.value.intVal; ++i)
 			{
 				NSString* attrName = [[NSString alloc] initWithFormat:@"%s%d", ACTIVITY_ATTRIBUTE_GRAPH_PEAK, i];
-				ActivityAttributeType peakIndex = QueryHistoricalActivityAttribute(activityIndex, [attrName UTF8String]);
+				ActivityAttributeType peakIndex = [appDelegate queryHistoricalActivityAttribute:[attrName UTF8String] forActivityId:self->activityId];
 				if (peakIndex.valid)
 				{
 					NSNumber* x = [[NSNumber alloc] initWithInt:(int)peakIndex.value.intVal];
 					NSNumber* y = [[NSNumber alloc] initWithInt:0];
-					
+
 					ChartPoint* point = [[ChartPoint alloc] initWithValues:x :y];
 					if (point)
 					{

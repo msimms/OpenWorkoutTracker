@@ -8,6 +8,7 @@
 #import "HeartRateLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface HeartRateLine ()
@@ -20,7 +21,8 @@ void HeartRateDataCallback(size_t activityIndex, void* context)
 {
 	HeartRateLine* ptrToHeartRateChart = (__bridge HeartRateLine*)context;
 
-	ActivityAttributeType hrValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_HEART_RATE);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	ActivityAttributeType hrValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_HEART_RATE forActivityIndex:activityIndex];
 	if (hrValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToHeartRateChart->points count]];

@@ -8,6 +8,7 @@
 #import "VerticalSpeedLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface VerticalSpeedLine ()
@@ -20,7 +21,8 @@ void VerticalSpeedDataCallback(size_t activityIndex, void* context)
 {
 	VerticalSpeedLine* ptrToVerticalPaceChart = (__bridge VerticalSpeedLine*)context;
 
-	ActivityAttributeType speedValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_VERTICAL_SPEED);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	ActivityAttributeType speedValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_VERTICAL_SPEED forActivityIndex:activityIndex];
 	if (speedValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToVerticalPaceChart->points count]];

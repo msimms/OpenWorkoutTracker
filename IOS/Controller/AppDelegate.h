@@ -27,23 +27,26 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 {
-	SensorMgr*           sensorMgr;
-	LeDiscovery*         leSensorFinder;
-	WiFiDiscovery*       wifiSensorFinder;
+	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
+	LeDiscovery*         leSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
+	WiFiDiscovery*       wifiSensorFinder; // For discovering Wifi devices, such as cameras.
 	CloudMgr*            cloudMgr;
-	ActivityPreferences* activityPrefs;
-	BroadcastManager*    broadcastMgr;
-	HealthManager*       healthMgr;
+	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
+	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
+	HealthManager*       healthMgr; // Interfaces with Apple HealthKit.
 	NSTimer*             intervalTimer;
-	WCSession*           watchSession;
-
+	WCSession*           watchSession; // Interfaces with the watch app.
 	BOOL                 badGps;
 }
 
 - (NSString*)getDeviceId;
 
+// feature management; some features may be optionally disabled
+
 - (BOOL)isFeaturePresent:(Feature)feature;
 - (BOOL)isFeatureEnabled:(Feature)feature;
+
+// describes the phone; only used for determining if we're on a really old phone or not
 
 - (NSString*)getPlatformString;
 
@@ -115,8 +118,17 @@
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
-- (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
+
+// methods for loading and editing historical activities
+
+- (size_t)initializeHistoricalActivityList;
+- (size_t)getNumHistoricalActivities;
+- (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
+- (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart;
+- (void)deleteActivity:(NSString*)activityId;
 
 // hash methods
 
@@ -128,11 +140,6 @@
 - (void)playSound:(NSString*)soundPath;
 - (void)playBeepSound;
 - (void)playPingSound;
-
-// methods for downloading a map overlay
-
-- (NSString*)getOverlayDir;
-- (BOOL)downloadMapOverlay:(NSString*)urlStr withName:(NSString*)name;
 
 // methods for downloading an activity via a URL
 
@@ -166,7 +173,6 @@
 - (NSMutableArray*)getEnabledFileImportServices;
 - (NSMutableArray*)getEnabledFileExportCloudServices;
 - (NSMutableArray*)getEnabledFileExportServices;
-- (NSMutableArray*)getMapOverlayList;
 - (NSMutableArray*)getActivityTypes;
 - (NSMutableArray*)getCurrentActivityAttributes;
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex;

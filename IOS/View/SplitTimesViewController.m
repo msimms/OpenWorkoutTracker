@@ -6,8 +6,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "SplitTimesViewController.h"
-#import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "StringUtils.h"
 
 #define TITLE             NSLocalizedString(@"Split Times", nil)
@@ -105,14 +105,15 @@ typedef enum SectionType
 
 #pragma mark random methods
 
-- (void)addKmSplits:(size_t)activityIndex
+- (void)addKmSplits
 {
 	ActivityAttributeType lastValue;
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	for (uint16_t km = 1; km < 1000; ++km)
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sKM %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, km];
-		ActivityAttributeType value = QueryHistoricalActivityAttribute(activityIndex, [attributeName UTF8String]);
+		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 		if (value.valid)
 		{
 			NSString* label;
@@ -143,14 +144,15 @@ typedef enum SectionType
 	}
 }
 
-- (void)addMileSplits:(size_t)activityIndex
+- (void)addMileSplits
 {
 	ActivityAttributeType lastValue;
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	for (uint16_t mile = 1; mile < 1000; ++mile)
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sMile %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, mile];
-		ActivityAttributeType value = QueryHistoricalActivityAttribute(activityIndex, [attributeName UTF8String]);
+		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 		if (value.valid)
 		{
 			NSString* label;
@@ -185,13 +187,11 @@ typedef enum SectionType
 {
 	self->activityId = newId;
 
-	size_t activityIndex = ConvertActivityIdToActivityIndex([newId UTF8String]);
-
 	self->splitTimesKm = [[NSMutableArray alloc] init];
 	self->splitTimesMile = [[NSMutableArray alloc] init];
 
-	[self addKmSplits:activityIndex];
-	[self addMileSplits:activityIndex];
+	[self addKmSplits];
+	[self addMileSplits];
 
 	[self.splitTimesTableView reloadData];
 }

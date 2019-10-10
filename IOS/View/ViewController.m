@@ -11,7 +11,6 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "MapOverviewViewController.h"
-#import "OverlayListViewController.h"
 #import "Preferences.h"
 #import "Segues.h"
 

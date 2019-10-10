@@ -8,6 +8,7 @@
 #import "ElevationLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface ElevationLine ()
@@ -20,7 +21,8 @@ void ElevationDataCallback(size_t activityIndex, void* context)
 {
 	ElevationLine* ptrToElevationChart = (__bridge ElevationLine*)context;
 
-	ActivityAttributeType elevationValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_ALTITUDE);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	ActivityAttributeType elevationValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_ALTITUDE forActivityIndex:activityIndex];
 	if (elevationValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToElevationChart->points count]];

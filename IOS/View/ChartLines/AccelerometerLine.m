@@ -8,6 +8,7 @@
 #import "AccelerometerLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 AccelerometerLine* g_ptrToAccelChart;
@@ -27,17 +28,18 @@ Axis g_accelChartAxis = AXIS_X;
 void AccelDataCallback(size_t activityIndex, void* context)
 {
 	ActivityAttributeType axisValue;
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	switch (g_accelChartAxis)
 	{
 	case AXIS_X:
-		axisValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_X);
+		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityIndex:activityIndex];
 		break;
 	case AXIS_Y:
-		axisValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_Y);
+		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_Y forActivityIndex:activityIndex];
 		break;
 	case AXIS_Z:
-		axisValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_Z);
+		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_Z forActivityIndex:activityIndex];
 		break;
 	}
 

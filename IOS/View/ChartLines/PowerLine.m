@@ -8,6 +8,7 @@
 #import "PowerLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface PowerLine ()
@@ -20,7 +21,8 @@ void PowerDataCallback(size_t activityIndex, void* context)
 {
 	PowerLine* ptrToPowerChart = (__bridge PowerLine*)context;
 
-	ActivityAttributeType powerValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_3_SEC_POWER);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	ActivityAttributeType powerValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_3_SEC_POWER forActivityIndex:activityIndex];
 	if (powerValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToPowerChart->points count]];

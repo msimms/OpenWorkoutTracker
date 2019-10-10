@@ -8,6 +8,7 @@
 #import "SpeedLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface SpeedLine ()
@@ -20,7 +21,8 @@ void SpeedDataCallback(size_t activityIndex, void* context)
 {
 	SpeedLine* ptrToPaceChart = (__bridge SpeedLine*)context;
 
-	ActivityAttributeType speedValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	ActivityAttributeType speedValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_CURRENT_SPEED forActivityIndex:activityIndex];
 	if (speedValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToPaceChart->points count]];

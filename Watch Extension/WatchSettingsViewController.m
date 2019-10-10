@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WatchSettingsViewController.h"
-#import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "Preferences.h"

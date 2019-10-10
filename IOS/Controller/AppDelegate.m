@@ -29,8 +29,7 @@
 
 #include <sys/sysctl.h>
 
-#define DATABASE_NAME        "Activities.sqlite"
-#define MAP_OVERLAY_DIR_NAME "Map Overlays"
+#define DATABASE_NAME "Activities.sqlite"
 
 @implementation UINavigationController (Rotation_IOS6)
 
@@ -217,7 +216,7 @@
 	return uuid;
 }
 
-#pragma mark controller methods for this application
+#pragma mark feature management; some features may be optionally disabled
 
 - (BOOL)isFeaturePresent:(Feature)feature
 {
@@ -254,6 +253,8 @@
 	}
 	return TRUE;
 }
+
+#pragma mark describes the phone; only used for determining if we're on a really old phone or not
 
 - (NSString*)getPlatformString
 {
@@ -924,6 +925,34 @@ void startSensorCallback(SensorType type, void* context)
 	return StartNewLap();
 }
 
+- (void)recreateOrphanedActivity:(NSInteger)activityIndex
+{
+	DestroyCurrentActivity();
+	ReCreateOrphanedActivity(activityIndex);
+}
+
+#pragma mark methods for loading and editing historical activities
+
+- (size_t)initializeHistoricalActivityList
+{
+	// Read activities from our database.
+	InitializeHistoricalActivityList();
+	size_t numHistoricalActivities = GetNumHistoricalActivities();
+
+	// Read activities from HealthKit.
+	if (self->healthMgr)
+	{
+		[self->healthMgr readRunningWorkoutsFromHealthStore];
+		[self->healthMgr readCyclingWorkoutsFromHealthStore];
+	}
+	return numHistoricalActivities;
+}
+
+- (size_t)getNumHistoricalActivities
+{
+	return GetNumHistoricalActivities();
+}
+
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex
 {
 	BOOL result = FALSE;
@@ -953,10 +982,31 @@ void startSensorCallback(SensorType type, void* context)
 	return result;
 }
 
-- (void)recreateOrphanedActivity:(NSInteger)activityIndex
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
 {
-	DestroyCurrentActivity();
-	ReCreateOrphanedActivity(activityIndex);
+	return QueryHistoricalActivityAttribute((size_t)activityIndex, attributeName);
+}
+
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
+}
+
+- (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart
+{
+	if (TrimActivityData([activityId UTF8String], newTime, fromStart))
+	{
+		InitializeHistoricalActivityList();
+		return TRUE;
+	}
+	return FALSE;
+}
+
+- (void)deleteActivity:(NSString*)activityId
+{
+	DeleteActivity([activityId UTF8String]);
+	InitializeHistoricalActivityList();
 }
 
 #pragma mark hash methods
@@ -1013,44 +1063,6 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		[self playSound:mySoundPath];
 	}
-}
-
-#pragma mark methods for downloading a map overlay
-
-- (NSString*)getOverlayDir
-{
-	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	return [[paths objectAtIndex: 0] stringByAppendingPathComponent:@MAP_OVERLAY_DIR_NAME];
-}
-
-- (NSString*)createOverlayDir
-{
-	NSString* overlayDir = [self getOverlayDir];
-	
-	if (![[NSFileManager defaultManager] fileExistsAtPath:overlayDir])
-	{
-		NSError* error = nil;
-		
-		if (![[NSFileManager defaultManager] createDirectoryAtPath:overlayDir withIntermediateDirectories:NO attributes:nil error:&error])
-		{
-			return nil;
-		}
-	}
-	return overlayDir;
-}
-
-- (BOOL)downloadMapOverlay:(NSString*)urlStr withName:(NSString*)name
-{
-	NSURL* url = [NSURL URLWithString:urlStr];
-	NSData* urlData = [NSData dataWithContentsOfURL:url];
-	if (urlData)
-	{
-		NSString* overlayDir = [self createOverlayDir];
-		NSString* theFileName = [[urlStr lastPathComponent] stringByDeletingPathExtension];
-		NSString* filePath = [NSString stringWithFormat:@"%@/%@", overlayDir, theFileName];
-		return [urlData writeToFile:filePath atomically:YES];
-	}
-	return FALSE;
 }
 
 #pragma mark methods for downloading an activity via a URL
@@ -1189,29 +1201,6 @@ void startSensorCallback(SensorType type, void* context)
 		[services addObject:@EXPORT_TO_EMAIL_STR];
 	}
 	return services;
-}
-
-#pragma mark methods for managing map overlays
-
-- (NSMutableArray*)getMapOverlayList
-{
-	NSMutableArray* pOverlays = [[NSMutableArray alloc] init];
-	if (pOverlays)
-	{
-		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-		NSString* overlaysDir = [[paths objectAtIndex: 0] stringByAppendingPathComponent:@MAP_OVERLAY_DIR_NAME];
-		NSFileManager* fm = [NSFileManager defaultManager];
-		NSArray* files = [fm contentsOfDirectoryAtPath:overlaysDir error:nil];
-		for (NSString* file in files)
-		{
-			if ([file characterAtIndex:0] != '.')
-			{
-				NSString* fullPath = [overlaysDir stringByAppendingPathComponent:file];
-				[pOverlays addObject:fullPath];
-			}
-		}
-	}
-	return pOverlays;
 }
 
 #pragma mark methods for managing bikes

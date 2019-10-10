@@ -8,6 +8,7 @@
 #import "CadenceLine.h"
 #import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "ChartPoint.h"
 
 @interface CadenceLine ()
@@ -20,7 +21,8 @@ void CadenceDataCallback(size_t activityIndex, void* context)
 {
 	CadenceLine* ptrToCadenceChart = (__bridge CadenceLine*)context;
 
-	ActivityAttributeType cadenceValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_CADENCE);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	ActivityAttributeType cadenceValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_CADENCE forActivityIndex:activityIndex];
 	if (cadenceValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToCadenceChart->points count]];

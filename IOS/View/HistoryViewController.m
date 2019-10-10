@@ -51,9 +51,7 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.searchBar setTintColor:[UIColor blackColor]];
-	
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
-
 	[self.spinner stopAnimating];
 
 	self->selectedActivityIndex = nil;
@@ -67,11 +65,10 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.searchBar setTintColor:[UIColor blackColor]];
-
 	[self.spinner stopAnimating];
 
-	InitializeHistoricalActivityList();
-	InitializeBikeProfileList();
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate initializeHistoricalActivityList];
 
 	[self buildDictionary];
 	[self.historyTableView reloadData];
@@ -241,6 +238,7 @@
 	NSString* allTagsStr = @"";
 
 	// If a bike was specified then add that tag to the list of tags.
+	InitializeBikeProfileList();
 	GetActivityBikeProfile([activityId UTF8String], &bikeId);
 	if (bikeId > 0)
 	{
@@ -319,7 +317,9 @@
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId([activityIndex intValue])];
 
 		DeleteActivity([activityId UTF8String]);
-		InitializeHistoricalActivityList();
+
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate initializeHistoricalActivityList];
 
 		[self buildDictionary];
 		[self.historyTableView reloadData];
@@ -408,9 +408,14 @@
 	self->searching = true;
 
 	if ([searchText length] == 0)
-		InitializeHistoricalActivityList();
+	{
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate initializeHistoricalActivityList];
+	}
 	else
+	{
 		SearchForTags([searchText UTF8String]);
+	}
 
 	[self buildDictionary];
 	[self.historyTableView reloadData];

@@ -6,8 +6,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "LapTimesViewController.h"
-#import "ActivityMgr.h"
 #import "ActivityAttribute.h"
+#import "AppDelegate.h"
 #import "StringUtils.h"
 
 #define TITLE             NSLocalizedString(@"Lap Times", nil)
@@ -93,25 +93,24 @@
 - (void)setActivityId:(NSString*)newId
 {
 	self->activityId = newId;
-
-	size_t activityIndex = ConvertActivityIdToActivityIndex([newId UTF8String]);
 	self->lapTimes = [[NSMutableArray alloc] init];
-	[self addLapTimes:activityIndex];
-
+	[self addLapTimes];
 	[self.lapTimesTableView reloadData];
 }
 
-- (void)addLapTimes:(size_t)activityIndex
+- (void)addLapTimes
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	for (uint16_t lapNum = 1; lapNum < 1000; ++lapNum)
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%s%d", ACTIVITY_ATTRIBUTE_LAP_TIME, lapNum];
-		ActivityAttributeType value = QueryHistoricalActivityAttribute(activityIndex, [attributeName UTF8String]);
+		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 		if (value.valid)
 		{
 			NSString* label = [[NSString alloc] initWithFormat:@"%@ %d", TEXT_LAP, lapNum];
 			NSString* detail = [StringUtils formatActivityViewType:value];
-			
+
 			LapTime* arrayItem = [[LapTime alloc] initWithValues:label :detail];
 			if (arrayItem)
 			{

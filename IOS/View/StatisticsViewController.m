@@ -63,7 +63,6 @@
 
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-
 	[self.spinner stopAnimating];
 
 	InitializeHistoricalActivityList();
@@ -77,7 +76,6 @@
 {
 	[super viewDidAppear:animated];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-
 	[self.spinner stopAnimating];
 }
 

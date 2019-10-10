@@ -106,7 +106,6 @@
 		27B7CD9D19BFD91C000383E3 /* MapOverviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD6919BFD91C000383E3 /* MapOverviewViewController.m */; };
 		27B7CD9E19BFD91C000383E3 /* MappedActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD6B19BFD91C000383E3 /* MappedActivityViewController.m */; };
 		27B7CD9F19BFD91C000383E3 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD6D19BFD91C000383E3 /* MapViewController.m */; };
-		27B7CDA119BFD91C000383E3 /* OverlayListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD7119BFD91C000383E3 /* OverlayListViewController.m */; };
 		27B7CDA219BFD91C000383E3 /* Pin.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD7319BFD91C000383E3 /* Pin.m */; };
 		27B7CDA319BFD91C000383E3 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD7519BFD91C000383E3 /* ProfileViewController.m */; };
 		27B7CDA419BFD91C000383E3 /* SensorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD7819BFD91C000383E3 /* SensorsViewController.m */; };
@@ -602,8 +601,6 @@
 		27B7CD6B19BFD91C000383E3 /* MappedActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MappedActivityViewController.m; path = IOS/View/MappedActivityViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD6C19BFD91C000383E3 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapViewController.h; path = IOS/View/MapViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD6D19BFD91C000383E3 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MapViewController.m; path = IOS/View/MapViewController.m; sourceTree = SOURCE_ROOT; };
-		27B7CD7019BFD91C000383E3 /* OverlayListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OverlayListViewController.h; path = IOS/View/OverlayListViewController.h; sourceTree = SOURCE_ROOT; };
-		27B7CD7119BFD91C000383E3 /* OverlayListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OverlayListViewController.m; path = IOS/View/OverlayListViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD7219BFD91C000383E3 /* Pin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pin.h; path = IOS/View/Pin.h; sourceTree = SOURCE_ROOT; };
 		27B7CD7319BFD91C000383E3 /* Pin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Pin.m; path = IOS/View/Pin.m; sourceTree = SOURCE_ROOT; };
 		27B7CD7419BFD91C000383E3 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileViewController.h; path = IOS/View/ProfileViewController.h; sourceTree = SOURCE_ROOT; };
@@ -913,8 +910,6 @@
 				27B7CD6B19BFD91C000383E3 /* MappedActivityViewController.m */,
 				27B7CD6C19BFD91C000383E3 /* MapViewController.h */,
 				27B7CD6D19BFD91C000383E3 /* MapViewController.m */,
-				27B7CD7019BFD91C000383E3 /* OverlayListViewController.h */,
-				27B7CD7119BFD91C000383E3 /* OverlayListViewController.m */,
 				27B7CD7219BFD91C000383E3 /* Pin.h */,
 				27B7CD7319BFD91C000383E3 /* Pin.m */,
 				27B7CD7419BFD91C000383E3 /* ProfileViewController.h */,
@@ -1692,7 +1687,6 @@
 				27C0846019BFD063007CE934 /* SquatAnalyzer.cpp in Sources */,
 				27B7CD3C19BFD903000383E3 /* AboutViewController.m in Sources */,
 				27C0845719BFD063007CE934 /* LiftingActivity.cpp in Sources */,
-				27B7CDA119BFD91C000383E3 /* OverlayListViewController.m in Sources */,
 				27B7CDD619BFD979000383E3 /* RepititionOverlay.m in Sources */,
 				2797F19219BFE48E008F8672 /* TcxFileWriter.cpp in Sources */,
 				2797F19319BFE48E008F8672 /* TextFileReader.cpp in Sources */,

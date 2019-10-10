@@ -137,7 +137,8 @@
 	[self.mapView setShowsUserLocation:FALSE];
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
-	size_t numHistoricalActivities = GetNumHistoricalActivities();
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
 	if (numHistoricalActivities > 0)
 	{
 		CLLocationDegrees maxLat = -90;
@@ -148,8 +149,8 @@
 		size_t numPins = 0;
 		for (size_t index = 0; index < numHistoricalActivities; ++index)
 		{
-			ActivityAttributeType lat = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE);
-			ActivityAttributeType lon = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE);
+			ActivityAttributeType lat = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityIndex:index];
+			ActivityAttributeType lon = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE forActivityIndex:index];
 
 			if (lat.valid && lon.valid)
 			{
@@ -191,8 +192,7 @@
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	size_t numHistoricalActivities = GetNumHistoricalActivities();
+	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
 	if (numHistoricalActivities > 0)
 	{
 		CLLocationDegrees maxLat = -90;
@@ -206,8 +206,8 @@
 			NSString* currentActivityType = [appDelegate getHistoricalActivityType:index];
 			if ([currentActivityType isEqualToString:activityType])
 			{
-				ActivityAttributeType lat = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE);
-				ActivityAttributeType lon = QueryHistoricalActivityAttribute(index, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE);
+				ActivityAttributeType lat = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityIndex:index];
+				ActivityAttributeType lon = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE forActivityIndex:index];
 
 				if (lat.valid && lon.valid)
 				{

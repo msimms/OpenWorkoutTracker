@@ -227,11 +227,11 @@ typedef enum ExportFileTypeButtons
 		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
 		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
 
-		self->hasGpsData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE).valid;
-		self->hasAccelerometerData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_X).valid;
-		self->hasHeartRateData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_MAX_HEART_RATE).valid;
-		self->hasCadenceData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_MAX_CADENCE).valid;
-		self->hasPowerData = QueryHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_MAX_POWER).valid;
+		self->hasGpsData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityIndex:self->activityIndex].valid;
+		self->hasAccelerometerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityIndex:self->activityIndex].valid;
+		self->hasHeartRateData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_HEART_RATE forActivityIndex:self->activityIndex].valid;
+		self->hasCadenceData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_CADENCE forActivityIndex:self->activityIndex].valid;
+		self->hasPowerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_POWER forActivityIndex:self->activityIndex].valid;
 		
 		self->chartTitles = [LineFactory getLineNames:self->hasGpsData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
 		
@@ -267,7 +267,7 @@ typedef enum ExportFileTypeButtons
 		NSArray* tempAttrNames = [appDelegate getHistoricalActivityAttributes:self->activityIndex];
 		for (NSString* attrName in tempAttrNames)
 		{
-			ActivityAttributeType attr = QueryHistoricalActivityAttribute(self->activityIndex, [attrName UTF8String]);
+			ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attrName UTF8String] forActivityIndex:self->activityIndex];
 			if (attr.valid)
 			{
 				if ([self isRecordName:attrName])
@@ -324,6 +324,7 @@ typedef enum ExportFileTypeButtons
 
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* segueId = [segue identifier];
 
 	if ([segueId isEqualToString:@SEGUE_TO_TAG_VIEW])
@@ -355,7 +356,7 @@ typedef enum ExportFileTypeButtons
 		{
 			if (self->mapMode == MAP_OVERVIEW_SEGMENT_VIEW)
 			{
-				ActivityAttributeType value = QueryHistoricalActivityAttribute(self->activityIndex, [self->selectedRowStr UTF8String]);
+				ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[self->selectedRowStr UTF8String] forActivityIndex:self->activityIndex];
 				[mapVC setSegment:value withSegmentName:self->selectedRowStr];
 			}
 			[mapVC setActivityId:self->activityId];
@@ -614,9 +615,7 @@ typedef enum ExportFileTypeButtons
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate serverDeleteActivityAsync:self->activityId];
-
-		DeleteActivity([self->activityId UTF8String]);
-		InitializeHistoricalActivityList();
+		[appDelegate deleteActivity:self->activityId];
 		[self.navigationController popViewControllerAnimated:YES];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -639,59 +638,56 @@ typedef enum ExportFileTypeButtons
 		if ([self showCloudSheet] == FALSE)
 		{
 			[self showFileFormatSheet];
-		}			
+		}
 	}
 }
 
 - (IBAction)onEdit:(id)sender
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_EDIT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_1 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->startTime + 1) * 1000;
-		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		InitializeHistoricalActivityList();		
+		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
 		[self redraw];
 		[self.summaryTableView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_5 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->startTime + 5) * 1000;
-		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		InitializeHistoricalActivityList();		
+		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
 		[self redraw];
 		[self.summaryTableView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_30 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->startTime + 30) * 1000;
-		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		InitializeHistoricalActivityList();		
+		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
 		[self redraw];
 		[self.summaryTableView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_SECOND_1 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->endTime - 1) * 1000;
-		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		InitializeHistoricalActivityList();		
+		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
 		[self redraw];
 		[self.summaryTableView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_SECOND_5 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->endTime - 5) * 1000;
-		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		InitializeHistoricalActivityList();		
+		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
 		[self redraw];
 		[self.summaryTableView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_SECOND_30 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->endTime - 30) * 1000;
-		TrimActivityData([self->activityId UTF8String], newTime, TRUE);
-		InitializeHistoricalActivityList();		
+		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
 		[self redraw];
 		[self.summaryTableView reloadData];
 	}]];
-	ActivityAttributeType repsValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS);
+
+	ActivityAttributeType repsValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_REPS forActivityIndex:activityIndex];
 	if (repsValue.valid)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_FIX_REPS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -718,6 +714,7 @@ typedef enum ExportFileTypeButtons
 	}
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
+
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -868,6 +865,8 @@ typedef enum ExportFileTypeButtons
 {
 	static NSString* CellIdentifier = @"Cell";
 
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil)
 	{
@@ -929,7 +928,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_ATTRIBUTES:
 			{
 				NSString* attributeName = [self->attributeNames objectAtIndex:row];
-				ActivityAttributeType attr = QueryHistoricalActivityAttribute(self->activityIndex, [attributeName UTF8String]);
+				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityIndex:self->activityIndex];
 				if (attr.valid)
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
@@ -951,7 +950,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_SUPERLATIVES:
 			{
 				NSString* attributeName = [self->recordNames objectAtIndex:row];
-				ActivityAttributeType attr = QueryHistoricalActivityAttribute(self->activityIndex, [attributeName UTF8String]);
+				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityIndex:self->activityIndex];
 				if (attr.valid)
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];

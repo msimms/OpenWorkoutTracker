@@ -2,7 +2,6 @@
 //  Copyright © 2019 Michael J Simms Software. All rights reserved.
 
 #import "WatchIntervalsViewController.h"
-#import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"

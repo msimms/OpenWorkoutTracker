@@ -11,7 +11,6 @@
 #import "AppStrings.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
-#import "OverlayListViewController.h"
 #import "Pin.h"
 #import "Segues.h"
 #import "StringUtils.h"
