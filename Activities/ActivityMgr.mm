@@ -37,9 +37,10 @@ extern "C" {
 	Database*        g_pDatabase = NULL;
 	bool             g_autoStartEnabled = false;
 
-	ActivitySummaryList          g_historicalActivityList;
-	std::vector<Bike>            g_bikes;
-	std::vector<IntervalWorkout> g_intervalWorkouts;
+	ActivitySummaryList           g_historicalActivityList;
+	std::map<std::string, size_t> g_activityIdMap; // maps activity IDs to activity indexes
+	std::vector<Bike>             g_bikes;
+	std::vector<IntervalWorkout>  g_intervalWorkouts;
 
 	//
 	// Functions for managing the database.
@@ -703,14 +704,10 @@ extern "C" {
 		{
 			return 0;
 		}
-
-		for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
+		
+		if (g_activityIdMap.count(activityId) > 0)
 		{
-			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
-			if (summary.activityId.compare(activityId) == 0)
-			{
-				return activityIndex;
-			}
+			return g_activityIdMap.at(activityId);
 		}
 		return 0;
 	}
@@ -726,6 +723,13 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			g_pDatabase->RetrieveActivities(g_historicalActivityList);
+
+			// Build the activity id to index hash map.
+			for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
+			{
+				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+				g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex));
+			}
 		}
 	}
 
@@ -1021,6 +1025,7 @@ extern "C" {
 		}
 
 		g_historicalActivityList.clear();
+		g_activityIdMap.clear();
 	}
 
 	void FreeHistoricalActivityObject(size_t activityIndex)
