@@ -11,13 +11,18 @@
 
 @interface HealthManager : NSObject
 {
-	NSMutableArray* heartRates;
-	NSDate* firstHeartRateSample;
-	NSDate* lastHeartRateSample;
+	NSMutableArray* workouts; // summaries of workouts stored in the health store
+	NSMutableArray* heartRates; // we write average heart rates to the health store; this stores the intermediate values
+	NSDate* firstHeartRateSample; // timestamp associated with the above array
+	NSDate* lastHeartRateSample; // timestamp associated with the above array
 }
 
 - (void)start;
 
+// methods for managing workouts.
+
+- (NSInteger)getNumWorkouts;
+- (void)clearWorkoutsList;
 - (void)readRunningWorkoutsFromHealthStore;
 - (void)readCyclingWorkoutsFromHealthStore;
 

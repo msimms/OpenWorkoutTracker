@@ -138,7 +138,7 @@
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
+	NSInteger numHistoricalActivities = [appDelegate getNumHistoricalActivities];
 	if (numHistoricalActivities > 0)
 	{
 		CLLocationDegrees maxLat = -90;
@@ -147,7 +147,7 @@
 		CLLocationDegrees minLon = 180;
 
 		size_t numPins = 0;
-		for (size_t index = 0; index < numHistoricalActivities; ++index)
+		for (NSInteger index = 0; index < numHistoricalActivities; ++index)
 		{
 			ActivityAttributeType lat = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityIndex:index];
 			ActivityAttributeType lon = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE forActivityIndex:index];
@@ -192,7 +192,7 @@
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
+	NSInteger numHistoricalActivities = [appDelegate getNumHistoricalActivities];
 	if (numHistoricalActivities > 0)
 	{
 		CLLocationDegrees maxLat = -90;
@@ -200,8 +200,8 @@
 		CLLocationDegrees minLat = 90;
 		CLLocationDegrees minLon = 180;
 
-		size_t numPins = 0;
-		for (size_t index = 0; index < numHistoricalActivities; ++index)
+		NSInteger numPins = 0;
+		for (NSInteger index = 0; index < numHistoricalActivities; ++index)
 		{
 			NSString* currentActivityType = [appDelegate getHistoricalActivityType:index];
 			if ([currentActivityType isEqualToString:activityType])
@@ -251,9 +251,10 @@
 	[self.mapView setShowsUserLocation:FALSE];
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
-	size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
-	if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_GPS, NULL, NULL))
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_GPS forActivityId:self->activityId withCallback:NULL withContext:NULL])
 	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
 		if (numPoints > 0)
 		{
@@ -361,12 +362,13 @@
 {
 	[self.mapView setShowsUserLocation:FALSE];
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
-	
-	size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
-	if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_GPS, NULL, NULL))
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_GPS forActivityId:self->activityId withCallback:NULL withContext:NULL])
 	{
 		const size_t SCALING_FACTOR = 3;
 
+		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex) / SCALING_FACTOR;
 		if (numPoints > 0)
 		{

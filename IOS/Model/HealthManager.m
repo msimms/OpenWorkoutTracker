@@ -68,7 +68,7 @@
 	}
 }
 
-#pragma mark - HealthKit Permissions
+#pragma mark HealthKit permissions
 
 // Returns the types of data that Fit wishes to write to HealthKit.
 - (NSSet*)dataTypesToWrite
@@ -93,16 +93,17 @@
 	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, workoutType, nil];
 }
 
-#pragma mark methods for reading HealthKit Data
+#pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc.
 
 - (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType predicate:(NSPredicate*)predicate completion:(void (^)(HKQuantity*, NSError*))completion
 {
 	NSSortDescriptor* timeSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:NO];
-	
+
 	// Since we are interested in retrieving the user's latest sample, we sort the samples in descending
 	// order, and set the limit to 1. We are not filtering the data, and so the predicate is set to nil.
 	HKSampleQuery* query = [[HKSampleQuery alloc] initWithSampleType:quantityType predicate:nil
-															   limit:1 sortDescriptors:@[timeSortDescriptor]
+															   limit:1
+													 sortDescriptors:@[timeSortDescriptor]
 													  resultsHandler:^(HKSampleQuery* query, NSArray* results, NSError* error)
 	{
 		if (!results)
@@ -168,7 +169,6 @@
 		{
 			HKUnit* weightUnit = [HKUnit poundUnit];
 			double usersWeight = [mostRecentQuantity doubleValueForUnit:weightUnit];
-
 			[UserProfile setWeightInLbs:usersWeight];
 
 			ActivityAttributeType tempWeight = InitializeActivityAttribute(TYPE_DOUBLE, MEASURE_WEIGHT, UNIT_SYSTEM_US_CUSTOMARY);
@@ -182,6 +182,18 @@
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:weightData];
 		}
 	 }];
+}
+
+#pragma mark methods for managing workouts
+
+- (NSInteger)getNumWorkouts
+{
+	return [self->workouts count];
+}
+
+- (void)clearWorkoutsList
+{
+	[self->workouts removeAllObjects];
 }
 
 - (void)readWorkoutsFromHealthStore:(HKWorkoutActivityType)activityType
@@ -198,7 +210,8 @@
 		{
 			for (HKQuantitySample* sample in samples)
 			{
-//				HKWorkout* workout = (HKWorkout*)sample;
+				HKWorkout* workout = (HKWorkout*)sample;
+				[self->workouts addObject:workout];
 			}
 		}
 	}];

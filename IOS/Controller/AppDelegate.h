@@ -20,6 +20,7 @@
 #import "HealthManager.h"
 #import "LeDiscovery.h"
 #import "SensorMgr.h"
+#import "SensorType.h"
 #import "WiFiDiscovery.h"
 
 #define EXPORT_TO_EMAIL_STR "Email"
@@ -119,14 +120,17 @@
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
+- (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName;
 
 // methods for loading and editing historical activities
 
-- (size_t)initializeHistoricalActivityList;
-- (size_t)getNumHistoricalActivities;
+- (NSInteger)initializeHistoricalActivityList;
+- (NSInteger)getNumHistoricalActivities;
+- (void)createHistoricalActivityObject:(NSString*)activityId;
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
+- (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context;
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart;
 - (void)deleteActivity:(NSString*)activityId;
 

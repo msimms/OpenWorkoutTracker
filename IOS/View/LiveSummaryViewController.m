@@ -174,9 +174,10 @@
 	{
 		case 0:
 			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 				NSString* attrName = [self->attributeNames objectAtIndex:row];
-				ActivityAttributeType attr = QueryLiveActivityAttribute([attrName UTF8String]);
-				
+				ActivityAttributeType attr = [appDelegate queryLiveActivityAttribute:attrName];
+
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
 				if (unitsStr != nil)
 					mainStr = [NSString stringWithFormat:@"%@ (%@)", attrName, unitsStr];

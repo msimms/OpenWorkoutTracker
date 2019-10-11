@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "AccelerometerLine.h"
-#import "ActivityMgr.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
 #import "ChartPoint.h"
@@ -63,14 +62,10 @@ void AccelDataCallback(size_t activityIndex, void* context)
 	{
 		g_ptrToAccelChart = self;
 
-		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate createHistoricalActivityObject:self->activityId];
 
-		FreeHistoricalActivityObject(activityIndex);
-		FreeHistoricalActivitySensorData(activityIndex);
-
-		CreateHistoricalActivityObject(activityIndex);
-
-		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_ACCELEROMETER, AccelDataCallback, NULL))
+		if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_ACCELEROMETER forActivityId:self->activityId withCallback:AccelDataCallback withContext:NULL])
 		{
 			[super draw];
 		}

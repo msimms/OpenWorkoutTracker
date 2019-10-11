@@ -931,34 +931,58 @@ void startSensorCallback(SensorType type, void* context)
 	ReCreateOrphanedActivity(activityIndex);
 }
 
+- (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
+{
+	return QueryLiveActivityAttribute([attributeName UTF8String]);
+}
+
 #pragma mark methods for loading and editing historical activities
 
-- (size_t)initializeHistoricalActivityList
+- (NSInteger)initializeHistoricalActivityList
 {
 	// Read activities from our database.
 	InitializeHistoricalActivityList();
-	size_t numHistoricalActivities = GetNumHistoricalActivities();
 
 	// Read activities from HealthKit.
 	if (self->healthMgr)
 	{
+		[self->healthMgr clearWorkoutsList];
 		[self->healthMgr readRunningWorkoutsFromHealthStore];
 		[self->healthMgr readCyclingWorkoutsFromHealthStore];
 	}
-	return numHistoricalActivities;
+	return [self getNumHistoricalActivities];
 }
 
-- (size_t)getNumHistoricalActivities
+- (NSInteger)getNumHistoricalActivities
 {
-	return GetNumHistoricalActivities();
+	// The number of activities from out database.
+	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
+
+	// Add in the activities from HealthKit.
+	if (self->healthMgr)
+	{
+	//	numActivities += [self->healthMgr getNumWorkouts];
+	}
+	return numActivities;
+}
+
+- (void)createHistoricalActivityObject:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	FreeHistoricalActivityObject(activityIndex);
+	FreeHistoricalActivitySensorData(activityIndex);
+	CreateHistoricalActivityObject(activityIndex);
 }
 
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex
 {
 	BOOL result = FALSE;
 
-	LoadHistoricalActivitySummaryData(activityIndex);
+	FreeHistoricalActivityObject(activityIndex);
+	FreeHistoricalActivitySensorData(activityIndex);
 	CreateHistoricalActivityObject(activityIndex);
+
+	LoadHistoricalActivitySummaryData(activityIndex);
 
 	if (LoadAllHistoricalActivitySensorData(activityIndex))
 	{
@@ -991,6 +1015,12 @@ void startSensorCallback(SensorType type, void* context)
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
+}
+
+- (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return LoadHistoricalActivitySensorData(activityIndex, sensorType, callback, context);
 }
 
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart

@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "CadenceLine.h"
-#import "ActivityMgr.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
 #import "ChartPoint.h"
@@ -41,13 +40,10 @@ void CadenceDataCallback(size_t activityIndex, void* context)
 	self->points = [[NSMutableArray alloc] init];
 	if (self->points)
 	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate createHistoricalActivityObject:self->activityId];
 
-		FreeHistoricalActivityObject(activityIndex);
-		FreeHistoricalActivitySensorData(activityIndex);
-
-		CreateHistoricalActivityObject(activityIndex);
-		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_CADENCE, CadenceDataCallback, (__bridge void*)self))
+		if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_ACCELEROMETER forActivityId:self->activityId withCallback:CadenceDataCallback withContext:(__bridge void*)self])
 		{
 			[super draw];
 		}
