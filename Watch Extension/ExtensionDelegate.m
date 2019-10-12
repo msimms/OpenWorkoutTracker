@@ -26,7 +26,6 @@
 	Initialize([dbFileName UTF8String]);
 
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-
 	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 
@@ -39,6 +38,7 @@
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
+	self->receivingLocations = FALSE;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
@@ -408,21 +408,23 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)locationUpdated:(NSNotification*)notification
 {
-	NSDictionary* locationData = [notification object];
-
-	NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
-	NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-	NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
-
-	NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
-	NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
-
-	NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
-
-	NSString* activityType = [self getCurrentActivityType];
+	self->receivingLocations = TRUE;
 
 	if (IsActivityInProgress())
 	{
+		NSDictionary* locationData = [notification object];
+
+		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
+		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
+		NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
+
+		NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
+		NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
+
+		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
+
+		NSString* activityType = [self getCurrentActivityType];
+
 		BOOL shouldProcessReading = TRUE;
 		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
 		

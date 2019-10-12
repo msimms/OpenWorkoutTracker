@@ -67,8 +67,6 @@
 		case kCLAuthorizationStatusDenied:
 			break;
 		case kCLAuthorizationStatusAuthorizedWhenInUse:
-			[self.locationManager requestAlwaysAuthorization];
-			break;
 		case kCLAuthorizationStatusAuthorizedAlways:
 			[self.locationManager startUpdatingLocation];
 #if !TARGET_OS_WATCH
@@ -106,6 +104,9 @@
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager*)manager
 {
+#if TARGET_OS_WATCH
+	[self.locationManager startUpdatingLocation];
+#endif
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager*)manager
@@ -148,8 +149,10 @@
 			[self.locationManager requestAlwaysAuthorization];
 			break;
 		case kCLAuthorizationStatusAuthorizedAlways:
+			[self.locationManager startUpdatingLocation];
 			break;
 		case kCLAuthorizationStatusAuthorizedWhenInUse:
+			[self.locationManager startUpdatingLocation];
 			break;
 		case kCLAuthorizationStatusNotDetermined:
 			[self.locationManager requestAlwaysAuthorization];

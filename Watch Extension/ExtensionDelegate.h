@@ -23,6 +23,7 @@
 	HealthManager*       healthMgr;
 
 	BOOL badGps;
+	BOOL receivingLocations; // TRUE if we have received at least one location
 }
 
 // watch sensor methods
