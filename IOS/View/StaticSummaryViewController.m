@@ -219,7 +219,7 @@ typedef enum ExportFileTypeButtons
 	[self.spinner stopAnimating];
 	
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if (appDelegate && [appDelegate loadHistoricalActivity:self->activityIndex])
+	if (appDelegate && [appDelegate loadHistoricalActivity:self->activityId])
 	{
 		self->attributeNames = [[NSMutableArray alloc] init];
 		self->recordNames = [[NSMutableArray alloc] init];

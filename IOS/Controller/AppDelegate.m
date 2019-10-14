@@ -974,7 +974,7 @@ void startSensorCallback(SensorType type, void* context)
 	CreateHistoricalActivityObject(activityIndex);
 }
 
-- (BOOL)loadHistoricalActivity:(NSInteger)activityIndex
+- (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex
 {
 	BOOL result = FALSE;
 
@@ -1004,6 +1004,12 @@ void startSensorCallback(SensorType type, void* context)
 		}
 	}
 	return result;
+}
+
+- (BOOL)loadHistoricalActivity:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return [self loadHistoricalActivityByIndex:activityIndex];
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex

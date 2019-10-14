@@ -249,7 +249,7 @@
 		// Add the "throw it away and start over" option
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-			[appDelegate loadHistoricalActivity:self->orphanedActivityIndex];
+			[appDelegate loadHistoricalActivityByIndex:self->orphanedActivityIndex];
 			[self createActivity:self->newActivityType];
 		}]];
 		[self presentViewController:alertController animated:YES completion:nil];
