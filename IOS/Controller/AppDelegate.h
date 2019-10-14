@@ -122,6 +122,20 @@
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName;
 
+// methods for creating and destroying the current activity.
+
+- (void)createActivity:(NSString*)activityType;
+- (void)reCreateOrphanedActivity:(size_t)activityIndex;
+- (void)destroyCurrentActivity;
+
+// methods for querying the status of the current activity.
+
+- (BOOL)isActivityCreated;
+- (BOOL)isActivityInProgress;
+- (BOOL)isActivityInProgressAndNotPaused;
+- (BOOL)isActivityOrphaned:(size_t*)activityIndex;
+- (BOOL)isActivityPaused;
+
 // methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList;
@@ -134,6 +148,7 @@
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context;
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart;
 - (void)deleteActivity:(NSString*)activityId;
+- (void)freeHistoricalActivityList;
 
 // hash methods
 
@@ -184,6 +199,11 @@
 
 - (NSString*)getCurrentActivityType;
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
+
+// methods for managing tags
+
+- (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId;
+- (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId;
 
 // utility methods
 

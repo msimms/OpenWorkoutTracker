@@ -313,12 +313,12 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 		NSNumber* activityIndex = [self getActivityIndex:indexPath];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId([activityIndex intValue])];
 
-		DeleteActivity([activityId UTF8String]);
-
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate deleteActivity:activityId];
 		[appDelegate initializeHistoricalActivityList];
 
 		[self buildDictionary];

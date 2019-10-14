@@ -936,6 +936,50 @@ void startSensorCallback(SensorType type, void* context)
 	return QueryLiveActivityAttribute([attributeName UTF8String]);
 }
 
+#pragma mark methods for creating and destroying the current activity.
+
+- (void)createActivity:(NSString*)activityType
+{
+	CreateActivity([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+}
+
+- (void)reCreateOrphanedActivity:(size_t)activityIndex
+{
+	ReCreateOrphanedActivity(activityIndex);
+}
+
+- (void)destroyCurrentActivity
+{
+	DestroyCurrentActivity();
+}
+
+#pragma mark methods for querying the status of the current activity
+
+- (BOOL)isActivityCreated
+{
+	return IsActivityCreated();
+}
+
+- (BOOL)isActivityInProgress
+{
+	return IsActivityInProgress();
+}
+
+- (BOOL)isActivityInProgressAndNotPaused
+{
+	return IsActivityInProgressAndNotPaused();
+}
+
+- (BOOL)isActivityOrphaned:(size_t*)activityIndex
+{
+	return IsActivityOrphaned(activityIndex);
+}
+
+- (BOOL)isActivityPaused
+{
+	return IsActivityPaused();
+}
+
 #pragma mark methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList
@@ -1043,6 +1087,11 @@ void startSensorCallback(SensorType type, void* context)
 {
 	DeleteActivity([activityId UTF8String]);
 	InitializeHistoricalActivityList();
+}
+
+- (void)freeHistoricalActivityList
+{
+	FreeHistoricalActivityList();
 }
 
 #pragma mark hash methods
@@ -1423,6 +1472,18 @@ void attributeNameCallback(const char* name, void* context)
 		free((void*)activityType);
 	}
 	return result;
+}
+
+#pragma mark methods for managing tags
+
+- (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId
+{
+	return StoreTag([activityId UTF8String], [tag UTF8String]);
+}
+
+- (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId
+{
+	return DeleteTag([activityId UTF8String], [tag UTF8String]);
 }
 
 #pragma mark utility methods

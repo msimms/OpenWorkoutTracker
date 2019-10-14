@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "ViewController.h"
-#import "ActivityMgr.h"
 #import "ActivityPreferences.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
@@ -81,8 +80,9 @@
 	[super viewWillAppear:animated];
 	self.navigationController.navigationBarHidden = TRUE;
 	
-	FreeHistoricalActivityList();
-	DestroyCurrentActivity();
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate freeHistoricalActivityList];
+	[appDelegate destroyCurrentActivity];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -106,10 +106,7 @@
 	if ([[segue identifier] isEqualToString:@SEGUE_TO_MAP_OVERVIEW])
 	{
 		MapOverviewViewController* mapVC = (MapOverviewViewController*)[segue destinationViewController];
-		if (mapVC)
-		{
-			[mapVC setMode:MAP_OVERVIEW_HEAT];
-		}
+		[mapVC setMode:MAP_OVERVIEW_HEAT];
 	}
 }
 
@@ -210,11 +207,12 @@
 	const char* pActivityType = [activityType cStringUsingEncoding:NSASCIIStringEncoding];
 	if (pActivityType)
 	{
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 		// Create the data structures and database entries needed to start an activity.
-		CreateActivity(pActivityType);
+		[appDelegate createActivity:activityType];
 
 		// Initialize any sensors that we are going to use.
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate startSensors];
 
 		// Switch to the activity view.
@@ -224,15 +222,14 @@
 
 - (void)startActivity:(NSString*)activityType
 {
-	bool isOrphaned = IsActivityOrphaned(&self->orphanedActivityIndex);
-	bool isInProgress = IsActivityInProgress();
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	bool isOrphaned = [appDelegate isActivityOrphaned:&self->orphanedActivityIndex];
+	bool isInProgress = [appDelegate isActivityInProgress];
 
 	if (isOrphaned || isInProgress)
 	{
-		char* orphanedType = GetHistoricalActivityType(self->orphanedActivityIndex);
-		self->orphanedActivityType = [NSString stringWithFormat:@"%s", orphanedType];
-		free((void*)orphanedType);
-
+		self->orphanedActivityType = [appDelegate getHistoricalActivityType:self->orphanedActivityIndex];
 		self->newActivityType = activityType;
 
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:TITLE_IN_PROGRESS
@@ -241,22 +238,20 @@
 
 		// Add the "re-connect to the orphaned activity" option.
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 			[appDelegate recreateOrphanedActivity:self->orphanedActivityIndex];
 			[self showActivityView:self->orphanedActivityType];
 		}]];
 
 		// Add the "throw it away and start over" option
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 			[appDelegate loadHistoricalActivityByIndex:self->orphanedActivityIndex];
 			[self createActivity:self->newActivityType];
 		}]];
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
-	else if (IsActivityCreated())
+	else if ([appDelegate isActivityCreated])
 	{
-		DestroyCurrentActivity();
+		[appDelegate destroyCurrentActivity];
 		[self createActivity:activityType];
 	}
 	else

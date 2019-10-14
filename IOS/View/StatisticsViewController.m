@@ -122,7 +122,7 @@
 		return;
 	}
 
-	size_t numHistoricalActivities = GetNumHistoricalActivities();
+	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
 	if (numHistoricalActivities > 0)
 	{
 		self->attributeDictionary = [[NSMutableDictionary alloc] init];

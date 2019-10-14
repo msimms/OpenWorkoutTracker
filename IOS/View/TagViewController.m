@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "TagViewController.h"
-#import "ActivityMgr.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
 
@@ -182,13 +181,13 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		NSString* tag = [self->tags objectAtIndex:indexPath.row];
-		if (DeleteTag([self->activityId UTF8String], [tag UTF8String]))
+
+		if ([appDelegate deleteTag:tag forActivityId:self->activityId])
 		{
 			[self->tags removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 			[appDelegate serverDeleteTagAsync:tag forActivity:self->activityId];
 		}
 	}
@@ -223,10 +222,11 @@
 
 - (void)textFieldDidEndEditing:(UITextField*)textField
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* tag = [textField text];
-	if (StoreTag([self->activityId UTF8String], [tag UTF8String]))
+
+	if ([appDelegate storeTag:tag forActivityId:self->activityId])
 	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate serverCreateTagAsync:tag forActivity:self->activityId];
 	}
 }
