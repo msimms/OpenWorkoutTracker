@@ -87,7 +87,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
 	self.navigationController.navigationBarHidden = FALSE;
 	[super viewWillDisappear:animated];
 }
