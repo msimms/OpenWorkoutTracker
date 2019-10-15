@@ -26,11 +26,17 @@
 - (void)readRunningWorkoutsFromHealthStore;
 - (void)readCyclingWorkoutsFromHealthStore;
 
+// methods for writing HealthKit data.
+
 - (void)saveHeightIntoHealthStore:(double)heightInInches;
 - (void)saveWeightIntoHealthStore:(double)weightInPounds;
 - (void)saveHeartRateIntoHealthStore:(double)beats;
 - (void)saveRunningWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
 - (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
+
+// for getting heart rate updates from the watch
+
+- (void)subscribeToHeartRateUpdates;
 
 @property (nonatomic) HKHealthStore* healthStore;
 

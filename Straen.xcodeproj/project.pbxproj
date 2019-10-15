@@ -29,6 +29,8 @@
 		2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852919C8F69900FE0077 /* InfoPlist.strings */; };
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
 		27345D0A19EDEE4600059FFF /* LeScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* LeScale.m */; };
+		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
+		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
@@ -1849,6 +1851,7 @@
 				27DCF60822B71628009A23C2 /* ChinUpAnalyzer.h in Sources */,
 				27DCF60922B71628009A23C2 /* Cycling.cpp in Sources */,
 				27DCF60A22B71628009A23C2 /* Cycling.h in Sources */,
+				27417B452355EC84000DFE00 /* UserProfile.m in Sources */,
 				270547A222EE3B930071F3C2 /* WatchSessionManager.m in Sources */,
 				27DCF60B22B71628009A23C2 /* GForceAnalyzer.cpp in Sources */,
 				27DCF60C22B71628009A23C2 /* GForceAnalyzer.h in Sources */,
@@ -1871,6 +1874,7 @@
 				27DCF61922B71628009A23C2 /* PullUp.cpp in Sources */,
 				27DCF61A22B71628009A23C2 /* PullUp.h in Sources */,
 				27DCF61B22B71628009A23C2 /* PullUpAnalyzer.cpp in Sources */,
+				27417B372355EC24000DFE00 /* HealthManager.m in Sources */,
 				27DCF61C22B71628009A23C2 /* PullUpAnalyzer.h in Sources */,
 				27DCF61D22B71628009A23C2 /* PushUp.cpp in Sources */,
 				27DCF61E22B71628009A23C2 /* PushUp.h in Sources */,

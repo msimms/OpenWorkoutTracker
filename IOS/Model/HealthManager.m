@@ -8,7 +8,7 @@
 #import "HealthManager.h"
 #import "ActivityMgr.h"
 #import "ActivityType.h"
-#import "AppDelegate.h"
+#import "LeHeartRateMonitor.h"
 #import "LeScale.h"
 #import "Notifications.h"
 #import "UserProfile.h"
@@ -73,6 +73,11 @@
 // Returns the types of data that Fit wishes to write to HealthKit.
 - (NSSet*)dataTypesToWrite
 {
+#if TARGET_OS_WATCH
+	HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
+	HKQuantityType* activeEnergyBurnType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierActiveEnergyBurned];
+	return [NSSet setWithObjects: hrType, activeEnergyBurnType, nil];
+#else
 	HKQuantityType* heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	HKQuantityType* weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 	HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
@@ -80,22 +85,31 @@
 	HKQuantityType* runType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
 	HKQuantityType* activeEnergyBurnType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierActiveEnergyBurned];
 	return [NSSet setWithObjects: heightType, weightType, hrType, bikeType, runType, activeEnergyBurnType, nil];
+#endif
 }
 
 // Returns the types of data that Fit wishes to read from HealthKit.
 - (NSSet*)dataTypesToRead
 {
+#if TARGET_OS_WATCH
+	HKQuantityType* heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
+	HKQuantityType* weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+	HKCharacteristicType* birthdayType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierDateOfBirth];
+	HKCharacteristicType* biologicalSexType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierBiologicalSex];
+	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, nil];
+#else
 	HKQuantityType* heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	HKQuantityType* weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 	HKCharacteristicType* birthdayType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierDateOfBirth];
 	HKCharacteristicType* biologicalSexType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierBiologicalSex];
 	HKWorkoutType* workoutType = [HKObjectType workoutType];
 	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, workoutType, nil];
+#endif
 }
 
 #pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc.
 
-- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType predicate:(NSPredicate*)predicate completion:(void (^)(HKQuantity*, NSError*))completion
+- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType predicate:(NSPredicate*)predicate completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
 {
 	NSSortDescriptor* timeSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:NO];
 
@@ -110,9 +124,8 @@
 		{
 			if (completion)
 			{
-				completion(nil, error);
+				completion(nil, nil, error);
 			}
-
 			return;
 		}
 
@@ -121,7 +134,8 @@
 			// If quantity isn't in the database, return nil in the completion block.
 			HKQuantitySample* quantitySample = results.firstObject;
 			HKQuantity* quantity = quantitySample.quantity;
-			completion(quantity, error);
+			NSDate* startDate = quantitySample.startDate;
+			completion(quantity, startDate, error);
 		}
 	}];
 	
@@ -146,7 +160,7 @@
 	
 	[self mostRecentQuantitySampleOfType:heightType
 							   predicate:nil
-							  completion:^(HKQuantity* mostRecentQuantity, NSError* error)
+							  completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 	 {
 		 if (mostRecentQuantity)
 		 {
@@ -163,7 +177,7 @@
 
 	[self mostRecentQuantitySampleOfType:weightType
 							   predicate:nil
-							  completion:^(HKQuantity* mostRecentQuantity, NSError* error)
+							  completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 	 {
 		if (mostRecentQuantity)
 		{
@@ -229,7 +243,7 @@
 	[self readWorkoutsFromHealthStore:HKWorkoutActivityTypeCycling];
 }
 
-#pragma mark methods for writing HealthKit Data
+#pragma mark methods for writing HealthKit data
 
 - (void)saveHeightIntoHealthStore:(double)heightInInches
 {
@@ -314,6 +328,43 @@
 	HKQuantityType* calorieType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierActiveEnergyBurned];
 	HKQuantitySample* calorieSample = [HKQuantitySample quantitySampleWithType:calorieType quantity:calorieQuantity startDate:startDate endDate:endDate];
 	[self.healthStore saveObject:calorieSample withCompletion:^(BOOL success, NSError *error) {}];
+}
+
+#pragma mark for getting heart rate updates from the watch
+
+- (void)subscribeToHeartRateUpdates
+{
+	HKSampleType* sampleType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
+	HKObserverQuery* query = [[HKObserverQuery alloc] initWithSampleType:sampleType
+															   predicate:nil
+														   updateHandler:^(HKObserverQuery* query, HKObserverQueryCompletionHandler completionHandler, NSError* error)
+	{
+		 if (!error)
+		 {
+			 HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
+
+			 [self mostRecentQuantitySampleOfType:hrType
+										predicate:nil
+									   completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
+			  {
+				  if (mostRecentQuantity)
+				  {
+					  double hr = [mostRecentQuantity doubleValueForUnit:[HKUnit heartBeatsPerMinuteUnit]];
+					  time_t unixTime = (time_t) [startDate timeIntervalSince1970];
+					  NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
+													 [NSNumber numberWithLong:(long)hr], @KEY_NAME_HEART_RATE,
+													 [NSNumber numberWithLongLong:unixTime], @KEY_NAME_HRM_TIMESTAMP_MS,
+													nil];
+					  if (heartRateData)
+					  {
+						  [[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
+					  }
+				  }
+			  }];
+		 }
+	}];
+
+	[self.healthStore executeQuery:query];
 }
 
 #pragma mark notifications

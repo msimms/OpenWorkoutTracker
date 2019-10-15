@@ -36,12 +36,15 @@
 		[self->sensorMgr addSensor:locationController];
 	}
 
+	[self startHealthMgr];
+
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
 }
 
 - (void)applicationDidBecomeActive
@@ -147,6 +150,18 @@
 {
 	self->watchSession = [[WatchSessionManager alloc] init];
 	[self->watchSession startWatchSession];
+}
+
+#pragma mark healthkit methods
+
+- (void)startHealthMgr
+{
+	self->healthMgr = [[HealthManager alloc] init];
+	if (self->healthMgr)
+	{
+		[self->healthMgr start];
+		[self->healthMgr subscribeToHeartRateUpdates];
+	}
 }
 
 #pragma mark sensor methods
@@ -437,6 +452,10 @@ void startSensorCallback(SensorType type, void* context)
 			ProcessGpsReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
 		}
 	}
+}
+
+- (void)heartRateUpdated:(NSNotification*)notification
+{
 }
 
 #pragma mark accessor methods
