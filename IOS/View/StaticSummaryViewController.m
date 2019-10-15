@@ -224,7 +224,6 @@ typedef enum ExportFileTypeButtons
 		self->attributeNames = [[NSMutableArray alloc] init];
 		self->recordNames = [[NSMutableArray alloc] init];
 
-		self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
 		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
 
 		self->hasGpsData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityIndex:self->activityIndex].valid;
@@ -480,6 +479,7 @@ typedef enum ExportFileTypeButtons
 - (void)setActivityIndex:(NSInteger)index
 {
 	self->activityIndex = index;
+	self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
 
 	CreateHistoricalActivityObject(index);
 	LoadHistoricalActivitySummaryData(index);
