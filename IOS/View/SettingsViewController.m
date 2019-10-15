@@ -253,10 +253,6 @@ typedef enum SettingsRowsBroadcast
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSInteger numRows = NUM_SETTINGS_ROWS_BACKUP;
 
-	if (![appDelegate isFeaturePresent:FEATURE_ICLOUD])
-	{
-		numRows--;
-	}
 	if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
 	{
 		numRows--;
@@ -386,10 +382,6 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_BACKUP:
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				if (![appDelegate isFeaturePresent:FEATURE_ICLOUD])
-				{
-					row++;
-				}
 				if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
 				{
 					row++;

@@ -226,8 +226,6 @@
 			return TRUE;
 		case FEATURE_DROPBOX:
 			return FALSE;
-		case FEATURE_ICLOUD:
-			return FALSE;
 		case FEATURE_STRAVA:
 			return FALSE;
 		case FEATURE_RUNKEEPER:
@@ -244,8 +242,6 @@
 			return [self isFeaturePresent:feature] && [self isFeaturePresent:feature];
 		case FEATURE_DROPBOX:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_DROPBOX];
-		case FEATURE_ICLOUD:
-			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD];
 		case FEATURE_STRAVA:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_STRAVA];
 		case FEATURE_RUNKEEPER:

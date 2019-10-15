@@ -216,6 +216,7 @@ void startSensorCallback(SensorType type, void* context)
 		ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
 		ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
+
 		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 		NSString* activityHash = [self hashCurrentActivity];
@@ -304,8 +305,6 @@ void startSensorCallback(SensorType type, void* context)
 		case FEATURE_BROADCAST:
 			return TRUE;
 		case FEATURE_DROPBOX:
-			return FALSE;
-		case FEATURE_ICLOUD:
 			return FALSE;
 		case FEATURE_STRAVA:
 			return FALSE;
