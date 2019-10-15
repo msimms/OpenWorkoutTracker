@@ -37,6 +37,7 @@
 	}
 
 	[self startHealthMgr];
+	[self startWatchSession];
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
@@ -160,7 +161,7 @@
 	if (self->healthMgr)
 	{
 		[self->healthMgr start];
-		[self->healthMgr subscribeToHeartRateUpdates];
+//		[self->healthMgr subscribeToHeartRateUpdates];
 	}
 }
 

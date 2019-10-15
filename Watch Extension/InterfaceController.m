@@ -21,9 +21,6 @@
 
 - (void)awakeWithContext:(id)context
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-	[extDelegate startWatchSession];
-
 	[super awakeWithContext:context];
 }
 

@@ -39,7 +39,7 @@
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
 	[msgData setObject:@WATCH_MSG_REGISTER_DEVICE forKey:@WATCH_MSG_TYPE];
-	[msgData setObject:@WATCH_MSG_DEVICE_ID forKey:[extDelegate getDeviceId]];
+	[msgData setObject:[extDelegate getDeviceId] forKey:@WATCH_MSG_DEVICE_ID];
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
@@ -64,11 +64,14 @@
 
 - (void)sessionReachabilityDidChange:(nonnull WCSession*)session
 {
+	if (session.reachable)
+	{
+		[self sendRegisterDeviceMsg];
+	}
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
-//	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
 		// The phone app wants to sync preferences.
