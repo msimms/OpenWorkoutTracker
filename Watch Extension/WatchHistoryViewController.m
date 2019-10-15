@@ -60,7 +60,8 @@
 
 - (void)table:(WKInterfaceTable*)table didSelectRowAtIndex:(NSInteger)rowIndex
 {
-	NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:rowIndex], @"activityIndex", nil];
+	NSInteger activityIndex = self.historyTable.numberOfRows - rowIndex - 1;
+	NSDictionary* dictionary = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:activityIndex], @"activityIndex", nil];
 	[self pushControllerWithName:@"WatchDetailsViewController" context:dictionary];
 }
 
