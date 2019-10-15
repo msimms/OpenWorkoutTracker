@@ -469,7 +469,6 @@
 		{
 			[self playBeepSound];
 		}
-
 		[self setUIForStartedActivity];
 	}
 
@@ -526,11 +525,13 @@
 
 - (IBAction)onStartStop:(id)sender
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	SetAutoStart(false);
 
-	if (IsActivityInProgress())
+	if ([appDelegate isActivityInProgress])
 	{
-		if (IsActivityPaused())
+		if ([appDelegate isActivityPaused])
 		{
 			[self doPause];
 		}
@@ -552,7 +553,6 @@
 	}
 	else
 	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		NSString* activityType = [appDelegate getCurrentActivityType];
 
 		// If using a stationary bike, make sure a bike has been selected as we need to know the wheel size.

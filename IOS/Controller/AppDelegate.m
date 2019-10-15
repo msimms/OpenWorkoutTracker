@@ -1052,6 +1052,11 @@ void startSensorCallback(SensorType type, void* context)
 	return [self loadHistoricalActivityByIndex:activityIndex];
 }
 
+- (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
+{
+	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+}
+
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
 {
 	return QueryHistoricalActivityAttribute((size_t)activityIndex, attributeName);
@@ -1480,6 +1485,11 @@ void attributeNameCallback(const char* name, void* context)
 - (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId
 {
 	return DeleteTag([activityId UTF8String], [tag UTF8String]);
+}
+
+- (void)searchForTags:(NSString*)searchText
+{
+	SearchForTags([searchText UTF8String]);
 }
 
 #pragma mark utility methods

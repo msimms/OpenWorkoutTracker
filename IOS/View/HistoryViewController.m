@@ -113,7 +113,8 @@
 	self->historyDictionary = nil;
 	self->sortedKeys = nil;
 
-	size_t numHistoricalActivities = GetNumHistoricalActivities();
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
 	if (numHistoricalActivities > 0)
 	{
 		self->historyDictionary = [[NSMutableDictionary alloc] init];
@@ -123,7 +124,7 @@
 			{
 				time_t startTime = 0;
 				time_t endTime = 0;
-				GetHistoricalActivityStartAndEndTime(i, &startTime, &endTime);
+				[appDelegate getHistoricalActivityStartAndEndTime:(NSInteger)i withStartTime:&startTime withEndTime:&endTime];
 
 				struct tm* theTime = localtime(&startTime);
 				if (theTime)
@@ -179,9 +180,7 @@
 	self.spinner.hidden = FALSE;
 	self.spinner.center = self.view.center;
 	[self.spinner startAnimating];
-
 	[self performSegueWithIdentifier:@SEGUE_TO_ACTIVITY_SUMMARY sender:self];
-
 	[self.spinner stopAnimating];
 }
 
@@ -273,7 +272,7 @@
 	// Get the start time.
 	time_t startTime = 0;
 	time_t endTime = 0;
-	GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+	[appDelegate getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:&startTime withEndTime:&endTime];
 	NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
 	if ([allTagsStr length] > 0)
 	{
@@ -405,16 +404,16 @@
 
 - (void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)searchText
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self->searching = true;
 
 	if ([searchText length] == 0)
 	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate initializeHistoricalActivityList];
 	}
 	else
 	{
-		SearchForTags([searchText UTF8String]);
+		[appDelegate searchForTags:searchText];
 	}
 
 	[self buildDictionary];
@@ -449,8 +448,7 @@
 	{
 		MFMailComposeViewController* mailController = [[MFMailComposeViewController alloc] init];
 		mailController.navigationBar.barStyle = UIBarStyleBlack;
-		[mailController setEditing:TRUE];
-		
+		[mailController setEditing:TRUE];		
 		[mailController setSubject:subjectStr];
 		[mailController setMessageBody:bodyStr isHTML:YES];
 		[mailController setMailComposeDelegate:self];

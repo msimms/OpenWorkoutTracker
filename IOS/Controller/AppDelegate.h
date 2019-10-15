@@ -143,6 +143,7 @@
 - (void)createHistoricalActivityObject:(NSString*)activityId;
 - (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex;
 - (BOOL)loadHistoricalActivity:(NSString*)activityId;
+- (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context;
@@ -204,6 +205,7 @@
 
 - (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId;
 - (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId;
+- (void)searchForTags:(NSString*)searchText;
 
 // utility methods
 
