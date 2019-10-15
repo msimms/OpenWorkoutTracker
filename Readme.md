@@ -21,11 +21,17 @@ Why develop a workout tracker when there are so many closed-source options avail
 * Apple Watch Companion App (In Progress)
 * Android Version
 
-## Version History
-2019-06-13 Version 1.0.0 - Initial Release
+## Architecture
+
+The software architecture uses a model-view-controller philosophy.
+
+![Architecture Diagram](https://github.com/msimms/Straen/blob/master/Docs/Architecture.png?raw=true)
 
 ## Building
 Straen is built using Apple XCode. Every attempt is made to stay up-to-date with the latest version of XCode and the latest version of iOS. In theory, if you have cloned the source code and initialized the submodules, then you should be able to open the project in XCode, build, and deploy.
+
+## Version History
+2019-06-13 Version 1.0.0 - Initial Release
 
 ## Tech
 Straen uses three other source projects to work properly:
