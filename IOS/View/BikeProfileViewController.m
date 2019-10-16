@@ -305,7 +305,8 @@
 				[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				}]];
 				[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					DeleteBikeProfile(self->bikeId);
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					[appDelegate deleteBikeProfile:self->bikeId];
 					[self.navigationController popViewControllerAnimated:YES];
 				}]];
 				[self presentViewController:alertController animated:YES completion:nil];

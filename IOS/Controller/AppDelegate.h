@@ -139,6 +139,7 @@
 
 - (NSInteger)initializeHistoricalActivityList;
 - (NSInteger)getNumHistoricalActivities;
+- (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId;
 - (void)createHistoricalActivityObject:(NSString*)activityId;
 - (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex;
 - (BOOL)loadHistoricalActivity:(NSString*)activityId;
@@ -146,6 +147,7 @@
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context;
+- (BOOL)loadAllHistoricalActivitySensorData:(NSString*)activityId;
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart;
 - (void)deleteActivity:(NSString*)activityId;
 - (void)freeHistoricalActivityList;
@@ -154,6 +156,16 @@
 
 - (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
+
+// methods for managing bike profiles
+
+- (void)initializeBikeProfileList;
+- (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId;
+- (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm;
+- (void)setBikeForCurrentActivity:(NSString*)bikeName;
+- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId;
+- (uint64_t)getBikeIdFromName:(NSString*)bikeName;
+- (BOOL)deleteBikeProfile:(uint64_t)bikeId;
 
 // sound methods
 
@@ -172,13 +184,6 @@
 - (NSString*)exportActivity:(NSString*)activityId withFileFormat:(FileFormat)format to:selectedExportLocation;
 - (NSString*)exportActivitySummary:(NSString*)activityType;
 - (void)clearExportDir;
-
-// methods for managing bikes
-
-- (void)setBikeForCurrentActivity:(NSString*)bikeName;
-- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId;
-- (uint64_t)getBikeIdFromName:(NSString*)bikeName;
-- (BOOL)deleteBikeProfile:(uint64_t)bikeId;
 
 // methods for managing the activity name
 

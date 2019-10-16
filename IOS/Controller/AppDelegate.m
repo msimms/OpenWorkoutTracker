@@ -1006,6 +1006,12 @@ void startSensorCallback(SensorType type, void* context)
 	return numActivities;
 }
 
+- (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return GetNumHistoricalActivityLocationPoints(activityIndex);
+}
+
 - (void)createHistoricalActivityObject:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
@@ -1074,6 +1080,12 @@ void startSensorCallback(SensorType type, void* context)
 	return LoadHistoricalActivitySensorData(activityIndex, sensorType, callback, context);
 }
 
+- (BOOL)loadAllHistoricalActivitySensorData:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return LoadAllHistoricalActivitySensorData(activityIndex);
+}
+
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart
 {
 	if (TrimActivityData([activityId UTF8String], newTime, fromStart))
@@ -1118,6 +1130,57 @@ void startSensorCallback(SensorType type, void* context)
 		StoreHash([activityId UTF8String], [hashStr UTF8String]);
 	}
 	return hashStr;
+}
+
+#pragma mark methods for managing bike profiles
+
+- (void)initializeBikeProfileList
+{
+	return InitializeBikeProfileList();
+}
+
+- (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId
+{
+	return GetActivityBikeProfile([activityId UTF8String], bikeId);
+}
+
+- (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm
+{
+	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm);
+}
+
+- (void)setBikeForCurrentActivity:(NSString*)bikeName
+{
+	uint64_t bikeId = 0;
+	double weightKg = (double)0.0;
+	double wheelSize = (double)0.0;
+
+	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
+	{
+		SetActivityBikeProfile(GetCurrentActivityId(), bikeId);
+	}
+}
+
+- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId
+{
+	uint64_t bikeId = 0;
+	double weightKg = (double)0.0;
+	double wheelSize = (double)0.0;
+	
+	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
+	{
+		SetActivityBikeProfile([activityId UTF8String], bikeId);
+	}
+}
+
+- (uint64_t)getBikeIdFromName:(NSString*)bikeName
+{
+	return GetBikeIdFromName([bikeName UTF8String]);
+}
+
+- (BOOL)deleteBikeProfile:(uint64_t)bikeId
+{
+	return DeleteBikeProfile(bikeId);
 }
 
 #pragma mark sound methods
@@ -1277,42 +1340,6 @@ void startSensorCallback(SensorType type, void* context)
 		[services addObject:@EXPORT_TO_EMAIL_STR];
 	}
 	return services;
-}
-
-#pragma mark methods for managing bikes
-
-- (void)setBikeForCurrentActivity:(NSString*)bikeName
-{
-	uint64_t bikeId = 0;
-	double weightKg = (double)0.0;
-	double wheelSize = (double)0.0;
-
-	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
-	{
-		SetActivityBikeProfile(GetCurrentActivityId(), bikeId);
-	}
-}
-
-- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId
-{
-	uint64_t bikeId = 0;
-	double weightKg = (double)0.0;
-	double wheelSize = (double)0.0;
-	
-	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
-	{
-		SetActivityBikeProfile([activityId UTF8String], bikeId);
-	}
-}
-
-- (uint64_t)getBikeIdFromName:(NSString*)bikeName
-{
-	return GetBikeIdFromName([bikeName UTF8String]);
-}
-
-- (BOOL)deleteBikeProfile:(uint64_t)bikeId
-{
-	return DeleteBikeProfile(bikeId);
 }
 
 #pragma mark methods for managing the activity name

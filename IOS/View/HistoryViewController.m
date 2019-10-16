@@ -166,7 +166,6 @@
 {
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
-
 	NSString* month = [self->sortedKeys objectAtIndex:section];
 	return [[self->historyDictionary objectForKey:month] objectAtIndex:row];
 }
@@ -237,15 +236,15 @@
 	NSString* allTagsStr = @"";
 
 	// If a bike was specified then add that tag to the list of tags.
-	InitializeBikeProfileList();
-	GetActivityBikeProfile([activityId UTF8String], &bikeId);
+	[appDelegate initializeBikeProfileList];
+	[appDelegate getBikeProfileForActivity:activityId withBikeId:&bikeId];
 	if (bikeId > 0)
 	{
 		char* bikeName = NULL;
 		double bikeWeight = (double)0.0;
 		double bikeWheel = (double)0.0;
 
-		GetBikeProfileById(bikeId, &bikeName, &bikeWeight, &bikeWheel);
+		[appDelegate getBikeProfileById:bikeId withName:&bikeName withWeightKg:&bikeWeight withWheelCircumferenceMm:&bikeWheel];
 		if (bikeName)
 		{
 			allTagsStr = [allTagsStr stringByAppendingFormat:@"%s", bikeName];

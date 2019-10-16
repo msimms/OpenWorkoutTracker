@@ -249,13 +249,13 @@ typedef enum ExportFileTypeButtons
 		}
 
 		uint64_t bikeId;
-		if (GetActivityBikeProfile([self->activityId UTF8String], &bikeId))
+		if ([appDelegate getBikeProfileForActivity:self->activityId withBikeId:&bikeId])
 		{
 			char* name = NULL;
 			double weightKg = (double)0.0;
 			double wheelSize = (double)0.0;
 			
-			if (GetBikeProfileById(bikeId, &name, &weightKg, &wheelSize))
+			if ([appDelegate getBikeProfileById:bikeId withName:&name withWeightKg:&weightKg withWheelCircumferenceMm:&wheelSize])
 			{
 				NSString* tempName = [[NSString alloc] initWithUTF8String:name];
 				[self.bikeButton setTitle:tempName];
@@ -409,17 +409,17 @@ typedef enum ExportFileTypeButtons
 
 - (BOOL)showFileFormatSheet
 {
-	if (GetNumHistoricalActivities() > 0)
-	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
+	if ([appDelegate getNumHistoricalActivities] > 0)
+	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_FILE_FORMAT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 		
-		LoadAllHistoricalActivitySensorData(self->activityIndex);
+		[appDelegate loadAllHistoricalActivitySensorData:self->activityId];
 
-		if (GetNumHistoricalActivityLocationPoints(self->activityIndex) > 0)
+		if ([appDelegate getNumHistoricalActivityLocationPoints:self->activityId] > 0)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_GPX to:self->selectedExportLocation];
@@ -488,11 +488,7 @@ typedef enum ExportFileTypeButtons
 #pragma mark location handling methods
 
 - (void)drawRoute
-{
-	const NSInteger SCREEN_HEIGHT_IPHONE5 = 568;
-	const NSInteger SCREEN_TOP = 60;
-	const NSInteger BAR_HEIGHT = 50;
-	
+{	
 	CLLocationDegrees maxLat = -90;
 	CLLocationDegrees maxLon = -180;
 	CLLocationDegrees minLat = 90;
@@ -500,7 +496,6 @@ typedef enum ExportFileTypeButtons
 
 	size_t pointIndex = 0;
 	Coordinate coordinate;
-	NSInteger screenHeight = [[UIScreen mainScreen] bounds].size.height;
 	CLLocation* location = nil;
 
 	while (GetHistoricalActivityPoint(self->activityIndex, pointIndex, &coordinate))
@@ -545,63 +540,25 @@ typedef enum ExportFileTypeButtons
 		}
 	}
 
+	CGRect mapRect = [self.mapView frame];
+	CGRect summaryTableRect = [self.summaryTableView frame];
+
 	if (pointIndex > 0)
 	{
-		// Set the map region.
-		
-		MKCoordinateRegion region;
-		region.center.latitude     = (maxLat + minLat) / 2;
-		region.center.longitude    = (maxLon + minLon) / 2;
-		region.span.latitudeDelta  = (maxLat - minLat) * 1.1;
-		region.span.longitudeDelta = (maxLon - minLon) * 1.1;
-		
-		[self.mapView setRegion:region];
-		[self.mapView setDelegate:self];
-		
-		// Compute the size of the table view.
-
-		NSInteger tableHeight = (screenHeight / 2) - BAR_HEIGHT;
-		NSInteger tableTop    = (screenHeight / 2);
-
-		// Resize the table view.
-		
-		CGRect tvbounds = [self.summaryTableView bounds];
-		
-		[self.summaryTableView setBounds:CGRectMake(0, tableTop, tvbounds.size.width, tableHeight)];
-		[self.summaryTableView setFrame:CGRectMake(0, tableTop, tvbounds.size.width, tableHeight)];
-
-		// Resize and show the map view.
-
-		CGRect mvbounds = [self.mapView bounds];
-
-		[self.mapView setBounds:CGRectMake(0, 0, mvbounds.size.width, tableTop)];
 		self.mapView.hidden = FALSE;
-
-		// Setup the toolbar.
-
+		[self.mapView setDelegate:self];
 		[self.toolbar setItems:self->movingToolbar animated:NO];
+		summaryTableRect.origin.y = mapRect.origin.y + mapRect.size.height;
 	}
 	else
 	{
-		// Hide the map view.
-
 		self.mapView.hidden = TRUE;
-		
-		// Resize the table view.
-
-		CGRect tvbounds = [self.summaryTableView bounds];
-
-		NSInteger tableHeight = 370;
-		if (screenHeight == SCREEN_HEIGHT_IPHONE5)
-			tableHeight = 458;
-
-		[self.summaryTableView setBounds:CGRectMake(0, SCREEN_TOP, tvbounds.size.width, tableHeight)];
-		[self.summaryTableView setFrame:CGRectMake(0, SCREEN_TOP, tvbounds.size.width, tableHeight)];
-
-		// Setup the toolbar.
-
 		[self.toolbar setItems:self->liftingToolbar animated:NO];
+		summaryTableRect.origin.y = mapRect.origin.y;
 	}
+
+	[self.summaryTableView setFrame:summaryTableRect];
+	[self.summaryTableView sizeToFit];
 }
 
 #pragma mark button handlers
