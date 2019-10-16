@@ -24,7 +24,6 @@
 #import "WiFiDiscovery.h"
 
 #define EXPORT_TO_EMAIL_STR "Email"
-#define IMPORT_VIA_URL_STR  "URL"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 {
@@ -191,7 +190,6 @@
 - (NSMutableArray*)getBikeNames;
 - (NSMutableArray*)getIntervalWorkoutNames;
 - (NSMutableArray*)getEnabledFileImportCloudServices;
-- (NSMutableArray*)getEnabledFileImportServices;
 - (NSMutableArray*)getEnabledFileExportCloudServices;
 - (NSMutableArray*)getEnabledFileExportServices;
 - (NSMutableArray*)getActivityTypes;

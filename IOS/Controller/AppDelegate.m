@@ -1248,16 +1248,6 @@ void startSensorCallback(SensorType type, void* context)
 	return services;
 }
 
-- (NSMutableArray*)getEnabledFileImportServices
-{
-	NSMutableArray* services = [self getEnabledFileImportCloudServices];
-	if (services)
-	{
-		[services addObject:@IMPORT_VIA_URL_STR];
-	}
-	return services;
-}
-
 - (NSMutableArray*)getEnabledFileExportCloudServices
 {
 	NSMutableArray* services = [[NSMutableArray alloc] init];
