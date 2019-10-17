@@ -23,6 +23,7 @@
 		self.locationManager = [[CLLocationManager alloc] init];
 		self.locationManager.delegate = self;
 		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+		self.locationManager.distanceFilter = kCLDistanceFilterNone;
 		self.locationManager.activityType = CLActivityTypeFitness;
 #if !TARGET_OS_WATCH
 		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
@@ -30,17 +31,6 @@
 		self.locationManager.allowsBackgroundLocationUpdates = YES;
 	}
 	return self;
-}
-
-#pragma mark method for determining if a location seems "reasonable".
-
-- (BOOL)isValidLocation:(CLLocation*)newLocation
-{
-	// Make sure the update is new not cached
-	NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-	if (locationAge > 5.0)
-		return NO;
-	return YES;
 }
 
 #pragma mark CLLocationManagerDelegate methods
@@ -58,6 +48,12 @@
 	}
 }
 
+#if !TARGET_OS_WATCH
+- (void)locationManager:(CLLocationManager*)manager didFinishDeferredUpdatesWithError:(NSError *)error
+{
+}
+#endif
+
 - (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
 	switch (status)
@@ -69,10 +65,6 @@
 		case kCLAuthorizationStatusAuthorizedWhenInUse:
 		case kCLAuthorizationStatusAuthorizedAlways:
 			[self.locationManager startUpdatingLocation];
-#if !TARGET_OS_WATCH
-			self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
-#endif
-			self.locationManager.allowsBackgroundLocationUpdates = YES;
 			break;
 		default:
 			break;
@@ -87,7 +79,7 @@
 	}
 }
 
-#pragma Sensor methods
+#pragma mark Sensor methods
 
 - (SensorType)sensorType
 {
@@ -115,27 +107,24 @@
 
 - (void)processNewLocation:(CLLocation*)newLocation
 {
-	if ([self isValidLocation:newLocation])
-	{
-		CLLocationDegrees lat = newLocation.coordinate.latitude;
-		CLLocationDegrees lon = newLocation.coordinate.longitude;
-		CLLocationDegrees alt = newLocation.altitude;
-		
-		CLLocationAccuracy horizontalAccuracy = newLocation.horizontalAccuracy;
-		CLLocationAccuracy verticalAccuracy = newLocation.verticalAccuracy;
-		
-		uint64_t theTimeMs = (uint64_t)([newLocation.timestamp timeIntervalSince1970] * (double)1000.0);
-		
-		NSDictionary* locationData = [[NSDictionary alloc] initWithObjectsAndKeys:
-									  [NSNumber numberWithDouble:lat],@KEY_NAME_LATITUDE,
-									  [NSNumber numberWithDouble:lon],@KEY_NAME_LONGITUDE,
-									  [NSNumber numberWithDouble:alt],@KEY_NAME_ALTITUDE,
-									  [NSNumber numberWithDouble:horizontalAccuracy],@KEY_NAME_HORIZONTAL_ACCURACY,
-									  [NSNumber numberWithDouble:verticalAccuracy],@KEY_NAME_VERTICAL_ACCURACY,
-									  [NSNumber numberWithLongLong:theTimeMs],@KEY_NAME_GPS_TIMESTAMP_MS,
-									  nil];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOCATION object:locationData];
-	}
+	CLLocationDegrees lat = newLocation.coordinate.latitude;
+	CLLocationDegrees lon = newLocation.coordinate.longitude;
+	CLLocationDegrees alt = newLocation.altitude;
+	
+	CLLocationAccuracy horizontalAccuracy = newLocation.horizontalAccuracy;
+	CLLocationAccuracy verticalAccuracy = newLocation.verticalAccuracy;
+	
+	uint64_t theTimeMs = (uint64_t)([newLocation.timestamp timeIntervalSince1970] * (double)1000.0);
+	
+	NSDictionary* locationData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								  [NSNumber numberWithDouble:lat],@KEY_NAME_LATITUDE,
+								  [NSNumber numberWithDouble:lon],@KEY_NAME_LONGITUDE,
+								  [NSNumber numberWithDouble:alt],@KEY_NAME_ALTITUDE,
+								  [NSNumber numberWithDouble:horizontalAccuracy],@KEY_NAME_HORIZONTAL_ACCURACY,
+								  [NSNumber numberWithDouble:verticalAccuracy],@KEY_NAME_VERTICAL_ACCURACY,
+								  [NSNumber numberWithLongLong:theTimeMs],@KEY_NAME_GPS_TIMESTAMP_MS,
+								  nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOCATION object:locationData];
 }
 
 - (void)startUpdates
