@@ -156,7 +156,7 @@ typedef enum ExportFileTypeButtons
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-		NSString* activityType = [appDelegate getHistoricalActivityType:self->activityIndex];
+		NSString* activityType = [appDelegate getHistoricalActivityTypeForIndex:self->activityIndex];
 		if (!([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE]))
@@ -263,7 +263,7 @@ typedef enum ExportFileTypeButtons
 			}
 		}
 
-		NSArray* tempAttrNames = [appDelegate getHistoricalActivityAttributes:self->activityIndex];
+		NSArray* tempAttrNames = [appDelegate getHistoricalActivityAttributes:self->activityId];
 		for (NSString* attrName in tempAttrNames)
 		{
 			ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attrName UTF8String] forActivityIndex:self->activityIndex];
@@ -315,7 +315,7 @@ typedef enum ExportFileTypeButtons
 			}
 		}
 		
-		self.navItem.title = NSLocalizedString([appDelegate getHistoricalActivityType:self->activityIndex], nil);
+		self.navItem.title = NSLocalizedString([appDelegate getHistoricalActivityType:self->activityId], nil);
 		
 		[self drawRoute];
 	}

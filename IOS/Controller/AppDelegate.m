@@ -921,12 +921,6 @@ void startSensorCallback(SensorType type, void* context)
 	return StartNewLap();
 }
 
-- (void)recreateOrphanedActivity:(NSInteger)activityIndex
-{
-	DestroyCurrentActivity();
-	ReCreateOrphanedActivity(activityIndex);
-}
-
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
 {
 	return QueryLiveActivityAttribute([attributeName UTF8String]);
@@ -939,8 +933,9 @@ void startSensorCallback(SensorType type, void* context)
 	CreateActivity([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
 }
 
-- (void)reCreateOrphanedActivity:(size_t)activityIndex
+- (void)recreateOrphanedActivity:(NSInteger)activityIndex
 {
+	DestroyCurrentActivity();
 	ReCreateOrphanedActivity(activityIndex);
 }
 
@@ -1058,9 +1053,15 @@ void startSensorCallback(SensorType type, void* context)
 	return [self loadHistoricalActivityByIndex:activityIndex];
 }
 
-- (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
+- (void)getHistoricalActivityStartAndEndTimeByIndex:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
 	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+}
+
+- (void)getHistoricalActivityStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	[self getHistoricalActivityStartAndEndTimeByIndex:activityIndex withStartTime:startTime withEndTime:endTime];
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
@@ -1445,8 +1446,10 @@ void attributeNameCallback(const char* name, void* context)
 	return names;
 }
 
-- (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex
+- (NSMutableArray*)getHistoricalActivityAttributes:(NSString*)activityId
 {
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
 	NSMutableArray* attributes = [[NSMutableArray alloc] init];
 	if (attributes)
 	{
@@ -1480,7 +1483,7 @@ void attributeNameCallback(const char* name, void* context)
 	return activityTypeStr;
 }
 
-- (NSString*)getHistoricalActivityType:(NSInteger)activityIndex
+- (NSString*)getHistoricalActivityTypeForIndex:(NSInteger)activityIndex
 {
 	NSString* result = nil;
 	char* activityType = GetHistoricalActivityType((size_t)activityIndex);
@@ -1490,6 +1493,12 @@ void attributeNameCallback(const char* name, void* context)
 		free((void*)activityType);
 	}
 	return result;
+}
+
+- (NSString*)getHistoricalActivityType:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return [self getHistoricalActivityTypeForIndex:activityIndex];
 }
 
 #pragma mark methods for managing tags

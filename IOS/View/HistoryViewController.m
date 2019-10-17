@@ -124,7 +124,7 @@
 			{
 				time_t startTime = 0;
 				time_t endTime = 0;
-				[appDelegate getHistoricalActivityStartAndEndTime:(NSInteger)i withStartTime:&startTime withEndTime:&endTime];
+				[appDelegate getHistoricalActivityStartAndEndTimeByIndex:(NSInteger)i withStartTime:&startTime withEndTime:&endTime];
 
 				struct tm* theTime = localtime(&startTime);
 				if (theTime)
@@ -260,7 +260,7 @@
 			allTagsStr = [allTagsStr stringByAppendingString:@", "];
 		allTagsStr = [allTagsStr stringByAppendingString:tag];
 	}
-	
+
 	// Get the activity name.
 	NSString* name = [appDelegate getActivityName:activityId];
 	if ([name length] > 0)
@@ -271,7 +271,7 @@
 	// Get the start time.
 	time_t startTime = 0;
 	time_t endTime = 0;
-	[appDelegate getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:&startTime withEndTime:&endTime];
+	[appDelegate getHistoricalActivityStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];
 	NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
 	if ([allTagsStr length] > 0)
 	{
@@ -282,7 +282,7 @@
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 
-	cell.textLabel.text = NSLocalizedString([appDelegate getHistoricalActivityType: activityIndex], nil);
+	cell.textLabel.text = NSLocalizedString([appDelegate getHistoricalActivityType:activityId], nil);
 
 	return cell;
 }

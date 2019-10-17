@@ -229,7 +229,7 @@
 
 	if (isOrphaned || isInProgress)
 	{
-		self->orphanedActivityType = [appDelegate getHistoricalActivityType:self->orphanedActivityIndex];
+		self->orphanedActivityType = [appDelegate getHistoricalActivityTypeForIndex:self->orphanedActivityIndex];
 		self->newActivityType = activityType;
 
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:TITLE_IN_PROGRESS
