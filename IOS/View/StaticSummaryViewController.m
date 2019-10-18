@@ -177,13 +177,6 @@ typedef enum ExportFileTypeButtons
 	}
 
 	[self redraw];
-
-	UILongPressGestureRecognizer* gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleMapGesture:)];
-	if (gesture)
-	{
-		gesture.minimumPressDuration = 1.0;
-		[self.mapView addGestureRecognizer:gesture];
-	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -323,7 +316,6 @@ typedef enum ExportFileTypeButtons
 
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* segueId = [segue identifier];
 
 	if ([segueId isEqualToString:@SEGUE_TO_TAG_VIEW])
@@ -346,20 +338,6 @@ typedef enum ExportFileTypeButtons
 				[plotVC appendChartLine:line withXLabel:TIME withYLabel:self->selectedRowStr];
 				[plotVC setTitle:self->selectedRowStr];
 			}
-		}
-	}
-	else if ([segueId isEqualToString:@SEGUE_TO_MAP_OVERVIEW])
-	{
-		MapOverviewViewController* mapVC = (MapOverviewViewController*)[segue destinationViewController];
-		if (mapVC)
-		{
-			if (self->mapMode == MAP_OVERVIEW_SEGMENT_VIEW)
-			{
-				ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[self->selectedRowStr UTF8String] forActivityIndex:self->activityIndex];
-				[mapVC setSegment:value withSegmentName:self->selectedRowStr];
-			}
-			[mapVC setActivityId:self->activityId];
-			[mapVC setMode:self->mapMode];
 		}
 	}
 	else if ([segueId isEqualToString:@SEGUE_TO_SPLIT_TIMES_VIEW])
@@ -753,10 +731,6 @@ typedef enum ExportFileTypeButtons
 		case SECTION_SUPERLATIVES:
 			if ([self superlativeHasSegue:cell])
 			{
-				self->mapMode = MAP_OVERVIEW_SEGMENT_VIEW;
-				self.spinner.hidden = FALSE;
-				[self.spinner startAnimating];
-				[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
 			}
 			break;
 	}
@@ -957,14 +931,7 @@ typedef enum ExportFileTypeButtons
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 		case SECTION_SUPERLATIVES:
-			if ([self superlativeHasSegue:cell])
-			{
-				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			}
-			else
-			{
-				cell.accessoryType = UITableViewCellAccessoryNone;
-			}
+			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 	}
 }
@@ -1037,17 +1004,6 @@ typedef enum ExportFileTypeButtons
 	[appDelegate deleteFile:self->exportedFileName];
 
 	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark UIGestureRecognizer methods
-
-- (void)handleMapGesture:(UIGestureRecognizer*)sender
-{
-	if (sender.state == UIGestureRecognizerStateBegan)
-	{
-		self->mapMode = MAP_OVERVIEW_COMPLETE_ROUTE;
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	}
 }
 
 @end
