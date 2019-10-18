@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Calories burned during exercise can be written to the Health app.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Calories burned during exercise can be written to the Health app.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Location Services are required to monitor certain activities.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
