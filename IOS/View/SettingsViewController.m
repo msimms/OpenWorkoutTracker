@@ -382,10 +382,6 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_BACKUP:
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
-				{
-					row++;
-				}
 
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
