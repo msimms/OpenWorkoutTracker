@@ -44,6 +44,7 @@
 - (BOOL)startNewLap;
 - (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
+- (void)endOrpanedActivity:(NSInteger)activityIndex;
 
 // retrieves or creates and retrieves the applications unique identifier
 

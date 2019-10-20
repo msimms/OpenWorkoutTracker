@@ -104,7 +104,7 @@
 		// Add the "throw it away and start over" option
 		action = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
 			ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-			[extDelegate loadHistoricalActivity:self->orphanedActivityIndex];
+			[extDelegate endOrpanedActivity:self->orphanedActivityIndex];
 			[self createActivity:self->newActivityType];
 		}];	
 		[actions addObject:action];

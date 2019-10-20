@@ -299,6 +299,11 @@ void startSensorCallback(SensorType type, void* context)
 	ReCreateOrphanedActivity(activityIndex);
 }
 
+- (void)endOrpanedActivity:(NSInteger)activityIndex
+{
+	FixHistoricalActivityEndTime(activityIndex);
+}
+
 #pragma mark retrieves or creates and retrieves the applications unique identifier
 
 - (NSString*)getDeviceId;
