@@ -37,6 +37,7 @@
 	NSTimer*             intervalTimer;
 	WCSession*           watchSession; // Interfaces with the watch app.
 	BOOL                 badGps;
+	size_t               currentActivityIndex; // Used when iterating over historical activities.
 }
 
 - (NSString*)getDeviceId;
@@ -137,12 +138,12 @@
 // methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList;
+- (NSString*)getNextActivityId;
 - (NSInteger)getNumHistoricalActivities;
 - (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId;
 - (void)createHistoricalActivityObject:(NSString*)activityId;
 - (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex;
 - (BOOL)loadHistoricalActivity:(NSString*)activityId;
-- (void)getHistoricalActivityStartAndEndTimeByIndex:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 - (void)getHistoricalActivityStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;

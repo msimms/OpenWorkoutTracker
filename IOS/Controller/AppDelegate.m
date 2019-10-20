@@ -90,6 +90,7 @@
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[self hasLeBluetooth]];
 	self->badGps = FALSE;
+	self->currentActivityIndex = 0;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
@@ -985,7 +986,22 @@ void startSensorCallback(SensorType type, void* context)
 		[self->healthMgr readRunningWorkoutsFromHealthStore];
 		[self->healthMgr readCyclingWorkoutsFromHealthStore];
 	}
+	
+	// Reset the iterator.
+	self->currentActivityIndex = 0;
+
 	return [self getNumHistoricalActivities];
+}
+
+- (NSString*)getNextActivityId
+{
+	if (self->currentActivityIndex < [self getNumHistoricalActivities])
+	{
+		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->currentActivityIndex)];
+		++self->currentActivityIndex;
+		return activityId;
+	}
+	return nil;
 }
 
 - (NSInteger)getNumHistoricalActivities
@@ -1053,15 +1069,10 @@ void startSensorCallback(SensorType type, void* context)
 	return [self loadHistoricalActivityByIndex:activityIndex];
 }
 
-- (void)getHistoricalActivityStartAndEndTimeByIndex:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
-{
-	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
-}
-
 - (void)getHistoricalActivityStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	[self getHistoricalActivityStartAndEndTimeByIndex:activityIndex withStartTime:startTime withEndTime:endTime];
+	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex

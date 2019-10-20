@@ -120,11 +120,13 @@
 		self->historyDictionary = [[NSMutableDictionary alloc] init];
 		if (self->historyDictionary)
 		{
-			for (size_t i = 0; i < numHistoricalActivities; ++i)
+			for (size_t rowIndex = 0; rowIndex < numHistoricalActivities; ++rowIndex)
 			{
+				NSString* activityId = [appDelegate getNextActivityId];
+
 				time_t startTime = 0;
 				time_t endTime = 0;
-				[appDelegate getHistoricalActivityStartAndEndTimeByIndex:(NSInteger)i withStartTime:&startTime withEndTime:&endTime];
+				[appDelegate getHistoricalActivityStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];
 
 				struct tm* theTime = localtime(&startTime);
 				if (theTime)
@@ -139,7 +141,7 @@
 						}
 						if (monthlyActivities)
 						{
-							[monthlyActivities insertObject:[NSNumber numberWithLongLong:i] atIndex:0];
+							[monthlyActivities insertObject:[NSNumber numberWithLongLong:rowIndex] atIndex:0];
 							[self->historyDictionary setObject:monthlyActivities forKey:key];
 						}
 					}
