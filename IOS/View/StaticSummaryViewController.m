@@ -8,7 +8,6 @@
 #import "StaticSummaryViewController.h"
 #import "AccelerometerLine.h"
 #import "ActivityAttribute.h"
-#import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "AppStrings.h"
 #import "AppDelegate.h"
@@ -118,9 +117,7 @@ typedef enum ExportFileTypeButtons
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->activityIndex = 0;
 		self->attributeIndex = 0;
-
 		self->activityId = nil;
 
 		self->startTime = 0;
@@ -155,8 +152,8 @@ typedef enum ExportFileTypeButtons
 	if (self->movingToolbar)
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		NSString* activityType = [appDelegate getHistoricalActivityType:self->activityId];
 
-		NSString* activityType = [appDelegate getHistoricalActivityTypeForIndex:self->activityIndex];
 		if (!([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE]))
@@ -217,13 +214,13 @@ typedef enum ExportFileTypeButtons
 		self->attributeNames = [[NSMutableArray alloc] init];
 		self->recordNames = [[NSMutableArray alloc] init];
 
-		GetHistoricalActivityStartAndEndTime(self->activityIndex, &self->startTime, &self->endTime);
+		[appDelegate getHistoricalActivityStartAndEndTime:self->activityId withStartTime:&self->startTime withEndTime:&self->endTime];
 
-		self->hasGpsData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityIndex:self->activityIndex].valid;
-		self->hasAccelerometerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityIndex:self->activityIndex].valid;
-		self->hasHeartRateData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_HEART_RATE forActivityIndex:self->activityIndex].valid;
-		self->hasCadenceData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_CADENCE forActivityIndex:self->activityIndex].valid;
-		self->hasPowerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_POWER forActivityIndex:self->activityIndex].valid;
+		self->hasGpsData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityId:self->activityId].valid;
+		self->hasAccelerometerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityId:self->activityId].valid;
+		self->hasHeartRateData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_HEART_RATE forActivityId:self->activityId].valid;
+		self->hasCadenceData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_CADENCE forActivityId:self->activityId].valid;
+		self->hasPowerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_POWER forActivityId:self->activityId].valid;
 		
 		self->chartTitles = [LineFactory getLineNames:self->hasGpsData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
 		
@@ -259,7 +256,7 @@ typedef enum ExportFileTypeButtons
 		NSArray* tempAttrNames = [appDelegate getHistoricalActivityAttributes:self->activityId];
 		for (NSString* attrName in tempAttrNames)
 		{
-			ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attrName UTF8String] forActivityIndex:self->activityIndex];
+			ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attrName UTF8String] forActivityId:self->activityId];
 			if (attr.valid)
 			{
 				if ([self isRecordName:attrName])
@@ -456,12 +453,13 @@ typedef enum ExportFileTypeButtons
 
 - (void)setActivityId:(NSString*)activityId
 {
-	self->activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	self->activityId = activityId;
 
-	InitializeHistoricalActivityList();
-	CreateHistoricalActivityObject(self->activityIndex);
-	LoadHistoricalActivitySummaryData(self->activityIndex);
+	[appDelegate initializeHistoricalActivityList];
+	[appDelegate createHistoricalActivityObject:activityId];
+	[appDelegate loadHistoricalActivitySummaryData:activityId];
 }
 
 #pragma mark location handling methods
@@ -474,15 +472,17 @@ typedef enum ExportFileTypeButtons
 	CLLocationDegrees minLon = 180;
 
 	size_t pointIndex = 0;
-	Coordinate coordinate;
+	double latitude = (double)0.0;
+	double longitude = (double)0.0;
 	CLLocation* location = nil;
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	while (GetHistoricalActivityPoint(self->activityIndex, pointIndex, &coordinate))
+	while ([appDelegate getHistoricalActivityPoint:self->activityId withPointIndex:pointIndex withLatitude:&latitude withLongitude:&longitude])
 	{
 		// Draw every other point.
 		if (pointIndex % 2 == 0)
 		{
-			location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+			location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
 			if (location)
 			{
 				if (location.coordinate.latitude > maxLat)
@@ -642,8 +642,8 @@ typedef enum ExportFileTypeButtons
 				value.valueType = TYPE_INTEGER;
 				value.measureType = MEASURE_COUNT;
 
-				SetHistoricalActivityAttribute(self->activityIndex, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, value);
-				SaveHistoricalActivitySummaryData(self->activityIndex);
+				[appDelegate setHistoricalActivityAttribute:self->activityId withAttributeName:ACTIVITY_ATTRIBUTE_REPS_CORRECTED withAttributeType:value];
+				[appDelegate saveHistoricalActivitySummaryData:self->activityId];
 			}]];
 			[self presentViewController:repsAlertController animated:YES completion:nil];
 		}]];
@@ -813,7 +813,7 @@ typedef enum ExportFileTypeButtons
 	{
 		case SECTION_NAME:
 			{
-				NSString* name = [NSString stringWithFormat:@"%s", GetHistoricalActivityName(self->activityIndex)];
+				NSString* name = [appDelegate getActivityName:self->activityId];
 				if ([name length] > 0)
 					cell.textLabel.text = name;
 				else
@@ -860,7 +860,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_ATTRIBUTES:
 			{
 				NSString* attributeName = [self->attributeNames objectAtIndex:row];
-				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityIndex:self->activityIndex];
+				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 				if (attr.valid)
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
@@ -882,7 +882,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_SUPERLATIVES:
 			{
 				NSString* attributeName = [self->recordNames objectAtIndex:row];
-				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityIndex:self->activityIndex];
+				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 				if (attr.valid)
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];

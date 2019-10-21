@@ -1069,10 +1069,35 @@ void startSensorCallback(SensorType type, void* context)
 	return [self loadHistoricalActivityByIndex:activityIndex];
 }
 
+- (void)loadHistoricalActivitySummaryData:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	LoadHistoricalActivitySummaryData(activityIndex);
+}
+
+- (void)saveHistoricalActivitySummaryData:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	SaveHistoricalActivitySummaryData(activityIndex);
+}
+
 - (void)getHistoricalActivityStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+}
+
+- (BOOL)getHistoricalActivityPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	Coordinate coordinate;
+	BOOL result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+	if (result)
+	{
+		(*latitude) = coordinate.latitude;
+		(*longitude) = coordinate.longitude;
+	}
+	return result;
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
@@ -1084,6 +1109,12 @@ void startSensorCallback(SensorType type, void* context)
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
+}
+
+- (void)setHistoricalActivityAttribute:(NSString*)activityId withAttributeName:(const char* const)attributeName withAttributeType:(ActivityAttributeType) attributeValue
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	SetHistoricalActivityAttribute(activityIndex, attributeName, attributeValue);
 }
 
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context
