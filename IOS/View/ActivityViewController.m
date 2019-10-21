@@ -180,9 +180,8 @@
 		StaticSummaryViewController* summaryVC = (StaticSummaryViewController*)[segue destinationViewController];
 		if (summaryVC)
 		{
-			InitializeHistoricalActivityList();
-			NSInteger activityIndex = GetNumHistoricalActivities() - 1;
-			[summaryVC setActivityIndex:activityIndex];
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+			[summaryVC setActivityId:[appDelegate getCurrentActivityId]];
 		}
 	}
 }

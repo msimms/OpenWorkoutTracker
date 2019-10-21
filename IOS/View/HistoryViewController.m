@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "HistoryViewController.h"
-#import "ActivityMgr.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "Segues.h"
@@ -54,7 +53,7 @@
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
 	[self.spinner stopAnimating];
 
-	self->selectedActivityIndex = nil;
+	self->selectedActivityId = nil;
 	self->searching = false;
 }
 
@@ -100,8 +99,7 @@
 		StaticSummaryViewController* summaryVC = (StaticSummaryViewController*)[segue destinationViewController];
 		if (summaryVC)
 		{
-			NSInteger activityIndex = [self->selectedActivityIndex integerValue];
-			[summaryVC setActivityIndex:activityIndex];
+			[summaryVC setActivityId:self->selectedActivityId];
 		}
 	}
 }
@@ -115,6 +113,7 @@
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
+
 	if (numHistoricalActivities > 0)
 	{
 		self->historyDictionary = [[NSMutableDictionary alloc] init];
@@ -141,7 +140,7 @@
 						}
 						if (monthlyActivities)
 						{
-							[monthlyActivities insertObject:[NSNumber numberWithLongLong:rowIndex] atIndex:0];
+							[monthlyActivities insertObject:activityId atIndex:0];
 							[self->historyDictionary setObject:monthlyActivities forKey:key];
 						}
 					}
@@ -164,7 +163,7 @@
 	}
 }
 
-- (NSNumber*)getActivityIndex:(NSIndexPath*)indexPath
+- (NSString*)getActivityId:(NSIndexPath*)indexPath
 {
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
@@ -176,10 +175,11 @@
 
 - (void)handleSelectedActivity:(NSIndexPath*)indexPath
 {
-	self->selectedActivityIndex = [self getActivityIndex:indexPath];
+	self->selectedActivityId = [self getActivityId:indexPath];
 
 	self.spinner.hidden = FALSE;
 	self.spinner.center = self.view.center;
+
 	[self.spinner startAnimating];
 	[self performSegueWithIdentifier:@SEGUE_TO_ACTIVITY_SUMMARY sender:self];
 	[self.spinner stopAnimating];
@@ -232,10 +232,9 @@
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	size_t activityIndex = [[self getActivityIndex:indexPath] intValue];
-	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(activityIndex)];
-	uint64_t bikeId = 0;
+	NSString* activityId = [self getActivityId:indexPath];
 	NSString* allTagsStr = @"";
+	uint64_t bikeId = 0;
 
 	// If a bike was specified then add that tag to the list of tags.
 	[appDelegate initializeBikeProfileList];
@@ -314,9 +313,7 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-		NSNumber* activityIndex = [self getActivityIndex:indexPath];
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId([activityIndex intValue])];
+		NSString* activityId = [self getActivityId:indexPath];
 
 		[appDelegate deleteActivity:activityId];
 		[appDelegate initializeHistoricalActivityList];
@@ -331,8 +328,8 @@
 - (BOOL)showActivityList
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* activityTypes = [appDelegate getActivityTypes];
+
 	if ([activityTypes count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
@@ -366,14 +363,14 @@
 - (BOOL)showFileExportSheet
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	
 	NSMutableArray* fileSites = [appDelegate getEnabledFileExportServices];
+
 	if ([fileSites count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_EXPORT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
-		
+
 		for (NSString* fileSite in fileSites)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -442,18 +439,19 @@
 
 - (void)displayEmailComposerSheet
 {
-	NSString* subjectStr = EMAIL_TITLE;
-	NSString* bodyStr = EMAIL_CONTENTS;
-
 	if ([MFMailComposeViewController canSendMail])
 	{
+		NSString* subjectStr = EMAIL_TITLE;
+		NSString* bodyStr = EMAIL_CONTENTS;
+
 		MFMailComposeViewController* mailController = [[MFMailComposeViewController alloc] init];
 		mailController.navigationBar.barStyle = UIBarStyleBlack;
+
 		[mailController setEditing:TRUE];		
 		[mailController setSubject:subjectStr];
 		[mailController setMessageBody:bodyStr isHTML:YES];
 		[mailController setMailComposeDelegate:self];
-		
+
 		[self.parentViewController resignFirstResponder];
 		[self becomeFirstResponder];
 		

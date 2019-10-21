@@ -1512,6 +1512,12 @@ void attributeNameCallback(const char* name, void* context)
 	return [self getHistoricalActivityTypeForIndex:activityIndex];
 }
 
+- (NSString*)getCurrentActivityId
+{
+	NSString* activityId = [NSString stringWithFormat:@"%s", GetCurrentActivityId()];
+	return activityId;
+}
+
 #pragma mark methods for managing tags
 
 - (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId

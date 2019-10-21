@@ -65,7 +65,7 @@
 - (IBAction)onBike:(id)sender;
 - (IBAction)onHome:(id)sender;
 
-- (void)setActivityIndex:(NSInteger)index;
+- (void)setActivityId:(NSString*)activityId;
 - (void)drawRoute;
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;

@@ -15,11 +15,9 @@
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar* toolbar;
-
 	IBOutlet UISearchBar* searchBar;
 	IBOutlet UITableView* historyTableView;
 	IBOutlet UIActivityIndicatorView* spinner;
-
 	IBOutlet UIBarButtonItem* exportButton;
 
 	NSMutableDictionary* historyDictionary;
@@ -28,9 +26,8 @@
 	NSString* exportedFileName;
 	NSString* selectedExportActivity;
 	NSString* selectedExportService;
-	
-	NSNumber* selectedActivityIndex;
-	
+	NSString* selectedActivityId;
+
 	bool searching;
 }
 
@@ -38,11 +35,9 @@
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
-
 @property (nonatomic, retain) IBOutlet UISearchBar* searchBar;
 @property (nonatomic, retain) IBOutlet UITableView* historyTableView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
-
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* exportButton;
 
 @end

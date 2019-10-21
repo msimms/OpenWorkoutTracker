@@ -206,6 +206,8 @@
 - (NSString*)getHistoricalActivityTypeForIndex:(NSInteger)activityIndex;
 - (NSString*)getHistoricalActivityType:(NSString*)activityId;
 
+- (NSString*)getCurrentActivityId;
+
 // methods for managing tags
 
 - (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId;

@@ -454,13 +454,14 @@ typedef enum ExportFileTypeButtons
 
 #pragma mark accessor methods
 
-- (void)setActivityIndex:(NSInteger)index
+- (void)setActivityId:(NSString*)activityId
 {
-	self->activityIndex = index;
-	self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->activityIndex)];
+	self->activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	self->activityId = activityId;
 
-	CreateHistoricalActivityObject(index);
-	LoadHistoricalActivitySummaryData(index);
+	InitializeHistoricalActivityList();
+	CreateHistoricalActivityObject(self->activityIndex);
+	LoadHistoricalActivitySummaryData(self->activityIndex);
 }
 
 #pragma mark location handling methods
