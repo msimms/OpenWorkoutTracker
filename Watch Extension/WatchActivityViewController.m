@@ -39,9 +39,6 @@
 - (instancetype)init
 {
 	self = [super init];
-	if (self)
-	{
-	}
 	return self;
 }
 
@@ -64,7 +61,7 @@
 		[self->unitsLabels addObject:self.units2];
 		[self->unitsLabels addObject:self.units3];
 	}
-	
+
 	self->groups = [[NSMutableArray alloc] init];
 	if (self->groups)
 	{
@@ -72,7 +69,20 @@
 		[self->groups addObject:self.group2];
 		[self->groups addObject:self.group3];
 	}
-	
+
+	size_t orphanedActivityIndex = 0;
+	bool isOrphaned = IsActivityOrphaned(&orphanedActivityIndex);
+	bool isInProgress = IsActivityInProgress();
+
+	if (isOrphaned || isInProgress)
+	{
+		[self setUIForStartedActivity];
+	}
+	else
+	{
+		[self setUIForStoppedActivity];
+	}
+
 	[self startTimer];
 }
 

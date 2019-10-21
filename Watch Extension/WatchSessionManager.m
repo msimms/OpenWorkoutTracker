@@ -30,6 +30,7 @@
 - (void)sendSyncPrefsMsg
 {
 	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+
 	[msgData setObject:@WATCH_MSG_SYNC_PREFS forKey:@WATCH_MSG_TYPE];
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
@@ -38,6 +39,7 @@
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+
 	[msgData setObject:@WATCH_MSG_REGISTER_DEVICE forKey:@WATCH_MSG_TYPE];
 	[msgData setObject:[extDelegate getDeviceId] forKey:@WATCH_MSG_DEVICE_ID];
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
@@ -73,22 +75,28 @@
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
+	{
 		// The phone app wants to sync preferences.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
+	{
 		// The phone app is asking the watch to register itself.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
+	{
 		// The phone app is sending interval workouts.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
+	{
 		// The phone app wants to know if we have an activity.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
+	{
 		// The phone app is requesting an activity.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
+	{
 		// The phone app is sending an activity.
 	}
 }
@@ -96,23 +104,29 @@
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
+	{
 		// The phone app wants to sync preferences.
 		[Preferences importPrefs:message];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
+	{
 		// The phone app is asking the watch to register itself.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
+	{
 		// The phone app is sending interval workouts.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
+	{
 		// The phone app wants to know if we have an activity.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
+	{
 		// The phone app is requesting an activity.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
+	{
 		// The phone app is sending an activity.
 	}
 }

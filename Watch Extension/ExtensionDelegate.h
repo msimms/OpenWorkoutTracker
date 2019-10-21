@@ -42,7 +42,6 @@
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
-- (BOOL)loadHistoricalActivity:(NSInteger)activityIndex;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
 - (void)endOrpanedActivity:(NSInteger)activityIndex;
 

@@ -11,8 +11,6 @@
 @interface InterfaceController : WKInterfaceController
 {
 	NSString* newActivityType;
-	NSString* orphanedActivityType;
-	size_t    orphanedActivityIndex;
 }
 
 @end
