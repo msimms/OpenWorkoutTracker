@@ -1705,6 +1705,9 @@ void attributeNameCallback(const char* name, void* context)
 		else if ([urlStr rangeOfString:@REMOTE_API_DELETE_TAG_URL].location != NSNotFound)
 		{
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_CLAIM_DEVICE_URL].location != NSNotFound)
+		{
+		}
 	}];
 	[dataTask resume];
 	
@@ -1807,6 +1810,17 @@ void attributeNameCallback(const char* name, void* context)
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 
+- (BOOL)serverClaimDeviceAsync:(NSString*)deviceId
+{
+	NSString* post = [NSString stringWithFormat:@"{"];
+	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+	[postData appendData:[[NSString stringWithFormat:@"\"device_id\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CLAIM_DEVICE_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+}
+
 #pragma mark reset methods
 
 - (void)resetDatabase
@@ -1823,6 +1837,7 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)registerWatch:(NSString*)deviceId
 {
+	[self serverClaimDeviceAsync:deviceId];
 }
 
 - (void)checkForActivity:(NSString*)activityHash
@@ -1868,26 +1883,32 @@ void attributeNameCallback(const char* name, void* context)
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
+	{
 		// The watch app wants to sync preferences.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
+	{
 		// The watch app wants to register itself.
 		NSString* deviceId = [message objectForKey:@WATCH_MSG_DEVICE_ID];
 		[self registerWatch:deviceId];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
+	{
 		// The watch app wants to download interval workouts.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
+	{
 		// The watch app wants to know if we have an activity.
 		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
 		[self checkForActivity:activityHash];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
+	{
 		// The watch app is requesting an activity.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
+	{
 		// The watch app is sending an activity.
 	}
 }
@@ -1895,26 +1916,32 @@ void attributeNameCallback(const char* name, void* context)
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
-	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS]) {
+	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
+	{
 		// The watch app wants to sync preferences.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
+	{
 		// The watch app wants to register itself.
 		NSString* deviceId = [message objectForKey:@WATCH_MSG_DEVICE_ID];
 		[self registerWatch:deviceId];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
+	{
 		// The watch app wants to download interval workouts.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
+	{
 		// The watch app wants to know if we have an activity.
 		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
 		[self checkForActivity:activityHash];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
+	{
 		// The watch app is requesting an activity.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY]) {
+	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
+	{
 		// The watch app is sending an activity.
 	}
 }

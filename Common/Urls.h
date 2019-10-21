@@ -18,3 +18,4 @@
 #define REMOTE_API_DELETE_ACTIVITY_URL   "api/1.0/delete_activity?"
 #define REMOTE_API_CREATE_TAG_URL        "api/1.0/create_tag"
 #define REMOTE_API_DELETE_TAG_URL        "api/1.0/delete_tag"
+#define REMOTE_API_CLAIM_DEVICE_URL      "api/1.0/claim_device"
