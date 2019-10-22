@@ -242,11 +242,13 @@
 			[self showActivityView:self->orphanedActivityType];
 		}]];
 
-		// Add the "throw it away and start over" option
+		// Add the "throw it away and start over" option.
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[appDelegate loadHistoricalActivityByIndex:self->orphanedActivityIndex];
 			[self createActivity:self->newActivityType];
 		}]];
+
+		// Show the alert.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else if ([appDelegate isActivityCreated])

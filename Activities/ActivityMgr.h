@@ -18,6 +18,8 @@
 #include "SensorType.h"
 #include "UnitSystem.h"
 
+#define ACTIVITY_INDEX_UNKNOWN (size_t)-1
+
 #ifdef __cplusplus
 extern "C" {
 #endif

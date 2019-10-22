@@ -34,6 +34,7 @@
 + (NSInteger)broadcastRate;
 + (NSString*)broadcastProtocol;
 + (NSString*)broadcastHostName;
++ (BOOL)willIntegrateHealthKitActivities;
 + (BOOL)hasShownFirstTimeUseMessage;
 + (BOOL)hasShownPullUpHelp;
 + (BOOL)hasShownPushUpHelp;
@@ -53,6 +54,7 @@
 + (void)setBroadcastRate:(NSInteger)value;
 + (void)setBroadcastProtocol:(NSString*)value;
 + (void)setBroadcastHostName:(NSString*)value;
++ (void)setWillIntegrateHealthKitActivities:(BOOL)value;
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value;
 + (void)setHasShownPullUpHelp:(BOOL)value;
 + (void)setHasShownPushUpHelp:(BOOL)value;

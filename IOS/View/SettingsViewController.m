@@ -16,6 +16,7 @@
 typedef enum SettingsSections
 {
 	SECTION_UNITS = 0,
+	SECTION_HEALTHKIT,
 	SECTION_BACKUP,
 	SECTION_SOCIAL,
 	SECTION_AUTOUPLOAD,
@@ -55,35 +56,43 @@ typedef enum SettingsRowsBroadcast
 	NUM_SETTINGS_ROWS_BROADCAST
 } SettingsRowsBroadcast;
 
-#define TITLE                        NSLocalizedString(@"Settings", nil)
-#define UNIT_TITLE                   NSLocalizedString(@"Units", nil)
-#define UNIT_TITLE_US_CUSTOMARY      NSLocalizedString(@"US Customary Units", nil)
-#define UNIT_TITLE_METRIC            NSLocalizedString(@"Metric", nil)
-#define ICLOUD_BACKUP                NSLocalizedString(@"iCloud Backup", nil)
-#define CLOUD_BACKUP                 NSLocalizedString(@"Cloud Backup", nil)
-#define SOCIAL                       NSLocalizedString(@"Social", nil)
-#define AUTOUPLOAD                   NSLocalizedString(@"Auto Upload", nil)
-#define BROADCAST                    NSLocalizedString(@"Broadcast", nil)
-#define BROADCAST_LOCALLY            NSLocalizedString(@"To Your Local Group", nil)
-#define BROADCAST_GLOBALLY           NSLocalizedString(@"To the Internet", nil)
-#define BROADCAST_NAME               NSLocalizedString(@"Name", nil)
-#define BROADCAST_RATE               NSLocalizedString(@"Update Rate", nil)
-#define BROADCAST_HTTPS              NSLocalizedString(@"Use HTTPS", nil)
-#define BROADCAST_HOST               NSLocalizedString(@"Broadcast Server", nil)
-#define BROADCAST_UNITS              NSLocalizedString(@"Seconds", nil)
-#define MANAGE_FOLLOWING             NSLocalizedString(@"Manage People I'm Following", nil)
-#define MANAGE_FOLLOWED_BY           NSLocalizedString(@"Manage People Following Me", nil)
-#define DEVICE_ID                    NSLocalizedString(@"Device ID", nil)
-#define BUTTON_TITLE_COPY            NSLocalizedString(@"Copy", nil)
-#define ALERT_TITLE_BROADCAST_USER   NSLocalizedString(@"Enter the name you want to use", nil)
-#define ALERT_TITLE_BROADCAST_RATE   NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
-#define ALERT_TITLE_BROADCAST_HOST   NSLocalizedString(@"What is the host name of the broadcast server?", nil)
-#define ALERT_TITLE_BROADCAST_WARN   NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
-#define ALERT_TITLE_NOT_IMPLEMENTED  NSLocalizedString(@"Unimplemented Feature", nil)
-#define ALERT_MSG_IMPLEMENTED        NSLocalizedString(@"This feature is not implemented.", nil)
-#define ALERT_NO_PROTOCOL            NSLocalizedString(@"Do not include the protocol in the URL.", nil)
-#define ALERT_MSG_NAME               NSLocalizedString(@"", nil)
-#define ALERT_MSG_RATE               NSLocalizedString(@"1", nil)
+typedef enum SettingsRowsHealthKit
+{
+	SETTINGS_ROW_INTEGRATE_HEALTHKIT = 0,
+	NUM_SETTINGS_ROWS_HEALTHKIT
+} SettingsRowsHealthKit;
+
+#define TITLE                          NSLocalizedString(@"Settings", nil)
+#define UNIT_TITLE                     NSLocalizedString(@"Units", nil)
+#define UNIT_TITLE_US_CUSTOMARY        NSLocalizedString(@"US Customary Units", nil)
+#define UNIT_TITLE_METRIC              NSLocalizedString(@"Metric", nil)
+#define ICLOUD_BACKUP                  NSLocalizedString(@"Save Files to iCloud Drive", nil)
+#define CLOUD_BACKUP                   NSLocalizedString(@"Cloud Backup", nil)
+#define SOCIAL                         NSLocalizedString(@"Social", nil)
+#define AUTOUPLOAD                     NSLocalizedString(@"Auto Upload", nil)
+#define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
+#define BROADCAST_LOCALLY              NSLocalizedString(@"To Your Local Group", nil)
+#define BROADCAST_GLOBALLY             NSLocalizedString(@"To the Internet", nil)
+#define BROADCAST_NAME                 NSLocalizedString(@"Name", nil)
+#define BROADCAST_RATE                 NSLocalizedString(@"Update Rate", nil)
+#define BROADCAST_HTTPS                NSLocalizedString(@"Use HTTPS", nil)
+#define BROADCAST_HOST                 NSLocalizedString(@"Broadcast Server", nil)
+#define BROADCAST_UNITS                NSLocalizedString(@"Seconds", nil)
+#define MANAGE_FOLLOWING               NSLocalizedString(@"Manage People I'm Following", nil)
+#define MANAGE_FOLLOWED_BY             NSLocalizedString(@"Manage People Following Me", nil)
+#define DEVICE_ID                      NSLocalizedString(@"Device ID", nil)
+#define BUTTON_TITLE_COPY              NSLocalizedString(@"Copy", nil)
+#define HEALTHKIT                      NSLocalizedString(@"HealthKit", nil)
+#define READ_ACTIVITIES_FROM_HEALTHKIT NSLocalizedString(@"Read activities from HealthKit", nil)
+#define ALERT_TITLE_BROADCAST_USER     NSLocalizedString(@"Enter the name you want to use", nil)
+#define ALERT_TITLE_BROADCAST_RATE     NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
+#define ALERT_TITLE_BROADCAST_HOST     NSLocalizedString(@"What is the host name of the broadcast server?", nil)
+#define ALERT_TITLE_BROADCAST_WARN     NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
+#define ALERT_TITLE_NOT_IMPLEMENTED    NSLocalizedString(@"Unimplemented Feature", nil)
+#define ALERT_MSG_IMPLEMENTED          NSLocalizedString(@"This feature is not implemented.", nil)
+#define ALERT_NO_PROTOCOL              NSLocalizedString(@"Do not include the protocol in the URL.", nil)
+#define ALERT_MSG_NAME                 NSLocalizedString(@"", nil)
+#define ALERT_MSG_RATE                 NSLocalizedString(@"1", nil)
 
 @interface SettingsViewController ()
 
@@ -295,6 +304,8 @@ typedef enum SettingsRowsBroadcast
 	{
 		case SECTION_UNITS:
 			return UNIT_TITLE;
+		case SECTION_HEALTHKIT:
+			return HEALTHKIT;
 		case SECTION_BACKUP:
 			if ([self numberOfBackupRows] > 0)
 			{
@@ -329,6 +340,9 @@ typedef enum SettingsRowsBroadcast
 		case SECTION_UNITS:
 			numRows = NUM_SETTINGS_ROWS_UNITS;
 			break;
+		case SECTION_HEALTHKIT:
+			numRows = NUM_SETTINGS_ROWS_HEALTHKIT;
+			break;
 		case SECTION_BACKUP:
 			numRows = [self numberOfBackupRows];
 			break;
@@ -348,6 +362,8 @@ typedef enum SettingsRowsBroadcast
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	static NSString* CellIdentifier = @"Cell";
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil)
@@ -379,10 +395,25 @@ typedef enum SettingsRowsBroadcast
 					break;
 			}
 			break;
+		case SECTION_HEALTHKIT:
+			{
+				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+				cell.accessoryView = switchview;
+				[switchview setTag:(section * 100) + row];
+
+				switch (row)
+				{
+					case SETTINGS_ROW_INTEGRATE_HEALTHKIT:
+						cell.textLabel.text = READ_ACTIVITIES_FROM_HEALTHKIT;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences willIntegrateHealthKitActivities]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+				}
+			}
+			break;
 		case SECTION_BACKUP:
 			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
@@ -406,7 +437,6 @@ typedef enum SettingsRowsBroadcast
 			break;
 		case SECTION_SOCIAL:
 			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 				if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
 				{
 					row++;
@@ -438,11 +468,8 @@ typedef enum SettingsRowsBroadcast
 			}
 			break;
 		case SECTION_AUTOUPLOAD:
-			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				cell.textLabel.text = [[appDelegate getEnabledFileExportCloudServices] objectAtIndex:row];
-				cell.detailTextLabel.text = @"";
-			}
+			cell.textLabel.text = [[appDelegate getEnabledFileExportCloudServices] objectAtIndex:row];
+			cell.detailTextLabel.text = @"";
 			break;
 		case SECTION_BROADCAST:
 			{
@@ -489,13 +516,11 @@ typedef enum SettingsRowsBroadcast
 						cell.detailTextLabel.text = @"";
 						break;
 					case SETTINGS_ROW_DEVICE_ID:
-						{
-							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-							cell.textLabel.text = DEVICE_ID;
-							cell.detailTextLabel.text = [appDelegate getDeviceId];
-						}
+						cell.textLabel.text = DEVICE_ID;
+						cell.detailTextLabel.text = [appDelegate getDeviceId];
 						break;
 				}
+				break;
 			}
 			break;
 		default:
@@ -579,11 +604,14 @@ typedef enum SettingsRowsBroadcast
 
 - (void)switchToggled:(id)sender
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	UISwitch* switchControl = sender;
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	switch (switchControl.tag)
 	{
+		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_INTEGRATE_HEALTHKIT:
+			[Preferences setWillIntegrateHealthKitActivities:switchControl.isOn];
+			break;
 		case (SECTION_BACKUP * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
 			break;
 		case (SECTION_BACKUP * 100) + SETTINGS_ROW_LINK_DROPBOX:

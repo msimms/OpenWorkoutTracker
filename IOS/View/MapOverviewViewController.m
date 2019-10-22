@@ -263,7 +263,9 @@
 			size_t duringSegmentCount = 0; // points (so far) drawn within the highlighted segment
 			size_t afterSegmentCount  = 0; // points (so far) drawn after the highlighted segment
 
-			Coordinate coordinate;
+			double latitude = (double)0.0;
+			double longitude = (double)0.0;
+			time_t timestamp = 0;
 
 			CLLocationCoordinate2D coordinatesBefore[numPoints];
 			CLLocationCoordinate2D coordinatesDuring[numPoints];
@@ -276,9 +278,9 @@
 
 			CLLocation* location = nil;
 
-			while (GetHistoricalActivityPoint(activityIndex, totalPointIndex, &coordinate))
+			while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:totalPointIndex withLatitude:&latitude withLongitude:&longitude withTimestamp:&timestamp])
 			{
-				location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+				location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
 				
 				if ((prevLocation == nil) || ([location distanceFromLocation:prevLocation] >= 20.0))
 				{
@@ -296,11 +298,11 @@
 						[self addPin:location.coordinate withPlaceName:PIN_TITLE_START_OF_WORKOUT withDescription:@""];
 					}
 
-					if (coordinate.time < self->segmentToHighlight.startTime)
+					if (timestamp < self->segmentToHighlight.startTime)
 					{
 						coordinatesBefore[beforeSegmentCount++] = location.coordinate;
 					}
-					else if (coordinate.time > self->segmentToHighlight.endTime)
+					else if (timestamp > self->segmentToHighlight.endTime)
 					{
 						if ((afterSegmentCount == 0) && (self->segmentName != nil) && (self->segmentToHighlight.startTime != self->segmentToHighlight.endTime))
 						{

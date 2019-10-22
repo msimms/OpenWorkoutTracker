@@ -7,19 +7,18 @@
 
 "Active" = "Activo";
 "Activity Level" = "Nivel de Actividad";
-"Add Bike Profile" = "Añadir Perfil Bicicleta";
+"Add Bike Profile" = "Añadir un Perfil de Bicicleta";
 "Add a New Interval" = "Añadir un Intervalo Nuevo";
 "Additional Weight" = "Peso Additional";
 "Attributes" = "Atributos";
 "An unfinished activity has been found. Do you wish to resume it?" = "Se ha encontrado una actividad inacabada. ¿Deseas detenerlo?";
-"Are you sure you want to clear the wheel size?" = "¿Está seguro que desea reajustar el diámetro de la rueda?";
+"Are you sure you want to clear the wheel size?" = "¿Está seguro que desea eliminar el diámetro de la rueda?";
 "Are you sure you want to delete this bike profile?" = "¿Está seguro que desea eliminar este perfil?";
 "Are you sure you want to delete this workout?" = "¿Está seguro que desea eliminar este entrenamiento?";
 "Are you sure you want to stop?" = "¿Está seguro de que desea detener?";
 "Athlete" = "Atleta";
 "Authentication" = "Autenticación";
 "Auto Upload" = "Carga Automática";
-"Autolock" = "Autolock";
 "Autoscale" = "Autoescala";
 "Autoscale On" = "Activado Autoescala";
 "Autoscale Off" = "Discapacitado Autoescala";
@@ -96,7 +95,7 @@
 "GPS Filter Options" = "Opciones de Filtro GPS";
 "GPS Sample Frequency" = "Muestra GPS Frecuencia";
 "GPX File" = "GPX Archivo";
-"Heart Rate Monitor" = "Heart Rate Monitor";
+"Heart Rate Monitor" = "Monitor de Pulso Cardiaco";
 "Heatmap" = "Mapa de Calor";
 "Height" = "Altura";
 "Hiking" = "Excursionismo";
@@ -104,7 +103,7 @@
 "Home" = "Casa";
 "How often do you want to update your position to your followers?" = "¿Con qué frecuencia desea actualizar su posición a tus seguidores?";
 "Hybrid View" = "Híbrido Vista";
-"iCloud Backup" = "iCloud de Copia de Seguridad";
+"Save Files to iCloud Drive" = "Guardar Archivos en iCloud Drive";
 "Import" = "Importar";
 "Import from" = "Importar de";
 "Import Overlay" = "Importar";
@@ -168,6 +167,7 @@
 "Profile" = "Perfil";
 "Pull Up" = "La Tracción";
 "Push Up" = "La Flexión";
+"Read activities from HealthKit" = "Leer actividades de HealthKit";
 "Records" = "El Mejor";
 "Rep Interval" = "Intervalo de los Repeticións";
 "Repetitions" = "Repeticións";

@@ -474,10 +474,11 @@ typedef enum ExportFileTypeButtons
 	size_t pointIndex = 0;
 	double latitude = (double)0.0;
 	double longitude = (double)0.0;
+	time_t timestamp = 0;
 	CLLocation* location = nil;
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	while ([appDelegate getHistoricalActivityPoint:self->activityId withPointIndex:pointIndex withLatitude:&latitude withLongitude:&longitude])
+	while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:pointIndex withLatitude:&latitude withLongitude:&longitude withTimestamp:&timestamp])
 	{
 		// Draw every other point.
 		if (pointIndex % 2 == 0)
@@ -721,11 +722,9 @@ typedef enum ExportFileTypeButtons
 			}
 			break;
 		case SECTION_CHARTS:
-			{
-				self.spinner.hidden = FALSE;
-				[self.spinner startAnimating];
-				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
-			}
+			self.spinner.hidden = FALSE;
+			[self.spinner startAnimating];
+			[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
 			break;
 		case SECTION_ATTRIBUTES:
 			break;

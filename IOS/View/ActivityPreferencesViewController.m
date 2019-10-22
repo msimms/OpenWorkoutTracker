@@ -16,7 +16,6 @@
 #define TITLE_COLORS          NSLocalizedString(@"Colors", nil)
 #define TITLE_SOUNDS          NSLocalizedString(@"Sounds", nil)
 #define TITLE_GPS             NSLocalizedString(@"GPS", nil)
-#define TITLE_AUTOLOCK        NSLocalizedString(@"Autolock", nil)
 #define TITLE_COUNTDOWN       NSLocalizedString(@"Countdown Timer", nil)
 #define TITLE_GPS_ACCURACY    NSLocalizedString(@"Minimum GPS Accuracy", nil)
 #define TITLE_GPS_FILTER      NSLocalizedString(@"GPS Filter Options", nil)

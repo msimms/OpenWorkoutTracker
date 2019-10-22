@@ -858,6 +858,7 @@ void startSensorCallback(SensorType type, void* context)
 	if (result)
 	{
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+
 		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 
@@ -980,13 +981,17 @@ void startSensorCallback(SensorType type, void* context)
 	InitializeHistoricalActivityList();
 
 	// Read activities from HealthKit.
-	if (self->healthMgr)
+	if ([Preferences willIntegrateHealthKitActivities])
 	{
-		[self->healthMgr clearWorkoutsList];
-		[self->healthMgr readRunningWorkoutsFromHealthStore];
-		[self->healthMgr readCyclingWorkoutsFromHealthStore];
+		if (self->healthMgr)
+		{
+			[self->healthMgr clearWorkoutsList];
+			[self->healthMgr readRunningWorkoutsFromHealthStore];
+			[self->healthMgr readCyclingWorkoutsFromHealthStore];
+			[self->healthMgr waitForHealthKitQueries];
+		}
 	}
-	
+
 	// Reset the iterator.
 	self->currentActivityIndex = 0;
 
@@ -997,9 +1002,20 @@ void startSensorCallback(SensorType type, void* context)
 {
 	if (self->currentActivityIndex < [self getNumHistoricalActivities])
 	{
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(self->currentActivityIndex)];
-		++self->currentActivityIndex;
-		return activityId;
+		const char* const tempActivityId = ConvertActivityIndexToActivityId(self->currentActivityIndex);
+
+		if (tempActivityId)
+		{
+			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", tempActivityId];
+			++self->currentActivityIndex;
+			return activityId;
+		}
+		else
+		{
+			size_t healthMgrIndex = self->currentActivityIndex - GetNumHistoricalActivities();
+			++self->currentActivityIndex;
+			return [self->healthMgr convertIndexToActivityId:healthMgrIndex];
+		}
 	}
 	return nil;
 }
@@ -1012,7 +1028,7 @@ void startSensorCallback(SensorType type, void* context)
 	// Add in the activities from HealthKit.
 	if (self->healthMgr)
 	{
-	//	numActivities += [self->healthMgr getNumWorkouts];
+		numActivities += [self->healthMgr getNumWorkouts];
 	}
 	return numActivities;
 }
@@ -1020,12 +1036,29 @@ void startSensorCallback(SensorType type, void* context)
 - (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return 0;
+	}
+
+	// Activity is in the database.
 	return GetNumHistoricalActivityLocationPoints(activityIndex);
 }
 
 - (void)createHistoricalActivityObject:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		// No need to do anything.
+		return;
+	}
+
+	// Activity is in the database.
 	FreeHistoricalActivityObject(activityIndex);
 	FreeHistoricalActivitySensorData(activityIndex);
 	CreateHistoricalActivityObject(activityIndex);
@@ -1035,18 +1068,23 @@ void startSensorCallback(SensorType type, void* context)
 {
 	BOOL result = FALSE;
 
+	// Delete any cached data.
 	FreeHistoricalActivityObject(activityIndex);
 	FreeHistoricalActivitySensorData(activityIndex);
+
+	// Create the object.
 	CreateHistoricalActivityObject(activityIndex);
 
+	// Load all data.
 	LoadHistoricalActivitySummaryData(activityIndex);
-
 	if (LoadAllHistoricalActivitySensorData(activityIndex))
 	{
 		time_t startTime = 0;
 		time_t endTime = 0;
 
 		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+		
+		// If the activity was orphaned then the end time will be zero.
 		if (endTime == 0)
 		{
 			FixHistoricalActivityEndTime(activityIndex);
@@ -1066,36 +1104,82 @@ void startSensorCallback(SensorType type, void* context)
 - (BOOL)loadHistoricalActivity:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		// No need to do anything.
+		return TRUE;
+	}
+
+	// Activity is in the database.
 	return [self loadHistoricalActivityByIndex:activityIndex];
 }
 
 - (void)loadHistoricalActivitySummaryData:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		// No need to do anything.
+		return;
+	}
+
+	// Activity is in the database.
 	LoadHistoricalActivitySummaryData(activityIndex);
 }
 
 - (void)saveHistoricalActivitySummaryData:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		// No need to do anything.
+		return;
+	}
+
+	// Activity is in the database.
 	SaveHistoricalActivitySummaryData(activityIndex);
 }
 
 - (void)getHistoricalActivityStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		[self->healthMgr getWorkoutStartAndEndTime:activityId withStartTime:startTime withEndTime:endTime];
+	}
+
+	// Activity is in the database.
+	else
+	{
+		GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+	}
 }
 
-- (BOOL)getHistoricalActivityPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude
+- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return FALSE;
+	}
+
 	Coordinate coordinate;
 	BOOL result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
 	if (result)
 	{
 		(*latitude) = coordinate.latitude;
 		(*longitude) = coordinate.longitude;
+		(*timestamp) = coordinate.time;
 	}
 	return result;
 }
@@ -1108,24 +1192,58 @@ void startSensorCallback(SensorType type, void* context)
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return [self->healthMgr getWorkoutAttribute:attributeName forActivityId:activityId];
+	}
+
+	// Activity is in the database.
 	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
 }
 
 - (void)setHistoricalActivityAttribute:(NSString*)activityId withAttributeName:(const char* const)attributeName withAttributeType:(ActivityAttributeType) attributeValue
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return;
+	}
+
+	// Activity is in the database.
 	SetHistoricalActivityAttribute(activityIndex, attributeName, attributeValue);
 }
 
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		// No need to do anything.
+		return TRUE;
+	}
+
+	// Activity is in the database.
 	return LoadHistoricalActivitySensorData(activityIndex, sensorType, callback, context);
 }
 
 - (BOOL)loadAllHistoricalActivitySensorData:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		// No need to do anything.
+		return TRUE;
+	}
+
+	// Activity is in the database.
 	return LoadAllHistoricalActivitySensorData(activityIndex);
 }
 
@@ -1492,6 +1610,13 @@ void attributeNameCallback(const char* name, void* context)
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return nil;
+	}
+
+	// Activity is in the database.
 	NSMutableArray* attributes = [[NSMutableArray alloc] init];
 	if (attributes)
 	{
@@ -1540,13 +1665,20 @@ void attributeNameCallback(const char* name, void* context)
 - (NSString*)getHistoricalActivityType:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return [self->healthMgr getHistoricalActivityType:activityId];
+	}
+
+	// Activity is in the database.
 	return [self getHistoricalActivityTypeForIndex:activityIndex];
 }
 
 - (NSString*)getCurrentActivityId
 {
-	NSString* activityId = [NSString stringWithFormat:@"%s", GetCurrentActivityId()];
-	return activityId;
+	return [NSString stringWithFormat:@"%s", GetCurrentActivityId()];
 }
 
 #pragma mark methods for managing tags

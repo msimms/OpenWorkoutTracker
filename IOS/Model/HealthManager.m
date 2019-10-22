@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "HealthManager.h"
+#import "ActivityAttribute.h"
 #import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "LeHeartRateMonitor.h"
@@ -36,6 +37,8 @@
 	{
 		self.healthStore = [[HKHealthStore alloc] init];
 		self->heartRates = [[NSMutableArray alloc] init];
+		self->workouts = [[NSMutableDictionary alloc] init];
+		self->queryGroup = dispatch_group_create();
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 	}
@@ -146,6 +149,7 @@
 {
 	NSError* error;
 	NSDateComponents* dateOfBirth = [self.healthStore dateOfBirthComponentsWithError:&error];
+
 	if (dateOfBirth)
 	{
 		NSCalendar* gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -224,12 +228,13 @@
 		{
 			for (HKQuantitySample* sample in samples)
 			{
-				HKWorkout* workout = (HKWorkout*)sample;
-				[self->workouts addObject:workout];
+				[self->workouts setObject:(HKWorkout*)sample forKey:[[NSUUID UUID] UUIDString]];
 			}
 		}
+		dispatch_group_leave(self->queryGroup);
 	}];
 
+	dispatch_group_enter(self->queryGroup);
 	[self.healthStore executeQuery:sampleQuery];
 }
 
@@ -241,6 +246,98 @@
 - (void)readCyclingWorkoutsFromHealthStore
 {
 	[self readWorkoutsFromHealthStore:HKWorkoutActivityTypeCycling];
+}
+
+- (void)waitForHealthKitQueries
+{
+	dispatch_group_wait(self->queryGroup, DISPATCH_TIME_FOREVER);
+}
+
+#pragma mark methods for querying workout data.
+
+- (NSString*)convertIndexToActivityId:(size_t)index
+{
+	NSArray* keys = [self->workouts allKeys];
+	return [keys objectAtIndex:index];
+}
+
+- (NSString*)getHistoricalActivityType:(NSString*)activityId
+{
+	HKWorkout* workout = [self->workouts objectForKey:activityId];
+	if (workout)
+	{
+		HKWorkoutActivityType type = [workout workoutActivityType];
+		switch (type)
+		{
+			case HKWorkoutActivityTypeCycling:
+				return @"Cycling";
+			case HKWorkoutActivityTypeRunning:
+				return @"Running";
+			case HKWorkoutActivityTypeWalking:
+				return @"Walking";
+			default:
+				break;
+		}
+	}
+	return nil;
+}
+
+- (void)getWorkoutStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
+{
+	HKWorkout* workout = [self->workouts objectForKey:activityId];
+	if (workout)
+	{
+		(*startTime) = [workout.startDate timeIntervalSince1970];
+		(*endTime) = [workout.endDate timeIntervalSince1970];
+	}
+}
+
+- (ActivityAttributeType)getWorkoutAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
+{
+	ActivityAttributeType attr;
+	attr.valid = false;
+
+	HKWorkout* workout = [self->workouts objectForKey:activityId];
+	if (workout)
+	{
+		if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, strlen(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)) == 0)
+		{
+			HKQuantity* qty = [workout totalDistance];
+			attr.value.doubleVal = [qty doubleValueForUnit:HKUnit.meterUnit];
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_DISTANCE;
+			attr.valid = true;
+		}
+		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_MAX_CADENCE, strlen(ACTIVITY_ATTRIBUTE_MAX_CADENCE)) == 0)
+		{
+			attr.value.doubleVal = (double)0.0;
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_DISTANCE;
+			attr.valid = true;
+		}
+		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_HEART_RATE, strlen(ACTIVITY_ATTRIBUTE_HEART_RATE)) == 0)
+		{
+			attr.value.doubleVal = (double)0.0;
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_DISTANCE;
+			attr.valid = true;
+		}
+		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)) == 0)
+		{
+			attr.value.doubleVal = (double)0.0;
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_DISTANCE;
+			attr.valid = true;
+		}
+		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)) == 0)
+		{
+			attr.value.doubleVal = (double)0.0;
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_DISTANCE;
+			attr.valid = true;
+		}
+	}
+	return attr;
 }
 
 #pragma mark methods for writing HealthKit data
@@ -296,6 +393,7 @@
 																		endDate:self->lastHeartRateSample];
 
 		[self->heartRates removeAllObjects];
+
 		self->firstHeartRateSample = NULL;
 		self->lastHeartRateSample = NULL;
 

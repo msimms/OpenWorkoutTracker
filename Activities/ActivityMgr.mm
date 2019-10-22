@@ -702,14 +702,14 @@ extern "C" {
 	{
 		if (activityId == NULL)
 		{
-			return 0;
+			return ACTIVITY_INDEX_UNKNOWN;
 		}
 		
 		if (g_activityIdMap.count(activityId) > 0)
 		{
 			return g_activityIdMap.at(activityId);
 		}
-		return 0;
+		return ACTIVITY_INDEX_UNKNOWN;
 	}
 
 	//

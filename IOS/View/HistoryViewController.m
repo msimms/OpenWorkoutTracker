@@ -20,6 +20,37 @@
 #define EMAIL_TITLE                 NSLocalizedString(@"Workout Summary Data", nil)
 #define EMAIL_CONTENTS              NSLocalizedString(@"The data file is attached.", nil)
 
+@interface RowData : NSObject
+{
+@public
+	NSString* activityId;
+	time_t startTime;
+}
+@property (nonatomic, strong) NSString* activityId;
+@property (nonatomic) time_t startTime;
+
+- (id)initWithActivityId:(NSString*)activityId withStartTime:(time_t)startTime;
+
+@end
+
+@implementation RowData
+
+@synthesize activityId;
+@synthesize startTime;
+
+- (id)initWithActivityId:(NSString*)activityId withStartTime:(time_t)startTime
+{
+	if (self = [super init])
+	{
+		self.activityId = activityId;
+		self.startTime = startTime;
+	}
+	return self;
+}
+
+@end
+
+
 @interface HistoryViewController ()
 
 @end
@@ -119,10 +150,9 @@
 		self->historyDictionary = [[NSMutableDictionary alloc] init];
 		if (self->historyDictionary)
 		{
-			for (size_t rowIndex = 0; rowIndex < numHistoricalActivities; ++rowIndex)
+			NSString* activityId;
+			while ((activityId = [appDelegate getNextActivityId]) != nil)
 			{
-				NSString* activityId = [appDelegate getNextActivityId];
-
 				time_t startTime = 0;
 				time_t endTime = 0;
 				[appDelegate getHistoricalActivityStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];
@@ -133,16 +163,26 @@
 					NSString* key = [[NSString alloc] initWithFormat:@"%04u-%02u", theTime->tm_year + 1900, theTime->tm_mon + 1];
 					if (key)
 					{
+						RowData* rowData = [[RowData alloc] initWithActivityId:activityId withStartTime:startTime];
 						NSMutableArray* monthlyActivities = [self->historyDictionary objectForKey:key];
 						if (monthlyActivities == nil)
 						{
 							monthlyActivities = [[NSMutableArray alloc] init];
 						}
-						if (monthlyActivities)
+
+						// Insert sorted.
+						size_t insertIndex = 0;
+						for (RowData* existingRowData in monthlyActivities)
 						{
-							[monthlyActivities insertObject:activityId atIndex:0];
-							[self->historyDictionary setObject:monthlyActivities forKey:key];
+							if (startTime > existingRowData->startTime)
+							{
+								break;
+							}
+							insertIndex++;
 						}
+
+						[monthlyActivities insertObject:rowData atIndex:insertIndex];
+						[self->historyDictionary setObject:monthlyActivities forKey:key];
 					}
 				}
 			}
@@ -168,7 +208,7 @@
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 	NSString* month = [self->sortedKeys objectAtIndex:section];
-	return [[self->historyDictionary objectForKey:month] objectAtIndex:row];
+	return [[[self->historyDictionary objectForKey:month] objectAtIndex:row] activityId];
 }
 
 #pragma mark called when the user selects a row
@@ -222,6 +262,8 @@
 {
 	static NSString* CellIdentifier = @"Cell";
 
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil)
 	{
@@ -229,8 +271,6 @@
 	}
 
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	NSString* activityId = [self getActivityId:indexPath];
 	NSString* allTagsStr = @"";

@@ -19,7 +19,6 @@
 "Athlete" = "Athlete";
 "Authentication" = "Authentication";
 "Auto Upload" = "Auto Upload";
-"Autolock" = "Autolock";
 "Autoscale" = "Autoscale";
 "Autoscale On" = "Autoscale On";
 "Autoscale Off" = "Autoscale Off";
@@ -104,7 +103,7 @@
 "Home" = "Home";
 "How often do you want to update your position to your followers?" = "How often do you want to update your position to your followers?";
 "Hybrid View" = "Hybrid View";
-"iCloud Backup" = "iCloud Backup";
+"Save Files to iCloud Drive" = "Save Files to iCloud Drive";
 "Import" = "Import";
 "Import from" = "Import from";
 "Import Overlay" = "Import Overlay";
@@ -168,6 +167,7 @@
 "Profile" = "Profile";
 "Pull Up" = "Pull Up";
 "Push Up" = "Push Up";
+"Read activities from HealthKit" = "Read activities from HealthKit";
 "Records" = "Records";
 "Rep Interval" = "Rep Interval";
 "Repetitions" = "Repetitions";
