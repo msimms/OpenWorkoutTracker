@@ -12,6 +12,7 @@
 #import "LeHeartRateMonitor.h"
 #import "LeScale.h"
 #import "Notifications.h"
+#import "Preferences.h"
 #import "UserProfile.h"
 
 @interface HKUnit (HKManager)
@@ -47,28 +48,6 @@
 
 - (void)dealloc
 {
-}
-
-- (void)start
-{
-	if ([HKHealthStore isHealthDataAvailable])
-	{
-		NSSet* writeDataTypes = [self dataTypesToWrite];
-		NSSet* readDataTypes = [self dataTypesToRead];
-
-		// Request authorization. If granted update the user's metrics.
-		[self.healthStore requestAuthorizationToShareTypes:writeDataTypes readTypes:readDataTypes completion:^(BOOL success, NSError* error)
-		{
-			if (success)
-			{
-				dispatch_async(dispatch_get_main_queue(), ^{
-					[self updateUsersAge];
-					[self updateUsersHeight];
-					[self updateUsersWeight];
-				});
-			}
-		}];
-	}
 }
 
 #pragma mark HealthKit permissions
@@ -108,6 +87,30 @@
 	HKWorkoutType* workoutType = [HKObjectType workoutType];
 	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, workoutType, nil];
 #endif
+}
+
+#pragma mark methods for managing authorization.
+
+- (void)requestAuthorization
+{
+	if ([HKHealthStore isHealthDataAvailable])
+	{
+		NSSet* writeDataTypes = [self dataTypesToWrite];
+		NSSet* readDataTypes = [self dataTypesToRead];
+
+		// Request authorization. If granted update the user's metrics.
+		[self.healthStore requestAuthorizationToShareTypes:writeDataTypes readTypes:readDataTypes completion:^(BOOL success, NSError* error)
+		{
+			if (success)
+			{
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[self updateUsersAge];
+					[self updateUsersHeight];
+					[self updateUsersWeight];
+				});
+			}
+		}];
+	}
 }
 
 #pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc.
@@ -214,7 +217,7 @@
 	[self->workouts removeAllObjects];
 }
 
-- (void)readWorkoutsFromHealthStore:(HKWorkoutActivityType)activityType
+- (void)readWorkoutsFromHealthStoreOfType:(HKWorkoutActivityType)activityType
 {
 	NSPredicate* predicate = [HKQuery predicateForWorkoutsWithWorkoutActivityType:activityType];
 	NSSortDescriptor* sortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierStartDate ascending:false];
@@ -226,9 +229,12 @@
 	{
 		if (!error && samples)
 		{
-			for (HKQuantitySample* sample in samples)
+			@synchronized(self->workouts)
 			{
-				[self->workouts setObject:(HKWorkout*)sample forKey:[[NSUUID UUID] UUIDString]];
+				for (HKQuantitySample* sample in samples)
+				{
+					[self->workouts setObject:(HKWorkout*)sample forKey:[[NSUUID UUID] UUIDString]];
+				}
 			}
 		}
 		dispatch_group_leave(self->queryGroup);
@@ -240,12 +246,12 @@
 
 - (void)readRunningWorkoutsFromHealthStore
 {
-	[self readWorkoutsFromHealthStore:HKWorkoutActivityTypeRunning];
+	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeRunning];
 }
 
 - (void)readCyclingWorkoutsFromHealthStore
 {
-	[self readWorkoutsFromHealthStore:HKWorkoutActivityTypeCycling];
+	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeCycling];
 }
 
 - (void)waitForHealthKitQueries
@@ -292,6 +298,13 @@
 	}
 }
 
+- (double)quantityInUserPreferredUnits:(HKQuantity*)qty
+{
+	if ([Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC)
+		return [qty doubleValueForUnit:[HKUnit meterUnitWithMetricPrefix:HKMetricPrefixKilo]];
+	return [qty doubleValueForUnit:[HKUnit mileUnit]];
+}
+
 - (ActivityAttributeType)getWorkoutAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
 {
 	ActivityAttributeType attr;
@@ -303,7 +316,7 @@
 		if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, strlen(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)) == 0)
 		{
 			HKQuantity* qty = [workout totalDistance];
-			attr.value.doubleVal = [qty doubleValueForUnit:HKUnit.meterUnit];
+			attr.value.doubleVal = [self quantityInUserPreferredUnits:qty];
 			attr.valueType = TYPE_DOUBLE;
 			attr.measureType = MEASURE_DISTANCE;
 			attr.valid = true;

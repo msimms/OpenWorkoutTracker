@@ -160,7 +160,7 @@
 	self->healthMgr = [[HealthManager alloc] init];
 	if (self->healthMgr)
 	{
-		[self->healthMgr start];
+		[self->healthMgr requestAuthorization];
 //		[self->healthMgr subscribeToHeartRateUpdates];
 	}
 }

@@ -301,6 +301,14 @@
 			allTagsStr = [allTagsStr stringByAppendingString:@", "];
 		allTagsStr = [allTagsStr stringByAppendingString:tag];
 	}
+	
+	// If the activity was loaded from health kit then append at tag to denote it as such.
+	if ([appDelegate isHealthKitActivity:activityId])
+	{
+		if ([allTagsStr length] > 0)
+			allTagsStr = [allTagsStr stringByAppendingString:@", "];
+		allTagsStr = [allTagsStr stringByAppendingString:@"HealthKit"];
+	}
 
 	// Get the activity name.
 	NSString* name = [appDelegate getActivityName:activityId];

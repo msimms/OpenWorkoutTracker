@@ -624,7 +624,7 @@ typedef enum ExportFileTypeButtons
 		[self.summaryTableView reloadData];
 	}]];
 
-	ActivityAttributeType repsValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_REPS forActivityIndex:activityIndex];
+	ActivityAttributeType repsValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_REPS forActivityId:self->activityId];
 	if (repsValue.valid)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_FIX_REPS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {

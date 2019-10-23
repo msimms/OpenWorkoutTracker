@@ -34,7 +34,6 @@
 	NSMutableArray* timeSection2RowNames;
 	NSArray* chartTitles;
 
-	NSInteger activityIndex;
 	NSInteger attributeIndex;
 
 	NSString* exportedFileName;

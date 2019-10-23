@@ -461,7 +461,20 @@
 	self->healthMgr = [[HealthManager alloc] init];
 	if (self->healthMgr)
 	{
-		[self->healthMgr start];
+		// Request authorization.
+		[self->healthMgr requestAuthorization];
+
+		// Read activities from HealthKit.
+		if ([Preferences willIntegrateHealthKitActivities])
+		{
+			if (self->healthMgr)
+			{
+				[self->healthMgr clearWorkoutsList];
+				[self->healthMgr readRunningWorkoutsFromHealthStore];
+				[self->healthMgr readCyclingWorkoutsFromHealthStore];
+				[self->healthMgr waitForHealthKitQueries];
+			}
+		}
 	}
 }
 
@@ -980,18 +993,6 @@ void startSensorCallback(SensorType type, void* context)
 	// Read activities from our database.
 	InitializeHistoricalActivityList();
 
-	// Read activities from HealthKit.
-	if ([Preferences willIntegrateHealthKitActivities])
-	{
-		if (self->healthMgr)
-		{
-			[self->healthMgr clearWorkoutsList];
-			[self->healthMgr readRunningWorkoutsFromHealthStore];
-			[self->healthMgr readCyclingWorkoutsFromHealthStore];
-			[self->healthMgr waitForHealthKitQueries];
-		}
-	}
-
 	// Reset the iterator.
 	self->currentActivityIndex = 0;
 
@@ -1062,6 +1063,11 @@ void startSensorCallback(SensorType type, void* context)
 	FreeHistoricalActivityObject(activityIndex);
 	FreeHistoricalActivitySensorData(activityIndex);
 	CreateHistoricalActivityObject(activityIndex);
+}
+
+- (BOOL)isHealthKitActivity:(NSString*)activityId
+{
+	return (ConvertActivityIdToActivityIndex([activityId UTF8String]) == ACTIVITY_INDEX_UNKNOWN);
 }
 
 - (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex
@@ -1608,17 +1614,18 @@ void attributeNameCallback(const char* name, void* context)
 
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSString*)activityId
 {
+	NSMutableArray* attributes = [[NSMutableArray alloc] init];
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
 	// If the activity is not in the database, try HealthKit.
 	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 	{
-		return nil;
+		NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED];
+		[attributes addObject:attrTitle];
 	}
 
 	// Activity is in the database.
-	NSMutableArray* attributes = [[NSMutableArray alloc] init];
-	if (attributes)
+	else
 	{
 		size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
 		for (size_t i = 0; i < numAttributes; ++i)
@@ -1627,10 +1634,7 @@ void attributeNameCallback(const char* name, void* context)
 			if (attrName)
 			{
 				NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", attrName];
-				if (attrTitle)
-				{
-					[attributes addObject:attrTitle];
-				}
+				[attributes addObject:attrTitle];
 				free((void*)attrName);
 			}
 		}

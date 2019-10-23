@@ -19,7 +19,9 @@
 	dispatch_group_t queryGroup; // tracks queries until they are completed
 }
 
-- (void)start;
+// methods for managing authorization.
+
+- (void)requestAuthorization;
 
 // methods for managing workouts.
 
