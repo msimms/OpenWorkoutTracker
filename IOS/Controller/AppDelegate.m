@@ -1620,8 +1620,8 @@ void attributeNameCallback(const char* name, void* context)
 	// If the activity is not in the database, try HealthKit.
 	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 	{
-		NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED];
-		[attributes addObject:attrTitle];
+		[attributes addObject:[[NSString alloc] initWithFormat:@"%s", ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED]];
+		[attributes addObject:[[NSString alloc] initWithFormat:@"%s", ACTIVITY_ATTRIBUTE_ELAPSED_TIME]];
 	}
 
 	// Activity is in the database.

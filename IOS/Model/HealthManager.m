@@ -321,32 +321,40 @@
 			attr.measureType = MEASURE_DISTANCE;
 			attr.valid = true;
 		}
+		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_ELAPSED_TIME, strlen(ACTIVITY_ATTRIBUTE_ELAPSED_TIME)) == 0)
+		{
+			NSTimeInterval qty = [workout duration];
+			attr.value.timeVal = (time_t)qty;
+			attr.valueType = TYPE_TIME;
+			attr.measureType = MEASURE_TIME;
+			attr.valid = true;
+		}
 		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_MAX_CADENCE, strlen(ACTIVITY_ATTRIBUTE_MAX_CADENCE)) == 0)
 		{
 			attr.value.doubleVal = (double)0.0;
 			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DISTANCE;
+			attr.measureType = MEASURE_RPM;
 			attr.valid = true;
 		}
 		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_HEART_RATE, strlen(ACTIVITY_ATTRIBUTE_HEART_RATE)) == 0)
 		{
 			attr.value.doubleVal = (double)0.0;
 			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DISTANCE;
+			attr.measureType = MEASURE_BPM;
 			attr.valid = true;
 		}
 		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)) == 0)
 		{
 			attr.value.doubleVal = (double)0.0;
 			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DISTANCE;
+			attr.measureType = MEASURE_DEGREES;
 			attr.valid = true;
 		}
 		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)) == 0)
 		{
 			attr.value.doubleVal = (double)0.0;
 			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DISTANCE;
+			attr.measureType = MEASURE_DEGREES;
 			attr.valid = true;
 		}
 	}
