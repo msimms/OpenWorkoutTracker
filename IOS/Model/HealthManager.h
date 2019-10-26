@@ -28,6 +28,7 @@
 - (NSInteger)getNumWorkouts;
 - (void)clearWorkoutsList;
 - (void)readRunningWorkoutsFromHealthStore;
+- (void)readWalkingWorkoutsFromHealthStore;
 - (void)readCyclingWorkoutsFromHealthStore;
 - (void)waitForHealthKitQueries;
 

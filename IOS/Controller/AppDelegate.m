@@ -471,6 +471,7 @@
 			{
 				[self->healthMgr clearWorkoutsList];
 				[self->healthMgr readRunningWorkoutsFromHealthStore];
+				[self->healthMgr readWalkingWorkoutsFromHealthStore];
 				[self->healthMgr readCyclingWorkoutsFromHealthStore];
 				[self->healthMgr waitForHealthKitQueries];
 			}

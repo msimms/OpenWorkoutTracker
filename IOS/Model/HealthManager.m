@@ -249,6 +249,11 @@
 	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeRunning];
 }
 
+- (void)readWalkingWorkoutsFromHealthStore
+{
+	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeWalking];
+}
+
 - (void)readCyclingWorkoutsFromHealthStore
 {
 	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeCycling];
