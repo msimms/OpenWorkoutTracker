@@ -26,11 +26,11 @@ NSString* NumToStringForHashing(NSNumber* num)
 	return [formatter stringFromNumber:num];
 }
 
-void GpsDataHashCallback(size_t activityIndex, void* context)
+void GpsDataHashCallback(const char* activityId, void* context)
 {
-	ActivityAttributeType latValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_LATITUDE);
-	ActivityAttributeType lonValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_LONGITUDE);
-	ActivityAttributeType altValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_ALTITUDE);
+	ActivityAttributeType latValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_LATITUDE);
+	ActivityAttributeType lonValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_LONGITUDE);
+	ActivityAttributeType altValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_ALTITUDE);
 
 	if (latValue.valid && lonValue.valid && altValue.valid)
 	{
@@ -53,15 +53,15 @@ void GpsDataHashCallback(size_t activityIndex, void* context)
 	}
 }
 
-void AccelDataHashCallback(size_t activityIndex, void* context)
+void AccelDataHashCallback(const char* activityId, void* context)
 {
 	ActivityAttributeType xAxisValue;
 	ActivityAttributeType yAxisValue;
 	ActivityAttributeType zAxisValue;
 
-	xAxisValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_X);
-	yAxisValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_Y);
-	zAxisValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_Z);
+	xAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_X);
+	yAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Y);
+	zAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Z);
 
 	if (xAxisValue.valid && yAxisValue.valid && zAxisValue.valid)
 	{
@@ -74,9 +74,9 @@ void AccelDataHashCallback(size_t activityIndex, void* context)
 	}
 }
 
-void CadenceDataHashCallback(size_t activityIndex, void* context)
+void CadenceDataHashCallback(const char* activityId, void* context)
 {
-	ActivityAttributeType cadenceValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_CADENCE);
+	ActivityAttributeType cadenceValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_CADENCE);
 	if (cadenceValue.valid)
 	{
 		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;
@@ -91,9 +91,9 @@ void CadenceDataHashCallback(size_t activityIndex, void* context)
 	}
 }
 
-void HeartRateDataHashCallback(size_t activityIndex, void* context)
+void HeartRateDataHashCallback(const char* activityId, void* context)
 {
-	ActivityAttributeType hrValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_HEART_RATE);
+	ActivityAttributeType hrValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_HEART_RATE);
 	if (hrValue.valid)
 	{
 		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;
@@ -109,9 +109,9 @@ void HeartRateDataHashCallback(size_t activityIndex, void* context)
 	}
 }
 
-void PowerDataHashCallback(size_t activityIndex, void* context)
+void PowerDataHashCallback(const char* activityId, void* context)
 {
-	ActivityAttributeType powerValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_POWER);
+	ActivityAttributeType powerValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_POWER);
 	if (powerValue.valid)
 	{
 		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;
@@ -127,10 +127,13 @@ void PowerDataHashCallback(size_t activityIndex, void* context)
 	}
 }
 
-- (NSString*)calculateWithActivityIndex:(size_t)activityIndex
+- (NSString*)calculateWithActivityId:(NSString*)activityId
 {
 	CC_SHA512_CTX ctx;
-	
+
+	InitializeHistoricalActivityList();
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
 	// Initialize the context.
 	CC_SHA512_Init(&ctx);
 
@@ -158,13 +161,6 @@ void PowerDataHashCallback(size_t activityIndex, void* context)
 	
 	NSData* data = [NSData dataWithBytes:digest length:CC_SHA512_DIGEST_LENGTH];
 	return [data description];
-}
-
-- (NSString*)calculateWithActivityId:(NSString*)activityId
-{
-	InitializeHistoricalActivityList();
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	return [self calculateWithActivityIndex:activityIndex];
 }
 
 @end

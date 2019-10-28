@@ -7,7 +7,6 @@
 
 - (id)init;
 
-- (NSString*)calculateWithActivityIndex:(size_t)activityIndex;
 - (NSString*)calculateWithActivityId:(NSString*)activityId;
 
 @end

@@ -16,12 +16,13 @@
 
 @implementation HeartRateLine
 
-void HeartRateDataCallback(size_t activityIndex, void* context)
+void HeartRateDataCallback(const char* const activityId, void* context)
 {
 	HeartRateLine* ptrToHeartRateChart = (__bridge HeartRateLine*)context;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityAttributeType hrValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_HEART_RATE forActivityIndex:activityIndex];
+	ActivityAttributeType hrValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_HEART_RATE forActivityId:[NSString stringWithUTF8String:activityId]];
+
 	if (hrValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToHeartRateChart->points count]];

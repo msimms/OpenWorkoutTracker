@@ -24,7 +24,7 @@ Axis g_accelChartAxis = AXIS_X;
 	g_accelChartAxis = axis;
 }
 
-void AccelDataCallback(size_t activityIndex, void* context)
+void AccelDataCallback(const char* const activityId, void* context)
 {
 	ActivityAttributeType axisValue;
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -32,13 +32,13 @@ void AccelDataCallback(size_t activityIndex, void* context)
 	switch (g_accelChartAxis)
 	{
 	case AXIS_X:
-		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityIndex:activityIndex];
+		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityId:[NSString stringWithUTF8String:activityId]];
 		break;
 	case AXIS_Y:
-		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_Y forActivityIndex:activityIndex];
+		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_Y forActivityId:[NSString stringWithUTF8String:activityId]];
 		break;
 	case AXIS_Z:
-		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_Z forActivityIndex:activityIndex];
+		axisValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_Z forActivityId:[NSString stringWithUTF8String:activityId]];
 		break;
 	}
 

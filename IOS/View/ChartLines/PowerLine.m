@@ -16,12 +16,13 @@
 
 @implementation PowerLine
 
-void PowerDataCallback(size_t activityIndex, void* context)
+void PowerDataCallback(const char* const activityId, void* context)
 {
 	PowerLine* ptrToPowerChart = (__bridge PowerLine*)context;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityAttributeType powerValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_3_SEC_POWER forActivityIndex:activityIndex];
+	ActivityAttributeType powerValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_3_SEC_POWER forActivityId:[NSString stringWithUTF8String:activityId]];
+
 	if (powerValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToPowerChart->points count]];

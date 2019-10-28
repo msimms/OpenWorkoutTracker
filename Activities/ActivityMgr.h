@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 	// Callbacks.
-	typedef void (*SensorDataCallback)(size_t activityIndex, void* context);
+	typedef void (*SensorDataCallback)(const char* activityId, void* context);
 	typedef void (*KmlPlacemarkStartCallback)(const char* name, void* context);
 	typedef void (*KmlPlacemarkEndCallback)(const char* name, void* context);
 	typedef void (*KmlCoordinateCallback)(Coordinate coordinate, void* context);
@@ -123,6 +123,7 @@ extern "C" {
 	char* GetHistoricalActivityName(size_t activityIndex);
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex);
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
+	ActivityAttributeType QueryHistoricalActivityAttributeById(const char* activityId, const char* const attributeName);
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex);
 	size_t GetNumHistoricalActivities(void);

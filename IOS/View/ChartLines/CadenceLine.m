@@ -16,12 +16,13 @@
 
 @implementation CadenceLine
 
-void CadenceDataCallback(size_t activityIndex, void* context)
+void CadenceDataCallback(const char* const activityId, void* context)
 {
 	CadenceLine* ptrToCadenceChart = (__bridge CadenceLine*)context;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityAttributeType cadenceValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_CADENCE forActivityIndex:activityIndex];
+	ActivityAttributeType cadenceValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_CADENCE forActivityId:[NSString stringWithUTF8String:activityId]];
+
 	if (cadenceValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToCadenceChart->points count]];

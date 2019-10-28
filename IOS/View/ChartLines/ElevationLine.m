@@ -16,12 +16,13 @@
 
 @implementation ElevationLine
 
-void ElevationDataCallback(size_t activityIndex, void* context)
+void ElevationDataCallback(const char* const activityId, void* context)
 {
 	ElevationLine* ptrToElevationChart = (__bridge ElevationLine*)context;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityAttributeType elevationValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_ALTITUDE forActivityIndex:activityIndex];
+	ActivityAttributeType elevationValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_ALTITUDE forActivityId:[NSString stringWithUTF8String:activityId]];
+
 	if (elevationValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToElevationChart->points count]];

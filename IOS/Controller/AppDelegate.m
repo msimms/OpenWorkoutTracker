@@ -467,14 +467,11 @@
 		// Read activities from HealthKit.
 		if ([Preferences willIntegrateHealthKitActivities])
 		{
-			if (self->healthMgr)
-			{
-				[self->healthMgr clearWorkoutsList];
-				[self->healthMgr readRunningWorkoutsFromHealthStore];
-				[self->healthMgr readWalkingWorkoutsFromHealthStore];
-				[self->healthMgr readCyclingWorkoutsFromHealthStore];
-				[self->healthMgr waitForHealthKitQueries];
-			}
+			[self->healthMgr clearWorkoutsList];
+			[self->healthMgr readRunningWorkoutsFromHealthStore];
+			[self->healthMgr readWalkingWorkoutsFromHealthStore];
+			[self->healthMgr readCyclingWorkoutsFromHealthStore];
+			[self->healthMgr waitForHealthKitQueries];
 		}
 	}
 }
@@ -697,7 +694,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
 			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
 
-			if (rate)
+			if (timestampMs && rate)
 			{
 				ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
 
@@ -723,7 +720,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSNumber* timestampMs = [cadenceData objectForKey:@KEY_NAME_CADENCE_TIMESTAMP_MS];
 			NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
 
-			if (rate)
+			if (timestampMs && rate)
 			{
 				ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
 			}
@@ -744,7 +741,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS];
 			NSNumber* count = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED];
 
-			if (count)
+			if (timestampMs && count)
 			{
 				ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
 			}
@@ -765,7 +762,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_POWER_TIMESTAMP_MS];
 			NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
 
-			if (watts)
+			if (timestampMs && watts)
 			{
 				ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
 			}
@@ -783,10 +780,10 @@ void startSensorCallback(SensorType type, void* context)
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
-			NSNumber* value = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH];
 			NSNumber* timestampMs = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH_TIMESTAMP_MS];
+			NSNumber* value = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH];
 
-			if (value)
+			if (timestampMs && value)
 			{
 				ProcessRunStrideLengthReading([value doubleValue], [timestampMs longLongValue]);
 			}
@@ -804,10 +801,10 @@ void startSensorCallback(SensorType type, void* context)
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
-			NSNumber* value = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE];
 			NSNumber* timestampMs = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE_TIMESTAMP_MS];
+			NSNumber* value = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE];
 
-			if (value)
+			if (timestampMs && value)
 			{
 				ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
 			}
@@ -1042,7 +1039,7 @@ void startSensorCallback(SensorType type, void* context)
 	// If the activity is not in the database, try HealthKit.
 	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 	{
-		return 0;
+		return [self->healthMgr getNumLocationPoints:activityId];
 	}
 
 	// Activity is in the database.

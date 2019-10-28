@@ -16,12 +16,13 @@
 
 @implementation SpeedLine
 
-void SpeedDataCallback(size_t activityIndex, void* context)
+void SpeedDataCallback(const char* const activityId, void* context)
 {
 	SpeedLine* ptrToPaceChart = (__bridge SpeedLine*)context;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityAttributeType speedValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_CURRENT_SPEED forActivityIndex:activityIndex];
+	ActivityAttributeType speedValue = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_CURRENT_SPEED forActivityId:[NSString stringWithUTF8String:activityId]];
+
 	if (speedValue.valid)
 	{
 		NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:[ptrToPaceChart->points count]];

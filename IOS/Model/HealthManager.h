@@ -37,6 +37,7 @@
 - (NSString*)convertIndexToActivityId:(size_t)index;
 - (NSString*)getHistoricalActivityType:(NSString*)activityId;
 - (void)getWorkoutStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
+- (NSInteger)getNumLocationPoints:(NSString*)activityId;
 - (ActivityAttributeType)getWorkoutAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 
 // methods for writing HealthKit data.

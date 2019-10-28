@@ -303,6 +303,11 @@
 	}
 }
 
+- (NSInteger)getNumLocationPoints:(NSString*)activityId
+{
+	return 0;
+}
+
 - (double)quantityInUserPreferredUnits:(HKQuantity*)qty
 {
 	if ([Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC)
@@ -360,6 +365,14 @@
 			attr.value.doubleVal = (double)0.0;
 			attr.valueType = TYPE_DOUBLE;
 			attr.measureType = MEASURE_DEGREES;
+			attr.valid = true;
+		}
+		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_CALORIES_BURNED, strlen(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)) == 0)
+		{
+			HKQuantity* qty = [workout totalEnergyBurned];
+			attr.value.doubleVal = [self quantityInUserPreferredUnits:qty];
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_CALORIES;
 			attr.valid = true;
 		}
 	}

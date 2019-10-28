@@ -90,7 +90,7 @@
 	// Format the attributes.
 	for (NSString* attributeName in attributeNames)
 	{
-		ActivityAttributeType attr = QueryHistoricalActivityAttribute(activityIndex, [attributeName UTF8String]);
+		ActivityAttributeType attr = QueryHistoricalActivityAttributeById([self->activityId UTF8String], [attributeName UTF8String]);
 		if (attr.valid)
 		{
 			NSString* valueStr = [StringUtils formatActivityViewType:attr];
