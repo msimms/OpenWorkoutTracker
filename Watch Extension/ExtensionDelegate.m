@@ -26,17 +26,17 @@
 	Initialize([dbFileName UTF8String]);
 
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
+//	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 
 	self->sensorMgr = [SensorMgr sharedInstance];
 	if (self->sensorMgr)
 	{
-		[self->sensorMgr addSensor:accelerometerController];
+//		[self->sensorMgr addSensor:accelerometerController];
 		[self->sensorMgr addSensor:locationController];
 	}
 
-	[self startHealthMgr];
+//	[self startHealthMgr];
 	[self startWatchSession];
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
