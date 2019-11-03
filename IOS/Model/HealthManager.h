@@ -30,7 +30,9 @@
 - (void)readRunningWorkoutsFromHealthStore;
 - (void)readWalkingWorkoutsFromHealthStore;
 - (void)readCyclingWorkoutsFromHealthStore;
+- (void)readLocationPointsFromHealthStoreForActivityId:(NSString*)activityId;
 - (void)waitForHealthKitQueries;
+- (void)removeOverlappingActivityWithStartTime:(time_t)startTime withEndTime:(time_t)endTime;
 
 // methods for querying workout data.
 

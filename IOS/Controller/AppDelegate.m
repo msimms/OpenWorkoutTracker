@@ -991,6 +991,17 @@ void startSensorCallback(SensorType type, void* context)
 	// Read activities from our database.
 	InitializeHistoricalActivityList();
 
+	// Remove duplicate items from the health kit list.
+	size_t numDbActivities = GetNumHistoricalActivities();
+	for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+	{
+		time_t startTime = 0;
+		time_t endTime = 0;
+
+		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+		[self->healthMgr removeOverlappingActivityWithStartTime:startTime withEndTime:endTime];
+	}
+
 	// Reset the iterator.
 	self->currentActivityIndex = 0;
 
@@ -1053,7 +1064,7 @@ void startSensorCallback(SensorType type, void* context)
 	// If the activity is not in the database, try HealthKit.
 	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 	{
-		// No need to do anything.
+		[self->healthMgr readLocationPointsFromHealthStoreForActivityId:activityId];
 		return;
 	}
 

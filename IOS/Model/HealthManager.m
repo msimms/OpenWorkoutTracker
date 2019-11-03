@@ -259,9 +259,82 @@
 	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeCycling];
 }
 
+- (void)readLocationPointsFromHealthStoreForWorkoutRoute:(HKWorkoutRoute*)route
+{
+	HKWorkoutRouteQuery* query = [[HKWorkoutRouteQuery alloc] initWithRoute:route
+																dataHandler:^(HKWorkoutRouteQuery* query, NSArray<CLLocation*>* routeData, BOOL done, NSError *error)
+	{
+		for (CLLocation* location in routeData)
+		{
+		}
+		dispatch_group_leave(self->queryGroup);
+	}];
+
+	dispatch_group_enter(self->queryGroup);
+	[self.healthStore executeQuery:query];
+}
+
+- (void)readLocationPointsFromHealthStoreForWorkout:(HKWorkout*)workout
+{
+	NSPredicate* workoutPredicate = [HKQuery predicateForObjectsFromWorkout:workout];
+	HKSampleType* type = [HKSeriesType workoutRouteType];
+	HKQuery* query = [[HKAnchoredObjectQuery alloc] initWithType:type
+													   predicate:workoutPredicate
+														  anchor:nil
+												   limit:HKObjectQueryNoLimit
+												  resultsHandler:^(HKAnchoredObjectQuery* query,
+																   NSArray<HKSample*>* sampleObjects,
+																   NSArray<HKDeletedObject*>* deletedObjects,
+																   HKQueryAnchor* newAnchor,
+																   NSError* error)
+	{
+		for (HKWorkoutRoute* route in sampleObjects)
+		{
+			[self readLocationPointsFromHealthStoreForWorkoutRoute:route];
+		}
+		dispatch_group_leave(self->queryGroup);
+	}];
+
+	dispatch_group_enter(self->queryGroup);
+	[self.healthStore executeQuery:query];
+}
+
+- (void)readLocationPointsFromHealthStoreForActivityId:(NSString*)activityId
+{
+	@synchronized(self->workouts)
+	{
+		HKWorkout* workout = [self->workouts objectForKey:activityId];
+		if (workout)
+		{
+			[self readLocationPointsFromHealthStoreForWorkout:workout];
+		}
+	}
+}
+
 - (void)waitForHealthKitQueries
 {
 	dispatch_group_wait(self->queryGroup, DISPATCH_TIME_FOREVER);
+}
+
+- (void)removeOverlappingActivityWithStartTime:(time_t)startTime withEndTime:(time_t)endTime
+{
+	NSMutableArray* itemsToRemove = [NSMutableArray array];
+
+	for (NSString* activityId in self->workouts)
+	{
+		HKWorkout* workout = [self->workouts objectForKey:activityId];
+
+		time_t workoutStartTime = [workout.startDate timeIntervalSince1970];
+		time_t workoutEndTime = [workout.endDate timeIntervalSince1970];
+
+		if ((startTime >= workoutStartTime && startTime < workoutEndTime) ||
+			(endTime < workoutEndTime && endTime >= workoutStartTime))
+		{
+			[itemsToRemove addObject:activityId];
+		}
+	}
+
+	[self->workouts removeObjectsForKeys:itemsToRemove];
 }
 
 #pragma mark methods for querying workout data.
