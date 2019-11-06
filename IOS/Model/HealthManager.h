@@ -13,6 +13,7 @@
 @interface HealthManager : NSObject
 {
 	NSMutableDictionary* workouts; // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
+	NSMutableDictionary* locations; // arrays of locations stored in the health store, key is the activity ID which is generated automatically
 	NSMutableArray* heartRates; // we write average heart rates to the health store; this stores the intermediate values
 	NSDate* firstHeartRateSample; // timestamp associated with the above array
 	NSDate* lastHeartRateSample; // timestamp associated with the above array
@@ -40,6 +41,7 @@
 - (NSString*)getHistoricalActivityType:(NSString*)activityId;
 - (void)getWorkoutStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 - (NSInteger)getNumLocationPoints:(NSString*)activityId;
+- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp;
 - (ActivityAttributeType)getWorkoutAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 
 // methods for writing HealthKit data.

@@ -1185,7 +1185,7 @@ void startSensorCallback(SensorType type, void* context)
 	// If the activity is not in the database, try HealthKit.
 	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 	{
-		return FALSE;
+		return [self->healthMgr getHistoricalActivityLocationPoint:activityId withPointIndex:pointIndex withLatitude:latitude withLongitude:longitude withTimestamp:timestamp];
 	}
 
 	Coordinate coordinate;

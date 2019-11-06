@@ -5,6 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#import <CoreLocation/CoreLocation.h>
 #import "HealthManager.h"
 #import "ActivityAttribute.h"
 #import "ActivityMgr.h"
@@ -39,6 +40,7 @@
 		self.healthStore = [[HKHealthStore alloc] init];
 		self->heartRates = [[NSMutableArray alloc] init];
 		self->workouts = [[NSMutableDictionary alloc] init];
+		self->locations = [[NSMutableDictionary alloc] init];
 		self->queryGroup = dispatch_group_create();
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
@@ -262,7 +264,7 @@
 - (void)readLocationPointsFromHealthStoreForWorkoutRoute:(HKWorkoutRoute*)route
 {
 	HKWorkoutRouteQuery* query = [[HKWorkoutRouteQuery alloc] initWithRoute:route
-																dataHandler:^(HKWorkoutRouteQuery* query, NSArray<CLLocation*>* routeData, BOOL done, NSError *error)
+																dataHandler:^(HKWorkoutRouteQuery* query, NSArray<CLLocation*>* routeData, BOOL done, NSError* error)
 	{
 		for (CLLocation* location in routeData)
 		{
@@ -378,7 +380,28 @@
 
 - (NSInteger)getNumLocationPoints:(NSString*)activityId
 {
+	NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+	if (activityLocations)
+	{
+		return [activityLocations count];
+	}
 	return 0;
+}
+
+- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp
+{
+	NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+	if (activityLocations)
+	{
+		CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
+		if (loc)
+		{
+			(*latitude) = loc.coordinate.latitude;
+			(*longitude) = loc.coordinate.longitude;
+			(*timestamp) = [loc.timestamp timeIntervalSince1970];
+		}
+	}
+	return FALSE;
 }
 
 - (double)quantityInUserPreferredUnits:(HKQuantity*)qty
@@ -534,7 +557,7 @@
 - (void)saveCaloriesBurnedIntoHealthStore:(double)calories withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
 {
 	HKUnit* calorieUnit = [HKUnit largeCalorieUnit];
-	HKQuantity* calorieQuantity = [HKQuantity quantityWithUnit:calorieUnit doubleValue:calories * (double)1000.0];
+	HKQuantity* calorieQuantity = [HKQuantity quantityWithUnit:calorieUnit doubleValue:calories];
 	HKQuantityType* calorieType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierActiveEnergyBurned];
 	HKQuantitySample* calorieSample = [HKQuantitySample quantitySampleWithType:calorieType quantity:calorieQuantity startDate:startDate endDate:endDate];
 	[self.healthStore saveObject:calorieSample withCompletion:^(BOOL success, NSError *error) {}];
