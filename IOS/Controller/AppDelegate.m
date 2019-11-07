@@ -1068,6 +1068,7 @@ void startSensorCallback(SensorType type, void* context)
 	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 	{
 		[self->healthMgr readLocationPointsFromHealthStoreForActivityId:activityId];
+		[self->healthMgr waitForHealthKitQueries];
 		return;
 	}
 

@@ -283,8 +283,14 @@
 			{
 				[self->locations setObject:newArray forKey:activityId];
 			}
+			
+			if (done)
+			{
+				dispatch_group_leave(self->queryGroup);
+			}
 		}];
 
+		dispatch_group_enter(self->queryGroup);
 		[self.healthStore executeQuery:query];
 	}
 }
