@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -76,7 +76,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XGp-p1-MzY">
-                                <rect key="frame" x="0.0" y="567" width="375" height="46"/>
+                                <rect key="frame" x="0.0" y="587" width="375" height="46"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="46" id="j5a-P9-WLQ"/>
@@ -95,7 +95,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EyH-bS-fuV">
-                                <rect key="frame" x="144" y="621" width="87" height="46"/>
+                                <rect key="frame" x="144" y="641" width="87" height="46"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="46" id="nzN-Qv-FY7"/>
@@ -127,7 +127,7 @@
                             <constraint firstItem="XGp-p1-MzY" firstAttribute="trailing" secondItem="aso-RI-pGM" secondAttribute="trailing" id="Yqe-mo-c5E"/>
                             <constraint firstItem="k8x-Jc-LVD" firstAttribute="leading" secondItem="aso-RI-pGM" secondAttribute="leading" constant="240" id="ZXr-PL-85V"/>
                             <constraint firstItem="e7o-Hb-o9t" firstAttribute="leading" secondItem="aso-RI-pGM" secondAttribute="leading" id="b8C-FJ-4wp"/>
-                            <constraint firstItem="XGp-p1-MzY" firstAttribute="top" secondItem="k8x-Jc-LVD" secondAttribute="top" constant="-165" id="bI3-3s-7pD"/>
+                            <constraint firstItem="XGp-p1-MzY" firstAttribute="top" secondItem="k8x-Jc-LVD" secondAttribute="top" constant="-145" id="bI3-3s-7pD"/>
                             <constraint firstItem="3MJ-dG-U6e" firstAttribute="leading" secondItem="aso-RI-pGM" secondAttribute="leading" id="faD-vZ-K99"/>
                             <constraint firstItem="e7o-Hb-o9t" firstAttribute="trailing" secondItem="H2K-iC-FnB" secondAttribute="trailing" id="gr0-ai-8P9"/>
                             <constraint firstItem="3MJ-dG-U6e" firstAttribute="top" secondItem="3" secondAttribute="top" id="jEZ-cg-1Y3"/>
