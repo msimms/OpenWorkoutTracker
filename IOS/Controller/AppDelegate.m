@@ -191,7 +191,7 @@
 	return YES;
 }
 
-- (BOOL)application:(UIApplication*)application shouldRestoreApplicationState:(NSCoder*)coder
+- (BOOL)application:(UIApplication*)application shouldRestoreSecureApplicationState:(NSCoder*)coder
 {
 	return YES;
 }
