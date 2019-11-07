@@ -59,6 +59,7 @@ typedef enum SettingsRowsBroadcast
 typedef enum SettingsRowsHealthKit
 {
 	SETTINGS_ROW_INTEGRATE_HEALTHKIT = 0,
+	SETTINGS_ROW_HIDE_DUPLICATES,
 	NUM_SETTINGS_ROWS_HEALTHKIT
 } SettingsRowsHealthKit;
 
@@ -84,6 +85,7 @@ typedef enum SettingsRowsHealthKit
 #define BUTTON_TITLE_COPY              NSLocalizedString(@"Copy", nil)
 #define HEALTHKIT                      NSLocalizedString(@"HealthKit", nil)
 #define READ_ACTIVITIES_FROM_HEALTHKIT NSLocalizedString(@"Read activities from HealthKit", nil)
+#define HIDE_DUPLICATES                NSLocalizedString(@"Hide Duplicates", nil)
 #define ALERT_TITLE_BROADCAST_USER     NSLocalizedString(@"Enter the name you want to use", nil)
 #define ALERT_TITLE_BROADCAST_RATE     NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
 #define ALERT_TITLE_BROADCAST_HOST     NSLocalizedString(@"What is the host name of the broadcast server?", nil)
@@ -409,6 +411,12 @@ typedef enum SettingsRowsHealthKit
 						[switchview setOn:[Preferences willIntegrateHealthKitActivities]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
+					case SETTINGS_ROW_HIDE_DUPLICATES:
+						cell.textLabel.text = HIDE_DUPLICATES;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences hideHealthKitDuplicates]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
 				}
 			}
 			break;
@@ -611,6 +619,9 @@ typedef enum SettingsRowsHealthKit
 	{
 		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_INTEGRATE_HEALTHKIT:
 			[Preferences setWillIntegrateHealthKitActivities:switchControl.isOn];
+			break;
+		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_HIDE_DUPLICATES:
+			[Preferences setHideHealthKitDuplicates:switchControl.isOn];
 			break;
 		case (SECTION_BACKUP * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
 			break;

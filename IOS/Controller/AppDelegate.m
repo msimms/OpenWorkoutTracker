@@ -992,14 +992,17 @@ void startSensorCallback(SensorType type, void* context)
 	InitializeHistoricalActivityList();
 
 	// Remove duplicate items from the health kit list.
-	size_t numDbActivities = GetNumHistoricalActivities();
-	for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+	if ([Preferences hideHealthKitDuplicates])
 	{
-		time_t startTime = 0;
-		time_t endTime = 0;
+		size_t numDbActivities = GetNumHistoricalActivities();
+		for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+		{
+			time_t startTime = 0;
+			time_t endTime = 0;
 
-		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
-		[self->healthMgr removeOverlappingActivityWithStartTime:startTime withEndTime:endTime];
+			GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+			[self->healthMgr removeOverlappingActivityWithStartTime:startTime withEndTime:endTime];
+		}
 	}
 
 	// Reset the iterator.

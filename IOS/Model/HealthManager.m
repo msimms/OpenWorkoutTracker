@@ -86,8 +86,9 @@
 	HKQuantityType* weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 	HKCharacteristicType* birthdayType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierDateOfBirth];
 	HKCharacteristicType* biologicalSexType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierBiologicalSex];
+	HKSeriesType* routeType = [HKObjectType seriesTypeForIdentifier:HKWorkoutRouteTypeIdentifier];
 	HKWorkoutType* workoutType = [HKObjectType workoutType];
-	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, workoutType, nil];
+	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, routeType, workoutType, nil];
 #endif
 }
 
@@ -216,7 +217,14 @@
 
 - (void)clearWorkoutsList
 {
-	[self->workouts removeAllObjects];
+	@synchronized(self->workouts)
+	{
+		[self->workouts removeAllObjects];
+	}
+	@synchronized(self->locations)
+	{
+		[self->locations removeAllObjects];
+	}
 }
 
 - (void)readWorkoutsFromHealthStoreOfType:(HKWorkoutActivityType)activityType
@@ -229,14 +237,11 @@
 														   sortDescriptors:@[sortDescriptor]
 															resultsHandler:^(HKSampleQuery* query, NSArray* samples, NSError* error)
 	{
-		if (!error && samples)
+		@synchronized(self->workouts)
 		{
-			@synchronized(self->workouts)
+			for (HKQuantitySample* workout in samples)
 			{
-				for (HKQuantitySample* sample in samples)
-				{
-					[self->workouts setObject:(HKWorkout*)sample forKey:[[NSUUID UUID] UUIDString]];
-				}
+				[self->workouts setObject:(HKWorkout*)workout forKey:[[NSUUID UUID] UUIDString]];
 			}
 		}
 		dispatch_group_leave(self->queryGroup);
@@ -261,22 +266,30 @@
 	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeCycling];
 }
 
-- (void)readLocationPointsFromHealthStoreForWorkoutRoute:(HKWorkoutRoute*)route
+- (void)readLocationPointsFromHealthStoreForWorkoutRoute:(HKWorkoutRoute*)route withActivityId:(NSString*)activityId
 {
-	HKWorkoutRouteQuery* query = [[HKWorkoutRouteQuery alloc] initWithRoute:route
-																dataHandler:^(HKWorkoutRouteQuery* query, NSArray<CLLocation*>* routeData, BOOL done, NSError* error)
+	@synchronized(self->locations)
 	{
-		for (CLLocation* location in routeData)
+		HKWorkoutRouteQuery* query = [[HKWorkoutRouteQuery alloc] initWithRoute:route
+																	dataHandler:^(HKWorkoutRouteQuery* query, NSArray<CLLocation*>* routeData, BOOL done, NSError* error)
 		{
-		}
-		dispatch_group_leave(self->queryGroup);
-	}];
+			NSMutableArray* newArray = [[NSMutableArray alloc] initWithArray:routeData copyItems:YES];
+			NSMutableArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+			if (activityLocations)
+			{
+				[activityLocations addObjectsFromArray:newArray];
+			}
+			else
+			{
+				[self->locations setObject:newArray forKey:activityId];
+			}
+		}];
 
-	dispatch_group_enter(self->queryGroup);
-	[self.healthStore executeQuery:query];
+		[self.healthStore executeQuery:query];
+	}
 }
 
-- (void)readLocationPointsFromHealthStoreForWorkout:(HKWorkout*)workout
+- (void)readLocationPointsFromHealthStoreForWorkout:(HKWorkout*)workout withActivityId:(NSString*)activityId
 {
 	NSPredicate* workoutPredicate = [HKQuery predicateForObjectsFromWorkout:workout];
 	HKSampleType* type = [HKSeriesType workoutRouteType];
@@ -292,7 +305,7 @@
 	{
 		for (HKWorkoutRoute* route in sampleObjects)
 		{
-			[self readLocationPointsFromHealthStoreForWorkoutRoute:route];
+			[self readLocationPointsFromHealthStoreForWorkoutRoute:route withActivityId:activityId];
 		}
 		dispatch_group_leave(self->queryGroup);
 	}];
@@ -308,7 +321,7 @@
 		HKWorkout* workout = [self->workouts objectForKey:activityId];
 		if (workout)
 		{
-			[self readLocationPointsFromHealthStoreForWorkout:workout];
+			[self readLocationPointsFromHealthStoreForWorkout:workout withActivityId:activityId];
 		}
 	}
 }
@@ -320,49 +333,58 @@
 
 - (void)removeOverlappingActivityWithStartTime:(time_t)startTime withEndTime:(time_t)endTime
 {
-	NSMutableArray* itemsToRemove = [NSMutableArray array];
-
-	for (NSString* activityId in self->workouts)
+	@synchronized(self->workouts)
 	{
-		HKWorkout* workout = [self->workouts objectForKey:activityId];
+		NSMutableArray* itemsToRemove = [NSMutableArray array];
 
-		time_t workoutStartTime = [workout.startDate timeIntervalSince1970];
-		time_t workoutEndTime = [workout.endDate timeIntervalSince1970];
-
-		if ((startTime >= workoutStartTime && startTime < workoutEndTime) ||
-			(endTime < workoutEndTime && endTime >= workoutStartTime))
+		for (NSString* activityId in self->workouts)
 		{
-			[itemsToRemove addObject:activityId];
-		}
-	}
+			HKWorkout* workout = [self->workouts objectForKey:activityId];
 
-	[self->workouts removeObjectsForKeys:itemsToRemove];
+			time_t workoutStartTime = [workout.startDate timeIntervalSince1970];
+			time_t workoutEndTime = [workout.endDate timeIntervalSince1970];
+
+			if ((startTime >= workoutStartTime && startTime < workoutEndTime) ||
+				(endTime < workoutEndTime && endTime >= workoutStartTime))
+			{
+				[itemsToRemove addObject:activityId];
+			}
+		}
+
+		[self->workouts removeObjectsForKeys:itemsToRemove];
+	}
 }
 
 #pragma mark methods for querying workout data.
 
 - (NSString*)convertIndexToActivityId:(size_t)index
 {
-	NSArray* keys = [self->workouts allKeys];
-	return [keys objectAtIndex:index];
+	@synchronized(self->workouts)
+	{
+		NSArray* keys = [self->workouts allKeys];
+		return [keys objectAtIndex:index];
+	}
 }
 
 - (NSString*)getHistoricalActivityType:(NSString*)activityId
 {
-	HKWorkout* workout = [self->workouts objectForKey:activityId];
-	if (workout)
+	@synchronized(self->workouts)
 	{
-		HKWorkoutActivityType type = [workout workoutActivityType];
-		switch (type)
+		HKWorkout* workout = [self->workouts objectForKey:activityId];
+		if (workout)
 		{
-			case HKWorkoutActivityTypeCycling:
-				return @"Cycling";
-			case HKWorkoutActivityTypeRunning:
-				return @"Running";
-			case HKWorkoutActivityTypeWalking:
-				return @"Walking";
-			default:
-				break;
+			HKWorkoutActivityType type = [workout workoutActivityType];
+			switch (type)
+			{
+				case HKWorkoutActivityTypeCycling:
+					return @"Cycling";
+				case HKWorkoutActivityTypeRunning:
+					return @"Running";
+				case HKWorkoutActivityTypeWalking:
+					return @"Walking";
+				default:
+					break;
+			}
 		}
 	}
 	return nil;
@@ -370,35 +392,48 @@
 
 - (void)getWorkoutStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
-	HKWorkout* workout = [self->workouts objectForKey:activityId];
-	if (workout)
+	@synchronized(self->workouts)
 	{
-		(*startTime) = [workout.startDate timeIntervalSince1970];
-		(*endTime) = [workout.endDate timeIntervalSince1970];
+		HKWorkout* workout = [self->workouts objectForKey:activityId];
+		if (workout)
+		{
+			(*startTime) = [workout.startDate timeIntervalSince1970];
+			(*endTime) = [workout.endDate timeIntervalSince1970];
+		}
 	}
 }
 
 - (NSInteger)getNumLocationPoints:(NSString*)activityId
 {
-	NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
-	if (activityLocations)
+	@synchronized(self->locations)
 	{
-		return [activityLocations count];
+		NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+		if (activityLocations)
+		{
+			return [activityLocations count];
+		}
 	}
 	return 0;
 }
 
 - (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp
 {
-	NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
-	if (activityLocations)
+	@synchronized(self->locations)
 	{
-		CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
-		if (loc)
+		NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+		if (activityLocations)
 		{
-			(*latitude) = loc.coordinate.latitude;
-			(*longitude) = loc.coordinate.longitude;
-			(*timestamp) = [loc.timestamp timeIntervalSince1970];
+			if (pointIndex < [activityLocations count])
+			{
+				CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
+				if (loc)
+				{
+					(*latitude) = loc.coordinate.latitude;
+					(*longitude) = loc.coordinate.longitude;
+					(*timestamp) = [loc.timestamp timeIntervalSince1970];
+					return TRUE;
+				}
+			}
 		}
 	}
 	return FALSE;
@@ -416,60 +451,63 @@
 	ActivityAttributeType attr;
 	attr.valid = false;
 
-	HKWorkout* workout = [self->workouts objectForKey:activityId];
-	if (workout)
+	@synchronized(self->workouts)
 	{
-		if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, strlen(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)) == 0)
+		HKWorkout* workout = [self->workouts objectForKey:activityId];
+		if (workout)
 		{
-			HKQuantity* qty = [workout totalDistance];
-			attr.value.doubleVal = [self quantityInUserPreferredUnits:qty];
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DISTANCE;
-			attr.valid = true;
-		}
-		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_ELAPSED_TIME, strlen(ACTIVITY_ATTRIBUTE_ELAPSED_TIME)) == 0)
-		{
-			NSTimeInterval qty = [workout duration];
-			attr.value.timeVal = (time_t)qty;
-			attr.valueType = TYPE_TIME;
-			attr.measureType = MEASURE_TIME;
-			attr.valid = true;
-		}
-		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_MAX_CADENCE, strlen(ACTIVITY_ATTRIBUTE_MAX_CADENCE)) == 0)
-		{
-			attr.value.doubleVal = (double)0.0;
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_RPM;
-			attr.valid = true;
-		}
-		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_HEART_RATE, strlen(ACTIVITY_ATTRIBUTE_HEART_RATE)) == 0)
-		{
-			attr.value.doubleVal = (double)0.0;
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_BPM;
-			attr.valid = true;
-		}
-		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)) == 0)
-		{
-			attr.value.doubleVal = (double)0.0;
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DEGREES;
-			attr.valid = true;
-		}
-		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)) == 0)
-		{
-			attr.value.doubleVal = (double)0.0;
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DEGREES;
-			attr.valid = true;
-		}
-		else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_CALORIES_BURNED, strlen(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)) == 0)
-		{
-			HKQuantity* qty = [workout totalEnergyBurned];
-			attr.value.doubleVal = [self quantityInUserPreferredUnits:qty];
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_CALORIES;
-			attr.valid = true;
+			if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, strlen(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)) == 0)
+			{
+				HKQuantity* qty = [workout totalDistance];
+				attr.value.doubleVal = [self quantityInUserPreferredUnits:qty];
+				attr.valueType = TYPE_DOUBLE;
+				attr.measureType = MEASURE_DISTANCE;
+				attr.valid = true;
+			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_ELAPSED_TIME, strlen(ACTIVITY_ATTRIBUTE_ELAPSED_TIME)) == 0)
+			{
+				NSTimeInterval qty = [workout duration];
+				attr.value.timeVal = (time_t)qty;
+				attr.valueType = TYPE_TIME;
+				attr.measureType = MEASURE_TIME;
+				attr.valid = true;
+			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_MAX_CADENCE, strlen(ACTIVITY_ATTRIBUTE_MAX_CADENCE)) == 0)
+			{
+				attr.value.doubleVal = (double)0.0;
+				attr.valueType = TYPE_DOUBLE;
+				attr.measureType = MEASURE_RPM;
+				attr.valid = true;
+			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_HEART_RATE, strlen(ACTIVITY_ATTRIBUTE_HEART_RATE)) == 0)
+			{
+				attr.value.doubleVal = (double)0.0;
+				attr.valueType = TYPE_DOUBLE;
+				attr.measureType = MEASURE_BPM;
+				attr.valid = true;
+			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)) == 0)
+			{
+				attr.value.doubleVal = (double)0.0;
+				attr.valueType = TYPE_DOUBLE;
+				attr.measureType = MEASURE_DEGREES;
+				attr.valid = true;
+			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)) == 0)
+			{
+				attr.value.doubleVal = (double)0.0;
+				attr.valueType = TYPE_DOUBLE;
+				attr.measureType = MEASURE_DEGREES;
+				attr.valid = true;
+			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_CALORIES_BURNED, strlen(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)) == 0)
+			{
+				HKQuantity* qty = [workout totalEnergyBurned];
+				attr.value.doubleVal = [self quantityInUserPreferredUnits:qty];
+				attr.valueType = TYPE_DOUBLE;
+				attr.measureType = MEASURE_CALORIES;
+				attr.valid = true;
+			}
 		}
 	}
 	return attr;

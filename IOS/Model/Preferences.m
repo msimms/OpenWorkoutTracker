@@ -17,6 +17,7 @@
 #define PREF_NAME_BROADCAST_HOST_NAME                  "Broadcast Host Name"
 #define PREF_NAME_ALWAYS_CONNECT                       "Always Connect"
 #define PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES "Will Integrate HealthKit Activities"
+#define PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES           "Hide HealthKit Duplicates"
 #define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG         "Has Shown First Time Use Message"
 #define PREF_NAME_HAS_SHOWN_PULL_UP_HELP               "Has Shown Pull Up Help"
 #define PREF_NAME_HAS_SHOWN_PUSH_UP_HELP               "Has Shown Push Up Help"
@@ -167,6 +168,11 @@
 	return [self readBooleanValue:@PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES];
 }
 
++ (BOOL)hideHealthKitDuplicates
+{
+	return [self readBooleanValue:@PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES];
+}
+
 + (BOOL)hasShownFirstTimeUseMessage
 {
 	return [self readBooleanValue:@PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG];
@@ -262,6 +268,11 @@
 + (void)setWillIntegrateHealthKitActivities:(BOOL)value
 {
 	[self writeBoolValue:@PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES withValue:value];
+}
+
++ (void)setHideHealthKitDuplicates:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES withValue:value];
 }
 
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value
