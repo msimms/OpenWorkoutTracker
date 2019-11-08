@@ -30,7 +30,7 @@
 	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
 	LeDiscovery*         leSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
 	WiFiDiscovery*       wifiSensorFinder; // For discovering Wifi devices, such as cameras.
-	CloudMgr*            cloudMgr;
+	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
 	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
 	HealthManager*       healthMgr; // Interfaces with Apple HealthKit.
@@ -179,15 +179,11 @@
 - (void)playBeepSound;
 - (void)playPingSound;
 
-// methods for downloading an activity via a URL
-
-- (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType;
-
 // methods for exporting activities
 
 - (BOOL)deleteFile:(NSString*)fileName;
-
-- (NSString*)exportActivity:(NSString*)activityId withFileFormat:(FileFormat)format to:selectedExportLocation;
+- (BOOL)exportFileToCloudService:(NSString*)fileName toService:(NSString*)serviceName;
+- (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
 - (NSString*)exportActivitySummary:(NSString*)activityType;
 - (void)clearExportDir;
 

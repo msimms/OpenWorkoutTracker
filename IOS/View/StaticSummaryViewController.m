@@ -375,6 +375,14 @@ typedef enum ExportFileTypeButtons
 		{
 			[self displayEmailComposerSheet];
 		}
+		else
+		{
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+			if (![appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportLocation])
+			{
+				[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
+			}
+		}
 	}
 	else
 	{
@@ -382,71 +390,54 @@ typedef enum ExportFileTypeButtons
 	}
 }
 
-- (BOOL)showFileFormatSheet
+- (void)showFileFormatSheet
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	if ([appDelegate getNumHistoricalActivities] > 0)
-	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																				 message:ACTION_SHEET_TITLE_FILE_FORMAT
-																		  preferredStyle:UIAlertControllerStyleActionSheet];
-		
-		[appDelegate loadAllHistoricalActivitySensorData:self->activityId];
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_FILE_FORMAT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	[appDelegate loadAllHistoricalActivitySensorData:self->activityId];
 
-		if ([appDelegate getNumHistoricalActivityLocationPoints:self->activityId] > 0)
-		{
-			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_GPX to:self->selectedExportLocation];
-				[self handleFileFormatSelection];
-			}]];
-			[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_TCX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_TCX to:self->selectedExportLocation];
-				[self handleFileFormatSelection];
-			}]];
-		}
-		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			self->exportedFileName = [appDelegate exportActivity:self->activityId withFileFormat:FILE_CSV to:self->selectedExportLocation];
+	if ([appDelegate getNumHistoricalActivityLocationPoints:self->activityId] > 0)
+	{
+		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:FILE_GPX];
 			[self handleFileFormatSelection];
 		}]];
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_TCX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:FILE_TCX];
+			[self handleFileFormatSelection];
 		}]];
+	}
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:FILE_CSV];
+		[self handleFileFormatSelection];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
 
-		[self presentViewController:alertController animated:YES completion:^{
-		}];
-	}
-	else
-	{
-		[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOW_MEMORY];
-	}
-	return FALSE;
+	[self presentViewController:alertController animated:YES completion:^{
+	}];
 }
 
-- (BOOL)showCloudSheet
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+- (void)showCloudSheet:(NSMutableArray*)fileExportServices
+{	
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_EXPORT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
-	NSMutableArray* fileSites = [appDelegate getBikeNames];
-	if ([fileSites count] > 0)
+	for (NSString* fileExportService in fileExportServices)
 	{
-		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																				 message:ACTION_SHEET_TITLE_EXPORT
-																		  preferredStyle:UIAlertControllerStyleActionSheet];
-		
-		for (NSString* fileSite in fileSites)
-		{
-			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				self->selectedExportLocation = fileSite;
-				[self showFileFormatSheet];
-			}]];
-		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[alertController addAction:[UIAlertAction actionWithTitle:fileExportService style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			self->selectedExportLocation = fileExportService;
+			[self showFileFormatSheet];
 		}]];
-		[self presentViewController:alertController animated:YES completion:nil];
-		
-		return TRUE;
 	}
-	return FALSE;
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark accessor methods
@@ -564,18 +555,15 @@ typedef enum ExportFileTypeButtons
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSMutableArray* fileSites = [appDelegate getEnabledFileExportServices];
-	if ([fileSites count] == 1)
+	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
+	if ([fileExportServices count] == 1)
 	{
-		self->selectedExportLocation = [fileSites objectAtIndex:0];
+		self->selectedExportLocation = [fileExportServices objectAtIndex:0];
 		[self showFileFormatSheet];
 	}
 	else
 	{
-		if ([self showCloudSheet] == FALSE)
-		{
-			[self showFileFormatSheet];
-		}
+		[self showCloudSheet:fileExportServices];
 	}
 }
 

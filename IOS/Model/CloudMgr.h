@@ -20,12 +20,12 @@ typedef enum CloudServiceType
 
 @interface CloudMgr : NSObject
 {
-	NSMutableArray* fileClouds;
-	NSMutableArray* dataClouds;
+	NSMutableArray* fileClouds; // cloud services that let us store raw files
+	NSMutableArray* dataClouds; // cloud services that have an API for importing activity data
 
-	iCloud*         iCloudController;
-	RunKeeper*      runKeeperController;
-	Strava*         stravaController;
+	iCloud*         iCloudController; // handles iCloud drive interactions
+	RunKeeper*      runKeeperController; // handles RunKeeper interactions
+	Strava*         stravaController; // handles Strava interactions
 }
 
 - (id)init;
@@ -37,7 +37,13 @@ typedef enum CloudServiceType
 - (NSString*)nameOf:(CloudServiceType)service;
 - (void)requestCloudServiceAcctNames:(CloudServiceType)service;
 
-- (void)uploadFile:(NSString*)fileName;
-- (void)uploadActivity:(NSString*)name;
+- (BOOL)uploadFile:(NSString*)fileName toService:(CloudServiceType)service;
+- (BOOL)uploadActivity:(NSString*)activityId toService:(CloudServiceType)service;
+
+- (BOOL)uploadFile:(NSString*)fileName toServiceNamed:(NSString*)serviceName;
+- (BOOL)uploadActivity:(NSString*)activityId toServiceNamed:(NSString*)serviceName;
+
+- (void)uploadFileToAll:(NSString*)fileName;
+- (void)uploadActivityToAll:(NSString*)activityId;
 
 @end

@@ -1432,33 +1432,23 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-#pragma mark methods for downloading an activity via a URL
-
-- (BOOL)downloadActivity:(NSString*)urlStr withActivityType:(NSString*)activityType
-{
-	NSURL* url = [NSURL URLWithString:urlStr];
-	NSData* urlData = [NSData dataWithContentsOfURL:url];
-	if (urlData)
-	{
-		NSString* fileName = [urlStr lastPathComponent];
-		NSString* filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
-		if ([urlData writeToFile:filePath atomically:YES])
-		{
-			BOOL result = ImportActivityFromFile([filePath UTF8String], [activityType UTF8String]);
-			[self deleteFile:filePath];
-			return result;
-		}
-	}
-	return FALSE;
-}
-
 #pragma mark methods for exporting activities
 
 - (BOOL)deleteFile:(NSString*)fileName
 {
-	NSError* error;
+	NSError* error = nil;
 	NSFileManager* fileMgr = [NSFileManager defaultManager];
+
 	return [fileMgr removeItemAtPath:fileName error:&error] == YES;
+}
+
+- (BOOL)exportFileToCloudService:(NSString*)fileName toService:(NSString*)serviceName
+{
+	if (self->cloudMgr)
+	{
+		return [self->cloudMgr uploadFile:fileName toServiceNamed:serviceName];
+	}
+	return FALSE;
 }
 
 - (NSString*)createExportDir
@@ -1469,7 +1459,7 @@ void startSensorCallback(SensorType type, void* context)
 	if (![[NSFileManager defaultManager] fileExistsAtPath:exportDir])
 	{
 		NSError* error = nil;
-		
+
 		if (![[NSFileManager defaultManager] createDirectoryAtPath:exportDir withIntermediateDirectories:NO attributes:nil error:&error])
 		{
 			return nil;
@@ -1478,7 +1468,7 @@ void startSensorCallback(SensorType type, void* context)
 	return exportDir;
 }
 
-- (NSString*)exportActivity:(NSString*)activityId withFileFormat:(FileFormat)format to:selectedExportLocation
+- (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format
 {
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
@@ -1546,6 +1536,7 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_STRAVA]];
 		}
+		[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_ICLOUD]];
 	}
 	return services;
 }

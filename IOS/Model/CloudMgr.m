@@ -15,8 +15,8 @@
 	self = [super init];
 	if (self != nil)
 	{
-		self->fileClouds   = [[NSMutableArray alloc] init];
-		self->dataClouds   = [[NSMutableArray alloc] init];
+		self->fileClouds = [[NSMutableArray alloc] init];
+		self->dataClouds = [[NSMutableArray alloc] init];
 
 		[self createAll];
 	}
@@ -42,6 +42,7 @@
 - (void)createAll
 {
 	[self createCloudController:CLOUD_SERVICE_ICLOUD];
+	[self createCloudController:CLOUD_SERVICE_DROPBOX];
 	[self createCloudController:CLOUD_SERVICE_RUNKEEPER];
 	[self createCloudController:CLOUD_SERVICE_STRAVA];
 }
@@ -132,14 +133,64 @@
 	}
 }
 
-- (void)uploadFile:(NSString*)fileName
+- (BOOL)uploadFile:(NSString*)fileName toService:(CloudServiceType)service
+{
+	switch (service)
+	{
+		case CLOUD_SERVICE_ICLOUD:
+			return [self->iCloudController uploadFile:fileName];
+		case CLOUD_SERVICE_DROPBOX:
+		case CLOUD_SERVICE_RUNKEEPER:
+		case CLOUD_SERVICE_STRAVA:
+			break;
+	}
+	return FALSE;
+}
+
+- (BOOL)uploadActivity:(NSString*)activityId toService:(CloudServiceType)service
+{
+	switch (service)
+	{
+		case CLOUD_SERVICE_ICLOUD:
+		case CLOUD_SERVICE_DROPBOX:
+			break;
+		case CLOUD_SERVICE_RUNKEEPER:
+		case CLOUD_SERVICE_STRAVA:
+			break;
+	}
+	return FALSE;
+}
+
+- (BOOL)uploadFile:(NSString*)fileName toServiceNamed:(NSString*)serviceName
+{
+	if (self->iCloudController && [serviceName isEqualToString:[self->iCloudController name]])
+	{
+		return [self uploadFile:fileName toService:CLOUD_SERVICE_ICLOUD];
+	}
+	return FALSE;
+}
+
+- (BOOL)uploadActivity:(NSString*)activityId toServiceNamed:(NSString*)serviceName
+{
+	if (self->runKeeperController && [serviceName isEqualToString:[self->runKeeperController name]])
+	{
+		return [self uploadActivity:activityId toService:CLOUD_SERVICE_RUNKEEPER];
+	}
+	else if (self->stravaController && [serviceName isEqualToString:[self->stravaController name]])
+	{
+		return [self uploadActivity:activityId toService:CLOUD_SERVICE_STRAVA];
+	}
+	return FALSE;
+}
+
+- (void)uploadFileToAll:(NSString*)fileName
 {
 	[self->fileClouds makeObjectsPerformSelector:@selector(uploadFile:) withObject:(NSString*)fileName];
 }
 
-- (void)uploadActivity:(NSString*)name
+- (void)uploadActivityToAll:(NSString*)activityId
 {
-	[self->dataClouds makeObjectsPerformSelector:@selector(uploadActivity:) withObject:(NSString*)name];
+	[self->dataClouds makeObjectsPerformSelector:@selector(uploadActivity:) withObject:(NSString*)activityId];
 }
 
 @end

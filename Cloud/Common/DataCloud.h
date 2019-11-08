@@ -10,6 +10,6 @@
 
 @interface DataCloud : CloudService
 
-- (BOOL)uploadActivity:(NSString*)name;
+- (BOOL)uploadActivity:(NSString*)activityId;
 
 @end

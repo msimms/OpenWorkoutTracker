@@ -16,6 +16,6 @@
 
 - (id)init;
 - (BOOL)isLinked;
-- (BOOL)uploadActivity:(NSString*)name;
+- (BOOL)uploadActivity:(NSString*)activityId;
 
 @end
