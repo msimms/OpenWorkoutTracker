@@ -94,7 +94,6 @@
 		27B7CD8C19BFD91C000383E3 /* CrumbPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4719BFD91C000383E3 /* CrumbPath.m */; };
 		27B7CD8D19BFD91C000383E3 /* CrumbPathRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */; };
 		27B7CD8E19BFD91C000383E3 /* DateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4B19BFD91C000383E3 /* DateViewController.m */; };
-		27B7CD8F19BFD91C000383E3 /* ExportingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4D19BFD91C000383E3 /* ExportingViewController.m */; };
 		27B7CD9019BFD91C000383E3 /* FollowedByViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */; };
 		27B7CD9119BFD91C000383E3 /* FollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5119BFD91C000383E3 /* FollowingViewController.m */; };
 		27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5519BFD91C000383E3 /* HistoryViewController.m */; };
@@ -575,8 +574,6 @@
 		27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrumbPathRenderer.m; path = IOS/View/CrumbPathRenderer.m; sourceTree = SOURCE_ROOT; };
 		27B7CD4A19BFD91C000383E3 /* DateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateViewController.h; path = IOS/View/DateViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD4B19BFD91C000383E3 /* DateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateViewController.m; path = IOS/View/DateViewController.m; sourceTree = SOURCE_ROOT; };
-		27B7CD4C19BFD91C000383E3 /* ExportingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportingViewController.h; path = IOS/View/ExportingViewController.h; sourceTree = SOURCE_ROOT; };
-		27B7CD4D19BFD91C000383E3 /* ExportingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportingViewController.m; path = IOS/View/ExportingViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD4E19BFD91C000383E3 /* FollowedByViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FollowedByViewController.h; path = IOS/View/FollowedByViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FollowedByViewController.m; path = IOS/View/FollowedByViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5019BFD91C000383E3 /* FollowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FollowingViewController.h; path = IOS/View/FollowingViewController.h; sourceTree = SOURCE_ROOT; };
@@ -884,8 +881,6 @@
 				27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */,
 				27B7CD4A19BFD91C000383E3 /* DateViewController.h */,
 				27B7CD4B19BFD91C000383E3 /* DateViewController.m */,
-				27B7CD4C19BFD91C000383E3 /* ExportingViewController.h */,
-				27B7CD4D19BFD91C000383E3 /* ExportingViewController.m */,
 				27B7CD4E19BFD91C000383E3 /* FollowedByViewController.h */,
 				27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */,
 				27B7CD5019BFD91C000383E3 /* FollowingViewController.h */,
@@ -1705,7 +1700,6 @@
 				27C0845419BFD063007CE934 /* GForceAnalyzer.cpp in Sources */,
 				27C0844F19BFD063007CE934 /* ActivityFactory.cpp in Sources */,
 				27B7CD8C19BFD91C000383E3 /* CrumbPath.m in Sources */,
-				27B7CD8F19BFD91C000383E3 /* ExportingViewController.m in Sources */,
 				27B7CDA819BFD91C000383E3 /* SplitTimesViewController.m in Sources */,
 				2797F18E19BFE48E008F8672 /* GpxFileWriter.cpp in Sources */,
 				2797F18F19BFE48E008F8672 /* KmlFileReader.cpp in Sources */,
