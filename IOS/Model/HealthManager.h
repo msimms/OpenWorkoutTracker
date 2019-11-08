@@ -7,13 +7,17 @@
 
 #import <Foundation/Foundation.h>
 #import "ActivityAttributeType.h"
+#import "ActivityMgr.h"
+
+typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 @import HealthKit;
 
 @interface HealthManager : NSObject
 {
 	NSMutableDictionary* workouts; // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
-	NSMutableDictionary* locations; // arrays of locations stored in the health store, key is the activity ID which is generated automatically
+	NSMutableDictionary* locations; // arrays of locations stored in the health store, key is the activity ID
+	NSMutableDictionary* activityObjects; // arrays of activity objects built from data read from the health store, key is the activity ID
 	NSMutableArray* heartRates; // we write average heart rates to the health store; this stores the intermediate values
 	NSDate* firstHeartRateSample; // timestamp associated with the above array
 	NSDate* lastHeartRateSample; // timestamp associated with the above array
@@ -43,6 +47,7 @@
 - (NSInteger)getNumLocationPoints:(NSString*)activityId;
 - (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp;
 - (ActivityAttributeType)getWorkoutAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
+- (BOOL)loadHistoricalActivitySensorData:(SensorType)sensor forActivityId:(NSString*)activityId withCallback:(SensorDataCallback)callback withContext:(void*)context;
 
 // methods for writing HealthKit data.
 

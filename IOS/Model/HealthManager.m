@@ -8,7 +8,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import "HealthManager.h"
 #import "ActivityAttribute.h"
-#import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "LeHeartRateMonitor.h"
 #import "LeScale.h"
@@ -41,6 +40,7 @@
 		self->heartRates = [[NSMutableArray alloc] init];
 		self->workouts = [[NSMutableDictionary alloc] init];
 		self->locations = [[NSMutableDictionary alloc] init];
+		self->activityObjects = [[NSMutableDictionary alloc] init];
 		self->queryGroup = dispatch_group_create();
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
@@ -225,6 +225,8 @@
 	{
 		[self->locations removeAllObjects];
 	}
+
+	[self->activityObjects removeAllObjects];
 }
 
 - (void)readWorkoutsFromHealthStoreOfType:(HKWorkoutActivityType)activityType
@@ -517,6 +519,33 @@
 		}
 	}
 	return attr;
+}
+
+- (BOOL)loadHistoricalActivitySensorData:(SensorType)sensor forActivityId:(NSString*)activityId withCallback:(SensorDataCallback)callback withContext:(void*)context
+{
+	if (sensor == SENSOR_TYPE_GPS)
+	{
+		const char* activityIdStr = [activityId UTF8String];
+
+		@synchronized(self->locations)
+		{
+			NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+			if (activityLocations)
+			{
+				for (size_t pointIndex = 0; pointIndex < [activityLocations count]; ++pointIndex)
+				{
+					CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
+					if (loc)
+					{
+						if (callback)
+							callback(activityIdStr, context);
+					}
+				}
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
 }
 
 #pragma mark methods for writing HealthKit data
