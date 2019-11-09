@@ -174,7 +174,7 @@
 {
 	@synchronized(self->discoveredSensors)
 	{
-		WiFiSensor* sensor;
+		WiFiSensor* sensor = nil;
 		
 //		if (![self alreadyDiscovered:SENSOR_TYPE_GOPRO] && [self canConnect:GOPRO_IP_ADDR])
 //		{

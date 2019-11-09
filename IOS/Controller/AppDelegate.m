@@ -539,8 +539,6 @@
 		{
 			self->leSensorFinder = NULL;
 		}
-		
-		self->wifiSensorFinder = [WiFiDiscovery sharedInstance];
 	}
 }
 

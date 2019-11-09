@@ -21,7 +21,6 @@
 #import "LeDiscovery.h"
 #import "SensorMgr.h"
 #import "SensorType.h"
-#import "WiFiDiscovery.h"
 
 #define EXPORT_TO_EMAIL_STR "Email"
 
@@ -29,7 +28,6 @@
 {
 	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
 	LeDiscovery*         leSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
-	WiFiDiscovery*       wifiSensorFinder; // For discovering Wifi devices, such as cameras.
 	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
 	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
