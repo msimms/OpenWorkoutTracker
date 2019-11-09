@@ -110,7 +110,7 @@ bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDat
 							const Coordinate& coordinate = (*coordinateIter);
 							const TimeDistancePair& timeDistance = (*distanceIter);
 							
-							if (coordinate.time > lapEndTimeMs)
+							if ((coordinate.time > lapEndTimeMs) && (lapEndTimeMs != 0))
 							{
 								break;
 							}
@@ -245,7 +245,7 @@ bool DataExporter::ExportToGpx(const std::string& fileName, Database* const pDat
 					{
 						const Coordinate& coordinate = (*coordinateIter);
 
-						if (coordinate.time > lapEndTimeMs)
+						if ((coordinate.time > lapEndTimeMs) && (lapEndTimeMs != 0))
 						{
 							break;
 						}

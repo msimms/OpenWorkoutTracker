@@ -1457,11 +1457,14 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
-	char* tempExportFileName = ExportActivity([activityId UTF8String], format, [exportDir UTF8String]);
-	if (tempExportFileName)
+	if (exportDir)
 	{
-		exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
-		free((void*)tempExportFileName);
+		char* tempExportFileName = ExportActivity([activityId UTF8String], format, [exportDir UTF8String]);
+		if (tempExportFileName)
+		{
+			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
+			free((void*)tempExportFileName);
+		}
 	}
 	return exportFileName;
 }
@@ -1470,11 +1473,14 @@ void startSensorCallback(SensorType type, void* context)
 {	
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
-	char* tempExportFileName = ExportActivitySummary([activityType UTF8String], [exportDir UTF8String]);
-	if (tempExportFileName)
+	if (exportDir)
 	{
-		exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
-		free((void*)tempExportFileName);
+		char* tempExportFileName = ExportActivitySummary([activityType UTF8String], [exportDir UTF8String]);
+		if (tempExportFileName)
+		{
+			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
+			free((void*)tempExportFileName);
+		}
 	}
 	return exportFileName;
 }
@@ -1482,12 +1488,15 @@ void startSensorCallback(SensorType type, void* context)
 - (void)clearExportDir
 {
 	NSString* exportDir = [self createExportDir];
-	NSError* error;
-	NSArray* directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:exportDir error:&error];
-	for (NSString* file in directoryContents)
+	if (exportDir)
 	{
-		NSString* filePath = [[NSString alloc] initWithFormat:@"%@/%@", exportDir, file];
-		[self deleteFile:filePath];
+		NSError* error;
+		NSArray* directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:exportDir error:&error];
+		for (NSString* file in directoryContents)
+		{
+			NSString* filePath = [[NSString alloc] initWithFormat:@"%@/%@", exportDir, file];
+			[self deleteFile:filePath];
+		}
 	}
 }
 
