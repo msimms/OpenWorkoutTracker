@@ -549,11 +549,6 @@
 		[self->leSensorFinder stopScanning];
 		self->leSensorFinder = NULL;
 	}
-	if (self->wifiSensorFinder)
-	{
-		[self->wifiSensorFinder stopScanning];
-		self->wifiSensorFinder = NULL;
-	}
 }
 
 - (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
@@ -562,10 +557,6 @@
 	{
 		[self->leSensorFinder addDelegate:delegate];
 	}
-	if (self->wifiSensorFinder)
-	{
-		[self->wifiSensorFinder addDelegate:delegate];
-	}
 }
 
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
@@ -573,10 +564,6 @@
 	if (self->leSensorFinder)
 	{
 		[self->leSensorFinder removeDelegate:delegate];
-	}
-	if (self->wifiSensorFinder)
-	{
-		[self->wifiSensorFinder removeDelegate:delegate];
 	}
 }
 
