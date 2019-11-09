@@ -12,22 +12,25 @@
 - (id)init
 {
 	self = [super init];
-	if (self != nil)
-	{
-	}
 	return self;
 }
 
 - (BOOL)isAvailable
 {
-	BOOL result = FALSE;
-
-	self->ubiq = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
-	if (self->ubiq)
+	self->ubiquityContainer = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+	if (self->ubiquityContainer)
 	{
-		result = TRUE;
+		self->documentsUrl = [self->ubiquityContainer URLByAppendingPathComponent:@"Documents"];
+		if (self->documentsUrl)
+		{
+			if (![[NSFileManager defaultManager] fileExistsAtPath:[documentsUrl path] isDirectory:nil])
+			{
+				[[NSFileManager defaultManager] createDirectoryAtURL:documentsUrl withIntermediateDirectories:true attributes:nil error:nil];
+			}
+		}
+		return TRUE;
 	}
-	return result;
+	return FALSE;
 }
 
 #pragma mark FileSharingWebsite methods
@@ -39,7 +42,11 @@
 
 - (BOOL)uploadFile:(NSString*)filePath
 {
-	return FALSE;
+	NSURL* localDocumentUrl = [NSURL URLWithString:filePath];
+	NSString* fileName = [localDocumentUrl lastPathComponent];
+	NSURL* iCloudDocumentsUrl = [self->documentsUrl URLByAppendingPathComponent:fileName];
+	NSError* error = nil;
+	return [[NSFileManager defaultManager] copyItemAtURL:localDocumentUrl toURL:iCloudDocumentsUrl error:&error];
 }
 
 @end

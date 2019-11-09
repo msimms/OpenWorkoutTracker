@@ -1536,7 +1536,10 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_STRAVA]];
 		}
-		[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_ICLOUD]];
+		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD])
+		{
+			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_ICLOUD]];
+		}
 	}
 	return services;
 }
@@ -1775,11 +1778,6 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)listDataClouds
 {
 	return [self->cloudMgr listDataClouds];
-}
-
-- (BOOL)isCloudServiceLinked:(CloudServiceType)service
-{
-	return [self->cloudMgr isLinked:service];
 }
 
 - (NSString*)nameOfCloudService:(CloudServiceType)service

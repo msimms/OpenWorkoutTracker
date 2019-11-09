@@ -82,7 +82,7 @@
 	switch (service)
 	{
 		case CLOUD_SERVICE_ICLOUD:
-			if ([CloudPreferences usingiCloud] && self->iCloudController)
+			if (self->iCloudController)
 			{
 				return [self->iCloudController isAvailable];
 			}
@@ -90,13 +90,13 @@
 		case CLOUD_SERVICE_DROPBOX:
 			return FALSE;
 		case CLOUD_SERVICE_RUNKEEPER:
-			if ([CloudPreferences usingRunKeeper] && self->runKeeperController)
+			if (self->runKeeperController)
 			{
 				return [self->runKeeperController isLinked];
 			}
 			break;
 		case CLOUD_SERVICE_STRAVA:
-			if ([CloudPreferences usingStrava] && self->stravaController)
+			if (self->stravaController)
 			{
 				return [self->stravaController isLinked];
 			}

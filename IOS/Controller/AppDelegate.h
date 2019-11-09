@@ -224,7 +224,6 @@
 
 - (NSMutableArray*)listFileClouds;
 - (NSMutableArray*)listDataClouds;
-- (BOOL)isCloudServiceLinked:(CloudServiceType)service;
 - (NSString*)nameOfCloudService:(CloudServiceType)service;
 - (void)requestCloudServiceAcctNames:(CloudServiceType)service;
 

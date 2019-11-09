@@ -10,7 +10,8 @@
 
 @interface iCloud : FileSharingWebsite
 {
-	NSURL* ubiq;
+	NSURL* ubiquityContainer;
+	NSURL* documentsUrl;
 }
 
 - (NSString*)name;
