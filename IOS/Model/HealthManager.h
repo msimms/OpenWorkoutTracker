@@ -17,11 +17,13 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 {
 	NSMutableDictionary* workouts; // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
 	NSMutableDictionary* locations; // arrays of locations stored in the health store, key is the activity ID
-	NSMutableDictionary* activityObjects; // arrays of activity objects built from data read from the health store, key is the activity ID
+	NSMutableDictionary* distances; // arrays of distances computed from the locations array, key is the activity ID
+	NSMutableDictionary* speeds; // arrays of speeds computed from the distances array, key is the activity ID
 	NSMutableArray* heartRates; // we write average heart rates to the health store; this stores the intermediate values
 	NSDate* firstHeartRateSample; // timestamp associated with the above array
 	NSDate* lastHeartRateSample; // timestamp associated with the above array
 	dispatch_group_t queryGroup; // tracks queries until they are completed
+	NSInteger tempPointIndex;
 }
 
 // methods for managing authorization.

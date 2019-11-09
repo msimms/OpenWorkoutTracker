@@ -40,7 +40,8 @@
 		self->heartRates = [[NSMutableArray alloc] init];
 		self->workouts = [[NSMutableDictionary alloc] init];
 		self->locations = [[NSMutableDictionary alloc] init];
-		self->activityObjects = [[NSMutableDictionary alloc] init];
+		self->distances = [[NSMutableDictionary alloc] init];
+		self->speeds = [[NSMutableDictionary alloc] init];
 		self->queryGroup = dispatch_group_create();
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
@@ -225,8 +226,14 @@
 	{
 		[self->locations removeAllObjects];
 	}
-
-	[self->activityObjects removeAllObjects];
+	@synchronized(self->distances)
+	{
+		[self->distances removeAllObjects];
+	}
+	@synchronized(self->speeds)
+	{
+		[self->speeds removeAllObjects];
+	}
 }
 
 - (void)readWorkoutsFromHealthStoreOfType:(HKWorkoutActivityType)activityType
@@ -268,6 +275,58 @@
 	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeCycling];
 }
 
+- (void)calculateSpeedsFromDistances:(NSMutableArray<NSNumber*>*)activityDistances withActivityId:(NSString*)activityId
+{
+	@synchronized(self->speeds)
+	{
+		NSMutableArray* activitySpeeds = [[NSMutableArray alloc] init];
+		[activitySpeeds addObject:@(0)];
+
+		for (size_t i = 1; i < [activityDistances count]; ++i)
+		{
+			NSNumber* distance1 = [activityDistances objectAtIndex:i - 1];
+			NSNumber* distance2 = [activityDistances objectAtIndex:i];
+
+			double speed = [distance2 doubleValue] - [distance1 doubleValue];
+			[activitySpeeds addObject:@(speed)];
+		}
+
+		[self->speeds setObject:activitySpeeds forKey:activityId];
+	}
+}
+
+- (void)calculateDistancesFromLocations:(NSMutableArray<CLLocation*>*)activityLocations withActivityId:(NSString*)activityId
+{
+	@synchronized(self->distances)
+	{
+		NSMutableArray<NSNumber*>* activityDistances = [[NSMutableArray alloc] init];
+		[activityDistances addObject:@(0)];
+
+		for (size_t i = 1; i < [activityLocations count]; ++i)
+		{
+			CLLocation* loc1 = [activityLocations objectAtIndex:i - 1];
+			CLLocation* loc2 = [activityLocations objectAtIndex:i];
+			Coordinate c1;
+			Coordinate c2;
+			
+			c1.latitude = loc1.coordinate.latitude;
+			c1.longitude = loc1.coordinate.longitude;
+			c1.altitude = 0.0;
+			c2.latitude = loc2.coordinate.latitude;
+			c2.longitude = loc2.coordinate.longitude;
+			c2.altitude = 0.0;
+
+			double distance = DistanceBetweenCoordinates(c1, c2);
+			[activityDistances addObject:@(distance)];
+		}
+
+		[self->distances setObject:activityDistances forKey:activityId];
+
+		// Now update the speed calculations.
+		[self calculateSpeedsFromDistances:activityDistances withActivityId:activityId];
+	}
+}
+
 - (void)readLocationPointsFromHealthStoreForWorkoutRoute:(HKWorkoutRoute*)route withActivityId:(NSString*)activityId
 {
 	@synchronized(self->locations)
@@ -288,9 +347,14 @@
 			
 			if (done)
 			{
+				// Now update the distance calculations.
+				[self calculateDistancesFromLocations:activityLocations withActivityId:activityId];
+
 				dispatch_group_leave(self->queryGroup);
 			}
 		}];
+		
+		[self->locations removeObjectForKey:activityId];
 
 		dispatch_group_enter(self->queryGroup);
 		[self.healthStore executeQuery:query];
@@ -516,6 +580,17 @@
 				attr.measureType = MEASURE_CALORIES;
 				attr.valid = true;
 			}
+			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_CURRENT_SPEED, strlen(ACTIVITY_ATTRIBUTE_CURRENT_SPEED)) == 0)
+			{
+				@synchronized(self->speeds)
+				{
+					NSArray<NSNumber*>* activitySpeeds = [self->speeds objectForKey:activityId];
+					attr.value.doubleVal = [[activitySpeeds objectAtIndex:self->tempPointIndex] doubleValue];
+					attr.valueType = TYPE_DOUBLE;
+					attr.measureType = MEASURE_SPEED;
+					attr.valid = true;
+				}
+			}
 		}
 	}
 	return attr;
@@ -526,24 +601,13 @@
 	if (sensor == SENSOR_TYPE_GPS)
 	{
 		const char* activityIdStr = [activityId UTF8String];
-
-		@synchronized(self->locations)
+		NSInteger numLocationPoints = [self getNumLocationPoints:activityId];
+		for (self->tempPointIndex = 0; self->tempPointIndex < numLocationPoints; ++self->tempPointIndex)
 		{
-			NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
-			if (activityLocations)
-			{
-				for (size_t pointIndex = 0; pointIndex < [activityLocations count]; ++pointIndex)
-				{
-					CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
-					if (loc)
-					{
-						if (callback)
-							callback(activityIdStr, context);
-					}
-				}
-				return TRUE;
-			}
+			if (callback)
+				callback(activityIdStr, context);
 		}
+		return TRUE;
 	}
 	return FALSE;
 }
