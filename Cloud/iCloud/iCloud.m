@@ -17,18 +17,19 @@
 
 - (BOOL)isAvailable
 {
-	self->ubiquityContainer = [[NSFileManager defaultManager] URLForUbiquityContainerIdentifier:nil];
+	NSFileManager* fm = [NSFileManager defaultManager];
+	self->ubiquityContainer = [fm URLForUbiquityContainerIdentifier:nil];
 	if (self->ubiquityContainer)
 	{
 		self->documentsUrl = [self->ubiquityContainer URLByAppendingPathComponent:@"Documents"];
 		if (self->documentsUrl)
 		{
-			if (![[NSFileManager defaultManager] fileExistsAtPath:[documentsUrl path] isDirectory:nil])
+			if (![fm fileExistsAtPath:[self->documentsUrl path] isDirectory:nil])
 			{
-				[[NSFileManager defaultManager] createDirectoryAtURL:documentsUrl withIntermediateDirectories:true attributes:nil error:nil];
+				[fm createDirectoryAtURL:self->documentsUrl withIntermediateDirectories:true attributes:nil error:nil];
 			}
+			return TRUE;
 		}
-		return TRUE;
 	}
 	return FALSE;
 }
@@ -42,11 +43,13 @@
 
 - (BOOL)uploadFile:(NSString*)filePath
 {
-	NSURL* localDocumentUrl = [NSURL URLWithString:filePath];
+	NSString* filePathWithScheme = [NSString stringWithFormat:@"file://%@", filePath];
+	NSURL* localDocumentUrl = [NSURL URLWithString:filePathWithScheme];
 	NSString* fileName = [localDocumentUrl lastPathComponent];
 	NSURL* iCloudDocumentsUrl = [self->documentsUrl URLByAppendingPathComponent:fileName];
 	NSError* error = nil;
-	return [[NSFileManager defaultManager] copyItemAtURL:localDocumentUrl toURL:iCloudDocumentsUrl error:&error];
+
+	return [[NSFileManager defaultManager] setUbiquitous:TRUE itemAtURL:localDocumentUrl destinationURL:iCloudDocumentsUrl error:&error];
 }
 
 @end

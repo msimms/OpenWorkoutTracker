@@ -142,6 +142,7 @@
 		27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEE19BFD99B000383E3 /* SensorMgr.m */; };
 		27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7CDFC19BFD9AD000383E3 /* MapKit.framework */; };
 		27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C044FC19F8622B00E32E96 /* ComplexScreen.png */; };
+		27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C081FC2383780700BEB105 /* CloudKit.framework */; };
 		27C0844E19BFD063007CE934 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
 		27C0844F19BFD063007CE934 /* ActivityFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841619BFD063007CE934 /* ActivityFactory.cpp */; };
 		27C0845019BFD063007CE934 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841919BFD063007CE934 /* ActivityMgr.mm */; };
@@ -676,6 +677,7 @@
 		27B7CDF119BFD99B000383E3 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = IOS/Sensors/SensorType.h; sourceTree = SOURCE_ROOT; };
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
+		27C081FC2383780700BEB105 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		27C0841219BFD063007CE934 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = SOURCE_ROOT; };
 		27C0841319BFD063007CE934 /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Activity.h; path = Activities/Activity.h; sourceTree = SOURCE_ROOT; };
 		27C0841419BFD063007CE934 /* ActivityAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityAttribute.h; path = Activities/ActivityAttribute.h; sourceTree = SOURCE_ROOT; };
@@ -772,6 +774,7 @@
 				27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */,
 				27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */,
 				27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */,
+				27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */,
 				27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */,
 				27B44D0219BFEF4E0058FE00 /* Accelerate.framework in Frameworks */,
 				27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */,
@@ -1056,6 +1059,7 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27C081FC2383780700BEB105 /* CloudKit.framework */,
 				27DCF66322B72FBF009A23C2 /* libxml2.tbd */,
 				27DCF63822B717FE009A23C2 /* libsqlite3.tbd */,
 				27DCF5F722B70CAE009A23C2 /* HealthKit.framework */,
