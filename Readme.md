@@ -14,6 +14,7 @@ Why develop a workout tracker when there are so many closed-source options avail
 * Support for Bluetooth LE sensors, including heart rate, cycling power, and cycling cadence.
 * Optional ability to live broadcast to the companion server app (StraenWeb). Note that this is off by default, but is something I added so friends could track me during long cycling events.
 * Integrates with Apple Health.
+* Can export to the iCloud Drive.
 
 ## Major Todos
 * Unit Tests
