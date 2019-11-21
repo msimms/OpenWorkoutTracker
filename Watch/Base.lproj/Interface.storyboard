@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="14868" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="14643"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
     </dependencies>
     <scenes>
+        <!--Interface Controller-->
+        <scene sceneID="FSP-Ae-cLG">
+            <objects>
+                <controller id="d9K-Wx-f3c">
+                    <items>
+                        <label alignment="left" text="Copyright (c) 2019 by Michael J. Simms" textAlignment="left" numberOfLines="4" id="dJC-h1-7Wk"/>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="973" y="-18"/>
+        </scene>
         <!--Interface Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
@@ -30,6 +41,11 @@
                         <button width="1" alignment="left" title="Intervals" id="IvE-jq-NUh">
                             <connections>
                                 <segue destination="aHE-HE-Bag" kind="push" id="8Ux-PK-3UZ"/>
+                            </connections>
+                        </button>
+                        <button width="1" alignment="left" title="About" id="x9X-9W-OPg">
+                            <connections>
+                                <segue destination="d9K-Wx-f3c" kind="push" id="sp0-EJ-abt"/>
                             </connections>
                         </button>
                     </items>
@@ -113,7 +129,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="604" y="345"/>
+            <point key="canvasLocation" x="797" y="343"/>
         </scene>
         <!--WatchIntervalsViewController-->
         <scene sceneID="2wF-ip-6Vt">
