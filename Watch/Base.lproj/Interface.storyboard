@@ -110,6 +110,7 @@
                             </gestureRecognizers>
                         </group>
                         <button width="1" alignment="left" verticalAlignment="bottom" title="Start" id="75M-0x-o8w">
+                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
                             </connections>

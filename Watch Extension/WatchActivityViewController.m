@@ -101,21 +101,25 @@
 - (void)setUIForStartedActivity
 {
 	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setBackgroundColor:[UIColor redColor]];
 }
 
 - (void)setUIForStoppedActivity
 {
 	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
 }
 
 - (void)setUIForPausedActivity
 {
 	[self.startStopButton setTitle:ACTIVITY_BUTTON_RESUME];
+	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
 }
 
 - (void)setUIForResumedActivity
 {
 	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setBackgroundColor:[UIColor redColor]];
 }
 
 #pragma mark button handlers
