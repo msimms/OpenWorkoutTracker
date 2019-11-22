@@ -12,6 +12,8 @@
 #import "AppStrings.h"
 #import "StringUtils.h"
 
+#define ALERT_MSG_DELETE NSLocalizedString(@"Are you sure you want to delete this activity?", nil)
+
 @implementation WatchDetailsRowController
 
 @synthesize name;
@@ -50,6 +52,22 @@
 {
 	[super awakeWithContext:context];
 	[self redraw:context];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onDelete
+{
+	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void){
+		DeleteActivity([self->activityId UTF8String]);
+		[self popController];
+	}];
+	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
+	}];
+
+	NSArray* actions = [NSArray new];
+	actions = @[yesAction, noAction];
+	[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_DELETE preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
 #pragma mark location handling methods

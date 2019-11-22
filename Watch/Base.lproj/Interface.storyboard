@@ -184,6 +184,13 @@
                                 </tableRow>
                             </items>
                         </table>
+                        <button width="1" alignment="left" title="Delete" id="UZH-zv-QWv">
+                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="onDelete" destination="TxK-qh-dpe" id="2Rd-UY-XlA"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="detailsTable" destination="57Q-IQ-iLJ" id="mnM-GJ-dE0"/>
