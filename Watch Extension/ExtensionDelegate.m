@@ -416,6 +416,30 @@ void startSensorCallback(SensorType type, void* context)
 
 		NSString* activityType = [self getCurrentActivityType];
 
+		BOOL tempBadGps = FALSE;
+
+		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+		if (minHAccuracy != (uint8_t)-1)
+		{
+			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
+			if (minHAccuracy != 0 && accuracy > minHAccuracy)
+			{
+				tempBadGps = TRUE;
+			}
+		}
+		
+		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+		if (minVAccuracy != (uint8_t)-1)
+		{
+			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
+			if (minVAccuracy != 0 && accuracy > minVAccuracy)
+			{
+				tempBadGps = TRUE;
+			}
+		}
+
+		self->badGps = tempBadGps;
+
 		BOOL shouldProcessReading = TRUE;
 		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
 		
