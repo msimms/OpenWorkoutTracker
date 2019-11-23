@@ -70,6 +70,9 @@
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
 		27A71FDA2158556C00995B56 /* CommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A71FD92158556C00995B56 /* CommonViewController.m */; };
+		27AAB9D62389E76C00C0A91F /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AAB9D52389E76C00C0A91F /* Version.m */; };
+		27AAB9DA2389EC7B00C0A91F /* WatchAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AAB9D72389EBC300C0A91F /* WatchAboutViewController.m */; };
+		27AAB9DB2389EC9100C0A91F /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AAB9D52389E76C00C0A91F /* Version.m */; };
 		27B44D0219BFEF4E0058FE00 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B44D0119BFEF4E0058FE00 /* Accelerate.framework */; };
 		27B44D1019BFF01A0058FE00 /* Background1.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0419BFF01A0058FE00 /* Background1.png */; };
 		27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B44D0519BFF01A0058FE00 /* Countdown1.png */; };
@@ -534,6 +537,10 @@
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		27A3625319BFB0E200F5A17F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		27A71FD92158556C00995B56 /* CommonViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CommonViewController.m; path = IOS/View/CommonViewController.m; sourceTree = SOURCE_ROOT; };
+		27AAB9C72389E76C00C0A91F /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Version.h; path = IOS/Model/Version.h; sourceTree = SOURCE_ROOT; };
+		27AAB9D52389E76C00C0A91F /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Version.m; path = IOS/Model/Version.m; sourceTree = SOURCE_ROOT; };
+		27AAB9D72389EBC300C0A91F /* WatchAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchAboutViewController.m; sourceTree = "<group>"; };
+		27AAB9D82389EBC300C0A91F /* WatchAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchAboutViewController.h; sourceTree = "<group>"; };
 		27B44D0119BFEF4E0058FE00 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		27B44D0419BFF01A0058FE00 /* Background1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Background1.png; path = Images/Background1.png; sourceTree = SOURCE_ROOT; };
 		27B44D0519BFF01A0058FE00 /* Countdown1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Countdown1.png; path = Images/Countdown1.png; sourceTree = SOURCE_ROOT; };
@@ -969,6 +976,8 @@
 				2797F14B19BFE3B7008F8672 /* Preferences.m */,
 				2797F14C19BFE3B7008F8672 /* UserProfile.h */,
 				2797F14D19BFE3B7008F8672 /* UserProfile.m */,
+				27AAB9C72389E76C00C0A91F /* Version.h */,
+				27AAB9D52389E76C00C0A91F /* Version.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1373,6 +1382,8 @@
 				27DCF5D022B193B7009A23C2 /* InterfaceController.m */,
 				27DCF5D522B193B7009A23C2 /* NotificationController.h */,
 				27DCF5D622B193B7009A23C2 /* NotificationController.m */,
+				27AAB9D82389EBC300C0A91F /* WatchAboutViewController.h */,
+				27AAB9D72389EBC300C0A91F /* WatchAboutViewController.m */,
 				27DCF67622B80661009A23C2 /* WatchActivityViewController.h */,
 				27DCF67522B80661009A23C2 /* WatchActivityViewController.m */,
 				27754B19233DA0B5003F2C53 /* WatchDetailsViewController.h */,
@@ -1657,6 +1668,7 @@
 				27B7CD9B19BFD91C000383E3 /* LiveSummaryViewController.m in Sources */,
 				27B7CDF319BFD99B000383E3 /* LeBikeSpeedAndCadence.m in Sources */,
 				27B7CD2019BFD807000383E3 /* DataExporter.cpp in Sources */,
+				27AAB9D62389E76C00C0A91F /* Version.m in Sources */,
 				27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */,
 				27C0845C19BFD063007CE934 /* PushUp.cpp in Sources */,
 				27B7CD3219BFD8AC000383E3 /* AppDelegate.m in Sources */,
@@ -1785,6 +1797,7 @@
 				27DCF65922B72F24009A23C2 /* Coordinate.h in Sources */,
 				27DCF65A22B72F24009A23C2 /* UnitConversionFactors.h in Sources */,
 				27DCF65B22B72F24009A23C2 /* UnitConverter.cpp in Sources */,
+				27AAB9DB2389EC9100C0A91F /* Version.m in Sources */,
 				27DCF65C22B72F24009A23C2 /* UnitConverter.h in Sources */,
 				27DCF65D22B72F24009A23C2 /* UnitSystem.h in Sources */,
 				27DCF64222B72EFA009A23C2 /* CsvFileWriter.cpp in Sources */,
@@ -1808,6 +1821,7 @@
 				27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */,
 				27DCF65322B72EFA009A23C2 /* TextFileReader.cpp in Sources */,
 				27DCF65422B72EFA009A23C2 /* TextFileReader.h in Sources */,
+				27AAB9DA2389EC7B00C0A91F /* WatchAboutViewController.m in Sources */,
 				27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */,
 				27DCF65622B72EFA009A23C2 /* XmlFileReader.h in Sources */,
 				27DCF65722B72EFA009A23C2 /* XmlFileWriter.cpp in Sources */,

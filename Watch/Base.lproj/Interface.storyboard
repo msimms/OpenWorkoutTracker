@@ -7,13 +7,17 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--WatchAboutViewController-->
         <scene sceneID="FSP-Ae-cLG">
             <objects>
-                <controller id="d9K-Wx-f3c">
+                <controller identifier="WatchAboutViewController" id="d9K-Wx-f3c" customClass="WatchAboutViewController">
                     <items>
                         <label alignment="left" text="Copyright (c) 2019 by Michael J. Simms" textAlignment="left" numberOfLines="4" id="dJC-h1-7Wk"/>
+                        <label alignment="left" text="Built on:" id="NTE-qx-o3z"/>
                     </items>
+                    <connections>
+                        <outlet property="compileDate" destination="NTE-qx-o3z" id="VYv-uf-YPW"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="973" y="-18"/>
