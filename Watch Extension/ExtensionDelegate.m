@@ -264,6 +264,18 @@ void startSensorCallback(SensorType type, void* context)
 	return StartNewLap();
 }
 
+- (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
+{
+	return QueryLiveActivityAttribute([attributeName UTF8String]);
+}
+
+#pragma mark methods for creating and destroying the current activity.
+
+- (void)createActivity:(NSString*)activityType
+{
+	CreateActivity([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+}
+
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex
 {
 	DestroyCurrentActivity();
@@ -273,6 +285,43 @@ void startSensorCallback(SensorType type, void* context)
 - (void)endOrpanedActivity:(NSInteger)activityIndex
 {
 	FixHistoricalActivityEndTime(activityIndex);
+}
+
+#pragma mark methods for querying the status of the current activity.
+
+- (BOOL)isActivityCreated
+{
+	return IsActivityCreated();
+}
+
+- (BOOL)isActivityInProgress
+{
+	return IsActivityInProgress();
+}
+
+- (BOOL)isActivityOrphaned:(size_t*)activityIndex
+{
+	return IsActivityOrphaned(activityIndex);
+}
+
+
+#pragma mark methods for loading and editing historical activities
+
+- (NSInteger)initializeHistoricalActivityList
+{
+	InitializeHistoricalActivityList();
+	return [self getNumHistoricalActivities];
+}
+
+- (NSInteger)getNumHistoricalActivities
+{
+	// The number of activities from out database.
+	return (NSInteger)GetNumHistoricalActivities();
+}
+
+- (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
+{
+	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
 }
 
 #pragma mark retrieves or creates and retrieves the applications unique identifier
@@ -516,18 +565,6 @@ void attributeNameCallback(const char* name, void* context)
 	return attributes;
 }
 
-- (NSString*)getCurrentActivityType
-{
-	NSString* activityTypeStr = nil;
-	char* activityType = GetCurrentActivityType();
-	if (activityType)
-	{
-		activityTypeStr = [NSString stringWithFormat:@"%s", activityType];
-		free((void*)activityType);
-	}
-	return activityTypeStr;
-}
-
 - (NSMutableArray*)getIntervalWorkoutNames
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
@@ -544,6 +581,42 @@ void attributeNameCallback(const char* name, void* context)
 		}
 	}
 	return names;
+}
+
+- (NSString*)getCurrentActivityType
+{
+	NSString* activityTypeStr = nil;
+	char* activityType = GetCurrentActivityType();
+	if (activityType)
+	{
+		activityTypeStr = [NSString stringWithFormat:@"%s", activityType];
+		free((void*)activityType);
+	}
+	return activityTypeStr;
+}
+
+- (NSString*)getHistoricalActivityType:(NSInteger)activityIndex
+{
+	NSString* result = nil;
+	char* activityType = GetHistoricalActivityType((size_t)activityIndex);
+	if (activityType)
+	{
+		result = [NSString stringWithFormat:@"%s", activityType];
+		free((void*)activityType);
+	}
+	return result;
+}
+
+- (NSString*)getHistoricalActivityName:(NSInteger)activityIndex
+{
+	NSString* result = nil;
+	char* activityName = GetHistoricalActivityName((size_t)activityIndex);
+	if (activityName)
+	{
+		result = [NSString stringWithFormat:@"%s", activityName];
+		free((void*)activityName);
+	}
+	return result;
 }
 
 @end

@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WatchActivityViewController.h"
-#import "ActivityMgr.h"
 #import "ActivityPreferences.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
@@ -203,6 +202,7 @@
 {
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSString* activityType = [extDelegate getCurrentActivityType];
 
@@ -274,6 +274,7 @@
 - (void)showAttributesMenu
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 

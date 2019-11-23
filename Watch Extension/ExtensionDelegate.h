@@ -42,8 +42,25 @@
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
+- (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName;
+
+// methods for creating and destroying the current activity.
+
+- (void)createActivity:(NSString*)activityType;
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex;
 - (void)endOrpanedActivity:(NSInteger)activityIndex;
+
+// methods for querying the status of the current activity.
+
+- (BOOL)isActivityCreated;
+- (BOOL)isActivityInProgress;
+- (BOOL)isActivityOrphaned:(size_t*)activityIndex;
+
+// methods for loading and editing historical activities
+
+- (NSInteger)initializeHistoricalActivityList;
+- (NSInteger)getNumHistoricalActivities;
+- (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 
 // retrieves or creates and retrieves the applications unique identifier
 
@@ -63,7 +80,10 @@
 - (NSMutableArray*)getActivityTypes;
 - (NSMutableArray*)getCurrentActivityAttributes;
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex;
-- (NSString*)getCurrentActivityType;
 - (NSMutableArray*)getIntervalWorkoutNames;
+
+- (NSString*)getCurrentActivityType;
+- (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
+- (NSString*)getHistoricalActivityName:(NSInteger)activityIndex;
 
 @end

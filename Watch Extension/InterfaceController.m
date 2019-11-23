@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "InterfaceController.h"
-#import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 
@@ -28,13 +27,14 @@
 {
 	[super willActivate];
 
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	size_t orphanedActivityIndex = 0;
-	bool isOrphaned = IsActivityOrphaned(&orphanedActivityIndex);
-	bool isInProgress = IsActivityInProgress();
+	bool isOrphaned = [extDelegate isActivityOrphaned:&orphanedActivityIndex];
+	bool isInProgress = [extDelegate isActivityInProgress];
 
 	if (isOrphaned || isInProgress)
 	{
-		ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 		[extDelegate recreateOrphanedActivity:orphanedActivityIndex];
 		[self pushControllerWithName:@"WatchActivityViewController" context:nil];
 	}
@@ -48,6 +48,7 @@
 - (IBAction)onStartWorkout
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	NSMutableArray* activityTypes = [extDelegate getActivityTypes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
@@ -73,19 +74,16 @@
 
 - (void)createActivity:(NSString*)activityType
 {
-	const char* pActivityType = [activityType cStringUsingEncoding:NSASCIIStringEncoding];
-	if (pActivityType)
-	{
-		// Create the data structures and database entries needed to start an activity.
-		CreateActivity(pActivityType);
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 
-		// Initialize any sensors that we are going to use.
-		ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-		[extDelegate startSensors];
+	// Create the data structures and database entries needed to start an activity.
+	[extDelegate createActivity:activityType];
 
-		// Switch to the activity view.
-		[self pushControllerWithName:@"WatchActivityViewController" context:nil];
-	}
+	// Initialize any sensors that we are going to use.
+	[extDelegate startSensors];
+
+	// Switch to the activity view.
+	[self pushControllerWithName:@"WatchActivityViewController" context:nil];
 }
 
 @end

@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WatchHistoryViewController.h"
-#import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
@@ -64,8 +63,8 @@
 
 - (void)redraw
 {
-	InitializeHistoricalActivityList();
-	size_t numHistoricalActivities = GetNumHistoricalActivities();
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	size_t numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
 
 	if (numHistoricalActivities == 0)
 	{
@@ -92,26 +91,17 @@
 			time_t startTime = 0;
 			time_t endTime = 0;
 
-			GetHistoricalActivityStartAndEndTime(i, &startTime, &endTime);
+			[extDelegate getHistoricalActivityStartAndEndTime:i withStartTime:&startTime withEndTime:&endTime];
 			NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
-			
-			char* type = GetHistoricalActivityType(i);
-			char* name = GetHistoricalActivityName(i);
+
+			NSString* type = [extDelegate getHistoricalActivityType:i];
+			NSString* name = [extDelegate getHistoricalActivityName:i];
 
 			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:rowControllerIndex];
 			--rowControllerIndex;
 
-			NSString* rowTitle = [NSString stringWithFormat:@"%s\n%s %@", type, name, startTimeStr];
+			NSString* rowTitle = [NSString stringWithFormat:@"%@\n%@ %@", type, name, startTimeStr];
 			[row.itemLabel setText:rowTitle];
-
-			if (type)
-			{
-				free((void*)type);
-			}
-			if (name)
-			{
-				free((void*)name);
-			}
 		}
 	}
 }
