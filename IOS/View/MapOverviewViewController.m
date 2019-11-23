@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "MapOverviewViewController.h"
-#import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "ActivityAttribute.h"
 #import "ActivityAttributeType.h"

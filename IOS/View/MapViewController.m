@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "MapViewController.h"
-#import "ActivityMgr.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "LocationSensor.h"

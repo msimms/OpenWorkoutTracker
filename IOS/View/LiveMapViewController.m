@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "LiveMapViewController.h"
-#import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "AppDelegate.h"
 #import "LocationSensor.h"

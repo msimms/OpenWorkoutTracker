@@ -8,7 +8,6 @@
 #import "BikeProfileViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
-#import "ActivityMgr.h"
 #import "Preferences.h"
 #import "UnitConversionFactors.h"
 
