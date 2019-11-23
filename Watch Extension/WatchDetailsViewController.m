@@ -8,7 +8,6 @@
 #import "WatchDetailsViewController.h"
 #import "ExtensionDelegate.h"
 #import "ActivityAttribute.h"
-#import "ActivityMgr.h"
 #import "AppStrings.h"
 #import "StringUtils.h"
 
@@ -75,13 +74,14 @@
 - (void)redraw:(id)context
 {	
 	NSDictionary* passedData = (NSDictionary*)context;
+
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	NSNumber* tempActivityIndex = [passedData objectForKey:@"activityIndex"];
 	NSInteger activityIndex = [tempActivityIndex integerValue];
 
-	CreateHistoricalActivityObject(activityIndex);
-	LoadHistoricalActivitySummaryData(activityIndex);
-
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	[extDelegate createHistoricalActivityObject:activityIndex];
+	[extDelegate loadHistoricalActivitySummaryData:activityIndex];
 
 	NSMutableArray* nameStrs = [[NSMutableArray alloc] init];
 	NSMutableArray* valueStrs = [[NSMutableArray alloc] init];
@@ -93,7 +93,7 @@
 	bool startCoordinateSet = false;
 
 	self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(activityIndex)];
-	GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+	[extDelegate getHistoricalActivityStartAndEndTime:activityIndex withStartTime:&startTime withEndTime:&endTime];
 
 	// Format the start time.
 	NSString* temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
@@ -108,7 +108,7 @@
 	// Format the attributes.
 	for (NSString* attributeName in attributeNames)
 	{
-		ActivityAttributeType attr = QueryHistoricalActivityAttributeById([self->activityId UTF8String], [attributeName UTF8String]);
+		ActivityAttributeType attr = [extDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 		if (attr.valid)
 		{
 			NSString* valueStr = [StringUtils formatActivityViewType:attr];

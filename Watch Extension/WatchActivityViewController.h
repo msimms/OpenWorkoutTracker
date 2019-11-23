@@ -25,6 +25,7 @@
 	NSMutableArray* valueLabels;
 	NSMutableArray* unitsLabels;
 	NSMutableArray* groups;
+	BOOL            isPopping;
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* startStopButton;

@@ -38,11 +38,17 @@
 - (instancetype)init
 {
 	self = [super init];
+	self->isPopping = FALSE;
 	return self;
 }
 
 - (void)willActivate
 {
+	if (self->isPopping)
+	{
+		return;
+	}
+
 	[super willActivate];
 
 	self->valueLabels = [[NSMutableArray alloc] init];
@@ -140,6 +146,7 @@
 	{
 		[self setUIForStoppedActivity];
 		[self popController];
+		self->isPopping = TRUE;
 	}
 }
 

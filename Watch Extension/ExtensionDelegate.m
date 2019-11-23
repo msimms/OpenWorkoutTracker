@@ -236,9 +236,14 @@ void startSensorCallback(SensorType type, void* context)
 		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 		NSString* activityHash = [self hashCurrentActivity];
-		
-		SaveActivitySummaryData();
-		
+
+		dispatch_queue_t summarizerQueue = dispatch_queue_create("summarizer", NULL);
+		dispatch_async(summarizerQueue, ^{
+			@synchronized(self) {
+				SaveActivitySummaryData();
+			}
+		});
+
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								  activityId, @KEY_NAME_ACTIVITY_ID,
 								  activityType, @KEY_NAME_ACTIVITY_TYPE,
@@ -248,7 +253,7 @@ void startSensorCallback(SensorType type, void* context)
 								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
 								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 								  nil];
-		
+
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
 	}
 	return result;
@@ -319,9 +324,32 @@ void startSensorCallback(SensorType type, void* context)
 	return (NSInteger)GetNumHistoricalActivities();
 }
 
+- (void)createHistoricalActivityObject:(NSInteger)activityIndex
+{
+	CreateHistoricalActivityObject(activityIndex);
+}
+
+- (void)loadHistoricalActivitySummaryData:(NSInteger)activityIndex
+{
+	@synchronized(self) {
+		LoadHistoricalActivitySummaryData(activityIndex);
+	}
+}
+
 - (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
 	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+}
+
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
+{
+	return QueryHistoricalActivityAttribute((size_t)activityIndex, attributeName);
+}
+
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
 }
 
 #pragma mark retrieves or creates and retrieves the applications unique identifier

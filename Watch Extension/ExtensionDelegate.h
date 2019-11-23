@@ -60,7 +60,11 @@
 
 - (NSInteger)initializeHistoricalActivityList;
 - (NSInteger)getNumHistoricalActivities;
+- (void)createHistoricalActivityObject:(NSInteger)activityIndex;
+- (void)loadHistoricalActivitySummaryData:(NSInteger)activityIndex;
 - (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
+- (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 
 // retrieves or creates and retrieves the applications unique identifier
 
