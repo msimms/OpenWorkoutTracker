@@ -390,6 +390,21 @@ typedef enum ExportFileTypeButtons
 	}
 }
 
+- (void)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:format];
+	if (self->exportedFileName)
+	{
+		[self handleFileFormatSelection];
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
+	}
+}
+
 - (void)showFileFormatSheet
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -403,23 +418,19 @@ typedef enum ExportFileTypeButtons
 	if ([appDelegate getNumHistoricalActivityLocationPoints:self->activityId] > 0)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:FILE_GPX];
-			[self handleFileFormatSelection];
+			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_GPX];
 		}]];
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_TCX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:FILE_TCX];
-			[self handleFileFormatSelection];
+			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_TCX];
 		}]];
 	}
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:FILE_CSV];
-		[self handleFileFormatSelection];
+		[self exportActivityToTempFile:self->activityId withFileFormat:FILE_CSV];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 
-	[self presentViewController:alertController animated:YES completion:^{
-	}];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)showCloudSheet:(NSMutableArray*)fileExportServices
@@ -437,6 +448,7 @@ typedef enum ExportFileTypeButtons
 	}
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
+
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

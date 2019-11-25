@@ -700,7 +700,47 @@
 	[self.healthStore saveObject:calorieSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
-#pragma mark for getting heart rate updates from the watch
+#pragma mark methods for exporting HealthKit data.
+
+- (BOOL)exportToTcx:(NSString*)activityId toFile:(NSString*)fileName
+{
+	return FALSE;
+}
+
+- (BOOL)exportToGpx:(NSString*)activityId toFile:(NSString*)fileName
+{
+	return FALSE;
+}
+
+- (BOOL)exportToCsv:(NSString*)activityId toFile:(NSString*)fileName
+{
+	return FALSE;
+}
+
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format
+{
+	NSString* fileName;
+
+	switch (format)
+	{
+		case FILE_UNKNOWN:
+			return nil;
+		case FILE_TEXT:
+			return nil;
+		case FILE_TCX:
+			return [self exportToTcx:activityId toFile:fileName] ? fileName : nil;
+		case FILE_GPX:
+			return [self exportToGpx:activityId toFile:fileName] ? fileName : nil;
+		case FILE_CSV:
+			return [self exportToCsv:activityId toFile:fileName] ? fileName : nil;
+		case FILE_ZWO:				
+		default:
+			return nil;
+	}
+	return nil;
+}
+
+#pragma mark methods for getting heart rate updates from the watch
 
 - (void)subscribeToHeartRateUpdates
 {

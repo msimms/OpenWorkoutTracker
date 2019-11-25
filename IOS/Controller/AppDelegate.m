@@ -1459,11 +1459,26 @@ void startSensorCallback(SensorType type, void* context)
 	NSString* exportDir = [self createExportDir];
 	if (exportDir)
 	{
-		char* tempExportFileName = ExportActivity([activityId UTF8String], format, [exportDir UTF8String]);
-		if (tempExportFileName)
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 		{
-			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
-			free((void*)tempExportFileName);
+			if (self->healthMgr)
+			{
+				return [self->healthMgr exportActivityToFile:activityId withFileFormat:format];
+			}
+		}
+		
+		// Activity is in our database.
+		else
+		{
+			char* tempExportFileName = ExportActivity([activityId UTF8String], format, [exportDir UTF8String]);
+			if (tempExportFileName)
+			{
+				exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
+				free((void*)tempExportFileName);
+			}
 		}
 	}
 	return exportFileName;

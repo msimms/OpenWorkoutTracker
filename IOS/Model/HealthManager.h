@@ -59,7 +59,11 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 - (void)saveRunningWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
 - (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
 
-// for getting heart rate updates from the watch
+// methods for exporting HealthKit data.
+
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format;
+
+// methods for getting heart rate updates from the watch
 
 - (void)subscribeToHeartRateUpdates;
 
