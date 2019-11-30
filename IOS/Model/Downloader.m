@@ -9,40 +9,49 @@
 
 @implementation Downloader
 
-@synthesize strFileNameWithPath;
-@synthesize delegate;
-
-- (void)loadData
+- (void)downloadFile:(NSString*)sourceFileName to:(NSString*)destinationFileName completionHandler:(void (^)(NSData* _Nullable data, NSURLResponse* _Nullable response, NSError* _Nullable error))completionHandler
 {
-	self->floatTotalData     = 100;
-	self->floatReceivedData  = 0;
+	self->bytesReceived = 0;
+	self->destinationFileName = destinationFileName;
 
-	NSArray*  paths          = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString* docDir         = [paths objectAtIndex: 0];
-	self.strFileNameWithPath = [docDir stringByAppendingPathComponent:@"Workouts.sqlite"];
+	NSFileManager* fm = [NSFileManager defaultManager];
+	[fm removeItemAtPath:self->destinationFileName error:nil];
 
-	[[NSFileManager defaultManager] createFileAtPath:self.strFileNameWithPath contents:nil attributes:nil];
+	if ([fm createFileAtPath:self->destinationFileName contents:nil attributes:nil])
+	{
+		NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:sourceFileName]];
+		[request setHTTPMethod:@"GET"];
 
-	NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://mikesimms.net/Workouts.sqlite"]];
-	[request setHTTPMethod:@"GET"];
+		NSURLSession* session = [NSURLSession sharedSession];
+		NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request completionHandler:completionHandler];
+		[dataTask resume];
+	}
+}
 
-	NSURLSession* session = [NSURLSession sharedSession];
-	NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
-												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
-									  {
-										  self->floatReceivedData += [data length];
-										  
-										  NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath: self.strFileNameWithPath];
-										  [fileHandle seekToEndOfFile];
-										  [fileHandle writeData: data];
-										  [fileHandle closeFile];
-										  
-										  if ([self.delegate respondsToSelector:@selector(didReceiveData:)])
-											  [self.delegate didReceiveData:self];
-										  if ([self.delegate respondsToSelector:@selector(didLoadData:)])
-											  [self.delegate didLoadData:self];
-									  }];
-	[dataTask resume];
+- (void)downloadFile:(NSString*)sourceFileName to:(NSString*)destinationFileName
+{
+	[self downloadFile:sourceFileName to:destinationFileName completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
+	{
+		self->bytesReceived += [data length];
+
+		if ([self->delegate respondsToSelector:@selector(didReceiveData:)])
+		{
+			[self->delegate didReceiveData:self];
+		}
+
+		NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:self->destinationFileName];
+		if (fileHandle)
+		{
+			[fileHandle seekToEndOfFile];
+			[fileHandle writeData:data];
+			[fileHandle closeFile];
+
+			if ([self->delegate respondsToSelector:@selector(didLoadData:)])
+			{
+				[self->delegate didLoadData:self];
+			}
+		}
+	}];
 }
 
 @end

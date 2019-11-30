@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "D793BC94-36BA-47A3-8B36-91ADE4085080",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Straen.xcodeproj",
+        "identifier" : "270CF4062391BBF400584058",
+        "name" : "Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

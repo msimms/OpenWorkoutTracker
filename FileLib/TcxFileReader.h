@@ -24,6 +24,13 @@ namespace FileLib
 
 		virtual void ProcessNode(xmlNode* node);
 		virtual void ProcessProperties(xmlAttr* attr);
+
+		typedef bool (*NewLocationFunc)(double lat, double lon, double ele, uint64_t time, void* context);
+		virtual void SetNewLocationCallback(NewLocationFunc func, void* context) { m_newLocCallback = func; m_newLocContext = context; };
+
+	protected:
+		NewLocationFunc m_newLocCallback;
+		void*           m_newLocContext;
 	};
 }
 

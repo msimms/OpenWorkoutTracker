@@ -1639,32 +1639,30 @@ extern "C" {
 	// Functions for importing/exporting activities.
 	//
 
-	bool ImportActivityFromFile(const char* const pFileName, const char* const pActivityType)
+	bool ImportActivityFromFile(const char* const pFileName, const char* const pActivityType, const char* const activityId)
 	{
+		bool result = false;
+
 		if (pFileName)
 		{
-			bool result = false;
 			std::string fileName = pFileName;
 			std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);;
 			DataImporter importer;
 
 			if (fileExtension.compare("gpx") == 0)
 			{
-				result = importer.ImportFromGpx(pFileName, pActivityType, g_pDatabase);
+				result = importer.ImportFromGpx(pFileName, pActivityType, activityId, g_pDatabase);
 			}
 			else if (fileExtension.compare("tcx") == 0)
 			{
-				result = importer.ImportFromTcx(pFileName, pActivityType, g_pDatabase);
+				result = importer.ImportFromTcx(pFileName, pActivityType, activityId, g_pDatabase);
 			}
-			else if (fileExtension.compare("cxv") == 0)
+			else if (fileExtension.compare("csv") == 0)
 			{
-				result = importer.ImportFromCsv(pFileName, pActivityType, g_pDatabase);
+				result = importer.ImportFromCsv(pFileName, pActivityType, activityId, g_pDatabase);
 			}
-
-			return result;
 		}
-
-		return false;
+		return result;
 	}
 
 	char* ExportActivity(const char* const activityId, FileFormat format, const char* const pDirName)

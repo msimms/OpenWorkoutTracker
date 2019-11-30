@@ -13,5 +13,10 @@ const std::string ZWO_TAG_DESCRIPTION = "description";
 const std::string ZWO_TAG_SPORTTYPE = "sportType";
 const std::string ZWO_TAG_TAGS = "tags";
 const std::string ZWO_TAG_WORKOUT = "workout";
+const std::string ZWO_TAG_WORKOUT_WARMUP = "Warmup";
+const std::string ZWO_TAG_WORKOUT_COOLDOWN = "Cooldown";
+const std::string ZWO_TAG_WORKOUT_STEADYSTATE = "SteadyState";
+const std::string ZWO_TAG_WORKOUT_INTERVALS = "IntervalsT";
+const std::string ZWO_TAG_WORKOUT_FREERIDE = "FreeRide";
 
 #endif

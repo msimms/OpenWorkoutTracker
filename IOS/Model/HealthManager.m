@@ -719,7 +719,7 @@
 
 - (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format
 {
-	NSString* fileName;
+	NSString* fileName = [[NSString alloc] initWithFormat:@""];
 
 	switch (format)
 	{

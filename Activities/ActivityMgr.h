@@ -184,7 +184,7 @@ extern "C" {
 	bool IsCyclingActivity(void);
 
 	// Functions for importing/exporting activities.
-	bool ImportActivityFromFile(const char* const fileName, const char* const activityType);
+	bool ImportActivityFromFile(const char* const fileName, const char* const activityType, const char* const activityId);
 	char* ExportActivity(const char* const activityId, FileFormat format, const char* const dirName);
 	char* ExportActivitySummary(const char* activityType, const char* const dirName);
 

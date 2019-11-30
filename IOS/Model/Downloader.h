@@ -12,17 +12,13 @@
 @interface Downloader : NSObject
 {
 	id<DownloaderDelegate> delegate;
-
-	NSString* strFileNameWithPath;
+	NSString* destinationFileName;
 	NSURLConnection* connection;
-	CGFloat floatTotalData;
-	CGFloat floatReceivedData;
+	NSInteger bytesReceived;
 }
 
-@property(nonatomic, retain) NSString* strFileNameWithPath;
-@property(nonatomic, retain) id <DownloaderDelegate> delegate;
-
-- (void)loadData;
+- (void)downloadFile:(NSString*)sourceFileName to:(NSString*)destinationFileName completionHandler:(void (^)(NSData* data, NSURLResponse* response, NSError* error))completionHandler;
+- (void)downloadFile:(NSString*)sourceFileName to:(NSString*)destinationFileName;
 
 @end
 

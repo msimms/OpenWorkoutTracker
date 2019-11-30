@@ -33,18 +33,20 @@ bool OnNewLocation(double lat, double lon, double ele, uint64_t time, void* cont
 	return false;
 }
 
-bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string& activityType, Database* pDatabase)
+bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
 {
 	bool result = false;
 	
 	m_pDb = pDatabase;
 	m_activityType = activityType;
+	m_activityId = activityId;
 	m_started = false;
 	m_lastTime = 0;
 
 	FileLib::TcxFileReader reader;
+	reader.SetNewLocationCallback(OnNewLocation, this);
 	result = reader.ParseFile(fileName);
-	if (m_lastTime > 0)
+	if (result && (m_lastTime > 0))
 	{
 		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
 		result = m_pDb->StopActivity(endTimeSecs, m_activityId);
@@ -52,19 +54,20 @@ bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string&
 	return result;
 }
 
-bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string& activityType, Database* pDatabase)
+bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
 {
 	bool result = false;
 
 	m_pDb = pDatabase;
 	m_activityType = activityType;
+	m_activityId = activityId;
 	m_started = false;
 	m_lastTime = 0;
 
 	FileLib::GpxFileReader reader;
 	reader.SetNewLocationCallback(OnNewLocation, this);
 	result = reader.ParseFile(fileName);
-	if (m_lastTime > 0)
+	if (result && (m_lastTime > 0))
 	{
 		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
 		result = m_pDb->StopActivity(endTimeSecs, m_activityId);
@@ -72,11 +75,18 @@ bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string&
 	return result;
 }
 
-bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string& activityType, Database* pDatabase)
+bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
 {
+	bool result = false;
+
 	m_pDb = pDatabase;
+	m_activityType = activityType;
+	m_activityId = activityId;
 	m_started = false;
-	return false;
+	m_lastTime = 0;
+
+
+	return result;
 }
 
 bool DataImporter::ImportFromKml(const std::string& fileName, std::vector<FileLib::KmlPlacemark>& placemarks)

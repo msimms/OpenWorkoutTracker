@@ -18,6 +18,124 @@
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
+		270CF40A2391BBF400584058 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF4092391BBF400584058 /* Tests.m */; };
+		270CF40F2391BE0800584058 /* GpxImportTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF3FA2391B63800584058 /* GpxImportTest.m */; };
+		270CF4102391BE0D00584058 /* PeakFindTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF3FC2391B63800584058 /* PeakFindTest.m */; };
+		270CF4112391BE1200584058 /* TcxImportTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF3FB2391B63800584058 /* TcxImportTest.m */; };
+		270CF4122391BE1900584058 /* ZwoImportTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF3F92391B63700584058 /* ZwoImportTest.m */; };
+		270CF4252391F05200584058 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
+		270CF4262391F05200584058 /* Activity.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841319BFD063007CE934 /* Activity.h */; };
+		270CF4272391F05200584058 /* ActivityAttribute.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841419BFD063007CE934 /* ActivityAttribute.h */; };
+		270CF4282391F05200584058 /* ActivityAttributeType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841519BFD063007CE934 /* ActivityAttributeType.h */; };
+		270CF4292391F05200584058 /* ActivityFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841619BFD063007CE934 /* ActivityFactory.cpp */; };
+		270CF42A2391F05200584058 /* ActivityFactory.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841719BFD063007CE934 /* ActivityFactory.h */; };
+		270CF42B2391F05200584058 /* ActivityMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841819BFD063007CE934 /* ActivityMgr.h */; };
+		270CF42C2391F05200584058 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841919BFD063007CE934 /* ActivityMgr.mm */; };
+		270CF42D2391F05200584058 /* ActivitySummary.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841B19BFD063007CE934 /* ActivitySummary.h */; };
+		270CF42E2391F05200584058 /* ActivityType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841C19BFD063007CE934 /* ActivityType.h */; };
+		270CF42F2391F05200584058 /* ActivityViewType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841D19BFD063007CE934 /* ActivityViewType.h */; };
+		270CF4302391F05200584058 /* AxisName.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841E19BFD063007CE934 /* AxisName.h */; };
+		270CF4312391F05200584058 /* ChinUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841F19BFD063007CE934 /* ChinUp.cpp */; };
+		270CF4322391F05200584058 /* ChinUp.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842019BFD063007CE934 /* ChinUp.h */; };
+		270CF4332391F05200584058 /* ChinUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842119BFD063007CE934 /* ChinUpAnalyzer.cpp */; };
+		270CF4342391F05200584058 /* ChinUpAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */; };
+		270CF4352391F05200584058 /* Cycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842319BFD063007CE934 /* Cycling.cpp */; };
+		270CF4362391F05200584058 /* Cycling.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842419BFD063007CE934 /* Cycling.h */; };
+		270CF4372391F05200584058 /* GForceAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */; };
+		270CF4382391F05200584058 /* GForceAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842719BFD063007CE934 /* GForceAnalyzer.h */; };
+		270CF4392391F05200584058 /* GForceAnalyzerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */; };
+		270CF43A2391F05200584058 /* GForceAnalyzerFactory.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842919BFD063007CE934 /* GForceAnalyzerFactory.h */; };
+		270CF43B2391F05200584058 /* Hike.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842D19BFD063007CE934 /* Hike.cpp */; };
+		270CF43C2391F05200584058 /* Hike.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842E19BFD063007CE934 /* Hike.h */; };
+		270CF43D2391F05200584058 /* IntervalWorkout.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0842F19BFD063007CE934 /* IntervalWorkout.h */; };
+		270CF43E2391F05200584058 /* IntervalWorkoutSegment.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843019BFD063007CE934 /* IntervalWorkoutSegment.h */; };
+		270CF43F2391F05200584058 /* LiftingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843119BFD063007CE934 /* LiftingActivity.cpp */; };
+		270CF4402391F05200584058 /* LiftingActivity.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843219BFD063007CE934 /* LiftingActivity.h */; };
+		270CF4412391F05200584058 /* MountainBiking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843319BFD063007CE934 /* MountainBiking.cpp */; };
+		270CF4422391F05200584058 /* MountainBiking.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843419BFD063007CE934 /* MountainBiking.h */; };
+		270CF4432391F05200584058 /* MovingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843519BFD063007CE934 /* MovingActivity.cpp */; };
+		270CF4442391F05200584058 /* MovingActivity.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843619BFD063007CE934 /* MovingActivity.h */; };
+		270CF4452391F05200584058 /* PullUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843719BFD063007CE934 /* PullUp.cpp */; };
+		270CF4462391F05200584058 /* PullUp.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843819BFD063007CE934 /* PullUp.h */; };
+		270CF4472391F05200584058 /* PullUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843919BFD063007CE934 /* PullUpAnalyzer.cpp */; };
+		270CF4482391F05200584058 /* PullUpAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843A19BFD063007CE934 /* PullUpAnalyzer.h */; };
+		270CF4492391F05200584058 /* PushUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843B19BFD063007CE934 /* PushUp.cpp */; };
+		270CF44A2391F05200584058 /* PushUp.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843C19BFD063007CE934 /* PushUp.h */; };
+		270CF44B2391F05200584058 /* PushUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843D19BFD063007CE934 /* PushUpAnalyzer.cpp */; };
+		270CF44C2391F05200584058 /* PushUpAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843E19BFD063007CE934 /* PushUpAnalyzer.h */; };
+		270CF44D2391F05200584058 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0843F19BFD063007CE934 /* Run.cpp */; };
+		270CF44E2391F05200584058 /* Run.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844019BFD063007CE934 /* Run.h */; };
+		270CF44F2391F05200584058 /* SegmentType.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844119BFD063007CE934 /* SegmentType.h */; };
+		270CF4502391F05200584058 /* Squat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844219BFD063007CE934 /* Squat.cpp */; };
+		270CF4512391F05200584058 /* Squat.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844319BFD063007CE934 /* Squat.h */; };
+		270CF4522391F05200584058 /* SquatAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844419BFD063007CE934 /* SquatAnalyzer.cpp */; };
+		270CF4532391F05200584058 /* SquatAnalyzer.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844519BFD063007CE934 /* SquatAnalyzer.h */; };
+		270CF4542391F05200584058 /* StationaryCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844619BFD063007CE934 /* StationaryCycling.cpp */; };
+		270CF4552391F05200584058 /* StationaryCycling.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844719BFD063007CE934 /* StationaryCycling.h */; };
+		270CF4562391F05200584058 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
+		270CF4572391F05200584058 /* Treadmill.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844919BFD063007CE934 /* Treadmill.h */; };
+		270CF4582391F05200584058 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
+		270CF4592391F05200584058 /* UnitMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844B19BFD063007CE934 /* UnitMgr.h */; };
+		270CF45A2391F05200584058 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
+		270CF45B2391F05200584058 /* Walking.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844D19BFD063007CE934 /* Walking.h */; };
+		270CF45C2391F05200584058 /* Bike.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1419BFD7C8000383E3 /* Bike.h */; };
+		270CF46A2391F0B200584058 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1719BFD807000383E3 /* Database.cpp */; };
+		270CF46B2391F0B200584058 /* Database.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1819BFD807000383E3 /* Database.h */; };
+		270CF46C2391F0B200584058 /* DataExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1919BFD807000383E3 /* DataExporter.cpp */; };
+		270CF46D2391F0B200584058 /* DataExporter.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1A19BFD807000383E3 /* DataExporter.h */; };
+		270CF46E2391F0B200584058 /* DataImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1B19BFD807000383E3 /* DataImporter.cpp */; };
+		270CF46F2391F0B200584058 /* DataImporter.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1C19BFD807000383E3 /* DataImporter.h */; };
+		270CF4702391F0B200584058 /* HeatMapGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1D19BFD807000383E3 /* HeatMapGenerator.cpp */; };
+		270CF4712391F0B200584058 /* HeatMapGenerator.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1E19BFD807000383E3 /* HeatMapGenerator.h */; };
+		270CF4722391F0BA00584058 /* CsvFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17319BFE48E008F8672 /* CsvFileWriter.cpp */; };
+		270CF4732391F0BA00584058 /* CsvFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17419BFE48E008F8672 /* CsvFileWriter.h */; };
+		270CF4742391F0BA00584058 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17519BFE48E008F8672 /* File.cpp */; };
+		270CF4752391F0BA00584058 /* File.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17619BFE48E008F8672 /* File.h */; };
+		270CF4762391F0BA00584058 /* FileFormat.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17719BFE48E008F8672 /* FileFormat.h */; };
+		270CF4772391F0BA00584058 /* GpxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17819BFE48E008F8672 /* GpxFileReader.cpp */; };
+		270CF4782391F0BA00584058 /* GpxFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17919BFE48E008F8672 /* GpxFileReader.h */; };
+		270CF4792391F0BA00584058 /* GpxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17A19BFE48E008F8672 /* GpxFileWriter.cpp */; };
+		270CF47A2391F0BA00584058 /* GpxFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17B19BFE48E008F8672 /* GpxFileWriter.h */; };
+		270CF47B2391F0BB00584058 /* GpxTags.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17C19BFE48E008F8672 /* GpxTags.h */; };
+		270CF47C2391F0BB00584058 /* KmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17D19BFE48E008F8672 /* KmlFileReader.cpp */; };
+		270CF47D2391F0BB00584058 /* KmlFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17E19BFE48E008F8672 /* KmlFileReader.h */; };
+		270CF47E2391F0BB00584058 /* TcxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18019BFE48E008F8672 /* TcxFileReader.cpp */; };
+		270CF47F2391F0BB00584058 /* TcxFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18119BFE48E008F8672 /* TcxFileReader.h */; };
+		270CF4802391F0BB00584058 /* TcxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18219BFE48E008F8672 /* TcxFileWriter.cpp */; };
+		270CF4812391F0BB00584058 /* TcxFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18319BFE48E008F8672 /* TcxFileWriter.h */; };
+		270CF4822391F0BB00584058 /* TcxTags.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18419BFE48E008F8672 /* TcxTags.h */; };
+		270CF4832391F0BB00584058 /* TextFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18519BFE48E008F8672 /* TextFileReader.cpp */; };
+		270CF4842391F0BB00584058 /* TextFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18619BFE48E008F8672 /* TextFileReader.h */; };
+		270CF4852391F0BB00584058 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18719BFE48E008F8672 /* XmlFileReader.cpp */; };
+		270CF4862391F0BB00584058 /* XmlFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18819BFE48E008F8672 /* XmlFileReader.h */; };
+		270CF4872391F0BB00584058 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */; };
+		270CF4882391F0BB00584058 /* XmlFileWriter.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18A19BFE48E008F8672 /* XmlFileWriter.h */; };
+		270CF4892391F0BB00584058 /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
+		270CF48A2391F0BB00584058 /* ZwoFileReader.h in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6D8234BC16B0086A50F /* ZwoFileReader.h */; };
+		270CF48B2391F0BB00584058 /* ZwoTags.h in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E8234BC21A0086A50F /* ZwoTags.h */; };
+		270CF48C2391F0DF00584058 /* Coordinate.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5ADC1A9FEDEB008F55AF /* Coordinate.h */; };
+		270CF48D2391F0DF00584058 /* UnitConversionFactors.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5ADF1A9FEDEB008F55AF /* UnitConversionFactors.h */; };
+		270CF48E2391F0DF00584058 /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
+		270CF48F2391F0DF00584058 /* UnitConverter.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE11A9FEDEB008F55AF /* UnitConverter.h */; };
+		270CF4902391F0DF00584058 /* UnitSystem.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE21A9FEDEB008F55AF /* UnitSystem.h */; };
+		270CF4922391F12400584058 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 270CF4912391F12400584058 /* libsqlite3.tbd */; };
+		270CF4942391F14200584058 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 270CF4932391F14200584058 /* libxml2.2.tbd */; };
+		270CF4952391F18900584058 /* ActivityLevel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15719BFE3F5008F8672 /* ActivityLevel.h */; };
+		270CF4962391F18A00584058 /* BmrFormula.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15819BFE3F5008F8672 /* BmrFormula.h */; };
+		270CF4972391F18A00584058 /* Gender.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15919BFE3F5008F8672 /* Gender.h */; };
+		270CF4982391F18A00584058 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15A19BFE3F5008F8672 /* User.cpp */; };
+		270CF4992391F18A00584058 /* User.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15B19BFE3F5008F8672 /* User.h */; };
+		270CF49A2391F1B800584058 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047178216D997000EE47FF /* Distance.cpp */; };
+		270CF49B2391F1B800584058 /* Distance.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047174216D996F00EE47FF /* Distance.h */; };
+		270CF49C2391F1B800584058 /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
+		270CF49D2391F1B800584058 /* Double.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0692300165100A248BE /* Double.h */; };
+		270CF49E2391F1B800584058 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
+		270CF49F2391F1B800584058 /* KMeans.h in Sources */ = {isa = PBXBuildFile; fileRef = 2704717D216E253A00EE47FF /* KMeans.h */; };
+		270CF4A02391F1B800584058 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047177216D997000EE47FF /* Peaks.cpp */; };
+		270CF4A12391F1B800584058 /* Peaks.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047176216D997000EE47FF /* Peaks.h */; };
+		270CF4A22391F1B800584058 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
+		270CF4A32391F1B800584058 /* Statistics.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047179216D997000EE47FF /* Statistics.h */; };
+		270CF4A42392C2CD00584058 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14919BFE3B7008F8672 /* Downloader.m */; };
 		271464B42345214D00D1BA20 /* WatchIntervalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271464B22345213C00D1BA20 /* WatchIntervalsViewController.m */; };
 		271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
@@ -358,6 +476,13 @@
 			remoteGlobalIDString = C37EA6B71BC83F2D0091C8F7;
 			remoteInfo = "UnitTests tvOS";
 		};
+		270CF4222391C49F00584058 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27A3624B19BFB0E200F5A17F;
+			remoteInfo = Straen;
+		};
 		27DCF5CC22B193B7009A23C2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
@@ -428,6 +553,16 @@
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
 		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		2709420F215ABD2200C3BCBE /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		270CF3F92391B63700584058 /* ZwoImportTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZwoImportTest.m; sourceTree = "<group>"; };
+		270CF3FA2391B63800584058 /* GpxImportTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GpxImportTest.m; sourceTree = "<group>"; };
+		270CF3FB2391B63800584058 /* TcxImportTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TcxImportTest.m; sourceTree = "<group>"; };
+		270CF3FC2391B63800584058 /* PeakFindTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeakFindTest.m; sourceTree = "<group>"; };
+		270CF4072391BBF400584058 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		270CF4092391BBF400584058 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
+		270CF40B2391BBF400584058 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		270CF4142391C34900584058 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
+		270CF4912391F12400584058 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
+		270CF4932391F14200584058 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
 		271464A42345213B00D1BA20 /* WatchIntervalsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchIntervalsViewController.h; sourceTree = "<group>"; };
 		271464B22345213C00D1BA20 /* WatchIntervalsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchIntervalsViewController.m; sourceTree = "<group>"; };
 		271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchHistoryViewController.m; sourceTree = "<group>"; };
@@ -774,6 +909,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		270CF4042391BBF400584058 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				270CF4942391F14200584058 /* libxml2.2.tbd in Frameworks */,
+				270CF4922391F12400584058 /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27A3624919BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -833,6 +977,20 @@
 				27072E0E1D40528B00045624 /* UnitTests tvOS.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		270CF3F82391B5D600584058 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				270CF3FA2391B63800584058 /* GpxImportTest.m */,
+				270CF3FC2391B63800584058 /* PeakFindTest.m */,
+				270CF4092391BBF400584058 /* Tests.m */,
+				270CF3FB2391B63800584058 /* TcxImportTest.m */,
+				270CF40B2391BBF400584058 /* Info.plist */,
+				270CF3F92391B63700584058 /* ZwoImportTest.m */,
+				270CF4142391C34900584058 /* TestPlan.xctestplan */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		2729852819C8F69900FE0077 /* en.lproj */ = {
@@ -1049,6 +1207,7 @@
 				2728FD2319C1248700CE2BAD /* Icon_120px.png */,
 				27A3625519BFB0E200F5A17F /* App */,
 				27DCF5BF22B193B6009A23C2 /* Watch */,
+				270CF3F82391B5D600584058 /* Tests */,
 				27DCF5CE22B193B7009A23C2 /* Watch Extension */,
 				27A3624E19BFB0E200F5A17F /* Frameworks */,
 				27A3624D19BFB0E200F5A17F /* Products */,
@@ -1061,6 +1220,7 @@
 				27A3624C19BFB0E200F5A17F /* Straen.app */,
 				27DCF5BE22B193B5009A23C2 /* Straen.app */,
 				27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */,
+				270CF4072391BBF400584058 /* Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1068,6 +1228,8 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				270CF4932391F14200584058 /* libxml2.2.tbd */,
+				270CF4912391F12400584058 /* libsqlite3.tbd */,
 				27C081FC2383780700BEB105 /* CloudKit.framework */,
 				27DCF66322B72FBF009A23C2 /* libxml2.tbd */,
 				27DCF63822B717FE009A23C2 /* libsqlite3.tbd */,
@@ -1407,6 +1569,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		270CF4062391BBF400584058 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 270CF40C2391BBF400584058 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				270CF4032391BBF400584058 /* Sources */,
+				270CF4042391BBF400584058 /* Frameworks */,
+				270CF4052391BBF400584058 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				270CF4232391C49F00584058 /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 270CF4072391BBF400584058 /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		27A3624B19BFB0E200F5A17F /* Straen */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Straen" */;
@@ -1470,6 +1650,10 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "MJ Simms Software LLC";
 				TargetAttributes = {
+					270CF4062391BBF400584058 = {
+						CreatedOnToolsVersion = 11.2;
+						TestTargetID = 27A3624B19BFB0E200F5A17F;
+					};
 					27A3624B19BFB0E200F5A17F = {
 						DevelopmentTeam = F42C985T48;
 						SystemCapabilities = {
@@ -1538,6 +1722,7 @@
 				27A3624B19BFB0E200F5A17F /* Straen */,
 				27DCF5BD22B193B5009A23C2 /* StraenWatch */,
 				27DCF5C922B193B7009A23C2 /* StraenWatch Extension */,
+				270CF4062391BBF400584058 /* Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -1602,6 +1787,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		270CF4052391BBF400584058 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27A3624A19BFB0E200F5A17F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1647,6 +1839,129 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		270CF4032391BBF400584058 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				270CF49A2391F1B800584058 /* Distance.cpp in Sources */,
+				270CF49B2391F1B800584058 /* Distance.h in Sources */,
+				270CF49C2391F1B800584058 /* Double.cpp in Sources */,
+				270CF49D2391F1B800584058 /* Double.h in Sources */,
+				270CF49E2391F1B800584058 /* KMeans.cpp in Sources */,
+				270CF49F2391F1B800584058 /* KMeans.h in Sources */,
+				270CF4A02391F1B800584058 /* Peaks.cpp in Sources */,
+				270CF4A12391F1B800584058 /* Peaks.h in Sources */,
+				270CF4A22391F1B800584058 /* Statistics.cpp in Sources */,
+				270CF4A32391F1B800584058 /* Statistics.h in Sources */,
+				270CF4952391F18900584058 /* ActivityLevel.h in Sources */,
+				270CF4962391F18A00584058 /* BmrFormula.h in Sources */,
+				270CF4972391F18A00584058 /* Gender.h in Sources */,
+				270CF4982391F18A00584058 /* User.cpp in Sources */,
+				270CF4992391F18A00584058 /* User.h in Sources */,
+				270CF48C2391F0DF00584058 /* Coordinate.h in Sources */,
+				270CF48D2391F0DF00584058 /* UnitConversionFactors.h in Sources */,
+				270CF48E2391F0DF00584058 /* UnitConverter.cpp in Sources */,
+				270CF48F2391F0DF00584058 /* UnitConverter.h in Sources */,
+				270CF4902391F0DF00584058 /* UnitSystem.h in Sources */,
+				270CF4722391F0BA00584058 /* CsvFileWriter.cpp in Sources */,
+				270CF4732391F0BA00584058 /* CsvFileWriter.h in Sources */,
+				270CF4742391F0BA00584058 /* File.cpp in Sources */,
+				270CF4752391F0BA00584058 /* File.h in Sources */,
+				270CF4762391F0BA00584058 /* FileFormat.h in Sources */,
+				270CF4772391F0BA00584058 /* GpxFileReader.cpp in Sources */,
+				270CF4782391F0BA00584058 /* GpxFileReader.h in Sources */,
+				270CF4792391F0BA00584058 /* GpxFileWriter.cpp in Sources */,
+				270CF47A2391F0BA00584058 /* GpxFileWriter.h in Sources */,
+				270CF47B2391F0BB00584058 /* GpxTags.h in Sources */,
+				270CF47C2391F0BB00584058 /* KmlFileReader.cpp in Sources */,
+				270CF47D2391F0BB00584058 /* KmlFileReader.h in Sources */,
+				270CF47E2391F0BB00584058 /* TcxFileReader.cpp in Sources */,
+				270CF47F2391F0BB00584058 /* TcxFileReader.h in Sources */,
+				270CF4802391F0BB00584058 /* TcxFileWriter.cpp in Sources */,
+				270CF4812391F0BB00584058 /* TcxFileWriter.h in Sources */,
+				270CF4822391F0BB00584058 /* TcxTags.h in Sources */,
+				270CF4832391F0BB00584058 /* TextFileReader.cpp in Sources */,
+				270CF4842391F0BB00584058 /* TextFileReader.h in Sources */,
+				270CF4852391F0BB00584058 /* XmlFileReader.cpp in Sources */,
+				270CF4862391F0BB00584058 /* XmlFileReader.h in Sources */,
+				270CF4872391F0BB00584058 /* XmlFileWriter.cpp in Sources */,
+				270CF4A42392C2CD00584058 /* Downloader.m in Sources */,
+				270CF4882391F0BB00584058 /* XmlFileWriter.h in Sources */,
+				270CF4892391F0BB00584058 /* ZwoFileReader.cpp in Sources */,
+				270CF48A2391F0BB00584058 /* ZwoFileReader.h in Sources */,
+				270CF48B2391F0BB00584058 /* ZwoTags.h in Sources */,
+				270CF46A2391F0B200584058 /* Database.cpp in Sources */,
+				270CF46B2391F0B200584058 /* Database.h in Sources */,
+				270CF46C2391F0B200584058 /* DataExporter.cpp in Sources */,
+				270CF46D2391F0B200584058 /* DataExporter.h in Sources */,
+				270CF46E2391F0B200584058 /* DataImporter.cpp in Sources */,
+				270CF46F2391F0B200584058 /* DataImporter.h in Sources */,
+				270CF4702391F0B200584058 /* HeatMapGenerator.cpp in Sources */,
+				270CF4712391F0B200584058 /* HeatMapGenerator.h in Sources */,
+				270CF4252391F05200584058 /* Activity.cpp in Sources */,
+				270CF4262391F05200584058 /* Activity.h in Sources */,
+				270CF4272391F05200584058 /* ActivityAttribute.h in Sources */,
+				270CF4282391F05200584058 /* ActivityAttributeType.h in Sources */,
+				270CF4292391F05200584058 /* ActivityFactory.cpp in Sources */,
+				270CF42A2391F05200584058 /* ActivityFactory.h in Sources */,
+				270CF42B2391F05200584058 /* ActivityMgr.h in Sources */,
+				270CF42C2391F05200584058 /* ActivityMgr.mm in Sources */,
+				270CF42D2391F05200584058 /* ActivitySummary.h in Sources */,
+				270CF42E2391F05200584058 /* ActivityType.h in Sources */,
+				270CF42F2391F05200584058 /* ActivityViewType.h in Sources */,
+				270CF4302391F05200584058 /* AxisName.h in Sources */,
+				270CF4312391F05200584058 /* ChinUp.cpp in Sources */,
+				270CF4322391F05200584058 /* ChinUp.h in Sources */,
+				270CF4332391F05200584058 /* ChinUpAnalyzer.cpp in Sources */,
+				270CF4342391F05200584058 /* ChinUpAnalyzer.h in Sources */,
+				270CF4352391F05200584058 /* Cycling.cpp in Sources */,
+				270CF4362391F05200584058 /* Cycling.h in Sources */,
+				270CF4372391F05200584058 /* GForceAnalyzer.cpp in Sources */,
+				270CF4382391F05200584058 /* GForceAnalyzer.h in Sources */,
+				270CF4392391F05200584058 /* GForceAnalyzerFactory.cpp in Sources */,
+				270CF43A2391F05200584058 /* GForceAnalyzerFactory.h in Sources */,
+				270CF43B2391F05200584058 /* Hike.cpp in Sources */,
+				270CF43C2391F05200584058 /* Hike.h in Sources */,
+				270CF43D2391F05200584058 /* IntervalWorkout.h in Sources */,
+				270CF43E2391F05200584058 /* IntervalWorkoutSegment.h in Sources */,
+				270CF43F2391F05200584058 /* LiftingActivity.cpp in Sources */,
+				270CF4402391F05200584058 /* LiftingActivity.h in Sources */,
+				270CF4412391F05200584058 /* MountainBiking.cpp in Sources */,
+				270CF4422391F05200584058 /* MountainBiking.h in Sources */,
+				270CF4432391F05200584058 /* MovingActivity.cpp in Sources */,
+				270CF4442391F05200584058 /* MovingActivity.h in Sources */,
+				270CF4452391F05200584058 /* PullUp.cpp in Sources */,
+				270CF4462391F05200584058 /* PullUp.h in Sources */,
+				270CF4472391F05200584058 /* PullUpAnalyzer.cpp in Sources */,
+				270CF4482391F05200584058 /* PullUpAnalyzer.h in Sources */,
+				270CF4492391F05200584058 /* PushUp.cpp in Sources */,
+				270CF44A2391F05200584058 /* PushUp.h in Sources */,
+				270CF44B2391F05200584058 /* PushUpAnalyzer.cpp in Sources */,
+				270CF44C2391F05200584058 /* PushUpAnalyzer.h in Sources */,
+				270CF44D2391F05200584058 /* Run.cpp in Sources */,
+				270CF44E2391F05200584058 /* Run.h in Sources */,
+				270CF44F2391F05200584058 /* SegmentType.h in Sources */,
+				270CF4502391F05200584058 /* Squat.cpp in Sources */,
+				270CF4512391F05200584058 /* Squat.h in Sources */,
+				270CF4522391F05200584058 /* SquatAnalyzer.cpp in Sources */,
+				270CF4532391F05200584058 /* SquatAnalyzer.h in Sources */,
+				270CF4542391F05200584058 /* StationaryCycling.cpp in Sources */,
+				270CF4552391F05200584058 /* StationaryCycling.h in Sources */,
+				270CF4562391F05200584058 /* Treadmill.cpp in Sources */,
+				270CF4572391F05200584058 /* Treadmill.h in Sources */,
+				270CF4582391F05200584058 /* UnitMgr.cpp in Sources */,
+				270CF4592391F05200584058 /* UnitMgr.h in Sources */,
+				270CF45A2391F05200584058 /* Walking.cpp in Sources */,
+				270CF45B2391F05200584058 /* Walking.h in Sources */,
+				270CF45C2391F05200584058 /* Bike.h in Sources */,
+				270CF4112391BE1200584058 /* TcxImportTest.m in Sources */,
+				270CF4102391BE0D00584058 /* PeakFindTest.m in Sources */,
+				270CF40F2391BE0800584058 /* GpxImportTest.m in Sources */,
+				270CF4122391BE1900584058 /* ZwoImportTest.m in Sources */,
+				270CF40A2391BBF400584058 /* Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		27A3624819BFB0E200F5A17F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1921,6 +2236,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		270CF4232391C49F00584058 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27A3624B19BFB0E200F5A17F /* Straen */;
+			targetProxy = 270CF4222391C49F00584058 /* PBXContainerItemProxy */;
+		};
 		27DCF5CD22B193B7009A23C2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 27DCF5C922B193B7009A23C2 /* StraenWatch Extension */;
@@ -1977,6 +2297,67 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		270CF40D2391BBF400584058 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Straen.app/Straen";
+			};
+			name = Debug;
+		};
+		270CF40E2391BBF400584058 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = F42C985T48;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Straen.app/Straen";
+			};
+			name = Release;
+		};
 		27A3627619BFB0E200F5A17F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2271,6 +2652,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		270CF40C2391BBF400584058 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				270CF40D2391BBF400584058 /* Debug */,
+				270CF40E2391BBF400584058 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Straen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
