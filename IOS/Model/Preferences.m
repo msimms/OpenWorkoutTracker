@@ -30,6 +30,7 @@
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
 
+#define MIN_BROADCAST_RATE     60
 #define MAX_BROADCAST_RATE     5
 #define DEFAULT_BROADCAST_RATE 30
 #define DEFAULT_PROTOCOL       "https"
@@ -142,8 +143,10 @@
 	NSInteger rate = [self readNumericValue:@PREF_NAME_BROADCAST_RATE];
 	if (rate == 0)
 		rate = DEFAULT_BROADCAST_RATE;
-	if (rate <= MAX_BROADCAST_RATE)
+	if (rate < MAX_BROADCAST_RATE)
 		rate = MAX_BROADCAST_RATE;
+	if (rate > MIN_BROADCAST_RATE)
+		rate = MIN_BROADCAST_RATE;
 	return rate;
 }
 
@@ -250,7 +253,9 @@
 
 + (void)setBroadcastRate:(NSInteger)value
 {
-	if (value <= MAX_BROADCAST_RATE)
+	if (value < MAX_BROADCAST_RATE)
+		return;
+	if (value > MIN_BROADCAST_RATE)
 		return;
 	[self writeIntValue:@PREF_NAME_BROADCAST_RATE withValue:value];
 }
