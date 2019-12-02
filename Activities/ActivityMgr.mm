@@ -226,6 +226,20 @@ extern "C" {
 		return NULL;
 	}
 
+	const char* GetHashForActivityId(const char* const activityId)
+	{
+		if (g_pDatabase)
+		{
+			std::string hash;
+
+			if (g_pDatabase->RetrieveHashForActivityId(activityId, hash))
+			{
+				return strdup(hash.c_str());
+			}
+		}
+		return NULL;
+	}
+
 	//
 	// Functions for controlling preferences.
 	//

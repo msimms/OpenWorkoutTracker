@@ -74,6 +74,8 @@
 
 - (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
+- (NSString*)retrieveHashForActivityId:(NSString*)activityId;
+- (NSString*)retrieveHashForActivityIndex:(NSInteger)activityIndex;
 
 // methods for managing the activity name
 

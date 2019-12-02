@@ -433,6 +433,27 @@ void startSensorCallback(SensorType type, void* context)
 	return hashStr;
 }
 
+- (NSString*)retrieveHashForActivityId:(NSString*)activityId
+{
+	const char* const hash = GetHashForActivityId([activityId UTF8String]);
+	if (hash)
+	{
+		return [[NSString alloc] initWithFormat:@"%s", hash];
+	}
+	return NULL;
+}
+
+- (NSString*)retrieveHashForActivityIndex:(NSInteger)activityIndex
+{
+	const char* const activityId = ConvertActivityIndexToActivityId(activityIndex);
+	if (activityId)
+	{
+		NSString* tempActivityId = [[NSString alloc] initWithFormat:@"%s", activityId];
+		return [self retrieveHashForActivityId:tempActivityId];
+	}
+	return NULL;
+}
+
 #pragma mark methods for managing the activity name
 
 - (NSString*)getActivityName:(NSString*)activityId

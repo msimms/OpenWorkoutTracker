@@ -45,6 +45,28 @@
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
+- (void)checkIfActivitiesAreUploaded
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	size_t numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
+	for (size_t i = 0; i < numHistoricalActivities; ++i)
+	{
+		NSString* hash = [extDelegate retrieveHashForActivityIndex:i];
+		if (hash)
+		{
+			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+
+			[msgData setObject:@WATCH_MSG_CHECK_ACTIVITY forKey:@WATCH_MSG_TYPE];
+			[msgData setObject:hash forKey:@WATCH_MSG_ACTIVITY_HASH];
+			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+		}
+	}
+}
+
+- (void)sendActivity:(NSString*)activityHash
+{
+}
+
 - (void)session:(nonnull WCSession*)session didReceiveApplicationContext:(NSDictionary<NSString*, id>*)applicationContext
 {
 }
@@ -69,6 +91,7 @@
 	if (session.reachable)
 	{
 		[self sendRegisterDeviceMsg];
+		[self checkIfActivitiesAreUploaded];
 	}
 }
 
@@ -78,6 +101,7 @@
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
 	{
 		// The phone app wants to sync preferences.
+		[Preferences importPrefs:message];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
 	{
@@ -94,6 +118,8 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The phone app is requesting an activity.
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		[self sendActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
@@ -124,6 +150,8 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The phone app is requesting an activity.
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		[self sendActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
