@@ -57,6 +57,7 @@
 
 				NSString* activityId = [[NSUUID UUID] UUIDString];
 				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_RUNNING, [activityId UTF8String]));
+				DeleteActivity([activityId UTF8String]);
 			}
 
 			dispatch_group_leave(queryGroup);

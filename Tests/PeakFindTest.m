@@ -4,6 +4,7 @@
 #import <XCTest/XCTest.h>
 #import "ActivityMgr.h"
 #import "ActivityType.h"
+#import "ActivityAttribute.h"
 #import "Downloader.h"
 
 @interface PeakFindTest : XCTestCase
@@ -56,6 +57,8 @@
 
 				NSString* activityId = [[NSUUID UUID] UUIDString];
 				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_PUSHUP, [activityId UTF8String]));
+				ActivityAttributeType numPushups = QueryActivityAttributeTotal(ACTIVITY_ATTRIBUTE_REPS);
+				DeleteActivity([activityId UTF8String]);
 			}
 
 			dispatch_group_leave(queryGroup);

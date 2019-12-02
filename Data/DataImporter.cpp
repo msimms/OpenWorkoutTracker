@@ -46,7 +46,7 @@ bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string&
 	FileLib::TcxFileReader reader;
 	reader.SetNewLocationCallback(OnNewLocation, this);
 	result = reader.ParseFile(fileName);
-	if (result && (m_lastTime > 0))
+	if (result && m_pDb && (m_lastTime > 0))
 	{
 		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
 		result = m_pDb->StopActivity(endTimeSecs, m_activityId);
@@ -67,12 +67,23 @@ bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string&
 	FileLib::GpxFileReader reader;
 	reader.SetNewLocationCallback(OnNewLocation, this);
 	result = reader.ParseFile(fileName);
-	if (result && (m_lastTime > 0))
+	if (result && m_pDb && (m_lastTime > 0))
 	{
 		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
 		result = m_pDb->StopActivity(endTimeSecs, m_activityId);
 	}
 	return result;
+}
+
+template<char delimiter>
+class ColumnDelimiter : public std::string
+{
+};
+
+std::istream& operator>>(std::istream& is, ColumnDelimiter<','>& output)
+{
+   std::getline(is, output, ',');
+   return is;
 }
 
 bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
@@ -85,6 +96,50 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 	m_started = false;
 	m_lastTime = 0;
 
+	std::ifstream in(fileName);
+	std::string str;
+
+	while (std::getline(in, str))
+	{
+		std::istringstream iss(str);
+		std::vector<std::string> results((std::istream_iterator<ColumnDelimiter<','>>(iss)), std::istream_iterator<ColumnDelimiter<','>>());
+
+		if (results.size() == 4)
+		{
+			time_t ts = atol(results[0].c_str());
+			double x = atof(results[1].c_str());
+			double y = atof(results[2].c_str());
+			double z = atof(results[3].c_str());
+
+			if (!m_started)
+			{
+				if (m_pDb)
+				{
+					time_t startTimeSecs = (time_t)(ts / 1000);
+					result = m_pDb->StartActivity(m_activityId, "", m_activityType, startTimeSecs);
+				}
+				m_started = true;
+			}
+
+			if (m_pDb)
+			{
+				SensorReading reading;
+				reading.time = ts;
+				reading.type = SENSOR_TYPE_ACCELEROMETER;
+				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_X, x));
+				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_Y, y));
+				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_Z, z));
+
+				result = m_pDb->CreateSensorReading(m_activityId, reading);
+			}
+		}
+	}
+
+	if (m_pDb)
+	{
+		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
+		result = m_pDb->StopActivity(endTimeSecs, m_activityId);
+	}
 
 	return result;
 }
@@ -105,21 +160,25 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, uint64_t time
 {
 	bool result = false;
 
+	if (!m_started)
+	{
+		time_t startTimeSecs = (time_t)(time / 1000);
+		if (m_pDb)
+		{
+			result = m_pDb->StartActivity(m_activityId, "", m_activityType, startTimeSecs);
+		}
+		m_started = true;
+	}
+
 	if (m_pDb)
 	{
-		if (!m_started)
-		{
-			time_t startTimeSecs = (time_t)(time / 1000);
-			result = m_pDb->StartActivity(m_activityId, "", m_activityType, startTimeSecs);
-			m_started = true;
-		}
-
 		SensorReading reading;
 		reading.time = time;
 		reading.type = SENSOR_TYPE_GPS;
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LATITUDE, lat));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LONGITUDE, lon));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, ele));
+
 		result = m_pDb->CreateSensorReading(m_activityId, reading);
 	}
 	m_lastTime = time;

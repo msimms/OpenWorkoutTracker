@@ -54,7 +54,6 @@
 				[fileHandle writeData:data];
 				[fileHandle closeFile];
 
-				NSString* activityId = [[NSUUID UUID] UUIDString];
 			}
 
 			dispatch_group_leave(queryGroup);
