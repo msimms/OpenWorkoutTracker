@@ -26,13 +26,13 @@
 	Initialize([dbFileName UTF8String]);
 
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-//	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
+	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 
 	self->sensorMgr = [SensorMgr sharedInstance];
 	if (self->sensorMgr)
 	{
-//		[self->sensorMgr addSensor:accelerometerController];
+		[self->sensorMgr addSensor:accelerometerController];
 		[self->sensorMgr addSensor:locationController];
 	}
 
@@ -461,7 +461,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress())
+	if (IsActivityInProgress() && IsLiftingActivity())
 	{
 		NSDictionary* accelerometerData = [notification object];
 		
