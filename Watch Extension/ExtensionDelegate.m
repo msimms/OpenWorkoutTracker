@@ -373,6 +373,8 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		case FEATURE_BROADCAST:
 			return TRUE;
+		case FEATURE_WORKOUT_PLAN_GENERATION:
+			return FALSE;
 		case FEATURE_DROPBOX:
 			return FALSE;
 		case FEATURE_STRAVA:

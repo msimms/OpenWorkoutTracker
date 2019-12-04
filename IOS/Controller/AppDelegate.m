@@ -225,6 +225,8 @@
 	{
 		case FEATURE_BROADCAST:
 			return TRUE;
+		case FEATURE_WORKOUT_PLAN_GENERATION:
+			return TRUE;
 		case FEATURE_DROPBOX:
 			return FALSE;
 		case FEATURE_STRAVA:
@@ -240,7 +242,9 @@
 	switch (feature)
 	{
 		case FEATURE_BROADCAST:
-			return [self isFeaturePresent:feature] && [self isFeaturePresent:feature];
+			return [self isFeaturePresent:feature];
+		case FEATURE_WORKOUT_PLAN_GENERATION:
+			return [self isFeaturePresent:feature];
 		case FEATURE_DROPBOX:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_DROPBOX];
 		case FEATURE_STRAVA:
