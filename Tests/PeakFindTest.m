@@ -35,6 +35,10 @@
 	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/StraenTest/master/accelerometer/";
 	NSURL* tempUrl = [fm temporaryDirectory];
 
+	NSURL* dbFileUrl = [tempUrl URLByAppendingPathComponent:@"test.db"];
+	NSString* dbFileStr = [dbFileUrl resourceSpecifier];
+	Initialize([dbFileStr UTF8String]);
+
 	NSMutableArray* testFileNames = [[NSMutableArray alloc] init];
 	[testFileNames addObject:@"10_pullups_accelerometer_iphone_4s_01.csv"];
 	[testFileNames addObject:@"10_pullups_accelerometer_iphone_4s_02.csv"];
@@ -52,22 +56,29 @@
 		dispatch_group_enter(queryGroup);
 		[downloader downloadFile:sourceFileName to:destFileName completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
 		{
-			NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:destFileName];
-			if (fileHandle)
+			@synchronized(self)
 			{
-				[fileHandle seekToEndOfFile];
-				[fileHandle writeData:data];
-				[fileHandle closeFile];
+				NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:destFileName];
+				if (fileHandle)
+				{
+					[fileHandle seekToEndOfFile];
+					[fileHandle writeData:data];
+					[fileHandle closeFile];
 
-				NSString* activityId = [[NSUUID UUID] UUIDString];
-				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_PUSHUP, [activityId UTF8String]));
-				ActivityAttributeType numPushups = QueryActivityAttributeTotal(ACTIVITY_ATTRIBUTE_REPS);
-				DeleteActivity([activityId UTF8String]);
+					NSString* activityId = [[NSUUID UUID] UUIDString];
+					XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_PUSHUP, [activityId UTF8String]));
+					InitializeHistoricalActivityList();
+					CreateHistoricalActivityObjectById([activityId UTF8String]);
+					ActivityAttributeType numPushups = QueryHistoricalActivityAttributeById([activityId UTF8String], ACTIVITY_ATTRIBUTE_REPS);
+					DeleteActivity([activityId UTF8String]);
+				}
+
+				dispatch_group_leave(queryGroup);
 			}
-
-			dispatch_group_leave(queryGroup);
 		}];
 	}
+
+	dispatch_group_wait(queryGroup, DISPATCH_TIME_FOREVER);
 }
 
 - (void)testPeakFindingPerformance

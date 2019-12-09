@@ -58,11 +58,14 @@
 				[fileHandle writeData:data];
 				[fileHandle closeFile];
 
+				XCTAssert(ImportZwoFile([destFileName UTF8String], "Test Workout"));
 			}
 
 			dispatch_group_leave(queryGroup);
 		}];
 	}
+
+	dispatch_group_wait(queryGroup, DISPATCH_TIME_FOREVER);
 }
 
 @end

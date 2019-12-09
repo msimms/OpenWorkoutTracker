@@ -16,6 +16,7 @@
 #include "Distance.h"
 #include "HeatMapGenerator.h"
 #include "IntervalWorkout.h"
+#include "WorkoutImporter.h"
 
 #include "Cycling.h"
 #include "Hike.h"
@@ -757,6 +758,12 @@ extern "C" {
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
 			}
 		}
+	}
+
+	void CreateHistoricalActivityObjectById(const char* activityId)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		CreateHistoricalActivityObject(activityIndex);
 	}
 
 	void CreateAllHistoricalActivityObjects()
@@ -2078,6 +2085,16 @@ extern "C" {
 			}
 		}
 		return result;
+	}
+
+	//
+	// Functions for importing ZWO files.
+	//
+
+	bool ImportZwoFile(const char* const fileName, const char* const workoutName)
+	{
+		WorkoutImporter importer;
+		return importer.ImportZwoFile(fileName, workoutName);
 	}
 
 	//

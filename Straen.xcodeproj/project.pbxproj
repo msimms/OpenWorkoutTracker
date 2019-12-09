@@ -151,6 +151,10 @@
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
+		2768E502239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */; };
+		2768E503239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */; };
+		2768E511239DCAEA00DD06E9 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */; };
+		2768E512239DCB0100DD06E9 /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
@@ -589,6 +593,8 @@
 		275BA6E8234BC21A0086A50F /* ZwoTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTags.h; path = FileLib/ZwoTags.h; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
 		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
+		2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutImporter.cpp; path = Data/WorkoutImporter.cpp; sourceTree = SOURCE_ROOT; };
+		2768E501239DC4B600DD06E9 /* WorkoutImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutImporter.h; path = Data/WorkoutImporter.h; sourceTree = SOURCE_ROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
 		276B57E819E21ABD006F47BB /* HealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HealthManager.m; path = IOS/Model/HealthManager.m; sourceTree = SOURCE_ROOT; };
 		276C937B19BFDE3B00D96E7F /* App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "App-Info.plist"; path = "IOS/App-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -1334,6 +1340,8 @@
 				27B7CD1C19BFD807000383E3 /* DataImporter.h */,
 				27B7CD1D19BFD807000383E3 /* HeatMapGenerator.cpp */,
 				27B7CD1E19BFD807000383E3 /* HeatMapGenerator.h */,
+				2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */,
+				2768E501239DC4B600DD06E9 /* WorkoutImporter.h */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -1896,6 +1904,7 @@
 				270CF46D2391F0B200584058 /* DataExporter.h in Sources */,
 				270CF46E2391F0B200584058 /* DataImporter.cpp in Sources */,
 				270CF46F2391F0B200584058 /* DataImporter.h in Sources */,
+				2768E503239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */,
 				270CF4702391F0B200584058 /* HeatMapGenerator.cpp in Sources */,
 				270CF4712391F0B200584058 /* HeatMapGenerator.h in Sources */,
 				270CF4252391F05200584058 /* Activity.cpp in Sources */,
@@ -2071,6 +2080,7 @@
 				27B7CDAB19BFD91C000383E3 /* TagViewController.m in Sources */,
 				27B7CD9119BFD91C000383E3 /* FollowingViewController.m in Sources */,
 				2797F18C19BFE48E008F8672 /* File.cpp in Sources */,
+				2768E502239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */,
 				27B7CDA419BFD91C000383E3 /* SensorsViewController.m in Sources */,
 				27B7CD2219BFD807000383E3 /* HeatMapGenerator.cpp in Sources */,
 				27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */,
@@ -2173,6 +2183,7 @@
 				27DCF60322B71628009A23C2 /* ActivityViewType.h in Sources */,
 				27DCF60422B71628009A23C2 /* AxisName.h in Sources */,
 				27DCF60522B71628009A23C2 /* ChinUp.cpp in Sources */,
+				2768E511239DCAEA00DD06E9 /* WorkoutImporter.cpp in Sources */,
 				27DCF60622B71628009A23C2 /* ChinUp.h in Sources */,
 				27DCF60722B71628009A23C2 /* ChinUpAnalyzer.cpp in Sources */,
 				27DCF60822B71628009A23C2 /* ChinUpAnalyzer.h in Sources */,
@@ -2218,6 +2229,7 @@
 				27DCF62622B71628009A23C2 /* SquatAnalyzer.cpp in Sources */,
 				27DCF62722B71628009A23C2 /* SquatAnalyzer.h in Sources */,
 				27DCF62822B71628009A23C2 /* StationaryCycling.cpp in Sources */,
+				2768E512239DCB0100DD06E9 /* ZwoFileReader.cpp in Sources */,
 				27DCF62922B71628009A23C2 /* StationaryCycling.h in Sources */,
 				27DCF62A22B71628009A23C2 /* Treadmill.cpp in Sources */,
 				27DCF62B22B71628009A23C2 /* Treadmill.h in Sources */,

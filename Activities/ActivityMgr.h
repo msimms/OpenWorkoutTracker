@@ -103,6 +103,7 @@ extern "C" {
 	// Functions for loading history.
 	void InitializeHistoricalActivityList(void);
 	void CreateHistoricalActivityObject(size_t activityIndex);
+	void CreateHistoricalActivityObjectById(const char* activityId);
 	void CreateAllHistoricalActivityObjects(void);
 	bool LoadHistoricalActivityLapData(size_t activityIndex);
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context);
@@ -209,6 +210,9 @@ extern "C" {
 	ActivityAttributeType QueryActivityAttributeTotal(const char* const attributeName);
 	ActivityAttributeType QueryActivityAttributeTotalByActivityType(const char* const attributeName, const char* const activityType);
 	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, const char* const activityId);
+
+	// Functions for importing ZWO files.
+	bool ImportZwoFile(const char* const fileName, const char* const workoutName);
 
 	// Functions for importing KML files.
 	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, KmlCoordinateCallback coordinateCallback, void* context);

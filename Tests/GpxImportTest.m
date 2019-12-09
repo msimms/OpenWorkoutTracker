@@ -67,6 +67,8 @@
 			dispatch_group_leave(queryGroup);
 		}];
 	}
+
+	dispatch_group_wait(queryGroup, DISPATCH_TIME_FOREVER);
 }
 
 @end

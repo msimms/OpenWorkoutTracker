@@ -8,6 +8,7 @@
 #include "DataImporter.h"
 
 #include "ActivityAttribute.h"
+#include "AxisName.h"
 #include "TcxFileReader.h"
 #include "GpxFileReader.h"
 #include "KmlFileReader.h"
@@ -126,9 +127,9 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 				SensorReading reading;
 				reading.time = ts;
 				reading.type = SENSOR_TYPE_ACCELEROMETER;
-				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_X, x));
-				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_Y, y));
-				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_Z, z));
+				reading.reading.insert(SensorNameValuePair(AXIS_NAME_X, x));
+				reading.reading.insert(SensorNameValuePair(AXIS_NAME_Y, y));
+				reading.reading.insert(SensorNameValuePair(AXIS_NAME_Z, z));
 
 				result = m_pDb->CreateSensorReading(m_activityId, reading);
 			}
