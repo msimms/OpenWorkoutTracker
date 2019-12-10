@@ -42,18 +42,27 @@ namespace FileLib
 					}
 					else if (state.compare(ZWO_TAG_AUTHOR) == 0)
 					{
+						m_author = (const char*)node->content;
 					}
 					else if (state.compare(ZWO_TAG_NAME) == 0)
 					{
+						m_name = (const char*)node->content;
 					}
 					else if (state.compare(ZWO_TAG_DESCRIPTION) == 0)
 					{
+						m_description = (const char*)node->content;
 					}
 					else if (state.compare(ZWO_TAG_SPORTTYPE) == 0)
 					{
+						m_sportType = (const char*)node->content;
 					}
 					else if (state.compare(ZWO_TAG_TAGS) == 0)
 					{
+					}
+					else if (state.compare(ZWO_TAG_TAG) == 0)
+					{
+						std::string tagName = (const char*)node->content;
+						m_tags.push_back(tagName);
 					}
 					else if (state.compare(ZWO_TAG_WORKOUT) == 0)
 					{
@@ -117,6 +126,79 @@ namespace FileLib
 		if (state.compare(ZWO_TAG_WORKOUT_FILE) == 0)
 		{
 		}
+		else if (state.compare(ZWO_TAG_TAG) == 0)
+		{
+			if (attrName.compare(ZWO_ATTR_NAME_NAME) == 0)
+			{
+				std::string tagName = (const char*)attr->children->content;
+				m_tags.push_back(tagName);
+			}
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_WARMUP) == 0)
+		{
+			if (attrName.compare(ZWO_ATTR_NAME_DURATION) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_POWERLOW) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_POWERHIGH) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_PACE) == 0)
+			{
+			}
+			m_currentWorkout.m_attributes.insert(std::pair<std::string, std::string>(attrName, (const char*)attr->children->content));
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_COOLDOWN) == 0)
+		{
+			if (attrName.compare(ZWO_ATTR_NAME_DURATION) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_POWERLOW) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_POWERHIGH) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_PACE) == 0)
+			{
+			}
+			m_currentWorkout.m_attributes.insert(std::pair<std::string, std::string>(attrName, (const char*)attr->children->content));
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_STEADYSTATE) == 0)
+		{
+			m_currentWorkout.m_attributes.insert(std::pair<std::string, std::string>(attrName, (const char*)attr->children->content));
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_INTERVALS) == 0)
+		{
+			if (attrName.compare(ZWO_ATTR_NAME_REPEAT) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_ONDURATION) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_OFFDURATION) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_ONPOWER) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_OFFPOWER) == 0)
+			{
+			}
+			m_currentWorkout.m_attributes.insert(std::pair<std::string, std::string>(attrName, (const char*)attr->children->content));
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_FREERIDE) == 0)
+		{
+			if (attrName.compare(ZWO_ATTR_NAME_DURATION) == 0)
+			{
+			}
+			else if (attrName.compare(ZWO_ATTR_NAME_FLATROAD) == 0)
+			{
+			}
+			m_currentWorkout.m_attributes.insert(std::pair<std::string, std::string>(attrName, (const char*)attr->children->content));
+		}
 	}
 
 	void ZwoFileReader::PushState(std::string newState)
@@ -130,6 +212,36 @@ namespace FileLib
 
 	void ZwoFileReader::PopState()
 	{
+		if (m_state.size() == 0)
+		{
+			return;
+		}
+
+		const std::string& state = CurrentState();
+
+		if (state.compare(ZWO_TAG_WORKOUT_WARMUP) == 0)
+		{
+			m_workouts.push_back(m_currentWorkout);
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_COOLDOWN) == 0)
+		{
+			m_workouts.push_back(m_currentWorkout);
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_STEADYSTATE) == 0)
+		{
+			m_workouts.push_back(m_currentWorkout);
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_INTERVALS) == 0)
+		{
+			m_workouts.push_back(m_currentWorkout);
+		}
+		else if (state.compare(ZWO_TAG_WORKOUT_FREERIDE) == 0)
+		{
+			m_workouts.push_back(m_currentWorkout);
+		}
+
+		m_currentWorkout.m_attributes.clear();
+
 		XmlFileReader::PopState();
 	}
 	

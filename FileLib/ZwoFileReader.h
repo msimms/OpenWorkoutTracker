@@ -6,10 +6,20 @@
 
 #pragma once
 
+#include <string>
+#include <map>
+#include <vector>
+
 #include "XmlFileReader.h"
 
 namespace FileLib
 {
+	typedef struct Workout
+	{
+		std::string m_type;
+		std::map<std::string, std::string> m_attributes;
+	} Workout;
+
 	class ZwoFileReader : public XmlFileReader
 	{
 	public:
@@ -23,6 +33,14 @@ namespace FileLib
 		virtual void PopState();
 		
 	private:
+		std::string m_author;
+		std::string m_name;
+		std::string m_description;
+		std::string m_sportType;
+		std::vector<std::string> m_tags;
+		std::vector<Workout> m_workouts;
+		Workout m_currentWorkout;
+
 		void Clear();
 	};
 }
