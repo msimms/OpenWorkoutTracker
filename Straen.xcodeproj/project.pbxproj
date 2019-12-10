@@ -155,6 +155,10 @@
 		2768E503239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */; };
 		2768E511239DCAEA00DD06E9 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */; };
 		2768E512239DCB0100DD06E9 /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
+		2768E51623A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */; };
+		2768E51723A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */; };
+		2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */; };
+		2768E51C23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
@@ -595,6 +599,11 @@
 		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
 		2768E500239DC4B600DD06E9 /* WorkoutImporter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutImporter.cpp; path = Data/WorkoutImporter.cpp; sourceTree = SOURCE_ROOT; };
 		2768E501239DC4B600DD06E9 /* WorkoutImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutImporter.h; path = Data/WorkoutImporter.h; sourceTree = SOURCE_ROOT; };
+		2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TrainingPaceCalculator.cpp; path = Activities/TrainingPaceCalculator.cpp; sourceTree = SOURCE_ROOT; };
+		2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingPaceCalculator.h; path = Activities/TrainingPaceCalculator.h; sourceTree = SOURCE_ROOT; };
+		2768E51823A0241200DD06E9 /* TrainingPaceType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingPaceType.h; path = Activities/TrainingPaceType.h; sourceTree = SOURCE_ROOT; };
+		2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VO2MaxCalculator.cpp; path = Activities/VO2MaxCalculator.cpp; sourceTree = SOURCE_ROOT; };
+		2768E51A23A0270500DD06E9 /* VO2MaxCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VO2MaxCalculator.h; path = Activities/VO2MaxCalculator.h; sourceTree = SOURCE_ROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
 		276B57E819E21ABD006F47BB /* HealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HealthManager.m; path = IOS/Model/HealthManager.m; sourceTree = SOURCE_ROOT; };
 		276C937B19BFDE3B00D96E7F /* App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "App-Info.plist"; path = "IOS/App-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -1515,12 +1524,17 @@
 				27C0844519BFD063007CE934 /* SquatAnalyzer.h */,
 				27C0844619BFD063007CE934 /* StationaryCycling.cpp */,
 				27C0844719BFD063007CE934 /* StationaryCycling.h */,
+				2768E51823A0241200DD06E9 /* TrainingPaceType.h */,
+				2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */,
+				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,
 				27C0844819BFD063007CE934 /* Treadmill.cpp */,
 				27C0844919BFD063007CE934 /* Treadmill.h */,
 				27C0844A19BFD063007CE934 /* UnitMgr.cpp */,
 				27C0844B19BFD063007CE934 /* UnitMgr.h */,
 				27C0844C19BFD063007CE934 /* Walking.cpp */,
 				27C0844D19BFD063007CE934 /* Walking.h */,
+				2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */,
+				2768E51A23A0270500DD06E9 /* VO2MaxCalculator.h */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -1909,6 +1923,8 @@
 				270CF4712391F0B200584058 /* HeatMapGenerator.h in Sources */,
 				270CF4252391F05200584058 /* Activity.cpp in Sources */,
 				270CF4262391F05200584058 /* Activity.h in Sources */,
+				2768E51C23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
+				2768E51723A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */,
 				270CF4272391F05200584058 /* ActivityAttribute.h in Sources */,
 				270CF4282391F05200584058 /* ActivityAttributeType.h in Sources */,
 				270CF4292391F05200584058 /* ActivityFactory.cpp in Sources */,
@@ -2005,7 +2021,9 @@
 				2797F15319BFE3B7008F8672 /* Downloader.m in Sources */,
 				27B7CD1F19BFD807000383E3 /* Database.cpp in Sources */,
 				2797F15219BFE3B7008F8672 /* CloudMgr.m in Sources */,
+				2768E51623A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */,
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
+				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
 				27B7CD9019BFD91C000383E3 /* FollowedByViewController.m in Sources */,
 				2704717B216D997000EE47FF /* Peaks.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
