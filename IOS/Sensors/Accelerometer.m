@@ -38,8 +38,12 @@
 {
 	if (self->motionManager && [self->motionManager isAccelerometerAvailable])
 	{
+#if TARGET_OS_WATCH
+		[self->motionManager setAccelerometerUpdateInterval:0.2];
+#else
 		[self->motionManager setAccelerometerUpdateInterval:0.1];
-		[self->motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error)
+#endif
+		[self->motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMAccelerometerData* accelerometerData, NSError* error)
 		 {
 			 NSDate* now = [NSDate date];
 			 uint64_t theTimeMs = (uint64_t)([now timeIntervalSince1970] * (double)1000.0);

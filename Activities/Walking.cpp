@@ -5,6 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#import <TargetConditionals.h>
+
 #include "Walking.h"
 #include "ActivityAttribute.h"
 #include "AxisName.h"
@@ -24,7 +26,9 @@ Walking::~Walking()
 
 void Walking::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 {
+#if !TARGET_OS_WATCH
 	sensorTypes.push_back(SENSOR_TYPE_ACCELEROMETER);
+#endif
 	MovingActivity::ListUsableSensors(sensorTypes);
 }
 

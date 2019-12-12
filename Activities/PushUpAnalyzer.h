@@ -8,6 +8,7 @@
 #ifndef __PUSHUPANALYZER__
 #define __PUSHUPANALYZER__
 
+#import <TargetConditionals.h>
 #include "GForceAnalyzer.h"
 
 class PushUpAnalyzer : public GForceAnalyzer
