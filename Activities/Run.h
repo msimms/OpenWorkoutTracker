@@ -8,9 +8,9 @@
 #ifndef __RUN__
 #define __RUN__
 
-#include "Walking.h"
+#include "Walk.h"
 
-class Run : public Walking
+class Run : public Walk
 {
 public:
 	Run();

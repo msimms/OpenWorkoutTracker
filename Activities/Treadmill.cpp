@@ -8,7 +8,7 @@
 #include "Treadmill.h"
 #include "ActivityAttribute.h"
 
-Treadmill::Treadmill() : Walking()
+Treadmill::Treadmill() : Walk()
 {
 	m_currentStrideReading = (double)0.0;
 	m_prevDistanceReading = (double)0.0;

@@ -8,9 +8,9 @@
 #ifndef __TREADMILL__
 #define __TREADMILL__
 
-#include "Walking.h"
+#include "Walk.h"
 
-class Treadmill : public Walking
+class Treadmill : public Walk
 {
 public:
 	Treadmill();

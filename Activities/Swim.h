@@ -1,0 +1,33 @@
+// Created by Michael Simms on 12/13/19.
+// Copyright (c) 2019 Michael J. Simms. All rights reserved.
+
+#ifndef __SWIM__
+#define __SWIM__
+
+#include "ActivityType.h"
+#include "MovingActivity.h"
+#include "GForceAnalyzer.h"
+
+class Swim : public MovingActivity
+{
+public:
+	Swim();
+	virtual ~Swim();
+
+	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
+
+	virtual uint16_t StrokesTaken() const { return m_strokesTaken; };
+
+	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
+	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
+
+protected:
+	LibMath::GraphLine m_graphLine;
+	LibMath::Peaks     m_peakFinder;
+	uint64_t m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
+	uint16_t m_strokesTaken;
+	double   m_currentCalories;
+
+};
+
+#endif

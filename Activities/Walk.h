@@ -5,21 +5,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef __WALKING__
-#define __WALKING__
+#ifndef __WALK__
+#define __WALK__
 
 #include "ActivityType.h"
 #include "MovingActivity.h"
 #include "GForceAnalyzer.h"
 
-class Walking : public MovingActivity
+class Walk : public MovingActivity
 {
 public:
-	Walking();
-	virtual ~Walking();
+	Walk();
+	virtual ~Walk();
 
 	static std::string Type() { return ACTIVITY_TYPE_WALKING; };
-	virtual std::string GetType() const { return Walking::Type(); };
+	virtual std::string GetType() const { return Walk::Type(); };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
@@ -40,7 +40,7 @@ public:
 protected:
 	virtual bool ProcessGpsReading(const SensorReading& reading);
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
-	
+
 protected:
 	LibMath::GraphLine m_graphLine;
 	LibMath::Peaks     m_peakFinder;

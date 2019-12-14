@@ -12,13 +12,15 @@
 #include "Cycling.h"
 #include "Hike.h"
 #include "MountainBiking.h"
+#include "OpenWaterSwim.h"
+#include "PoolSwim.h"
 #include "PullUp.h"
 #include "PushUp.h"
 #include "Run.h"
 #include "Squat.h"
 #include "StationaryCycling.h"
 #include "Treadmill.h"
-#include "Walking.h"
+#include "Walk.h"
 
 ActivityFactory::ActivityFactory()
 {
@@ -36,13 +38,15 @@ std::vector<std::string> ActivityFactory::ListActivityTypes()
 	types.push_back(Cycling::Type());
 	types.push_back(Hike::Type());
 	types.push_back(MountainBiking::Type());
+	types.push_back(OpenWaterSwim::Type());
+	types.push_back(PoolSwim::Type());
 	types.push_back(PullUp::Type());
 	types.push_back(PushUp::Type());
 	types.push_back(Run::Type());
 	types.push_back(Squat::Type());
 	types.push_back(StationaryCycling::Type());
 	types.push_back(Treadmill::Type());
-	types.push_back(Walking::Type());
+	types.push_back(Walk::Type());
 	std::sort(types.begin(), types.end());
 	return types;
 }
@@ -67,6 +71,14 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 	else if (type.compare(MountainBiking::Type()) == 0)
 	{
 		pActivity = new MountainBiking();
+	}
+	else if (type.compare(OpenWaterSwim::Type()) == 0)
+	{
+		pActivity = new OpenWaterSwim();
+	}
+	else if (type.compare(PoolSwim::Type()) == 0)
+	{
+		pActivity = new PoolSwim();
 	}
 	else if (type.compare(PullUp::Type()) == 0)
 	{
@@ -95,9 +107,9 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 	{
 		pActivity = new Treadmill();
 	}
-	else if (type.compare(Walking::Type()) == 0)
+	else if (type.compare(Walk::Type()) == 0)
 	{
-		pActivity = new Walking();
+		pActivity = new Walk();
 	}
 	else
 	{

@@ -8,7 +8,7 @@
 #include "Hike.h"
 #include "ActivityAttribute.h"
 
-Hike::Hike() : Walking()
+Hike::Hike() : Walk()
 {
 	m_stepsTaken = 0;
 }

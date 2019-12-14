@@ -81,5 +81,6 @@
 #define ACTIVITY_ATTRIBUTE_RUN_STRIDE_LENGTH          "Run Stride Length"       // stride length from a foot pod
 #define ACTIVITY_ATTRIBUTE_RUN_DISTANCE               "Run Distance"            // distance from a foot pod
 #define ACTIVITY_ATTRIBUTE_TOTAL_ASCENT               "Total Ascent"            // 
+#define ACTIVITY_ATTRIBUTE_SWIM_STROKES               "Swim Strokes"            // the number of swim strokes taken
 
 #endif

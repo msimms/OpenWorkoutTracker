@@ -8,9 +8,9 @@
 #ifndef __HIKE__
 #define __HIKE__
 
-#include "Walking.h"
+#include "Walk.h"
 
-class Hike : public Walking
+class Hike : public Walk
 {
 public:
 	Hike();

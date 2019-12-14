@@ -76,8 +76,6 @@
 		270CF4572391F05200584058 /* Treadmill.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844919BFD063007CE934 /* Treadmill.h */; };
 		270CF4582391F05200584058 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		270CF4592391F05200584058 /* UnitMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844B19BFD063007CE934 /* UnitMgr.h */; };
-		270CF45A2391F05200584058 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
-		270CF45B2391F05200584058 /* Walking.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844D19BFD063007CE934 /* Walking.h */; };
 		270CF45C2391F05200584058 /* Bike.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1419BFD7C8000383E3 /* Bike.h */; };
 		270CF46A2391F0B200584058 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1719BFD807000383E3 /* Database.cpp */; };
 		270CF46B2391F0B200584058 /* Database.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1819BFD807000383E3 /* Database.h */; };
@@ -294,7 +292,6 @@
 		27C0846119BFD063007CE934 /* StationaryCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844619BFD063007CE934 /* StationaryCycling.cpp */; };
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
-		27C0846419BFD063007CE934 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
 		27C63293233D950C009BF5CB /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
 		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
 		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
@@ -357,8 +354,6 @@
 		27DCF62B22B71628009A23C2 /* Treadmill.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844919BFD063007CE934 /* Treadmill.h */; };
 		27DCF62C22B71628009A23C2 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		27DCF62D22B71628009A23C2 /* UnitMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844B19BFD063007CE934 /* UnitMgr.h */; };
-		27DCF62E22B71628009A23C2 /* Walking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844C19BFD063007CE934 /* Walking.cpp */; };
-		27DCF62F22B71628009A23C2 /* Walking.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844D19BFD063007CE934 /* Walking.h */; };
 		27DCF63022B716CB009A23C2 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1719BFD807000383E3 /* Database.cpp */; };
 		27DCF63122B716CB009A23C2 /* Database.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1819BFD807000383E3 /* Database.h */; };
 		27DCF63222B716CB009A23C2 /* DataExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1919BFD807000383E3 /* DataExporter.cpp */; };
@@ -421,6 +416,19 @@
 		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
 		27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
 		27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27E299532336B25600B864FA /* LaunchScreen.storyboard */; };
+		27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */; };
+		27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
+		27F4240523A44C0E00F59F50 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240323A44C0E00F59F50 /* PoolSwim.cpp */; };
+		27F4240823A44D4A00F59F50 /* Swim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240623A44D4A00F59F50 /* Swim.cpp */; };
+		27F4240B23A45FAC00F59F50 /* Walk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240A23A45FAC00F59F50 /* Walk.cpp */; };
+		27F4240C23A461A900F59F50 /* Walk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240A23A45FAC00F59F50 /* Walk.cpp */; };
+		27F4240D23A461AA00F59F50 /* Walk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240A23A45FAC00F59F50 /* Walk.cpp */; };
+		27F4240E23A46A5900F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
+		27F4240F23A46A5900F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
+		27F4241023A46A5D00F59F50 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240323A44C0E00F59F50 /* PoolSwim.cpp */; };
+		27F4241123A46A5E00F59F50 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240323A44C0E00F59F50 /* PoolSwim.cpp */; };
+		27F4241223A46A6400F59F50 /* Swim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240623A44D4A00F59F50 /* Swim.cpp */; };
+		27F4241323A46A6400F59F50 /* Swim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240623A44D4A00F59F50 /* Swim.cpp */; };
 		27F6D0782300165100A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F6D0792300166500A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
@@ -888,8 +896,6 @@
 		27C0844919BFD063007CE934 /* Treadmill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Treadmill.h; path = Activities/Treadmill.h; sourceTree = SOURCE_ROOT; };
 		27C0844A19BFD063007CE934 /* UnitMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitMgr.cpp; path = Activities/UnitMgr.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
-		27C0844C19BFD063007CE934 /* Walking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walking.cpp; path = Activities/Walking.cpp; sourceTree = SOURCE_ROOT; };
-		27C0844D19BFD063007CE934 /* Walking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walking.h; path = Activities/Walking.h; sourceTree = SOURCE_ROOT; };
 		27DCF5BE22B193B5009A23C2 /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -916,6 +922,16 @@
 		27DCF68E22CD483A009A23C2 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = SOURCE_ROOT; };
 		27E299532336B25600B864FA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IOS/Storyboards/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
+		27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutPlanGenerator.cpp; path = Activities/WorkoutPlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
+		27F423EF23A430F300F59F50 /* WorkoutPlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanGenerator.h; path = Activities/WorkoutPlanGenerator.h; sourceTree = SOURCE_ROOT; };
+		27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenWaterSwim.cpp; path = Activities/OpenWaterSwim.cpp; sourceTree = SOURCE_ROOT; };
+		27F4240123A432A300F59F50 /* OpenWaterSwim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OpenWaterSwim.h; path = Activities/OpenWaterSwim.h; sourceTree = SOURCE_ROOT; };
+		27F4240323A44C0E00F59F50 /* PoolSwim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PoolSwim.cpp; path = Activities/PoolSwim.cpp; sourceTree = SOURCE_ROOT; };
+		27F4240423A44C0E00F59F50 /* PoolSwim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PoolSwim.h; path = Activities/PoolSwim.h; sourceTree = SOURCE_ROOT; };
+		27F4240623A44D4A00F59F50 /* Swim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Swim.cpp; path = Activities/Swim.cpp; sourceTree = SOURCE_ROOT; };
+		27F4240723A44D4A00F59F50 /* Swim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Swim.h; path = Activities/Swim.h; sourceTree = SOURCE_ROOT; };
+		27F4240923A45FAC00F59F50 /* Walk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walk.h; path = Activities/Walk.h; sourceTree = SOURCE_ROOT; };
+		27F4240A23A45FAC00F59F50 /* Walk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walk.cpp; path = Activities/Walk.cpp; sourceTree = SOURCE_ROOT; };
 		27F6D0692300165100A248BE /* Double.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Double.h; path = LibMath/cpp/Double.h; sourceTree = SOURCE_ROOT; };
 		27F6D0772300165100A248BE /* Double.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Double.cpp; path = LibMath/cpp/Double.cpp; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -1507,6 +1523,10 @@
 				27C0843419BFD063007CE934 /* MountainBiking.h */,
 				27C0843519BFD063007CE934 /* MovingActivity.cpp */,
 				27C0843619BFD063007CE934 /* MovingActivity.h */,
+				27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */,
+				27F4240123A432A300F59F50 /* OpenWaterSwim.h */,
+				27F4240323A44C0E00F59F50 /* PoolSwim.cpp */,
+				27F4240423A44C0E00F59F50 /* PoolSwim.h */,
 				27C0843719BFD063007CE934 /* PullUp.cpp */,
 				27C0843819BFD063007CE934 /* PullUp.h */,
 				27C0843919BFD063007CE934 /* PullUpAnalyzer.cpp */,
@@ -1524,6 +1544,8 @@
 				27C0844519BFD063007CE934 /* SquatAnalyzer.h */,
 				27C0844619BFD063007CE934 /* StationaryCycling.cpp */,
 				27C0844719BFD063007CE934 /* StationaryCycling.h */,
+				27F4240623A44D4A00F59F50 /* Swim.cpp */,
+				27F4240723A44D4A00F59F50 /* Swim.h */,
 				2768E51823A0241200DD06E9 /* TrainingPaceType.h */,
 				2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */,
 				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,
@@ -1531,8 +1553,10 @@
 				27C0844919BFD063007CE934 /* Treadmill.h */,
 				27C0844A19BFD063007CE934 /* UnitMgr.cpp */,
 				27C0844B19BFD063007CE934 /* UnitMgr.h */,
-				27C0844C19BFD063007CE934 /* Walking.cpp */,
-				27C0844D19BFD063007CE934 /* Walking.h */,
+				27F4240A23A45FAC00F59F50 /* Walk.cpp */,
+				27F4240923A45FAC00F59F50 /* Walk.h */,
+				27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */,
+				27F423EF23A430F300F59F50 /* WorkoutPlanGenerator.h */,
 				2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */,
 				2768E51A23A0270500DD06E9 /* VO2MaxCalculator.h */,
 			);
@@ -1904,6 +1928,7 @@
 				270CF4822391F0BB00584058 /* TcxTags.h in Sources */,
 				270CF4832391F0BB00584058 /* TextFileReader.cpp in Sources */,
 				270CF4842391F0BB00584058 /* TextFileReader.h in Sources */,
+				27F4241123A46A5E00F59F50 /* PoolSwim.cpp in Sources */,
 				270CF4852391F0BB00584058 /* XmlFileReader.cpp in Sources */,
 				270CF4862391F0BB00584058 /* XmlFileReader.h in Sources */,
 				270CF4872391F0BB00584058 /* XmlFileWriter.cpp in Sources */,
@@ -1951,6 +1976,7 @@
 				270CF43E2391F05200584058 /* IntervalWorkoutSegment.h in Sources */,
 				270CF43F2391F05200584058 /* LiftingActivity.cpp in Sources */,
 				270CF4402391F05200584058 /* LiftingActivity.h in Sources */,
+				27F4240D23A461AA00F59F50 /* Walk.cpp in Sources */,
 				270CF4412391F05200584058 /* MountainBiking.cpp in Sources */,
 				270CF4422391F05200584058 /* MountainBiking.h in Sources */,
 				270CF4432391F05200584058 /* MovingActivity.cpp in Sources */,
@@ -1961,9 +1987,11 @@
 				270CF4482391F05200584058 /* PullUpAnalyzer.h in Sources */,
 				270CF4492391F05200584058 /* PushUp.cpp in Sources */,
 				270CF44A2391F05200584058 /* PushUp.h in Sources */,
+				27F4240F23A46A5900F59F50 /* OpenWaterSwim.cpp in Sources */,
 				270CF44B2391F05200584058 /* PushUpAnalyzer.cpp in Sources */,
 				270CF44C2391F05200584058 /* PushUpAnalyzer.h in Sources */,
 				270CF44D2391F05200584058 /* Run.cpp in Sources */,
+				27F4241323A46A6400F59F50 /* Swim.cpp in Sources */,
 				270CF44E2391F05200584058 /* Run.h in Sources */,
 				270CF44F2391F05200584058 /* SegmentType.h in Sources */,
 				270CF4502391F05200584058 /* Squat.cpp in Sources */,
@@ -1976,8 +2004,6 @@
 				270CF4572391F05200584058 /* Treadmill.h in Sources */,
 				270CF4582391F05200584058 /* UnitMgr.cpp in Sources */,
 				270CF4592391F05200584058 /* UnitMgr.h in Sources */,
-				270CF45A2391F05200584058 /* Walking.cpp in Sources */,
-				270CF45B2391F05200584058 /* Walking.h in Sources */,
 				270CF45C2391F05200584058 /* Bike.h in Sources */,
 				270CF4112391BE1200584058 /* TcxImportTest.m in Sources */,
 				270CF4102391BE0D00584058 /* PeakFindTest.m in Sources */,
@@ -2015,6 +2041,7 @@
 				2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */,
 				27B7CD9C19BFD91C000383E3 /* LoginViewController.m in Sources */,
 				27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */,
+				27F4240523A44C0E00F59F50 /* PoolSwim.cpp in Sources */,
 				27C0845219BFD063007CE934 /* ChinUpAnalyzer.cpp in Sources */,
 				27B7CDCB19BFD953000383E3 /* SpeedLine.m in Sources */,
 				2773EB401A7435C500B088B3 /* WiFiSensor.m in Sources */,
@@ -2024,6 +2051,7 @@
 				2768E51623A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */,
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
 				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
+				27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */,
 				27B7CD9019BFD91C000383E3 /* FollowedByViewController.m in Sources */,
 				2704717B216D997000EE47FF /* Peaks.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
@@ -2054,6 +2082,7 @@
 				27C0845119BFD063007CE934 /* ChinUp.cpp in Sources */,
 				27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */,
 				27B7CDF519BFD99B000383E3 /* LeDiscovery.m in Sources */,
+				27F4240823A44D4A00F59F50 /* Swim.cpp in Sources */,
 				27B7CDCA19BFD953000383E3 /* PowerLine.m in Sources */,
 				27C0845419BFD063007CE934 /* GForceAnalyzer.cpp in Sources */,
 				27C0844F19BFD063007CE934 /* ActivityFactory.cpp in Sources */,
@@ -2107,11 +2136,12 @@
 				2797F19419BFE48E008F8672 /* XmlFileReader.cpp in Sources */,
 				27C0845A19BFD063007CE934 /* PullUp.cpp in Sources */,
 				27C0845519BFD063007CE934 /* GForceAnalyzerFactory.cpp in Sources */,
+				27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */,
+				27F4240B23A45FAC00F59F50 /* Walk.cpp in Sources */,
 				276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */,
 				27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */,
 				27C0845819BFD063007CE934 /* MountainBiking.cpp in Sources */,
 				275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */,
-				27C0846419BFD063007CE934 /* Walking.cpp in Sources */,
 				2704717C216D997000EE47FF /* Distance.cpp in Sources */,
 				27B7CDA719BFD91C000383E3 /* SimpleActivityViewController.m in Sources */,
 				27C0846119BFD063007CE934 /* StationaryCycling.cpp in Sources */,
@@ -2157,6 +2187,7 @@
 				270547B322EF9A9B0071F3C2 /* ActivityHash.m in Sources */,
 				27DCF64D22B72EFA009A23C2 /* KmlFileReader.h in Sources */,
 				27DCF64E22B72EFA009A23C2 /* TcxFileReader.cpp in Sources */,
+				27F4240E23A46A5900F59F50 /* OpenWaterSwim.cpp in Sources */,
 				27DCF64F22B72EFA009A23C2 /* TcxFileReader.h in Sources */,
 				27DCF65022B72EFA009A23C2 /* TcxFileWriter.cpp in Sources */,
 				27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */,
@@ -2198,10 +2229,12 @@
 				27F6D0792300166500A248BE /* Double.cpp in Sources */,
 				27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */,
 				27DCF60222B71628009A23C2 /* ActivityType.h in Sources */,
+				27F4241223A46A6400F59F50 /* Swim.cpp in Sources */,
 				27DCF60322B71628009A23C2 /* ActivityViewType.h in Sources */,
 				27DCF60422B71628009A23C2 /* AxisName.h in Sources */,
 				27DCF60522B71628009A23C2 /* ChinUp.cpp in Sources */,
 				2768E511239DCAEA00DD06E9 /* WorkoutImporter.cpp in Sources */,
+				27F4241023A46A5D00F59F50 /* PoolSwim.cpp in Sources */,
 				27DCF60622B71628009A23C2 /* ChinUp.h in Sources */,
 				27DCF60722B71628009A23C2 /* ChinUpAnalyzer.cpp in Sources */,
 				27DCF60822B71628009A23C2 /* ChinUpAnalyzer.h in Sources */,
@@ -2220,6 +2253,7 @@
 				271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */,
 				27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */,
 				27DCF61222B71628009A23C2 /* IntervalWorkoutSegment.h in Sources */,
+				27F4240C23A461A900F59F50 /* Walk.cpp in Sources */,
 				27DCF61322B71628009A23C2 /* LiftingActivity.cpp in Sources */,
 				27DCF61422B71628009A23C2 /* LiftingActivity.h in Sources */,
 				27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */,
@@ -2253,8 +2287,6 @@
 				27DCF62B22B71628009A23C2 /* Treadmill.h in Sources */,
 				27DCF62C22B71628009A23C2 /* UnitMgr.cpp in Sources */,
 				27DCF62D22B71628009A23C2 /* UnitMgr.h in Sources */,
-				27DCF62E22B71628009A23C2 /* Walking.cpp in Sources */,
-				27DCF62F22B71628009A23C2 /* Walking.h in Sources */,
 				27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */,
 				27DCF5FA22B7160C009A23C2 /* ActivityMgr.mm in Sources */,
 				27DCF5D422B193B7009A23C2 /* ExtensionDelegate.m in Sources */,

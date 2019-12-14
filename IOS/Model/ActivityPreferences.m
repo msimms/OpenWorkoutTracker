@@ -130,6 +130,11 @@
 									  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
 									  nil];
 #endif
+		self->defaultSwimmingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_SWIM_STROKES,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  nil];
 		self->defaultLiftingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
 									  @ACTIVITY_ATTRIBUTE_REPS,
 									  @ACTIVITY_ATTRIBUTE_SETS,
@@ -380,6 +385,11 @@
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
 		{
 			array = self->defaultRunningLayout;
+		}
+		else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] ||
+				 [activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+		{
+			array = self->defaultSwimmingLayout;
 		}
 		else
 		{

@@ -42,6 +42,7 @@ typedef enum GpsFilterOption
 	NSArray* defaultStationaryBikeLayout;
 	NSArray* defaultTreadmillLayout;
 	NSArray* defaultHikingLayout;
+	NSArray* defaultSwimmingLayout;
 	NSArray* defaultRunningLayout;
 	NSArray* defaultLiftingLayout;
 }

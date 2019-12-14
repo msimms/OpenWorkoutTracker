@@ -7,24 +7,25 @@
 
 #import <TargetConditionals.h>
 
-#include "Walking.h"
+#include "Walk.h"
 #include "ActivityAttribute.h"
 #include "AxisName.h"
 #include "Distance.h"
 #include "UnitMgr.h"
 
-Walking::Walking() : MovingActivity()
+Walk::Walk() : MovingActivity()
 {
+	m_lastPeakCalculationTime = 0;
 	m_stepsTaken = 0;
 	m_lastAvgAltitudeM = (double)0.0;
 	m_currentCalories = (double)0.0;
 }
 
-Walking::~Walking()
+Walk::~Walk()
 {
 }
 
-void Walking::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
+void Walk::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 {
 #if !TARGET_OS_WATCH
 	sensorTypes.push_back(SENSOR_TYPE_ACCELEROMETER);
@@ -32,25 +33,25 @@ void Walking::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 	MovingActivity::ListUsableSensors(sensorTypes);
 }
 
-bool Walking::Stop()
+bool Walk::Stop()
 {
 	CalculateStepsTaken();
 	return Activity::Stop();
 }
 
-void Walking::Pause()
+void Walk::Pause()
 {
 	CalculateStepsTaken();
 	Activity::Pause();
 }
 
-void Walking::OnFinishedLoadingSensorData()
+void Walk::OnFinishedLoadingSensorData()
 {
 	CalculateStepsTaken();
 	Activity::OnFinishedLoadingSensorData();
 }
 
-bool Walking::ProcessGpsReading(const SensorReading& reading)
+bool Walk::ProcessGpsReading(const SensorReading& reading)
 {
 	bool result = false;
 
@@ -70,7 +71,7 @@ bool Walking::ProcessGpsReading(const SensorReading& reading)
 	return result;
 }
 
-bool Walking::ProcessAccelerometerReading(const SensorReading& reading)
+bool Walk::ProcessAccelerometerReading(const SensorReading& reading)
 {
 	try
 	{
@@ -96,7 +97,7 @@ bool Walking::ProcessAccelerometerReading(const SensorReading& reading)
 	return MovingActivity::ProcessAccelerometerReading(reading);
 }
 
-ActivityAttributeType Walking::QueryActivityAttribute(const std::string& attributeName) const
+ActivityAttributeType Walk::QueryActivityAttribute(const std::string& attributeName) const
 {
 	ActivityAttributeType result;
 
@@ -118,7 +119,7 @@ ActivityAttributeType Walking::QueryActivityAttribute(const std::string& attribu
 	return result;
 }
 
-double Walking::CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& pt2)
+double Walk::CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& pt2)
 {
 	double movingTimeMin = (double)(pt1.time - pt2.time) / (double)60000.0;
 	double avgAltitudeM  = RunningAltitudeAverage();
@@ -154,7 +155,7 @@ double Walking::CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& p
 	return calories;
 }
 
-double Walking::CaloriesBurned() const
+double Walk::CaloriesBurned() const
 {
 	// Sanity check.
 	if (m_currentCalories < (double)0.1)
@@ -164,7 +165,7 @@ double Walking::CaloriesBurned() const
 	return m_currentCalories;
 }
 
-void Walking::BuildAttributeList(std::vector<std::string>& attributes) const
+void Walk::BuildAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_STEPS_TAKEN);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_MARATHON);
@@ -172,7 +173,7 @@ void Walking::BuildAttributeList(std::vector<std::string>& attributes) const
 	MovingActivity::BuildAttributeList(attributes);
 }
 
-void Walking::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
+void Walk::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_STEPS_TAKEN);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_MARATHON);
@@ -180,7 +181,7 @@ void Walking::BuildSummaryAttributeList(std::vector<std::string>& attributes) co
 	MovingActivity::BuildSummaryAttributeList(attributes);
 }
 
-void Walking::CalculateStepsTaken()
+void Walk::CalculateStepsTaken()
 {
 	LibMath::GraphPeakList peaks = m_peakFinder.findPeaksOfSize(m_graphLine, (double)40.0);
 	m_stepsTaken = peaks.size();
