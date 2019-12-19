@@ -7,6 +7,7 @@
 
 #include "Swim.h"
 #include "ActivityAttribute.h"
+#include "AxisName.h"
 #include "UnitMgr.h"
 
 Swim::Swim()
@@ -18,6 +19,50 @@ Swim::Swim()
 
 Swim::~Swim()
 {
+}
+
+bool Swim::Stop()
+{
+	CalculateStrokesTaken();
+	return Activity::Stop();
+}
+
+void Swim::Pause()
+{
+	CalculateStrokesTaken();
+	Activity::Pause();
+}
+
+void Swim::OnFinishedLoadingSensorData()
+{
+	CalculateStrokesTaken();
+	Activity::OnFinishedLoadingSensorData();
+}
+
+bool Swim::ProcessAccelerometerReading(const SensorReading& reading)
+{
+	try
+	{
+		if (reading.reading.count(AXIS_NAME_Y) > 0)
+		{
+			m_graphLine.push_back(LibMath::GraphPoint(reading.time, reading.reading.at(AXIS_NAME_Y)));
+			
+			time_t endTime = GetEndTimeSecs();
+			if (endTime == 0) // Activity is in progress; if loading from the database we'll do all the calculations at the end.
+			{
+				if (reading.time - m_lastPeakCalculationTime > 5000)
+				{
+					CalculateStrokesTaken();
+					m_lastPeakCalculationTime = reading.time;
+				}
+			}
+		}
+	}
+	catch (...)
+	{
+	}
+
+	return MovingActivity::ProcessAccelerometerReading(reading);
 }
 
 ActivityAttributeType Swim::QueryActivityAttribute(const std::string& attributeName) const
@@ -52,4 +97,10 @@ void Swim::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_SWIM_STROKES);
 	MovingActivity::BuildSummaryAttributeList(attributes);
+}
+
+void Swim::CalculateStrokesTaken()
+{
+	LibMath::GraphPeakList peaks = m_peakFinder.findPeaksOfSize(m_graphLine, (double)40.0);
+	m_strokesTaken = peaks.size();
 }

@@ -20,10 +20,18 @@ public:
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
+	virtual bool Stop();
+	virtual void Pause();
+
+	virtual void OnFinishedLoadingSensorData();
+
 	virtual uint16_t StrokesTaken() const { return m_strokesTaken; };
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
+
+protected:
+	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 
 protected:
 	LibMath::GraphLine m_graphLine;
@@ -32,6 +40,8 @@ protected:
 	uint16_t m_strokesTaken;
 	double   m_currentCalories;
 
+protected:
+	void CalculateStrokesTaken();
 };
 
 #endif
