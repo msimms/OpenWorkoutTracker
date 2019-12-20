@@ -55,22 +55,28 @@ void GpsDataHashCallback(const char* activityId, void* context)
 
 void AccelDataHashCallback(const char* activityId, void* context)
 {
-	ActivityAttributeType xAxisValue;
-	ActivityAttributeType yAxisValue;
-	ActivityAttributeType zAxisValue;
-
-	xAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_X);
-	yAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Y);
-	zAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Z);
+	ActivityAttributeType xAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_X);
+	ActivityAttributeType yAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Y);
+	ActivityAttributeType zAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Z);
 
 	if (xAxisValue.valid && yAxisValue.valid && zAxisValue.valid)
 	{
 		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;
 
 		NSNumber* time = [NSNumber numberWithLongLong:xAxisValue.startTime];
+		NSNumber* xAxisValueNum = [NSNumber numberWithDouble:xAxisValue.value.doubleVal];
+		NSNumber* yAxisValueNum = [NSNumber numberWithDouble:yAxisValue.value.doubleVal];
+		NSNumber* zAxisValueNum = [NSNumber numberWithDouble:zAxisValue.value.doubleVal];
+
 		NSString* timeStr = [time stringValue];
+		NSString* xAxisValueStr = NumToStringForHashing(xAxisValueNum);
+		NSString* yAxisValueStr = NumToStringForHashing(yAxisValueNum);
+		NSString* zAxisValueStr = NumToStringForHashing(zAxisValueNum);
 
 		CC_SHA512_Update(ctx, [timeStr UTF8String], (CC_LONG)[timeStr length]);
+		CC_SHA512_Update(ctx, [xAxisValueStr UTF8String], (CC_LONG)[xAxisValueStr length]);
+		CC_SHA512_Update(ctx, [yAxisValueStr UTF8String], (CC_LONG)[yAxisValueStr length]);
+		CC_SHA512_Update(ctx, [zAxisValueStr UTF8String], (CC_LONG)[zAxisValueStr length]);
 	}
 }
 
@@ -83,6 +89,7 @@ void CadenceDataHashCallback(const char* activityId, void* context)
 
 		NSNumber* time = [NSNumber numberWithLongLong:cadenceValue.startTime];
 		NSNumber* cadence = [NSNumber numberWithDouble:cadenceValue.value.doubleVal];
+
 		NSString* timeStr = [time stringValue];
 		NSString* cadenceStr = [cadence stringValue];
 
