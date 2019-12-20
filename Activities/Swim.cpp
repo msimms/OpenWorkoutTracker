@@ -73,7 +73,7 @@ ActivityAttributeType Swim::QueryActivityAttribute(const std::string& attributeN
 	result.endTime = 0;
 	result.unitSystem = UnitMgr::GetUnitSystem();
 
-	if (attributeName.compare(ACTIVITY_ATTRIBUTE_STEPS_TAKEN) == 0)
+	if (attributeName.compare(ACTIVITY_ATTRIBUTE_SWIM_STROKES) == 0)
 	{
 		result.value.intVal = StrokesTaken();
 		result.valueType = TYPE_INTEGER;
