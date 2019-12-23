@@ -20,6 +20,7 @@
 #include "Coordinate.h"
 #include "IntervalWorkout.h"
 #include "MovingActivity.h"
+#include "PacePlan.h"
 #include "SensorReading.h"
 
 class Database
@@ -48,6 +49,11 @@ public:
 	bool RetrieveIntervalWorkoutId(const std::string& name, uint64_t& workoutId);
 	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
 	bool DeleteIntervalWorkout(uint64_t workoutId);
+
+	bool CreatePacePlan(const std::string& name);
+	bool RetrievePacePlanId(const std::string& name, uint64_t& pacePlanId);
+	bool RetrievePacePlans(std::vector<PacePlan>& pacePlans);
+	bool DeletePacePlan(uint64_t pacePlanId);
 
 	bool CreateIntervalSegment(IntervalWorkoutSegment segment);
 	bool RetrieveIntervalSegments(uint64_t workoutId, std::vector<IntervalWorkoutSegment>& segments);
