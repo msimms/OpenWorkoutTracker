@@ -93,6 +93,10 @@ extern "C" {
 	bool DeleteIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex);
 	bool GetIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex, uint32_t* quantity, IntervalUnit* units);
 
+	// Functions for managing pace plans.
+	bool CreateNewPacePlan(const char* planName, const char* planId);
+	bool DeletePacePlan(const char* planId);
+
 	// Functions for merging historical activities.
 	bool MergeActivities(const char* const activityId1, const char* const activityId2);
 

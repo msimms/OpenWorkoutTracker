@@ -9,7 +9,7 @@
 
 typedef struct PacePlan
 {
-	uint64_t     planId;
+	std::string  id;
 	std::string  name;
 	double       targetPace;
 	double       targetDistance;

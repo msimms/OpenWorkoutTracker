@@ -688,6 +688,28 @@ extern "C" {
 	}
 
 	//
+	// Functions for managing pace plans.
+	//
+
+	bool CreateNewPacePlan(const char* planName, const char* planId)
+	{
+		if (g_pDatabase)
+		{
+			return g_pDatabase->CreatePacePlan(planName, planId);
+		}
+		return false;
+	}
+
+	bool DeletePacePlan(const char* planId)
+	{
+		if (g_pDatabase)
+		{
+			return g_pDatabase->DeletePacePlan(planId);
+		}
+		return false;
+	}
+
+	//
 	// Functions for merging historical activities.
 	//
 

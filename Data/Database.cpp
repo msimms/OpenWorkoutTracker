@@ -96,7 +96,7 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("pace_plan"))
 	{
-		sql = "create table pace_plan (id integer primary key, name text, target_pace double, target_distance double, route text)";
+		sql = "create table pace_plan (id integer primary key, plan_id text, name text, target_pace double, target_distance double, route text)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("custom_activity"))
@@ -443,75 +443,6 @@ bool Database::DeleteIntervalWorkout(uint64_t workoutId)
 	return result == SQLITE_DONE;
 }
 
-bool Database::CreatePacePlan(const std::string& name)
-{
-	sqlite3_stmt* statement = NULL;
-	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?)", -1, &statement, 0);
-	if (result == SQLITE_OK)
-	{
-		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
-		result = sqlite3_step(statement);
-		sqlite3_finalize(statement);
-	}	
-	return result == SQLITE_DONE;
-}
-
-bool Database::RetrievePacePlanId(const std::string& name, uint64_t& pacePlanId)
-{
-	sqlite3_stmt* statement = NULL;
-
-	int result = sqlite3_prepare_v2(m_pDb, "select id from pace_plan where name = ?", -1, &statement, 0);
-	if (result == SQLITE_OK)
-	{
-		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
-		result = sqlite3_step(statement);
-		pacePlanId = sqlite3_column_int64(statement, 0);
-		sqlite3_finalize(statement);
-	}
-	return result == SQLITE_ROW;
-}
-
-bool Database::RetrievePacePlans(std::vector<PacePlan>& pacePlans)
-{
-	bool result = false;
-	sqlite3_stmt* statement = NULL;
-	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, target_pace, target_distance, route from pace_plan order by id", -1, &statement, 0) == SQLITE_OK)
-	{
-		while (sqlite3_step(statement) == SQLITE_ROW)
-		{
-			PacePlan plan;
-
-			plan.planId = sqlite3_column_int64(statement, 0);
-			plan.name.append((const char*)sqlite3_column_text(statement, 1));
-			plan.targetPace = sqlite3_column_double(statement, 2);
-			plan.targetDistance = sqlite3_column_double(statement, 3);
-			plan.route.append((const char*)sqlite3_column_text(statement, 4));
-
-			pacePlans.push_back(plan);
-		}
-		
-		sqlite3_finalize(statement);
-		result = true;
-	}
-	return result;
-}
-
-bool Database::DeletePacePlan(uint64_t pacePlanId)
-{
-	sqlite3_stmt* statement = NULL;
-
-	int result = sqlite3_prepare_v2(m_pDb, "delete from pace_plan where id = ?", -1, &statement, 0);
-	if (result == SQLITE_OK)
-	{
-		sqlite3_bind_int64(statement, 1, pacePlanId);
-		result = sqlite3_step(statement);
-		sqlite3_finalize(statement);
-	}
-	return result == SQLITE_DONE;
-}
-
 bool Database::CreateIntervalSegment(IntervalWorkoutSegment segment)
 {
 	sqlite3_stmt* statement = NULL;
@@ -577,6 +508,61 @@ bool Database::DeleteIntervalSegments(uint64_t workoutId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, workoutId);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::CreatePacePlan(const std::string& name, const std::string& planId)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, planId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}	
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, target_pace, target_distance, route from pace_plan", -1, &statement, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			PacePlan plan;
+
+			plan.id.append((const char*)sqlite3_column_text(statement, 0));
+			plan.name.append((const char*)sqlite3_column_text(statement, 1));
+			plan.targetPace = sqlite3_column_double(statement, 2);
+			plan.targetDistance = sqlite3_column_double(statement, 3);
+			plan.route.append((const char*)sqlite3_column_text(statement, 4));
+
+			plans.push_back(plan);
+		}
+		
+		sqlite3_finalize(statement);
+		result = true;
+	}
+	return result;
+}
+
+bool Database::DeletePacePlan(const std::string& planId)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "delete from pace_plan where plan_id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, planId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

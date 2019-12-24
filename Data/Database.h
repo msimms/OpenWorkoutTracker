@@ -50,15 +50,14 @@ public:
 	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
 	bool DeleteIntervalWorkout(uint64_t workoutId);
 
-	bool CreatePacePlan(const std::string& name);
-	bool RetrievePacePlanId(const std::string& name, uint64_t& pacePlanId);
-	bool RetrievePacePlans(std::vector<PacePlan>& pacePlans);
-	bool DeletePacePlan(uint64_t pacePlanId);
-
 	bool CreateIntervalSegment(IntervalWorkoutSegment segment);
 	bool RetrieveIntervalSegments(uint64_t workoutId, std::vector<IntervalWorkoutSegment>& segments);
 	bool DeleteIntervalSegment(uint64_t segmentId);
 	bool DeleteIntervalSegments(uint64_t workoutId);
+
+	bool CreatePacePlan(const std::string& name, const std::string& planId);
+	bool RetrievePacePlans(std::vector<PacePlan>& plans);
+	bool DeletePacePlan(const std::string& planId);
 
 	bool CreateCustomActivity(const std::string& activityType, ActivityViewType viewType);
 	bool DeleteCustomActivity(const std::string& activityType);
