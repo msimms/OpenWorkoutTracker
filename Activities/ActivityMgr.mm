@@ -2094,7 +2094,7 @@ extern "C" {
 	bool ImportZwoFile(const char* const fileName, const char* const workoutName)
 	{
 		WorkoutImporter importer;
-		return importer.ImportZwoFile(fileName, workoutName);
+		return importer.ImportZwoFile(fileName, workoutName, g_pDatabase);
 	}
 
 	//

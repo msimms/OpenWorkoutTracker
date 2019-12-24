@@ -25,7 +25,8 @@ namespace FileLib
 
 		virtual void PushState(std::string newState);
 		virtual void PopState();
-		
+
+		// Registers the callback that is triggered when a new location is read.
 		typedef bool (*NewLocationFunc)(double lat, double lon, double ele, uint64_t time, void* context);
 		virtual void SetNewLocationCallback(NewLocationFunc func, void* context) { m_newLocCallback = func; m_newLocContext = context; };
 		

@@ -9,6 +9,7 @@
 #define _WORKOUTIMPORTER_
 
 #include <string>
+#include "Database.h"
 
 class WorkoutImporter
 {
@@ -16,7 +17,7 @@ public:
 	WorkoutImporter();
 	virtual ~WorkoutImporter();
 
-	bool ImportZwoFile(const std::string& fileName, const std::string& workoutName);
+	bool ImportZwoFile(const std::string& fileName, const std::string& workoutName, Database* pDatabase);
 };
 
 #endif
