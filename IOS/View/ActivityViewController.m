@@ -815,47 +815,32 @@
 	NSDictionary* intervalData = [notification object];
 	if (intervalData)
 	{
-		NSNumber* quantity = [intervalData objectForKey:@KEY_NAME_INTERVAL_QUANTITY];
-		NSNumber* units = [intervalData objectForKey:@KEY_NAME_INTERVAL_UNITS];
-		NSString* msg;
-
-		switch ([units intValue])
+		NSValue* segmentValue = [intervalData objectForKey:@KEY_NAME_INTERVAL_SEGMENT];
+		if (segmentValue)
 		{
-			case INTERVAL_UNIT_UNSPECIFIED:
-				msg = UNSPECIFIED_INTERVAL;
-				break;
-			case INTERVAL_UNIT_SECONDS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_SECONDS];
-				break;
-			case INTERVAL_UNIT_METERS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_METERS];
-				break;
-			case INTERVAL_UNIT_KILOMETERS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_KILOMETERS];
-				break;
-			case INTERVAL_UNIT_FEET:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_FEET];
-				break;
-			case INTERVAL_UNIT_YARDS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_YARDS];
-				break;
-			case INTERVAL_UNIT_MILES:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_MILES];
-				break;
-			case INTERVAL_UNIT_SETS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_SETS];
-				break;
-			case INTERVAL_UNIT_REPS:
-				msg = [[NSString alloc] initWithFormat:@"%u %@", [quantity intValue], STR_REPS];
-				break;
-		}
-
-		if (msg)
-		{
-			@synchronized(self->messages)
+			IntervalWorkoutSegment* segment = (IntervalWorkoutSegment*)[segmentValue objCType];
+			NSString* msg;
+			
+			if (segment->sets > 0)
 			{
-				[self->messages removeAllObjects];
-				[self->messages addObject:msg];
+				msg = [[NSString alloc] initWithFormat:@"%ul Set(s)", segment->sets];
+			}
+			else if (segment->reps > 0)
+			{
+				msg = [[NSString alloc] initWithFormat:@"%ul Rep(s)", segment->reps];
+			}
+			else if (segment->duration > 0)
+			{
+				msg = [[NSString alloc] initWithFormat:@"%ul Seconds", segment->duration];				
+			}
+
+			if (msg)
+			{
+				@synchronized(self->messages)
+				{
+					[self->messages removeAllObjects];
+					[self->messages addObject:msg];
+				}
 			}
 		}
 	}

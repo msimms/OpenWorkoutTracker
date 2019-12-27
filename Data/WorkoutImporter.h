@@ -17,7 +17,7 @@ public:
 	WorkoutImporter();
 	virtual ~WorkoutImporter();
 
-	bool ImportZwoFile(const std::string& fileName, const std::string& workoutName, Database* pDatabase);
+	bool ImportZwoFile(const std::string& fileName, const std::string& workoutId, const std::string& workoutName, Database* pDatabase);
 };
 
 #endif

@@ -42,11 +42,6 @@
                                 <segue destination="hJl-mE-pcA" kind="push" id="xRX-5Z-MpU"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" title="Intervals" id="IvE-jq-NUh">
-                            <connections>
-                                <segue destination="aHE-HE-Bag" kind="push" id="8Ux-PK-3UZ"/>
-                            </connections>
-                        </button>
                         <button width="1" alignment="left" title="About" id="x9X-9W-OPg">
                             <connections>
                                 <segue destination="d9K-Wx-f3c" kind="push" id="sp0-EJ-abt"/>
@@ -135,33 +130,6 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="797" y="343"/>
-        </scene>
-        <!--WatchIntervalsViewController-->
-        <scene sceneID="2wF-ip-6Vt">
-            <objects>
-                <controller identifier="WatchIntervalsViewController" id="aHE-HE-Bag" customClass="WatchIntervalsViewController">
-                    <items>
-                        <table alignment="left" id="RTR-Bs-42t">
-                            <items>
-                                <tableRow identifier="WatchIntervalsRowType" id="hXl-Mc-5xm" customClass="WatchIntervalsRowController">
-                                    <group key="rootItem" width="1" alignment="left" id="eFI-dU-5GQ">
-                                        <items>
-                                            <label alignment="left" text="Label" id="q6H-Ya-w9h"/>
-                                        </items>
-                                    </group>
-                                    <connections>
-                                        <outlet property="itemLabel" destination="q6H-Ya-w9h" id="RBt-bu-cqS"/>
-                                    </connections>
-                                </tableRow>
-                            </items>
-                        </table>
-                    </items>
-                    <connections>
-                        <outlet property="intervalsTable" destination="RTR-Bs-42t" id="0yk-5a-7gm"/>
-                    </connections>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="-48" y="759"/>
         </scene>
         <!--WatchDetailsViewController-->
         <scene sceneID="smr-zi-axf">

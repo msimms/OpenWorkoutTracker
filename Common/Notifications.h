@@ -30,7 +30,6 @@
 #define NOTIFICATION_NAME_INTERVAL_UPDATED         "IntervalUpdated"
 #define NOTIFICATION_NAME_INTERVAL_COMPLETE        "IntervalComplete"
 
-#define KEY_NAME_INTERVAL_QUANTITY                 "IntervalSegmentQuantity"
-#define KEY_NAME_INTERVAL_UNITS                    "IntervalSegmentUnits"
 #define KEY_NAME_DEVICE_ID                         "DeviceId"
 #define KEY_NAME_USER_NAME                         "Name"
+#define KEY_NAME_INTERVAL_SEGMENT                  "IntervalSegment"

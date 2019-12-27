@@ -507,14 +507,14 @@ extern "C" {
 	// Functions for managing the currently set interval workout.
 	//
 
-	const IntervalWorkout* GetIntervalWorkout(const char* const workoutName)
+	const IntervalWorkout* GetIntervalWorkout(const char* const workoutId)
 	{
-		if (workoutName)
+		if (workoutId)
 		{
 			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
 				const IntervalWorkout& workout = (*iter);
-				if (workout.name.compare(workoutName) == 0)
+				if (workout.workoutId.compare(workoutId) == 0)
 				{
 					return &workout;
 				}
@@ -523,11 +523,11 @@ extern "C" {
 		return NULL;
 	}
 
-	bool SetCurrentIntervalWorkout(const char* const workoutName)
+	bool SetCurrentIntervalWorkout(const char* const workoutId)
 	{
-		if (g_pCurrentActivity && workoutName)
+		if (g_pCurrentActivity && workoutId)
 		{
-			const IntervalWorkout* workout = GetIntervalWorkout(workoutName);
+			const IntervalWorkout* workout = GetIntervalWorkout(workoutId);
 			if (workout)
 			{
 				g_pCurrentActivity->SetIntervalWorkout((*workout));
@@ -546,11 +546,11 @@ extern "C" {
 		return false;
 	}
 
-	bool GetCurrentIntervalWorkoutSegment(uint32_t* quantity, IntervalUnit* units)
+	bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment* segment)
 	{
 		if (IsActivityInProgress())
 		{
-			return g_pCurrentActivity->GetCurrentIntervalWorkoutSegment(quantity, units);
+			return g_pCurrentActivity->GetCurrentIntervalWorkoutSegment(*segment);
 		}
 		return false;	
 	}
@@ -576,25 +576,20 @@ extern "C" {
 	// Functions for managing interval workouts.
 	//
 
-	bool CreateNewIntervalWorkout(const char* const workoutName)
+	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
 	{
-		if (g_pDatabase && workoutName)
+		if (g_pDatabase && workoutId && workoutName && sport)
 		{
-			return g_pDatabase->CreateIntervalWorkout(workoutName);
+			return g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
 		}
 		return false;
 	}
 
-	bool DeleteIntervalWorkout(const char* const workoutName)
+	bool DeleteIntervalWorkout(const char* const workoutId)
 	{
-		if (g_pDatabase && workoutName)
+		if (g_pDatabase && workoutId)
 		{
-			uint64_t workoutId;
-
-			if (g_pDatabase->RetrieveIntervalWorkoutId(workoutName, workoutId))
-			{
-				return g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegments(workoutId);
-			}
+			return g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
 		}
 		return false;
 	}
@@ -603,17 +598,23 @@ extern "C" {
 	{
 		g_intervalWorkouts.clear();
 
-		if (g_pDatabase)
+		if (g_pDatabase && g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
 		{
-			if (g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
+			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
-				for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
-				{
-					IntervalWorkout& workout = (*iter);
-					g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments);
-				}
+				IntervalWorkout& workout = (*iter);
+				g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments);
 			}
 		}
+	}
+
+	char* GetIntervalWorkoutId(size_t workoutIndex)
+	{
+		if (workoutIndex < g_intervalWorkouts.size())
+		{
+			return strdup(g_intervalWorkouts.at(workoutIndex).workoutId.c_str());
+		}
+		return NULL;		
 	}
 
 	char* GetIntervalWorkoutName(size_t workoutIndex)
@@ -625,15 +626,24 @@ extern "C" {
 		return NULL;		
 	}
 
+	char* GetIntervalWorkoutSport(size_t workoutIndex)
+	{
+		if (workoutIndex < g_intervalWorkouts.size())
+		{
+			return strdup(g_intervalWorkouts.at(workoutIndex).sport.c_str());
+		}
+		return NULL;		
+	}
+
 	//
 	// Functions for managing interval workout segments.
 	//
 
-	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutName)
+	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId)
 	{
-		if (g_pDatabase && workoutName)
+		if (g_pDatabase && workoutId)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutName);
+			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 			if (pWorkout)
 			{
 				return pWorkout->segments.size();
@@ -642,26 +652,21 @@ extern "C" {
 		return 0;
 	}
 
-	bool CreateNewIntervalWorkoutSegment(const char* const workoutName, uint32_t quantity, IntervalUnit units)
+	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment)
 	{
-		const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutName);
+		const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 		if (pWorkout)
 		{
-			IntervalWorkoutSegment segment;
-			segment.segmentId = 0;
-			segment.workoutId = pWorkout->workoutId;
-			segment.quantity = quantity;
-			segment.units = units;
-			return g_pDatabase->CreateIntervalSegment(segment);
+			return g_pDatabase->CreateIntervalSegment(workoutId, segment);
 		}
 		return false;
 	}
 
-	bool DeleteIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex)
+	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex)
 	{
 		if (g_pDatabase)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutName);
+			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 			if (pWorkout)
 			{
 				const IntervalWorkoutSegment& segment = pWorkout->segments.at(segmentIndex);
@@ -671,16 +676,15 @@ extern "C" {
 		return false;
 	}
 
-	bool GetIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex, uint32_t* quantity, IntervalUnit* units)
+	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment)
 	{
 		if (g_pDatabase)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutName);
+			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 			if (pWorkout)
 			{
-				const IntervalWorkoutSegment& segment = pWorkout->segments.at(segmentIndex);
-				(*quantity) = segment.quantity;
-				(*units) = segment.units;
+				const IntervalWorkoutSegment& tempSegment = pWorkout->segments.at(segmentIndex);
+				(*segment) = tempSegment;
 				return true;
 			}
 		}
@@ -2113,10 +2117,10 @@ extern "C" {
 	// Functions for importing ZWO files.
 	//
 
-	bool ImportZwoFile(const char* const fileName, const char* const workoutName)
+	bool ImportZwoFile(const char* const fileName, const char* const workoutId, const char* const workoutName)
 	{
 		WorkoutImporter importer;
-		return importer.ImportZwoFile(fileName, workoutName, g_pDatabase);
+		return importer.ImportZwoFile(fileName, workoutId, workoutName, g_pDatabase);
 	}
 
 	//

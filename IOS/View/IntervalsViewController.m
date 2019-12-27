@@ -11,11 +11,16 @@
 #import "IntervalEditViewController.h"
 #import "Segues.h"
 
-#define TITLE                    NSLocalizedString(@"Intervals", nil)
+#define TITLE                        NSLocalizedString(@"Intervals", nil)
 
-#define ADD_INTERVAL             NSLocalizedString(@"Add Interval Workout", nil)
-#define ALERT_TITLE_NEW_INTERVAL NSLocalizedString(@"New Interval Workout", nil)
-#define ALERT_MSG_NEW_INTERVAL   NSLocalizedString(@"Name this interval workout", nil)
+#define ADD_INTERVAL                 NSLocalizedString(@"Add Interval Workout", nil)
+#define ALERT_TITLE_NEW_INTERVAL     NSLocalizedString(@"New Interval Workout", nil)
+#define ALERT_MSG_NEW_INTERVAL_SPORT NSLocalizedString(@"Create an interval for which sport?", nil)
+#define ALERT_MSG_NEW_INTERVAL       NSLocalizedString(@"Name this interval workout", nil)
+
+#define STR_RUNNING                  NSLocalizedString(@"Running", nil)
+#define STR_CYCLING                  NSLocalizedString(@"Cycling", nil)
+#define STR_LIFTING                  NSLocalizedString(@"Lifting", nil)
 
 @interface IntervalsViewController ()
 
@@ -82,7 +87,7 @@
 		IntervalEditViewController* editVC = (IntervalEditViewController*)[segue destinationViewController];
 		if (editVC)
 		{
-			[editVC setWorkoutName:self->selectedWorkoutName];
+			[editVC setWorkoutId:self->selectedWorkoutId];
 		}
 	}
 }
@@ -95,9 +100,7 @@
 	self->workoutNames = [appDelegate getIntervalWorkoutNames];
 }
 
-#pragma mark button handlers
-
-- (IBAction)onAddInterval:(id)sender
+- (void)createIntervalWorkoutForSport:(NSString*)intervalWorkoutSport
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_NEW_INTERVAL
 																			 message:ALERT_MSG_NEW_INTERVAL
@@ -108,15 +111,37 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		UITextField* field = alertController.textFields.firstObject;
-		NSString* text = [field text];
-		if (CreateNewIntervalWorkout([text UTF8String]))
+		NSString* intervalWorkoutId = [[NSUUID UUID] UUIDString];
+		NSString* intervalWorkoutName = [alertController.textFields.firstObject text];
+
+		if (CreateNewIntervalWorkout([intervalWorkoutId UTF8String], [intervalWorkoutName UTF8String], [intervalWorkoutSport UTF8String]))
 		{
-			self->selectedWorkoutName = text;
+			self->selectedWorkoutId = intervalWorkoutId;
+
 			[self updateWorkoutNames];
 			[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
 		}
 	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onAddInterval:(id)sender
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ALERT_MSG_NEW_INTERVAL_SPORT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_RUNNING style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self createIntervalWorkoutForSport:STR_RUNNING];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CYCLING style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self createIntervalWorkoutForSport:STR_CYCLING];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_LIFTING style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self createIntervalWorkoutForSport:STR_LIFTING];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -173,8 +198,12 @@
 	NSInteger section = [indexPath section];	
 	if (section == 0)
 	{
-		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
-		self->selectedWorkoutName = cell.textLabel.text;
+		char* workoutId = GetIntervalWorkoutId([indexPath row]);
+		if (workoutId)
+		{
+			self->selectedWorkoutId = [[NSString alloc] initWithUTF8String:workoutId];
+			free((void*)workoutId);
+		}
 		
 		[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
 	}

@@ -13,7 +13,7 @@
 	IBOutlet UITableView* intervalTableView;
 	IBOutlet UIBarButtonItem* intervalButton;
 	
-	NSString* selectedWorkoutName;
+	NSString* selectedWorkoutId;
 	NSMutableArray* workoutNames;
 }
 

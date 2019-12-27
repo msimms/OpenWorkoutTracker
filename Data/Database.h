@@ -45,15 +45,14 @@ public:
 	bool RetrieveBikeActivity(const std::string& activityId, uint64_t& bikeId);
 	bool UpdateBikeActivity(uint64_t bikeId, const std::string& activityId);
 
-	bool CreateIntervalWorkout(const std::string& name);
-	bool RetrieveIntervalWorkoutId(const std::string& name, uint64_t& workoutId);
+	bool CreateIntervalWorkout(const std::string& workoutId, const std::string& name, const std::string& sport);
 	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
-	bool DeleteIntervalWorkout(uint64_t workoutId);
+	bool DeleteIntervalWorkout(const std::string& workoutId);
 
-	bool CreateIntervalSegment(IntervalWorkoutSegment segment);
-	bool RetrieveIntervalSegments(uint64_t workoutId, std::vector<IntervalWorkoutSegment>& segments);
+	bool CreateIntervalSegment(const std::string& workoutId, IntervalWorkoutSegment segment);
+	bool RetrieveIntervalSegments(const std::string& workoutId, std::vector<IntervalWorkoutSegment>& segments);
 	bool DeleteIntervalSegment(uint64_t segmentId);
-	bool DeleteIntervalSegments(uint64_t workoutId);
+	bool DeleteIntervalSegmentsForWorkout(const std::string& workoutId);
 
 	bool CreatePacePlan(const std::string& name, const std::string& planId);
 	bool RetrievePacePlans(std::vector<PacePlan>& plans);
@@ -122,6 +121,7 @@ private:
 
 	bool DoesTableHaveColumn(const std::string& tableName, const std::string& columnName);
 	bool DoesTableExist(const std::string& tableName);
+	bool DropTable(const std::string& tableName);
 
 	bool CreateAccelerometerReading(const std::string& activityId, const SensorReading& reading);
 	bool CreateGpsReading(const std::string& activityId, const SensorReading& reading);

@@ -1242,42 +1242,14 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 
 bool MovingActivity::CheckPositionInterval()
 {
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
+	if ((m_intervalWorkout.workoutId.size() > 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return false;
 	}
 	
-	double meters = (double)0.0;
-	
-	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-	switch (segment.units)
-	{
-		case INTERVAL_UNIT_UNSPECIFIED:
-			break;
-		case INTERVAL_UNIT_SECONDS:
-			break;
-		case INTERVAL_UNIT_METERS:
-			meters = (double)segment.quantity;
-			break;
-		case INTERVAL_UNIT_KILOMETERS:
-			meters = (double)segment.quantity * (double)1000.0;
-			break;
-		case INTERVAL_UNIT_FEET:
-			meters = (double)segment.quantity / FEET_PER_METER;
-			break;
-		case INTERVAL_UNIT_YARDS:
-			meters = (double)segment.quantity * METERS_PER_YARD;
-			break;
-		case INTERVAL_UNIT_MILES:
-			meters = (double)segment.quantity * METERS_PER_MILE;
-			break;
-		case INTERVAL_UNIT_SETS:
-		case INTERVAL_UNIT_REPS:
-			break;
-	}
-	
-	if (DistanceTraveledInMeters() - m_intervalWorkoutState.lastDistanceMeters >= meters)
+	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);	
+	if (DistanceTraveledInMeters() - m_intervalWorkoutState.lastDistanceMeters >= segment.distance)
 	{
 		return true;
 	}

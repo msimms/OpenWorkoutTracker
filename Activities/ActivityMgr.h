@@ -77,21 +77,23 @@ extern "C" {
 	// Functions for managing the currently set interval workout.
 	bool SetCurrentIntervalWorkout(const char* const workoutName);
 	bool CheckCurrentIntervalWorkout(void);
-	bool GetCurrentIntervalWorkoutSegment(uint32_t* quantity, IntervalUnit* units);
+	bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment* segment);
 	bool IsIntervalWorkoutComplete(void);
 	void AdvanceCurrentIntervalWorkout(void);
 
 	// Functions for managing interval workouts.
-	bool CreateNewIntervalWorkout(const char* const workoutName);
-	bool DeleteIntervalWorkout(const char* const workoutName);
+	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
+	bool DeleteIntervalWorkout(const char* const workoutId);
 	void InitializeIntervalWorkoutList(void);
+	char* GetIntervalWorkoutId(size_t workoutIndex);
 	char* GetIntervalWorkoutName(size_t workoutIndex);
+	char* GetIntervalWorkoutSport(size_t workoutIndex);
 
 	// Functions for managing interval workout segments.
-	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutName);
-	bool CreateNewIntervalWorkoutSegment(const char* const workoutName, uint32_t quantity, IntervalUnit units);
-	bool DeleteIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex);
-	bool GetIntervalWorkoutSegment(const char* const workoutName, size_t segmentIndex, uint32_t* quantity, IntervalUnit* units);
+	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId);
+	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment);
+	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex);
+	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment);
 
 	// Functions for managing pace plans.
 	bool CreateNewPacePlan(const char* planName, const char* planId);
@@ -216,7 +218,7 @@ extern "C" {
 	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, const char* const activityId);
 
 	// Functions for importing ZWO files.
-	bool ImportZwoFile(const char* const fileName, const char* const workoutName);
+	bool ImportZwoFile(const char* const fileName, const char* const workoutId, const char* const workoutName);
 
 	// Functions for importing KML files.
 	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, KmlCoordinateCallback coordinateCallback, void* context);

@@ -13,12 +13,11 @@
 
 #include "IntervalWorkoutSegment.h"
 
-#define INTERVAL_WORKOUT_ID_NOT_SET 0
-
 typedef struct IntervalWorkout
 {
-	uint64_t     workoutId;
-	std::string  name;
+	std::string  workoutId; // Unique identifier
+	std::string  name;      // Displayable name
+	std::string  sport;     // Sport to which this workout applies
 	std::vector<IntervalWorkoutSegment> segments;
 } IntervalWorkout;
 

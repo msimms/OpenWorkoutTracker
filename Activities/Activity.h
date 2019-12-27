@@ -91,7 +91,7 @@ public:
 	SensorReading GetMostRecentSensorReading() const { return m_mostRecentSensorReading; };
 
 	virtual bool CheckIntervalWorkout();
-	virtual bool GetCurrentIntervalWorkoutSegment(uint32_t* pQuantity, IntervalUnit* pUnits);
+	virtual bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment);
 	virtual bool IsIntervalWorkoutComplete();
 	virtual void UserWantsToAdvanceIntervalState() { m_intervalWorkoutState.shouldAdvance = true; };
 
@@ -104,7 +104,6 @@ protected:
 	virtual bool ProcessPowerMeterReading(const SensorReading& reading);
 	virtual bool ProcessFootPodReading(const SensorReading& reading);
 	
-	virtual bool CheckUnspecifiedInterval();
 	virtual bool CheckTimeInterval();
 	virtual bool CheckPositionInterval() { return false; };
 	virtual bool CheckSetsInterval() { return false; };

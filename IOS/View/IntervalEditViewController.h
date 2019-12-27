@@ -6,19 +6,18 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <UIKit/UIKit.h>
-#import "IntervalWorkoutSegment.h"
 
 @interface IntervalEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* intervalTableView;
 
-	NSString* name;
+	NSString* workoutId;
 }
 
 - (IBAction)onAddInterval:(id)sender;
 
-- (void)setWorkoutName:(NSString*)newName;
+- (void)setWorkoutId:(NSString*)workoutId;
 
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* intervalTableView;

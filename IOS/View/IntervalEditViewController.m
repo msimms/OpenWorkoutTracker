@@ -8,6 +8,7 @@
 #import "IntervalEditViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "UnitConversionFactors.h"
 
 #define TITLE                                    NSLocalizedString(@"Interval Workout", nil)
 
@@ -28,17 +29,6 @@
 #define TIME_INTERVAL                            NSLocalizedString(@"Time Interval", nil)
 #define SET_INTERVAL                             NSLocalizedString(@"Set Interval", nil)
 #define REP_INTERVAL                             NSLocalizedString(@"Rep Interval", nil)
-
-#define PROMPT_FOR_DISTANCE(units) \
-	UIAlertController* alertController3 = [UIAlertController alertControllerWithTitle:ALERT_TITLE_DISTANCE_INTERVAL message:ALERT_MSG_DISTANCE_INTERVAL preferredStyle:UIAlertControllerStyleAlert]; \
-	[alertController3 addTextFieldWithConfigurationHandler:^(UITextField* textField) { textField.keyboardType = UIKeyboardTypeNumberPad; }]; \
-	[alertController3 addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) { \
-		if (CreateNewIntervalWorkoutSegment([self->name UTF8String], [[alertController3.textFields.firstObject text] intValue], INTERVAL_UNIT_METERS)) \
-		{ \
-			[self reload]; \
-		} \
-	}]]; \
-	[self presentViewController:alertController3 animated:YES completion:nil];
 
 @interface IntervalEditViewController ()
 
@@ -94,39 +84,76 @@
 {
 }
 
-#pragma mark button handlers
+#pragma mark helper methods
 
-- (IBAction)onAddInterval:(id)sender
+- (void)promptForDistance:(IntervalUnit)unit withSegment:(IntervalWorkoutSegment)segment
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																			 message:ACTION_SHEET_TITLE_ADD_INTERVAL
-																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	[alertController addAction:[UIAlertAction actionWithTitle:UNSPECIFIED_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
-	{
-		if (CreateNewIntervalWorkoutSegment([self->name UTF8String], 0, INTERVAL_UNIT_UNSPECIFIED))
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_DISTANCE_INTERVAL message:ALERT_MSG_DISTANCE_INTERVAL preferredStyle:UIAlertControllerStyleAlert];
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) { textField.keyboardType = UIKeyboardTypeNumberPad; }];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		IntervalWorkoutSegment segment2 = segment;
+		uint32_t valueFromUser = [[alertController.textFields.firstObject text] intValue];
+
+		switch (unit)
+		{
+		case INTERVAL_UNIT_SECONDS:
+			segment2.duration = valueFromUser;
+			segment2.units = INTERVAL_UNIT_SECONDS;
+			break;
+		case INTERVAL_UNIT_METERS:
+		case INTERVAL_UNIT_KILOMETERS:
+		case INTERVAL_UNIT_FEET:
+		case INTERVAL_UNIT_YARDS:
+		case INTERVAL_UNIT_MILES:
+			segment2.distance = valueFromUser;
+			segment2.units = unit;
+			break;
+		}
+
+		if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment2))
 		{
 			[self reload];
 		}
 	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onAddInterval:(id)sender
+{
+	__block IntervalWorkoutSegment segment;
+	segment.segmentId = 0;  // Database identifier for this segment
+	segment.sets = 0;       // Number of sets
+	segment.reps = 0;       // Number of reps
+	segment.duration = 0;   // Duration, if applicable, in seconds
+	segment.distance = 0.0; // Distance, if applicable, in meters
+	segment.pace = 0.0;     // Pace, if applicable, in meters/second
+	segment.power = 0.0;    // Power, if applicable, in percentage of FTP
+
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_ADD_INTERVAL
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
 	[alertController addAction:[UIAlertAction actionWithTitle:DISTANCE_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 	{
 		UIAlertController* alertController2 = [UIAlertController alertControllerWithTitle:nil
 																				  message:ACTION_SHEET_TITLE_SELECT_DISTANCE_UNITS
 																		   preferredStyle:UIAlertControllerStyleActionSheet];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_METERS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			PROMPT_FOR_DISTANCE(INTERVAL_UNIT_METERS);
+			[self promptForDistance:INTERVAL_UNIT_METERS withSegment:segment];
 		}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_KILOMETERS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			PROMPT_FOR_DISTANCE(INTERVAL_UNIT_KILOMETERS);
+			[self promptForDistance:INTERVAL_UNIT_KILOMETERS withSegment:segment];
 		}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_FEET style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			PROMPT_FOR_DISTANCE(INTERVAL_UNIT_FEET);
+			[self promptForDistance:INTERVAL_UNIT_FEET withSegment:segment];
 		}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_YARDS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			PROMPT_FOR_DISTANCE(INTERVAL_UNIT_YARDS);
+			[self promptForDistance:INTERVAL_UNIT_YARDS withSegment:segment];
 		}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_MILES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			PROMPT_FOR_DISTANCE(INTERVAL_UNIT_MILES);
+			[self promptForDistance:INTERVAL_UNIT_MILES withSegment:segment];
 		}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 		[self presentViewController:alertController2 animated:YES completion:nil];
@@ -140,7 +167,8 @@
 		[alertController2 addTextFieldWithConfigurationHandler:^(UITextField* textField) { textField.keyboardType = UIKeyboardTypeNumberPad; }];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 		{
-			if (CreateNewIntervalWorkoutSegment([self->name UTF8String], [[alertController2.textFields.firstObject text] intValue], INTERVAL_UNIT_SECONDS))
+			segment.duration = [[alertController2.textFields.firstObject text] intValue];
+			if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 			{
 				[self reload];			
 			}
@@ -156,7 +184,8 @@
 		[alertController2 addTextFieldWithConfigurationHandler:^(UITextField* textField) { textField.keyboardType = UIKeyboardTypeNumberPad; }];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 		{
-			if (CreateNewIntervalWorkoutSegment([self->name UTF8String], [[alertController2.textFields.firstObject text] intValue], INTERVAL_UNIT_SETS))
+			segment.sets = [[alertController2.textFields.firstObject text] intValue];
+			if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 			{
 				[self reload];			
 			}
@@ -164,7 +193,7 @@
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:REP_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
-	{		
+	{
 		UIAlertController* alertController2 = [UIAlertController alertControllerWithTitle:ALERT_TITLE_REP_INTERVAL
 																				  message:ALERT_MSG_REP_INTERVAL
 																		   preferredStyle:UIAlertControllerStyleAlert];
@@ -172,7 +201,8 @@
 		[alertController2 addTextFieldWithConfigurationHandler:^(UITextField* textField) { textField.keyboardType = UIKeyboardTypeNumberPad; }];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 		{
-			if (CreateNewIntervalWorkoutSegment([self->name UTF8String], [[alertController2.textFields.firstObject text] intValue], INTERVAL_UNIT_REPS))
+			segment.reps = [[alertController2.textFields.firstObject text] intValue];
+			if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 			{
 				[self reload];
 			}
@@ -185,9 +215,9 @@
 
 #pragma mark accessor methods
 
-- (void)setWorkoutName:(NSString*)newName
+- (void)setWorkoutId:(NSString*)workoutId
 {
-	self->name = newName;
+	self->workoutId = workoutId;
 }
 
 #pragma mark random methods
@@ -215,7 +245,7 @@
 	switch (section)
 	{
 		case 0:
-			return GetNumSegmentsForIntervalWorkout([self->name UTF8String]);
+			return GetNumSegmentsForIntervalWorkout([self->workoutId UTF8String]);
 	}
 	return 0;
 }
@@ -237,50 +267,30 @@
 	{
 		case 0:
 			{
-				uint32_t quantity;
-				IntervalUnit units;
+				IntervalWorkoutSegment segment;
 
-				if (GetIntervalWorkoutSegment([self->name UTF8String], row, &quantity, &units))
+				if (GetIntervalWorkoutSegment([self->workoutId UTF8String], row, &segment))
 				{
-					NSString* unitsStr;
-
-					switch (units)
+					switch (segment.units)
 					{
-						case INTERVAL_UNIT_UNSPECIFIED:
-							break;
-						case INTERVAL_UNIT_SECONDS:
-							unitsStr = STR_SECONDS;
-							break;
-						case INTERVAL_UNIT_METERS:
-							unitsStr = STR_METERS;
-							break;
-						case INTERVAL_UNIT_KILOMETERS:
-							unitsStr = STR_KILOMETERS;
-							break;
-						case INTERVAL_UNIT_FEET:
-							unitsStr = STR_FEET;
-							break;
-						case INTERVAL_UNIT_YARDS:
-							unitsStr = STR_YARDS;
-							break;
-						case INTERVAL_UNIT_MILES:
-							unitsStr = STR_MILES;
-							break;
-						case INTERVAL_UNIT_SETS:
-							unitsStr = STR_SETS;
-							break;
-						case INTERVAL_UNIT_REPS:
-							unitsStr = STR_REPS;
-							break;
-					}
-
-					if (units != INTERVAL_UNIT_UNSPECIFIED)
-					{
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %u %@", row + 1, quantity, unitsStr];
-					}
-					else
-					{
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %@", row + 1, UNSPECIFIED_INTERVAL];
+					case INTERVAL_UNIT_SECONDS:
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %u second(s)", row + 1, segment.duration];
+						break;
+					case INTERVAL_UNIT_METERS:
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f meter(s)", row + 1, segment.distance];
+						break;
+					case INTERVAL_UNIT_KILOMETERS:
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f kilometer(s)", row + 1, segment.distance];
+						break;
+					case INTERVAL_UNIT_FEET:
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f feet", row + 1, segment.distance];
+						break;
+					case INTERVAL_UNIT_YARDS:
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f yard(s)", row + 1, segment.distance];
+						break;
+					case INTERVAL_UNIT_MILES:
+						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f mile(s)", row + 1, segment.distance];
+						break;
 					}
 				}
 			}
@@ -320,7 +330,7 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
-		if (DeleteIntervalWorkoutSegment([name UTF8String], [indexPath row]))
+		if (DeleteIntervalWorkoutSegment([self->workoutId UTF8String], [indexPath row]))
 		{
 			InitializeIntervalWorkoutList();
 			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];

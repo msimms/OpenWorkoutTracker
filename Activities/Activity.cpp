@@ -29,7 +29,6 @@ Activity::Activity()
 	m_firstIteration = true;
 	m_timeWhenLastPaused = 0;
 	m_secsPreviouslySpentPaused = 0;
-	m_intervalWorkout.workoutId = INTERVAL_WORKOUT_ID_NOT_SET;
 	m_intervalWorkoutState.nextSegmentIndex = 0;
 	m_intervalWorkoutState.lastTimeSecs = 0;
 	m_intervalWorkoutState.lastDistanceMeters = (double)0.0;
@@ -410,7 +409,7 @@ void Activity::SetActivityAttribute(const std::string& attributeName, ActivityAt
 
 bool Activity::CheckIntervalWorkout()
 {
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
+	if ((m_intervalWorkout.workoutId.size() > 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return false;
@@ -426,30 +425,10 @@ bool Activity::CheckIntervalWorkout()
 	
 	try
 	{
-		const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-
-		switch (segment.units)
-		{
-			case INTERVAL_UNIT_UNSPECIFIED:
-				shouldAdvance = CheckUnspecifiedInterval();
-				break;
-			case INTERVAL_UNIT_SECONDS:
-				shouldAdvance = CheckTimeInterval();
-				break;
-			case INTERVAL_UNIT_METERS:
-			case INTERVAL_UNIT_KILOMETERS:
-			case INTERVAL_UNIT_FEET:
-			case INTERVAL_UNIT_YARDS:
-			case INTERVAL_UNIT_MILES:
-				shouldAdvance = CheckPositionInterval();
-				break;
-			case INTERVAL_UNIT_SETS:
-				shouldAdvance = CheckSetsInterval();
-				break;
-			case INTERVAL_UNIT_REPS:
-				shouldAdvance = CheckRepsInterval();
-				break;
-		}
+		shouldAdvance  = CheckTimeInterval();
+		shouldAdvance |= CheckPositionInterval();
+		shouldAdvance |= CheckSetsInterval();
+		shouldAdvance |= CheckRepsInterval();
 
 		if (shouldAdvance)
 		{
@@ -463,9 +442,9 @@ bool Activity::CheckIntervalWorkout()
 	return shouldAdvance;
 }
 
-bool Activity::GetCurrentIntervalWorkoutSegment(uint32_t* pQuantity, IntervalUnit* pUnits)
+bool Activity::GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment)
 {
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
+	if ((m_intervalWorkout.workoutId.size() > 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return false;
@@ -473,9 +452,8 @@ bool Activity::GetCurrentIntervalWorkoutSegment(uint32_t* pQuantity, IntervalUni
 
 	try
 	{
-		const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-		(*pQuantity) = segment.quantity;
-		(*pUnits) = segment.units;
+		const IntervalWorkoutSegment& tempSegment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
+		segment = tempSegment;
 	}
 	catch (...)
 	{
@@ -486,7 +464,7 @@ bool Activity::GetCurrentIntervalWorkoutSegment(uint32_t* pQuantity, IntervalUni
 
 bool Activity::IsIntervalWorkoutComplete()
 {
-	if ((m_intervalWorkout.workoutId != INTERVAL_WORKOUT_ID_NOT_SET) &&
+	if ((m_intervalWorkout.workoutId.size() > 0) &&
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return true;
@@ -494,34 +472,9 @@ bool Activity::IsIntervalWorkoutComplete()
 	return false;
 }
 
-bool Activity::CheckUnspecifiedInterval()
-{
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
-	{
-		return false;
-	}
-
-	try
-	{
-		const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-		if (segment.units == INTERVAL_UNIT_UNSPECIFIED)
-		{
-			if (m_intervalWorkoutState.shouldAdvance)
-			{
-				return true;
-			}
-		}
-	}
-	catch (...)
-	{
-	}
-	return false;
-}
-
 bool Activity::CheckTimeInterval()
 {
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
+	if ((m_intervalWorkout.workoutId.size() > 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return false;
@@ -530,10 +483,10 @@ bool Activity::CheckTimeInterval()
 	try
 	{
 		const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-		if (segment.units == INTERVAL_UNIT_SECONDS)
+		if (segment.duration > 0)
 		{
 			uint64_t currentTime = ElapsedTimeInSeconds();
-			if (currentTime - m_intervalWorkoutState.lastTimeSecs >= segment.quantity)
+			if (currentTime - m_intervalWorkoutState.lastTimeSecs >= segment.duration)
 			{
 				return true;
 			}

@@ -213,16 +213,16 @@ void LiftingActivity::BuildSummaryAttributeList(std::vector<std::string>& attrib
 
 bool LiftingActivity::CheckSetsInterval()
 {
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
+	if ((m_intervalWorkout.workoutId.size() > 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return false;
 	}
 
 	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-	if (segment.units == INTERVAL_UNIT_SETS)
+	if (segment.sets > 0)
 	{
-		if (m_sets >= segment.quantity)
+		if (m_sets >= segment.sets)
 		{
 			return true;
 		}
@@ -232,17 +232,17 @@ bool LiftingActivity::CheckSetsInterval()
 
 bool LiftingActivity::CheckRepsInterval()
 {
-	if ((m_intervalWorkout.workoutId == INTERVAL_WORKOUT_ID_NOT_SET) ||
+	if ((m_intervalWorkout.workoutId.size() > 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
 	{
 		return false;
 	}
 
 	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-	if (segment.units == INTERVAL_UNIT_REPS)
+	if (segment.reps > 0)
 	{
 		uint16_t total = Total();
-		if (total >= segment.quantity)
+		if (total >= segment.reps)
 		{
 			return true;
 		}

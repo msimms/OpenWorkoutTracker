@@ -819,14 +819,13 @@ void startSensorCallback(SensorType type, void* context)
 		}
 		else
 		{
-			uint32_t quantity;
-			IntervalUnit units;
+			IntervalWorkoutSegment segment;
 
-			if (GetCurrentIntervalWorkoutSegment(&quantity, &units))
+			if (GetCurrentIntervalWorkoutSegment(&segment))
 			{
+				NSValue* segmentValue = [NSValue value:&segmentValue withObjCType:@encode(IntervalWorkoutSegment)]; 
 				NSDictionary* intervalData = [[NSDictionary alloc] initWithObjectsAndKeys:
-											  [NSNumber numberWithLong:quantity], @KEY_NAME_INTERVAL_QUANTITY,
-											  [NSNumber numberWithLong:units], @KEY_NAME_INTERVAL_UNITS,
+											  segmentValue, @KEY_NAME_INTERVAL_SEGMENT,
 											  nil];
 				if (intervalData)
 				{

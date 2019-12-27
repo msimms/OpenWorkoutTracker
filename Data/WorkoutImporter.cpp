@@ -16,7 +16,7 @@ WorkoutImporter::~WorkoutImporter()
 {
 }
 
-bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::string& workoutName, Database* pDatabase)
+bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::string& workoutId, const std::string& workoutName, Database* pDatabase)
 {
 	if (!pDatabase)
 	{
@@ -28,10 +28,8 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 	if (reader.ParseFile(fileName))
 	{
 		std::string name = reader.GetName();
-		uint64_t workoutId = 0;
 
-		bool result = pDatabase->CreateIntervalWorkout(name);
-		result &= pDatabase->RetrieveIntervalWorkoutId(name, workoutId);
+		bool result = pDatabase->CreateIntervalWorkout(workoutId, name, "");
 		
 		FileLib::ZwoWarmup warmup;
 		FileLib::ZwoCooldown cooldown;
@@ -44,28 +42,26 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 
 			IntervalWorkoutSegment dbSegment;
 			dbSegment.segmentId = segmentId++;
-			dbSegment.workoutId = workoutId;
-			dbSegment.units = INTERVAL_UNIT_SECONDS;
 			
 			const FileLib::ZwoWarmup* warmupSegment = dynamic_cast<const FileLib::ZwoWarmup*>(fileSegment);
 			if (warmupSegment != NULL)
 			{
-				dbSegment.quantity = warmupSegment->duration;
+				dbSegment.duration = warmupSegment->duration;
 			}
 
 			const FileLib::ZwoInterval* intervalSegment = dynamic_cast<const FileLib::ZwoInterval*>(fileSegment);
 			if (intervalSegment != NULL)
 			{
-				dbSegment.quantity = intervalSegment->onDuration;
+				dbSegment.duration = intervalSegment->onDuration;
 			}
 
 			const FileLib::ZwoCooldown* coolDown = dynamic_cast<const FileLib::ZwoCooldown*>(fileSegment);
 			if (coolDown != NULL)
 			{
-				dbSegment.quantity = coolDown->duration;
+				dbSegment.duration = coolDown->duration;
 			}
 			
-			result &= pDatabase->CreateIntervalSegment(dbSegment);
+			result &= pDatabase->CreateIntervalSegment(workoutId, dbSegment);
 		}
 
 		return result;
