@@ -165,6 +165,7 @@
 		276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFB1AA16A41008F55AF /* iCloud.m */; };
 		276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
 		276D5B021AA16A7D008F55AF /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
+		276E3BA223B83ADA00EAC341 /* PacePlansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 276E3BA123B83ADA00EAC341 /* PacePlansViewController.m */; };
 		2773EB401A7435C500B088B3 /* WiFiSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2773EB3F1A7435C500B088B3 /* WiFiSensor.m */; };
 		27754B1C233DA154003F2C53 /* WatchDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */; };
 		27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B16233DA0B4003F2C53 /* WatchSettingsViewController.m */; };
@@ -632,6 +633,8 @@
 		276D5B001AA16A7D008F55AF /* Strava.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Strava.h; path = Cloud/Strava/Strava.h; sourceTree = SOURCE_ROOT; };
 		276D5B011AA16A7D008F55AF /* Strava.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Strava.m; path = Cloud/Strava/Strava.m; sourceTree = SOURCE_ROOT; };
 		276E3B8F23B0FC3B00EAC341 /* PacePlan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PacePlan.h; path = Activities/PacePlan.h; sourceTree = SOURCE_ROOT; };
+		276E3BA023B83ADA00EAC341 /* PacePlansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacePlansViewController.h; path = IOS/View/PacePlansViewController.h; sourceTree = SOURCE_ROOT; };
+		276E3BA123B83ADA00EAC341 /* PacePlansViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PacePlansViewController.m; path = IOS/View/PacePlansViewController.m; sourceTree = SOURCE_ROOT; };
 		2773EB381A74102F00B088B3 /* Discovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Discovery.h; path = IOS/Sensors/Discovery.h; sourceTree = SOURCE_ROOT; };
 		2773EB3C1A74349700B088B3 /* WiFiSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiSensor.h; path = IOS/Sensors/WiFiSensor.h; sourceTree = SOURCE_ROOT; };
 		2773EB3F1A7435C500B088B3 /* WiFiSensor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiSensor.m; path = IOS/Sensors/WiFiSensor.m; sourceTree = SOURCE_ROOT; };
@@ -1104,6 +1107,8 @@
 				27B7CD6B19BFD91C000383E3 /* MappedActivityViewController.m */,
 				27B7CD6C19BFD91C000383E3 /* MapViewController.h */,
 				27B7CD6D19BFD91C000383E3 /* MapViewController.m */,
+				276E3BA023B83ADA00EAC341 /* PacePlansViewController.h */,
+				276E3BA123B83ADA00EAC341 /* PacePlansViewController.m */,
 				27B7CD7219BFD91C000383E3 /* Pin.h */,
 				27B7CD7319BFD91C000383E3 /* Pin.m */,
 				27B7CD7419BFD91C000383E3 /* ProfileViewController.h */,
@@ -2086,6 +2091,7 @@
 				27B7CD8C19BFD91C000383E3 /* CrumbPath.m in Sources */,
 				27B7CDA819BFD91C000383E3 /* SplitTimesViewController.m in Sources */,
 				2797F18E19BFE48E008F8672 /* GpxFileWriter.cpp in Sources */,
+				276E3BA223B83ADA00EAC341 /* PacePlansViewController.m in Sources */,
 				2797F18F19BFE48E008F8672 /* KmlFileReader.cpp in Sources */,
 				27B7CDF419BFD99B000383E3 /* LeBluetoothSensor.m in Sources */,
 				27B7CDC819BFD953000383E3 /* HeartRateLine.m in Sources */,

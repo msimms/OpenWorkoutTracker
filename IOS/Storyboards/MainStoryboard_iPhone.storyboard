@@ -156,11 +156,12 @@
                         <segue destination="c7D-r7-Xlg" kind="push" identifier="SegueToIntervalsView" id="PUP-vK-iGk"/>
                         <segue destination="sJ4-y9-qRG" kind="push" identifier="SegueToSettingsView" id="Qdm-QW-9lB"/>
                         <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="E2b-lU-9dF"/>
+                        <segue destination="A9N-FN-6yC" kind="push" identifier="SegueToPacePlansView" id="frI-i4-eiK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="920.625" y="353.87323943661971"/>
+            <point key="canvasLocation" x="919" y="354"/>
         </scene>
         <!--Profile-->
         <scene sceneID="DLc-pZ-sa5">
@@ -2408,6 +2409,46 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             </objects>
             <point key="canvasLocation" x="1989.5999999999999" y="1557.6354679802957"/>
         </scene>
+        <!--Pace Plans View Controller-->
+        <scene sceneID="zLl-Au-iUN">
+            <objects>
+                <viewController id="A9N-FN-6yC" customClass="PacePlansViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="heL-qQ-kTG">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fUO-t0-pEF">
+                                <rect key="frame" x="0.0" y="88" width="375" height="636"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IzN-VU-DL2">
+                                <rect key="frame" x="0.0" y="724" width="375" height="54"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="zly-Gx-C6s"/>
+                                    <barButtonItem systemItem="add" id="Cl0-L9-uVv"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="top" secondItem="BmK-jm-Hlr" secondAttribute="top" id="Dkh-S4-X4q"/>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="trailing" secondItem="IzN-VU-DL2" secondAttribute="trailing" id="GZB-xi-aMP"/>
+                            <constraint firstItem="IzN-VU-DL2" firstAttribute="top" secondItem="fUO-t0-pEF" secondAttribute="bottom" id="Huh-NO-nke"/>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="trailing" secondItem="BmK-jm-Hlr" secondAttribute="trailing" id="KOy-Wi-QZc"/>
+                            <constraint firstItem="BmK-jm-Hlr" firstAttribute="bottom" secondItem="IzN-VU-DL2" secondAttribute="bottom" id="QFB-Bb-r0G"/>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="centerY" secondItem="heL-qQ-kTG" secondAttribute="centerY" id="XSt-hh-ROT"/>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="leading" secondItem="BmK-jm-Hlr" secondAttribute="leading" id="qgo-3j-UM8"/>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="leading" secondItem="IzN-VU-DL2" secondAttribute="leading" id="x0C-2U-0Sx"/>
+                            <constraint firstItem="fUO-t0-pEF" firstAttribute="centerX" secondItem="heL-qQ-kTG" secondAttribute="centerX" id="zdm-Ng-gJG"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="BmK-jm-Hlr"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="TBC-bU-eXL"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4ae-iv-OnM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="917.60000000000002" y="-565.27093596059115"/>
+        </scene>
         <!--Sensors-->
         <scene sceneID="c43-cl-wSh">
             <objects>
@@ -2571,10 +2612,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="SimpleScreen.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="rmC-zq-awJ"/>
-        <segue reference="Y2u-2b-CLK"/>
-        <segue reference="YPO-0d-PeY"/>
-        <segue reference="mpc-lI-yFA"/>
+        <segue reference="2hX-Kx-fHg"/>
+        <segue reference="E2b-lU-9dF"/>
+        <segue reference="zxl-cL-SNo"/>
+        <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

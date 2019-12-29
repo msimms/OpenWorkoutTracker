@@ -24,6 +24,7 @@
 #define BUTTON_TITLE_EDIT_SETTINGS   NSLocalizedString(@"Settings", nil)
 #define BUTTON_TITLE_EDIT_SENSORS    NSLocalizedString(@"Sensors", nil)
 #define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Intervals", nil)
+#define BUTTON_TITLE_EDIT_PACE_PLANS NSLocalizedString(@"Pace Plans", nil)
 
 #define MSG_RESET                    NSLocalizedString(@"This will delete all of your data. Do you wish to continue? This cannot be undone.", nil)
 #define MSG_SELECT_NEW               NSLocalizedString(@"Select the workout to perform.", nil)
@@ -179,6 +180,9 @@
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_INTERVALS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_INTERVALS_VIEW sender:self];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_PACE_PLANS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self performSegueWithIdentifier:@SEQUE_TO_PACE_PLANS_VIEW sender:self];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
