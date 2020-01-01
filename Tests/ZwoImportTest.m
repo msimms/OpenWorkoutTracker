@@ -58,7 +58,7 @@
 				[fileHandle writeData:data];
 				[fileHandle closeFile];
 
-				XCTAssert(ImportZwoFile([[NSUUID UUID] UUIDString], [destFileName UTF8String], "Test Workout"));
+				XCTAssert(ImportZwoFile([[[NSUUID UUID] UUIDString] UTF8String], [destFileName UTF8String], "Test Workout"));
 			}
 
 			dispatch_group_leave(queryGroup);
