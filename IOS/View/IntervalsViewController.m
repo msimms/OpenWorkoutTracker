@@ -231,8 +231,8 @@
 
 		if (DeleteIntervalWorkout([cell.textLabel.text UTF8String]))
 		{
-			[self updateWorkoutNames];
-			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+			[self->workoutNames removeObjectAtIndex:indexPath.row];
+			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
 	}
 }

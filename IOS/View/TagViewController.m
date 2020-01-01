@@ -187,7 +187,7 @@
 		if ([appDelegate deleteTag:tag forActivityId:self->activityId])
 		{
 			[self->tags removeObjectAtIndex:indexPath.row];
-			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 			[appDelegate serverDeleteTagAsync:tag forActivity:self->activityId];
 		}
 	}

@@ -30,6 +30,7 @@
 #define SEGUE_TO_NEW_ACTIVITY            "SegueToNewActivityView"
 #define SEGUE_TO_NEW_MAP_OVERLAY         "SegueToNewMapOverlayViewController"
 #define SEQUE_TO_PACE_PLANS_VIEW         "SegueToPacePlansView"
+#define SEGUE_TO_PACE_PLAN_EDIT_VIEW     "SegueToPlanPlanEditView"
 #define SEQUE_TO_PROFILE_VIEW            "SegueToProfileView"
 #define SEQUE_TO_SETTINGS_VIEW           "SegueToSettingsView"
 #define SEQUE_TO_SENSORS_VIEW            "SegueToSensorsView"

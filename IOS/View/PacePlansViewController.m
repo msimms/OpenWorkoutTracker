@@ -45,7 +45,7 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-	[self updateWorkoutNames];
+	[self updatePacePlanNames];
 	[self.planTableView reloadData];
 }
 
@@ -72,35 +72,38 @@
 {
 	NSString* segueId = [segue identifier];
 
-	if ([segueId isEqualToString:@SEGUE_TO_INTERVAL_EDIT_VIEW])
+	if ([segueId isEqualToString:@SEGUE_TO_PACE_PLAN_EDIT_VIEW])
 	{
 	}
 }
 
 #pragma mark miscellaneous methods
 
-- (void)updateWorkoutNames
+- (void)updatePacePlanNames
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->planNames = [appDelegate getIntervalWorkoutNames];
+	self->planNames = [appDelegate getPacePlanNames];
 }
 
 #pragma mark button handlers
 
-- (IBAction)onAddInterval:(id)sender
+- (IBAction)onAddPacePlan:(id)sender
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ALERT_MSG_NEW_PACE_PLAN
-																	  preferredStyle:UIAlertControllerStyleActionSheet];
+																	  preferredStyle:UIAlertControllerStyleAlert];
 
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 	}];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		NSString* pacePlanId = [[NSUUID UUID] UUIDString];
 		NSString* pacePlanName = [alertController.textFields.firstObject text];
+		NSString* pacePlanId = [[NSUUID UUID] UUIDString];
 
+		if (CreateNewPacePlan([pacePlanName UTF8String], [pacePlanId UTF8String]))
+		{
+		}
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
@@ -158,14 +161,14 @@
 	NSInteger section = [indexPath section];	
 	if (section == 0)
 	{
-		char* workoutId = GetIntervalWorkoutId([indexPath row]);
-		if (workoutId)
+		char* pacePlanId = GetPacePlanId([indexPath row]);
+		if (pacePlanId)
 		{
-			self->selectedPlanId = [[NSString alloc] initWithUTF8String:workoutId];
-			free((void*)workoutId);
+			self->selectedPlanId = [[NSString alloc] initWithUTF8String:pacePlanId];
+			free((void*)pacePlanId);
 		}
 		
-		[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
+		[self performSegueWithIdentifier:@SEGUE_TO_PACE_PLAN_EDIT_VIEW sender:self];
 	}
 }
 
@@ -189,10 +192,10 @@
 	{
 		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
 
-		if (DeleteIntervalWorkout([cell.textLabel.text UTF8String]))
+		if (DeletePacePlan([cell.textLabel.text UTF8String]))
 		{
-			[self updateWorkoutNames];
-			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+			[self->planNames removeObjectAtIndex:indexPath.row];
+			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
 	}
 }

@@ -13,7 +13,7 @@
 	NSMutableArray* planNames;
 }
 
-- (IBAction)onAddInterval:(id)sender;
+- (IBAction)onAddPacePlan:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* planTableView;

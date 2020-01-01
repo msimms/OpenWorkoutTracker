@@ -533,11 +533,11 @@ bool Database::CreatePacePlan(const std::string& name, const std::string& planId
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?,0.0,0.0,\"\")", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(statement, 2, planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, name.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}	
@@ -555,7 +555,7 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 		{
 			PacePlan plan;
 
-			plan.id.append((const char*)sqlite3_column_text(statement, 0));
+			plan.planId.append((const char*)sqlite3_column_text(statement, 0));
 			plan.name.append((const char*)sqlite3_column_text(statement, 1));
 			plan.targetPace = sqlite3_column_double(statement, 2);
 			plan.targetDistance = sqlite3_column_double(statement, 3);

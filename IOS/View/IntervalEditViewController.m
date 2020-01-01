@@ -333,7 +333,7 @@
 		if (DeleteIntervalWorkoutSegment([self->workoutId UTF8String], [indexPath row]))
 		{
 			InitializeIntervalWorkoutList();
-			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
 	}
 }

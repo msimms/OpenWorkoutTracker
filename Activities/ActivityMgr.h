@@ -96,6 +96,9 @@ extern "C" {
 	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment);
 
 	// Functions for managing pace plans.
+	void InitializePacePlanList(void);
+	char* GetPacePlanId(size_t planIndex);
+	char* GetPacePlanName(size_t planIndex);
 	bool CreateNewPacePlan(const char* planName, const char* planId);
 	bool DeletePacePlan(const char* planId);
 

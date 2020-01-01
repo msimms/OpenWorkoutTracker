@@ -42,6 +42,7 @@ extern "C" {
 	std::map<std::string, size_t> g_activityIdMap; // maps activity IDs to activity indexes
 	std::vector<Bike>             g_bikes;
 	std::vector<IntervalWorkout>  g_intervalWorkouts;
+	std::vector<PacePlan>         g_pacePlans;
 
 	//
 	// Functions for managing the database.
@@ -694,6 +695,34 @@ extern "C" {
 	//
 	// Functions for managing pace plans.
 	//
+
+	void InitializePacePlanList(void)
+	{
+		g_pacePlans.clear();
+
+		if (g_pDatabase)
+		{
+			g_pDatabase->RetrievePacePlans(g_pacePlans);
+		}
+	}
+
+	char* GetPacePlanId(size_t planIndex)
+	{
+		if (planIndex < g_pacePlans.size())
+		{
+			return strdup(g_pacePlans.at(planIndex).planId.c_str());
+		}
+		return NULL;		
+	}
+
+	char* GetPacePlanName(size_t planIndex)
+	{
+		if (planIndex < g_pacePlans.size())
+		{
+			return strdup(g_pacePlans.at(planIndex).name.c_str());
+		}
+		return NULL;		
+	}
 
 	bool CreateNewPacePlan(const char* planName, const char* planId)
 	{

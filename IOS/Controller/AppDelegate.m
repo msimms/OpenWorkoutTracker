@@ -1637,6 +1637,24 @@ void tagCallback(const char* name, void* context)
 	return names;
 }
 
+- (NSMutableArray*)getPacePlanNames
+{
+	NSMutableArray* names = [[NSMutableArray alloc] init];
+	if (names)
+	{
+		char* pacePlanName = NULL;
+		size_t index = 0;
+
+		InitializePacePlanList();
+		while ((pacePlanName = GetPacePlanName(index++)) != NULL)
+		{
+			[names addObject:[[NSString alloc] initWithUTF8String:pacePlanName]];
+			free((void*)pacePlanName);
+		}
+	}
+	return names;
+}
+
 void activityTypeCallback(const char* type, void* context)
 {
 	NSMutableArray* types = (__bridge NSMutableArray*)context;

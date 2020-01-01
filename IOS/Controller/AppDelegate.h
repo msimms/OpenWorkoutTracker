@@ -194,6 +194,7 @@
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId;
 - (NSMutableArray*)getBikeNames;
 - (NSMutableArray*)getIntervalWorkoutNames;
+- (NSMutableArray*)getPacePlanNames;
 - (NSMutableArray*)getEnabledFileImportCloudServices;
 - (NSMutableArray*)getEnabledFileExportCloudServices;
 - (NSMutableArray*)getEnabledFileExportServices;

@@ -2409,6 +2409,22 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             </objects>
             <point key="canvasLocation" x="1989.5999999999999" y="1557.6354679802957"/>
         </scene>
+        <!--Pace Plan Edit View Controller-->
+        <scene sceneID="Kgi-6W-ofn">
+            <objects>
+                <viewController id="EBx-yG-7i6" customClass="PacePlanEditViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qNb-dT-Lkr">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="PbG-OE-X5E"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="2g5-8q-rgW"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xPy-4Q-FQ8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-47" y="-986"/>
+        </scene>
         <!--Pace Plans View Controller-->
         <scene sceneID="zLl-Au-iUN">
             <objects>
@@ -2420,12 +2436,20 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fUO-t0-pEF">
                                 <rect key="frame" x="0.0" y="88" width="375" height="636"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="A9N-FN-6yC" id="6SK-22-c6y"/>
+                                    <outlet property="delegate" destination="A9N-FN-6yC" id="XV9-GG-Gqr"/>
+                                </connections>
                             </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IzN-VU-DL2">
                                 <rect key="frame" x="0.0" y="724" width="375" height="54"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="zly-Gx-C6s"/>
-                                    <barButtonItem systemItem="add" id="Cl0-L9-uVv"/>
+                                    <barButtonItem systemItem="add" id="Cl0-L9-uVv">
+                                        <connections>
+                                            <action selector="onAddPacePlan:" destination="A9N-FN-6yC" id="nlK-JU-hWZ"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -2444,6 +2468,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <viewLayoutGuide key="safeArea" id="BmK-jm-Hlr"/>
                     </view>
                     <navigationItem key="navigationItem" id="TBC-bU-eXL"/>
+                    <connections>
+                        <outlet property="planTableView" destination="fUO-t0-pEF" id="Vwd-O5-KFk"/>
+                        <segue destination="EBx-yG-7i6" kind="push" identifier="SegueToPlanPlanEditView" id="uEg-Py-Xjv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4ae-iv-OnM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2614,7 +2642,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     <inferredMetricsTieBreakers>
         <segue reference="2hX-Kx-fHg"/>
         <segue reference="E2b-lU-9dF"/>
-        <segue reference="zxl-cL-SNo"/>
+        <segue reference="Zfp-Rg-OxX"/>
         <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
