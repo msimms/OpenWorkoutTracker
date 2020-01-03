@@ -17,15 +17,16 @@ namespace FileLib
 	class ZwoWorkoutSegment
 	{
 	public:
-		ZwoWorkoutSegment() { Clear(); };
+		ZwoWorkoutSegment() { };
 		virtual ~ZwoWorkoutSegment() {};
-		virtual void Clear() {};
+		virtual void Clear() = 0;
 	};
 
 	class ZwoWarmup : public ZwoWorkoutSegment
 	{
 	public:
 		ZwoWarmup() { Clear(); };
+		ZwoWarmup(const ZwoWarmup& rhs) { duration = rhs.duration; powerLow = rhs.powerLow; powerHigh = rhs.powerHigh; pace = rhs.pace; };
 		virtual ~ZwoWarmup() {};
 		virtual void Clear() { duration = 0; powerLow = 0.0; powerHigh = 0.0; pace = 0.0; };
 
@@ -39,6 +40,7 @@ namespace FileLib
 	{
 	public:
 		ZwoInterval() { Clear(); };
+		ZwoInterval(const ZwoInterval& rhs) { repeat = rhs.repeat; onDuration = rhs.onDuration; offDuration = rhs.offDuration; onDuration = rhs.onDuration; offPower = rhs.offPower; };
 		virtual ~ZwoInterval() {};
 		virtual void Clear() { repeat = 0; onDuration = 0; offDuration = 0; onPower = 0.0; offPower = 0.0; };
 
@@ -53,6 +55,7 @@ namespace FileLib
 	{
 	public:
 		ZwoCooldown() { Clear(); };
+		ZwoCooldown(const ZwoCooldown& rhs) { duration = rhs.duration; powerLow = rhs.powerLow; powerHigh = rhs.powerHigh; pace = rhs.pace; };
 		virtual ~ZwoCooldown() {};
 		virtual void Clear() { duration = 0; powerLow = 0.0; powerHigh = 0.0; pace = 0.0; };
 
@@ -66,6 +69,7 @@ namespace FileLib
 	{
 	public:
 		ZwoFreeride() { Clear(); };
+		ZwoFreeride(const ZwoFreeride& rhs) { duration = rhs.duration; flatRoad = rhs.flatRoad; };
 		virtual ~ZwoFreeride() {};
 		virtual void Clear() { duration = 0; flatRoad = 0.0; };
 
@@ -90,7 +94,7 @@ namespace FileLib
 		virtual std::string GetDescription() const { return m_description; };
 		virtual std::string GetSportType() const { return m_sportType; };
 		virtual std::vector<std::string> GetTags() const { return m_tags; };
-		virtual std::vector<ZwoWorkoutSegment> GetSegments() const { return m_segments; };
+		virtual std::vector<ZwoWorkoutSegment*> GetSegments() const { return m_segments; };
 
 	private:
 		std::string m_author;
@@ -98,11 +102,12 @@ namespace FileLib
 		std::string m_description;
 		std::string m_sportType;
 		std::vector<std::string> m_tags;
-		std::vector<ZwoWorkoutSegment> m_segments;
+		std::vector<ZwoWorkoutSegment*> m_segments;
 
 		ZwoWarmup m_warmup;
 		ZwoCooldown m_cooldown;
 		ZwoInterval m_currentInterval;
+		ZwoFreeride m_currentFreeRide;
 
 		void Clear();
 	};

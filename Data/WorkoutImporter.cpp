@@ -30,38 +30,66 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 		std::string name = reader.GetName();
 
 		bool result = pDatabase->CreateIntervalWorkout(workoutId, name, "");
-		
-		FileLib::ZwoWarmup warmup;
-		FileLib::ZwoCooldown cooldown;
-		
-		uint64_t segmentId = 0;
-		std::vector<FileLib::ZwoWorkoutSegment> segments = reader.GetSegments();
-		for (auto iter = segments.begin(); result && iter != segments.end(); ++iter)
+		if (result)
 		{
-			const FileLib::ZwoWorkoutSegment* fileSegment = &(*iter);
-
-			IntervalWorkoutSegment dbSegment;
-			dbSegment.segmentId = segmentId++;
+			FileLib::ZwoWarmup warmup;
+			FileLib::ZwoCooldown cooldown;
 			
-			const FileLib::ZwoWarmup* warmupSegment = dynamic_cast<const FileLib::ZwoWarmup*>(fileSegment);
-			if (warmupSegment != NULL)
+			uint64_t segmentId = 0;
+			std::vector<FileLib::ZwoWorkoutSegment*> segments = reader.GetSegments();
+			for (auto iter = segments.begin(); result && iter != segments.end(); ++iter)
 			{
-				dbSegment.duration = warmupSegment->duration;
-			}
+				const FileLib::ZwoWorkoutSegment* fileSegment = (*iter);
 
-			const FileLib::ZwoInterval* intervalSegment = dynamic_cast<const FileLib::ZwoInterval*>(fileSegment);
-			if (intervalSegment != NULL)
-			{
-				dbSegment.duration = intervalSegment->onDuration;
-			}
+				IntervalWorkoutSegment dbSegment;
+				dbSegment.segmentId = segmentId;
+				dbSegment.sets = 0;
+				dbSegment.reps = 0;
+				dbSegment.duration = 0;
+				dbSegment.distance = 0.0;
+				dbSegment.pace = 0.0;
+				dbSegment.power = 0.0;
+				dbSegment.units = INTERVAL_UNIT_SECONDS;
+				
+				const FileLib::ZwoWarmup* warmupSegment = dynamic_cast<const FileLib::ZwoWarmup*>(fileSegment);
+				if (warmupSegment != NULL)
+				{
+					dbSegment.duration = warmupSegment->duration;
+					dbSegment.power = warmupSegment->powerHigh;
+					dbSegment.pace = warmupSegment->pace;
+				}
 
-			const FileLib::ZwoCooldown* coolDown = dynamic_cast<const FileLib::ZwoCooldown*>(fileSegment);
-			if (coolDown != NULL)
-			{
-				dbSegment.duration = coolDown->duration;
+				const FileLib::ZwoInterval* intervalSegment = dynamic_cast<const FileLib::ZwoInterval*>(fileSegment);
+				if (intervalSegment != NULL)
+				{
+					dbSegment.reps = intervalSegment->repeat;
+					dbSegment.duration = intervalSegment->onDuration;
+					dbSegment.power = intervalSegment->onPower;
+				}
+
+				const FileLib::ZwoCooldown* coolDown = dynamic_cast<const FileLib::ZwoCooldown*>(fileSegment);
+				if (coolDown != NULL)
+				{
+					dbSegment.duration = coolDown->duration;
+					dbSegment.power = coolDown->powerHigh;
+					dbSegment.pace = coolDown->pace;
+				}
+
+				const FileLib::ZwoFreeride* freeRide = dynamic_cast<const FileLib::ZwoFreeride*>(fileSegment);
+				if (freeRide != NULL)
+				{
+					dbSegment.duration = freeRide->duration;
+				}
+
+				if (dbSegment.duration > 0)
+				{
+					result &= pDatabase->CreateIntervalSegment(workoutId, dbSegment);
+					if (result)
+					{
+						++segmentId;
+					}
+				}
 			}
-			
-			result &= pDatabase->CreateIntervalSegment(workoutId, dbSegment);
 		}
 
 		return result;

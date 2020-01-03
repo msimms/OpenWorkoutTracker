@@ -54,11 +54,14 @@
 			NSFileHandle* fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:destFileName];
 			if (fileHandle)
 			{
+				NSString* intervalId = [[NSUUID UUID] UUIDString];
+
 				[fileHandle seekToEndOfFile];
 				[fileHandle writeData:data];
 				[fileHandle closeFile];
 
-				XCTAssert(ImportZwoFile([[[NSUUID UUID] UUIDString] UTF8String], [destFileName UTF8String], "Test Workout"));
+				XCTAssert(ImportZwoFile([destFileName UTF8String], [intervalId UTF8String], "Test Workout"));
+				XCTAssert(DeleteIntervalWorkout([intervalId UTF8String]));
 			}
 
 			dispatch_group_leave(queryGroup);

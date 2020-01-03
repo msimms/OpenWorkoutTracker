@@ -13,6 +13,7 @@ namespace FileLib
 	
 	ZwoFileReader::~ZwoFileReader()
 	{
+		Clear();
 	}
 
 	void ZwoFileReader::ProcessNode(xmlNode* node)
@@ -202,9 +203,11 @@ namespace FileLib
 		{
 			if (attrName.compare(ZWO_ATTR_NAME_DURATION) == 0)
 			{
+				m_currentFreeRide.duration = (uint32_t)atol((const char*)attr->children->content);
 			}
 			else if (attrName.compare(ZWO_ATTR_NAME_FLATROAD) == 0)
 			{
+				m_currentFreeRide.flatRoad = atof((const char*)attr->children->content);
 			}
 		}
 	}
@@ -229,12 +232,12 @@ namespace FileLib
 
 		if (state.compare(ZWO_TAG_WORKOUT_WARMUP) == 0)
 		{
-			m_segments.push_back(m_warmup);
+			m_segments.push_back(new ZwoWarmup(m_warmup));
 			m_warmup.Clear();
 		}
 		else if (state.compare(ZWO_TAG_WORKOUT_COOLDOWN) == 0)
 		{
-			m_segments.push_back(m_cooldown);
+			m_segments.push_back(new ZwoCooldown(m_cooldown));
 			m_cooldown.Clear();
 		}
 		else if (state.compare(ZWO_TAG_WORKOUT_STEADYSTATE) == 0)
@@ -242,11 +245,13 @@ namespace FileLib
 		}
 		else if (state.compare(ZWO_TAG_WORKOUT_INTERVALS) == 0)
 		{
-			m_segments.push_back(m_currentInterval);
+			m_segments.push_back(new ZwoInterval(m_currentInterval));
 			m_currentInterval.Clear();
 		}
 		else if (state.compare(ZWO_TAG_WORKOUT_FREERIDE) == 0)
 		{
+			m_segments.push_back(new ZwoFreeride(m_currentFreeRide));
+			m_currentFreeRide.Clear();
 		}
 
 		XmlFileReader::PopState();
@@ -259,6 +264,10 @@ namespace FileLib
 		m_description.clear();
 		m_sportType.clear();
 		m_tags.clear();
+		for (auto iter = m_segments.begin(); iter != m_segments.end(); ++iter)
+		{
+			delete (*iter);
+		}
 		m_segments.clear();
 	}
 }

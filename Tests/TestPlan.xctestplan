@@ -13,7 +13,12 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
+      "skippedTests" : [
+        "GpxImportTest",
+        "PeakFindTest",
+        "TcxImportTest",
+        "Tests"
+      ],
       "target" : {
         "containerPath" : "container:Straen.xcodeproj",
         "identifier" : "270CF4062391BBF400584058",
