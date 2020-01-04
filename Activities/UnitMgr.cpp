@@ -56,6 +56,18 @@ double UnitMgr::ConvertFromPreferredDistanceToCustomaryUnits(double value)
 	return (double)0.0;
 }
 
+double UnitMgr::ConvertFromPreferredDistanceToMeters(double value)
+{
+	switch (m_unitSystem)
+	{
+		case UNIT_SYSTEM_METRIC:
+			return value * 1000.0;
+		case UNIT_SYSTEM_US_CUSTOMARY:
+			return UnitConverter::MilesToKilometers(value) * 1000.0;
+	}
+	return (double)0.0;
+}
+
 double UnitMgr::ConvertFromPreferredAltitudeToCustomaryUnits(double value)
 {
 	switch (m_unitSystem)

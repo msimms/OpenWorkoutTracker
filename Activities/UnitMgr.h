@@ -26,6 +26,7 @@ public:
 
 	static double ConvertFromPreferredDistanceToCustomaryUnits(double value);
 	static double ConvertFromPreferredAltitudeToCustomaryUnits(double value);
+	static double ConvertFromPreferredDistanceToMeters(double value);
 
 	static void ConvertActivityAttributeToMetric(ActivityAttributeType& value);
 	static void ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& value);
