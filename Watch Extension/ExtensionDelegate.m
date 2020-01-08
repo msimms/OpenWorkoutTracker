@@ -688,4 +688,11 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
+#pragma mark reset methods
+
+- (void)resetDatabase
+{
+	ResetDatabase();
+}
+
 @end

@@ -14,6 +14,10 @@
 @implementation PacePlanEditViewController
 
 @synthesize toolbar;
+@synthesize nameTextField;
+@synthesize distanceTextField;
+@synthesize targetPaceTextField;
+@synthesize splitsTextField;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {

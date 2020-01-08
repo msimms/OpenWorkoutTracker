@@ -10,6 +10,8 @@
 #import "ExtensionDelegate.h"
 #import "Preferences.h"
 
+#define ALERT_MSG_STOP NSLocalizedString(@"Are you sure you want to do this? This cannot be undone.", nil)
+
 @interface WatchSettingsViewController ()
 
 @end
@@ -18,6 +20,7 @@
 @implementation WatchSettingsViewController
 
 @synthesize broadcast;
+@synthesize resetButton;
 
 - (instancetype)init
 {
@@ -50,6 +53,22 @@
 - (IBAction)switchAction:(BOOL)on
 {
 	[Preferences setBroadcastGlobally:on];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onReset
+{
+	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void){
+		ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+		[extDelegate resetDatabase];
+	}];
+	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
+	}];
+
+	NSArray* actions = [NSArray new];
+	actions = @[yesAction, noAction];
+	[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_STOP preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
 @end

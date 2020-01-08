@@ -93,4 +93,8 @@
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex;
 
+// reset methods
+
+- (void)resetDatabase;
+
 @end

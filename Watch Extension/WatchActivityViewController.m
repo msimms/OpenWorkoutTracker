@@ -11,11 +11,13 @@
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
 
-#define ACTIVITY_BUTTON_START  NSLocalizedString(@"Start", nil)
-#define ACTIVITY_BUTTON_STOP   NSLocalizedString(@"Stop", nil)
-#define ACTIVITY_BUTTON_PAUSE  NSLocalizedString(@"Pause", nil)
-#define ACTIVITY_BUTTON_RESUME NSLocalizedString(@"Resume", nil)
-#define ALERT_MSG_STOP         NSLocalizedString(@"Are you sure you want to stop?", nil)
+#define ACTIVITY_BUTTON_START       NSLocalizedString(@"Start", nil)
+#define ACTIVITY_BUTTON_STOP        NSLocalizedString(@"Stop", nil)
+#define ACTIVITY_BUTTON_PAUSE       NSLocalizedString(@"Pause", nil)
+#define ACTIVITY_BUTTON_RESUME      NSLocalizedString(@"Resume", nil)
+#define ALERT_MSG_STOP              NSLocalizedString(@"Are you sure you want to stop?", nil)
+#define MSG_SELECT_INTERVAL_WORKOUT NSLocalizedString(@"Select the interval workout you wish to perform.", nil)
+#define MSG_SELECT_PACE_PLAN        NSLocalizedString(@"Select the pace plan you wish to use.", nil)
 
 @interface WatchActivityViewController ()
 
@@ -25,6 +27,8 @@
 @implementation WatchActivityViewController
 
 @synthesize startStopButton;
+@synthesize intervalsButton;
+@synthesize pacePlanButton;
 @synthesize value1;
 @synthesize value2;
 @synthesize value3;
@@ -44,6 +48,8 @@
 
 - (void)willActivate
 {
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	if (self->isPopping)
 	{
 		return;
@@ -87,6 +93,14 @@
 	{
 		[self setUIForStoppedActivity];
 	}
+
+	// Don't show the interval workouts button if there are no interval workouts.
+	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNames];
+	self.intervalsButton.hidden = ([intervalWorkoutNames count] == 0);
+
+	// Don't show the pace plans button if there are no pace plans.
+	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNames];
+	self.pacePlanButton.hidden = ([pacePlanNames count] == 0);
 
 	[self startTimer];
 }
@@ -191,6 +205,42 @@
 	{
 		[self doStart];
 	}
+}
+
+- (IBAction)onIntervals
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNames];
+	NSMutableArray* actions = [[NSMutableArray alloc] init];
+
+	[intervalWorkoutNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	for (NSString* name in intervalWorkoutNames)
+	{
+		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
+		}];	
+		[actions addObject:action];
+	}
+
+	// Show the action sheet.
+	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_INTERVAL_WORKOUT preferredStyle:WKAlertControllerStyleAlert actions:actions];
+}
+
+- (IBAction)onPacePlan
+{
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNames];
+	NSMutableArray* actions = [[NSMutableArray alloc] init];
+
+	[pacePlanNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	for (NSString* name in pacePlanNames)
+	{
+		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
+		}];	
+		[actions addObject:action];
+	}
+
+	// Show the action sheet.
+	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_PACE_PLAN preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
 #pragma mark method for refreshing screen values

@@ -12,7 +12,7 @@
             <objects>
                 <controller identifier="WatchAboutViewController" id="d9K-Wx-f3c" customClass="WatchAboutViewController">
                     <items>
-                        <label alignment="left" text="Copyright (c) 2019 by Michael J. Simms" textAlignment="left" numberOfLines="4" id="dJC-h1-7Wk"/>
+                        <label alignment="left" text="Copyright (c) 2020 by Michael J. Simms" textAlignment="left" numberOfLines="4" id="dJC-h1-7Wk"/>
                         <label alignment="left" text="Built on:" id="NTE-qx-o3z"/>
                     </items>
                     <connections>
@@ -60,6 +60,7 @@
                         <group width="1" alignment="left" verticalAlignment="center" id="pJ5-uP-Shn">
                             <items>
                                 <label alignment="center" text="--" id="fm7-ZA-A65">
+                                    <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
                                     <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
                                 </label>
                                 <label alignment="center" verticalAlignment="center" text=" Units" id="eHx-Fy-G0d">
@@ -77,6 +78,7 @@
                         <group width="1" alignment="left" verticalAlignment="center" id="PPr-6M-NT3">
                             <items>
                                 <label alignment="left" text="--" id="jW7-ae-vrm">
+                                    <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                                 <label alignment="right" verticalAlignment="center" text=" Units" id="lAO-ig-DSV">
@@ -94,6 +96,7 @@
                         <group width="1" alignment="left" verticalAlignment="center" id="8Du-RJ-V9w">
                             <items>
                                 <label alignment="left" text="--" id="pED-pN-z8m">
+                                    <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
                                 <label alignment="right" verticalAlignment="center" text=" Units" id="pgE-yK-xEC">
@@ -114,11 +117,23 @@
                                 <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
                             </connections>
                         </button>
+                        <button width="1" alignment="left" verticalAlignment="bottom" title="Intervals" id="Nbx-ph-zUl">
+                            <connections>
+                                <action selector="onIntervals" destination="Bpo-6v-NAv" id="les-54-tL4"/>
+                            </connections>
+                        </button>
+                        <button width="1" alignment="left" verticalAlignment="bottom" title="Pace Plan" id="TJ5-Yl-Fdq">
+                            <connections>
+                                <action selector="onPacePlan" destination="Bpo-6v-NAv" id="8bn-S8-e81"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="group1" destination="pJ5-uP-Shn" id="7RW-cp-4g3"/>
                         <outlet property="group2" destination="PPr-6M-NT3" id="yeS-ya-6Di"/>
                         <outlet property="group3" destination="8Du-RJ-V9w" id="vBH-d0-Vsp"/>
+                        <outlet property="intervalsButton" destination="Nbx-ph-zUl" id="uOZ-xD-Ay4"/>
+                        <outlet property="pacePlanButton" destination="TJ5-Yl-Fdq" id="81d-Wy-4P3"/>
                         <outlet property="startStopButton" destination="75M-0x-o8w" id="T2n-Oo-agQ"/>
                         <outlet property="units1" destination="eHx-Fy-G0d" id="hrO-PJ-jvf"/>
                         <outlet property="units2" destination="lAO-ig-DSV" id="uuv-WB-65W"/>
@@ -225,9 +240,15 @@
                                 <action selector="switchAction:" destination="hJl-mE-pcA" id="Hac-M4-mre"/>
                             </connections>
                         </switch>
+                        <button width="1" alignment="left" title="Reset" id="RLD-SD-HYq">
+                            <connections>
+                                <action selector="onReset" destination="hJl-mE-pcA" id="iXx-6E-fXU"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="broadcast" destination="8A2-ad-Uee" id="W3g-zr-jsL"/>
+                        <outlet property="resetButton" destination="RLD-SD-HYq" id="eh9-SE-X1V"/>
                     </connections>
                 </controller>
             </objects>
