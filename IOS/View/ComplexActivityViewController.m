@@ -134,8 +134,8 @@
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
 	{
-		NSMutableArray* workoutNames = [appDelegate getIntervalWorkoutNames];
-		if ([workoutNames count] == 0)
+		NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
+		if ([workoutNamesAndIds count] == 0)
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.intervalsButton];
 		}

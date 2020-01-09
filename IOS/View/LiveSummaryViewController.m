@@ -151,7 +151,12 @@
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [self->attributeNames count];
+	switch (section)
+	{
+		case 0:
+			return [self->attributeNames count];
+	}
+	return 0;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath

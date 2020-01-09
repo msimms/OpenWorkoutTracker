@@ -14,6 +14,8 @@
 	NSString* selectedPlanId;
 }
 
+- (void)setPlanId:(NSString*)planId;
+
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITextField* nameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* distanceTextField;

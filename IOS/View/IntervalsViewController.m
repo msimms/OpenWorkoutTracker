@@ -97,7 +97,7 @@
 - (void)updateWorkoutNames
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->workoutNames = [appDelegate getIntervalWorkoutNames];
+	self->workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
 }
 
 - (void)createIntervalWorkoutForSport:(NSString*)intervalWorkoutSport
@@ -111,15 +111,20 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		NSString* intervalWorkoutId = [[NSUUID UUID] UUIDString];
 		NSString* intervalWorkoutName = [alertController.textFields.firstObject text];
 
-		if (CreateNewIntervalWorkout([intervalWorkoutId UTF8String], [intervalWorkoutName UTF8String], [intervalWorkoutSport UTF8String]))
+		if ([appDelegate createNewIntervalWorkout:intervalWorkoutId withName:intervalWorkoutName withSport:intervalWorkoutSport])
 		{
 			self->selectedWorkoutId = intervalWorkoutId;
 
 			[self updateWorkoutNames];
 			[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
 		}
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
@@ -154,12 +159,17 @@
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return @"";
+	return TITLE;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [self->workoutNames count];
+	switch (section)
+	{
+		case 0:
+			return [self->workoutNamesAndIds count];
+	}
+	return 0;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -178,7 +188,10 @@
 	switch (section)
 	{
 		case 0:
-			cell.textLabel.text = [self->workoutNames objectAtIndex:row];
+			{
+				NSDictionary* nameAndId = [self->workoutNamesAndIds objectAtIndex:row];
+				cell.textLabel.text = nameAndId[@"name"];
+			}
 			break;
 		default:
 			break;
@@ -198,12 +211,8 @@
 	NSInteger section = [indexPath section];	
 	if (section == 0)
 	{
-		char* workoutId = GetIntervalWorkoutId([indexPath row]);
-		if (workoutId)
-		{
-			self->selectedWorkoutId = [[NSString alloc] initWithUTF8String:workoutId];
-			free((void*)workoutId);
-		}
+		NSDictionary* nameAndId = [self->workoutNamesAndIds objectAtIndex:[indexPath row]];
+		self->selectedWorkoutId = nameAndId[@"id"];
 		
 		[self performSegueWithIdentifier:@SEGUE_TO_INTERVAL_EDIT_VIEW sender:self];
 	}
@@ -227,12 +236,17 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
-		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		NSDictionary* nameAndId = [self->workoutNamesAndIds objectAtIndex:[indexPath row]];
 
-		if (DeleteIntervalWorkout([cell.textLabel.text UTF8String]))
+		if ([appDelegate deleteIntervalWorkout:nameAndId[@"id"]])
 		{
-			[self->workoutNames removeObjectAtIndex:indexPath.row];
+			[self->workoutNamesAndIds removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
 		}
 	}
 }

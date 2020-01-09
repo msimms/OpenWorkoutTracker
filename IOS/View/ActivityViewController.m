@@ -666,8 +666,8 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	NSMutableArray* workoutNames = [appDelegate getIntervalWorkoutNames];
-	if ([workoutNames count] > 0)
+	NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
+	if ([workoutNamesAndIds count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:ACTION_SHEET_TITLE_INTERVALS
@@ -677,8 +677,9 @@
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 		
 		// Add an option for each workout.
-		for (NSString* name in workoutNames)
+		for (NSDictionary* nameAndId in workoutNamesAndIds)
 		{
+			NSString* name = nameAndId[@"name"];
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				SetCurrentIntervalWorkout([name UTF8String]);
 				[self->intervalsButton setTitle:name];

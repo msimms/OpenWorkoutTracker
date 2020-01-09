@@ -95,11 +95,11 @@
 	}
 
 	// Don't show the interval workouts button if there are no interval workouts.
-	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNames];
+	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNamesAndIds];
 	self.intervalsButton.hidden = ([intervalWorkoutNames count] == 0);
 
 	// Don't show the pace plans button if there are no pace plans.
-	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNames];
+	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNamesAndIds];
 	self.pacePlanButton.hidden = ([pacePlanNames count] == 0);
 
 	[self startTimer];
@@ -210,12 +210,12 @@
 - (IBAction)onIntervals
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNames];
+	NSMutableArray* intervalWorkoutInfo = [extDelegate getIntervalWorkoutNamesAndIds];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
-	[intervalWorkoutNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-	for (NSString* name in intervalWorkoutNames)
+	for (NSDictionary* info in intervalWorkoutInfo)
 	{
+		NSString* name = info[@"name"];
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
 		}];	
 		[actions addObject:action];
@@ -228,12 +228,12 @@
 - (IBAction)onPacePlan
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNames];
+	NSMutableArray* pacePlanInfo = [extDelegate getPacePlanNamesAndIds];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
-	[pacePlanNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-	for (NSString* name in pacePlanNames)
+	for (NSDictionary* info in pacePlanInfo)
 	{
+		NSString* name = info[@"name"];
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
 		}];	
 		[actions addObject:action];

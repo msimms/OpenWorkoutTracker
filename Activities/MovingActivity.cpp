@@ -548,6 +548,13 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.endTime = segment.endTime;
 		result.valid = true;
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE) == 0)
+	{
+		result.value.timeVal = GapToTargetPace();
+		result.valueType = TYPE_TIME;
+		result.measureType = MEASURE_PACE;
+		result.valid = false;
+	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_SPEED) == 0)
 	{
 		result.value.doubleVal = AverageSpeed();
@@ -1009,6 +1016,11 @@ SegmentType MovingActivity::CurrentPace() const
 	return segment;
 }
 
+time_t MovingActivity::GapToTargetPace() const
+{
+	return 0;
+}
+
 double MovingActivity::AverageSpeed() const
 {
 	time_t secs = ElapsedTimeInSeconds();
@@ -1189,6 +1201,7 @@ void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_PACE);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
@@ -1224,6 +1237,7 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_PACE);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_SPEED);

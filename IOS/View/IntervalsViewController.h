@@ -6,15 +6,16 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface IntervalsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface IntervalsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
 	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* intervalTableView;
 	IBOutlet UIBarButtonItem* intervalButton;
 	
 	NSString* selectedWorkoutId;
-	NSMutableArray* workoutNames;
+	NSMutableArray* workoutNamesAndIds;
 }
 
 - (IBAction)onAddInterval:(id)sender;

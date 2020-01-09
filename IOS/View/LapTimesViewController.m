@@ -140,9 +140,9 @@
 {
 	switch (section)
 	{
-	case 0:
-		return [self->lapTimes count];
-		break;
+		case 0:
+			return [self->lapTimes count];
+			break;
 	}
 	return 0;
 }

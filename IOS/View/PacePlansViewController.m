@@ -4,6 +4,7 @@
 #import "PacePlansViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "PacePlanEditViewController.h"
 #import "Segues.h"
 
 #define TITLE                     NSLocalizedString(@"Pace Plans", nil)
@@ -74,6 +75,11 @@
 
 	if ([segueId isEqualToString:@SEGUE_TO_PACE_PLAN_EDIT_VIEW])
 	{
+		PacePlanEditViewController* editVC = (PacePlanEditViewController*)[segue destinationViewController];
+		if (editVC)
+		{
+			[editVC setPlanId:self->selectedPlanId];
+		}
 	}
 }
 
@@ -82,7 +88,7 @@
 - (void)updatePacePlanNames
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->planNames = [appDelegate getPacePlanNames];
+	self->planNamesAndIds = [appDelegate getPacePlanNamesAndIds];
 }
 
 #pragma mark button handlers
@@ -98,11 +104,20 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		NSString* pacePlanName = [alertController.textFields.firstObject text];
 		NSString* pacePlanId = [[NSUUID UUID] UUIDString];
 
-		if (CreateNewPacePlan([pacePlanName UTF8String], [pacePlanId UTF8String]))
+		if ([appDelegate createNewPacePlan:pacePlanName withPlanId:pacePlanId])
 		{
+			self->selectedPlanId = pacePlanId;
+
+			[self updatePacePlanNames];
+			[self performSegueWithIdentifier:@SEGUE_TO_PACE_PLAN_EDIT_VIEW sender:self];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
 		}
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
@@ -117,12 +132,17 @@
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return @"";
+	return TITLE;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [self->planNames count];
+	switch (section)
+	{
+		case 0:
+			return [self->planNamesAndIds count];
+	}
+	return 0;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -141,7 +161,10 @@
 	switch (section)
 	{
 		case 0:
-			cell.textLabel.text = [self->planNames objectAtIndex:row];
+			{
+				NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:row];
+				cell.textLabel.text = nameAndId[@"name"];
+			}
 			break;
 		default:
 			break;
@@ -161,12 +184,8 @@
 	NSInteger section = [indexPath section];	
 	if (section == 0)
 	{
-		char* pacePlanId = GetPacePlanId([indexPath row]);
-		if (pacePlanId)
-		{
-			self->selectedPlanId = [[NSString alloc] initWithUTF8String:pacePlanId];
-			free((void*)pacePlanId);
-		}
+		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
+		self->selectedPlanId = nameAndId[@"id"];
 		
 		[self performSegueWithIdentifier:@SEGUE_TO_PACE_PLAN_EDIT_VIEW sender:self];
 	}
@@ -190,12 +209,17 @@
 {
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
-		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
 
-		if (DeletePacePlan([cell.textLabel.text UTF8String]))
+		if ([appDelegate deletePacePlanWithId:nameAndId[@"id"]])
 		{
-			[self->planNames removeObjectAtIndex:indexPath.row];
+			[self->planNamesAndIds removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
 		}
 	}
 }

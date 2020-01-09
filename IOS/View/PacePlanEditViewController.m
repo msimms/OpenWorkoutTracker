@@ -62,4 +62,9 @@
 {
 }
 
+- (void)setPlanId:(NSString*)planId
+{
+	self->selectedPlanId = planId;
+}
+
 @end

@@ -75,7 +75,7 @@ extern "C" {
 	uint64_t GetBikeIdFromName(const char* const name);
 
 	// Functions for managing the currently set interval workout.
-	bool SetCurrentIntervalWorkout(const char* const workoutName);
+	bool SetCurrentIntervalWorkout(const char* const workoutId);
 	bool CheckCurrentIntervalWorkout(void);
 	bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment* segment);
 	bool IsIntervalWorkoutComplete(void);
@@ -84,7 +84,7 @@ extern "C" {
 	// Functions for managing interval workouts.
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
 	bool DeleteIntervalWorkout(const char* const workoutId);
-	void InitializeIntervalWorkoutList(void);
+	bool InitializeIntervalWorkoutList(void);
 	char* GetIntervalWorkoutId(size_t workoutIndex);
 	char* GetIntervalWorkoutName(size_t workoutIndex);
 	char* GetIntervalWorkoutSport(size_t workoutIndex);
@@ -96,11 +96,14 @@ extern "C" {
 	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment);
 
 	// Functions for managing pace plans.
-	void InitializePacePlanList(void);
+	bool InitializePacePlanList(void);
 	char* GetPacePlanId(size_t planIndex);
 	char* GetPacePlanName(size_t planIndex);
 	bool CreateNewPacePlan(const char* planName, const char* planId);
 	bool DeletePacePlan(const char* planId);
+
+	// Functions for managing the currently set pace plan.
+	bool SetCurrentPacePlan(const char* planId);
 
 	// Functions for merging historical activities.
 	bool MergeActivities(const char* const activityId1, const char* const activityId2);

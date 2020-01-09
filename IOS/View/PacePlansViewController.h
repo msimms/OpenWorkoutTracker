@@ -2,15 +2,16 @@
 // Copyright (c) 2019 Michael J. Simms. All rights reserved.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface PacePlansViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface PacePlansViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
 	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* planTableView;
 	IBOutlet UIBarButtonItem* addPlanButton;
 	
 	NSString* selectedPlanId;
-	NSMutableArray* planNames;
+	NSMutableArray* planNamesAndIds;
 }
 
 - (IBAction)onAddPacePlan:(id)sender;

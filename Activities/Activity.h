@@ -15,6 +15,7 @@
 #include "ActivityAttributeType.h"
 #include "ActivityType.h"
 #include "IntervalWorkout.h"
+#include "PacePlan.h"
 #include "SegmentType.h"
 #include "SensorReading.h"
 #include "UnitSystem.h"
@@ -40,6 +41,7 @@ public:
 
 	virtual void SetAthleteProfile(const User& athlete) { m_athlete = athlete; };
 	virtual void SetIntervalWorkout(const IntervalWorkout& workout) { m_intervalWorkout = workout; };
+	virtual void SetPacePlan(const PacePlan& pacePlan) { m_pacePlan = pacePlan; };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const = 0;
 
@@ -119,8 +121,9 @@ protected:
 protected:
 	std::string          m_id;                        // database identifier for this activity
 	User                 m_athlete;                   // user profile
-	IntervalWorkout      m_intervalWorkout;
-	IntervalWorkoutState m_intervalWorkoutState;
+	IntervalWorkout      m_intervalWorkout;           // interval workout to use (optional)
+	IntervalWorkoutState m_intervalWorkoutState;      // current position within the interval workout
+	PacePlan             m_pacePlan;                  // pace plan to use (optional)
 
 private:
 	double               m_additionalWeightKg;        // weight of barbells, dumbells, etc.

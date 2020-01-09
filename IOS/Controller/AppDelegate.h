@@ -193,8 +193,8 @@
 
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId;
 - (NSMutableArray*)getBikeNames;
-- (NSMutableArray*)getIntervalWorkoutNames;
-- (NSMutableArray*)getPacePlanNames;
+- (NSMutableArray*)getIntervalWorkoutNamesAndIds;
+- (NSMutableArray*)getPacePlanNamesAndIds;
 - (NSMutableArray*)getEnabledFileImportCloudServices;
 - (NSMutableArray*)getEnabledFileExportCloudServices;
 - (NSMutableArray*)getEnabledFileExportServices;
@@ -207,6 +207,16 @@
 - (NSString*)getHistoricalActivityType:(NSString*)activityId;
 
 - (NSString*)getCurrentActivityId;
+
+// methods for managing interval workotus
+
+- (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport;
+- (BOOL)deleteIntervalWorkout:(NSString*)workoutId;
+
+// methods for managing pace plans
+
+- (BOOL)createNewPacePlan:(NSString*)planName withPlanId:(NSString*)planId;
+- (BOOL)deletePacePlanWithId:(NSString*)planId;
 
 // methods for managing tags
 

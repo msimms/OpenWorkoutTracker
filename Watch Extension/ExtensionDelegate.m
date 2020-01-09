@@ -616,40 +616,56 @@ void attributeNameCallback(const char* name, void* context)
 	return attributes;
 }
 
-- (NSMutableArray*)getIntervalWorkoutNames
+- (NSMutableArray*)getIntervalWorkoutNamesAndIds
 {
-	NSMutableArray* names = [[NSMutableArray alloc] init];
-	if (names)
+	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
+	if (namesAndIds)
 	{
-		char* workoutName = NULL;
-		size_t index = 0;
-
-		InitializeIntervalWorkoutList();
-		while ((workoutName = GetIntervalWorkoutName(index++)) != NULL)
+		if (InitializeIntervalWorkoutList())
 		{
-			[names addObject:[[NSString alloc] initWithUTF8String:workoutName]];
-			free((void*)workoutName);
+			char* workoutId = NULL;
+			char* workoutName = NULL;
+			size_t index = 0;
+
+			while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
+			{
+				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
+				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
+				[namesAndIds addObject:mutDic];
+				free((void*)workoutId);
+				free((void*)workoutName);
+				++index;
+			}
 		}
 	}
-	return names;
+	return namesAndIds;
 }
 
-- (NSMutableArray*)getPacePlanNames
+- (NSMutableArray*)getPacePlanNamesAndIds
 {
-	NSMutableArray* names = [[NSMutableArray alloc] init];
-	if (names)
+	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
+	if (namesAndIds)
 	{
-		char* pacePlanName = NULL;
-		size_t index = 0;
-
-		InitializePacePlanList();
-		while ((pacePlanName = GetPacePlanName(index++)) != NULL)
+		if (InitializePacePlanList())
 		{
-			[names addObject:[[NSString alloc] initWithUTF8String:pacePlanName]];
-			free((void*)pacePlanName);
+			char* pacePlanId = NULL;
+			char* pacePlanName = NULL;
+			size_t index = 0;
+
+			while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
+			{
+				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+				[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
+				[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
+				[namesAndIds addObject:mutDic];
+				free((void*)pacePlanId);
+				free((void*)pacePlanName);
+				++index;
+			}
 		}
 	}
-	return names;
+	return namesAndIds;
 }
 
 - (NSString*)getCurrentActivityType

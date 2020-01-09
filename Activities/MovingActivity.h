@@ -57,6 +57,7 @@ public:
 
 	virtual SegmentType CurrentPace() const;
 	virtual SegmentType FastestPace() const { return m_fastestPace; };
+	virtual time_t GapToTargetPace() const;
 
 	virtual double AverageSpeed() const;
 	virtual double MovingSpeed() const;

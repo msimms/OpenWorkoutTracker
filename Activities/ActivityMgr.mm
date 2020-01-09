@@ -595,18 +595,25 @@ extern "C" {
 		return false;
 	}
 
-	void InitializeIntervalWorkoutList()
+	bool InitializeIntervalWorkoutList()
 	{
 		g_intervalWorkouts.clear();
 
 		if (g_pDatabase && g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
 		{
+			bool result = true;
+
 			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
 				IntervalWorkout& workout = (*iter);
-				g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments);
+				if (!g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments))
+				{
+					result = false;
+				}
 			}
+			return result;
 		}
+		return false;
 	}
 
 	char* GetIntervalWorkoutId(size_t workoutIndex)
@@ -696,14 +703,15 @@ extern "C" {
 	// Functions for managing pace plans.
 	//
 
-	void InitializePacePlanList(void)
+	bool InitializePacePlanList(void)
 	{
 		g_pacePlans.clear();
 
 		if (g_pDatabase)
 		{
-			g_pDatabase->RetrievePacePlans(g_pacePlans);
+			return g_pDatabase->RetrievePacePlans(g_pacePlans);
 		}
+		return false;
 	}
 
 	char* GetPacePlanId(size_t planIndex)
@@ -738,6 +746,40 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			return g_pDatabase->DeletePacePlan(planId);
+		}
+		return false;
+	}
+
+	//
+	// Functions for managing the currently set pace plan.
+	//
+
+	const PacePlan* GetPacePlan(const char* const planId)
+	{
+		if (planId)
+		{
+			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+			{
+				const PacePlan& pacePlan = (*iter);
+				if (pacePlan.planId.compare(planId) == 0)
+				{
+					return &pacePlan;
+				}
+			}
+		}
+		return NULL;
+	}
+
+	bool SetCurrentPacePlan(const char* planId)
+	{
+		if (g_pCurrentActivity && planId)
+		{
+			const PacePlan* pacePlan = GetPacePlan(planId);
+			if (pacePlan)
+			{
+				g_pCurrentActivity->SetPacePlan((*pacePlan));
+				return true;
+			}
 		}
 		return false;
 	}
