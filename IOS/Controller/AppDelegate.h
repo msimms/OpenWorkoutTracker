@@ -216,6 +216,8 @@
 // methods for managing pace plans
 
 - (BOOL)createNewPacePlan:(NSString*)planName withPlanId:(NSString*)planId;
+- (BOOL)retrievePacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits;
+- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits;
 - (BOOL)deletePacePlanWithId:(NSString*)planId;
 
 // methods for managing tags

@@ -1802,6 +1802,23 @@ void attributeNameCallback(const char* name, void* context)
 	return CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 }
 
+- (BOOL)retrievePacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits
+{
+	char* tempName = NULL;
+	BOOL result = RetrievePacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits);
+	if (tempName)
+	{
+		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 
+		free((void*)tempName);
+	}
+	return result;
+}
+
+- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits
+{
+	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits);
+}
+
 - (BOOL)deletePacePlanWithId:(NSString*)planId
 {
 	return DeletePacePlan([planId UTF8String]);

@@ -21,7 +21,9 @@
 + (NSString*)formatDateAndTime:(NSDate*)date;
 + (NSString*)formatDate:(NSDate*)date;
 + (NSString*)formatDateFromTimeStruct:(const struct tm*)date;
++ (NSString*)formatSeconds:(uint64_t)seconds;
 + (NSString*)activityLevelToStr:(ActivityLevel)level;
 + (NSString*)genderToStr:(Gender)gender;
++ (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds;
 
 @end

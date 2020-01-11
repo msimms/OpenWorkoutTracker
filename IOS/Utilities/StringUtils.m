@@ -22,28 +22,7 @@
 				result = [NSString stringWithFormat:@VALUE_NOT_SET_STR];
 				break;
 			case TYPE_TIME:
-				{
-					const uint32_t SECS_PER_DAY  = 86400;
-					const uint32_t SECS_PER_HOUR = 3600;
-					const uint32_t SECS_PER_MIN  = 60;
-
-					time_t remaining = attribute.value.timeVal;
-
-					uint8_t days    = (remaining / SECS_PER_DAY);
-					remaining      -= (days * SECS_PER_DAY);
-					uint8_t hours   = (remaining / SECS_PER_HOUR);
-					remaining      -= (hours * SECS_PER_HOUR);
-					uint8_t minutes = (remaining / SECS_PER_MIN);
-					remaining      -= (minutes * SECS_PER_MIN);
-					uint8_t seconds = (remaining % SECS_PER_MIN);
-
-					if (days > 0)
-						result = [NSString stringWithFormat:@"%02d:%02d:%02d:%02d", days, hours, minutes, seconds, nil];
-					else if (hours > 0)
-						result = [NSString stringWithFormat:@"%02d:%02d:%02d", hours, minutes, seconds, nil];
-					else
-						result = [NSString stringWithFormat:@"%02d:%02d", minutes, seconds, nil];
-				}
+				result = [StringUtils formatSeconds:attribute.value.timeVal];
 				break;
 			case TYPE_DOUBLE:
 				if (attribute.measureType == MEASURE_DISTANCE)
@@ -208,6 +187,27 @@
 	return result;
 }
 
++ (NSString*)formatSeconds:(uint64_t)numSeconds
+{
+	const uint32_t SECS_PER_DAY  = 86400;
+	const uint32_t SECS_PER_HOUR = 3600;
+	const uint32_t SECS_PER_MIN  = 60;
+
+	uint8_t days    = (numSeconds / SECS_PER_DAY);
+	numSeconds     -= (days * SECS_PER_DAY);
+	uint8_t hours   = (numSeconds / SECS_PER_HOUR);
+	numSeconds     -= (hours * SECS_PER_HOUR);
+	uint8_t minutes = (numSeconds / SECS_PER_MIN);
+	numSeconds     -= (minutes * SECS_PER_MIN);
+	uint8_t seconds = ((uint32_t)numSeconds % SECS_PER_MIN);
+
+	if (days > 0)
+		return [NSString stringWithFormat:@"%02d:%02d:%02d:%02d", days, hours, minutes, seconds, nil];
+	else if (hours > 0)
+		return [NSString stringWithFormat:@"%02d:%02d:%02d", hours, minutes, seconds, nil];
+	return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds, nil];
+}
+
 + (NSString*)activityLevelToStr:(ActivityLevel)level
 {
 	switch (level)
@@ -233,6 +233,36 @@
 	else
 		return NSLocalizedString(@"Female", nil);
 	return nil;
+}
+
++ (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds
+{
+	NSArray* listItems = [str componentsSeparatedByString:@":"];
+	NSInteger numItems = [listItems count];
+	uint16_t tempHours = 0;
+	uint16_t tempMinutes = 0;
+	uint16_t tempSeconds = 0;
+
+	if (numItems == 0)
+		return FALSE;
+
+	if (numItems >= 3)
+		tempHours = [listItems[2] intValue];
+		if (tempHours < 0)
+			return FALSE;
+	if (numItems >= 2)
+		tempMinutes = [listItems[1] intValue];
+		if (tempMinutes < 0 || tempMinutes >= 60)
+			return FALSE;
+	if (numItems >= 1)
+		tempSeconds = [listItems[0] intValue];
+		if (tempSeconds < 0 || tempSeconds >= 60)
+			return FALSE;
+
+	(*hours) = tempHours;
+	(*minutes) = tempMinutes;
+	(*seconds) = tempSeconds;
+	return TRUE;
 }
 
 @end

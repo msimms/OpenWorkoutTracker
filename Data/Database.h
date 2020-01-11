@@ -56,6 +56,7 @@ public:
 
 	bool CreatePacePlan(const std::string& name, const std::string& planId);
 	bool RetrievePacePlans(std::vector<PacePlan>& plans);
+	bool UpdatePacePlan(const PacePlan& plan);
 	bool DeletePacePlan(const std::string& planId);
 
 	bool CreateCustomActivity(const std::string& activityType, ActivityViewType viewType);

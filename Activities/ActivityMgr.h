@@ -99,7 +99,9 @@ extern "C" {
 	bool InitializePacePlanList(void);
 	char* GetPacePlanId(size_t planIndex);
 	char* GetPacePlanName(size_t planIndex);
-	bool CreateNewPacePlan(const char* planName, const char* planId);
+	bool CreateNewPacePlan(const char* const planName, const char* const planId);
+	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPace, double* targetDistance, double* splits);
+	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPace, double targetDistance, double splits);
 	bool DeletePacePlan(const char* planId);
 
 	// Functions for managing the currently set pace plan.

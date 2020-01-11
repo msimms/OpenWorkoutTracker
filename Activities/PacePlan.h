@@ -13,6 +13,7 @@ typedef struct PacePlan
 	std::string  name;
 	double       targetPace;
 	double       targetDistance;
+	double       splits;
 	std::string  route;
 } PacePlan;
 

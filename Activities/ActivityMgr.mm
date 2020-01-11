@@ -732,11 +732,55 @@ extern "C" {
 		return NULL;		
 	}
 
-	bool CreateNewPacePlan(const char* planName, const char* planId)
+	bool CreateNewPacePlan(const char* const planName, const char* planId)
 	{
 		if (g_pDatabase)
 		{
 			return g_pDatabase->CreatePacePlan(planName, planId);
+		}
+		return false;
+	}
+
+	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPace, double* targetDistance, double* splits)
+	{
+		if (planId)
+		{
+			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+			{
+				const PacePlan& pacePlan = (*iter);
+				if (pacePlan.planId.compare(planId) == 0)
+				{
+					if (name)
+						(*name) = strdup(pacePlan.name.c_str());
+					if (targetPace)
+						(*targetPace) = pacePlan.targetPace;
+					if (targetDistance)
+						(*targetDistance) = pacePlan.targetDistance;
+					if (splits)
+						(*splits) = pacePlan.splits;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPace, double targetDistance, double splits)
+	{
+		if (g_pDatabase && planId)
+		{
+			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+			{
+				PacePlan& pacePlan = (*iter);
+				if (pacePlan.planId.compare(planId) == 0)
+				{
+					pacePlan.name = name;
+					pacePlan.targetPace = targetPace;
+					pacePlan.targetDistance = targetDistance;
+					pacePlan.splits = splits;
+					return g_pDatabase->UpdatePacePlan(pacePlan);
+				}
+			}
 		}
 		return false;
 	}

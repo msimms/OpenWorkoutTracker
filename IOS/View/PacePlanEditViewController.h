@@ -2,8 +2,9 @@
 // Copyright (c) 2019 Michael J. Simms. All rights reserved.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface PacePlanEditViewController : UIViewController
+@interface PacePlanEditViewController : CommonViewController
 {
 	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITextField* nameTextField;
@@ -13,6 +14,8 @@
 	
 	NSString* selectedPlanId;
 }
+
+- (IBAction)onSave:(id)sender;
 
 - (void)setPlanId:(NSString*)planId;
 
