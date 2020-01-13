@@ -25,6 +25,7 @@
 #define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
 
 #define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
+#define ACTION_SHEET_TITLE_PACE_PLANS NSLocalizedString(@"Pace Plans", nil)
 
 #define ALERT_MSG_STOP                NSLocalizedString(@"Are you sure you want to stop?", nil)
 #define ALERT_MSG_WEIGHT              NSLocalizedString(@"Enter the amount of weight being used", nil)
@@ -40,7 +41,7 @@
 #define UNSPECIFIED_INTERVAL          NSLocalizedString(@"Waiting for screen touch", nil)
 
 #define HELP_PULLUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
-#define HELP_CYCLING                  NSLocalizedString(@"You can mount the phone on the bicycle's handlebars, though you you should pay attention to the road and obey all applicable laws.", nil)
+#define HELP_CYCLING                  NSLocalizedString(@"You can mount the phone on the bicycle's handlebars, though you should pay attention to the road and obey all applicable laws.", nil)
 #define HELP_PUSHUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
 #define HELP_RUNNING                  NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
 #define HELP_SQUAT                    NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
@@ -67,6 +68,7 @@
 @synthesize customizeButton;
 @synthesize bikeButton;
 @synthesize intervalsButton;
+@synthesize paceButton;
 @synthesize lapButton;
 @synthesize autoStartButton;
 @synthesize startStopButton;
@@ -675,14 +677,47 @@
 
 		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
-		
+
 		// Add an option for each workout.
 		for (NSDictionary* nameAndId in workoutNamesAndIds)
 		{
 			NSString* name = nameAndId[@"name"];
+			NSString* workoutId = nameAndId[@"id"];
+
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				SetCurrentIntervalWorkout([name UTF8String]);
+				SetCurrentIntervalWorkout([workoutId UTF8String]);
 				[self->intervalsButton setTitle:name];
+			}]];
+		}
+		
+		// Show the menu.
+		[self presentViewController:alertController animated:YES completion:nil];
+	}
+}
+
+- (IBAction)onPace:(id)sender
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	
+	NSMutableArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
+	if ([pacePlanNamesAndIds count] > 0)
+	{
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																				 message:ACTION_SHEET_TITLE_PACE_PLANS
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+		// Add an option for each workout.
+		for (NSDictionary* pacePlanAndId in pacePlanNamesAndIds)
+		{
+			NSString* name = pacePlanAndId[@"name"];
+			NSString* planId = pacePlanAndId[@"id"];
+
+			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				SetCurrentPacePlan([planId UTF8String]);
+				[self->paceButton setTitle:name];
 			}]];
 		}
 		

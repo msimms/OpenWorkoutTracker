@@ -105,7 +105,7 @@ extern "C" {
 	bool DeletePacePlan(const char* planId);
 
 	// Functions for managing the currently set pace plan.
-	bool SetCurrentPacePlan(const char* planId);
+	bool SetCurrentPacePlan(const char* const planId);
 
 	// Functions for merging historical activities.
 	bool MergeActivities(const char* const activityId1, const char* const activityId2);

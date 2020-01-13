@@ -872,6 +872,11 @@
                                             <action selector="onIntervals:" destination="0n6-g5-UTs" id="Clq-jo-jXR"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Pace" id="f5k-h3-Ygl">
+                                        <connections>
+                                            <action selector="onPace:" destination="0n6-g5-UTs" id="Nn3-V0-Hms"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Lap" id="92T-xb-WOa">
                                         <connections>
                                             <action selector="onLap:" destination="0n6-g5-UTs" id="E4q-2a-8eq"/>
@@ -1203,6 +1208,7 @@
                         <outlet property="messagesLabel" destination="U2o-bG-CJ3" id="bpl-s2-09u"/>
                         <outlet property="moreButton" destination="PMl-gG-wNv" id="qwT-e9-qDx"/>
                         <outlet property="navItem" destination="uwA-vG-wXj" id="Icj-gB-07r"/>
+                        <outlet property="paceButton" destination="f5k-h3-Ygl" id="0g7-YF-IJv"/>
                         <outlet property="startStopButton" destination="Zqe-eo-52i" id="5WQ-5A-2Rl"/>
                         <outlet property="swipe" destination="jST-vv-9A3" id="uUE-Jc-Mv2"/>
                         <outlet property="title_Large" destination="9W6-Sq-nCV" id="ErC-hk-oeJ"/>
@@ -1350,10 +1356,10 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GwT-k9-o3L">
-                                <rect key="frame" x="0.0" y="88" width="375" height="300"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="295"/>
                             </mapView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sir-57-T5G">
-                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="729" width="375" height="49"/>
                                 <items>
                                     <barButtonItem systemItem="edit" id="5bt-HJ-NJO">
                                         <connections>
@@ -1369,6 +1375,11 @@
                                     <barButtonItem title="Intervals" id="PNs-eK-OM5">
                                         <connections>
                                             <action selector="onIntervals:" destination="pMk-kM-n8i" id="tNV-Hl-yna"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Pace" id="3qL-0J-Bja">
+                                        <connections>
+                                            <action selector="onPace:" destination="pMk-kM-n8i" id="4Zp-BV-EaB"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Lap" id="8vo-Kn-qHg">
@@ -1395,13 +1406,13 @@
                                 </items>
                             </toolbar>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fWa-ef-Rda">
-                                <rect key="frame" x="0.0" y="398" width="375" height="0.0"/>
+                                <rect key="frame" x="0.0" y="393" width="375" height="0.0"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Elapsed Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="X7F-ml-DE7">
-                                <rect key="frame" x="20" y="430" width="337.66666666666669" height="21"/>
+                                <rect key="frame" x="20" y="425" width="337.66666666666669" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="eaD-47-7H8"/>
                                 </constraints>
@@ -1410,7 +1421,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="XpE-x3-bnB" userLabel="Units">
-                                <rect key="frame" x="20" y="595" width="160" height="21"/>
+                                <rect key="frame" x="20" y="590" width="160" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="LfY-7o-8XS"/>
                                 </constraints>
@@ -1419,7 +1430,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fQQ-Ng-ouf" userLabel="Units">
-                                <rect key="frame" x="20" y="681" width="160" height="21"/>
+                                <rect key="frame" x="20" y="676" width="160" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="UDz-KF-O2O"/>
                                 </constraints>
@@ -1428,19 +1439,19 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="AHP-Iq-h0i">
-                                <rect key="frame" x="20" y="459" width="337.66666666666669" height="72"/>
+                                <rect key="frame" x="20" y="454" width="337.66666666666669" height="72"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="72"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Kr6-XU-HvP">
-                                <rect key="frame" x="20" y="560" width="160" height="43"/>
+                                <rect key="frame" x="20" y="555" width="160" height="43"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="36"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="jAL-db-HXU">
-                                <rect key="frame" x="20" y="540" width="160" height="21"/>
+                                <rect key="frame" x="20" y="535" width="160" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="8b0-dG-flI"/>
                                     <constraint firstAttribute="height" constant="21" id="KkX-BC-mzS"/>
@@ -1450,13 +1461,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="nwW-C2-DCc">
-                                <rect key="frame" x="20" y="646" width="160" height="43"/>
+                                <rect key="frame" x="20" y="641" width="160" height="43"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="36"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="jKh-tf-MRU">
-                                <rect key="frame" x="20" y="626" width="160" height="21"/>
+                                <rect key="frame" x="20" y="621" width="160" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="u1p-sC-T44"/>
                                 </constraints>
@@ -1465,7 +1476,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Gyi-hB-pEf" userLabel="Units">
-                                <rect key="frame" x="115" y="529" width="136" height="21"/>
+                                <rect key="frame" x="115" y="524" width="136" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="bEE-Mg-dNr"/>
                                 </constraints>
@@ -1474,37 +1485,37 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="LN4-ge-uuF">
-                                <rect key="frame" x="195" y="560" width="162.66666666666663" height="43"/>
+                                <rect key="frame" x="195" y="555" width="162.66666666666663" height="43"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="36"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="r5V-3T-s5T">
-                                <rect key="frame" x="195" y="540" width="162.66666666666663" height="21"/>
+                                <rect key="frame" x="195" y="535" width="162.66666666666663" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="sLF-U3-EmA">
-                                <rect key="frame" x="195" y="646" width="162.66666666666663" height="43"/>
+                                <rect key="frame" x="195" y="641" width="162.66666666666663" height="43"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="36"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="LAR-e6-oIZ">
-                                <rect key="frame" x="195" y="626" width="162.66666666666663" height="21"/>
+                                <rect key="frame" x="195" y="621" width="162.66666666666663" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Whm-k3-b3p" userLabel="Units">
-                                <rect key="frame" x="195" y="595" width="162.66666666666663" height="21"/>
+                                <rect key="frame" x="195" y="590" width="162.66666666666663" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="JLI-RA-aVc" userLabel="Units">
-                                <rect key="frame" x="195" y="681" width="162.66666666666663" height="21"/>
+                                <rect key="frame" x="195" y="676" width="162.66666666666663" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1602,6 +1613,7 @@
                         <outlet property="messagesLabel" destination="fWa-ef-Rda" id="vGc-8Y-esc"/>
                         <outlet property="moreButton" destination="bv0-b4-Cmb" id="3K8-E8-udi"/>
                         <outlet property="navItem" destination="sdv-7e-4LU" id="o4h-SQ-4Ee"/>
+                        <outlet property="paceButton" destination="3qL-0J-Bja" id="4sY-ik-Mw1"/>
                         <outlet property="scaleButton" destination="HTh-Gm-FHv" id="o80-4C-0QS"/>
                         <outlet property="startStopButton" destination="s0a-k9-ORr" id="TR0-2h-tKJ"/>
                         <outlet property="swipe" destination="GCW-Lk-NFp" id="r5l-q2-wMY"/>
@@ -1639,7 +1651,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IJ4-Iq-sIP">
-                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="729" width="375" height="49"/>
                                 <items>
                                     <barButtonItem systemItem="edit" id="u0W-qK-ak4">
                                         <connections>
@@ -1655,6 +1667,11 @@
                                     <barButtonItem title="Intervals" id="ji6-6p-aBX">
                                         <connections>
                                             <action selector="onIntervals:" destination="hC7-Vx-aYi" id="qNd-7P-WOX"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Pace" id="n7C-Er-Fc8">
+                                        <connections>
+                                            <action selector="onPace:" destination="hC7-Vx-aYi" id="ujY-nJ-HeN"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Weight" id="0gz-RG-vbY">
@@ -1690,37 +1707,37 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="vMZ-ET-hQd" userLabel="Units">
-                                <rect key="frame" x="119" y="310" width="137" height="21"/>
+                                <rect key="frame" x="119" y="305" width="137" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="4ay-K9-568" userLabel="Units">
-                                <rect key="frame" x="119" y="423" width="137" height="21"/>
+                                <rect key="frame" x="119" y="418" width="137" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="7k0-5c-QEs" userLabel="Units">
-                                <rect key="frame" x="119" y="532" width="137" height="21"/>
+                                <rect key="frame" x="119" y="527" width="137" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="XZx-Jb-vZA" userLabel="Units">
-                                <rect key="frame" x="119" y="640" width="137" height="21"/>
+                                <rect key="frame" x="119" y="635" width="137" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Eg5-L5-zFn">
-                                <rect key="frame" x="24" y="249" width="335" height="72"/>
+                                <rect key="frame" x="24" y="244" width="335" height="72"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="72"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Elapsed Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="IsL-dv-F2Z">
-                                <rect key="frame" x="24" y="225" width="335" height="21"/>
+                                <rect key="frame" x="24" y="220" width="335" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="he6-ga-jSg"/>
                                 </constraints>
@@ -1729,13 +1746,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="GfJ-BA-ypv">
-                                <rect key="frame" x="24" y="358" width="335" height="72"/>
+                                <rect key="frame" x="24" y="353" width="335" height="72"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="72"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Elapsed Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="NI6-gV-Fnn">
-                                <rect key="frame" x="24" y="334" width="335" height="21"/>
+                                <rect key="frame" x="24" y="329" width="335" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="4on-mU-7q8"/>
                                 </constraints>
@@ -1744,13 +1761,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="gYV-OB-y5W">
-                                <rect key="frame" x="24" y="467" width="335" height="72"/>
+                                <rect key="frame" x="24" y="462" width="335" height="72"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="72"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Elapsed Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hzq-We-zTB">
-                                <rect key="frame" x="24" y="443" width="335" height="21"/>
+                                <rect key="frame" x="24" y="438" width="335" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="2Zh-aG-hbl"/>
                                 </constraints>
@@ -1759,13 +1776,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="TPp-2U-wEl">
-                                <rect key="frame" x="24" y="576" width="335" height="72"/>
+                                <rect key="frame" x="24" y="571" width="335" height="72"/>
                                 <fontDescription key="fontDescription" name="DBLCDTempBlack" family="DB LCD Temp" pointSize="72"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Elapsed Time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="XHy-X3-rkK">
-                                <rect key="frame" x="24" y="552" width="335" height="21"/>
+                                <rect key="frame" x="24" y="547" width="335" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="d1h-8s-gEK"/>
                                 </constraints>
@@ -1845,6 +1862,7 @@
                         <outlet property="messagesLabel" destination="ngk-5R-KXr" id="AYU-r9-Nnw"/>
                         <outlet property="moreButton" destination="wE7-XD-cTo" id="JS4-VT-Ipw"/>
                         <outlet property="navItem" destination="zFq-xI-Fl3" id="rzP-QT-l7j"/>
+                        <outlet property="paceButton" destination="n7C-Er-Fc8" id="zbx-tI-Kqf"/>
                         <outlet property="startStopButton" destination="cqS-Tg-XEP" id="9R6-8D-aDg"/>
                         <outlet property="swipe" destination="L53-oa-T9H" id="QR2-Rf-9ex"/>
                         <outlet property="title1" destination="IsL-dv-F2Z" id="9yF-rh-R1e"/>
@@ -2737,10 +2755,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="SimpleScreen.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="2hX-Kx-fHg"/>
+        <segue reference="UtV-9X-A4d"/>
         <segue reference="E2b-lU-9dF"/>
-        <segue reference="zxl-cL-SNo"/>
-        <segue reference="YOw-2o-8H3"/>
+        <segue reference="V9h-tU-0NS"/>
+        <segue reference="g4d-Zp-BfC"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

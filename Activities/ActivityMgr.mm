@@ -814,7 +814,7 @@ extern "C" {
 		return NULL;
 	}
 
-	bool SetCurrentPacePlan(const char* planId)
+	bool SetCurrentPacePlan(const char* const planId)
 	{
 		if (g_pCurrentActivity && planId)
 		{
