@@ -1967,7 +1967,7 @@
                                 </connections>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="M6E-Tx-gxb">
-                                <rect key="frame" x="0.0" y="365" width="375" height="369"/>
+                                <rect key="frame" x="0.0" y="365" width="375" height="364"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="xf7-Mc-VJA" id="fTH-Ie-93v"/>
@@ -1979,7 +1979,7 @@
                                 <color key="color" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jfP-Xt-Jaz">
-                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="729" width="375" height="49"/>
                                 <items>
                                     <barButtonItem systemItem="action" id="Kme-ZG-q82">
                                         <connections>
@@ -2244,7 +2244,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="HQH-Wv-fmj">
-                                <rect key="frame" x="0.0" y="88" width="375" height="646"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="641"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="jJ2-SU-SfT" id="FZW-NZ-qd8"/>
@@ -2252,7 +2252,7 @@
                                 </connections>
                             </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZdL-wM-ECI">
-                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="729" width="375" height="49"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="DYV-Bn-jXH"/>
                                     <barButtonItem systemItem="add" id="ScY-Jm-Z4w">
@@ -2739,7 +2739,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     <inferredMetricsTieBreakers>
         <segue reference="2hX-Kx-fHg"/>
         <segue reference="E2b-lU-9dF"/>
-        <segue reference="Zfp-Rg-OxX"/>
+        <segue reference="zxl-cL-SNo"/>
         <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

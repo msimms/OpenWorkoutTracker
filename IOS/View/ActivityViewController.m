@@ -282,9 +282,9 @@
 	{
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
 		NSString* imgPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
-		CGFloat toolbarHeight = self.toolbar.bounds.size.height;
+		CGFloat imageY = (self.view.bounds.size.height - self.view.bounds.size.width) / 2;
 		self->lastCountdownImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
-		self->lastCountdownImage.frame = CGRectMake(0, toolbarHeight, self.view.bounds.size.width, self.view.bounds.size.height - toolbarHeight);
+		self->lastCountdownImage.frame = CGRectMake(0, imageY, self.view.bounds.size.width, self.view.bounds.size.width);
 
 		[self.view addSubview:self->lastCountdownImage];
 		[self playPingSound];
