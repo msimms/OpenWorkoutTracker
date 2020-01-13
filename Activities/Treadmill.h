@@ -20,7 +20,7 @@ public:
 	virtual std::string GetType() const { return Treadmill::Type(); };
 
 protected:
-	virtual bool ProcessGpsReading(const SensorReading& reading);
+	virtual bool ProcessLocationReading(const SensorReading& reading);
 	virtual bool ProcessFootPodReading(const SensorReading& reading);
 	
 private:

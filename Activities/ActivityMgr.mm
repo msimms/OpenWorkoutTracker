@@ -968,7 +968,7 @@ extern "C" {
 							result = true;
 						}
 						break;
-					case SENSOR_TYPE_GPS:
+					case SENSOR_TYPE_LOCATION:
 						if (summary.locationPoints.size() == 0)
 						{
 							if (g_pDatabase->RetrieveActivityPositionReadings(summary.activityId, summary.locationPoints))
@@ -1922,10 +1922,10 @@ extern "C" {
 		return ProcessSensorReading(reading);
 	}
 
-	bool ProcessGpsReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t gpsTimestampMs)
+	bool ProcessLocationReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t gpsTimestampMs)
 	{
 		SensorReading reading;
-		reading.type = SENSOR_TYPE_GPS;
+		reading.type = SENSOR_TYPE_LOCATION;
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LATITUDE, lat));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LONGITUDE, lon));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, alt));

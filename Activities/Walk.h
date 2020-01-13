@@ -38,7 +38,7 @@ public:
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
 
 protected:
-	virtual bool ProcessGpsReading(const SensorReading& reading);
+	virtual bool ProcessLocationReading(const SensorReading& reading);
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 
 protected:

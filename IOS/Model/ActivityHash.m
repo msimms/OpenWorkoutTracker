@@ -148,7 +148,7 @@ void PowerDataHashCallback(const char* activityId, void* context)
 	CreateHistoricalActivityObject(activityIndex);
 
 	// Hash the locations.
-	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_GPS, GpsDataHashCallback, (void*)&ctx);
+	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, GpsDataHashCallback, (void*)&ctx);
 
 	// Hash the sensor data - accelerometer.
 	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_ACCELEROMETER, AccelDataHashCallback, (void*)&ctx);

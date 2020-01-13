@@ -19,7 +19,7 @@ Treadmill::~Treadmill()
 {
 }
 
-bool Treadmill::ProcessGpsReading(const SensorReading& reading)
+bool Treadmill::ProcessLocationReading(const SensorReading& reading)
 {
 	return false;
 }

@@ -99,7 +99,7 @@ public:
 
 protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
-	virtual bool ProcessGpsReading(const SensorReading& reading);
+	virtual bool ProcessLocationReading(const SensorReading& reading);
 	virtual bool ProcessHrmReading(const SensorReading& reading);
 	virtual bool ProcessCadenceReading(const SensorReading& reading);
 	virtual bool ProcessWheelSpeedReading(const SensorReading& reading);

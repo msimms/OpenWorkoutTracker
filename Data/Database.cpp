@@ -1497,7 +1497,7 @@ bool Database::CreateSensorReading(const std::string& activityId, const SensorRe
 			break;
 		case SENSOR_TYPE_ACCELEROMETER:
 			return CreateAccelerometerReading(activityId, reading);
-		case SENSOR_TYPE_GPS:
+		case SENSOR_TYPE_LOCATION:
 			return CreateGpsReading(activityId, reading);
 		case SENSOR_TYPE_HEART_RATE:
 			return CreateHrmReading(activityId, reading);
@@ -1527,7 +1527,7 @@ bool Database::RetrieveSensorReadingsOfType(const std::string& activityId, Senso
 			break;
 		case SENSOR_TYPE_ACCELEROMETER:
 			return RetrieveActivityAccelerometerReadings(activityId, readings);
-		case SENSOR_TYPE_GPS:
+		case SENSOR_TYPE_LOCATION:
 			return RetrieveActivityPositionReadings(activityId, readings);
 		case SENSOR_TYPE_HEART_RATE:
 			return RetrieveActivityHeartRateMonitorReadings(activityId, readings);
@@ -1615,7 +1615,7 @@ bool Database::RetrieveActivityPositionReadings(const std::string& activityId, S
 
 				SensorReading reading;
 
-				reading.type = SENSOR_TYPE_GPS;
+				reading.type = SENSOR_TYPE_LOCATION;
 				reading.time = sqlite3_column_int64(statement, 0);
 
 				double latitude  = sqlite3_column_double(statement, 1);

@@ -51,14 +51,14 @@ void Walk::OnFinishedLoadingSensorData()
 	Activity::OnFinishedLoadingSensorData();
 }
 
-bool Walk::ProcessGpsReading(const SensorReading& reading)
+bool Walk::ProcessLocationReading(const SensorReading& reading)
 {
 	bool result = false;
 
 	if (m_previousLocSet)
 	{
 		Coordinate prevLoc = m_currentLoc;
-		result = MovingActivity::ProcessGpsReading(reading);
+		result = MovingActivity::ProcessLocationReading(reading);
 		if (result)
 		{
 			m_currentCalories += CaloriesBetweenPoints(m_currentLoc, prevLoc);
@@ -66,7 +66,7 @@ bool Walk::ProcessGpsReading(const SensorReading& reading)
 	}
 	else
 	{
-		result = MovingActivity::ProcessGpsReading(reading);
+		result = MovingActivity::ProcessLocationReading(reading);
 	}
 	return result;
 }

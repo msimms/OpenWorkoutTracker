@@ -144,7 +144,7 @@ protected:
 	ActivityAttributeMap m_splitTimes;
 
 protected:
-	virtual bool ProcessGpsReading(const SensorReading& reading);
+	virtual bool ProcessLocationReading(const SensorReading& reading);
 	
 	virtual void RecomputeRecordTimes();
 	virtual void UpdateSplitTimes();

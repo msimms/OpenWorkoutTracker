@@ -598,7 +598,7 @@
 
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensor forActivityId:(NSString*)activityId withCallback:(SensorDataCallback)callback withContext:(void*)context
 {
-	if (sensor == SENSOR_TYPE_GPS)
+	if (sensor == SENSOR_TYPE_LOCATION)
 	{
 		const char* activityIdStr = [activityId UTF8String];
 		NSInteger numLocationPoints = [self getNumLocationPoints:activityId];

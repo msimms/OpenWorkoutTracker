@@ -32,7 +32,7 @@ SegmentType StationaryCycling::CurrentVerticalSpeed() const
 	return segment;
 }
 
-bool StationaryCycling::ProcessGpsReading(const SensorReading& reading)
+bool StationaryCycling::ProcessLocationReading(const SensorReading& reading)
 {
 	return false;
 }

@@ -175,7 +175,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, uint64_t time
 	{
 		SensorReading reading;
 		reading.time = time;
-		reading.type = SENSOR_TYPE_GPS;
+		reading.type = SENSOR_TYPE_LOCATION;
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LATITUDE, lat));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LONGITUDE, lon));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, ele));

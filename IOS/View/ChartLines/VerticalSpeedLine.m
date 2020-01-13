@@ -43,7 +43,7 @@ void VerticalSpeedDataCallback(size_t activityIndex, void* context)
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate createHistoricalActivityObject:self->activityId];
 
-		if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_GPS forActivityId:self->activityId withCallback:VerticalSpeedDataCallback withContext:(__bridge void*)self])
+		if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_LOCATION forActivityId:self->activityId withCallback:VerticalSpeedDataCallback withContext:(__bridge void*)self])
 		{
 			[super draw];
 		}

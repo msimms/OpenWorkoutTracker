@@ -28,7 +28,7 @@ public:
 	virtual double CaloriesBurned() const;
 
 protected:
-	virtual bool ProcessGpsReading(const SensorReading& reading);
+	virtual bool ProcessLocationReading(const SensorReading& reading);
 };
 
 #endif

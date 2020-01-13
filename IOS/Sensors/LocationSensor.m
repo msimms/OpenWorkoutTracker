@@ -83,7 +83,7 @@
 
 - (SensorType)sensorType
 {
-	return SENSOR_TYPE_GPS;
+	return SENSOR_TYPE_LOCATION;
 }
 
 - (void)enteredBackground

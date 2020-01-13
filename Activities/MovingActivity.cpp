@@ -93,7 +93,7 @@ uint64_t MovingActivity::GetCurrentLapStartTime()
 
 void MovingActivity::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 {
-	sensorTypes.push_back(SENSOR_TYPE_GPS);
+	sensorTypes.push_back(SENSOR_TYPE_LOCATION);
 	sensorTypes.push_back(SENSOR_TYPE_HEART_RATE);
 }
 
@@ -343,7 +343,7 @@ void MovingActivity::UpdateSplitTimes()
 	}
 }
 
-bool MovingActivity::ProcessGpsReading(const SensorReading& reading)
+bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 {
 	SetPrevDistanceTraveledInMeters(DistanceTraveledInMeters());
 
@@ -457,7 +457,7 @@ bool MovingActivity::ProcessGpsReading(const SensorReading& reading)
 	m_previousLoc = m_currentLoc;
 	m_previousLocSet = true;
 	
-	return Activity::ProcessGpsReading(reading);
+	return Activity::ProcessLocationReading(reading);
 }
 
 bool MovingActivity::GetCoordinate(size_t pointIndex, Coordinate* const pCoordinate) const

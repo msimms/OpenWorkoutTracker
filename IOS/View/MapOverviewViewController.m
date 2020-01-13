@@ -251,7 +251,7 @@
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_GPS forActivityId:self->activityId withCallback:NULL withContext:NULL])
+	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_LOCATION forActivityId:self->activityId withCallback:NULL withContext:NULL])
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
 		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
@@ -365,7 +365,7 @@
 	[self.mapView setUserTrackingMode:MKUserTrackingModeNone animated:NO];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_GPS forActivityId:self->activityId withCallback:NULL withContext:NULL])
+	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_LOCATION forActivityId:self->activityId withCallback:NULL withContext:NULL])
 	{
 		const size_t SCALING_FACTOR = 3;
 

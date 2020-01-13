@@ -143,8 +143,8 @@ bool Activity::ProcessSensorReading(const SensorReading& reading)
 		case SENSOR_TYPE_ACCELEROMETER:
 			processed = ProcessAccelerometerReading(reading);
 			break;
-		case SENSOR_TYPE_GPS:
-			processed = ProcessGpsReading(reading);
+		case SENSOR_TYPE_LOCATION:
+			processed = ProcessLocationReading(reading);
 			break;
 		case SENSOR_TYPE_HEART_RATE:
 			processed = ProcessHrmReading(reading);
@@ -186,7 +186,7 @@ bool Activity::ProcessAccelerometerReading(const SensorReading& reading)
 	return true;
 }
 
-bool Activity::ProcessGpsReading(const SensorReading& reading)
+bool Activity::ProcessLocationReading(const SensorReading& reading)
 {
 	return true;
 }
