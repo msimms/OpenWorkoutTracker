@@ -112,6 +112,9 @@ typedef enum ExportFileTypeButtons
 @synthesize tagsButton;
 @synthesize spinner;
 
+@synthesize tableTopConstraint;
+@synthesize tableHeightConstraint;
+
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -123,7 +126,7 @@ typedef enum ExportFileTypeButtons
 		self->startTime = 0;
 		self->endTime = 0;
 
-		self->hasGpsData = false;
+		self->hasLocationData = false;
 		self->hasAccelerometerData = false;
 		self->hasHeartRateData = false;
 		self->hasCadenceData = false;
@@ -216,13 +219,13 @@ typedef enum ExportFileTypeButtons
 
 		[appDelegate getHistoricalActivityStartAndEndTime:self->activityId withStartTime:&self->startTime withEndTime:&self->endTime];
 
-		self->hasGpsData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityId:self->activityId].valid;
+		self->hasLocationData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_STARTING_LATITUDE forActivityId:self->activityId].valid;
 		self->hasAccelerometerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_X forActivityId:self->activityId].valid;
 		self->hasHeartRateData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_HEART_RATE forActivityId:self->activityId].valid;
 		self->hasCadenceData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_CADENCE forActivityId:self->activityId].valid;
 		self->hasPowerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_POWER forActivityId:self->activityId].valid;
 		
-		self->chartTitles = [LineFactory getLineNames:self->hasGpsData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
+		self->chartTitles = [LineFactory getLineNames:self->hasLocationData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
 		
 		self->timeSection1RowNames = [[NSMutableArray alloc] init];
 		if (self->timeSection1RowNames)
@@ -232,7 +235,7 @@ typedef enum ExportFileTypeButtons
 		}
 
 		self->timeSection2RowNames = [[NSMutableArray alloc] init];
-		if (self->hasGpsData)
+		if (self->hasLocationData)
 		{
 			[self->timeSection2RowNames addObject:ROW_TITLE_SPLIT_TIMES];
 			[self->timeSection2RowNames addObject:ROW_TITLE_LAP_TIMES];
@@ -530,14 +533,18 @@ typedef enum ExportFileTypeButtons
 	{
 		self.mapView.hidden = FALSE;
 		[self.mapView setDelegate:self];
+		self.tableTopConstraint.constant = 0;
+		self.tableHeightConstraint.constant = self.view.frame.size.height;
+		[self.summaryTableView needsUpdateConstraints];
 		[self.toolbar setItems:self->movingToolbar animated:NO];
-		summaryTableRect.origin.y = mapRect.origin.y + mapRect.size.height;
 	}
 	else
 	{
 		self.mapView.hidden = TRUE;
+		self.tableTopConstraint.constant = -1 * mapRect.size.height;
+		self.tableHeightConstraint.constant = self.view.frame.size.height;
+		[self.summaryTableView needsUpdateConstraints];
 		[self.toolbar setItems:self->liftingToolbar animated:NO];
-		summaryTableRect.origin.y = mapRect.origin.y;
 	}
 
 	[self.summaryTableView setFrame:summaryTableRect];

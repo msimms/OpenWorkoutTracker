@@ -48,7 +48,7 @@
 	uint8_t sectionIndexes[8];
 	uint8_t numVisibleSections;
 
-	bool hasGpsData;
+	bool hasLocationData;
 	bool hasAccelerometerData;
 	bool hasHeartRateData;
 	bool hasCadenceData;
@@ -77,5 +77,8 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* bikeButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* tagsButton;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint* tableTopConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint* tableHeightConstraint;
 
 @end

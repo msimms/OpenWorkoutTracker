@@ -1987,6 +1987,9 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="M6E-Tx-gxb">
                                 <rect key="frame" x="0.0" y="365" width="375" height="364"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="364" id="B3g-Ei-oT1"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="xf7-Mc-VJA" id="fTH-Ie-93v"/>
                                     <outlet property="delegate" destination="xf7-Mc-VJA" id="xQ6-ft-k8U"/>
@@ -2070,8 +2073,11 @@
                         <outlet property="navItem" destination="tMM-Bs-yS7" id="AwI-W0-Mez"/>
                         <outlet property="spinner" destination="1ax-kD-CMV" id="d1h-gM-m7n"/>
                         <outlet property="summaryTableView" destination="M6E-Tx-gxb" id="7DR-Ah-880"/>
+                        <outlet property="tableHeightConstraint" destination="B3g-Ei-oT1" id="FQg-Xm-wqe"/>
+                        <outlet property="tableTopConstraint" destination="vMk-p6-Ib3" id="W28-Kd-fHF"/>
                         <outlet property="tagsButton" destination="yi4-Xp-L31" id="7HC-fd-lpV"/>
                         <outlet property="toolbar" destination="jfP-Xt-Jaz" id="k50-dG-hFR"/>
+                        <outlet property="view" destination="mi4-nO-i8o" id="EnY-8e-Gc1"/>
                         <segue destination="jJ2-SU-SfT" kind="push" identifier="SegueToTagViewController" id="EbT-fJ-Wcb"/>
                         <segue destination="dpF-uY-DXe" kind="push" identifier="SegueToSplitTimesView" id="hRg-kq-rh5"/>
                         <segue destination="nlb-r6-Zc5" kind="push" identifier="SegueToLapTimesView" id="W2K-DV-FJr"/>
