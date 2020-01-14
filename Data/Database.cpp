@@ -575,13 +575,14 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set target_pace = ?, target_distance = ?, splits = ? where plan_id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, target_pace = ?, target_distance = ?, splits = ? where plan_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_double(statement, 1, plan.targetPace);
-		sqlite3_bind_double(statement, 2, plan.targetDistance);
-		sqlite3_bind_double(statement, 3, plan.splits);
-		sqlite3_bind_text(statement, 4, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, plan.name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 2, plan.targetPace);
+		sqlite3_bind_double(statement, 3, plan.targetDistance);
+		sqlite3_bind_double(statement, 4, plan.splits);
+		sqlite3_bind_text(statement, 5, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

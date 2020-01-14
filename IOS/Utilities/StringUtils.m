@@ -238,7 +238,8 @@
 + (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds
 {
 	NSArray* listItems = [str componentsSeparatedByString:@":"];
-	NSInteger numItems = [listItems count];
+	NSArray* reversedList = [[listItems reverseObjectEnumerator] allObjects];
+	NSInteger numItems = [reversedList count];
 	uint16_t tempHours = 0;
 	uint16_t tempMinutes = 0;
 	uint16_t tempSeconds = 0;
@@ -247,15 +248,15 @@
 		return FALSE;
 
 	if (numItems >= 3)
-		tempHours = [listItems[2] intValue];
+		tempHours = [reversedList[2] intValue];
 		if (tempHours < 0)
 			return FALSE;
 	if (numItems >= 2)
-		tempMinutes = [listItems[1] intValue];
+		tempMinutes = [reversedList[1] intValue];
 		if (tempMinutes < 0 || tempMinutes >= 60)
 			return FALSE;
 	if (numItems >= 1)
-		tempSeconds = [listItems[0] intValue];
+		tempSeconds = [reversedList[0] intValue];
 		if (tempSeconds < 0 || tempSeconds >= 60)
 			return FALSE;
 

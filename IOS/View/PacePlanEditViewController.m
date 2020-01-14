@@ -7,6 +7,7 @@
 #import "StringUtils.h"
 
 #define TITLE NSLocalizedString(@"Edit Pace Plan", nil)
+#define MSG_INVALID_DISTANCE NSLocalizedString(@"Invalid distance value.", nil)
 #define MSG_INVALID_TIME NSLocalizedString(@"Invalid time value.", nil)
 
 @interface PacePlanEditViewController ()
@@ -85,9 +86,18 @@
 	uint16_t minutes = 0;
 	uint16_t seconds = 0;
 
+	double targetDistance = [distanceTextField.text floatValue];
 	double targetPace = 0.0;
 	double splits = 0.0;
 	
+	// Validate the distance. The units will be converted later.
+	if (targetDistance <= 0.0)
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_INVALID_DISTANCE];
+		return;
+	}
+
+	// Parse and validate the pace data.
 	if ([StringUtils parseHHMMSS:targetPaceTextField.text withHours:&hours withMinutes:&minutes withSeconds:&seconds])
 	{
 		targetPace = (hours * 60 * 60) + (minutes * 60) + seconds;
@@ -98,6 +108,7 @@
 		return;
 	}
 
+	// Parse and validate the splits data.
 	if ([StringUtils parseHHMMSS:splitsTextField.text withHours:&hours withMinutes:&minutes withSeconds:&seconds])
 	{
 		splits = (hours * 60 * 60) + (minutes * 60) + seconds;
@@ -106,6 +117,17 @@
 	{
 		[super showOneButtonAlert:STR_ERROR withMsg:MSG_INVALID_TIME];
 		return;
+	}
+
+	// Update the data.
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPace withTargetDistance:targetDistance withSplits:splits])
+	{
+		[self.navigationController popViewControllerAnimated:TRUE];
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
 	}
 }
 

@@ -709,7 +709,16 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			return g_pDatabase->RetrievePacePlans(g_pacePlans);
+			bool result = g_pDatabase->RetrievePacePlans(g_pacePlans);
+			if (result)
+			{
+				for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+				{
+					PacePlan& pacePlan = (*iter);
+					pacePlan.targetDistance = UnitMgr::ConvertToPreferredDistanceFromMeters(pacePlan.targetDistance);
+				}
+			}
+			return result;
 		}
 		return false;
 	}
@@ -776,7 +785,7 @@ extern "C" {
 				{
 					pacePlan.name = name;
 					pacePlan.targetPace = targetPace;
-					pacePlan.targetDistance = targetDistance;
+					pacePlan.targetDistance = UnitMgr::ConvertFromPreferredDistanceToMeters(targetDistance);
 					pacePlan.splits = splits;
 					return g_pDatabase->UpdatePacePlan(pacePlan);
 				}

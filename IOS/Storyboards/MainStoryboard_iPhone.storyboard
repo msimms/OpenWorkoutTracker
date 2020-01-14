@@ -2447,6 +2447,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     <constraint firstAttribute="height" constant="44" id="x1E-4p-SPb"/>
                                 </constraints>
                                 <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Wmb-Ki-pVq"/>
                                     <barButtonItem systemItem="save" id="7tJ-WE-XIJ">
                                         <connections>
                                             <action selector="onSave:" destination="EBx-yG-7i6" id="5mR-3o-d1Z"/>
@@ -2466,14 +2467,14 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Target Pace" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Son-pC-men">
-                                <rect key="frame" x="17.333333333333336" y="263" width="90.666666666666657" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Target Pace (mm:ss)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Son-pC-men">
+                                <rect key="frame" x="17.333333333333329" y="263" width="158" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qR6-mO-zhQ">
-                                <rect key="frame" x="79" y="122" width="266" height="34.333333333333314"/>
+                                <rect key="frame" x="79" y="121.99999999999999" width="266" height="34.333333333333329"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -2483,17 +2484,17 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NOx-tz-E9l">
-                                <rect key="frame" x="126" y="256.33333333333337" width="219" height="34.333333333333314"/>
+                                <rect key="frame" x="193.33333333333337" y="256.33333333333331" width="151.66666666666663" height="34.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YhW-NW-iB4">
-                                <rect key="frame" x="79" y="324.66666666666674" width="266" height="34.333333333333314"/>
+                                <rect key="frame" x="147" y="324.66666666666669" width="198" height="34.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Splits" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="280-6c-5gz">
-                                <rect key="frame" x="16" y="331.33333333333331" width="43" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Splits (mm:ss)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="280-6c-5gz">
+                                <rect key="frame" x="16" y="331.33333333333331" width="110" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -2526,7 +2527,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <constraint firstItem="NOx-tz-E9l" firstAttribute="trailing" secondItem="YhW-NW-iB4" secondAttribute="trailing" id="nQN-1N-ntv"/>
                             <constraint firstItem="Son-pC-men" firstAttribute="leading" secondItem="PbG-OE-X5E" secondAttribute="leading" constant="17.333333333333336" id="ogm-Tp-p8i"/>
                             <constraint firstItem="tYE-vI-hIF" firstAttribute="trailing" secondItem="NOx-tz-E9l" secondAttribute="trailing" id="qy3-4O-cLC"/>
-                            <constraint firstItem="qR6-mO-zhQ" firstAttribute="leading" secondItem="YhW-NW-iB4" secondAttribute="leading" id="xSE-b6-cO3"/>
+                            <constraint firstItem="qR6-mO-zhQ" firstAttribute="leading" secondItem="YhW-NW-iB4" secondAttribute="leading" constant="-68" id="xSE-b6-cO3"/>
                             <constraint firstItem="Son-pC-men" firstAttribute="top" secondItem="tYE-vI-hIF" secondAttribute="bottom" constant="38.666666666666657" id="zgS-q5-rhG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="PbG-OE-X5E"/>
