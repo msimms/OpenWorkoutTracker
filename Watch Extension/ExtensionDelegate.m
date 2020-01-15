@@ -437,12 +437,14 @@ void startSensorCallback(SensorType type, void* context)
 
 - (NSString*)retrieveHashForActivityId:(NSString*)activityId
 {
-	const char* const hash = GetHashForActivityId([activityId UTF8String]);
-	if (hash)
+	NSString* result = nil;
+	char* activityHash = GetHashForActivityId([activityId UTF8String]);
+	if (activityHash)
 	{
-		return [[NSString alloc] initWithFormat:@"%s", hash];
+		result = [NSString stringWithFormat:@"%s", activityHash];
+		free((void*)activityHash);
 	}
-	return NULL;
+	return result;
 }
 
 - (NSString*)retrieveHashForActivityIndex:(NSInteger)activityIndex
