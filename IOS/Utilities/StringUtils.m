@@ -70,7 +70,7 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"km/mile", nil);
+					return NSLocalizedString(@"mins/km", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
 					return NSLocalizedString(@"mins/mile", nil);
 				else
@@ -92,7 +92,7 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"km", nil);
+					return NSLocalizedString(@"kms", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
 					return NSLocalizedString(@"miles", nil);
 				else
@@ -103,7 +103,7 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"kg", nil);
+					return NSLocalizedString(@"kgs", nil);
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
 					return NSLocalizedString(@"lbs", nil);
 				else

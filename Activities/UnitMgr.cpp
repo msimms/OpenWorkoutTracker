@@ -97,13 +97,16 @@ void UnitMgr::ConvertActivityAttributeToMetric(ActivityAttributeType& value)
 				break;
 			case MEASURE_DISTANCE:
 				value.value.doubleVal = UnitConverter::MilesToKilometers(value.value.doubleVal);
+				value.unitSystem = UNIT_SYSTEM_METRIC;
 				break;
 			case MEASURE_WEIGHT:
 				value.value.doubleVal = UnitConverter::PoundsToKilograms(value.value.doubleVal);
+				value.unitSystem = UNIT_SYSTEM_METRIC;
 				break;
 			case MEASURE_HEIGHT:
 			case MEASURE_ALTITUDE:
 				value.value.doubleVal = UnitConverter::FeetToMeters(value.value.doubleVal);
+				value.unitSystem = UNIT_SYSTEM_METRIC;
 				break;
 			case MEASURE_COUNT:
 			case MEASURE_BPM:
@@ -137,13 +140,16 @@ void UnitMgr::ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& va
 					break;
 				case MEASURE_DISTANCE:
 					value.value.doubleVal = UnitConverter::KilometersToMiles(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 					break;
 				case MEASURE_WEIGHT:
 					value.value.doubleVal = UnitConverter::KilogramsToPounds(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 					break;
 				case MEASURE_HEIGHT:
 				case MEASURE_ALTITUDE:
 					value.value.doubleVal = UnitConverter::MetersToFeet(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 					break;
 				case MEASURE_COUNT:
 				case MEASURE_BPM:
@@ -175,16 +181,4 @@ void UnitMgr::ConvertActivityAttributeToPreferredUnits(ActivityAttributeType& va
 			UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
 			break;
 	}
-}
-
-std::string UnitMgr::GetPreferredDistanceLabel()
-{
-	switch (m_unitSystem)
-	{
-		case UNIT_SYSTEM_METRIC:
-			return "km";
-		case UNIT_SYSTEM_US_CUSTOMARY:
-			return "mile";
-	}
-	return "";
 }

@@ -1823,12 +1823,31 @@ void attributeNameCallback(const char* name, void* context)
 		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 
 		free((void*)tempName);
 	}
+	if (result && targetDistance)
+	{
+		ActivityAttributeType distanceAttr;
+		distanceAttr.value.doubleVal = (*targetDistance) / 1000.0;
+		distanceAttr.valueType = TYPE_DOUBLE;
+		distanceAttr.measureType = MEASURE_DISTANCE;
+		distanceAttr.unitSystem = UNIT_SYSTEM_METRIC;
+		distanceAttr.valid = true;
+		ConvertToPreferredUntis(&distanceAttr);
+		(*targetDistance) = distanceAttr.value.doubleVal;
+	}
 	return result;
 }
 
 - (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits
 {
-	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits);
+	ActivityAttributeType distanceAttr;
+	distanceAttr.value.doubleVal = targetDistance;
+	distanceAttr.valueType = TYPE_DOUBLE;
+	distanceAttr.measureType = MEASURE_DISTANCE;
+	distanceAttr.unitSystem = [Preferences preferredUnitSystem];
+	distanceAttr.valid = true;
+	ConvertToPreferredUntis(&distanceAttr);
+
+	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, distanceAttr.value.doubleVal, splits);
 }
 
 - (BOOL)deletePacePlanWithId:(NSString*)planId

@@ -558,7 +558,7 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 			plan.planId.append((const char*)sqlite3_column_text(statement, 0));
 			plan.name.append((const char*)sqlite3_column_text(statement, 1));
 			plan.targetPace = sqlite3_column_double(statement, 2);
-			plan.targetDistance = sqlite3_column_double(statement, 3);
+			plan.targetDistanceInMeters = sqlite3_column_double(statement, 3);
 			plan.splits = sqlite3_column_double(statement, 4);
 			plan.route.append((const char*)sqlite3_column_text(statement, 5));
 
@@ -580,7 +580,7 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 	{
 		sqlite3_bind_text(statement, 1, plan.name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_double(statement, 2, plan.targetPace);
-		sqlite3_bind_double(statement, 3, plan.targetDistance);
+		sqlite3_bind_double(statement, 3, plan.targetDistanceInMeters);
 		sqlite3_bind_double(statement, 4, plan.splits);
 		sqlite3_bind_text(statement, 5, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);

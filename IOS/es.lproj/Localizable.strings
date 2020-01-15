@@ -119,7 +119,6 @@
 "Invite" = "Invitar";
 "kgs" = "kgs";
 "Kilometers" = "Kilómetros";
-"km/mile" = "km/milla";
 "Lap" = "Vuelta";
 "Lap Times" = "Tiempos de Vueltas";
 "Layout" = "Disposición";
@@ -142,6 +141,7 @@
 "miles" = "millas";
 "Miles" = "Millas";
 "Minimum GPS Accuracy" = "Precisión Mínima GPS";
+"mins/km" = "mins/km";
 "mins/mile" = "mins/milla";
 "Moderate" = "Moderado";
 "More" = "Más";

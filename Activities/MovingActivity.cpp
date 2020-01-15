@@ -553,7 +553,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.timeVal = GapToTargetPace();
 		result.valueType = TYPE_TIME;
 		result.measureType = MEASURE_PACE;
-		result.valid = false;
+		result.valid = m_pacePlan.targetDistanceInMeters > (double)0.01;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_SPEED) == 0)
 	{
@@ -1018,6 +1018,14 @@ SegmentType MovingActivity::CurrentPace() const
 
 time_t MovingActivity::GapToTargetPace() const
 {
+	if (m_pacePlan.targetDistanceInMeters > (double)0.01 && m_pacePlan.targetPace > (double)0.0)
+	{
+		double remainingDistanceInMeters = m_pacePlan.targetDistanceInMeters - DistanceTraveledInMeters();
+		if (remainingDistanceInMeters > (double)0.01)
+		{
+			double neededAvgPace = remainingDistanceInMeters / m_pacePlan.targetPace;
+		}
+	}
 	return 0;
 }
 

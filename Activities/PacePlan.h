@@ -9,11 +9,11 @@
 
 typedef struct PacePlan
 {
-	std::string  planId;
-	std::string  name;
-	double       targetPace;
-	double       targetDistance;
-	double       splits;
+	std::string  planId;     // unique identifier
+	std::string  name;       // name
+	double       targetPace; // target pace (in seconds/meter)
+	double       targetDistanceInMeters; // target distance (in meters)
+	double       splits;     // desired splits (in seconds/meter)
 	std::string  route;
 } PacePlan;
 

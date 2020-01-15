@@ -119,7 +119,6 @@
 "Invite" = "Invite";
 "kgs" = "kgs";
 "Kilometers" = "Kilometers";
-"km/mile" = "km/mile";
 "Lap" = "Lap";
 "Lap Times" = "Lap Times";
 "Layout" = "Layout";
@@ -142,6 +141,7 @@
 "miles" = "miles";
 "Miles" = "Miles";
 "Minimum GPS Accuracy" = "Minimum GPS Accuracy";
+"mins/km" = "mins/km";
 "mins/mile" = "mins/mile";
 "Moderate" = "Moderate";
 "More" = "More";

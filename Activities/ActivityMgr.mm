@@ -709,16 +709,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			bool result = g_pDatabase->RetrievePacePlans(g_pacePlans);
-			if (result)
-			{
-				for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
-				{
-					PacePlan& pacePlan = (*iter);
-					pacePlan.targetDistance = UnitMgr::ConvertToPreferredDistanceFromMeters(pacePlan.targetDistance);
-				}
-			}
-			return result;
+			return g_pDatabase->RetrievePacePlans(g_pacePlans);
 		}
 		return false;
 	}
@@ -750,7 +741,7 @@ extern "C" {
 		return false;
 	}
 
-	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPace, double* targetDistance, double* splits)
+	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPace, double* targetDistanceInMeters, double* splits)
 	{
 		if (planId)
 		{
@@ -763,8 +754,8 @@ extern "C" {
 						(*name) = strdup(pacePlan.name.c_str());
 					if (targetPace)
 						(*targetPace) = pacePlan.targetPace;
-					if (targetDistance)
-						(*targetDistance) = pacePlan.targetDistance;
+					if (targetDistanceInMeters)
+						(*targetDistanceInMeters) = pacePlan.targetDistanceInMeters;
 					if (splits)
 						(*splits) = pacePlan.splits;
 					return true;
@@ -774,7 +765,7 @@ extern "C" {
 		return false;
 	}
 
-	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPace, double targetDistance, double splits)
+	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPace, double targetDistanceInMeters, double splits)
 	{
 		if (g_pDatabase && planId)
 		{
@@ -785,7 +776,7 @@ extern "C" {
 				{
 					pacePlan.name = name;
 					pacePlan.targetPace = targetPace;
-					pacePlan.targetDistance = UnitMgr::ConvertFromPreferredDistanceToMeters(targetDistance);
+					pacePlan.targetDistanceInMeters = targetDistanceInMeters;
 					pacePlan.splits = splits;
 					return g_pDatabase->UpdatePacePlan(pacePlan);
 				}

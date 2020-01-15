@@ -32,8 +32,6 @@ public:
 	static void ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& value);
 	static void ConvertActivityAttributeToPreferredUnits(ActivityAttributeType& value);
 
-	static std::string GetPreferredDistanceLabel();
-
 private:
 	static UnitSystem m_unitSystem;
 };
