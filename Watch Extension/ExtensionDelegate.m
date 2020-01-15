@@ -461,7 +461,7 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
-	const char* activityName = GetActivityName([activityId UTF8String]);
+	char* activityName = GetActivityName([activityId UTF8String]);
 	if (activityName)
 	{
 		result = [NSString stringWithFormat:@"%s", activityName];

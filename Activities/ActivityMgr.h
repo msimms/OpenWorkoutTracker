@@ -43,7 +43,7 @@ extern "C" {
 
 	// Functions for managing the activity name.
 	bool SetActivityName(const char* const activityId, const char* const name);
-	const char* GetActivityName(const char* const activityId);
+	char* GetActivityName(const char* const activityId);
 
 	// Functions for managing tags.
 	bool GetTags(const char* const activityId, TagCallback callback, void* context);
@@ -53,8 +53,8 @@ extern "C" {
 	
 	// Functions for managing the activity hash.
 	bool StoreHash(const char* const activityId, const char* const hash);
-	const char* GetActivityIdByHash(const char* const hash);
-	const char* GetHashForActivityId(const char* const activityId);
+	char* GetActivityIdByHash(const char* const hash);
+	char* GetHashForActivityId(const char* const activityId);
 
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);

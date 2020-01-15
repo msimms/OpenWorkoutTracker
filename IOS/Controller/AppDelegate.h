@@ -158,6 +158,7 @@
 
 // hash methods
 
+- (NSString*)getActivityHash:(NSString*)activityId;
 - (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
 

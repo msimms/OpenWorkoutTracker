@@ -31,6 +31,7 @@
 #define SECTION_TITLE_CHARTS           NSLocalizedString(@"Charts", nil)
 #define SECTION_TITLE_ATTRIBUTES       NSLocalizedString(@"Summary", nil)
 #define SECTION_TITLE_SUPERLATIVES     NSLocalizedString(@"Superlatives", nil)
+#define SECTION_TITLE_INTERNAL         NSLocalizedString(@"Internal", nil)
 
 #define ACTION_SHEET_BUTTON_GPX        NSLocalizedString(@"GPX File", nil)
 #define ACTION_SHEET_BUTTON_TCX        NSLocalizedString(@"TCX File", nil)
@@ -84,6 +85,7 @@ typedef enum Sections
 	SECTION_CHARTS,
 	SECTION_ATTRIBUTES,
 	SECTION_SUPERLATIVES,
+	SECTION_INTERNAL,
 	NUM_SECTIONS
 } Sections;
 
@@ -299,6 +301,9 @@ typedef enum ExportFileTypeButtons
 					break;
 				case SECTION_SUPERLATIVES:
 					count = [self->recordNames count];
+					break;
+				case SECTION_INTERNAL:
+					count = 1;
 					break;
 			}
 
@@ -774,6 +779,8 @@ typedef enum ExportFileTypeButtons
 			return SECTION_TITLE_ATTRIBUTES;
 		case SECTION_SUPERLATIVES:
 			return SECTION_TITLE_SUPERLATIVES;
+		case SECTION_INTERNAL:
+			return SECTION_TITLE_INTERNAL;
 	}
 	return @"";
 }
@@ -795,6 +802,8 @@ typedef enum ExportFileTypeButtons
 			return [self->attributeNames count];
 		case SECTION_SUPERLATIVES:
 			return [self->recordNames count];
+		case SECTION_INTERNAL:
+			return 1;
 	}
 	return 0;
 }
@@ -907,6 +916,16 @@ typedef enum ExportFileTypeButtons
 				}
 			}
 			break;
+		case SECTION_INTERNAL:
+			{
+				NSString* hash = [appDelegate getActivityHash:self->activityId];
+				cell.textLabel.text = NSLocalizedString(@"Activity Hash", nil);
+				if ([hash length] > 0)
+					cell.detailTextLabel.text = hash;
+				else
+					cell.detailTextLabel.text = @"--";
+			}
+			break;
 		default:
 			break;
 	}
@@ -938,6 +957,9 @@ typedef enum ExportFileTypeButtons
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 		case SECTION_SUPERLATIVES:
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			break;
+		case SECTION_INTERNAL:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 	}

@@ -114,7 +114,7 @@ extern "C" {
 		return false;
 	}
 
-	const char* GetActivityName(const char* const activityId)
+	char* GetActivityName(const char* const activityId)
 	{
 		if (g_pDatabase)
 		{
@@ -214,7 +214,7 @@ extern "C" {
 		return result;
 	}
 
-	const char* GetActivityIdByHash(const char* const hash)
+	char* GetActivityIdByHash(const char* const hash)
 	{
 		if (g_pDatabase)
 		{
@@ -228,7 +228,7 @@ extern "C" {
 		return NULL;
 	}
 
-	const char* GetHashForActivityId(const char* const activityId)
+	char* GetHashForActivityId(const char* const activityId)
 	{
 		if (g_pDatabase)
 		{
