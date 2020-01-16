@@ -18,6 +18,26 @@ double UnitConverter::KilometersToMiles(double km)
 	return km * (double)MILES_PER_KILOMETER;
 }
 
+double UnitConverter::PaceToUsCustomary(double pace)
+{
+	return pace / KPH_TO_MPH;
+}
+
+double UnitConverter::PaceToMetric(double pace)
+{
+	return pace / MPH_TO_KPH;
+}
+
+double UnitConverter::SpeedToUsCustomary(double speed)
+{
+	return speed * KPH_TO_MPH;
+}
+
+double UnitConverter::SpeedToMetric(double speed)
+{
+	return speed * MPH_TO_KPH;
+}
+
 double UnitConverter::MetersToFurlongs(double m)
 {
 	return m / (double)FURLONGS_PER_METER;

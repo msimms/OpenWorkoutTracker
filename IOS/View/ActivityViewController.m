@@ -951,6 +951,23 @@
 			{
 				[self displayValue:valueLabel withValue:self->lastPowerValue];
 			}
+			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE])
+			{
+				bool isNeg = (value.value.timeVal < 0);
+				if (isNeg)
+				{
+					value.value.timeVal *= -1;
+				}
+				NSString* formattedText = [StringUtils formatActivityViewType:value];
+				if (isNeg)
+				{
+					[valueLabel setText:[NSString stringWithFormat:@"-%@", formattedText]];
+				}
+				else
+				{
+					[valueLabel setText:formattedText];
+				}
+			}
 			else
 			{
 				[valueLabel setText:[StringUtils formatActivityViewType:value]];

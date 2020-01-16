@@ -741,7 +741,7 @@ extern "C" {
 		return false;
 	}
 
-	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPace, double* targetDistanceInMeters, double* splits)
+	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits)
 	{
 		if (planId)
 		{
@@ -752,10 +752,10 @@ extern "C" {
 				{
 					if (name)
 						(*name) = strdup(pacePlan.name.c_str());
-					if (targetPace)
-						(*targetPace) = pacePlan.targetPace;
-					if (targetDistanceInMeters)
-						(*targetDistanceInMeters) = pacePlan.targetDistanceInMeters;
+					if (targetPaceMinKm)
+						(*targetPaceMinKm) = pacePlan.targetPaceMinKm;
+					if (targetDistanceInKms)
+						(*targetDistanceInKms) = pacePlan.targetDistanceInKms;
 					if (splits)
 						(*splits) = pacePlan.splits;
 					return true;
@@ -765,7 +765,7 @@ extern "C" {
 		return false;
 	}
 
-	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPace, double targetDistanceInMeters, double splits)
+	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceMinKm, double targetDistanceInKms, double splits)
 	{
 		if (g_pDatabase && planId)
 		{
@@ -775,8 +775,8 @@ extern "C" {
 				if (pacePlan.planId.compare(planId) == 0)
 				{
 					pacePlan.name = name;
-					pacePlan.targetPace = targetPace;
-					pacePlan.targetDistanceInMeters = targetDistanceInMeters;
+					pacePlan.targetPaceMinKm = targetPaceMinKm;
+					pacePlan.targetDistanceInKms = targetDistanceInKms;
 					pacePlan.splits = splits;
 					return g_pDatabase->UpdatePacePlan(pacePlan);
 				}

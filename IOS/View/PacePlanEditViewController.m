@@ -46,18 +46,18 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	NSString* planName = nil;
-	double targetPace = (double)0.0;
 	double targetDistance = (double)0.0;
-	double splits = (double)0.0;
+	double targetPaceMin = (double)0.0;
+	double splitsMin = (double)0.0;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate retrievePacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPace withTargetDistance:&targetDistance withSplits:&splits])
+	if ([appDelegate retrievePacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin])
 	{
 		if (planName != nil)
 			nameTextField.text = planName;
 		distanceTextField.text = [NSString stringWithFormat:@"%0.2f", targetDistance];
-		targetPaceTextField.text = [StringUtils formatSeconds:(uint64_t)targetPace];
-		splitsTextField.text = [StringUtils formatSeconds:(uint64_t)splits];
+		targetPaceTextField.text = [StringUtils formatSeconds:(uint64_t)(targetPaceMin * 60.0)];
+		splitsTextField.text = [StringUtils formatSeconds:(uint64_t)(splitsMin * 60.0)];
 	}
 }
 
@@ -87,8 +87,8 @@
 	uint16_t seconds = 0;
 
 	double targetDistance = [distanceTextField.text floatValue];
-	double targetPace = 0.0;
-	double splits = 0.0;
+	double targetPaceMin = 0.0;
+	double splitsMin = 0.0;
 	
 	// Validate the distance. The units will be converted later.
 	if (targetDistance <= 0.0)
@@ -100,7 +100,7 @@
 	// Parse and validate the pace data.
 	if ([StringUtils parseHHMMSS:targetPaceTextField.text withHours:&hours withMinutes:&minutes withSeconds:&seconds])
 	{
-		targetPace = (hours * 60 * 60) + (minutes * 60) + seconds;
+		targetPaceMin = ((hours * 60.0 * 60.0) + (minutes * 60.0) + seconds) / 60.0;
 	}
 	else
 	{
@@ -111,7 +111,7 @@
 	// Parse and validate the splits data.
 	if ([StringUtils parseHHMMSS:splitsTextField.text withHours:&hours withMinutes:&minutes withSeconds:&seconds])
 	{
-		splits = (hours * 60 * 60) + (minutes * 60) + seconds;
+		splitsMin = ((hours * 60.0 * 60.0) + (minutes * 60.0) + seconds) / 60.0;
 	}
 	else
 	{
@@ -121,7 +121,7 @@
 
 	// Update the data.
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPace withTargetDistance:targetDistance withSplits:splits])
+	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withSplits:splitsMin])
 	{
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}

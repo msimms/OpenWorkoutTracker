@@ -93,7 +93,12 @@ void UnitMgr::ConvertActivityAttributeToMetric(ActivityAttributeType& value)
 			case MEASURE_TIME:
 				break;
 			case MEASURE_PACE:
+				value.value.doubleVal = UnitConverter::PaceToMetric(value.value.doubleVal);
+				value.unitSystem = UNIT_SYSTEM_METRIC;
+				break;
 			case MEASURE_SPEED:
+				value.value.doubleVal = UnitConverter::SpeedToMetric(value.value.doubleVal);
+				value.unitSystem = UNIT_SYSTEM_METRIC;
 				break;
 			case MEASURE_DISTANCE:
 				value.value.doubleVal = UnitConverter::MilesToKilometers(value.value.doubleVal);
@@ -136,7 +141,12 @@ void UnitMgr::ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& va
 				case MEASURE_TIME:
 					break;
 				case MEASURE_PACE:
+					value.value.doubleVal = UnitConverter::PaceToUsCustomary(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+					break;
 				case MEASURE_SPEED:
+					value.value.doubleVal = UnitConverter::SpeedToUsCustomary(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 					break;
 				case MEASURE_DISTANCE:
 					value.value.doubleVal = UnitConverter::KilometersToMiles(value.value.doubleVal);

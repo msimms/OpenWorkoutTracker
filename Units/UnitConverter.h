@@ -19,6 +19,11 @@ public:
 	static double MilesToKilometers(double miles);
 	static double KilometersToMiles(double km);
 
+	static double PaceToUsCustomary(double pace);
+	static double PaceToMetric(double pace);
+	static double SpeedToUsCustomary(double speed);
+	static double SpeedToMetric(double speed);
+
 	static double MetersToFurlongs(double m);
 	static double MetersToFeet(double m);
 	static double FeetToMeters(double ft);

@@ -553,7 +553,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.timeVal = GapToTargetPace();
 		result.valueType = TYPE_TIME;
 		result.measureType = MEASURE_PACE;
-		result.valid = m_pacePlan.targetDistanceInMeters > (double)0.01;
+		result.valid = m_pacePlan.targetDistanceInKms > (double)0.01;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_SPEED) == 0)
 	{
@@ -1018,12 +1018,28 @@ SegmentType MovingActivity::CurrentPace() const
 
 time_t MovingActivity::GapToTargetPace() const
 {
-	if (m_pacePlan.targetDistanceInMeters > (double)0.01 && m_pacePlan.targetPace > (double)0.0)
+	// Make sure a pace plan is selected.
+	if (m_pacePlan.targetDistanceInKms > (double)0.01 && m_pacePlan.targetPaceMinKm > (double)0.0)
 	{
-		double remainingDistanceInMeters = m_pacePlan.targetDistanceInMeters - DistanceTraveledInMeters();
+		double remainingDistanceInMeters = (m_pacePlan.targetDistanceInKms * 1000.0) - DistanceTraveledInMeters();
 		if (remainingDistanceInMeters > (double)0.01)
 		{
-			double neededAvgPace = remainingDistanceInMeters / m_pacePlan.targetPace;
+			SegmentType currentPaceSegment = CurrentPace();
+			if (currentPaceSegment.startTime > 0) // Make sure we're moving.
+			{
+				double elapsedMins = ElapsedTimeInSeconds() / (double)60.0;
+				double targetFinishTimeInMins = (m_pacePlan.targetDistanceInKms * m_pacePlan.targetPaceMinKm) - elapsedMins;
+				if (targetFinishTimeInMins > (double)0.01) // Make sure we haven't already passed the target finish time.
+				{
+					double remainingDistanceInUserUnits = UnitMgr::ConvertToPreferredDistanceFromMeters(remainingDistanceInMeters);
+					if (remainingDistanceInUserUnits > (double)0.01)
+					{
+						double neededAvgPaceInUserUnits = targetFinishTimeInMins / remainingDistanceInUserUnits;
+						time_t gapInSecs = -1 * ((neededAvgPaceInUserUnits * 60.0) - currentPaceSegment.value.doubleVal);
+						return gapInSecs;
+					}
+				}
+			}
 		}
 	}
 	return 0;

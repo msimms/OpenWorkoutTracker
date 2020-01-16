@@ -1823,31 +1823,60 @@ void attributeNameCallback(const char* name, void* context)
 		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 
 		free((void*)tempName);
 	}
+	
+	// Convert units.
 	if (result && targetDistance)
 	{
-		ActivityAttributeType distanceAttr;
-		distanceAttr.value.doubleVal = (*targetDistance) / 1000.0;
-		distanceAttr.valueType = TYPE_DOUBLE;
-		distanceAttr.measureType = MEASURE_DISTANCE;
-		distanceAttr.unitSystem = UNIT_SYSTEM_METRIC;
-		distanceAttr.valid = true;
-		ConvertToPreferredUntis(&distanceAttr);
-		(*targetDistance) = distanceAttr.value.doubleVal;
+		ActivityAttributeType attr;
+		attr.value.doubleVal = (*targetDistance);
+		attr.valueType = TYPE_DOUBLE;
+		attr.measureType = MEASURE_DISTANCE;
+		attr.unitSystem = UNIT_SYSTEM_METRIC;
+		attr.valid = true;
+		ConvertToPreferredUntis(&attr);
+		(*targetDistance) = attr.value.doubleVal;
+
+		attr.value.doubleVal = (*targetPace);
+		attr.measureType = MEASURE_PACE;
+		attr.unitSystem = UNIT_SYSTEM_METRIC;
+		ConvertToPreferredUntis(&attr);
+		(*targetPace) = attr.value.doubleVal;
+
+		attr.value.doubleVal = (*splits);
+		attr.measureType = MEASURE_PACE;
+		attr.unitSystem = UNIT_SYSTEM_METRIC;
+		ConvertToPreferredUntis(&attr);
+		(*splits) = attr.value.doubleVal;
 	}
 	return result;
 }
 
 - (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits
 {
-	ActivityAttributeType distanceAttr;
-	distanceAttr.value.doubleVal = targetDistance;
-	distanceAttr.valueType = TYPE_DOUBLE;
-	distanceAttr.measureType = MEASURE_DISTANCE;
-	distanceAttr.unitSystem = [Preferences preferredUnitSystem];
-	distanceAttr.valid = true;
-	ConvertToPreferredUntis(&distanceAttr);
+	// Convert units.
+	UnitSystem userUnits = [Preferences preferredUnitSystem];
+	ActivityAttributeType attr;
+	attr.value.doubleVal = targetDistance;
+	attr.valueType = TYPE_DOUBLE;
+	attr.measureType = MEASURE_DISTANCE;
+	attr.unitSystem = userUnits;
+	attr.valid = true;
+	ConvertToMetric(&attr);
+	targetDistance = attr.value.doubleVal;
 
-	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, distanceAttr.value.doubleVal, splits);
+	attr.value.doubleVal = targetPace;
+	attr.measureType = MEASURE_PACE;
+	attr.unitSystem = userUnits;
+	ConvertToMetric(&attr);
+	targetPace = attr.value.doubleVal;
+
+	attr.value.doubleVal = splits;
+	attr.measureType = MEASURE_PACE;
+	attr.unitSystem = userUnits;
+	ConvertToMetric(&attr);
+	splits = attr.value.doubleVal;
+
+	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits);
 }
 
 - (BOOL)deletePacePlanWithId:(NSString*)planId

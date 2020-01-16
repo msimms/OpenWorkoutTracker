@@ -8,6 +8,10 @@
 #ifndef __UNIT_CONVERSION_FACTORS__
 #define __UNIT_CONVERSION_FACTORS__
 
+// Speed
+#define MPH_TO_KPH           1.60934
+#define KPH_TO_MPH           0.621371
+
 // Distance
 #define KILOMETERS_PER_MILE  1.609344
 #define MILES_PER_KILOMETER  0.621371
