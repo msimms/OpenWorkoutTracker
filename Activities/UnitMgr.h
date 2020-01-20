@@ -24,6 +24,9 @@ public:
 	static double ConvertToPreferredDistanceFromMeters(double meters);
 	static double ConvertToPreferredAltitudeFromMeters(double meters);
 
+	static double ConvertToPreferredPaceFromMetric(double value);
+	static double ConvertToMetricPreferredPace(double value);
+
 	static double ConvertFromPreferredDistanceToCustomaryUnits(double value);
 	static double ConvertFromPreferredAltitudeToCustomaryUnits(double value);
 	static double ConvertFromPreferredDistanceToMeters(double value);

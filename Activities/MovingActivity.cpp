@@ -1021,21 +1021,37 @@ time_t MovingActivity::GapToTargetPace() const
 	// Make sure a pace plan is selected.
 	if (m_pacePlan.targetDistanceInKms > (double)0.01 && m_pacePlan.targetPaceMinKm > (double)0.0)
 	{
+		// Are we there yet?
 		double remainingDistanceInMeters = (m_pacePlan.targetDistanceInKms * 1000.0) - DistanceTraveledInMeters();
 		if (remainingDistanceInMeters > (double)0.01)
 		{
 			SegmentType currentPaceSegment = CurrentPace();
-			if (currentPaceSegment.startTime > 0) // Make sure we're moving.
+			
+			// Don't bother computing anything if we're standing still.
+			if (currentPaceSegment.startTime > 0)
 			{
 				double elapsedMins = ElapsedTimeInSeconds() / (double)60.0;
 				double targetFinishTimeInMins = (m_pacePlan.targetDistanceInKms * m_pacePlan.targetPaceMinKm) - elapsedMins;
-				if (targetFinishTimeInMins > (double)0.01) // Make sure we haven't already passed the target finish time.
+
+				// Make sure we haven't already passed the original target finish time.
+				if (targetFinishTimeInMins > (double)0.01)
 				{
 					double remainingDistanceInUserUnits = UnitMgr::ConvertToPreferredDistanceFromMeters(remainingDistanceInMeters);
 					if (remainingDistanceInUserUnits > (double)0.01)
 					{
+						// Percentage remaining. Needed to compute splits.
+						double totalDistanceInMeters = m_pacePlan.targetDistanceInKms * (double)1000.0;
+						double percentDistanceRemaining = remainingDistanceInMeters / totalDistanceInMeters;
+						
+						// Pace difference between the first km and the last km, due to splits.
+						double splitDiff = m_pacePlan.targetDistanceInKms * m_pacePlan.splits;
+						splitDiff = (percentDistanceRemaining * splitDiff) - ((double)0.5 * splitDiff);
+
+						// Compute the average pace we need to maintain, from our current location, if we are to hit our target time and distance.
 						double neededAvgPaceInUserUnits = targetFinishTimeInMins / remainingDistanceInUserUnits;
-						time_t gapInSecs = -1 * ((neededAvgPaceInUserUnits * 60.0) - currentPaceSegment.value.doubleVal);
+
+						// How far off of the needed pace are we?
+						time_t gapInSecs = -1 * ((neededAvgPaceInUserUnits * 60.0) - currentPaceSegment.value.doubleVal + splitDiff);
 						return gapInSecs;
 					}
 				}
