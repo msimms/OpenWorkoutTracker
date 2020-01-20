@@ -12,6 +12,11 @@
 #include "MovingActivity.h"
 #include "GForceAnalyzer.h"
 
+/**
+* Base class for swim activities with outdoor and pool swims being distinct subclasses of this class.
+* Common swim functionality is encapsulated here.
+* An instantiation of any class that inherits from this class represents a specific activity performed by the user.
+*/
 class Swim : public MovingActivity
 {
 public:

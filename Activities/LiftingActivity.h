@@ -11,6 +11,12 @@
 #include "Activity.h"
 #include "GForceAnalyzer.h"
 
+/**
+* Base class for an activity that does not location data.
+*
+* All activity types that do not require location data (typically strength activities such as push-ups, pull-ups, etc.) inherit from this class with common functionality being encapsulated here.
+* An instantiation of any class that inherits from this class represents a specific activity performed by the user.
+*/
 class LiftingActivity : public Activity
 {
 public:

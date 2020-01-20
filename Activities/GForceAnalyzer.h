@@ -18,6 +18,11 @@ typedef std::map<std::string, LibMath::GraphPeakList> GraphPeakListMap;
 typedef std::map<std::string, LibMath::GraphLine> GraphLineMap;
 typedef std::vector<std::string> AxisList;
 
+/**
+* Base class for any class that analyzes accelerometer data.
+* Common accelerometer analysis code is encapsulated here with subclasses adding specialization, such as specifying which axis to analyze.
+* The GForceAnalyzerFactory is responsible for instantiating objects of this type.
+*/
 class GForceAnalyzer
 {
 public:

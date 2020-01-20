@@ -7,13 +7,16 @@
 #include <stdint.h>
 #include <string>
 
+/**
+* Pace plans are used (typically when running) to help the athlete finish in a target time.
+*/
 typedef struct PacePlan
 {
-	std::string  planId;     // unique identifier
-	std::string  name;       // name
-	double       targetPaceMinKm; // target pace (in min/km)
+	std::string  planId;              // unique identifier
+	std::string  name;                // name
+	double       targetPaceMinKm;     // target pace (in min/km)
 	double       targetDistanceInKms; // target distance (in kilometers)
-	double       splits;     // desired splits (in min/km)
+	double       splits;              // desired splits (in min/km)
 	std::string  route;
 } PacePlan;
 

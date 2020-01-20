@@ -27,6 +27,13 @@ typedef std::pair<std::string, ActivityAttributeType> ActivityAttributePair;
 typedef std::vector<SensorReading> SensorReadingList;
 typedef std::vector<double>        NumericList;
 
+/**
+* Base class for an activity
+*
+* All activity types (running, cycling, push-ups, etc.) inherit from this class. 
+* An instantiation of any class that inherits from this class represents a specific activity performed by the user.
+* The ActivityFactory class creates objects of this type.
+*/
 class Activity
 {
 public:
@@ -119,7 +126,7 @@ protected:
 	std::string FormatTimeOfDayStr(time_t timeVal) const;
 	
 protected:
-	std::string          m_id;                        // database identifier for this activity
+	std::string          m_id;                        // unique identifier for this activity (UUID)
 	User                 m_athlete;                   // user profile
 	IntervalWorkout      m_intervalWorkout;           // interval workout to use (optional)
 	IntervalWorkoutState m_intervalWorkoutState;      // current position within the interval workout

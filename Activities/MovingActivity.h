@@ -30,6 +30,12 @@ typedef std::vector<Coordinate>       CoordinateList;
 typedef std::vector<TimeDistancePair> TimeDistancePairList;
 typedef std::vector<LapSummary>       LapSummaryList;
 
+/**
+* Base class for an activity that requires location data.
+*
+* All activity types that require location data (outdoor running, hiking, etc.) inherit from this class with common functionality being encapsulated here.
+* An instantiation of any class that inherits from this class represents a specific activity performed by the user.
+*/
 class MovingActivity : public Activity
 {
 public:

@@ -8,6 +8,10 @@
 #ifndef __ACTIVITY_ATTRIBUTE__
 #define __ACTIVITY_ATTRIBUTE__
 
+/**
+* This is a list of all the things that can be calculated or presented across all activity types.
+*/
+
 #define ACTIVITY_ATTRIBUTE_USER_NAME                  "User Name"               // Unique identifier for the user
 #define ACTIVITY_ATTRIBUTE_START_TIME                 "Start Time"              // start time (in unix time)
 #define ACTIVITY_ATTRIBUTE_END_TIME                   "End Time"                // end time (in unix time)

@@ -13,6 +13,9 @@
 
 #include "IntervalWorkoutSegment.h"
 
+/**
+* Intervals are used to structure workouts. Interval workouts can be fairly complex, containing segments that specify target times, distances, sets, reps, etc.
+*/
 typedef struct IntervalWorkout
 {
 	std::string  workoutId; // Unique identifier
