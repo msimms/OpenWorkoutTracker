@@ -539,7 +539,7 @@ typedef enum ExportFileTypeButtons
 		self.mapView.hidden = FALSE;
 		[self.mapView setDelegate:self];
 		self.tableTopConstraint.constant = 0;
-		self.tableHeightConstraint.constant = self.view.frame.size.height;
+		self.tableHeightConstraint.constant = self.view.frame.size.height - self.toolbar.frame.size.height;
 		[self.summaryTableView needsUpdateConstraints];
 		[self.toolbar setItems:self->movingToolbar animated:NO];
 	}
@@ -547,7 +547,7 @@ typedef enum ExportFileTypeButtons
 	{
 		self.mapView.hidden = TRUE;
 		self.tableTopConstraint.constant = -1 * mapRect.size.height;
-		self.tableHeightConstraint.constant = self.view.frame.size.height;
+		self.tableHeightConstraint.constant = self.view.frame.size.height - self.toolbar.frame.size.height;
 		[self.summaryTableView needsUpdateConstraints];
 		[self.toolbar setItems:self->liftingToolbar animated:NO];
 	}
