@@ -485,11 +485,12 @@ typedef enum ExportFileTypeButtons
 	size_t pointIndex = 0;
 	double latitude = (double)0.0;
 	double longitude = (double)0.0;
+	double altitude = (double)0.0;
 	time_t timestamp = 0;
 	CLLocation* location = nil;
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:pointIndex withLatitude:&latitude withLongitude:&longitude withTimestamp:&timestamp])
+	while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:pointIndex withLatitude:&latitude withLongitude:&longitude withAltitude:&altitude withTimestamp:&timestamp])
 	{
 		// Draw every other point.
 		if (pointIndex % 2 == 0)

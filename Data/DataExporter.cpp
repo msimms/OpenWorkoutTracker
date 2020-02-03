@@ -48,7 +48,42 @@ bool DataExporter::NearestSensorReading(uint64_t timeMs, const SensorReadingList
 	return (timeDiff < 3000);
 }
 
-bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+{
+	bool result = false;
+	FileLib::GpxFileWriter writer;
+
+	if (writer.CreateFile(fileName, APP_NAME))
+	{
+		writer.WriteMetadata((time_t)startTime);
+
+		if (writer.StartTrack())
+		{
+			writer.WriteName("Untitled");
+
+			if (writer.StartTrackSegment())
+			{
+				Coordinate coordinate;
+
+				while (nextCoordinateCallback(activityId.c_str(), &coordinate, context))
+				{
+					writer.StartTrackPoint(coordinate.latitude, coordinate.longitude, coordinate.altitude, coordinate.time);
+					writer.EndTrackPoint();
+				}
+				writer.EndTrackSegment();
+			}
+
+			writer.EndTrack();
+
+			result = true;
+		}
+
+		writer.CloseFile();
+	}
+	return result;
+}
+
+bool DataExporter::ExportFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	const MovingActivity* const pMovingActivity = dynamic_cast<const MovingActivity* const>(pActivity);
 	if (!pMovingActivity)
@@ -63,17 +98,20 @@ bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDat
 	{
 		if (writer.StartActivity(pActivity->GetType()))
 		{
+			std::string activityId = pActivity->GetId();
+
 			const CoordinateList& coordinateList = pMovingActivity->GetCoordinates();
 			const TimeDistancePairList& distanceList = pMovingActivity->GetDistances();
+
 			LapSummaryList lapList;
 			SensorReadingList hrList;
 			SensorReadingList cadenceList;
 			SensorReadingList powerList;
 
 			pDatabase->RetrieveLaps(pActivity->GetId(), lapList);
-			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_HEART_RATE, hrList);
-			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_CADENCE, cadenceList);
-			pDatabase->RetrieveSensorReadingsOfType(pActivity->GetId(), SENSOR_TYPE_POWER, powerList);
+			pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE, hrList);
+			pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_CADENCE, cadenceList);
+			pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_POWER, powerList);
 
 			CoordinateList::const_iterator coordinateIter = coordinateList.begin();
 			TimeDistancePairList::const_iterator distanceIter = distanceList.begin();
@@ -185,19 +223,20 @@ bool DataExporter::ExportToTcx(const std::string& fileName, Database* const pDat
 	return result;
 }
 
-bool DataExporter::ExportToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportFromDatabaseToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	bool result = false;
 	FileLib::GpxFileWriter writer;
 
 	if (writer.CreateFile(fileName, APP_NAME))
 	{
+		std::string activityId = pActivity->GetId();
+
 		CoordinateList coordinateList;
 		LapSummaryList lapList;
 		SensorReadingList hrList;
 		SensorReadingList cadenceList;
 		SensorReadingList powerList;
-		std::string activityId = pActivity->GetId();
 
 		pDatabase->RetrieveActivityCoordinates(activityId, coordinateList);
 		pDatabase->RetrieveLaps(activityId, lapList);
@@ -470,7 +509,7 @@ bool DataExporter::ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, const 
 	return result;
 }
 
-bool DataExporter::ExportToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportFromDatabaseToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	bool result = false;
 	FileLib::CsvFileWriter writer;
@@ -496,19 +535,49 @@ bool DataExporter::ExportToCsv(const std::string& fileName, Database* const pDat
 	return result;
 }
 
-bool DataExporter::Export(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+std::string DataExporter::GenerateFileName(FileFormat format, time_t startTime, const std::string& sportType)
+{
+	std::string fileName;
+
+	char buf[32];
+	strftime(buf, sizeof(buf) - 1, "%Y-%m-%dT%H-%M-%S", localtime(&startTime));
+
+	fileName.append(buf);
+	fileName.append("-");
+	fileName.append(sportType);
+
+	switch (format)
+	{
+		case FILE_UNKNOWN:
+			break;
+		case FILE_TEXT:
+			fileName.append(".txt");
+			break;
+		case FILE_TCX:
+			fileName.append(".tcx");
+			break;
+		case FILE_GPX:
+			fileName.append(".gpx");
+			break;
+		case FILE_CSV:
+			fileName.append(".csv");
+			break;
+		case FILE_ZWO:
+			fileName.append(".zwo");
+			break;
+		default:
+			break;
+	}
+
+	return fileName;
+}
+
+bool DataExporter::ExportFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	if (pActivity)
 	{
-		time_t startTime = pActivity->GetStartTimeSecs();
-
-		char buf[32];
-		strftime(buf, sizeof(buf) - 1, "%Y-%m-%dT%H-%M-%S", localtime(&startTime));
-
 		fileName.append("/");
-		fileName.append(buf);
-		fileName.append("-");
-		fileName.append(pActivity->GetType());
+		fileName.append(GenerateFileName(format, pActivity->GetStartTimeSecs(), pActivity->GetType()));
 
 		switch (format)
 		{
@@ -517,18 +586,39 @@ bool DataExporter::Export(FileFormat format, std::string& fileName, Database* co
 			case FILE_TEXT:
 				return false;
 			case FILE_TCX:
-				fileName.append(".tcx");
-				return ExportToTcx(fileName, pDatabase, pActivity);
+				return ExportFromDatabaseToTcx(fileName, pDatabase, pActivity);
 			case FILE_GPX:
-				fileName.append(".gpx");
-				return ExportToGpx(fileName, pDatabase, pActivity);
+				return ExportFromDatabaseToGpx(fileName, pDatabase, pActivity);
 			case FILE_CSV:
-				fileName.append(".csv");
-				return ExportToCsv(fileName, pDatabase, pActivity);
-			case FILE_ZWO:				
+				return ExportFromDatabaseToCsv(fileName, pDatabase, pActivity);
+			case FILE_ZWO:
 			default:
 				return false;
 		}
+	}
+	return false;
+}
+
+bool DataExporter::ExportUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+{
+	fileName.append("/");
+	fileName.append(GenerateFileName(format, startTime, sportType));
+
+	switch (format)
+	{
+		case FILE_UNKNOWN:
+			return false;
+		case FILE_TEXT:
+			return false;
+		case FILE_TCX:
+			return false;
+		case FILE_GPX:
+			return ExportToGpxUsingCallbacks(fileName, startTime, activityId, nextCoordinateCallback, context);
+		case FILE_CSV:
+			return false;
+		case FILE_ZWO:
+		default:
+			return false;
 	}
 	return false;
 }

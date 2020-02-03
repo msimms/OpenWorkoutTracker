@@ -1827,13 +1827,14 @@ extern "C" {
 		return result;
 	}
 
-	char* ExportActivity(const char* const activityId, FileFormat format, const char* const pDirName)
+	char* ExportActivityFromDatabase(const char* const activityId, FileFormat format, const char* const pDirName)
 	{
 		const Activity* pActivity = NULL;
 
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& current = (*iter);
+
 			if (current.activityId.compare(activityId) == 0)
 			{
 				pActivity = current.pActivity;
@@ -1841,14 +1842,28 @@ extern "C" {
 			}
 		}
 
-		std::string fileName = pDirName;
 		if (pActivity)
 		{
+			std::string tempFileName = pDirName;
 			DataExporter exporter;
-			if (exporter.Export(format, fileName, g_pDatabase, pActivity))
+
+			if (exporter.ExportFromDatabase(format, tempFileName, g_pDatabase, pActivity))
 			{
-				return strdup(fileName.c_str());
+				return strdup(tempFileName.c_str());
 			}
+		}
+		return NULL;
+	}
+
+	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const pDirName, time_t startTime, const char* const sportType, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+	{
+		std::string tempFileName = pDirName;
+		std::string tempSportType = sportType;
+		DataExporter exporter;
+
+		if (exporter.ExportUsingCallbackData(format, tempFileName, startTime, tempSportType, activityId, nextCoordinateCallback, context))
+		{
+			return strdup(tempFileName.c_str());
 		}
 		return NULL;
 	}
@@ -1856,12 +1871,12 @@ extern "C" {
 	char* ExportActivitySummary(const char* activityType, const char* const dirName)
 	{
 		std::string activityTypeStr = activityType;
-		std::string dirNameStr = dirName;
-
+		std::string tempFileName = dirName;
 		DataExporter exporter;
-		if (exporter.ExportActivitySummary(g_historicalActivityList, activityTypeStr, dirNameStr))
+
+		if (exporter.ExportActivitySummary(g_historicalActivityList, activityTypeStr, tempFileName))
 		{
-			return strdup(dirNameStr.c_str());
+			return strdup(tempFileName.c_str());
 		}
 		return NULL;
 	}

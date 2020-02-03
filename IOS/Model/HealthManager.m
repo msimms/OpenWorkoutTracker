@@ -8,6 +8,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "HealthManager.h"
 #import "ActivityAttribute.h"
+#import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "LeHeartRateMonitor.h"
 #import "LeScale.h"
@@ -336,15 +337,18 @@
 		{
 			NSMutableArray* newArray = [[NSMutableArray alloc] initWithArray:routeData copyItems:YES];
 			NSMutableArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+
 			if (activityLocations)
 			{
+				// Append to existing location array.
 				[activityLocations addObjectsFromArray:newArray];
 			}
 			else
 			{
+				// Create a new array.
 				[self->locations setObject:newArray forKey:activityId];
 			}
-			
+
 			if (done)
 			{
 				// Now update the distance calculations.
@@ -353,7 +357,8 @@
 				dispatch_group_leave(self->queryGroup);
 			}
 		}];
-		
+
+		// Remove any existing data.
 		[self->locations removeObjectForKey:activityId];
 
 		dispatch_group_enter(self->queryGroup);
@@ -488,7 +493,7 @@
 	return 0;
 }
 
-- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp
+- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withAltitude:(double*)altitude withTimestamp:(time_t*)timestamp
 {
 	@synchronized(self->locations)
 	{
@@ -500,9 +505,14 @@
 				CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
 				if (loc)
 				{
-					(*latitude) = loc.coordinate.latitude;
-					(*longitude) = loc.coordinate.longitude;
-					(*timestamp) = [loc.timestamp timeIntervalSince1970];
+					if (latitude)
+						(*latitude) = loc.coordinate.latitude;
+					if (longitude)
+						(*longitude) = loc.coordinate.longitude;
+					if (altitude)
+						(*altitude) = loc.altitude;
+					if (timestamp)
+						(*timestamp) = [loc.timestamp timeIntervalSince1970];
 					return TRUE;
 				}
 			}
@@ -702,42 +712,53 @@
 
 #pragma mark methods for exporting HealthKit data.
 
-- (BOOL)exportToTcx:(NSString*)activityId toFile:(NSString*)fileName
+bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* context)
 {
-	return FALSE;
-}
-
-- (BOOL)exportToGpx:(NSString*)activityId toFile:(NSString*)fileName
-{
-	return FALSE;
-}
-
-- (BOOL)exportToCsv:(NSString*)activityId toFile:(NSString*)fileName
-{
-	return FALSE;
-}
-
-- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format
-{
-	NSString* fileName = [[NSString alloc] initWithFormat:@""];
-
-	switch (format)
+	// The context pointer is the pointer to ourselves.
+	if (!(context && coordinate))
 	{
-		case FILE_UNKNOWN:
-			return nil;
-		case FILE_TEXT:
-			return nil;
-		case FILE_TCX:
-			return [self exportToTcx:activityId toFile:fileName] ? fileName : nil;
-		case FILE_GPX:
-			return [self exportToGpx:activityId toFile:fileName] ? fileName : nil;
-		case FILE_CSV:
-			return [self exportToCsv:activityId toFile:fileName] ? fileName : nil;
-		case FILE_ZWO:				
-		default:
-			return nil;
+		return false;
 	}
-	return nil;
+
+	HealthManager* healthMgr = (__bridge HealthManager*)context;
+	NSString* tempActivityId = [[NSString alloc] initWithUTF8String:activityId]; 
+	time_t timestamp = 0;
+
+	if ([healthMgr getHistoricalActivityLocationPoint:tempActivityId
+									   withPointIndex:healthMgr->tempPointIndex
+										 withLatitude:&coordinate->latitude
+										withLongitude:&coordinate->longitude
+										 withAltitude:&coordinate->altitude
+										withTimestamp:&timestamp])
+	{
+		coordinate->time = timestamp * 1000; // Convert to milliseconds
+		++healthMgr->tempPointIndex;
+		return true;
+	}
+	return false;
+}
+
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDir:(NSString*)dir
+{
+	NSString* newFileName;
+
+	// The file name starts with the directory and will include the start time and the sport type.
+	NSString* sportType = [self getHistoricalActivityType:activityId];
+	time_t startTime = 0;
+	time_t endTime = 0;
+	[self getWorkoutStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];
+
+	// Export in the desired format.
+	self->tempPointIndex = 0;
+	char* tempFileName = ExportActivityUsingCallbackData([activityId UTF8String], format, [dir UTF8String], startTime, [sportType UTF8String], NextCoordinate, (__bridge void*)self);
+
+	// Cleanup.
+	if (tempFileName)
+	{
+		newFileName = [[NSString alloc] initWithUTF8String:tempFileName]; 
+		free((void*)tempFileName);
+	}
+	return newFileName;
 }
 
 #pragma mark methods for getting heart rate updates from the watch

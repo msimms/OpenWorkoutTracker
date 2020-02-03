@@ -47,7 +47,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 - (NSString*)getHistoricalActivityType:(NSString*)activityId;
 - (void)getWorkoutStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 - (NSInteger)getNumLocationPoints:(NSString*)activityId;
-- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp;
+- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withAltitude:(double*)altitude withTimestamp:(time_t*)timestamp;
 - (ActivityAttributeType)getWorkoutAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensor forActivityId:(NSString*)activityId withCallback:(SensorDataCallback)callback withContext:(void*)context;
 
@@ -61,7 +61,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 // methods for exporting HealthKit data.
 
-- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format;
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDir:(NSString*)dir;
 
 // methods for getting heart rate updates from the watch
 

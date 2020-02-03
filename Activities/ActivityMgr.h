@@ -11,6 +11,7 @@
 #include "ActivityAttributeType.h"
 #include "ActivityLevel.h"
 #include "ActivityViewType.h"
+#include "Callbacks.h"
 #include "Coordinate.h"
 #include "FileFormat.h"
 #include "Gender.h"
@@ -23,17 +24,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-	// Callbacks.
-	typedef void (*SensorDataCallback)(const char* activityId, void* context);
-	typedef void (*KmlPlacemarkStartCallback)(const char* name, void* context);
-	typedef void (*KmlPlacemarkEndCallback)(const char* name, void* context);
-	typedef void (*KmlCoordinateCallback)(Coordinate coordinate, void* context);
-	typedef void (*HeadMapPointCallback)(Coordinate coordinate, uint32_t count, void* context);
-	typedef void (*TagCallback)(const char* name, void* context);
-	typedef void (*ActivityTypeCallback)(const char* name, void* context);
-	typedef void (*AttributeNameCallback)(const char* name, void* context);
-	typedef void (*SensorTypeCallback)(SensorType type, void* context);
 
 	// Functions for managing the database.
 	void Initialize(const char* const dbFileName);
@@ -201,7 +191,8 @@ extern "C" {
 
 	// Functions for importing/exporting activities.
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType, const char* const activityId);
-	char* ExportActivity(const char* const activityId, FileFormat format, const char* const dirName);
+	char* ExportActivityFromDatabase(const char* const activityId, FileFormat format, const char* const dirName);
+	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const dirName, time_t startTime, const char* const sportType, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 	char* ExportActivitySummary(const char* activityType, const char* const dirName);
 
 	// Functions for processing sensor reads.

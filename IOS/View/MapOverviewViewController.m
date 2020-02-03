@@ -264,6 +264,7 @@
 
 			double latitude = (double)0.0;
 			double longitude = (double)0.0;
+			double altitude = (double)0.0;
 			time_t timestamp = 0;
 
 			CLLocationCoordinate2D coordinatesBefore[numPoints];
@@ -277,7 +278,7 @@
 
 			CLLocation* location = nil;
 
-			while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:totalPointIndex withLatitude:&latitude withLongitude:&longitude withTimestamp:&timestamp])
+			while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:totalPointIndex withLatitude:&latitude withLongitude:&longitude withAltitude:&altitude withTimestamp:&timestamp])
 			{
 				location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
 				

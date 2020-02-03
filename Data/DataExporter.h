@@ -13,6 +13,7 @@
 
 #include "Activity.h"
 #include "ActivitySummary.h"
+#include "Callbacks.h"
 #include "CsvFileWriter.h"
 #include "Database.h"
 #include "MovingActivity.h"
@@ -24,13 +25,17 @@ public:
 	DataExporter();
 	virtual ~DataExporter();
 
-	bool ExportToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-	bool ExportToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-	bool ExportToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-
-	bool Export(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 
 	bool ExportActivitySummary(const ActivitySummaryList& activities, std::string& activityType, std::string& fileName);
+
+protected:
+	bool ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context);
+
+	bool ExportFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportFromDatabaseToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportFromDatabaseToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
 
 private:
 	bool NearestSensorReading(uint64_t time, const SensorReadingList& list, SensorReadingList::const_iterator& iter);
@@ -39,6 +44,8 @@ private:
 	bool ExportAccelerometerDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
 	bool ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
 	bool ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
+
+	std::string GenerateFileName(FileFormat format, time_t startTime, const std::string& sportType);
 };
 
 #endif

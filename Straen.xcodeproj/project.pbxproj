@@ -936,6 +936,7 @@
 		27F4240723A44D4A00F59F50 /* Swim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Swim.h; path = Activities/Swim.h; sourceTree = SOURCE_ROOT; };
 		27F4240923A45FAC00F59F50 /* Walk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walk.h; path = Activities/Walk.h; sourceTree = SOURCE_ROOT; };
 		27F4240A23A45FAC00F59F50 /* Walk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walk.cpp; path = Activities/Walk.cpp; sourceTree = SOURCE_ROOT; };
+		27F4445B23E775DF006CC7FB /* Callbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Callbacks.h; path = Activities/Callbacks.h; sourceTree = SOURCE_ROOT; };
 		27F6D0692300165100A248BE /* Double.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Double.h; path = LibMath/cpp/Double.h; sourceTree = SOURCE_ROOT; };
 		27F6D0772300165100A248BE /* Double.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Double.cpp; path = LibMath/cpp/Double.cpp; sourceTree = SOURCE_ROOT; };
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -1511,6 +1512,7 @@
 				27C0841C19BFD063007CE934 /* ActivityType.h */,
 				27C0841D19BFD063007CE934 /* ActivityViewType.h */,
 				27C0841E19BFD063007CE934 /* AxisName.h */,
+				27F4445B23E775DF006CC7FB /* Callbacks.h */,
 				27C0841F19BFD063007CE934 /* ChinUp.cpp */,
 				27C0842019BFD063007CE934 /* ChinUp.h */,
 				27C0842119BFD063007CE934 /* ChinUpAnalyzer.cpp */,

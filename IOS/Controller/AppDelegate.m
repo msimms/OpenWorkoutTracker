@@ -1191,7 +1191,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withTimestamp:(time_t*)timestamp
+- (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withAltitude:(double*)altitude withTimestamp:(time_t*)timestamp
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
@@ -1200,7 +1200,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		if (self->healthMgr)
 		{
-			return [self->healthMgr getHistoricalActivityLocationPoint:activityId withPointIndex:pointIndex withLatitude:latitude withLongitude:longitude withTimestamp:timestamp];
+			return [self->healthMgr getHistoricalActivityLocationPoint:activityId withPointIndex:pointIndex withLatitude:latitude withLongitude:longitude withAltitude:altitude withTimestamp:timestamp];
 		}
 	}
 	
@@ -1481,14 +1481,14 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			if (self->healthMgr)
 			{
-				return [self->healthMgr exportActivityToFile:activityId withFileFormat:format];
+				return [self->healthMgr exportActivityToFile:activityId withFileFormat:format toDir:exportDir];
 			}
 		}
 		
 		// Activity is in our database.
 		else
 		{
-			char* tempExportFileName = ExportActivity([activityId UTF8String], format, [exportDir UTF8String]);
+			char* tempExportFileName = ExportActivityFromDatabase([activityId UTF8String], format, [exportDir UTF8String]);
 			if (tempExportFileName)
 			{
 				exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
