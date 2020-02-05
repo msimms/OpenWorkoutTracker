@@ -264,7 +264,9 @@ bool DataExporter::ExportFromDatabaseToGpx(const std::string& fileName, Database
 
 		if (writer.StartTrack())
 		{
-			writer.WriteName("Untitled");
+			std::string activityName = "Untitled";
+			pDatabase->RetrieveActivityName(activityId, activityName);
+			writer.WriteName(activityName);
 
 			do
 			{
