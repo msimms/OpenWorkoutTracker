@@ -48,6 +48,62 @@ bool DataExporter::NearestSensorReading(uint64_t timeMs, const SensorReadingList
 	return (timeDiff < 3000);
 }
 
+bool DataExporter::ExportToTcxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, const std::string& activityType, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+{
+	bool result = false;
+	FileLib::TcxFileWriter writer;
+
+	if (writer.CreateFile(fileName))
+	{
+		if (writer.StartActivity(activityType))
+		{
+			uint64_t lapStartTimeMs = startTime;
+			uint64_t lapEndTimeMs = 0;
+
+			bool done = false;
+
+			writer.WriteId((time_t)(lapStartTimeMs / 1000));
+
+			do
+			{
+				if (writer.StartLap(lapStartTimeMs))
+				{
+					if (writer.StartTrack())
+					{
+						Coordinate coordinate;
+
+						while (nextCoordinateCallback(activityId.c_str(), &coordinate, context))
+						{
+							if ((coordinate.time > lapEndTimeMs) && (lapEndTimeMs != 0))
+							{
+								break;
+							}
+
+							writer.StartTrackpoint();
+							writer.StoreTime(coordinate.time);
+							writer.StorePosition(coordinate.latitude, coordinate.longitude);
+							writer.StoreAltitudeMeters(coordinate.altitude);
+							writer.EndTrackpoint();
+						}
+
+						writer.EndTrack();
+						
+						result = true;
+					}
+					writer.EndLap();
+				}
+
+				lapStartTimeMs = lapEndTimeMs;
+			} while (!done);
+
+			writer.EndActivity();
+		}
+
+		writer.CloseFile();
+	}
+	return result;
+}
+
 bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
 {
 	bool result = false;
@@ -613,7 +669,7 @@ bool DataExporter::ExportUsingCallbackData(FileFormat format, std::string& fileN
 		case FILE_TEXT:
 			return false;
 		case FILE_TCX:
-			return false;
+			return ExportToTcxUsingCallbacks(fileName, startTime, activityId, sportType, nextCoordinateCallback, context);
 		case FILE_GPX:
 			return ExportToGpxUsingCallbacks(fileName, startTime, activityId, nextCoordinateCallback, context);
 		case FILE_CSV:

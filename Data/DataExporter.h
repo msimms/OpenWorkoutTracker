@@ -31,6 +31,7 @@ public:
 	bool ExportActivitySummary(const ActivitySummaryList& activities, std::string& activityType, std::string& fileName);
 
 protected:
+	bool ExportToTcxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, const std::string& activityType, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 	bool ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 
 	bool ExportFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
