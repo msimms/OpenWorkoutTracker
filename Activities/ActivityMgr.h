@@ -131,6 +131,7 @@ extern "C" {
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
 	ActivityAttributeType QueryHistoricalActivityAttributeById(const char* activityId, const char* const attributeName);
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
+	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex);
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex);
 	size_t GetNumHistoricalActivities(void);
 	size_t GetNumHistoricalActivitiesByType(const char* const activityType);

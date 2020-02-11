@@ -420,7 +420,7 @@ typedef enum ExportFileTypeButtons
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_FILE_FORMAT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	
+
 	[appDelegate loadAllHistoricalActivitySensorData:self->activityId];
 
 	if ([appDelegate getNumHistoricalActivityLocationPoints:self->activityId] > 0)
@@ -432,9 +432,12 @@ typedef enum ExportFileTypeButtons
 			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_TCX];
 		}]];
 	}
-	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		[self exportActivityToTempFile:self->activityId withFileFormat:FILE_CSV];
-	}]];
+	if ([appDelegate getNumHistoricalActivityAccelerometerReadings:self->activityId] > 0)
+	{
+		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_CSV style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_CSV];
+		}]];
+	}
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 

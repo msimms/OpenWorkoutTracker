@@ -1334,6 +1334,16 @@ extern "C" {
 		return 0;		
 	}
 
+	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex)
+	{
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+			return summary.accelerometerReadings.size();
+		}
+		return 0;		
+	}
+
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex)
 	{
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))

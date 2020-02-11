@@ -139,6 +139,7 @@
 - (NSString*)getNextActivityId;
 - (NSInteger)getNumHistoricalActivities;
 - (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId;
+- (NSInteger)getNumHistoricalActivityAccelerometerReadings:(NSString*)activityId;
 - (void)createHistoricalActivityObject:(NSString*)activityId;
 - (BOOL)isHealthKitActivity:(NSString*)activityId;
 - (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex;

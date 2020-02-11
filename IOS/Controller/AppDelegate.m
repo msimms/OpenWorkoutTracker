@@ -1061,6 +1061,24 @@ void startSensorCallback(SensorType type, void* context)
 	return 0;
 }
 
+- (NSInteger)getNumHistoricalActivityAccelerometerReadings:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return 0;
+	}
+
+	// Activity is in the database.
+	else
+	{
+		return GetNumHistoricalActivityAccelerometerReadings(activityIndex);
+	}
+	return 0;
+}
+
 - (void)createHistoricalActivityObject:(NSString*)activityId
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
