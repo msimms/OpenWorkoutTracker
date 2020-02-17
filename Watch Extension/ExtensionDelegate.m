@@ -36,7 +36,7 @@
 		[self->sensorMgr addSensor:locationController];
 	}
 
-//	[self startHealthMgr];
+	[self startHealthMgr];
 	[self startWatchSession];
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
@@ -161,7 +161,7 @@
 	if (self->healthMgr)
 	{
 		[self->healthMgr requestAuthorization];
-//		[self->healthMgr subscribeToHeartRateUpdates];
+		[self->healthMgr subscribeToHeartRateUpdates];
 	}
 }
 
@@ -503,7 +503,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	self->receivingLocations = TRUE;
 
-	if (IsActivityInProgress())
+	if (IsActivityInProgressAndNotPaused())
 	{
 		NSDictionary* locationData = [notification object];
 
@@ -559,6 +559,18 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
+	if (IsActivityInProgressAndNotPaused())
+	{
+		NSDictionary* heartRateData = [notification object];
+
+		NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+		NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+
+		if (timestampMs && rate)
+		{
+			ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
+		}
+	}
 }
 
 #pragma mark accessor methods
