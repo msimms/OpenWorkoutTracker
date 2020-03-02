@@ -7,6 +7,7 @@
 #import "ActivityHash.h"
 #import "ActivityMgr.h"
 #import "HashUtils.h"
+#import "StringUtils.h"
 
 @implementation ActivityHash
 
@@ -165,9 +166,10 @@ void PowerDataHashCallback(const char* activityId, void* context)
 	// Compute the hash.
 	uint8_t digest[CC_SHA512_DIGEST_LENGTH] = {0};
 	CC_SHA512_Final(digest, &ctx);
-	
+
+	// Convert to a string.
 	NSData* data = [NSData dataWithBytes:digest length:CC_SHA512_DIGEST_LENGTH];
-	return [data description];
+	return [StringUtils bytesToHexStr:data];
 }
 
 @end

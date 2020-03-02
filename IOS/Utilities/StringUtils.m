@@ -235,6 +235,18 @@
 	return nil;
 }
 
++ (NSString*)bytesToHexStr:(NSData*)data
+{
+	NSUInteger capacity = data.length * 2;
+	NSMutableString* sbuf = [NSMutableString stringWithCapacity:capacity];
+	const unsigned char* buf = data.bytes;
+	for (NSInteger i = 0; i < data.length; ++i)
+	{
+		[sbuf appendFormat:@"%02X", (unsigned int)buf[i]];
+	}
+	return sbuf;
+}
+
 + (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds
 {
 	NSArray* listItems = [str componentsSeparatedByString:@":"];
