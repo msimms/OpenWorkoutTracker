@@ -13,6 +13,7 @@
 #import "ActivityMgr.h"
 #import "Accelerometer.h"
 #import "ActivityAttribute.h"
+#import "ApiClient.h"
 #import "LeBikeSpeedAndCadence.h"
 #import "LeFootPod.h"
 #import "LeHeartRateMonitor.h"
@@ -101,6 +102,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strideLengthUpdated:) name:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListReturned:) name:@NOTIFICATION_NAME_GEAR_LIST object:nil];
 
 	[self startInteralTimer];
 
@@ -120,6 +122,8 @@
 
 	[self setUnits];
 	[self setUserProfile];
+
+	[self retrieveRemoteGearList];
 }
 
 - (void)applicationWillResignActive:(UIApplication*)application
@@ -581,8 +585,11 @@
 
 void startSensorCallback(SensorType type, void* context)
 {
-	SensorMgr* mgr = (__bridge SensorMgr*)context;
-	[mgr startSensor:type];
+	if (context)
+	{
+		SensorMgr* mgr = (__bridge SensorMgr*)context;
+		[mgr startSensor:type];
+	}
 }
 
 - (void)startSensors
@@ -802,6 +809,54 @@ void startSensorCallback(SensorType type, void* context)
 			if (timestampMs && value)
 			{
 				ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
+			}
+		}
+	}
+}
+
+- (void)gearListReturned:(NSNotification*)notification
+{
+	NSDictionary* gearData = [notification object];
+	NSString* responseStr = [gearData objectForKey:@KEY_NAME_RESPONSE_STR];
+    NSError* error = nil;
+    NSArray* gearObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+	
+	[self initializeBikeProfileList];
+	[self initializeShoeList];
+
+	if (gearObjects)
+	{
+		for (NSDictionary* gearDict in gearObjects)
+		{
+			NSString* gearType = [gearDict objectForKey:@KEY_NAME_GEAR_TYPE];
+			NSString* gearName = [gearDict objectForKey:@KEY_NAME_GEAR_NAME];
+			NSString* gearDescription = [gearDict objectForKey:@KEY_NAME_GEAR_DESCRIPTION];
+			NSNumber* retireTime = [gearDict objectForKey:@KEY_NAME_RETIRE_TIME];
+
+			if ([retireTime intValue] == 0)
+			{
+				if ([gearType isEqualToString:@"shoes"])
+				{				
+					// Do we already have shoes with this name?
+					uint64_t gearId = [self getShoeIdFromName:gearName];
+
+					// If not, add it.
+					if (gearId == (uint64_t)-1)
+					{
+						[self addShoeProfile:gearName withDescription:gearDescription];						
+					}
+				}
+				else if ([gearType isEqualToString:@"bike"])
+				{
+					// Do we already have shoes with this name?
+					uint64_t gearId = [self getBikeIdFromName:gearName];
+
+					// If not, add it.
+					if (gearId == (uint64_t)-1)
+					{
+						[self addBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0];
+					}
+				}
 			}
 		}
 	}
@@ -1375,6 +1430,11 @@ void startSensorCallback(SensorType type, void* context)
 	return InitializeBikeProfileList();
 }
 
+- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm
+{
+	return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm);
+}
+
 - (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId
 {
 	return GetActivityBikeProfile([activityId UTF8String], bikeId);
@@ -1424,6 +1484,11 @@ void startSensorCallback(SensorType type, void* context)
 - (void)initializeShoeList
 {
 	return InitializeShoeList();
+}
+
+- (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description
+{
+	return AddShoeProfile([name UTF8String], [description UTF8String]);
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
@@ -1993,218 +2058,66 @@ void attributeNameCallback(const char* name, void* context)
 	[self->cloudMgr requestCloudServiceAcctNames:service];
 }
 
-#pragma mark broadcast options
-
-- (BOOL)makeRequest:(NSString*)urlStr withMethod:(NSString*)method withPostData:(NSMutableData*)postData
-{
-	if (![Preferences shouldBroadcastGlobally])
-	{
-		return FALSE;
-	}
-
-	NSMutableDictionary* downloadedData = [[NSMutableDictionary alloc] init];
-	[downloadedData setObject:urlStr forKey:@KEY_NAME_URL];
-
-	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
-	[request setURL:[NSURL URLWithString:urlStr]];
-	[request setHTTPMethod:method];
-
-	if (postData)
-	{
-		NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
-		[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-		[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-		[request setHTTPBody:postData];
-	}
-
-	NSURLSession* session = [NSURLSession sharedSession];
-	NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
-												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
-	{
-		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-		NSInteger httpCode = [httpResponse statusCode];
-
-		if (downloadedData)
-		{
-			[downloadedData setObject:[[NSNumber alloc] initWithInteger:httpCode] forKey:@KEY_NAME_RESPONSE_CODE];
-
-			NSString* dataStr = [NSString stringWithFormat:@""];
-			if (data && [data length] > 0)
-			{
-				NSString* tempStr = [NSString stringWithUTF8String:[data bytes]];
-				if (tempStr)
-					dataStr = tempStr;
-			}
-
-			[downloadedData setObject:dataStr forKey:@KEY_NAME_RESPONSE_STR];
-			[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
-		}
-
-		if ([urlStr rangeOfString:@REMOTE_API_IS_LOGGED_IN_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_CHECKED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LOGIN_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGIN_PROCESSED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_CREATE_LOGIN_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LOGOUT_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGGED_OUT object:downloadedData];
-			} );
-		}		
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FOLLOWING_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FOLLOWED_BY_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_UPDATE_STATUS_URL].location != NSNotFound)
-		{
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_CREATE_TAG_URL].location != NSNotFound)
-		{
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_DELETE_TAG_URL].location != NSNotFound)
-		{
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_CLAIM_DEVICE_URL].location != NSNotFound)
-		{
-		}
-	}];
-	[dataTask resume];
-	
-	return TRUE;
-}
+#pragma mark server api client methods
 
 - (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password
 {
-	[Preferences setBroadcastUserName:username];
-
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"password\": \"%@\",", password] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
-
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGIN_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [ApiClient serverLoginAsync:username withPassword:password];
 }
 
 - (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
-	[Preferences setBroadcastUserName:username];
-
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"password1\": \"%@\",", password1] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"password2\": \"%@\",", password2] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"realname\": \"%@\",", realname] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
-
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_LOGIN_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [ApiClient serverCreateLoginAsync:username withPassword:password1 withConfirmation:password2 withRealName:realname];
 }
 
 - (BOOL)serverIsLoggedInAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_IS_LOGGED_IN_URL];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+	return [ApiClient serverIsLoggedInAsync];
 }
 
 - (BOOL)serverLogoutAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGOUT_URL];
-	return [self makeRequest:str withMethod:@"POST" withPostData:nil];
+	return [ApiClient serverLogoutAsync];
 }
 
 - (BOOL)serverListFollowingAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FOLLOWING_URL];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+	return [ApiClient serverListFollowingAsync];
 }
 
 - (BOOL)serverListFollowedByAsync
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FOLLOWED_BY_URL];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+	return [ApiClient serverListFollowedByAsync];
+}
+
+- (BOOL)retrieveRemoteGearList
+{
+	return [ApiClient retrieveRemoteGearList];
 }
 
 - (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername
 {
-	NSString* params = [NSString stringWithFormat:@"target_email=%@", targetUsername];
-	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_TO_FOLLOW_URL, escapedParams];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+	return [ApiClient serverRequestToFollowAsync:targetUsername];
 }
 
 - (BOOL)serverDeleteActivityAsync:(NSString*)activityId
 {
-	NSString* params = [NSString stringWithFormat:@"activity_id=%@", activityId];
-	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_ACTIVITY_URL, escapedParams];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+	return [ApiClient serverDeleteActivityAsync:activityId];
 }
 
 - (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId
 {
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
-
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_TAG_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [ApiClient serverCreateTagAsync:tag forActivity:activityId];
 }
 
 - (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId
 {
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
-	
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_TAG_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [ApiClient serverDeleteTagAsync:tag forActivity:activityId];
 }
 
 - (BOOL)serverClaimDeviceAsync:(NSString*)deviceId
 {
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-	[postData appendData:[[NSString stringWithFormat:@"\"device_id\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
-
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CLAIM_DEVICE_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [ApiClient serverClaimDeviceAsync:deviceId];
 }
 
 #pragma mark reset methods

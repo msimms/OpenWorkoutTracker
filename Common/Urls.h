@@ -13,6 +13,7 @@
 #define REMOTE_API_LOGOUT_URL            "api/1.0/logout"
 #define REMOTE_API_LIST_FOLLOWING_URL    "api/1.0/list_users_following"
 #define REMOTE_API_LIST_FOLLOWED_BY_URL  "api/1.0/list_users_followed_by"
+#define REMOTE_API_LIST_GEAR             "api/1.0/list_gear"
 #define REMOTE_API_REQUEST_TO_FOLLOW_URL "api/1.0/request_to_follow?"
 #define REMOTE_API_UPDATE_STATUS_URL     "api/1.0/update_status"
 #define REMOTE_API_DELETE_ACTIVITY_URL   "api/1.0/delete_activity?"

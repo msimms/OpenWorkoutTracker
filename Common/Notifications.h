@@ -4,6 +4,7 @@
 #define NOTIFICATION_NAME_ACTIVITY_STARTED         "ActivityStarted"
 #define NOTIFICATION_NAME_ACTIVITY_STOPPED         "ActivityStopped"
 #define NOTIFICATION_NAME_PEER_LOCATION_UPDATED    "PeerLocationUpdated"
+#define NOTIFICATION_NAME_GEAR_LIST                "GearList"
 #define NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED   "FollowingListUpdated"
 #define NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED "FollowedByListUpdated"
 #define NOTIFICATION_NAME_LOGIN_PROCESSED          "LoginProcessed"
@@ -33,3 +34,8 @@
 #define KEY_NAME_DEVICE_ID                         "DeviceId"
 #define KEY_NAME_USER_NAME                         "Name"
 #define KEY_NAME_INTERVAL_SEGMENT                  "IntervalSegment"
+
+#define KEY_NAME_GEAR_TYPE                         "type"
+#define KEY_NAME_GEAR_NAME                         "name"
+#define KEY_NAME_GEAR_DESCRIPTION                  "description"
+#define KEY_NAME_RETIRE_TIME                       "retire_time"

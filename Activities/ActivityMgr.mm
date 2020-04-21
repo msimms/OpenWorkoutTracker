@@ -290,15 +290,21 @@ extern "C" {
 		
 		if (g_pDatabase)
 		{
-			Bike bike;
-			bike.name = name;
-			bike.weightKg = weightKg;
-			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
-			result = g_pDatabase->CreateBike(bike);
-			
-			if (result)
+			uint64_t existingId = GetBikeIdFromName(name);
+
+			if (existingId == (uint64_t)-1)
 			{
-				InitializeBikeProfileList();
+				Bike bike;
+				bike.name = name;
+				bike.weightKg = weightKg;
+				bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
+
+				result = g_pDatabase->CreateBike(bike);
+				
+				if (result)
+				{
+					InitializeBikeProfileList();
+				}
 			}
 		}
 		return result;
@@ -504,7 +510,7 @@ extern "C" {
 				return bike.id;
 			}
 		}
-		return 0;
+		return (uint64_t)-1;
 	}
 
 	//
@@ -527,14 +533,19 @@ extern "C" {
 		
 		if (g_pDatabase)
 		{
-			std::string tempName = name;
-			std::string tempDesc = description;
+			uint64_t existingId = GetShoeIdFromName(name);
 
-			result = g_pDatabase->CreateShoe(tempName, tempDesc);
-			
-			if (result)
+			if (existingId == 0)
 			{
-				InitializeShoeList();
+				std::string tempName = name;
+				std::string tempDesc = description;
+
+				result = g_pDatabase->CreateShoe(tempName, tempDesc);
+				
+				if (result)
+				{
+					InitializeShoeList();
+				}
 			}
 		}
 		return result;
@@ -613,7 +624,7 @@ extern "C" {
 				return shoe.id;
 			}
 		}
-		return 0;
+		return (uint64_t)-1;
 	}
 
 	//

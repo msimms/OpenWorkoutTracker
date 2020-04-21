@@ -419,6 +419,7 @@
 		27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27E299532336B25600B864FA /* LaunchScreen.storyboard */; };
 		27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB22244A39C7000FBFA0 /* GearViewController.m */; };
 		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
+		27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
 		27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */; };
 		27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
 		27F4240523A44C0E00F59F50 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240323A44C0E00F59F50 /* PoolSwim.cpp */; };
@@ -933,6 +934,8 @@
 		27EAAB32244D16B9000FBFA0 /* ShoeProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShoeProfileViewController.h; path = IOS/View/ShoeProfileViewController.h; sourceTree = SOURCE_ROOT; };
 		27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShoeProfileViewController.m; path = IOS/View/ShoeProfileViewController.m; sourceTree = SOURCE_ROOT; };
 		27EAAB44244E0BAC000FBFA0 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Shoes/Shoes.h; sourceTree = SOURCE_ROOT; };
+		27EAAB46244F786B000FBFA0 /* ApiClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApiClient.m; path = IOS/Model/ApiClient.m; sourceTree = SOURCE_ROOT; };
+		27EAAB47244F786B000FBFA0 /* ApiClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiClient.h; path = IOS/Model/ApiClient.h; sourceTree = SOURCE_ROOT; };
 		27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutPlanGenerator.cpp; path = Activities/WorkoutPlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
 		27F423EF23A430F300F59F50 /* WorkoutPlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanGenerator.h; path = Activities/WorkoutPlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenWaterSwim.cpp; path = Activities/OpenWaterSwim.cpp; sourceTree = SOURCE_ROOT; };
@@ -1171,6 +1174,8 @@
 				270547B222EF9A9B0071F3C2 /* ActivityHash.m */,
 				2797F13E19BFE3B7008F8672 /* ActivityPreferences.h */,
 				2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */,
+				27EAAB47244F786B000FBFA0 /* ApiClient.h */,
+				27EAAB46244F786B000FBFA0 /* ApiClient.m */,
 				2797F14019BFE3B7008F8672 /* BroadcastManager.h */,
 				2797F14119BFE3B7008F8672 /* BroadcastManager.m */,
 				2797F14219BFE3B7008F8672 /* BroadcastMessage.h */,
@@ -2091,6 +2096,7 @@
 				276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */,
 				2704717A216D997000EE47FF /* Statistics.cpp in Sources */,
 				27B7CDAA19BFD91C000383E3 /* StatisticsViewController.m in Sources */,
+				27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */,
 				2797F15519BFE3B7008F8672 /* UserProfile.m in Sources */,
 				276B57E919E21ABD006F47BB /* HealthManager.m in Sources */,
 				27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */,
