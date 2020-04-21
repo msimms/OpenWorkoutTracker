@@ -15,7 +15,6 @@
 typedef enum ProfileSections
 {
 	SECTION_USER = 0,
-	SECTION_BIKES,
 	NUM_PROFILE_SECTIONS
 } ProfileSections;
 
@@ -32,17 +31,12 @@ typedef enum ProfileRows
 
 #define TITLE                             NSLocalizedString(@"Profile", nil)
 
-#define TITLE_ATHLETE                     NSLocalizedString(@"Athlete", nil)
-#define TITLE_BIKES                       NSLocalizedString(@"Bikes", nil)
-
 #define ACTION_SHEET_TITLE_ACTIVITY_LEVEL NSLocalizedString(@"Activity Level", nil)
 #define ACTION_SHEET_TITLE_BIRTHDATE      NSLocalizedString(@"Enter your birthdate", nil)
 #define ALERT_MSG_HEIGHT                  NSLocalizedString(@"Please enter your height", nil)
 #define ALERT_MSG_WEIGHT                  NSLocalizedString(@"Please enter your weight", nil)
 #define ALERT_MSG_FTP                     NSLocalizedString(@"Please enter your FTP", nil)
 #define TITLE_BIRTHDATE                   NSLocalizedString(@"Birthdate", nil)
-
-#define BUTTON_TITLE_BIKE_PROFILE         NSLocalizedString(@"Add Bike Profile", nil)
 
 @interface ProfileViewController ()
 
@@ -52,7 +46,6 @@ typedef enum ProfileRows
 
 @synthesize profileTableView;
 @synthesize toolbar;
-@synthesize bikeProfileButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -67,8 +60,6 @@ typedef enum ProfileRows
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-
-	[self.bikeProfileButton setTitle:BUTTON_TITLE_BIKE_PROFILE];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,9 +73,6 @@ typedef enum ProfileRows
 		[appDelegate setUserBirthDate:dateObj];
 		self->dateVC = NULL;
 	}
-
-	[self listBikes];
-	[self.profileTableView reloadData];
 
 	[super viewWillAppear:animated];
 }
@@ -120,20 +108,7 @@ typedef enum ProfileRows
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* segueId = [segue identifier];
 
-	if ([segueId isEqualToString:@SEGUE_TO_BIKE_PROFILE])
-	{
-		BikeProfileViewController* bikeVC = (BikeProfileViewController*)[segue destinationViewController];
-		if (bikeVC)
-		{
-			if (self->bikeViewMode == BIKE_PROFILE_UPDATE)
-			{
-				uint64_t bikeId = [appDelegate getBikeIdFromName:self->selectedBikeName];
-				[bikeVC setBikeId:bikeId];
-			}
-			[bikeVC setMode:self->bikeViewMode];
-		}
-	}
-	else if ([segueId isEqualToString:@SEGUE_TO_DATE_VIEW])
+	if ([segueId isEqualToString:@SEGUE_TO_DATE_VIEW])
 	{
 		self->dateVC = (DateViewController*)[segue destinationViewController];
 		if (self->dateVC)
@@ -145,20 +120,10 @@ typedef enum ProfileRows
 	}
 }
 
-#pragma mark miscellaneous methods
-
-- (void)listBikes
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->bikeNames = [appDelegate getBikeNames];
-}
-
 #pragma mark UITableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
-	if ([self->bikeNames count] == 0)
-		return NUM_PROFILE_SECTIONS - 1;
 	return NUM_PROFILE_SECTIONS;
 }
 
@@ -167,9 +132,7 @@ typedef enum ProfileRows
 	switch (section)
 	{
 		case SECTION_USER:
-			return TITLE_ATHLETE;
-		case SECTION_BIKES:
-			return TITLE_BIKES;
+			return TITLE;
 	}
 	return @"";
 }
@@ -180,8 +143,6 @@ typedef enum ProfileRows
 	{
 		case SECTION_USER:
 			return NUM_PROFILE_ROWS;
-		case SECTION_BIKES:
-			return [self->bikeNames count];
 	}
 	return 0;
 }
@@ -251,38 +212,10 @@ typedef enum ProfileRows
 				}
 			}
 			break;
-		case SECTION_BIKES:
-			cell.textLabel.text = [self->bikeNames objectAtIndex:row];
-			cell.detailTextLabel.text = @"";
-			break;
 	}
 
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	return cell;
-}
-
-- (void)tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
-{
-	NSInteger section = [indexPath section];
-
-	switch (section)
-	{
-		case SECTION_USER:
-			break;
-		case SECTION_BIKES:
-			if (editingStyle == UITableViewCellEditingStyleDelete)
-			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				NSString* bikeName = [[[tableView cellForRowAtIndexPath:indexPath] textLabel] text];
-				uint64_t bikeId = [appDelegate getBikeIdFromName:bikeName];
-				if ([appDelegate deleteBikeProfile:bikeId])
-				{
-					[self listBikes];
-					[self.profileTableView reloadData];
-				}
-			}
-			break;
-	}
 }
 
 - (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath
@@ -294,15 +227,11 @@ typedef enum ProfileRows
 		case SECTION_USER:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
-		case SECTION_BIKES:
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator | UITableViewCellEditingStyleDelete;
-			break;
 	}
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
 	NSInteger section = [indexPath section];
 
 	if (section == SECTION_USER)
@@ -436,24 +365,6 @@ typedef enum ProfileRows
 				break;
 		}
 	}
-	else if (section == SECTION_BIKES)
-	{
-		self->selectedBikeName = cell.textLabel.text;
-		self->bikeViewMode = BIKE_PROFILE_UPDATE;
-		[self performSegueWithIdentifier:@SEGUE_TO_BIKE_PROFILE sender:self];
-	}
-}
-
-- (void)tableView:(UITableView*)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
-{
-}
-
-#pragma mark button handlers
-
-- (IBAction)onAddBikeProfile:(id)sender
-{
-	self->bikeViewMode = BIKE_PROFILE_NEW;
-	[self performSegueWithIdentifier:@SEGUE_TO_BIKE_PROFILE sender:self];
 }
 
 @end

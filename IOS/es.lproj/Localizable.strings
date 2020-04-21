@@ -22,6 +22,8 @@
 "Autoscale" = "Autoescala";
 "Autoscale On" = "Activado Autoescala";
 "Autoscale Off" = "Discapacitado Autoescala";
+"Bicycle" = "Bicicleta";
+"Bicycles" = "Bicicletas";
 "Bicycle Power Meter" = "Medidor de Energía de Bicicletas";
 "Bicycle Speed and Cadence" = "Velocidad y Cadencia de Bicicleta";
 "Biggest" = "Más Grande";
@@ -198,6 +200,7 @@
 "Sensors" = "Sensores";
 "Settings" = "Configuración";
 "Set Interval" = "Intervalo de los Sets";
+"Shoes" = "Zappatos";
 "Social" = "Social";
 "Sounds" = "Sonidos";
 "Speed" = "Velocidad";

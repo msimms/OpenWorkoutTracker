@@ -99,6 +99,11 @@ bool Database::CreateTables()
 		sql = "create table bike (id integer primary key, name text, weightKg double, wheelCircumferenceMm double)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("shoe"))
+	{
+		sql = "create table shoe (id integer primary key, name text, description text)";
+		queries.push_back(sql);
+	}
 	if (!DoesTableExist("bike_activity"))
 	{
 		sql = "create table bike_activity (id integer primary key, bike_id integer, activity_id text)";
@@ -214,6 +219,8 @@ bool Database::Reset()
 	std::string sql;
 
 	sql = "delete from bike";
+	queries.push_back(sql);
+	sql = "delete from shoe";
 	queries.push_back(sql);
 	sql = "delete from bike_activity";
 	queries.push_back(sql);
@@ -341,6 +348,95 @@ bool Database::DeleteBike(uint64_t bikeId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, bikeId);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::CreateShoe(const std::string& name, const std::string& description)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "insert into shoe values (NULL,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, description.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrieveShoe(uint64_t shoeId, Shoes& shoes)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, description from shoe where id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_int64(statement, 1, shoeId);
+		if (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			shoes.id = shoeId;
+			shoes.name.append((const char*)sqlite3_column_text(statement, 2));
+			shoes.description.append((const char*)sqlite3_column_text(statement, 3));
+			result = true;
+		}
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveAllShoes(std::vector<Shoes>& allShoes)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, description from shoe order by id", -1, &statement, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			Shoes shoes;
+			
+			shoes.id = sqlite3_column_int64(statement, 0);
+			shoes.name.append((const char*)sqlite3_column_text(statement, 1));
+			shoes.description.append((const char*)sqlite3_column_text(statement, 2));
+			
+			allShoes.push_back(shoes);
+		}
+		
+		sqlite3_finalize(statement);
+		result = true;
+	}
+	return result;
+}
+
+bool Database::UpdateShoe(uint64_t shoeId, std::string& name, std::string& description)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "update shoe set name = ?, description = ? where id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 3, shoeId);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::DeleteShoe(uint64_t shoeId)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "delete from shoe where id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_int64(statement, 1, shoeId);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

@@ -11,20 +11,13 @@
 
 @interface ProfileViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UITableView*     profileTableView;
-	IBOutlet UIToolbar*       toolbar;
-	IBOutlet UIBarButtonItem* bikeProfileButton;
+	IBOutlet UITableView* profileTableView;
+	IBOutlet UIToolbar*   toolbar;
 
-	NSMutableArray*     bikeNames;
-	NSString*           selectedBikeName;
-	BikeProfileViewMode bikeViewMode;
 	DateViewController* dateVC;
 }
 
-- (IBAction)onAddBikeProfile:(id)sender;
-
 @property (nonatomic, retain) IBOutlet UITableView* profileTableView;
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* bikeProfileButton;
 
 @end

@@ -417,6 +417,8 @@
 		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
 		27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
 		27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27E299532336B25600B864FA /* LaunchScreen.storyboard */; };
+		27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB22244A39C7000FBFA0 /* GearViewController.m */; };
+		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
 		27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */; };
 		27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
 		27F4240523A44C0E00F59F50 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240323A44C0E00F59F50 /* PoolSwim.cpp */; };
@@ -926,6 +928,11 @@
 		27DCF68E22CD483A009A23C2 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = SOURCE_ROOT; };
 		27E299532336B25600B864FA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IOS/Storyboards/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
+		27EAAB22244A39C7000FBFA0 /* GearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GearViewController.m; path = IOS/View/GearViewController.m; sourceTree = SOURCE_ROOT; };
+		27EAAB30244A39C7000FBFA0 /* GearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GearViewController.h; path = IOS/View/GearViewController.h; sourceTree = SOURCE_ROOT; };
+		27EAAB32244D16B9000FBFA0 /* ShoeProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShoeProfileViewController.h; path = IOS/View/ShoeProfileViewController.h; sourceTree = SOURCE_ROOT; };
+		27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShoeProfileViewController.m; path = IOS/View/ShoeProfileViewController.m; sourceTree = SOURCE_ROOT; };
+		27EAAB44244E0BAC000FBFA0 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Shoes/Shoes.h; sourceTree = SOURCE_ROOT; };
 		27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutPlanGenerator.cpp; path = Activities/WorkoutPlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
 		27F423EF23A430F300F59F50 /* WorkoutPlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanGenerator.h; path = Activities/WorkoutPlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenWaterSwim.cpp; path = Activities/OpenWaterSwim.cpp; sourceTree = SOURCE_ROOT; };
@@ -1089,6 +1096,8 @@
 				27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */,
 				27B7CD5019BFD91C000383E3 /* FollowingViewController.h */,
 				27B7CD5119BFD91C000383E3 /* FollowingViewController.m */,
+				27EAAB30244A39C7000FBFA0 /* GearViewController.h */,
+				27EAAB22244A39C7000FBFA0 /* GearViewController.m */,
 				27B7CD5419BFD91C000383E3 /* HistoryViewController.h */,
 				27B7CD5519BFD91C000383E3 /* HistoryViewController.m */,
 				27B7CD5819BFD91C000383E3 /* IntervalEditViewController.h */,
@@ -1126,6 +1135,8 @@
 				27B7CD7819BFD91C000383E3 /* SensorsViewController.m */,
 				27B7CD7919BFD91C000383E3 /* SettingsViewController.h */,
 				27B7CD7A19BFD91C000383E3 /* SettingsViewController.m */,
+				27EAAB32244D16B9000FBFA0 /* ShoeProfileViewController.h */,
+				27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */,
 				27B7CD7D19BFD91C000383E3 /* SimpleActivityViewController.h */,
 				27B7CD7E19BFD91C000383E3 /* SimpleActivityViewController.m */,
 				27B7CD7F19BFD91C000383E3 /* SplitTimesViewController.h */,
@@ -1304,6 +1315,7 @@
 				2797F13919BFE2B0008F8672 /* Utilities */,
 				2797F15619BFE3E8008F8672 /* User */,
 				2797F13D19BFE399008F8672 /* Model */,
+				27EAAB36244E0A9F000FBFA0 /* Shoes */,
 				27B7CD3319BFD8EB000383E3 /* View */,
 				27B7CD2319BFD847000383E3 /* Controller */,
 				27B44D0319BFEFDC0058FE00 /* Images */,
@@ -1619,6 +1631,14 @@
 				27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */,
 			);
 			path = "Watch Extension";
+			sourceTree = "<group>";
+		};
+		27EAAB36244E0A9F000FBFA0 /* Shoes */ = {
+			isa = PBXGroup;
+			children = (
+				27EAAB44244E0BAC000FBFA0 /* Shoes.h */,
+			);
+			path = Shoes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2067,11 +2087,13 @@
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
 				27B7CDC319BFD953000383E3 /* AccelerometerLine.m in Sources */,
 				27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */,
+				27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */,
 				276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */,
 				2704717A216D997000EE47FF /* Statistics.cpp in Sources */,
 				27B7CDAA19BFD91C000383E3 /* StatisticsViewController.m in Sources */,
 				2797F15519BFE3B7008F8672 /* UserProfile.m in Sources */,
 				276B57E919E21ABD006F47BB /* HealthManager.m in Sources */,
+				27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */,
 				27B7CD8A19BFD91C000383E3 /* CorePlotViewController.m in Sources */,
 				27B7CDA319BFD91C000383E3 /* ProfileViewController.m in Sources */,
 				27B7CDC619BFD953000383E3 /* ChartPoint.m in Sources */,

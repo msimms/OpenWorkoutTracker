@@ -1,0 +1,40 @@
+// Created by Michael Simms on 4/19/20.
+// Copyright (c) 2020 Michael J. Simms. All rights reserved.
+
+#import "CommonViewController.h"
+
+typedef enum ShoeProfileViewMode
+{
+	SHOE_PROFILE_NEW = 0,
+	SHOE_PROFILE_UPDATE
+} ShoeProfileViewMode;
+
+@interface ShoeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
+{
+	IBOutlet UIToolbar* toolbar;
+	IBOutlet UIBarButtonItem* saveButton;
+	IBOutlet UIBarButtonItem* deleteButton;
+	IBOutlet UITextField* nameTextField;
+	IBOutlet UITextField* descTextField;
+	IBOutlet UILabel* nameLabel;
+	IBOutlet UILabel* descLabel;
+
+	uint64_t shoeId;
+	ShoeProfileViewMode mode;
+}
+
+- (IBAction)onSave:(id)sender;
+- (IBAction)onDelete:(id)sender;
+
+- (void)setShoeId:(uint64_t)newShoeId;
+- (void)setMode:(ShoeProfileViewMode)newMode;
+
+@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* saveButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
+@property (nonatomic, retain) IBOutlet UITextField* nameTextField;
+@property (nonatomic, retain) IBOutlet UITextField* descTextField;
+@property (nonatomic, retain) IBOutlet UILabel* nameLabel;
+@property (nonatomic, retain) IBOutlet UILabel* descLabel;
+
+@end

@@ -1419,6 +1419,23 @@ void startSensorCallback(SensorType type, void* context)
 	return DeleteBikeProfile(bikeId);
 }
 
+#pragma mark methods for managing shoes
+
+- (void)initializeShoeList
+{
+	return InitializeShoeList();
+}
+
+- (uint64_t)getShoeIdFromName:(NSString*)shoeName
+{
+	return GetShoeIdFromName([shoeName UTF8String]);
+}
+
+- (BOOL)deleteShoeProfile:(uint64_t)shoeId
+{
+	return DeleteShoeProfile(shoeId);
+}
+
 #pragma mark sound methods
 
 - (void)playSound:(NSString*)soundPath
@@ -1633,17 +1650,38 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		char* bikeName = NULL;
 		size_t bikeIndex = 0;
+		char* bikeName = NULL;
 		uint64_t bikeId = 0;
 		double weightKg = (double)0.0;
 		double wheelCircumference = (double)0.0;
 
 		InitializeBikeProfileList();
-		while (GetBikeProfileByIndex(bikeIndex++, &bikeName, &bikeId, &weightKg, &wheelCircumference))
+		while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference))
 		{
 			[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
 			free((void*)bikeName);
+		}
+	}
+	return names;
+}
+
+- (NSMutableArray*)getShoeNames
+{
+	NSMutableArray* names = [[NSMutableArray alloc] init];
+	if (names)
+	{
+		size_t shoeIndex = 0;
+		uint64_t shoeId = 0;
+		char* shoeName = NULL;
+		char* shoeDescription = NULL;
+
+		InitializeShoeList();
+		while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, &shoeDescription))
+		{
+			[names addObject:[[NSString alloc] initWithUTF8String:shoeName]];
+			free((void*)shoeName);
+			free((void*)shoeDescription);
 		}
 	}
 	return names;

@@ -173,6 +173,12 @@
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName;
 - (BOOL)deleteBikeProfile:(uint64_t)bikeId;
 
+// methods for managing shoes
+
+- (void)initializeShoeList;
+- (uint64_t)getShoeIdFromName:(NSString*)shoeName;
+- (BOOL)deleteShoeProfile:(uint64_t)shoeId;
+
 // sound methods
 
 - (void)playSound:(NSString*)soundPath;
@@ -195,6 +201,7 @@
 
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId;
 - (NSMutableArray*)getBikeNames;
+- (NSMutableArray*)getShoeNames;
 - (NSMutableArray*)getIntervalWorkoutNamesAndIds;
 - (NSMutableArray*)getPacePlanNamesAndIds;
 - (NSMutableArray*)getEnabledFileImportCloudServices;

@@ -57,12 +57,21 @@ extern "C" {
 	bool DeleteBikeProfile(uint64_t bikeId);
 	bool ComputeWheelCircumference(uint64_t bikeId);
 	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm);
-	bool GetBikeProfileByIndex(size_t bikeIndex, char** const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm);
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm);
 	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm);
 	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId);
 	void SetActivityBikeProfile(const char* const activityId, uint64_t bikeId);
 	void SetCurrentBicycle(const char* const name);
 	uint64_t GetBikeIdFromName(const char* const name);
+
+	// Functions for managing shoes.
+	void InitializeShoeList(void);
+	bool AddShoeProfile(const char* const name, const char* const description);
+	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description);
+	bool DeleteShoeProfile(uint64_t shoeId);
+	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description);
+	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description);
+	uint64_t GetShoeIdFromName(const char* const name);
 
 	// Functions for managing the currently set interval workout.
 	bool SetCurrentIntervalWorkout(const char* const workoutId);

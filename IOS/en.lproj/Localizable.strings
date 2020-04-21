@@ -22,6 +22,8 @@
 "Autoscale" = "Autoscale";
 "Autoscale On" = "Autoscale On";
 "Autoscale Off" = "Autoscale Off";
+"Bicycle" = "Bicycle";
+"Bicycles" = "Bicycles";
 "Bicycle Power Meter" = "Bicycle Power Meter";
 "Bicycle Speed and Cadence" = "Bicycle Speed and Cadence";
 "Biggest" = "Biggest";
@@ -198,6 +200,7 @@
 "Sensors" = "Sensors";
 "Settings" = "Settings";
 "Set Interval" = "Set Interval";
+"Shoes" = "Shoes";
 "Social" = "Social";
 "Sounds" = "Sounds";
 "Speed" = "Speed";

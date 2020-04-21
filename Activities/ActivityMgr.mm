@@ -23,6 +23,7 @@
 #include "LiftingActivity.h"
 #include "MountainBiking.h"
 #include "Run.h"
+#include "Shoes.h"
 #include "UnitMgr.h"
 #include "User.h"
 
@@ -38,11 +39,12 @@ extern "C" {
 	Database*        g_pDatabase = NULL;
 	bool             g_autoStartEnabled = false;
 
-	ActivitySummaryList           g_historicalActivityList;
+	ActivitySummaryList           g_historicalActivityList; // cache of completed activities
 	std::map<std::string, size_t> g_activityIdMap; // maps activity IDs to activity indexes
-	std::vector<Bike>             g_bikes;
-	std::vector<IntervalWorkout>  g_intervalWorkouts;
-	std::vector<PacePlan>         g_pacePlans;
+	std::vector<Bike>             g_bikes; // cache of bike profiles
+	std::vector<Shoes>            g_shoes; // cache of shoe profiles
+	std::vector<IntervalWorkout>  g_intervalWorkouts; // cache of interval workouts
+	std::vector<PacePlan>         g_pacePlans; // cache of pace plans
 
 	//
 	// Functions for managing the database.
@@ -184,6 +186,7 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			std::vector<std::string> matchingActivities;
+
 			result = g_pDatabase->SearchForTags(searchStr, matchingActivities);
 
 			for (auto iter = matchingActivities.begin(); iter != matchingActivities.end(); ++iter)
@@ -413,13 +416,13 @@ extern "C" {
 		return false;
 	}
 
-	bool GetBikeProfileByIndex(size_t bikeIndex, char** const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm)
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm)
 	{
 		if (bikeIndex < g_bikes.size())
 		{
 			const Bike& bike = g_bikes.at(bikeIndex);
-			(*name) = strdup(bike.name.c_str());
 			(*bikeId) = bike.id;
+			(*name) = strdup(bike.name.c_str());
 			(*weightKg) = bike.weightKg;
 			(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
 			return true;
@@ -499,6 +502,115 @@ extern "C" {
 			if (bike.name.compare(name) == 0)
 			{
 				return bike.id;
+			}
+		}
+		return 0;
+	}
+
+	//
+	// Functions for managing shoes.
+	//
+
+	void InitializeShoeList(void)
+	{
+		g_shoes.clear();
+
+		if (g_pDatabase)
+		{
+			g_pDatabase->RetrieveAllShoes(g_shoes);
+		}
+	}
+
+	bool AddShoeProfile(const char* const name, const char* const description)
+	{
+		bool result = false;
+		
+		if (g_pDatabase)
+		{
+			std::string tempName = name;
+			std::string tempDesc = description;
+
+			result = g_pDatabase->CreateShoe(tempName, tempDesc);
+			
+			if (result)
+			{
+				InitializeShoeList();
+			}
+		}
+		return result;
+	}
+
+	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description)
+	{
+		bool result = false;
+
+		if (g_pDatabase)
+		{
+			std::string tempName = name;
+			std::string tempDesc = description;
+
+			result = g_pDatabase->UpdateShoe(shoeId, tempName, tempDesc);
+
+			if (result)
+			{
+				InitializeShoeList();
+			}
+		}
+		return result;
+	}
+
+	bool DeleteShoeProfile(uint64_t shoeId)
+	{
+		bool result = false;
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->DeleteShoe(shoeId);
+
+			if (result)
+			{
+				InitializeShoeList();
+			}
+		}
+		return result;
+	}
+
+	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description)
+	{
+		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
+		{
+			const Shoes& shoes = (*iter);
+			if (shoes.id == shoeId)
+			{
+				(*name) = strdup(shoes.name.c_str());
+				(*description) = strdup(shoes.description.c_str());
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description)
+	{
+		if (shoeIndex < g_shoes.size())
+		{
+			const Shoes& shoes = g_shoes.at(shoeIndex);
+			(*shoeId) = shoes.id;
+			(*name) = strdup(shoes.name.c_str());
+			(*description) = strdup(shoes.description.c_str());
+			return true;
+		}
+		return false;
+	}
+
+	uint64_t GetShoeIdFromName(const char* const name)
+	{
+		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
+		{
+			const Shoes& shoe = (*iter);
+			if (shoe.name.compare(name) == 0)
+			{
+				return shoe.id;
 			}
 		}
 		return 0;

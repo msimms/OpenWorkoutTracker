@@ -157,6 +157,7 @@
                         <segue destination="sJ4-y9-qRG" kind="push" identifier="SegueToSettingsView" id="Qdm-QW-9lB"/>
                         <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="E2b-lU-9dF"/>
                         <segue destination="A9N-FN-6yC" kind="push" identifier="SegueToPacePlansView" id="frI-i4-eiK"/>
+                        <segue destination="ObN-8C-jua" kind="push" identifier="SegueToGearView" id="Xdw-9G-X6h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -180,28 +181,13 @@
                                     <outlet property="delegate" destination="2GL-V3-JX0" id="ZsM-Ua-3NF"/>
                                 </connections>
                             </tableView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WGw-1D-1kq">
-                                <rect key="frame" x="0.0" y="768" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="gPi-bC-2UI"/>
-                                    <barButtonItem title="Add Bike Profile" id="YJi-lA-ou6">
-                                        <connections>
-                                            <action selector="onAddBikeProfile:" destination="2GL-V3-JX0" id="K6e-gw-fX6"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="gfk-8M-Gq9"/>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="AKv-aO-jig"/>
                     <connections>
-                        <outlet property="bikeProfileButton" destination="YJi-lA-ou6" id="sPe-mt-kri"/>
                         <outlet property="profileTableView" destination="TFu-Tc-0Aa" id="zpw-cK-Jza"/>
-                        <outlet property="toolbar" destination="WGw-1D-1kq" id="fZV-lt-7K4"/>
-                        <segue destination="nMS-ks-hnh" kind="push" identifier="SegueToBikeProfileView" id="toW-Zy-neB"/>
                         <segue destination="4eY-Zm-Fkn" kind="push" identifier="SegueToDatePickerViewController" id="dLs-Za-PEd"/>
                     </connections>
                 </viewController>
@@ -802,7 +788,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V2c-eu-Mfz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2905.5999999999999" y="2994.6026986506749"/>
+            <point key="canvasLocation" x="183" y="2994"/>
         </scene>
         <!--Date-->
         <scene sceneID="oxb-6u-abG">
@@ -2405,7 +2391,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="goP-S4-6Sr">
                                 <rect key="frame" x="0.0" y="34" width="375" height="744"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <mutableString key="text">Copyright (c) 2015-2020, by MJ Simms Software, LLC. All rights reserved.
+                                <string key="text">Copyright (c) 2015-2020, by MJ Simms Software, LLC. All rights reserved.
 
 Portions of this application are: Copyright (c) 2014, Drew McCormack, Brad Larson, Eric Skroch, Barry Wark, Dirkjan Krijnders, Rick Maddy, Vijay Kalusani, Caleb Cannon, Jeff Buck, Thomas Elstner, Jeroen Leenarts, Craig Hockenberry, Hartwig Wiesmann, Koen van der Drift, Nino Ag, Mike Lischke, Trevor Harmon, Travis Fischer, Graham Mueller, and Rafał Wójcik. All rights reserved.
 
@@ -2416,7 +2402,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
 1. THE SOFTWARE IS LICENSED, NOT SOLD. YOU ACKNOWLEDGE THAT NO TITLE TO THE INTELLECTUAL PROPERTY IN THE SOFTWARE IS TRANSFERRED TO YOU. YOU FURTHER ACKNOWLEDGE THAT TITLE AND FULL OWNERSHIP RIGHTS TO THE SOFTWARE WILL REMAIN THE EXCLUSIVE PROPERTY OF THE DEVELOPER(S), AND YOU WILL NOT ACQUIRE ANY RIGHTS TO THE SOFTWARE, EXCEPT AS EXPRESSLY SET FORTH ABOVE. THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATY PROVISIONS.
 
 2. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</mutableString>
+</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -2602,6 +2588,51 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             </objects>
             <point key="canvasLocation" x="917.60000000000002" y="-565.27093596059115"/>
         </scene>
+        <!--Gear View Controller-->
+        <scene sceneID="F6G-Jx-bxz">
+            <objects>
+                <viewController id="ObN-8C-jua" customClass="GearViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Iuy-fW-OeK">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Rzc-EK-lVg">
+                                <rect key="frame" x="0.0" y="88" width="375" height="646"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="ObN-8C-jua" id="dC5-EQ-5t7"/>
+                                    <outlet property="delegate" destination="ObN-8C-jua" id="lV7-su-ICG"/>
+                                </connections>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="VpR-Gs-pbB">
+                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="7HK-ol-RfG"/>
+                                    <barButtonItem systemItem="add" id="OJc-9l-6aW">
+                                        <connections>
+                                            <action selector="onAdd:" destination="ObN-8C-jua" id="kNZ-AD-Q9X"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="BAu-ty-PVf"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Kr3-kD-iEe"/>
+                    <connections>
+                        <outlet property="gearTableView" destination="Rzc-EK-lVg" id="UXL-WA-G5D"/>
+                        <outlet property="toolbar" destination="VpR-Gs-pbB" id="pr9-yx-k8j"/>
+                        <segue destination="nMS-ks-hnh" kind="push" identifier="SegueToBikeProfileView" id="mam-Vc-Nc6"/>
+                        <segue destination="Q0h-1D-Oup" kind="push" identifier="SegueToShoesProfileView" id="9ex-6Z-tDj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lh1-KH-C7Q" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-943.20000000000005" y="1519.9507389162561"/>
+        </scene>
         <!--Sensors-->
         <scene sceneID="c43-cl-wSh">
             <objects>
@@ -2756,6 +2787,91 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T2o-kx-rzI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3814.4000000000001" y="4420.3898050974512"/>
+        </scene>
+        <!--New Shoes-->
+        <scene sceneID="P9g-Kw-aKh">
+            <objects>
+                <viewController id="Q0h-1D-Oup" userLabel="New Shoes" customClass="ShoeProfileViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Pu0-xb-oc2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o9I-wr-kdf">
+                                <rect key="frame" x="0.0" y="729" width="375" height="49"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="pb4-or-lV6"/>
+                                    <barButtonItem systemItem="save" id="6aa-cT-lXN">
+                                        <connections>
+                                            <action selector="onSave:" destination="Q0h-1D-Oup" id="gPs-xl-cpD"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="trash" id="k65-MD-wuI">
+                                        <connections>
+                                            <action selector="onDelete:" destination="Q0h-1D-Oup" id="feg-rV-0L6"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5hL-aM-lJh">
+                                <rect key="frame" x="20" y="125" width="331" height="21"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="1Uf-ao-Gb0">
+                                <rect key="frame" x="20" y="154" width="335" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="FCZ-ep-RiZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Description:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lg4-yJ-jgB" userLabel="Description Label">
+                                <rect key="frame" x="20" y="192" width="331" height="21"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="c6d-yt-GNs" userLabel="Description Text Field">
+                                <rect key="frame" x="20" y="221" width="335" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="c6d-yt-GNs" firstAttribute="top" secondItem="Lg4-yJ-jgB" secondAttribute="bottom" constant="8" id="0hT-ES-NGF"/>
+                            <constraint firstItem="Vjy-QC-Ycg" firstAttribute="trailing" secondItem="5hL-aM-lJh" secondAttribute="trailing" constant="24" id="8kG-n9-LKm"/>
+                            <constraint firstItem="5hL-aM-lJh" firstAttribute="leading" secondItem="1Uf-ao-Gb0" secondAttribute="leading" id="8o2-KT-H10"/>
+                            <constraint firstItem="Lg4-yJ-jgB" firstAttribute="top" secondItem="1Uf-ao-Gb0" secondAttribute="bottom" constant="8" id="Be9-eT-Fk5"/>
+                            <constraint firstItem="o9I-wr-kdf" firstAttribute="bottom" secondItem="Vjy-QC-Ycg" secondAttribute="bottom" id="Cpq-Z2-bCk"/>
+                            <constraint firstItem="Vjy-QC-Ycg" firstAttribute="trailing" secondItem="c6d-yt-GNs" secondAttribute="trailing" constant="20" id="Gis-CM-sYa"/>
+                            <constraint firstItem="1Uf-ao-Gb0" firstAttribute="centerX" secondItem="Pu0-xb-oc2" secondAttribute="centerX" id="MWj-9p-Znh"/>
+                            <constraint firstItem="1Uf-ao-Gb0" firstAttribute="top" secondItem="5hL-aM-lJh" secondAttribute="bottom" constant="8" id="PGs-Jw-E3L"/>
+                            <constraint firstItem="5hL-aM-lJh" firstAttribute="leading" secondItem="Vjy-QC-Ycg" secondAttribute="leading" constant="20" id="QwG-ap-3SI"/>
+                            <constraint firstItem="Lg4-yJ-jgB" firstAttribute="leading" secondItem="c6d-yt-GNs" secondAttribute="leading" id="UYQ-bw-gcK"/>
+                            <constraint firstItem="o9I-wr-kdf" firstAttribute="leading" secondItem="Vjy-QC-Ycg" secondAttribute="leading" id="W1R-Rt-swB"/>
+                            <constraint firstItem="5hL-aM-lJh" firstAttribute="top" secondItem="Vjy-QC-Ycg" secondAttribute="top" constant="37" id="hgS-MA-MKC"/>
+                            <constraint firstItem="1Uf-ao-Gb0" firstAttribute="leading" secondItem="Lg4-yJ-jgB" secondAttribute="leading" id="iZQ-EV-UBo"/>
+                            <constraint firstItem="1Uf-ao-Gb0" firstAttribute="centerX" secondItem="o9I-wr-kdf" secondAttribute="centerX" id="jsH-gl-lEF"/>
+                            <constraint firstItem="5hL-aM-lJh" firstAttribute="trailing" secondItem="Lg4-yJ-jgB" secondAttribute="trailing" id="tbA-Pz-8OH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Vjy-QC-Ycg"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="New Shoes" id="1Sr-Ad-0gj"/>
+                    <connections>
+                        <outlet property="deleteButton" destination="k65-MD-wuI" id="NG9-uD-bB9"/>
+                        <outlet property="descLabel" destination="Lg4-yJ-jgB" id="OxW-QJ-NdL"/>
+                        <outlet property="descTextField" destination="c6d-yt-GNs" id="V6s-2J-e5m"/>
+                        <outlet property="nameLabel" destination="5hL-aM-lJh" id="lbX-F1-AD4"/>
+                        <outlet property="nameTextField" destination="1Uf-ao-Gb0" id="2gv-00-v1G"/>
+                        <outlet property="saveButton" destination="6aa-cT-lXN" id="Wce-df-Rkk"/>
+                        <outlet property="toolbar" destination="o9I-wr-kdf" id="SaX-Hq-RsG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hzH-Uu-ckl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-943.20000000000005" y="2992.6108374384239"/>
         </scene>
     </scenes>
     <resources>
