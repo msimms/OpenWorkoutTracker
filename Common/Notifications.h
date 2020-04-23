@@ -38,4 +38,5 @@
 #define KEY_NAME_GEAR_TYPE                         "type"
 #define KEY_NAME_GEAR_NAME                         "name"
 #define KEY_NAME_GEAR_DESCRIPTION                  "description"
+#define KEY_NAME_ADD_TIME                          "add_time"
 #define KEY_NAME_RETIRE_TIME                       "retire_time"

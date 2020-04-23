@@ -139,10 +139,10 @@
     switch (self->mode)
     {
         case SHOE_PROFILE_NEW:
-            saved = AddShoeProfile(shoeName, shoeDesc);
+            saved = AddShoeProfile(shoeName, shoeDesc, 0, 0);
             break;
         case SHOE_PROFILE_UPDATE:
-            saved = UpdateShoeProfile(shoeId, shoeName, shoeDesc);
+            saved = UpdateShoeProfile(shoeId, shoeName, shoeDesc, 0, 0);
             break;
         default:
             break;

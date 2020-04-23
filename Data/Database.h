@@ -42,10 +42,10 @@ public:
 	bool UpdateBike(const Bike& bike);
 	bool DeleteBike(uint64_t bikeId);
 
-	bool CreateShoe(const std::string& name, const std::string& description);
+	bool CreateShoe(Shoes& shoes);
 	bool RetrieveShoe(uint64_t shoeId, Shoes& shoes);
 	bool RetrieveAllShoes(std::vector<Shoes>& allShoes);
-	bool UpdateShoe(uint64_t shoeId, std::string& name, std::string& description);
+	bool UpdateShoe(Shoes& shoes);
 	bool DeleteShoe(uint64_t shoeId);
 
 	bool CreateBikeActivity(uint64_t bikeId, const std::string& activityId);

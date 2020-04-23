@@ -96,12 +96,12 @@ bool Database::CreateTables()
 
 	if (!DoesTableExist("bike"))
 	{
-		sql = "create table bike (id integer primary key, name text, weightKg double, wheelCircumferenceMm double)";
+		sql = "create table bike (id integer primary key, name text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("shoe"))
 	{
-		sql = "create table shoe (id integer primary key, name text, description text)";
+		sql = "create table shoe (id integer primary key, name text, description text, time_added unsigned big int, time_retired unsigned big int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("bike_activity"))
@@ -265,12 +265,14 @@ bool Database::CreateBike(const Bike& bike)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into bike values (NULL,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into bike values (NULL,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, bike.name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_double(statement, 2, bike.weightKg);
 		sqlite3_bind_double(statement, 3, bike.computedWheelCircumferenceMm);
+		sqlite3_bind_int64(statement, 4, bike.timeAdded);
+		sqlite3_bind_int64(statement, 5, bike.timeRetired);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -282,7 +284,7 @@ bool Database::RetrieveBike(uint64_t bikeId, Bike& bike)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, weightKg, wheelCircumferenceMm from bike where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, weight_kg, wheel_circumference_mm, time_added, time_retired from bike where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, bikeId);
 		if (sqlite3_step(statement) == SQLITE_ROW)
@@ -291,6 +293,8 @@ bool Database::RetrieveBike(uint64_t bikeId, Bike& bike)
 			bike.name.append((const char*)sqlite3_column_text(statement, 1));
 			bike.weightKg = sqlite3_column_double(statement, 2);
 			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 3);
+			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
+			bike.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
 			result = true;
 		}
 		sqlite3_finalize(statement);
@@ -303,7 +307,7 @@ bool Database::RetrieveBikes(std::vector<Bike>& bikes)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, weightKg, wheelCircumferenceMm from bike order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, weight_kg, wheel_circumference_mm, time_added, time_retired from bike order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -313,6 +317,8 @@ bool Database::RetrieveBikes(std::vector<Bike>& bikes)
 			bike.name.append((const char*)sqlite3_column_text(statement, 1));
 			bike.weightKg = sqlite3_column_double(statement, 2);
 			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 3);
+			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
+			bike.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
 			
 			bikes.push_back(bike);
 		}
@@ -327,13 +333,15 @@ bool Database::UpdateBike(const Bike& bike)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "update bike set weightKg = ?, wheelCircumferenceMm = ?, name = ? where id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update bike set weight_kg = ?, wheel_circumference_mm = ?, name = ?, time_added = ?, time_retired = ? where id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_double(statement, 1, bike.weightKg);
 		sqlite3_bind_double(statement, 2, bike.computedWheelCircumferenceMm);
 		sqlite3_bind_text(statement, 3, bike.name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 4, bike.id);
+		sqlite3_bind_int64(statement, 4, bike.timeAdded);
+		sqlite3_bind_int64(statement, 5, bike.timeRetired);
+		sqlite3_bind_int64(statement, 6, bike.id);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -354,15 +362,17 @@ bool Database::DeleteBike(uint64_t bikeId)
 	return result == SQLITE_DONE;
 }
 
-bool Database::CreateShoe(const std::string& name, const std::string& description)
+bool Database::CreateShoe(Shoes& shoes)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into shoe values (NULL,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into shoe values (NULL,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(statement, 2, description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, shoes.name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, shoes.description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 3, shoes.timeAdded);
+		sqlite3_bind_int64(statement, 4, shoes.timeRetired);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -374,7 +384,7 @@ bool Database::RetrieveShoe(uint64_t shoeId, Shoes& shoes)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, description from shoe where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, description, time_added, time_retired from shoe where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, shoeId);
 		if (sqlite3_step(statement) == SQLITE_ROW)
@@ -382,6 +392,8 @@ bool Database::RetrieveShoe(uint64_t shoeId, Shoes& shoes)
 			shoes.id = shoeId;
 			shoes.name.append((const char*)sqlite3_column_text(statement, 2));
 			shoes.description.append((const char*)sqlite3_column_text(statement, 3));
+			shoes.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
+			shoes.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
 			result = true;
 		}
 		sqlite3_finalize(statement);
@@ -394,7 +406,7 @@ bool Database::RetrieveAllShoes(std::vector<Shoes>& allShoes)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, description from shoe order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, description, time_added, time_retired from shoe order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -403,6 +415,8 @@ bool Database::RetrieveAllShoes(std::vector<Shoes>& allShoes)
 			shoes.id = sqlite3_column_int64(statement, 0);
 			shoes.name.append((const char*)sqlite3_column_text(statement, 1));
 			shoes.description.append((const char*)sqlite3_column_text(statement, 2));
+			shoes.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
+			shoes.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
 			
 			allShoes.push_back(shoes);
 		}
@@ -413,16 +427,18 @@ bool Database::RetrieveAllShoes(std::vector<Shoes>& allShoes)
 	return result;
 }
 
-bool Database::UpdateShoe(uint64_t shoeId, std::string& name, std::string& description)
+bool Database::UpdateShoe(Shoes& shoes)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "update shoe set name = ?, description = ? where id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update shoe set name = ?, description = ?, time_added = ?, time_retired = ? where id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(statement, 2, description.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 3, shoeId);
+		sqlite3_bind_text(statement, 1, shoes.name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, shoes.description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 3, shoes.timeAdded);
+		sqlite3_bind_int64(statement, 4, shoes.timeRetired);
+		sqlite3_bind_int64(statement, 5, shoes.id);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

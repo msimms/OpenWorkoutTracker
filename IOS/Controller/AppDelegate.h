@@ -177,7 +177,7 @@
 // methods for managing shoes
 
 - (void)initializeShoeList;
-- (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description;
+- (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired;
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName;
 - (BOOL)deleteShoeProfile:(uint64_t)shoeId;
 

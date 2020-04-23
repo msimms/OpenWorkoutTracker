@@ -18,6 +18,8 @@ typedef struct Shoes
 	uint64_t    id;
 	std::string name;
 	std::string description;
+	time_t      timeAdded;
+	time_t      timeRetired;
 } Shoes;
 
 #endif

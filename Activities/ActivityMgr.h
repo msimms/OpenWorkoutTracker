@@ -66,8 +66,8 @@ extern "C" {
 
 	// Functions for managing shoes.
 	void InitializeShoeList(void);
-	bool AddShoeProfile(const char* const name, const char* const description);
-	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description);
+	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
+	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool DeleteShoeProfile(uint64_t shoeId);
 	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description);
 	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description);

@@ -527,7 +527,7 @@ extern "C" {
 		}
 	}
 
-	bool AddShoeProfile(const char* const name, const char* const description)
+	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
 	{
 		bool result = false;
 		
@@ -535,12 +535,16 @@ extern "C" {
 		{
 			uint64_t existingId = GetShoeIdFromName(name);
 
-			if (existingId == 0)
+			if (existingId == (uint64_t)-1)
 			{
-				std::string tempName = name;
-				std::string tempDesc = description;
+				Shoes shoes;
 
-				result = g_pDatabase->CreateShoe(tempName, tempDesc);
+				shoes.name = name;
+				shoes.description = description;
+				shoes.timeAdded = timeAdded;
+				shoes.timeRetired = timeRetired;
+
+				result = g_pDatabase->CreateShoe(shoes);
 				
 				if (result)
 				{
@@ -551,16 +555,20 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description)
+	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
 	{
 		bool result = false;
 
 		if (g_pDatabase)
 		{
-			std::string tempName = name;
-			std::string tempDesc = description;
+			Shoes shoes;
 
-			result = g_pDatabase->UpdateShoe(shoeId, tempName, tempDesc);
+			shoes.name = name;
+			shoes.description = description;
+			shoes.timeAdded = timeAdded;
+			shoes.timeRetired = timeRetired;
+
+			result = g_pDatabase->UpdateShoe(shoes);
 
 			if (result)
 			{

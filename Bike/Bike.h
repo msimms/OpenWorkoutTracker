@@ -19,6 +19,8 @@ typedef struct Bike
 	std::string name;
 	double      weightKg;
 	double      computedWheelCircumferenceMm;
+	time_t      timeAdded;
+	time_t      timeRetired;
 } Bike;
 
 #endif

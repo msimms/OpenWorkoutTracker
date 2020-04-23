@@ -831,6 +831,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSString* gearType = [gearDict objectForKey:@KEY_NAME_GEAR_TYPE];
 			NSString* gearName = [gearDict objectForKey:@KEY_NAME_GEAR_NAME];
 			NSString* gearDescription = [gearDict objectForKey:@KEY_NAME_GEAR_DESCRIPTION];
+			NSNumber* addTime = [gearDict objectForKey:@KEY_NAME_ADD_TIME];
 			NSNumber* retireTime = [gearDict objectForKey:@KEY_NAME_RETIRE_TIME];
 
 			if ([retireTime intValue] == 0)
@@ -843,7 +844,7 @@ void startSensorCallback(SensorType type, void* context)
 					// If not, add it.
 					if (gearId == (uint64_t)-1)
 					{
-						[self addShoeProfile:gearName withDescription:gearDescription];						
+						[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];						
 					}
 				}
 				else if ([gearType isEqualToString:@"bike"])
@@ -1486,9 +1487,9 @@ void startSensorCallback(SensorType type, void* context)
 	return InitializeShoeList();
 }
 
-- (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description
+- (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
-	return AddShoeProfile([name UTF8String], [description UTF8String]);
+	return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
