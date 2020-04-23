@@ -12,8 +12,8 @@
 
 @interface GearViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UITableView*     gearTableView;
-	IBOutlet UIToolbar*       toolbar;
+	IBOutlet UITableView* gearTableView;
+	IBOutlet UIToolbar*   toolbar;
 
 	NSMutableArray*     bikeNames;
 	NSMutableArray*     shoeNames;

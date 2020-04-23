@@ -196,13 +196,31 @@ typedef enum GearSections
 
 - (void)tableView:(UITableView*)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	NSInteger section = [indexPath section];
-
-	switch (section)
+	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
-		case SECTION_BIKES:
-		case SECTION_SHOES:
-			break;
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		NSInteger section = [indexPath section];
+
+		switch (section)
+		{
+			case SECTION_BIKES:
+				{
+					self->selectedBikeName = [self->bikeNames objectAtIndex:[indexPath row]];
+					uint64_t bikeId = [appDelegate getBikeIdFromName:self->selectedBikeName];
+					DeleteBikeProfile(bikeId);
+				}
+				break;
+			case SECTION_SHOES:
+				{
+					self->selectedShoeName = [self->shoeNames objectAtIndex:[indexPath row]];
+					uint64_t shoeId = [appDelegate getShoeIdFromName:self->selectedShoeName];
+					DeleteShoeProfile(shoeId);
+				}
+				break;
+		}
+
+		[self listGear];
+		[self.gearTableView reloadData];
 	}
 }
 
