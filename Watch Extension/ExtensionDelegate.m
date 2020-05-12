@@ -388,7 +388,8 @@ void startSensorCallback(SensorType type, void* context)
 #pragma mark broadcast methods
 
 - (void)configureBroadcasting
-{	
+{
+#if !OMIT_BROADCAST
 	if ([self isFeaturePresent:FEATURE_BROADCAST])
 	{
 		if ([Preferences shouldBroadcastGlobally])
@@ -408,6 +409,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		self->broadcastMgr = nil;
 	}
+#endif
 }
 
 #pragma mark hash methods

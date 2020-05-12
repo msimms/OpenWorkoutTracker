@@ -8,6 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import "Defines.h"
+
+#if !OMIT_BROADCAST
+
 @interface BroadcastManager : NSObject<NSURLConnectionDelegate>
 {
 	NSMutableArray* locationCache;
@@ -21,3 +25,5 @@
 - (void)setDeviceId:(NSString*)deviceId;
 
 @end
+
+#endif

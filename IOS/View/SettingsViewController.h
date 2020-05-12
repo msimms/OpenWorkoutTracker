@@ -9,11 +9,13 @@
 
 @interface SettingsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
+	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* settingsTableView;
 	IBOutlet UIBarButtonItem* loginButton;
 	IBOutlet UIBarButtonItem* createLoginButton;
 }
 
+@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* settingsTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* loginButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* createLoginButton;

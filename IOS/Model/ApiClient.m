@@ -10,6 +10,9 @@
 
 + (BOOL)makeRequest:(NSString*)urlStr withMethod:(NSString*)method withPostData:(NSMutableData*)postData
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	if (![Preferences shouldBroadcastGlobally])
 	{
 		return FALSE;
@@ -117,10 +120,14 @@
 	[dataTask resume];
 	
 	return TRUE;
+#endif
 }
 
 + (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	[Preferences setBroadcastUserName:username];
 
 	NSString* post = [NSString stringWithFormat:@"{"];
@@ -132,10 +139,14 @@
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGIN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+#endif
 }
 
 + (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	[Preferences setBroadcastUserName:username];
 
 	NSString* post = [NSString stringWithFormat:@"{"];
@@ -149,6 +160,7 @@
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_LOGIN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+#endif
 }
 
 + (BOOL)serverIsLoggedInAsync

@@ -14,6 +14,7 @@
 #import "ActivityPreferences.h"
 #import "BroadcastManager.h"
 #import "CloudMgr.h"
+#import "Defines.h"
 #import "Feature.h"
 #import "FileFormat.h"
 #import "Gender.h"
@@ -30,7 +31,9 @@
 	LeDiscovery*         leSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
 	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
+#if !OMIT_BROADCAST
 	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
+#endif
 	HealthManager*       healthMgr; // Interfaces with Apple HealthKit.
 	NSTimer*             intervalTimer;
 	WCSession*           watchSession; // Interfaces with the watch app.

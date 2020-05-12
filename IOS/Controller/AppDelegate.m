@@ -228,7 +228,11 @@
 	switch (feature)
 	{
 		case FEATURE_BROADCAST:
+#if OMIT_BROADCAST
+			return FALSE;
+#else
 			return TRUE;
+#endif
 		case FEATURE_WORKOUT_PLAN_GENERATION:
 			return TRUE;
 		case FEATURE_DROPBOX:
@@ -446,7 +450,8 @@
 #pragma mark broadcast methods
 
 - (void)configureBroadcasting
-{	
+{
+#if !OMIT_BROADCAST
 	if ([self isFeaturePresent:FEATURE_BROADCAST])
 	{
 		if ([Preferences shouldBroadcastGlobally])
@@ -466,6 +471,7 @@
 	{
 		self->broadcastMgr = nil;
 	}
+#endif
 }
 
 #pragma mark healthkit methods

@@ -14,6 +14,8 @@
 #import "Preferences.h"
 #import "Urls.h"
 
+#if !OMIT_BROADCAST
+
 #define MESSAGE_ERROR_SENDING NSLocalizedString(@"Error sending to the server", nil)
 
 @implementation BroadcastManager
@@ -345,3 +347,5 @@
 }
 
 @end
+
+#endif

@@ -102,6 +102,7 @@ typedef enum SettingsRowsHealthKit
 
 @implementation SettingsViewController
 
+@synthesize toolbar;
 @synthesize settingsTableView;
 @synthesize loginButton;
 @synthesize createLoginButton;
@@ -121,6 +122,13 @@ typedef enum SettingsRowsHealthKit
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[super viewDidLoad];
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	if (![appDelegate isFeaturePresent:FEATURE_BROADCAST])
+	{
+		[self.toolbar setHidden:TRUE];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -130,7 +138,11 @@ typedef enum SettingsRowsHealthKit
 	[super viewDidAppear:animated];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate serverIsLoggedInAsync];
+
+	if ([appDelegate isFeaturePresent:FEATURE_BROADCAST])
+	{
+		[appDelegate serverIsLoggedInAsync];
+	}
 }
 
 - (void)viewDidDisappear:(BOOL)animated

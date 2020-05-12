@@ -19,7 +19,9 @@
 	SensorMgr*           sensorMgr;
 	ActivityPreferences* activityPrefs;
 	WatchSessionManager* watchSession;
+#if !OMIT_BROADCAST
 	BroadcastManager*    broadcastMgr;
+#endif
 	HealthManager*       healthMgr;
 
 	BOOL badGps;

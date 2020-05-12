@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -298,6 +298,7 @@
                         <outlet property="createLoginButton" destination="rfD-Dt-MaS" id="bqN-WC-F2u"/>
                         <outlet property="loginButton" destination="8Ex-Uv-xhw" id="YaU-Kb-Ue7"/>
                         <outlet property="settingsTableView" destination="x1e-he-2zG" id="2f6-Z8-Hh4"/>
+                        <outlet property="toolbar" destination="S4t-GJ-X6W" id="Elu-qq-gMk"/>
                         <segue destination="D1T-Mz-I8j" kind="push" identifier="SegueToManageFollowingView" id="ryL-ch-bGW"/>
                         <segue destination="3D7-f0-elt" kind="push" identifier="SegueToManageFollowedByView" id="Pej-Nh-0Ob"/>
                         <segue destination="BmG-cT-RrP" kind="push" identifier="SegueToLoginView" id="S5h-w5-hLE"/>
@@ -2874,12 +2875,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             <point key="canvasLocation" x="-943.20000000000005" y="2992.6108374384239"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="Background1.png" width="1280" height="1920"/>
-        <image name="ComplexScreen.png" width="640" height="1136"/>
-        <image name="MappedScreen.png" width="640" height="1136"/>
-        <image name="SimpleScreen.png" width="640" height="1136"/>
-    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="UtV-9X-A4d"/>
         <segue reference="E2b-lU-9dF"/>
@@ -2887,4 +2882,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <segue reference="g4d-Zp-BfC"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <resources>
+        <image name="Background1.png" width="1280" height="1920"/>
+        <image name="ComplexScreen.png" width="640" height="1136"/>
+        <image name="MappedScreen.png" width="640" height="1136"/>
+        <image name="SimpleScreen.png" width="640" height="1136"/>
+    </resources>
 </document>

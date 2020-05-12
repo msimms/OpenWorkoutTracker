@@ -8,3 +8,5 @@
 #pragma once
 
 #define APP_NAME "Straen"
+
+#define OMIT_BROADCAST FALSE
