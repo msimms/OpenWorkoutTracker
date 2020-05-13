@@ -17,8 +17,7 @@ typedef enum SettingsSections
 {
 	SECTION_UNITS = 0,
 	SECTION_HEALTHKIT,
-	SECTION_BACKUP,
-	SECTION_SOCIAL,
+	SECTION_SERVICES,
 	SECTION_AUTOUPLOAD,
 	SECTION_BROADCAST,
 	NUM_SETTINGS_SECTIONS
@@ -30,19 +29,14 @@ typedef enum SettingsRowsUnits
 	NUM_SETTINGS_ROWS_UNITS
 } SettingsRowsUnits;
 
-typedef enum SettingsRowsBackup
-{
-	SETTINGS_ROW_ICLOUD_BACKUP = 0,
-	SETTINGS_ROW_LINK_DROPBOX,
-	NUM_SETTINGS_ROWS_BACKUP
-} SettingsRowsBackup;
-
-typedef enum SettingsRowsShare
+typedef enum SettingsRowsServices
 {
 	SETTINGS_ROW_LINK_RUNKEEPER = 0,
 	SETTINGS_ROW_LINK_STRAVA,
-	NUM_SETTINGS_ROWS_LINK
-} SettingsRowsShare;
+	SETTINGS_ROW_LINK_DROPBOX,
+	SETTINGS_ROW_ICLOUD_BACKUP,
+	NUM_SETTINGS_ROWS_SERVICES
+} SettingsRowsServices;
 
 typedef enum SettingsRowsBroadcast
 {
@@ -68,8 +62,7 @@ typedef enum SettingsRowsHealthKit
 #define UNIT_TITLE_US_CUSTOMARY        NSLocalizedString(@"US Customary Units", nil)
 #define UNIT_TITLE_METRIC              NSLocalizedString(@"Metric", nil)
 #define ICLOUD_BACKUP                  NSLocalizedString(@"Save Files to iCloud Drive", nil)
-#define CLOUD_BACKUP                   NSLocalizedString(@"Cloud Backup", nil)
-#define SOCIAL                         NSLocalizedString(@"Social", nil)
+#define CLOUD_SERVICES                 NSLocalizedString(@"Cloud Services", nil)
 #define AUTOUPLOAD                     NSLocalizedString(@"Auto Upload", nil)
 #define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
 #define BROADCAST_LOCALLY              NSLocalizedString(@"To Your Local Group", nil)
@@ -271,23 +264,15 @@ typedef enum SettingsRowsHealthKit
 
 #pragma mark UITableView methods
 
-- (NSInteger)numberOfBackupRows
+- (NSInteger)numberOfServicesRows
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSInteger numRows = NUM_SETTINGS_ROWS_BACKUP;
+	NSInteger numRows = NUM_SETTINGS_ROWS_SERVICES;
 
 	if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
 	{
 		numRows--;
 	}
-	return numRows;
-}
-
-- (NSInteger)numberOfSocialRows
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSInteger numRows = NUM_SETTINGS_ROWS_LINK;
-
 	if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
 	{
 		numRows--;
@@ -320,16 +305,10 @@ typedef enum SettingsRowsHealthKit
 			return UNIT_TITLE;
 		case SECTION_HEALTHKIT:
 			return HEALTHKIT;
-		case SECTION_BACKUP:
-			if ([self numberOfBackupRows] > 0)
+		case SECTION_SERVICES:
+			if ([self numberOfServicesRows] > 0)
 			{
-				return CLOUD_BACKUP;
-			}
-			return @"";
-		case SECTION_SOCIAL:
-			if ([self numberOfSocialRows] > 0)
-			{
-				return SOCIAL;
+				return CLOUD_SERVICES;
 			}
 			return @"";
 		case SECTION_AUTOUPLOAD:
@@ -357,11 +336,8 @@ typedef enum SettingsRowsHealthKit
 		case SECTION_HEALTHKIT:
 			numRows = NUM_SETTINGS_ROWS_HEALTHKIT;
 			break;
-		case SECTION_BACKUP:
-			numRows = [self numberOfBackupRows];
-			break;
-		case SECTION_SOCIAL:
-			numRows = [self numberOfSocialRows];
+		case SECTION_SERVICES:
+			numRows = [self numberOfServicesRows];
 			break;
 		case SECTION_AUTOUPLOAD:
 			numRows = [[appDelegate getEnabledFileExportCloudServices] count];
@@ -432,36 +408,17 @@ typedef enum SettingsRowsHealthKit
 				}
 			}
 			break;
-		case SECTION_BACKUP:
-			{
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-
-				switch (row)
-				{
-					case SETTINGS_ROW_ICLOUD_BACKUP:
-						cell.textLabel.text = ICLOUD_BACKUP;
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[CloudPreferences usingiCloud]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_LINK_DROPBOX:
-						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX];
-						cell.detailTextLabel.text = @"";
-						[switchview setOn:[CloudPreferences usingDropbox]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-				}
-			}
-			break;
-		case SECTION_SOCIAL:
+		case SECTION_SERVICES:
 			{
 				if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
 				{
 					row++;
 				}
 				if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+				{
+					row++;
+				}
+				if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
 				{
 					row++;
 				}
@@ -482,6 +439,18 @@ typedef enum SettingsRowsHealthKit
 						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA];
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[CloudPreferences usingStrava]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_LINK_DROPBOX:
+						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX];
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingDropbox]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
+					case SETTINGS_ROW_ICLOUD_BACKUP:
+						cell.textLabel.text = ICLOUD_BACKUP;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[CloudPreferences usingiCloud]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 				}
@@ -559,8 +528,7 @@ typedef enum SettingsRowsHealthKit
 	switch (section)
 	{
 		case SECTION_UNITS:
-		case SECTION_BACKUP:
-		case SECTION_SOCIAL:
+		case SECTION_SERVICES:
 		case SECTION_AUTOUPLOAD:
 			break;
 		case SECTION_BROADCAST:
@@ -596,9 +564,7 @@ typedef enum SettingsRowsHealthKit
 					break;
 			}
 			break;
-		case SECTION_BACKUP:
-			break;
-		case SECTION_SOCIAL:
+		case SECTION_SERVICES:
 			break;
 		case SECTION_BROADCAST:
 			switch (row)
@@ -635,24 +601,24 @@ typedef enum SettingsRowsHealthKit
 		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_HIDE_DUPLICATES:
 			[Preferences setHideHealthKitDuplicates:switchControl.isOn];
 			break;
-		case (SECTION_BACKUP * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
-			break;
-		case (SECTION_BACKUP * 100) + SETTINGS_ROW_LINK_DROPBOX:
-			[CloudPreferences setUsingDropbox:switchControl.isOn];
-			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_RUNKEEPER:
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_LINK_RUNKEEPER:
 			[CloudPreferences setUsingRunKeeper:switchControl.isOn];
 			if (switchControl.isOn)
 			{
 				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
 			break;
-		case (SECTION_SOCIAL * 100) + SETTINGS_ROW_LINK_STRAVA:
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_LINK_STRAVA:
 			[CloudPreferences setUsingStrava:switchControl.isOn];
 			if (switchControl.isOn)
 			{
 				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
+			break;
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_LINK_DROPBOX:
+			[CloudPreferences setUsingDropbox:switchControl.isOn];
+			break;
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_GLOBAL_BROADCAST:
 			[Preferences setBroadcastGlobally:switchControl.isOn];
