@@ -1662,6 +1662,20 @@ extern "C" {
 		UnitMgr::ConvertActivityAttributeToMetric(*value);
 	}
 
+	void ConvertToBroadcastUnits(ActivityAttributeType* value)
+	{
+		// Convert to the units the server expects to see.
+		UnitMgr::ConvertActivityAttributeToMetric(*value);
+		if (value->measureType == MEASURE_SPEED)
+		{
+			value->value.doubleVal *= (1000.0 / 60.0 / 60.0); // Convert from kph to meters per second
+		}
+		else if (value->measureType == MEASURE_PACE)
+		{
+			value->value.doubleVal *= (60.0 / 1000.0); // Convert from minutes per km to seconds per meter
+		}
+	}
+
 	void ConvertToCustomaryUnits(ActivityAttributeType* value)
 	{
 		UnitMgr::ConvertActivityAttributeToCustomaryUnits(*value);

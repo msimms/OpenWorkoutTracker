@@ -259,6 +259,7 @@
 	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_SPEED);
 	if (attr.valid)
 	{
+		ConvertToBroadcastUnits(&attr);
 		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
 		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_SPEED];
 	}
@@ -266,6 +267,7 @@
 	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
 	if (attr.valid)
 	{
+		ConvertToBroadcastUnits(&attr);
 		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
 		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
 	}
@@ -273,6 +275,7 @@
 	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
 	if (attr.valid)
 	{
+		ConvertToBroadcastUnits(&attr);
 		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
 		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_MOVING_SPEED];
 	}
@@ -280,6 +283,7 @@
 	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_AVG_PACE);
 	if (attr.valid)
 	{
+		ConvertToBroadcastUnits(&attr);
 		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
 		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_AVG_PACE];
 	}

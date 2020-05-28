@@ -164,6 +164,7 @@ extern "C" {
 	
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);
+	void ConvertToBroadcastUnits(ActivityAttributeType* value);
 	void ConvertToCustomaryUnits(ActivityAttributeType* value);
 	void ConvertToPreferredUntis(ActivityAttributeType* value);
 
