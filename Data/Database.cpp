@@ -1333,6 +1333,21 @@ bool Database::RetrieveHashForActivityId(const std::string& activityId, std::str
 	return result;
 }
 
+bool Database::UpdateActivityHash(const std::string& activityId, const std::string& hash)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "update activity_hash set hash = ? where activity_id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, hash.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
 bool Database::CreateWeightMeasurement(time_t measurementTime, double weightKg)
 {
 	int result = SQLITE_ERROR;

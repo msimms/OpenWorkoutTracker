@@ -180,6 +180,8 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.value.doubleVal = CurrentCadence();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_RPM;
+		result.startTime = m_lastCadenceUpdateTime;
+		result.endTime = m_lastCadenceUpdateTime;
 		result.valid = (m_numCadenceReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_CADENCE) == 0)
@@ -205,6 +207,8 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.value.doubleVal = CurrentPower();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_POWER;
+		result.startTime = m_lastPowerUpdateTime;
+		result.endTime = m_lastPowerUpdateTime;
 		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_3_SEC_POWER) == 0)

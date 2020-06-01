@@ -212,7 +212,16 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->CreateActivityHash(activityId, hash);
+			std::string oldHash;
+
+			if (g_pDatabase->RetrieveHashForActivityId(activityId, oldHash))
+			{
+				result = g_pDatabase->UpdateActivityHash(activityId, hash);
+			}
+			else
+			{
+				result = g_pDatabase->CreateActivityHash(activityId, hash);
+			}
 		}
 		return result;
 	}
@@ -1125,7 +1134,8 @@ extern "C" {
 							{
 								for (auto iter = summary.heartRateMonitorReadings.begin(); iter != summary.heartRateMonitorReadings.end(); ++iter)
 								{
-									summary.pActivity->ProcessSensorReading((*iter));
+									const SensorReading& reading = (*iter);
+									summary.pActivity->ProcessSensorReading(reading);
 									if (callback)
 										callback(summary.activityId.c_str(), context);
 								}
@@ -1144,7 +1154,8 @@ extern "C" {
 							{
 								for (auto iter = summary.cadenceReadings.begin(); iter != summary.cadenceReadings.end(); ++iter)
 								{
-									summary.pActivity->ProcessSensorReading((*iter));
+									const SensorReading& reading = (*iter);
+									summary.pActivity->ProcessSensorReading(reading);
 									if (callback)
 										callback(summary.activityId.c_str(), context);
 								}
@@ -1166,7 +1177,8 @@ extern "C" {
 							{
 								for (auto iter = summary.powerReadings.begin(); iter != summary.powerReadings.end(); ++iter)
 								{
-									summary.pActivity->ProcessSensorReading((*iter));
+									const SensorReading& reading = (*iter);
+									summary.pActivity->ProcessSensorReading(reading);
 									if (callback)
 										callback(summary.activityId.c_str(), context);
 								}

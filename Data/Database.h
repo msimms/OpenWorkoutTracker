@@ -97,6 +97,7 @@ public:
 	bool CreateActivityHash(const std::string& activityId, const std::string& hash);
 	bool RetrieveActivityIdFromHash(const std::string& hash, std::string& activityId);
 	bool RetrieveHashForActivityId(const std::string& activityId, std::string& hash);
+	bool UpdateActivityHash(const std::string& activityId, const std::string& hash);
 
 	bool CreateWeightMeasurement(time_t measurementTime, double weightKg);
 	bool RetrieveNearestWeightMeasurement(time_t measurementTime, double& weightKg);
