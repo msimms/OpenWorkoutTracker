@@ -110,7 +110,7 @@ ActivityAttributeType Walk::QueryActivityAttribute(const std::string& attributeN
 		result.value.intVal = StepsTaken();
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_COUNT;
-		result.valid = true;
+		result.valid = m_graphLine.size() > 0;
 	}
 	else
 	{
