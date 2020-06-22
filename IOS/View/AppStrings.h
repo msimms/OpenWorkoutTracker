@@ -33,6 +33,7 @@
 #define STR_FTP               NSLocalizedString(@"FTP", nil)
 #define STR_STARTED           NSLocalizedString(@"Started", nil)
 #define STR_FINISHED          NSLocalizedString(@"Finished", nil)
+#define STR_NONE              NSLocalizedString(@"None", nil)
 
 #define STR_SECONDS           NSLocalizedString(@"Seconds", nil)
 #define STR_METERS            NSLocalizedString(@"Meters", nil)

@@ -213,15 +213,15 @@ typedef enum SettingsSections
 		case SECTION_ALWAYS_SCAN:
 			break;
 		case SECTION_HRM:
-			return ([self->discoveredHRMs count] > 0) ? NAME_HRM : @"";
+			return NAME_HRM;
 		case SECTION_CADENCE_WHEEL_SPEED:
-			return ([self->discoveredCadenceWheelSpeedSensors count] > 0) ? NAME_CADENCE_WHEEL_SPEED : @"";
+			return NAME_CADENCE_WHEEL_SPEED;
 		case SECTION_POWER_METER:
-			return ([self->discoveredPowerMeters count] > 0) ? NAME_POWER_METER : @"";
+			return NAME_POWER_METER;
 		case SECTION_FOOT_POD:
-			return ([self->discoveredFootPods count] > 0) ? NAME_FOOT_POD : @"";
+			return NAME_FOOT_POD;
 		case SECTION_SCALE:
-			return ([self->discoveredScales count] > 0) ? NAME_SCALE : @"";
+			return NAME_SCALE;
 		case SECTION_GO_PRO:
 			break;
 		case NUM_SETTINGS_SECTIONS:
@@ -232,32 +232,45 @@ typedef enum SettingsSections
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
+	NSInteger numRows = 0;
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	switch (section)
 	{
 		case SECTION_ALWAYS_SCAN:
 			return 1;
 		case SECTION_HRM:
 			self->discoveredHRMs = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_HEART_RATE];
-			return [self->discoveredHRMs count];
+			numRows = [self->discoveredHRMs count];
+			break;
 		case SECTION_CADENCE_WHEEL_SPEED:
 			self->discoveredCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
-			return [self->discoveredCadenceWheelSpeedSensors count];
+			numRows = [self->discoveredCadenceWheelSpeedSensors count];
+			break;
 		case SECTION_POWER_METER:
 			self->discoveredPowerMeters = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_POWER];
-			return [self->discoveredPowerMeters count];
+			numRows = [self->discoveredPowerMeters count];
+			break;
 		case SECTION_FOOT_POD:
 			self->discoveredFootPods = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
-			return [self->discoveredFootPods count];
+			numRows = [self->discoveredFootPods count];
+			break;
 		case SECTION_SCALE:
 			self->discoveredScales = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_WEIGHT];
-			return [self->discoveredScales count];
+			numRows = [self->discoveredScales count];
+			break;
 		case SECTION_GO_PRO:
+			numRows = -1;
 			break;
 		case NUM_SETTINGS_SECTIONS:
+			numRows = -1;
 			break;
 	}
-	return 0;
+	if (numRows == 0)
+	{
+		numRows = 1;
+	}
+	return numRows;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
@@ -274,84 +287,26 @@ typedef enum SettingsSections
 
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
+	NSMutableArray* peripheralList = nil;
 
 	switch (section)
 	{
 		case SECTION_ALWAYS_SCAN:
-			{
-				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchView;
-				cell.textLabel.text = TOGGLE_LABEL;
-
-				[switchView setOn:[Preferences shouldScanForSensors]];
-				[switchView setTag:(section * 100) + row];
-				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
 			break;
 		case SECTION_HRM:
-			{
-				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchView;
-				cell.textLabel.text = [[self->discoveredHRMs objectAtIndex:row] name];
-
-				CBPeripheral* peripheral = [self->discoveredHRMs objectAtIndex:row];
-				NSString* idStr = [[peripheral identifier] UUIDString];
-				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
-				[switchView setTag:(section * 100) + row];
-				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
+			peripheralList = self->discoveredHRMs;
 			break;
 		case SECTION_CADENCE_WHEEL_SPEED:
-			{
-				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchView;
-				cell.textLabel.text = [[self->discoveredCadenceWheelSpeedSensors objectAtIndex:row] name];
-
-				CBPeripheral* peripheral = [self->discoveredCadenceWheelSpeedSensors objectAtIndex:row];
-				NSString* idStr = [[peripheral identifier] UUIDString];
-				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
-				[switchView setTag:(section * 100) + row];
-				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
+			peripheralList = self->discoveredCadenceWheelSpeedSensors;
 			break;
 		case SECTION_POWER_METER:
-			{
-				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchView;
-				cell.textLabel.text = [[self->discoveredPowerMeters objectAtIndex:row] name];
-
-				CBPeripheral* peripheral = [self->discoveredPowerMeters objectAtIndex:row];
-				NSString* idStr = [[peripheral identifier] UUIDString];
-				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
-				[switchView setTag:(section * 100) + row];
-				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
+			peripheralList = self->discoveredPowerMeters;
 			break;
 		case SECTION_FOOT_POD:
-			{
-				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchView;
-				cell.textLabel.text = [[self->discoveredFootPods objectAtIndex:row] name];
-				
-				CBPeripheral* peripheral = [self->discoveredFootPods objectAtIndex:row];
-				NSString* idStr = [[peripheral identifier] UUIDString];
-				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
-				[switchView setTag:(section * 100) + row];
-				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
+			peripheralList = self->discoveredFootPods;
 			break;
 		case SECTION_SCALE:
-			{
-				UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-				cell.accessoryView = switchView;
-				cell.textLabel.text = [[self->discoveredScales objectAtIndex:row] name];
-				
-				CBPeripheral* peripheral = [self->discoveredScales objectAtIndex:row];
-				NSString* idStr = [[peripheral identifier] UUIDString];
-				[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
-				[switchView setTag:(section * 100) + row];
-				[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
+			peripheralList = self->discoveredScales;
 			break;
 		case SECTION_GO_PRO:
 			break;
@@ -361,6 +316,34 @@ typedef enum SettingsSections
 			cell.textLabel.text = @"";
 			cell.detailTextLabel.text = @"";
 			break;
+	}
+	
+	if (section == SECTION_ALWAYS_SCAN)
+	{
+		UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
+		cell.accessoryView = switchView;
+		cell.textLabel.text = TOGGLE_LABEL;
+
+		[switchView setOn:[Preferences shouldScanForSensors]];
+		[switchView setTag:(section * 100) + row];
+		[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+	}
+	else if (peripheralList && [peripheralList count] > 0)
+	{
+		UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
+		cell.accessoryView = switchView;
+		cell.textLabel.text = [[peripheralList objectAtIndex:row] name];
+
+		CBPeripheral* peripheral = [peripheralList objectAtIndex:row];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+		[switchView setOn:[Preferences shouldUsePeripheral:idStr]];
+		[switchView setTag:(section * 100) + row];
+		[switchView addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+	}
+	else
+	{
+		cell.textLabel.text = STR_NONE;
+		cell.detailTextLabel.text = @"";
 	}
 	return cell;
 }
