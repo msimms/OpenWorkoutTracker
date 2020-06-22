@@ -137,7 +137,6 @@
 					if (activityAttributes)
 					{
 						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME]];
-						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
 						[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_CALORIES]];
 						[self->attributeDictionary setObject:activityAttributes forKey:STR_SUMMARY];
@@ -155,7 +154,6 @@
 
 								if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING])
 								{
-									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_MAX_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_CENTURY]];
@@ -168,7 +166,6 @@
 								}
 								else if ([activityType isEqualToString:@ACTIVITY_TYPE_HIKING])
 								{
-									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_MAX_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_MILE]];
@@ -178,7 +175,6 @@
 								}
 								else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
 								{
-									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_MAX_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_MARATHON]];
@@ -193,7 +189,6 @@
 								}
 								else if ([activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
 								{
-									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_MAP]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:SUMMARY_ATTRIBUTE_MAX_DISTANCE]];
 									[activityAttributes addObject:[[AttrDictItem alloc] initWithName:@ACTIVITY_ATTRIBUTE_FASTEST_MILE]];
@@ -318,12 +313,8 @@
 
 	NSString* sectionName = [self->sortedKeys objectAtIndex:section];
 
-	if ([cell.textLabel.text isEqualToString:SUMMARY_MAP])
-	{
-		[self showSummaryMap:sectionName];
-	}
-	else if (([cell.textLabel.text rangeOfString:@"Fastest"].location != NSNotFound) &&
-			 ([cell.detailTextLabel.text isEqualToString:@VALUE_NOT_SET_STR] == FALSE))
+	if (([cell.textLabel.text rangeOfString:@"Fastest"].location != NSNotFound) &&
+		([cell.detailTextLabel.text isEqualToString:@VALUE_NOT_SET_STR] == FALSE))
 	{
 		AttrDictItem* attrDictItem = [[self->attributeDictionary objectForKey:sectionName] objectAtIndex:row];
 		if (attrDictItem)
@@ -392,9 +383,7 @@
 
 			if (section == 0)
 			{
-				if ([attribute isEqualToString:SUMMARY_MAP])
-					displayValue = false;
-				else if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME])
+				if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME])
 					attrDictItem->value = QueryActivityAttributeTotal([attribute UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_CALORIES])
 					attrDictItem->value = QueryActivityAttributeTotal(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
@@ -403,9 +392,7 @@
 			}
 			else
 			{
-				if ([attribute isEqualToString:SUMMARY_MAP])
-					displayValue = false;
-				else if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME])
+				if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME])
 					attrDictItem->value = QueryActivityAttributeTotalByActivityType([attribute UTF8String], [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_CALORIES])
 					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_CALORIES_BURNED, [sectionTitle UTF8String]);
@@ -462,12 +449,8 @@
 
 - (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	if ([cell.textLabel.text isEqualToString:SUMMARY_MAP])
-	{
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	}
-	else if (([cell.textLabel.text rangeOfString:STR_FASTEST].location != NSNotFound) &&
-			 ([cell.detailTextLabel.text isEqualToString:@VALUE_NOT_SET_STR] == false))
+	if (([cell.textLabel.text rangeOfString:STR_FASTEST].location != NSNotFound) &&
+		([cell.detailTextLabel.text isEqualToString:@VALUE_NOT_SET_STR] == false))
 	{
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
