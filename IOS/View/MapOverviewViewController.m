@@ -254,108 +254,111 @@
 	if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_LOCATION forActivityId:self->activityId withCallback:NULL withContext:NULL])
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
-		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
-		if (numPoints > 0)
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
 		{
-			size_t totalPointIndex    = 0;
-			size_t beforeSegmentCount = 0; // points (so far) drawn before the highlighted segment
-			size_t duringSegmentCount = 0; // points (so far) drawn within the highlighted segment
-			size_t afterSegmentCount  = 0; // points (so far) drawn after the highlighted segment
-
-			double latitude = (double)0.0;
-			double longitude = (double)0.0;
-			double altitude = (double)0.0;
-			time_t timestamp = 0;
-
-			CLLocationCoordinate2D coordinatesBefore[numPoints];
-			CLLocationCoordinate2D coordinatesDuring[numPoints];
-			CLLocationCoordinate2D coordinatesAfter[numPoints];
-
-			CLLocationDegrees maxLat = -90;
-			CLLocationDegrees maxLon = -180;
-			CLLocationDegrees minLat = 90;
-			CLLocationDegrees minLon = 180;
-
-			CLLocation* location = nil;
-
-			while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:totalPointIndex withLatitude:&latitude withLongitude:&longitude withAltitude:&altitude withTimestamp:&timestamp])
+			size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex);
+			if (numPoints > 0)
 			{
-				location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-				
-				if ((prevLocation == nil) || ([location distanceFromLocation:prevLocation] >= 20.0))
+				size_t totalPointIndex    = 0;
+				size_t beforeSegmentCount = 0; // points (so far) drawn before the highlighted segment
+				size_t duringSegmentCount = 0; // points (so far) drawn within the highlighted segment
+				size_t afterSegmentCount  = 0; // points (so far) drawn after the highlighted segment
+
+				double latitude = (double)0.0;
+				double longitude = (double)0.0;
+				double altitude = (double)0.0;
+				time_t timestamp = 0;
+
+				CLLocationCoordinate2D coordinatesBefore[numPoints];
+				CLLocationCoordinate2D coordinatesDuring[numPoints];
+				CLLocationCoordinate2D coordinatesAfter[numPoints];
+
+				CLLocationDegrees maxLat = -90;
+				CLLocationDegrees maxLon = -180;
+				CLLocationDegrees minLat = 90;
+				CLLocationDegrees minLon = 180;
+
+				CLLocation* location = nil;
+
+				while ([appDelegate getHistoricalActivityLocationPoint:self->activityId withPointIndex:totalPointIndex withLatitude:&latitude withLongitude:&longitude withAltitude:&altitude withTimestamp:&timestamp])
 				{
-					if (location.coordinate.latitude > maxLat)
-						maxLat = location.coordinate.latitude;
-					if (location.coordinate.latitude < minLat)
-						minLat = location.coordinate.latitude;
-					if (location.coordinate.longitude > maxLon)
-						maxLon = location.coordinate.longitude;
-					if (location.coordinate.longitude < minLon)
-						minLon = location.coordinate.longitude;
-
-					if (totalPointIndex == 0)
-					{
-						[self addPin:location.coordinate withPlaceName:PIN_TITLE_START_OF_WORKOUT withDescription:@""];
-					}
-
-					if (timestamp < self->segmentToHighlight.startTime)
-					{
-						coordinatesBefore[beforeSegmentCount++] = location.coordinate;
-					}
-					else if (timestamp > self->segmentToHighlight.endTime)
-					{
-						if ((afterSegmentCount == 0) && (self->segmentName != nil) && (self->segmentToHighlight.startTime != self->segmentToHighlight.endTime))
-						{
-							NSString* title = [[NSString alloc] initWithFormat:@"%@ %@", PIN_TITLE_END, self->segmentName];
-							[self addPin:location.coordinate withPlaceName:title withDescription:@""];
-						}
-						coordinatesAfter[afterSegmentCount++] = location.coordinate;
-					}
-					else
-					{
-						if ((duringSegmentCount == 0) && (self->segmentName != nil))
-						{
-							NSString* title;
-							if (self->segmentToHighlight.startTime == self->segmentToHighlight.endTime)
-								title = [[NSString alloc] initWithFormat:@"%@", self->segmentName];
-							else
-								title = [[NSString alloc] initWithFormat:@"%@ %@", PIN_TITLE_START, self->segmentName];
-							[self addPin:location.coordinate withPlaceName:title withDescription:@""];
-						}
-						coordinatesDuring[duringSegmentCount++] = location.coordinate;
-					}
+					location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
 					
-					prevLocation = location;
+					if ((prevLocation == nil) || ([location distanceFromLocation:prevLocation] >= 20.0))
+					{
+						if (location.coordinate.latitude > maxLat)
+							maxLat = location.coordinate.latitude;
+						if (location.coordinate.latitude < minLat)
+							minLat = location.coordinate.latitude;
+						if (location.coordinate.longitude > maxLon)
+							maxLon = location.coordinate.longitude;
+						if (location.coordinate.longitude < minLon)
+							minLon = location.coordinate.longitude;
+
+						if (totalPointIndex == 0)
+						{
+							[self addPin:location.coordinate withPlaceName:PIN_TITLE_START_OF_WORKOUT withDescription:@""];
+						}
+
+						if (timestamp < self->segmentToHighlight.startTime)
+						{
+							coordinatesBefore[beforeSegmentCount++] = location.coordinate;
+						}
+						else if (timestamp > self->segmentToHighlight.endTime)
+						{
+							if ((afterSegmentCount == 0) && (self->segmentName != nil) && (self->segmentToHighlight.startTime != self->segmentToHighlight.endTime))
+							{
+								NSString* title = [[NSString alloc] initWithFormat:@"%@ %@", PIN_TITLE_END, self->segmentName];
+								[self addPin:location.coordinate withPlaceName:title withDescription:@""];
+							}
+							coordinatesAfter[afterSegmentCount++] = location.coordinate;
+						}
+						else
+						{
+							if ((duringSegmentCount == 0) && (self->segmentName != nil))
+							{
+								NSString* title;
+								if (self->segmentToHighlight.startTime == self->segmentToHighlight.endTime)
+									title = [[NSString alloc] initWithFormat:@"%@", self->segmentName];
+								else
+									title = [[NSString alloc] initWithFormat:@"%@ %@", PIN_TITLE_START, self->segmentName];
+								[self addPin:location.coordinate withPlaceName:title withDescription:@""];
+							}
+							coordinatesDuring[duringSegmentCount++] = location.coordinate;
+						}
+						
+						prevLocation = location;
+					}
+
+					++totalPointIndex;
 				}
 
-				++totalPointIndex;
-			}
+				if (location)
+				{
+					[self addPin:location.coordinate withPlaceName:PIN_TITLE_END_OF_WORKOUT withDescription:@""];
+				}
 
-			if (location)
-			{
-				[self addPin:location.coordinate withPlaceName:PIN_TITLE_END_OF_WORKOUT withDescription:@""];
-			}
+				if (beforeSegmentCount > 0)
+				{
+					[self showRoute:coordinatesBefore withPointCount:beforeSegmentCount withColor:[UIColor blueColor] withWidth:5];
+				}
+				if (duringSegmentCount > 0)
+				{
+					[self showRoute:coordinatesDuring withPointCount:duringSegmentCount withColor:[UIColor greenColor] withWidth:10];
+				}
+				if (afterSegmentCount > 0)
+				{
+					[self showRoute:coordinatesAfter withPointCount:afterSegmentCount withColor:[UIColor blueColor] withWidth:5];
+				}
 
-			if (beforeSegmentCount > 0)
-			{
-				[self showRoute:coordinatesBefore withPointCount:beforeSegmentCount withColor:[UIColor blueColor] withWidth:5];
-			}
-			if (duringSegmentCount > 0)
-			{
-				[self showRoute:coordinatesDuring withPointCount:duringSegmentCount withColor:[UIColor greenColor] withWidth:10];
-			}
-			if (afterSegmentCount > 0)
-			{
-				[self showRoute:coordinatesAfter withPointCount:afterSegmentCount withColor:[UIColor blueColor] withWidth:5];
-			}
+				MKCoordinateRegion region;
+				region.center.latitude = (maxLat + minLat) / 2;
+				region.center.longitude = (maxLon + minLon) / 2;
+				region.span.latitudeDelta = maxLat - minLat;
+				region.span.longitudeDelta = maxLon - minLon;
 
-			MKCoordinateRegion region;
-			region.center.latitude = (maxLat + minLat) / 2;
-			region.center.longitude = (maxLon + minLon) / 2;
-			region.span.latitudeDelta = maxLat - minLat;
-			region.span.longitudeDelta = maxLon - minLon;
-
-			[self.mapView setRegion:region];
+				[self.mapView setRegion:region];
+			}
 		}
 	}
 }
@@ -371,58 +374,61 @@
 		const size_t SCALING_FACTOR = 3;
 
 		size_t activityIndex = ConvertActivityIdToActivityIndex([self->activityId UTF8String]);
-		size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex) / SCALING_FACTOR;
-		if (numPoints > 0)
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
 		{
-			Coordinate coordinate;
-			size_t pointCount = 0;
-			CLLocationCoordinate2D coordinates[numPoints];
-			
-			CLLocationDegrees maxLat = -90;
-			CLLocationDegrees maxLon = -180;
-			CLLocationDegrees minLat = 90;
-			CLLocationDegrees minLon = 180;
-			
-			CLLocation* location = nil;
-			
-			while (GetHistoricalActivityPoint(activityIndex, pointCount * SCALING_FACTOR, &coordinate))
+			size_t numPoints = GetNumHistoricalActivityLocationPoints(activityIndex) / SCALING_FACTOR;
+			if (numPoints > 0)
 			{
-				location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
-
-				if (location.coordinate.latitude > maxLat)
-					maxLat = location.coordinate.latitude;
-				if (location.coordinate.latitude < minLat)
-					minLat = location.coordinate.latitude;
-				if (location.coordinate.longitude > maxLon)
-					maxLon = location.coordinate.longitude;
-				if (location.coordinate.longitude < minLon)
-					minLon = location.coordinate.longitude;
-
-				if (pointCount == 0)
+				Coordinate coordinate;
+				size_t pointCount = 0;
+				CLLocationCoordinate2D coordinates[numPoints];
+				
+				CLLocationDegrees maxLat = -90;
+				CLLocationDegrees maxLon = -180;
+				CLLocationDegrees minLat = 90;
+				CLLocationDegrees minLon = 180;
+				
+				CLLocation* location = nil;
+				
+				while (GetHistoricalActivityPoint(activityIndex, pointCount * SCALING_FACTOR, &coordinate))
 				{
-					[self addPin:location.coordinate withPlaceName:PIN_TITLE_START_OF_WORKOUT withDescription:@""];
+					location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+
+					if (location.coordinate.latitude > maxLat)
+						maxLat = location.coordinate.latitude;
+					if (location.coordinate.latitude < minLat)
+						minLat = location.coordinate.latitude;
+					if (location.coordinate.longitude > maxLon)
+						maxLon = location.coordinate.longitude;
+					if (location.coordinate.longitude < minLon)
+						minLon = location.coordinate.longitude;
+
+					if (pointCount == 0)
+					{
+						[self addPin:location.coordinate withPlaceName:PIN_TITLE_START_OF_WORKOUT withDescription:@""];
+					}
+
+					coordinates[pointCount] = location.coordinate;
+					++pointCount;
 				}
 
-				coordinates[pointCount] = location.coordinate;
-				++pointCount;
-			}
+				if (location)
+				{
+					[self addPin:location.coordinate withPlaceName:PIN_TITLE_END_OF_WORKOUT withDescription:@""];
+				}
 
-			if (location)
-			{
-				[self addPin:location.coordinate withPlaceName:PIN_TITLE_END_OF_WORKOUT withDescription:@""];
-			}
+				if (pointCount > 0)
+				{
+					[self showRoute:coordinates withPointCount:pointCount withColor:[UIColor blueColor] withWidth:5];
 
-			if (pointCount > 0)
-			{
-				[self showRoute:coordinates withPointCount:pointCount withColor:[UIColor blueColor] withWidth:5];
-
-				MKCoordinateRegion region;
-				region.center.latitude = (maxLat + minLat) / 2;
-				region.center.longitude = (maxLon + minLon) / 2;
-				region.span.latitudeDelta = maxLat - minLat;
-				region.span.longitudeDelta = maxLon - minLon;
-				
-				[self.mapView setRegion:region];
+					MKCoordinateRegion region;
+					region.center.latitude = (maxLat + minLat) / 2;
+					region.center.longitude = (maxLon + minLon) / 2;
+					region.span.latitudeDelta = maxLat - minLat;
+					region.span.longitudeDelta = maxLon - minLon;
+					
+					[self.mapView setRegion:region];
+				}
 			}
 		}
 	}
