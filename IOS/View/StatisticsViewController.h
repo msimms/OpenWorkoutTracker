@@ -22,7 +22,6 @@
 }
 
 - (void)buildAttributeDictionary;
-- (void)showSummaryMap:(NSString*)sectionName;
 - (void)showSegmentsMap:(NSString*)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title;
 
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;

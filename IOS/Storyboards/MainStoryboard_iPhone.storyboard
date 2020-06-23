@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -155,14 +155,13 @@
                         <segue destination="2GL-V3-JX0" kind="push" identifier="SegueToProfileView" id="EU9-N8-0JA"/>
                         <segue destination="c7D-r7-Xlg" kind="push" identifier="SegueToIntervalsView" id="PUP-vK-iGk"/>
                         <segue destination="sJ4-y9-qRG" kind="push" identifier="SegueToSettingsView" id="Qdm-QW-9lB"/>
-                        <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="E2b-lU-9dF"/>
                         <segue destination="A9N-FN-6yC" kind="push" identifier="SegueToPacePlansView" id="frI-i4-eiK"/>
                         <segue destination="ObN-8C-jua" kind="push" identifier="SegueToGearView" id="Xdw-9G-X6h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="919" y="354"/>
+            <point key="canvasLocation" x="114" y="354"/>
         </scene>
         <!--Profile-->
         <scene sceneID="DLc-pZ-sa5">
@@ -815,7 +814,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p2X-X3-L1q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2905.5999999999999" y="2292.953523238381"/>
+            <point key="canvasLocation" x="2921" y="2994"/>
         </scene>
         <!--Complex Activity View Controller-->
         <scene sceneID="IB4-3H-B1s">
@@ -2131,7 +2130,6 @@
                         <outlet property="swipe" destination="POe-qc-6Tc" id="Yn9-Iz-u5G"/>
                         <outlet property="toolbar" destination="R4m-tl-6wx" id="gHz-cU-Pef"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="D1W-a8-Nen"/>
-                        <segue destination="Ft0-mK-MqL" kind="push" identifier="SegueToMapOverlayListViewController" id="Y2u-2b-CLK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IhX-cY-HKz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2141,42 +2139,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3929.5999999999999" y="-1527.4362818590705"/>
-        </scene>
-        <!--Map Overlays-->
-        <scene sceneID="vkN-LC-mlB">
-            <objects>
-                <viewController id="Ft0-mK-MqL" customClass="OverlayListViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="BZz-dd-cke">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="akv-r5-H8J">
-                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="Ft0-mK-MqL" id="6xK-E4-I19"/>
-                                    <outlet property="delegate" destination="Ft0-mK-MqL" id="CAi-a9-kHN"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="akv-r5-H8J" firstAttribute="bottom" secondItem="pAT-pb-Dwj" secondAttribute="bottom" id="CwH-9I-Gjn"/>
-                            <constraint firstItem="akv-r5-H8J" firstAttribute="centerY" secondItem="pAT-pb-Dwj" secondAttribute="centerY" constant="-22" id="do0-ZJ-QLc"/>
-                            <constraint firstItem="akv-r5-H8J" firstAttribute="leading" secondItem="pAT-pb-Dwj" secondAttribute="leading" id="npv-pe-kQY"/>
-                            <constraint firstItem="akv-r5-H8J" firstAttribute="centerX" secondItem="pAT-pb-Dwj" secondAttribute="centerX" id="oON-c1-W3C"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="pAT-pb-Dwj"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Map Overlays" id="fU7-bD-tbz"/>
-                    <connections>
-                        <outlet property="overlayTableView" destination="akv-r5-H8J" id="f8d-1M-Edl"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="rKV-Oz-88g" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5068" y="-1249.9250374812596"/>
+            <point key="canvasLocation" x="5326" y="-1318"/>
         </scene>
         <!--Summary-->
         <scene sceneID="rzl-qb-SLK">
@@ -2247,7 +2210,7 @@
                 <swipeGestureRecognizer direction="right" id="0bA-x0-UdY" userLabel="Swipe Gesture Recognizer - Left"/>
                 <swipeGestureRecognizer direction="right" id="YmB-iS-Fdy" userLabel="Swipe Gesture Recognizer - Right"/>
             </objects>
-            <point key="canvasLocation" x="2916.8000000000002" y="-1298.9505247376312"/>
+            <point key="canvasLocation" x="4586" y="-1318"/>
         </scene>
         <!--Tags-->
         <scene sceneID="ne8-82-5jk">
@@ -2375,11 +2338,12 @@
                     <navigationItem key="navigationItem" title="Statistics" id="Cfq-Ij-STH"/>
                     <connections>
                         <outlet property="spinner" destination="BUf-HZ-dRP" id="uY1-Nn-DgF"/>
+                        <segue destination="qGH-Hf-FM1" kind="push" identifier="SegueToMapOverview" id="1hs-Nm-UAf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HjS-b1-T6R" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1990.4000000000001" y="866.26686656671666"/>
+            <point key="canvasLocation" x="1988" y="1057"/>
         </scene>
         <!--About-->
         <scene sceneID="GyZ-tt-XZu">
@@ -2421,7 +2385,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2nS-1c-UA1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1989.5999999999999" y="1557.6354679802957"/>
+            <point key="canvasLocation" x="1990" y="1807"/>
         </scene>
         <!--Pace Plan Edit View Controller-->
         <scene sceneID="Kgi-6W-ofn">
@@ -2533,7 +2497,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xPy-4Q-FQ8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-47.200000000000003" y="-986.45320197044339"/>
+            <point key="canvasLocation" x="1990" y="-1298"/>
         </scene>
         <!--Pace Plans View Controller-->
         <scene sceneID="zLl-Au-iUN">
@@ -2663,7 +2627,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hFT-JM-Jxn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="115.2" y="1520.2398800599701"/>
+            <point key="canvasLocation" x="-121" y="1520"/>
         </scene>
         <!--Core Plot View Controller-->
         <scene sceneID="nIB-Ie-bzJ">
@@ -2706,7 +2670,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r1I-f3-c9b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="81.599999999999994" y="354.42278860569718"/>
+            <point key="canvasLocation" x="-690" y="354"/>
         </scene>
         <!--Lap Times-->
         <scene sceneID="dXw-Cm-b3j">
@@ -2744,7 +2708,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mIL-jz-rh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3753.5999999999999" y="1225.1874062968516"/>
+            <point key="canvasLocation" x="3753" y="1057"/>
         </scene>
         <!--Followers-->
         <scene sceneID="Kgu-41-app">
@@ -2874,11 +2838,69 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             </objects>
             <point key="canvasLocation" x="-943.20000000000005" y="2992.6108374384239"/>
         </scene>
+        <!--Segment-->
+        <scene sceneID="TJo-XU-45p">
+            <objects>
+                <viewController id="qGH-Hf-FM1" customClass="MapOverviewViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Pvh-oR-tmH">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m0D-Cj-0r7">
+                                <rect key="frame" x="0.0" y="88" width="375" height="641"/>
+                                <connections>
+                                    <outlet property="delegate" destination="qGH-Hf-FM1" id="98G-RP-78R"/>
+                                </connections>
+                            </mapView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ULA-Fd-HPk">
+                                <rect key="frame" x="0.0" y="729" width="375" height="49"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="T4v-3V-jYh"/>
+                                    <barButtonItem title="Map Type" id="pl6-7x-OUh">
+                                        <connections>
+                                            <action selector="onMapType:" destination="qGH-Hf-FM1" id="Grq-PP-Kto"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                                <connections>
+                                    <outlet property="delegate" destination="qGH-Hf-FM1" id="e9O-Ac-SOG"/>
+                                </connections>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="m0D-Cj-0r7" firstAttribute="leading" secondItem="I4k-ad-TeL" secondAttribute="leading" id="6be-3l-Zw0"/>
+                            <constraint firstItem="m0D-Cj-0r7" firstAttribute="top" secondItem="I4k-ad-TeL" secondAttribute="top" id="DS8-pt-gg8"/>
+                            <constraint firstItem="m0D-Cj-0r7" firstAttribute="leading" secondItem="ULA-Fd-HPk" secondAttribute="leading" id="Is4-Pu-Yx2"/>
+                            <constraint firstItem="ULA-Fd-HPk" firstAttribute="trailing" secondItem="I4k-ad-TeL" secondAttribute="trailing" id="T4k-Qp-NRo"/>
+                            <constraint firstItem="m0D-Cj-0r7" firstAttribute="centerX" secondItem="Pvh-oR-tmH" secondAttribute="centerX" id="dH7-ta-aw8"/>
+                            <constraint firstItem="ULA-Fd-HPk" firstAttribute="top" secondItem="m0D-Cj-0r7" secondAttribute="bottom" id="nwf-4e-jwv"/>
+                            <constraint firstItem="m0D-Cj-0r7" firstAttribute="trailing" secondItem="I4k-ad-TeL" secondAttribute="trailing" id="oXo-e1-vvu"/>
+                            <constraint firstItem="ULA-Fd-HPk" firstAttribute="bottom" secondItem="I4k-ad-TeL" secondAttribute="bottom" id="qUH-R1-qJU"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="I4k-ad-TeL"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Segment" id="VNc-04-sM5"/>
+                    <connections>
+                        <outlet property="mapTypeButton" destination="pl6-7x-OUh" id="tO7-2P-bJ3"/>
+                        <outlet property="mapView" destination="m0D-Cj-0r7" id="9Lf-ND-gvm"/>
+                        <outlet property="navItem" destination="VNc-04-sM5" id="BKX-SF-ZjS"/>
+                        <outlet property="toolbar" destination="ULA-Fd-HPk" id="GUi-Ij-cwv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uGJ-o2-4AP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="FbT-Q4-Uhe">
+                    <connections>
+                        <outlet property="delegate" destination="qGH-Hf-FM1" id="M2C-EA-eOO"/>
+                    </connections>
+                </swipeGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="2916" y="1807"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="UtV-9X-A4d"/>
-        <segue reference="E2b-lU-9dF"/>
-        <segue reference="YPO-0d-PeY"/>
+        <segue reference="D1W-a8-Nen"/>
         <segue reference="g4d-Zp-BfC"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

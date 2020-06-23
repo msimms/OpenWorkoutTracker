@@ -225,7 +225,7 @@ extern "C" {
 	ActivityAttributeType InitializeActivityAttribute(ActivityAttributeValueType valueType, ActivityAttributeMeasureType measureType, UnitSystem units);
 	ActivityAttributeType QueryActivityAttributeTotal(const char* const attributeName);
 	ActivityAttributeType QueryActivityAttributeTotalByActivityType(const char* const attributeName, const char* const activityType);
-	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, const char* const activityId);
+	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, char** const pActivityId);
 
 	// Functions for importing ZWO files.
 	bool ImportZwoFile(const char* const fileName, const char* const workoutId, const char* const workoutName);

@@ -2287,10 +2287,13 @@ extern "C" {
 		result.valid       = false;
 
 		std::string attributeName = pAttributeName;
+
+		// Look through all activity summaries.
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& summary = (*iter);
 
+			// If this activity is of the right type.
 			if (summary.pActivity && (summary.pActivity->GetType().compare(pActivityType) == 0))
 			{
 				ActivityAttributeMap::const_iterator mapIter = summary.summaryAttributes.find(attributeName);
@@ -2326,7 +2329,7 @@ extern "C" {
 		return result;
 	}
 
-	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const pAttributeName, const char* const pActivityType, bool smallestIsBest, const char* const activityId)
+	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const pAttributeName, const char* const pActivityType, bool smallestIsBest, char** const pActivityId)
 	{
 		ActivityAttributeType result;
 
@@ -2335,18 +2338,23 @@ extern "C" {
 		result.unitSystem  = UNIT_SYSTEM_US_CUSTOMARY;
 		result.valid       = false;
 
-		if (!(pAttributeName && pActivityType && activityId))
+		if (!(pAttributeName && pActivityType && pActivityId))
 		{
 			return result;
 		}
 
 		std::string attributeName = pAttributeName;
+		std::string activityId;
+
+		// Look through all activity summaries.
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& summary = (*iter);
 
+			// If this activity is of the right type.
 			if (summary.pActivity && (summary.pActivity->GetType().compare(pActivityType) == 0))
 			{
+				// Find the requested piece of summary data for this activity.
 				ActivityAttributeMap::const_iterator mapIter = summary.summaryAttributes.find(attributeName);
 				if (mapIter != summary.summaryAttributes.end())
 				{
@@ -2354,8 +2362,8 @@ extern "C" {
 
 					if (result.valueType == TYPE_NOT_SET)
 					{
-						result.valid = true;
 						result = currentResult;
+						activityId = summary.activityId;
 					}
 					else if (result.valueType == currentResult.valueType)
 					{
@@ -2367,11 +2375,13 @@ extern "C" {
 									if (result.value.doubleVal > currentResult.value.doubleVal)
 									{
 										result = currentResult;
+										activityId = summary.activityId;
 									}
 								}
 								else if (result.value.doubleVal < currentResult.value.doubleVal)
 								{
 									result = currentResult;
+									activityId = summary.activityId;
 								}
 								break;
 							case TYPE_INTEGER:
@@ -2380,11 +2390,13 @@ extern "C" {
 									if (result.value.intVal > currentResult.value.intVal)
 									{
 										result = currentResult;
+										activityId = summary.activityId;
 									}
 								}
 								else if (result.value.intVal < currentResult.value.intVal)
 								{
 									result = currentResult;
+									activityId = summary.activityId;
 								}
 								break;
 							case TYPE_TIME:
@@ -2393,11 +2405,13 @@ extern "C" {
 									if (result.value.timeVal > currentResult.value.timeVal)
 									{
 										result = currentResult;
+										activityId = summary.activityId;
 									}
 								}
 								else if (result.value.timeVal < currentResult.value.timeVal)
 								{
 									result = currentResult;
+									activityId = summary.activityId;
 								}
 								break;
 							case TYPE_NOT_SET:
@@ -2406,6 +2420,11 @@ extern "C" {
 					}
 				}
 			}
+		}
+		
+		if (result.valid && (activityId.size() > 0))
+		{
+			(*pActivityId) = strdup(activityId.c_str());
 		}
 		return result;
 	}

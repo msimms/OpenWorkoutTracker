@@ -13,6 +13,11 @@
 #import "Segues.h"
 #import "StringUtils.h"
 
+typedef enum Sections
+{
+	SECTION_SUMMARY = 0
+} Sections;
+
 @interface AttrDictItem : NSObject
 {
 @public
@@ -113,24 +118,23 @@
 
 #pragma mark random methods
 
+// Builds lists of hte attributes relevant to each activity type, as well as for the summary data.
 - (void)buildAttributeDictionary
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if (!appDelegate)
-	{
-		return;
-	}
-
 	size_t numHistoricalActivities = [appDelegate getNumHistoricalActivities];
+
 	if (numHistoricalActivities > 0)
 	{
 		self->attributeDictionary = [[NSMutableDictionary alloc] init];
 		if (self->attributeDictionary)
 		{
 			NSMutableArray* activityAttributes = [[NSMutableArray alloc] init];
+
 			if (activityAttributes)
 			{
 				NSMutableArray* activityTypes = [appDelegate getActivityTypes];
+
 				if (activityTypes)
 				{
 					activityAttributes = [[NSMutableArray alloc] init];
@@ -250,42 +254,6 @@
 	}
 }
 
-- (void)showSummaryMap:(NSString*)sectionName
-{
-	self.spinner.hidden = FALSE;
-	self.spinner.center = self.view.center;
-	[self.spinner startAnimating];
-
-	if ([sectionName isEqualToString:STR_SUMMARY])
-	{
-		self->mapMode = MAP_OVERVIEW_ALL_STARTS;
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	}
-	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_RUNNING])
-	{
-		self->mapMode = MAP_OVERVIEW_RUN_STARTS;
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	}
-	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_CYCLING])
-	{
-		self->mapMode = MAP_OVERVIEW_CYCLING_STARTS;
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	}
-	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_HIKING])
-	{
-		self->mapMode = MAP_OVERVIEW_HIKING_STARTS;
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	}
-	else if ([sectionName isEqualToString:@ACTIVITY_TYPE_WALKING])
-	{
-		self->mapMode = MAP_OVERVIEW_WALKING_STARTS;
-		[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	}
-	self->activityIdToMap = nil;
-
-	[self.spinner stopAnimating];
-}
-
 - (void)showSegmentsMap:(NSString*)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title
 {
 	self->activityIdToMap = activityId;
@@ -295,10 +263,9 @@
 
 	self.spinner.hidden = FALSE;
 	self.spinner.center = self.view.center;
+
 	[self.spinner startAnimating];
-
 	[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-
 	[self.spinner stopAnimating];
 }
 
@@ -377,11 +344,9 @@
 		if (attrDictItem)
 		{
 			NSString* attribute = attrDictItem->name;
-			bool displayValue = true;
+			char* activityId = NULL;
 
-			attrDictItem->activityId = nil;
-
-			if (section == 0)
+			if (section == SECTION_SUMMARY)
 			{
 				if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME])
 					attrDictItem->value = QueryActivityAttributeTotal([attribute UTF8String]);
@@ -399,27 +364,36 @@
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_DISTANCE])
 					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_MAX_DISTANCE])
-					attrDictItem->value = QueryBestActivityAttributeByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [sectionTitle UTF8String], false, [attrDictItem->activityId UTF8String]);
+					attrDictItem->value = QueryBestActivityAttributeByActivityType(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, [sectionTitle UTF8String], false, &activityId);
 				else if ([attribute isEqualToString:SUMMARY_ATTRIBUTE_TOTAL_REPS])
 					attrDictItem->value = QueryActivityAttributeTotalByActivityType(ACTIVITY_ATTRIBUTE_REPS, [sectionTitle UTF8String]);
 				else if ([attribute isEqualToString:@ACTIVITY_ATTRIBUTE_FASTEST_SPEED])
-					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [sectionTitle UTF8String], false, [attrDictItem->activityId UTF8String]);
+					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [sectionTitle UTF8String], false, &activityId);
 				else
-					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [sectionTitle UTF8String], true, [attrDictItem->activityId UTF8String]);
+					attrDictItem->value = QueryBestActivityAttributeByActivityType([attribute UTF8String], [sectionTitle UTF8String], true, &activityId);
+			}
+			
+			if (activityId)
+			{
+				attrDictItem->activityId = [NSString stringWithFormat:@"%s", activityId];
+				free((void*)activityId);
 			}
 
-			if (displayValue)
+			if (attrDictItem->value.valid)
 			{
-				size_t activityIndex = ConvertActivityIdToActivityIndex([attrDictItem->activityId UTF8String]);
-
 				time_t startTime = 0;
 				time_t endTime = 0;
-				GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
-				NSString* startTimeStr = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
 
-				NSString* valueStr   = [StringUtils formatActivityViewType:attrDictItem->value];
-				NSString* measureStr = [StringUtils formatActivityMeasureType:attrDictItem->value.measureType];
-				NSString* detailText = nil;
+				size_t activityIndex = ConvertActivityIdToActivityIndex([attrDictItem->activityId UTF8String]);
+				if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+				{
+					GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+				}
+
+				NSString* startTimeStr = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
+				NSString* valueStr     = [StringUtils formatActivityViewType:attrDictItem->value];
+				NSString* measureStr   = [StringUtils formatActivityMeasureType:attrDictItem->value.measureType];
+				NSString* detailText   = nil;
 
 				if ([measureStr length] > 0)
 					detailText = [NSString stringWithFormat:@"%@ %@", valueStr, measureStr];
@@ -436,11 +410,10 @@
 			}
 			else
 			{
-				cell.detailTextLabel.text = @"";
+				cell.detailTextLabel.text = STR_NONE;
 			}
 
 			cell.textLabel.text = attribute;
-
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
 	}
