@@ -18,7 +18,6 @@ typedef enum SettingsSections
 	SECTION_UNITS = 0,
 	SECTION_HEALTHKIT,
 	SECTION_SERVICES,
-	SECTION_AUTOUPLOAD,
 	SECTION_BROADCAST,
 	NUM_SETTINGS_SECTIONS
 } SettingsSections;
@@ -63,7 +62,6 @@ typedef enum SettingsRowsHealthKit
 #define UNIT_TITLE_METRIC              NSLocalizedString(@"Metric", nil)
 #define ICLOUD_BACKUP                  NSLocalizedString(@"Save Files to iCloud Drive", nil)
 #define CLOUD_SERVICES                 NSLocalizedString(@"Cloud Services", nil)
-#define AUTOUPLOAD                     NSLocalizedString(@"Auto Upload", nil)
 #define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
 #define BROADCAST_LOCALLY              NSLocalizedString(@"To Your Local Group", nil)
 #define BROADCAST_GLOBALLY             NSLocalizedString(@"To the Internet", nil)
@@ -298,7 +296,6 @@ typedef enum SettingsRowsHealthKit
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	switch (section)
 	{
 		case SECTION_UNITS:
@@ -311,12 +308,6 @@ typedef enum SettingsRowsHealthKit
 				return CLOUD_SERVICES;
 			}
 			return @"";
-		case SECTION_AUTOUPLOAD:
-			if ([[appDelegate getEnabledFileExportCloudServices] count] > 0)
-			{
-				return AUTOUPLOAD;
-			}
-			return @"";
 		case SECTION_BROADCAST:
 			return BROADCAST;
 	}
@@ -327,7 +318,6 @@ typedef enum SettingsRowsHealthKit
 {
 	NSInteger numRows = 0;
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	switch (section)
 	{
 		case SECTION_UNITS:
@@ -338,9 +328,6 @@ typedef enum SettingsRowsHealthKit
 			break;
 		case SECTION_SERVICES:
 			numRows = [self numberOfServicesRows];
-			break;
-		case SECTION_AUTOUPLOAD:
-			numRows = [[appDelegate getEnabledFileExportCloudServices] count];
 			break;
 		case SECTION_BROADCAST:
 			numRows = NUM_SETTINGS_ROWS_BROADCAST;
@@ -456,10 +443,6 @@ typedef enum SettingsRowsHealthKit
 				}
 			}
 			break;
-		case SECTION_AUTOUPLOAD:
-			cell.textLabel.text = [[appDelegate getEnabledFileExportCloudServices] objectAtIndex:row];
-			cell.detailTextLabel.text = @"";
-			break;
 		case SECTION_BROADCAST:
 			{
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -529,7 +512,6 @@ typedef enum SettingsRowsHealthKit
 	{
 		case SECTION_UNITS:
 		case SECTION_SERVICES:
-		case SECTION_AUTOUPLOAD:
 			break;
 		case SECTION_BROADCAST:
 			switch (row)
