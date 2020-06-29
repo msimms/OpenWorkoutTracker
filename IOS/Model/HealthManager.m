@@ -56,7 +56,7 @@
 
 #pragma mark HealthKit permissions
 
-// Returns the types of data that Fit wishes to write to HealthKit.
+// Returns the types of data that the app wishes to write to HealthKit.
 - (NSSet*)dataTypesToWrite
 {
 #if TARGET_OS_WATCH
@@ -74,7 +74,7 @@
 #endif
 }
 
-// Returns the types of data that Fit wishes to read from HealthKit.
+// Returns the types of data that the app wishes to read from HealthKit.
 - (NSSet*)dataTypesToRead
 {
 #if TARGET_OS_WATCH
@@ -403,11 +403,13 @@
 	}
 }
 
+// Blocks until all HealthKit queries have completed.
 - (void)waitForHealthKitQueries
 {
 	dispatch_group_wait(self->queryGroup, DISPATCH_TIME_FOREVER);
 }
 
+// Used for de-duplicating the HealthKit activity list, so we don't see activities recorded with this app twice.
 - (void)removeOverlappingActivityWithStartTime:(time_t)startTime withEndTime:(time_t)endTime
 {
 	@synchronized(self->workouts)
@@ -559,28 +561,28 @@
 				attr.value.doubleVal = (double)0.0;
 				attr.valueType = TYPE_DOUBLE;
 				attr.measureType = MEASURE_RPM;
-				attr.valid = true;
+				attr.valid = false;
 			}
 			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_HEART_RATE, strlen(ACTIVITY_ATTRIBUTE_HEART_RATE)) == 0)
 			{
 				attr.value.doubleVal = (double)0.0;
 				attr.valueType = TYPE_DOUBLE;
 				attr.measureType = MEASURE_BPM;
-				attr.valid = true;
+				attr.valid = false;
 			}
 			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LATITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)) == 0)
 			{
 				attr.value.doubleVal = (double)0.0;
 				attr.valueType = TYPE_DOUBLE;
 				attr.measureType = MEASURE_DEGREES;
-				attr.valid = true;
+				attr.valid = [self getHistoricalActivityLocationPoint:activityId withPointIndex:0 withLatitude:&attr.value.doubleVal withLongitude:NULL withAltitude:NULL withTimestamp:NULL];
 			}
 			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE, strlen(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)) == 0)
 			{
 				attr.value.doubleVal = (double)0.0;
 				attr.valueType = TYPE_DOUBLE;
 				attr.measureType = MEASURE_DEGREES;
-				attr.valid = true;
+				attr.valid = [self getHistoricalActivityLocationPoint:activityId withPointIndex:0 withLatitude:NULL withLongitude:&attr.value.doubleVal withAltitude:NULL withTimestamp:NULL];
 			}
 			else if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_CALORIES_BURNED, strlen(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)) == 0)
 			{

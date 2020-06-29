@@ -226,9 +226,7 @@ typedef enum ExportFileTypeButtons
 		self->hasHeartRateData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_HEART_RATE forActivityId:self->activityId].valid;
 		self->hasCadenceData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_CADENCE forActivityId:self->activityId].valid;
 		self->hasPowerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_POWER forActivityId:self->activityId].valid;
-		
-		self->chartTitles = [LineFactory getLineNames:self->hasLocationData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
-		
+
 		self->timeSection1RowNames = [[NSMutableArray alloc] init];
 		if (self->timeSection1RowNames)
 		{
@@ -241,6 +239,15 @@ typedef enum ExportFileTypeButtons
 		{
 			[self->timeSection2RowNames addObject:ROW_TITLE_SPLIT_TIMES];
 			[self->timeSection2RowNames addObject:ROW_TITLE_LAP_TIMES];
+		}
+
+		if (self->hasLocationData)
+		{
+			self->chartTitles = [LineFactory getLineNames:self->hasLocationData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
+		}
+		else
+		{
+			self->chartTitles = [[NSMutableArray alloc] init];
 		}
 
 		uint64_t bikeId;
