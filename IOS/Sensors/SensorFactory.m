@@ -28,16 +28,6 @@
 	return sensor;
 }
 
-- (GoPro*)createGoPro
-{
-#if TARGET_OS_WATCH
-	return nil;
-#else
-	GoPro* sensor = [[GoPro alloc] init];
-	return sensor;
-#endif
-}
-
 - (LeHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH

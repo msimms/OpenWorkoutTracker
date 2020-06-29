@@ -63,7 +63,6 @@ typedef enum SettingsRowsHealthKit
 #define ICLOUD_BACKUP                  NSLocalizedString(@"Save Files to iCloud Drive", nil)
 #define CLOUD_SERVICES                 NSLocalizedString(@"Cloud Services", nil)
 #define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
-#define BROADCAST_LOCALLY              NSLocalizedString(@"To Your Local Group", nil)
 #define BROADCAST_GLOBALLY             NSLocalizedString(@"To the Internet", nil)
 #define BROADCAST_NAME                 NSLocalizedString(@"Name", nil)
 #define BROADCAST_RATE                 NSLocalizedString(@"Update Rate", nil)

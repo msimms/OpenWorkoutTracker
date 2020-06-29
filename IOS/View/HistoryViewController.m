@@ -302,7 +302,7 @@
 		allTagsStr = [allTagsStr stringByAppendingString:tag];
 	}
 	
-	// If the activity was loaded from health kit then append at tag to denote it as such.
+	// If the activity was loaded from HealthKit then append at tag to denote it as such.
 	if ([appDelegate isHealthKitActivity:activityId])
 	{
 		if ([allTagsStr length] > 0)

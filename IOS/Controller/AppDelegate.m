@@ -1047,7 +1047,7 @@ void startSensorCallback(SensorType type, void* context)
 	// Read activities from our database.
 	InitializeHistoricalActivityList();
 
-	// Remove duplicate items from the health kit list.
+	// Remove duplicate items from the HealthKit list.
 	if (self->healthMgr && [Preferences hideHealthKitDuplicates])
 	{
 		size_t numDbActivities = GetNumHistoricalActivities();

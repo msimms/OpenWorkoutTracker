@@ -9,7 +9,6 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 #import "Accelerometer.h"
-#import "GoPro.h"
 #import "LocationSensor.h"
 #import "LeBikeSpeedAndCadence.h"
 #import "LeFootPod.h"
@@ -25,7 +24,6 @@
 
 - (Accelerometer*)createAccelerometer;
 - (LocationSensor*)createLocationSensor;
-- (GoPro*)createGoPro;
 - (LeHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral;
 - (LeBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral;
 - (LePowerMeter*)createPowerMeter:(CBPeripheral*)peripheral;

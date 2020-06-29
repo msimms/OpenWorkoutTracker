@@ -16,8 +16,7 @@
 #define MSG_NO_PASSWORD            NSLocalizedString(@"You did not enter a password.", nil)
 #define MSG_PASSWORD_NOT_CONFIRMED NSLocalizedString(@"You did not confirm the password.", nil)
 #define MSG_PASSWORDS_DONT_MATCH   NSLocalizedString(@"The passwords don't match.", nil)
-#define MSG_NO_FIRST_NAME          NSLocalizedString(@"You did not enter your first name.", nil)
-#define MSG_NO_LAST_NAME           NSLocalizedString(@"You did not enter your last name.", nil)
+#define MSG_NO_NAME                NSLocalizedString(@"You did not enter your name.", nil)
 #define MSG_LOGIN_FAILED           NSLocalizedString(@"Failed to create the account.", nil)
 #define MSG_404                    NSLocalizedString(@"There was an error contacting the web service.", nil)
 #define MSG_SUCCESSFUL_LOGIN       NSLocalizedString(@"Successful login.", nil)
@@ -155,7 +154,7 @@
 	else if (self.realNameTextField.text.length == 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
-																				 message:MSG_NO_FIRST_NAME
+																				 message:MSG_NO_NAME
 																		  preferredStyle:UIAlertControllerStyleAlert];           
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
 		[self presentViewController:alertController animated:YES completion:nil];

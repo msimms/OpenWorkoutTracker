@@ -12,12 +12,12 @@
 {
 	IBOutlet UITableView* peripheralTableView;
 
-	NSMutableArray* discoveredHRMs;
-	NSMutableArray* discoveredScales;
-	NSMutableArray* discoveredCadenceWheelSpeedSensors;
-	NSMutableArray* discoveredPowerMeters;
-	NSMutableArray* discoveredFootPods;
-	NSMutableArray* discoveredVideo;
+	// Sensors that are current connected.
+	NSMutableArray* connectedHRMs;
+	NSMutableArray* connectedScales;
+	NSMutableArray* connectedCadenceWheelSpeedSensors;
+	NSMutableArray* connectedPowerMeters;
+	NSMutableArray* connectedFootPods;
 
 	CBPeripheral* selectedPeripheral;
 }

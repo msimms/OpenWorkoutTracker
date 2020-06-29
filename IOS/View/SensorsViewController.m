@@ -24,7 +24,6 @@
 #define CONNECTED                   NSLocalizedString(@"Connected", nil)
 #define NOT_CONNECTED               NSLocalizedString(@"Not Connected", nil)
 
-#define MESSAGE_UNRECOGNIZED_DEVICE NSLocalizedString(@"This device is unrecognized and cannot be connected.", nil)
 #define MESSAGE_BT_POWERED_OFF      NSLocalizedString(@"Bluetooth is powered off. Turn Bluetooth on to scan for sensors.", nil)
 #define MESSAGE_NO_BT_SMART         NSLocalizedString(@"Your device does not support Bluetooth Smart, which is required for this feature.", nil)
 
@@ -32,7 +31,7 @@
 
 #define NAME_HRM                    NSLocalizedString(@"Heart Rate Monitor", nil)
 #define NAME_CADENCE_WHEEL_SPEED    NSLocalizedString(@"Bicycle Speed and Cadence", nil)
-#define NAME_POWER_METER            NSLocalizedString(@"Bicycle Power Meter", nil)
+#define NAME_POWER_METER            NSLocalizedString(@"Power Meter", nil)
 #define NAME_FOOT_POD               NSLocalizedString(@"Running Speed and Cadence", nil)
 #define NAME_SCALE                  NSLocalizedString(@"Scale", nil)
 
@@ -44,7 +43,6 @@ typedef enum SettingsSections
 	SECTION_POWER_METER,
 	SECTION_FOOT_POD,
 	SECTION_SCALE,
-	SECTION_GO_PRO,
 	NUM_SETTINGS_SECTIONS
 } SettingsSections;
 
@@ -150,27 +148,27 @@ typedef enum SettingsSections
 	else if (switchControl.tag >= (SECTION_SCALE * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_SCALE * 100);
-		peripheral = [self->discoveredScales objectAtIndex:index];
+		peripheral = [self->connectedScales objectAtIndex:index];
 	}
 	else if (switchControl.tag >= (SECTION_FOOT_POD * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_FOOT_POD * 100);
-		peripheral = [self->discoveredFootPods objectAtIndex:index];
+		peripheral = [self->connectedFootPods objectAtIndex:index];
 	}
 	else if (switchControl.tag >= (SECTION_POWER_METER * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_POWER_METER * 100);
-		peripheral = [self->discoveredPowerMeters objectAtIndex:index];
+		peripheral = [self->connectedPowerMeters objectAtIndex:index];
 	}
 	else if (switchControl.tag >= (SECTION_CADENCE_WHEEL_SPEED * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_CADENCE_WHEEL_SPEED * 100);
-		peripheral = [self->discoveredCadenceWheelSpeedSensors objectAtIndex:index];
+		peripheral = [self->connectedCadenceWheelSpeedSensors objectAtIndex:index];
 	}
 	else if (switchControl.tag >= (SECTION_HRM * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_HRM * 100);
-		peripheral = [self->discoveredHRMs objectAtIndex:index];
+		peripheral = [self->connectedHRMs objectAtIndex:index];
 	}
 
 	if (peripheral)
@@ -222,8 +220,6 @@ typedef enum SettingsSections
 			return NAME_FOOT_POD;
 		case SECTION_SCALE:
 			return NAME_SCALE;
-		case SECTION_GO_PRO:
-			break;
 		case NUM_SETTINGS_SECTIONS:
 			break;
 	}
@@ -240,30 +236,24 @@ typedef enum SettingsSections
 		case SECTION_ALWAYS_SCAN:
 			return 1;
 		case SECTION_HRM:
-			self->discoveredHRMs = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_HEART_RATE];
-			numRows = [self->discoveredHRMs count];
+			self->connectedHRMs = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_HEART_RATE];
+			numRows = [self->connectedHRMs count];
 			break;
 		case SECTION_CADENCE_WHEEL_SPEED:
-			self->discoveredCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
-			numRows = [self->discoveredCadenceWheelSpeedSensors count];
+			self->connectedCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
+			numRows = [self->connectedCadenceWheelSpeedSensors count];
 			break;
 		case SECTION_POWER_METER:
-			self->discoveredPowerMeters = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_POWER];
-			numRows = [self->discoveredPowerMeters count];
+			self->connectedPowerMeters = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_POWER];
+			numRows = [self->connectedPowerMeters count];
 			break;
 		case SECTION_FOOT_POD:
-			self->discoveredFootPods = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
-			numRows = [self->discoveredFootPods count];
+			self->connectedFootPods = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
+			numRows = [self->connectedFootPods count];
 			break;
 		case SECTION_SCALE:
-			self->discoveredScales = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_WEIGHT];
-			numRows = [self->discoveredScales count];
-			break;
-		case SECTION_GO_PRO:
-			numRows = -1;
-			break;
-		case NUM_SETTINGS_SECTIONS:
-			numRows = -1;
+			self->connectedScales = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_WEIGHT];
+			numRows = [self->connectedScales count];
 			break;
 	}
 	if (numRows == 0)
@@ -294,21 +284,19 @@ typedef enum SettingsSections
 		case SECTION_ALWAYS_SCAN:
 			break;
 		case SECTION_HRM:
-			peripheralList = self->discoveredHRMs;
+			peripheralList = self->connectedHRMs;
 			break;
 		case SECTION_CADENCE_WHEEL_SPEED:
-			peripheralList = self->discoveredCadenceWheelSpeedSensors;
+			peripheralList = self->connectedCadenceWheelSpeedSensors;
 			break;
 		case SECTION_POWER_METER:
-			peripheralList = self->discoveredPowerMeters;
+			peripheralList = self->connectedPowerMeters;
 			break;
 		case SECTION_FOOT_POD:
-			peripheralList = self->discoveredFootPods;
+			peripheralList = self->connectedFootPods;
 			break;
 		case SECTION_SCALE:
-			peripheralList = self->discoveredScales;
-			break;
-		case SECTION_GO_PRO:
+			peripheralList = self->connectedScales;
 			break;
 		case NUM_SETTINGS_SECTIONS:
 			break;
@@ -371,7 +359,7 @@ typedef enum SettingsSections
 		NSNumber* value = [data objectForKey:@KEY_NAME_WEIGHT_KG];
 		if (peripheral && value)
 		{
-			NSInteger row = [self->discoveredScales indexOfObject:peripheral];
+			NSInteger row = [self->connectedScales indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_SCALE, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
@@ -389,7 +377,7 @@ typedef enum SettingsSections
 		NSNumber* value = [data objectForKey:@KEY_NAME_HEART_RATE];
 		if (peripheral && value)
 		{
-			NSInteger row = [self->discoveredHRMs indexOfObject:peripheral];
+			NSInteger row = [self->connectedHRMs indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_HRM, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
@@ -407,7 +395,7 @@ typedef enum SettingsSections
 		NSNumber* value = [data objectForKey:@KEY_NAME_CADENCE];
 		if (peripheral && value)
 		{
-			NSInteger row = [self->discoveredCadenceWheelSpeedSensors indexOfObject:peripheral];
+			NSInteger row = [self->connectedCadenceWheelSpeedSensors indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_CADENCE_WHEEL_SPEED, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
@@ -437,7 +425,7 @@ typedef enum SettingsSections
 		NSNumber* value = [data objectForKey:@KEY_NAME_POWER];
 		if (peripheral && value)
 		{
-			NSInteger row = [self->discoveredPowerMeters indexOfObject:peripheral];
+			NSInteger row = [self->connectedPowerMeters indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_POWER_METER, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];

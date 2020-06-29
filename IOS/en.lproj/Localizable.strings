@@ -23,7 +23,6 @@
 "Autoscale Off" = "Autoscale Off";
 "Bicycle" = "Bicycle";
 "Bicycles" = "Bicycles";
-"Bicycle Power Meter" = "Bicycle Power Meter";
 "Bicycle Speed and Cadence" = "Bicycle Speed and Cadence";
 "Biggest" = "Biggest";
 "Bike" = "Bike";
@@ -90,7 +89,6 @@
 "Finished" = "Finished";
 "Fix Repetition Count" = "Fix Repetition Count";
 "ft" = "ft";
-"Garmin Connect" = "Garmin Connect";
 "Gender" = "Gender";
 "GPS" = "GPS";
 "GPS Filter Options" = "GPS Filter Options";
@@ -170,6 +168,7 @@
 "Please specify a URL." = "Please specify a URL.";
 "Poor GPS Signal" = "Poor GPS Signal";
 "Position" = "Position";
+"Power Meter" = "Power Meter";
 "Profile" = "Profile";
 "Pull Up" = "Pull Up";
 "Push Up" = "Push Up";
@@ -224,14 +223,11 @@
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "There are risks with exercise. Do not start an exercise program without consulting your doctor.";
 "There was an error contacting the web service." = "There was an error contacting the web service.";
 "There was an error creating the overlay." = "There was an error creating the overlay.";
-"There was an error downloading the file." = "There was an error downloading the file.";
-"This device is unrecognized and cannot be connected." = "This device is unrecognized and cannot be connected.";
 "This exercise should be performed with the phone positioned on the upper arm." = "This exercise should be performed with the phone positioned on the upper arm.";
 "This feature is not implemented." = "This feature is not implemented.";
 "Time" = "Time";
 "Time Interval" = "Time Interval";
 "To the Internet" = "To the Internet";
-"To Your Local Group" = "To Your Local Group";
 "To view your broadcast visit this webpage" = "To view your broadcast visit this webpage";
 "Total Calories" = "Total Calories";
 "Total Distance" = "Total Distance";
@@ -240,7 +236,6 @@
 "Trim" = "Trim";
 "Update" = "Update";
 "Update Rate" = "Update Rate";
-"Upload to Strava" = "Upload to Strava";
 "Unimplemented Feature" = "Unimplemented Feature";
 "Units" = "Units";
 "US Customary Units" = "US Customary Units";
@@ -263,8 +258,7 @@
 "You can mount the phone on the bicycle's handlebars, though you should pay attention to the road and obey all applicable laws." = "You can mount the phone on the bicycle's handlebars, though you should pay attention to the road and obey all applicable laws.";
 "You did not confirm the password." = "You did not confirm the password.";
 "You did not enter a password." = "You did not enter a password.";
-"You did not enter your first name." = "You did not enter your first name.";
-"You did not enter your last name." = "You did not enter your last name.";
+"You did not enter your name." = "You did not enter your name.";
 "You did not provide an email address." = "You did not provide an email address.";
 "You have not enabled any file hosting services. Services can be enabled using Settings." = "You have not enabled any file hosting services. Services can be enabled using Settings.";
 "You have not done any workouts. Get moving!" = "You have not done any workouts. Get moving!";

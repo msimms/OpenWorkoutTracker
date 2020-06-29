@@ -18,11 +18,11 @@
 #define ACTIVITY_ATTRIBUTE_CADENCE                    "Cadence"                 // bicycle cadence sensor reading
 #define ACTIVITY_ATTRIBUTE_AVG_CADENCE                "Average Cadence"         // average bicycle cadence sensor reading
 #define ACTIVITY_ATTRIBUTE_MAX_CADENCE                "Maximum Cadence"         // maximum bicycle cadence sensor reading
-#define ACTIVITY_ATTRIBUTE_POWER                      "Power"                   // bicycle power meter reading
-#define ACTIVITY_ATTRIBUTE_3_SEC_POWER                "3 Second Power"          // bicycle power meter reading, averaged over the last three seconds
-#define ACTIVITY_ATTRIBUTE_AVG_POWER                  "Average Power"           // average bicycle power meter reading
-#define ACTIVITY_ATTRIBUTE_NORMALIZED_POWER           "Normalized Power"        // normalized bicycle power meter reading
-#define ACTIVITY_ATTRIBUTE_MAX_POWER                  "Maximum Power"           // maximum bicycle power meter reading
+#define ACTIVITY_ATTRIBUTE_POWER                      "Power"                   // power meter reading
+#define ACTIVITY_ATTRIBUTE_3_SEC_POWER                "3 Second Power"          // power meter reading, averaged over the last three seconds
+#define ACTIVITY_ATTRIBUTE_AVG_POWER                  "Average Power"           // average power meter reading
+#define ACTIVITY_ATTRIBUTE_NORMALIZED_POWER           "Normalized Power"        // normalized power meter reading
+#define ACTIVITY_ATTRIBUTE_MAX_POWER                  "Maximum Power"           // maximum power meter reading
 #define ACTIVITY_ATTRIBUTE_POWER_ZONE                 "Power Zone"              // current power zone
 #define ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS      "Num. Wheel Revolutions"  // the number of wheel revolutions (from the wheel speed sensor)
 #define ACTIVITY_ATTRIBUTE_WHEEL_SPEED                "Wheel Speed"             // wheel speed
