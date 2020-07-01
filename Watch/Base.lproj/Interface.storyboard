@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15505" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="16097" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="16012"/>
     </dependencies>
     <scenes>
         <!--WatchAboutViewController-->
@@ -211,13 +211,18 @@
                         <table alignment="left" id="yQn-pj-4a3">
                             <items>
                                 <tableRow identifier="WatchHistoryRowType" id="wCX-p6-jkK" customClass="WatchHistoryRowController">
-                                    <group key="rootItem" width="1" alignment="left" id="74V-lq-v0z">
+                                    <group key="rootItem" width="1" alignment="left" layout="vertical" id="74V-lq-v0z">
                                         <items>
-                                            <label width="1" alignment="left" verticalAlignment="center" text="Label" numberOfLines="2" id="0JT-H8-yfj"/>
+                                            <label width="100" alignment="left" text="Label" id="0JT-H8-yfj"/>
+                                            <label width="1" alignment="left" verticalAlignment="bottom" text="Sub Label" id="NS0-QE-gQs">
+                                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                                <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                            </label>
                                         </items>
                                     </group>
                                     <connections>
                                         <outlet property="itemLabel" destination="0JT-H8-yfj" id="R9f-78-iGg"/>
+                                        <outlet property="itemSubLabel" destination="NS0-QE-gQs" id="hiH-5d-lOl"/>
                                     </connections>
                                 </tableRow>
                             </items>

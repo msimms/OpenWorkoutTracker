@@ -11,6 +11,7 @@
 @interface WatchHistoryRowController : NSObject
 
 @property (weak, nonatomic) IBOutlet WKInterfaceLabel* itemLabel;
+@property (weak, nonatomic) IBOutlet WKInterfaceLabel* itemSubLabel;
 
 @end
 

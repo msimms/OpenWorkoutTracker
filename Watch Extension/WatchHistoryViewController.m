@@ -13,6 +13,7 @@
 @implementation WatchHistoryRowController
 
 @synthesize itemLabel;
+@synthesize itemSubLabel;
 
 @end
 
@@ -100,8 +101,9 @@
 			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:rowControllerIndex];
 			--rowControllerIndex;
 
-			NSString* rowTitle = [NSString stringWithFormat:@"%@\n%@ %@", type, name, startTimeStr];
-			[row.itemLabel setText:rowTitle];
+			NSString* rowTitle = [NSString stringWithFormat:@"%@ %@", name, startTimeStr];
+			[row.itemLabel setText:type];
+			[row.itemSubLabel setText:rowTitle];
 		}
 	}
 }
