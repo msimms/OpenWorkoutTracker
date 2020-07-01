@@ -553,7 +553,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.timeVal = GapToTargetPace();
 		result.valueType = TYPE_TIME;
 		result.measureType = MEASURE_PACE;
-		result.valid = m_pacePlan.targetDistanceInKms > (double)0.01;
+		result.valid = m_pacePlan.planId.size() > 0;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_SPEED) == 0)
 	{

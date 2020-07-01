@@ -194,7 +194,7 @@
             </objects>
             <point key="canvasLocation" x="1990.4000000000001" y="2994.6026986506749"/>
         </scene>
-        <!--Intervals-->
+        <!--Interval Workouts-->
         <scene sceneID="FfT-dC-glr">
             <objects>
                 <viewController id="c7D-r7-Xlg" customClass="IntervalsViewController" sceneMemberID="viewController">
@@ -235,7 +235,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="q9A-sb-9gm"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Intervals" id="bAg-ji-cWg"/>
+                    <navigationItem key="navigationItem" title="Interval Workouts" id="bAg-ji-cWg"/>
                     <connections>
                         <outlet property="intervalButton" destination="hwI-af-vtv" id="is8-Ef-X3Q"/>
                         <outlet property="intervalTableView" destination="LIb-gB-AUm" id="Uwc-5S-lD1"/>
@@ -2899,9 +2899,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="UtV-9X-A4d"/>
-        <segue reference="D1W-a8-Nen"/>
-        <segue reference="g4d-Zp-BfC"/>
+        <segue reference="2hX-Kx-fHg"/>
+        <segue reference="zxl-cL-SNo"/>
+        <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>

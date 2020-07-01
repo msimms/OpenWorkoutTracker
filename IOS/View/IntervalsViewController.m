@@ -11,7 +11,7 @@
 #import "IntervalEditViewController.h"
 #import "Segues.h"
 
-#define TITLE                        NSLocalizedString(@"Intervals", nil)
+#define TITLE                        NSLocalizedString(@"Interval Workouts", nil)
 
 #define ADD_INTERVAL                 NSLocalizedString(@"Add Interval Workout", nil)
 #define ALERT_TITLE_NEW_INTERVAL     NSLocalizedString(@"New Interval Workout", nil)

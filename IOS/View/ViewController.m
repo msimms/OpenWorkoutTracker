@@ -23,7 +23,7 @@
 #define BUTTON_TITLE_EDIT_PROFILE    NSLocalizedString(@"Profile", nil)
 #define BUTTON_TITLE_EDIT_SETTINGS   NSLocalizedString(@"Settings", nil)
 #define BUTTON_TITLE_EDIT_SENSORS    NSLocalizedString(@"Sensors", nil)
-#define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Intervals", nil)
+#define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
 #define BUTTON_TITLE_EDIT_PACE_PLANS NSLocalizedString(@"Pace Plans", nil)
 #define BUTTON_TITLE_EDIT_GEAR       NSLocalizedString(@"Gear", nil)
 
