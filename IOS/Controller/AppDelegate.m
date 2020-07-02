@@ -2148,14 +2148,21 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)checkForActivity:(NSString*)activityHash
 {
-	const char* activityId = GetActivityIdByHash([activityHash UTF8String]);
-	if (activityId == NULL)
+	if (activityHash)
 	{
-		NSMutableDictionary* msgData = [Preferences exportPrefs];
-		[msgData setObject:@WATCH_MSG_REQUEST_ACTIVITY forKey:@WATCH_MSG_TYPE];
-		[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
-		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+		const char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+		if (activityId == NULL)
+		{
+			NSMutableDictionary* msgData = [Preferences exportPrefs];
+			[msgData setObject:@WATCH_MSG_REQUEST_ACTIVITY forKey:@WATCH_MSG_TYPE];
+			[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
+			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+		}
 	}
+}
+
+- (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
+{
 }
 
 #pragma mark watch session methods
@@ -2257,6 +2264,7 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
 		// The watch app is sending an activity.
+		[self importWatchActivity:message];
 	}
 }
 

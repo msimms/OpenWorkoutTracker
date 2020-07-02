@@ -65,6 +65,17 @@
 
 - (void)sendActivity:(NSString*)activityHash
 {
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	NSString* activityId = [extDelegate retrieveActivityIdByHash:activityHash];
+	if (activityId)
+	{
+		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+		NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
+
+		[msgData setObject:@WATCH_MSG_ACTIVITY forKey:@WATCH_MSG_TYPE];
+		[msgData setObject:locationData forKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+	}
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveApplicationContext:(NSDictionary<NSString*, id>*)applicationContext

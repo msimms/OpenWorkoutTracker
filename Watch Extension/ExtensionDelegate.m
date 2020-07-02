@@ -309,7 +309,6 @@ void startSensorCallback(SensorType type, void* context)
 	return IsActivityOrphaned(activityIndex);
 }
 
-
 #pragma mark methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList
@@ -350,6 +349,34 @@ void startSensorCallback(SensorType type, void* context)
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
+}
+
+- (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId
+{
+	NSMutableArray* locationData = [[NSMutableArray alloc] init];
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	InitializeHistoricalActivityList();
+	CreateHistoricalActivityObject(activityIndex);
+
+	if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
+	{
+		NSInteger pointIndex = 0;
+		BOOL result = FALSE;
+
+		do {
+			Coordinate coordinate;
+
+			result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+			if (result)
+			{
+				CLLocation* location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+				[locationData addObject:location];
+				++pointIndex;
+			}
+		} while (result);
+	}
+	return locationData;
 }
 
 #pragma mark retrieves or creates and retrieves the applications unique identifier
@@ -418,6 +445,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	ActivityHash* hash = [[ActivityHash alloc] init];
 	NSString* hashStr = [hash calculateWithActivityId:activityId];
+
 	if (hashStr)
 	{
 		StoreHash([activityId UTF8String], [hashStr UTF8String]);
@@ -430,6 +458,7 @@ void startSensorCallback(SensorType type, void* context)
 	ActivityHash* hash = [[ActivityHash alloc] init];
 	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 	NSString* hashStr = [hash calculateWithActivityId:activityId];
+
 	if (hashStr)
 	{
 		StoreHash([activityId UTF8String], [hashStr UTF8String]);
@@ -441,6 +470,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSString* result = nil;
 	char* activityHash = GetHashForActivityId([activityId UTF8String]);
+
 	if (activityHash)
 	{
 		result = [NSString stringWithFormat:@"%s", activityHash];
@@ -452,6 +482,7 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)retrieveHashForActivityIndex:(NSInteger)activityIndex
 {
 	const char* const activityId = ConvertActivityIndexToActivityId(activityIndex);
+
 	if (activityId)
 	{
 		NSString* tempActivityId = [[NSString alloc] initWithFormat:@"%s", activityId];
@@ -460,12 +491,26 @@ void startSensorCallback(SensorType type, void* context)
 	return NULL;
 }
 
+- (NSString*)retrieveActivityIdByHash:(NSString*)activityHash
+{
+	NSString* result = nil;
+	char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+
+	if (activityId)
+	{
+		result = [NSString stringWithFormat:@"%s", activityId];
+		free((void*)activityId);
+	}
+	return result;
+}
+
 #pragma mark methods for managing the activity name
 
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
 	char* activityName = GetActivityName([activityId UTF8String]);
+
 	if (activityName)
 	{
 		result = [NSString stringWithFormat:@"%s", activityName];
