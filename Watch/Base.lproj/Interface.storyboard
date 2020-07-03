@@ -246,6 +246,8 @@
                             </connections>
                         </switch>
                         <button width="1" alignment="left" title="Reset" id="RLD-SD-HYq">
+                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="onReset" destination="hJl-mE-pcA" id="iXx-6E-fXU"/>
                             </connections>
