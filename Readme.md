@@ -22,6 +22,10 @@ Why develop a workout tracker when there are so many closed-source options avail
 * Apple Watch Companion App (In Progress)
 * Android Version
 
+## User Documentation
+
+The User Documentation is stored [on this wiki page](https://github.com/msimms/Straen/wiki). There you will be able to find an explanation on how to use the app.
+
 ## Architecture
 
 The software architecture uses a model-view-controller philosophy.
