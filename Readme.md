@@ -26,6 +26,10 @@ Why develop a workout tracker when there are so many closed-source options avail
 
 The User Documentation is stored [on this wiki page](https://github.com/msimms/Straen/wiki). There you will be able to find an explanation on how to use the app.
 
+<p align="center">
+<img src="https://mikesimms.net/straen_images/Cycling.jpg" alt="Cycling Screen" width=256/>
+</p>
+
 ## Architecture
 
 The software architecture uses a model-view-controller philosophy.
