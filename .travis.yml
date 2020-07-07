@@ -1,4 +1,4 @@
 language: objective-c
 xcode_project: Straen.xcodeproj
 xcode_scheme: StraenTests
-xcode_destination: platform=iOS Simulator,OS=13.5,name=iPhone X
+xcode_destination: platform=iOS Simulator,OS=13.5,name=iPhone 11
