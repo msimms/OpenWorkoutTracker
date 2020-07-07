@@ -49,6 +49,7 @@
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	size_t numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
+
 	for (size_t i = 0; i < numHistoricalActivities; ++i)
 	{
 		NSString* hash = [extDelegate retrieveHashForActivityIndex:i];
@@ -67,6 +68,7 @@
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSString* activityId = [extDelegate retrieveActivityIdByHash:activityHash];
+
 	if (activityId)
 	{
 		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];

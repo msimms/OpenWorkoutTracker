@@ -354,27 +354,30 @@ void startSensorCallback(SensorType type, void* context)
 - (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId
 {
 	NSMutableArray* locationData = [[NSMutableArray alloc] init];
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	InitializeHistoricalActivityList();
-	CreateHistoricalActivityObject(activityIndex);
+	@synchronized(self) {
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
-	{
-		NSInteger pointIndex = 0;
-		BOOL result = FALSE;
+		InitializeHistoricalActivityList();
+		CreateHistoricalActivityObject(activityIndex);
 
-		do {
-			Coordinate coordinate;
+		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
+		{
+			NSInteger pointIndex = 0;
+			BOOL result = FALSE;
 
-			result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
-			if (result)
-			{
-				CLLocation* location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
-				[locationData addObject:location];
-				++pointIndex;
-			}
-		} while (result);
+			do {
+				Coordinate coordinate;
+
+				result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+				if (result)
+				{
+					CLLocation* location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+					[locationData addObject:location];
+					++pointIndex;
+				}
+			} while (result);
+		}
 	}
 	return locationData;
 }
