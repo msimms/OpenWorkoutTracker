@@ -82,8 +82,8 @@
 	}
 
 	size_t orphanedActivityIndex = 0;
-	bool isOrphaned = IsActivityOrphaned(&orphanedActivityIndex);
-	bool isInProgress = IsActivityInProgress();
+	bool isOrphaned = [extDelegate isActivityOrphaned:&orphanedActivityIndex];
+	bool isInProgress = [extDelegate isActivityInProgress];
 
 	if (isOrphaned || isInProgress)
 	{

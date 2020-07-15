@@ -183,9 +183,12 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)startSensors
 {
-	if (self->sensorMgr)
+	@synchronized(self)
 	{
-		GetUsableSensorTypes(startSensorCallback, (__bridge void*)self->sensorMgr);
+		if (self->sensorMgr)
+		{
+			GetUsableSensorTypes(startSensorCallback, (__bridge void*)self->sensorMgr);
+		}
 	}
 }
 
@@ -239,7 +242,8 @@ void startSensorCallback(SensorType type, void* context)
 
 		dispatch_queue_t summarizerQueue = dispatch_queue_create("summarizer", NULL);
 		dispatch_async(summarizerQueue, ^{
-			@synchronized(self) {
+			@synchronized(self)
+			{
 				SaveActivitySummaryData();
 			}
 		});
@@ -261,12 +265,20 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)pauseActivity
 {
-	return PauseCurrentActivity();
+	@synchronized(self)
+	{
+		return PauseCurrentActivity();
+	}
+	return FALSE;
 }
 
 - (BOOL)startNewLap
 {
-	return StartNewLap();
+	@synchronized(self)
+	{
+		return StartNewLap();
+	}
+	return FALSE;
 }
 
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
@@ -278,66 +290,101 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)createActivity:(NSString*)activityType
 {
-	CreateActivity([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	@synchronized(self)
+	{
+		CreateActivity([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	}
 }
 
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex
 {
-	DestroyCurrentActivity();
-	ReCreateOrphanedActivity(activityIndex);
+	@synchronized(self)
+	{
+		DestroyCurrentActivity();
+		ReCreateOrphanedActivity(activityIndex);
+	}
 }
 
 - (void)endOrpanedActivity:(NSInteger)activityIndex
 {
-	FixHistoricalActivityEndTime(activityIndex);
+	@synchronized(self)
+	{
+		FixHistoricalActivityEndTime(activityIndex);
+	}
 }
 
 #pragma mark methods for querying the status of the current activity.
 
 - (BOOL)isActivityCreated
 {
-	return IsActivityCreated();
+	@synchronized(self)
+	{
+		return IsActivityCreated();
+	}
+	return FALSE;
 }
 
 - (BOOL)isActivityInProgress
 {
-	return IsActivityInProgress();
+	@synchronized(self)
+	{
+		return IsActivityInProgress();
+	}
+	return FALSE;
 }
 
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex
 {
-	return IsActivityOrphaned(activityIndex);
+	@synchronized(self)
+	{
+		return IsActivityOrphaned(activityIndex);
+	}
+	return FALSE;
 }
 
 #pragma mark methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList
 {
-	InitializeHistoricalActivityList();
+	@synchronized(self)
+	{
+		InitializeHistoricalActivityList();
+	}
 	return [self getNumHistoricalActivities];
 }
 
 - (NSInteger)getNumHistoricalActivities
 {
-	// The number of activities from out database.
-	return (NSInteger)GetNumHistoricalActivities();
+	@synchronized(self)
+	{
+		// The number of activities from out database.
+		return (NSInteger)GetNumHistoricalActivities();
+	}
+	return 0;
 }
 
 - (void)createHistoricalActivityObject:(NSInteger)activityIndex
 {
-	CreateHistoricalActivityObject(activityIndex);
+	@synchronized(self)
+	{
+		CreateHistoricalActivityObject(activityIndex);
+	}
 }
 
 - (void)loadHistoricalActivitySummaryData:(NSInteger)activityIndex
 {
-	@synchronized(self) {
+	@synchronized(self)
+	{
 		LoadHistoricalActivitySummaryData(activityIndex);
 	}
 }
 
 - (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
-	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+	@synchronized(self)
+	{
+		GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+	}
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
@@ -355,7 +402,8 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSMutableArray* locationData = [[NSMutableArray alloc] init];
 
-	@synchronized(self) {
+	@synchronized(self)
+	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
 		InitializeHistoricalActivityList();
@@ -451,7 +499,10 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (hashStr)
 	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		@synchronized(self)
+		{
+			StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		}
 	}
 	return hashStr;
 }
@@ -459,12 +510,16 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)hashCurrentActivity
 {
 	ActivityHash* hash = [[ActivityHash alloc] init];
+
 	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 	NSString* hashStr = [hash calculateWithActivityId:activityId];
 
 	if (hashStr)
 	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		@synchronized(self)
+		{
+			StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		}
 	}
 	return hashStr;
 }
@@ -497,12 +552,16 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)retrieveActivityIdByHash:(NSString*)activityHash
 {
 	NSString* result = nil;
-	char* activityId = GetActivityIdByHash([activityHash UTF8String]);
 
-	if (activityId)
+	@synchronized(self)
 	{
-		result = [NSString stringWithFormat:@"%s", activityId];
-		free((void*)activityId);
+		char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+
+		if (activityId)
+		{
+			result = [NSString stringWithFormat:@"%s", activityId];
+			free((void*)activityId);
+		}
 	}
 	return result;
 }
@@ -512,12 +571,16 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* activityName = GetActivityName([activityId UTF8String]);
 
-	if (activityName)
+	@synchronized(self)
 	{
-		result = [NSString stringWithFormat:@"%s", activityName];
-		free((void*)activityName);
+		char* activityName = GetActivityName([activityId UTF8String]);
+
+		if (activityName)
+		{
+			result = [NSString stringWithFormat:@"%s", activityName];
+			free((void*)activityName);
+		}
 	}
 	return result;
 }
@@ -527,25 +590,31 @@ void startSensorCallback(SensorType type, void* context)
 - (void)weightHistoryUpdated:(NSNotification*)notification
 {
 	NSDictionary* weightData = [notification object];
-	
-	NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
-	NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
-	
-	ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+
+	@synchronized(self)
+	{
+		NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
+		NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
+		
+		ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+	}
 }
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgress() && IsLiftingActivity())
+	@synchronized(self)
 	{
-		NSDictionary* accelerometerData = [notification object];
-		
-		NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
-		NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
-		NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
-		NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
-		
-		ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+		if (IsActivityInProgress() && IsLiftingActivity())
+		{
+			NSDictionary* accelerometerData = [notification object];
+			
+			NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
+			NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
+			NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
+			NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
+			
+			ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+		}
 	}
 }
 
@@ -553,72 +622,78 @@ void startSensorCallback(SensorType type, void* context)
 {
 	self->receivingLocations = TRUE;
 
-	if (IsActivityInProgressAndNotPaused())
+	@synchronized(self)
 	{
-		NSDictionary* locationData = [notification object];
-
-		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
-		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-		NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
-
-		NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
-		NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
-
-		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
-
-		NSString* activityType = [self getCurrentActivityType];
-
-		BOOL tempBadGps = FALSE;
-
-		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
-		if (minHAccuracy != (uint8_t)-1)
+		if (IsActivityInProgressAndNotPaused())
 		{
-			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
-			if (minHAccuracy != 0 && accuracy > minHAccuracy)
+			NSDictionary* locationData = [notification object];
+
+			NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
+			NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
+			NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
+
+			NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
+			NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
+
+			NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
+
+			NSString* activityType = [self getCurrentActivityType];
+
+			BOOL tempBadGps = FALSE;
+
+			uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+			if (minHAccuracy != (uint8_t)-1)
 			{
-				tempBadGps = TRUE;
+				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
+				if (minHAccuracy != 0 && accuracy > minHAccuracy)
+				{
+					tempBadGps = TRUE;
+				}
 			}
-		}
-		
-		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
-		if (minVAccuracy != (uint8_t)-1)
-		{
-			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
-			if (minVAccuracy != 0 && accuracy > minVAccuracy)
+			
+			uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+			if (minVAccuracy != (uint8_t)-1)
 			{
-				tempBadGps = TRUE;
+				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
+				if (minVAccuracy != 0 && accuracy > minVAccuracy)
+				{
+					tempBadGps = TRUE;
+				}
 			}
-		}
 
-		self->badGps = tempBadGps;
+			self->badGps = tempBadGps;
 
-		BOOL shouldProcessReading = TRUE;
-		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
-		
-		if (filterOption == GPS_FILTER_DROP && self->badGps)
-		{
-			shouldProcessReading = FALSE;
-		}
-		
-		if (shouldProcessReading)
-		{
-			ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+			BOOL shouldProcessReading = TRUE;
+			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+			
+			if (filterOption == GPS_FILTER_DROP && self->badGps)
+			{
+				shouldProcessReading = FALSE;
+			}
+			
+			if (shouldProcessReading)
+			{
+				ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+			}
 		}
 	}
 }
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	@synchronized(self)
 	{
-		NSDictionary* heartRateData = [notification object];
-
-		NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
-		NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
-
-		if (timestampMs && rate)
+		if (IsActivityInProgressAndNotPaused())
 		{
-			ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
+			NSDictionary* heartRateData = [notification object];
+
+			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+
+			if (timestampMs && rate)
+			{
+				ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
+			}
 		}
 	}
 }
@@ -634,7 +709,8 @@ void activityTypeCallback(const char* type, void* context)
 - (NSMutableArray*)getActivityTypes
 {
 	NSMutableArray* types = [[NSMutableArray alloc] init];
-	if (types)
+
+	@synchronized(self)
 	{
 		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
 	}
@@ -650,7 +726,8 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getCurrentActivityAttributes
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
-	if (names)
+
+	@synchronized(self)
 	{
 		GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
 	}
@@ -660,7 +737,8 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getHistoricalActivityAttributes:(NSInteger)activityIndex
 {
 	NSMutableArray* attributes = [[NSMutableArray alloc] init];
-	if (attributes)
+
+	@synchronized(self)
 	{
 		size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
 		for (size_t i = 0; i < numAttributes; ++i)
@@ -683,7 +761,8 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getIntervalWorkoutNamesAndIds
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
-	if (namesAndIds)
+
+	@synchronized(self)
 	{
 		if (InitializeIntervalWorkoutList())
 		{
@@ -709,7 +788,8 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getPacePlanNamesAndIds
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
-	if (namesAndIds)
+
+	@synchronized(self)
 	{
 		if (InitializePacePlanList())
 		{
@@ -772,7 +852,10 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)resetDatabase
 {
-	ResetDatabase();
+	@synchronized(self)
+	{
+		ResetDatabase();
+	}
 }
 
 @end
