@@ -173,7 +173,7 @@ extern "C" {
 	void DestroyCustomActivity(const char* const name);
 
 	// Functions for creating and destroying the current activity.
-	void CreateActivity(const char* const activityType);
+	void CreateActivityObject(const char* const activityType);
 	void ReCreateOrphanedActivity(size_t activityIndex);
 	void DestroyCurrentActivity(void);
 	char* GetCurrentActivityType(void);

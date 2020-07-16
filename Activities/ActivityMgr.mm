@@ -1732,7 +1732,10 @@ extern "C" {
 	// Functions for creating and destroying the current activity.
 	//
 
-	void CreateActivity(const char* const activityType)
+	// Creates the activity object, does not create an entry in the database.
+	// It should be followed by a call to StartActivity to make the initial entry in the database.
+	// This is done this way so that an activity can be cancelled before it is started.
+	void CreateActivityObject(const char* const activityType)
 	{
 		if (!activityType)
 		{

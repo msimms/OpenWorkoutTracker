@@ -19,6 +19,9 @@
 #define WATCH_MSG_REQUEST_ACTIVITY "Request Activity"
 #define WATCH_MSG_ACTIVITY "Activity"
 #define WATCH_MSG_ACTIVITY_HASH "Activity Hash"
+#define WATCH_MSG_ACTIVITY_ID "Activity ID"
+#define WATCH_MSG_ACTIVITY_TYPE "Activity Type"
+#define WATCH_MSG_ACTIVITY_NAME "Activity Name"
 #define WATCH_MSG_ACTIVITY_LOCATIONS "Activity Locations"
 
 #endif

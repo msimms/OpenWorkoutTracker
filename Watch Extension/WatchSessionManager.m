@@ -75,6 +75,9 @@
 		NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
 
 		[msgData setObject:@WATCH_MSG_ACTIVITY forKey:@WATCH_MSG_TYPE];
+		[msgData setObject:activityId forKey:@WATCH_MSG_ACTIVITY_ID];
+		[msgData setObject:[extDelegate getHistoricalActivityTypeForActivityId:activityId] forKey:@WATCH_MSG_ACTIVITY_TYPE];
+		[msgData setObject:[extDelegate getHistoricalActivityNameForActivityId:activityId] forKey:@WATCH_MSG_ACTIVITY_NAME];
 		[msgData setObject:locationData forKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
 		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 	}

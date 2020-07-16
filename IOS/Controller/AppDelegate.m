@@ -999,7 +999,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)createActivity:(NSString*)activityType
 {
-	CreateActivity([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
 }
 
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex
@@ -2163,6 +2163,22 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
 {
+	NSString* activityId = [message objectForKey:@WATCH_MSG_ACTIVITY_ID];
+	NSString* activityType = [message objectForKey:@WATCH_MSG_ACTIVITY_TYPE];
+
+	if (activityId && activityType)
+	{
+		CreateActivityObject([activityType UTF8String]);
+		StartActivity([activityId UTF8String]);
+
+		NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+		if (locationData)
+		{
+			for (id location in locationData)
+			{
+			}
+		}
+	}
 }
 
 #pragma mark watch session methods

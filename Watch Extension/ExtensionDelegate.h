@@ -95,7 +95,9 @@
 
 - (NSString*)getCurrentActivityType;
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
+- (NSString*)getHistoricalActivityTypeForActivityId:(NSString*)activityId;
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex;
+- (NSString*)getHistoricalActivityNameForActivityId:(NSString*)activityId;
 
 // reset methods
 
