@@ -22,6 +22,8 @@
 #define WATCH_MSG_ACTIVITY_ID "Activity ID"
 #define WATCH_MSG_ACTIVITY_TYPE "Activity Type"
 #define WATCH_MSG_ACTIVITY_NAME "Activity Name"
+#define WATCH_MSG_ACTIVITY_START_TIME "Activity Start Time"
+#define WATCH_MSG_ACTIVITY_END_TIME "Activity End Time"
 #define WATCH_MSG_ACTIVITY_LOCATIONS "Activity Locations"
 
 #endif

@@ -133,6 +133,7 @@ extern "C" {
 
 	// Functions for accessing historical data (accessed by index instead of ID, following a call to InitializeHistoricalActivityList.
 	void GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime);
+	void SetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t startTime, time_t endTime);
 	void FixHistoricalActivityEndTime(size_t activityIndex);
 	char* GetHistoricalActivityType(size_t activityIndex);
 	char* GetHistoricalActivityName(size_t activityIndex);

@@ -1383,6 +1383,13 @@ extern "C" {
 		}
 	}
 
+	void SetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t startTime, time_t endTime)
+	{
+		if (activityIndex < g_historicalActivityList.size())
+		{
+		}
+	}
+
 	void FixHistoricalActivityEndTime(size_t activityIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())

@@ -68,18 +68,36 @@
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSString* activityId = [extDelegate retrieveActivityIdByHash:activityHash];
+	NSInteger activityIndex = [extDelegate getActivityIndexFromActivityId:activityId];
+	NSString* activityType = [extDelegate getHistoricalActivityType:activityIndex];
 
-	if (activityId)
+	if (activityId && activityType)
 	{
 		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+
+		NSString* activityName = [extDelegate getHistoricalActivityName:activityIndex];
 		NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
+
+		time_t tempStartTime = 0;
+		time_t tempEndTime = 0;
+		[extDelegate getHistoricalActivityStartAndEndTime:activityIndex withStartTime:&tempStartTime withEndTime:&tempEndTime];
+		NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
+		NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
 
 		[msgData setObject:@WATCH_MSG_ACTIVITY forKey:@WATCH_MSG_TYPE];
 		[msgData setObject:activityId forKey:@WATCH_MSG_ACTIVITY_ID];
-		[msgData setObject:[extDelegate getHistoricalActivityTypeForActivityId:activityId] forKey:@WATCH_MSG_ACTIVITY_TYPE];
-		[msgData setObject:[extDelegate getHistoricalActivityNameForActivityId:activityId] forKey:@WATCH_MSG_ACTIVITY_NAME];
-		[msgData setObject:locationData forKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
-		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+		[msgData setObject:activityType forKey:@WATCH_MSG_ACTIVITY_TYPE];
+		[msgData setObject:startTime forKey:@WATCH_MSG_ACTIVITY_START_TIME];
+		[msgData setObject:endTime forKey:@WATCH_MSG_ACTIVITY_END_TIME];
+
+		if ([activityName length] > 0)
+			[msgData setObject:activityName forKey:@WATCH_MSG_ACTIVITY_NAME];
+		if (locationData)
+			[msgData setObject:locationData forKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+
+		[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
+		} errorHandler:^(NSError* error) {
+		}];
 	}
 }
 

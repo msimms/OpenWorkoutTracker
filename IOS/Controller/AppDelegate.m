@@ -2153,7 +2153,7 @@ void attributeNameCallback(const char* name, void* context)
 		const char* activityId = GetActivityIdByHash([activityHash UTF8String]);
 		if (activityId == NULL)
 		{
-			NSMutableDictionary* msgData = [Preferences exportPrefs];
+			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
 			[msgData setObject:@WATCH_MSG_REQUEST_ACTIVITY forKey:@WATCH_MSG_TYPE];
 			[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
@@ -2168,14 +2168,23 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (activityId && activityType)
 	{
+		NSNumber* startTime = [message objectForKey:@WATCH_MSG_ACTIVITY_START_TIME];
+		NSNumber* endTime = [message objectForKey:@WATCH_MSG_ACTIVITY_END_TIME];
+
 		CreateActivityObject([activityType UTF8String]);
 		StartActivity([activityId UTF8String]);
 
-		NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
-		if (locationData)
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
 		{
-			for (id location in locationData)
+			SetHistoricalActivityStartAndEndTime(activityIndex, [startTime unsignedLongLongValue], [endTime unsignedLongLongValue]);
+
+			NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+			if (locationData)
 			{
+				for (id location in locationData)
+				{
+				}
 			}
 		}
 	}
@@ -2220,6 +2229,7 @@ void attributeNameCallback(const char* name, void* context)
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
 	{
 		// The watch app wants to sync preferences.
@@ -2247,12 +2257,14 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
 		// The watch app is sending an activity.
+		[self importWatchActivity:message];
 	}
 }
 
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
 	{
 		// The watch app wants to sync preferences.

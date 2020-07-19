@@ -84,6 +84,7 @@ void AccelDataHashCallback(const char* activityId, void* context)
 void SensorDataHashCallback(const char* activityId, void* context, const char* attributeName)
 {
 	ActivityAttributeType sensorValue = QueryHistoricalActivityAttributeById(activityId, attributeName);
+
 	if (sensorValue.valid)
 	{
 		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;

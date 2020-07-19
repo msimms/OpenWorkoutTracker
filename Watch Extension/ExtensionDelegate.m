@@ -430,6 +430,16 @@ void startSensorCallback(SensorType type, void* context)
 	return locationData;
 }
 
+- (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId
+{
+	@synchronized(self)
+	{
+		NSInteger activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+		return activityIndex;
+	}
+	return 0;
+}
+
 #pragma mark retrieves or creates and retrieves the applications unique identifier
 
 - (NSString*)getDeviceId;
@@ -836,12 +846,6 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
-- (NSString*)getHistoricalActivityTypeForActivityId:(NSString*)activityId
-{
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	return [self getHistoricalActivityType:activityIndex];
-}
-
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex
 {
 	NSString* result = nil;
@@ -852,12 +856,6 @@ void attributeNameCallback(const char* name, void* context)
 		free((void*)activityName);
 	}
 	return result;
-}
-
-- (NSString*)getHistoricalActivityNameForActivityId:(NSString*)activityId
-{
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	return [self getHistoricalActivityName:activityIndex];
 }
 
 #pragma mark reset methods

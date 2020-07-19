@@ -68,6 +68,7 @@
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 - (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId;
+- (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId;
 
 // retrieves or creates and retrieves the applications unique identifier
 
@@ -95,9 +96,7 @@
 
 - (NSString*)getCurrentActivityType;
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
-- (NSString*)getHistoricalActivityTypeForActivityId:(NSString*)activityId;
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex;
-- (NSString*)getHistoricalActivityNameForActivityId:(NSString*)activityId;
 
 // reset methods
 
