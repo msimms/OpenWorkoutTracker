@@ -75,32 +75,41 @@ extern "C" {
 		}
 	}
 
-	void DeleteActivity(const char* const activityId)
+	bool DeleteActivity(const char* const activityId)
 	{
+		bool deleted = false;
+
 		if (g_pDatabase)
 		{
-			g_pDatabase->DeleteActivity(activityId);
+			deleted = g_pDatabase->DeleteActivity(activityId);
 		}
 		if (g_pCurrentActivity && (g_pCurrentActivity->GetId().compare(activityId) == 0))
 		{
 			DestroyCurrentActivity();
 		}
+		return deleted;
 	}
 
-	void ResetDatabase()
+	bool ResetDatabase()
 	{
+		bool deleted = false;
+
 		if (g_pDatabase)
 		{
-			g_pDatabase->Reset();
+			deleted = g_pDatabase->Reset();
 		}
+		return deleted;
 	}
 
-	void CloseDatabase()
+	bool CloseDatabase()
 	{
+		bool deleted = false;
+
 		if (g_pDatabase)
 		{
-			g_pDatabase->Close();
+			deleted = g_pDatabase->Close();
 		}
+		return deleted;
 	}
 
 	//
@@ -1383,13 +1392,6 @@ extern "C" {
 		}
 	}
 
-	void SetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t startTime, time_t endTime)
-	{
-		if (activityIndex < g_historicalActivityList.size())
-		{
-		}
-	}
-
 	void FixHistoricalActivityEndTime(size_t activityIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())
@@ -1775,6 +1777,15 @@ extern "C" {
 				
 				summary.pActivity = NULL;
 			}
+		}
+	}
+
+	void SetCurrentActivityStartTime(time_t startTime)
+	{
+		if (g_pCurrentActivity && g_pDatabase)
+		{
+			g_pCurrentActivity->SetStartTimeSecs(startTime);
+			g_pDatabase->UpdateActivityStartTime(g_pCurrentActivity->GetId(), startTime);
 		}
 	}
 

@@ -406,25 +406,28 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-		InitializeHistoricalActivityList();
-		CreateHistoricalActivityObject(activityIndex);
-
-		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
 		{
-			NSInteger pointIndex = 0;
-			BOOL result = FALSE;
+			InitializeHistoricalActivityList();
+			CreateHistoricalActivityObject(activityIndex);
 
-			do {
-				Coordinate coordinate;
+			if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
+			{
+				NSInteger pointIndex = 0;
+				BOOL result = FALSE;
 
-				result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
-				if (result)
-				{
-					CLLocation* location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
-					[locationData addObject:location];
-					++pointIndex;
-				}
-			} while (result);
+				do {
+					Coordinate coordinate;
+
+					result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+					if (result)
+					{
+						NSArray* locations = @[[NSNumber numberWithFloat:coordinate.latitude], [NSNumber numberWithFloat:coordinate.longitude], [NSNumber numberWithFloat:coordinate.altitude], [NSNumber numberWithFloat:coordinate.horizontalAccuracy], [NSNumber numberWithFloat:coordinate.verticalAccuracy], [NSNumber numberWithFloat:coordinate.time]];
+						[locationData addObject:locations];
+						++pointIndex;
+					}
+				} while (result);
+			}
 		}
 	}
 	return locationData;
@@ -434,8 +437,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	@synchronized(self)
 	{
-		NSInteger activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-		return activityIndex;
+		return ConvertActivityIdToActivityIndex([activityId UTF8String]);
 	}
 	return 0;
 }

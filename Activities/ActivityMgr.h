@@ -27,9 +27,9 @@ extern "C" {
 
 	// Functions for managing the database.
 	void Initialize(const char* const dbFileName);
-	void DeleteActivity(const char* const activityId);
-	void ResetDatabase(void);
-	void CloseDatabase(void);
+	bool DeleteActivity(const char* const activityId);
+	bool ResetDatabase(void);
+	bool CloseDatabase(void);
 
 	// Functions for managing the activity name.
 	bool SetActivityName(const char* const activityId, const char* const name);
@@ -133,7 +133,6 @@ extern "C" {
 
 	// Functions for accessing historical data (accessed by index instead of ID, following a call to InitializeHistoricalActivityList.
 	void GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime);
-	void SetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t startTime, time_t endTime);
 	void FixHistoricalActivityEndTime(size_t activityIndex);
 	char* GetHistoricalActivityType(size_t activityIndex);
 	char* GetHistoricalActivityName(size_t activityIndex);
@@ -176,6 +175,7 @@ extern "C" {
 	// Functions for creating and destroying the current activity.
 	void CreateActivityObject(const char* const activityType);
 	void ReCreateOrphanedActivity(size_t activityIndex);
+	void SetCurrentActivityStartTime(time_t startTime);
 	void DestroyCurrentActivity(void);
 	char* GetCurrentActivityType(void);
 	const char* const GetCurrentActivityId(void);

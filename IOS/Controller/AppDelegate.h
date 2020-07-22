@@ -38,6 +38,7 @@
 	NSTimer*             intervalTimer;
 	WCSession*           watchSession; // Interfaces with the watch app.
 	BOOL                 badGps;
+	BOOL                 currentlyImporting; // TRUE if currently importing an activity (like from the watch, for example).
 	size_t               currentActivityIndex; // Used when iterating over historical activities.
 }
 

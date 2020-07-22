@@ -90,6 +90,7 @@
 	}
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[self hasLeBluetooth]];
+	self->currentlyImporting = FALSE;
 	self->badGps = FALSE;
 	self->currentActivityIndex = 0;
 
@@ -156,7 +157,7 @@
 {
 	// Called as part of the transition from the background to the inactive state; here you can undo many of
 	// the changes made on entering the background.
-	if (IsActivityCreated())
+	if ([self isActivityCreated])
 	{
 		[self startSensors];
 	}
@@ -620,7 +621,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* accelerometerData = [notification object];
 
@@ -672,7 +673,7 @@ void startSensorCallback(SensorType type, void* context)
 	
 	self->badGps = tempBadGps;
 
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		BOOL shouldProcessReading = TRUE;
 		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
@@ -691,7 +692,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* heartRateData = [notification object];
 		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
@@ -717,7 +718,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)cadenceUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* cadenceData = [notification object];
 		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
@@ -738,7 +739,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)wheelSpeedUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* wheelSpeedData = [notification object];
 		CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
@@ -759,7 +760,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)powerUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* powerData = [notification object];
 		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
@@ -780,7 +781,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)strideLengthUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* strideData = [notification object];
 		CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
@@ -801,7 +802,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)runDistanceUpdated:(NSNotification*)notification
 {
-	if (IsActivityInProgressAndNotPaused())
+	if ([self isActivityInProgressAndNotPaused])
 	{
 		NSDictionary* distanceData = [notification object];
 		CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
@@ -1027,6 +1028,8 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)isActivityInProgressAndNotPaused
 {
+	if (self->currentlyImporting)
+		return FALSE;
 	return IsActivityInProgressAndNotPaused();
 }
 
@@ -2168,24 +2171,42 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (activityId && activityType)
 	{
-		NSNumber* startTime = [message objectForKey:@WATCH_MSG_ACTIVITY_START_TIME];
-		NSNumber* endTime = [message objectForKey:@WATCH_MSG_ACTIVITY_END_TIME];
-
-		CreateActivityObject([activityType UTF8String]);
-		StartActivity([activityId UTF8String]);
-
-		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+		@synchronized(self)
 		{
-			SetHistoricalActivityStartAndEndTime(activityIndex, [startTime unsignedLongLongValue], [endTime unsignedLongLongValue]);
+			self->currentlyImporting = TRUE;
 
-			NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
-			if (locationData)
+			// Delete any existing activities with the same ID.
+			while (ConvertActivityIdToActivityIndex([activityId UTF8String]) != ACTIVITY_INDEX_UNKNOWN)
 			{
-				for (id location in locationData)
-				{
-				}
+				DeleteActivity([activityId UTF8String]);
 			}
+
+			// Create the activity object and database entry.
+			CreateActivityObject([activityType UTF8String]);
+			if (StartActivity([activityId UTF8String]))
+			{
+				// Fix the activity start time.
+				NSNumber* startTime = [message objectForKey:@WATCH_MSG_ACTIVITY_START_TIME];
+				SetCurrentActivityStartTime([startTime longLongValue]);
+
+				// Add all the locations.
+				NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+				if (locationData)
+				{
+					for (NSArray* locationPoints in locationData)
+					{
+						if ([locationPoints count] >= 5)
+						{
+							ProcessLocationReading([locationPoints[0] doubleValue], [locationPoints[1] doubleValue], [locationPoints[2] doubleValue], [locationPoints[3] longLongValue], [locationPoints[4] longLongValue], [locationPoints[5] longLongValue]);
+						}
+					}
+				}
+
+				// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
+				StopCurrentActivity();
+			}
+
+			self->currentlyImporting = FALSE;
 		}
 	}
 }
