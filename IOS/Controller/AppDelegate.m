@@ -1186,7 +1186,7 @@ void startSensorCallback(SensorType type, void* context)
 		NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
 
 		// Add in the activities from HealthKit.
-		if (self->healthMgr)
+		if (self->healthMgr && [Preferences willIntegrateHealthKitActivities])
 		{
 			numActivities += [self->healthMgr getNumWorkouts];
 		}
