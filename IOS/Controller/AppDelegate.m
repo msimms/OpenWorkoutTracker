@@ -615,8 +615,11 @@ void startSensorCallback(SensorType type, void* context)
 
 	NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
 	NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
-	
-	ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+
+	@synchronized(self)
+	{
+		ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+	}
 }
 
 - (void)accelerometerUpdated:(NSNotification*)notification
@@ -630,7 +633,10 @@ void startSensorCallback(SensorType type, void* context)
 		NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
 		NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
 
-		ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+		@synchronized(self)
+		{
+			ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+		}
 	}
 }
 
@@ -685,7 +691,10 @@ void startSensorCallback(SensorType type, void* context)
 
 		if (shouldProcessReading)
 		{
-			ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+			@synchronized(self)
+			{
+				ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+			}
 		}
 	}
 }
@@ -705,7 +714,10 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (timestampMs && rate)
 			{
-				ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
+				@synchronized(self)
+				{
+					ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
+				}
 
 				if (self->healthMgr)
 				{
@@ -731,7 +743,10 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (timestampMs && rate)
 			{
-				ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
+				@synchronized(self)
+				{
+					ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
+				}
 			}
 		}
 	}
@@ -752,7 +767,10 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (timestampMs && count)
 			{
-				ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
+				@synchronized(self)
+				{
+					ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
+				}
 			}
 		}
 	}
@@ -773,7 +791,10 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (timestampMs && watts)
 			{
-				ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
+				@synchronized(self)
+				{
+					ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
+				}
 			}
 		}
 	}
@@ -794,7 +815,10 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (timestampMs && value)
 			{
-				ProcessRunStrideLengthReading([value doubleValue], [timestampMs longLongValue]);
+				@synchronized(self)
+				{
+					ProcessRunStrideLengthReading([value doubleValue], [timestampMs longLongValue]);
+				}
 			}
 		}
 	}
@@ -815,7 +839,10 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (timestampMs && value)
 			{
-				ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
+				@synchronized(self)
+				{
+					ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
+				}
 			}
 		}
 	}
@@ -874,30 +901,33 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)onIntervalTimer:(NSTimer*)timer
 {
-	if (CheckCurrentIntervalWorkout())
+	@synchronized(self)
 	{
-		if (IsIntervalWorkoutComplete())
+		if (CheckCurrentIntervalWorkout())
 		{
-			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
-		}
-		else
-		{
-			IntervalWorkoutSegment segment;
-
-			if (GetCurrentIntervalWorkoutSegment(&segment))
+			if (IsIntervalWorkoutComplete())
 			{
-				NSValue* segmentValue = [NSValue value:&segmentValue withObjCType:@encode(IntervalWorkoutSegment)]; 
-				NSDictionary* intervalData = [[NSDictionary alloc] initWithObjectsAndKeys:
-											  segmentValue, @KEY_NAME_INTERVAL_SEGMENT,
-											  nil];
-				if (intervalData)
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
+			}
+			else
+			{
+				IntervalWorkoutSegment segment;
+
+				if (GetCurrentIntervalWorkoutSegment(&segment))
 				{
-					[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_UPDATED object:intervalData];
+					NSValue* segmentValue = [NSValue value:&segmentValue withObjCType:@encode(IntervalWorkoutSegment)]; 
+					NSDictionary* intervalData = [[NSDictionary alloc] initWithObjectsAndKeys:
+												  segmentValue, @KEY_NAME_INTERVAL_SEGMENT,
+												  nil];
+					if (intervalData)
+					{
+						[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_UPDATED object:intervalData];
+					}
 				}
 			}
-		}
 
-		[self playPingSound];
+			[self playPingSound];
+		}
 	}
 }
 
@@ -921,74 +951,96 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)startActivity
 {
-	NSString* activityId = [[NSUUID UUID] UUIDString];
-	BOOL result = StartActivity([activityId UTF8String]);
-	if (result)
+	@synchronized(self)
 	{
-		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+		NSString* activityId = [[NSUUID UUID] UUIDString];
+		BOOL result = StartActivity([activityId UTF8String]);
 
-		NSString* activityType = [self getCurrentActivityType];
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		if (result)
+		{
+			ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 
-		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								   activityId, @KEY_NAME_ACTIVITY_ID,
-								   activityType, @KEY_NAME_ACTIVITY_TYPE,
-								   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
-								   nil];
+			NSString* activityType = [self getCurrentActivityType];
+			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
+			NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									   activityId, @KEY_NAME_ACTIVITY_ID,
+									   activityType, @KEY_NAME_ACTIVITY_TYPE,
+									   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+									   nil];
+
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
+		}
+		return result;
 	}
-	return result;
+	return FALSE;
 }
 
 - (BOOL)startActivityWithBikeName:(NSString*)bikeName
 {
 	BOOL result = [self startActivity];
+
 	if (result)
 	{
-		SetCurrentBicycle([bikeName UTF8String]);
+		@synchronized(self)
+		{
+			SetCurrentBicycle([bikeName UTF8String]);
+		}
 	}
 	return result;
 }
 
 - (BOOL)stopActivity
 {
-	BOOL result = StopCurrentActivity();
-	if (result)
+	@synchronized(self)
 	{
-		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
-		ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
-		ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
-		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
-		NSString* activityType = [self getCurrentActivityType];
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
-		NSString* activityHash = [self hashCurrentActivity];
+		BOOL result = StopCurrentActivity();
 
-		SaveActivitySummaryData();
+		if (result)
+		{
+			ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+			ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
+			ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+			ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
+			NSString* activityType = [self getCurrentActivityType];
+			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+			NSString* activityHash = [self hashCurrentActivity];
 
-		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								  activityId, @KEY_NAME_ACTIVITY_ID,
-								  activityType, @KEY_NAME_ACTIVITY_TYPE,
-								  activityHash, @KEY_NAME_ACTIVITY_HASH,
-								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
-								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
-								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
-								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
-								  nil];
+			SaveActivitySummaryData();
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
+			NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									  activityId, @KEY_NAME_ACTIVITY_ID,
+									  activityType, @KEY_NAME_ACTIVITY_TYPE,
+									  activityHash, @KEY_NAME_ACTIVITY_HASH,
+									  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+									  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
+									  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
+									  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
+									  nil];
+
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
+		}
+		return result;
 	}
-	return result;
+	return FALSE;
 }
 
 - (BOOL)pauseActivity
 {
-	return PauseCurrentActivity();
+	@synchronized(self)
+	{
+		return PauseCurrentActivity();
+	}
+	return FALSE;
 }
 
 - (BOOL)startNewLap
 {
-	return StartNewLap();
+	@synchronized(self)
+	{
+		return StartNewLap();
+	}
+	return FALSE;
 }
 
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
@@ -1000,74 +1052,108 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)createActivity:(NSString*)activityType
 {
-	CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	@synchronized(self)
+	{
+		CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	}
 }
 
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex
 {
-	DestroyCurrentActivity();
-	ReCreateOrphanedActivity(activityIndex);
+	@synchronized(self)
+	{
+		DestroyCurrentActivity();
+		ReCreateOrphanedActivity(activityIndex);
+	}
 }
 
 - (void)destroyCurrentActivity
 {
-	DestroyCurrentActivity();
+	@synchronized(self)
+	{
+		DestroyCurrentActivity();
+	}
 }
 
 #pragma mark methods for querying the status of the current activity
 
 - (BOOL)isActivityCreated
 {
-	return IsActivityCreated();
+	@synchronized(self)
+	{
+		return IsActivityCreated();
+	}
+	return FALSE;
 }
 
 - (BOOL)isActivityInProgress
 {
-	return IsActivityInProgress();
+	@synchronized(self)
+	{
+		return IsActivityInProgress();
+	}
+	return FALSE;
 }
 
 - (BOOL)isActivityInProgressAndNotPaused
 {
-	if (self->currentlyImporting)
-		return FALSE;
-	return IsActivityInProgressAndNotPaused();
+	@synchronized(self)
+	{
+		if (self->currentlyImporting)
+			return FALSE;
+		return IsActivityInProgressAndNotPaused();
+	}
+	return FALSE;
 }
 
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex
 {
-	return IsActivityOrphaned(activityIndex);
+	@synchronized(self)
+	{
+		return IsActivityOrphaned(activityIndex);
+	}
+	return FALSE;
 }
 
 - (BOOL)isActivityPaused
 {
-	return IsActivityPaused();
+	@synchronized(self)
+	{
+		return IsActivityPaused();
+	}
+	return FALSE;
 }
 
 #pragma mark methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList
 {
-	// Read activities from our database.
-	InitializeHistoricalActivityList();
-
-	// Remove duplicate items from the HealthKit list.
-	if (self->healthMgr && [Preferences hideHealthKitDuplicates])
+	@synchronized(self)
 	{
-		size_t numDbActivities = GetNumHistoricalActivities();
-		for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+		// Read activities from our database.
+		InitializeHistoricalActivityList();
+
+		// Remove duplicate items from the HealthKit list.
+		if (self->healthMgr && [Preferences hideHealthKitDuplicates])
 		{
-			time_t startTime = 0;
-			time_t endTime = 0;
+			size_t numDbActivities = GetNumHistoricalActivities();
 
-			GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
-			[self->healthMgr removeOverlappingActivityWithStartTime:startTime withEndTime:endTime];
+			for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+			{
+				time_t startTime = 0;
+				time_t endTime = 0;
+
+				GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+				[self->healthMgr removeOverlappingActivityWithStartTime:startTime withEndTime:endTime];
+			}
 		}
+
+		// Reset the iterator.
+		self->currentActivityIndex = 0;
+
+		return [self getNumHistoricalActivities];
 	}
-
-	// Reset the iterator.
-	self->currentActivityIndex = 0;
-
-	return [self getNumHistoricalActivities];
+	return 0;
 }
 
 - (NSString*)getNextActivityId
@@ -1094,52 +1180,62 @@ void startSensorCallback(SensorType type, void* context)
 
 - (NSInteger)getNumHistoricalActivities
 {
-	// The number of activities from out database.
-	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
-
-	// Add in the activities from HealthKit.
-	if (self->healthMgr)
+	@synchronized(self)
 	{
-		numActivities += [self->healthMgr getNumWorkouts];
+		// The number of activities from out database.
+		NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
+
+		// Add in the activities from HealthKit.
+		if (self->healthMgr)
+		{
+			numActivities += [self->healthMgr getNumWorkouts];
+		}
+		return numActivities;
 	}
-	return numActivities;
+	return 0;
 }
 
 - (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		if (self->healthMgr)
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 		{
-			return [self->healthMgr getNumLocationPoints:activityId];
+			if (self->healthMgr)
+			{
+				return [self->healthMgr getNumLocationPoints:activityId];
+			}
 		}
-	}
 
-	// Activity is in the database.
-	else
-	{
-		return GetNumHistoricalActivityLocationPoints(activityIndex);
+		// Activity is in the database.
+		else
+		{
+			return GetNumHistoricalActivityLocationPoints(activityIndex);
+		}
 	}
 	return 0;
 }
 
 - (NSInteger)getNumHistoricalActivityAccelerometerReadings:(NSString*)activityId
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		return 0;
-	}
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// Activity is in the database.
-	else
-	{
-		return GetNumHistoricalActivityAccelerometerReadings(activityIndex);
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+		{
+			return 0;
+		}
+
+		// Activity is in the database.
+		else
+		{
+			return GetNumHistoricalActivityAccelerometerReadings(activityIndex);
+		}
 	}
 	return 0;
 }
@@ -1169,41 +1265,48 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)isHealthKitActivity:(NSString*)activityId
 {
-	return (ConvertActivityIdToActivityIndex([activityId UTF8String]) == ACTIVITY_INDEX_UNKNOWN);
+	@synchronized(self)
+	{
+		return (ConvertActivityIdToActivityIndex([activityId UTF8String]) == ACTIVITY_INDEX_UNKNOWN);
+	}
+	return FALSE;
 }
 
 - (BOOL)loadHistoricalActivityByIndex:(NSInteger)activityIndex
 {
 	BOOL result = FALSE;
 
-	// Delete any cached data.
-	FreeHistoricalActivityObject(activityIndex);
-	FreeHistoricalActivitySensorData(activityIndex);
-
-	// Create the object.
-	CreateHistoricalActivityObject(activityIndex);
-
-	// Load all data.
-	LoadHistoricalActivitySummaryData(activityIndex);
-	if (LoadAllHistoricalActivitySensorData(activityIndex))
+	@synchronized(self)
 	{
-		time_t startTime = 0;
-		time_t endTime = 0;
+		// Delete any cached data.
+		FreeHistoricalActivityObject(activityIndex);
+		FreeHistoricalActivitySensorData(activityIndex);
 
-		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
-		
-		// If the activity was orphaned then the end time will be zero.
-		if (endTime == 0)
+		// Create the object.
+		CreateHistoricalActivityObject(activityIndex);
+
+		// Load all data.
+		LoadHistoricalActivitySummaryData(activityIndex);
+		if (LoadAllHistoricalActivitySensorData(activityIndex))
 		{
-			FixHistoricalActivityEndTime(activityIndex);
-		}
+			time_t startTime = 0;
+			time_t endTime = 0;
 
-		if (SaveHistoricalActivitySummaryData(activityIndex))
-		{
-			LoadHistoricalActivitySummaryData(activityIndex);
-			LoadHistoricalActivityLapData(activityIndex);
+			GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+			
+			// If the activity was orphaned then the end time will be zero.
+			if (endTime == 0)
+			{
+				FixHistoricalActivityEndTime(activityIndex);
+			}
 
-			result = TRUE;
+			if (SaveHistoricalActivitySummaryData(activityIndex))
+			{
+				LoadHistoricalActivitySummaryData(activityIndex);
+				LoadHistoricalActivityLapData(activityIndex);
+
+				result = TRUE;
+			}
 		}
 	}
 	return result;
@@ -1211,94 +1314,110 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)loadHistoricalActivity:(NSString*)activityId
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		// No need to do anything.
-		return TRUE;
-	}
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// Activity is in the database.
-	return [self loadHistoricalActivityByIndex:activityIndex];
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+		{
+			// No need to do anything.
+			return TRUE;
+		}
+
+		// Activity is in the database.
+		return [self loadHistoricalActivityByIndex:activityIndex];
+	}
+	return FALSE;
 }
 
 - (void)loadHistoricalActivitySummaryData:(NSString*)activityId
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		// No need to do anything.
-		return;
-	}
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// Activity is in the database.
-	LoadHistoricalActivitySummaryData(activityIndex);
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+		{
+			// No need to do anything.
+			return;
+		}
+
+		// Activity is in the database.
+		LoadHistoricalActivitySummaryData(activityIndex);
+	}
 }
 
 - (void)saveHistoricalActivitySummaryData:(NSString*)activityId
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		// No need to do anything.
-		return;
-	}
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// Activity is in the database.
-	SaveHistoricalActivitySummaryData(activityIndex);
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+		{
+			// No need to do anything.
+			return;
+		}
+
+		// Activity is in the database.
+		SaveHistoricalActivitySummaryData(activityIndex);
+	}
 }
 
 - (void)getHistoricalActivityStartAndEndTime:(NSString*)activityId withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		if (self->healthMgr)
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 		{
-			[self->healthMgr getWorkoutStartAndEndTime:activityId withStartTime:startTime withEndTime:endTime];
+			if (self->healthMgr)
+			{
+				[self->healthMgr getWorkoutStartAndEndTime:activityId withStartTime:startTime withEndTime:endTime];
+			}
 		}
-	}
 
-	// Activity is in the database.
-	else
-	{
-		GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+		// Activity is in the database.
+		else
+		{
+			GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+		}
 	}
 }
 
 - (BOOL)getHistoricalActivityLocationPoint:(NSString*)activityId withPointIndex:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude withAltitude:(double*)altitude withTimestamp:(time_t*)timestamp
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	@synchronized(self)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
-	{
-		if (self->healthMgr)
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 		{
-			return [self->healthMgr getHistoricalActivityLocationPoint:activityId withPointIndex:pointIndex withLatitude:latitude withLongitude:longitude withAltitude:altitude withTimestamp:timestamp];
+			if (self->healthMgr)
+			{
+				return [self->healthMgr getHistoricalActivityLocationPoint:activityId withPointIndex:pointIndex withLatitude:latitude withLongitude:longitude withAltitude:altitude withTimestamp:timestamp];
+			}
 		}
-	}
-	
-	// The activity is in the database.
-	else
-	{
-		Coordinate coordinate;
-		BOOL result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
-		if (result)
+		
+		// The activity is in the database.
+		else
 		{
-			(*latitude) = coordinate.latitude;
-			(*longitude) = coordinate.longitude;
-			(*timestamp) = coordinate.time;
+			Coordinate coordinate;
+			BOOL result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+			if (result)
+			{
+				(*latitude) = coordinate.latitude;
+				(*longitude) = coordinate.longitude;
+				(*timestamp) = coordinate.time;
+			}
+			return result;
 		}
-		return result;
 	}
 	return FALSE;
 }
@@ -1327,73 +1446,92 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)setHistoricalActivityAttribute:(NSString*)activityId withAttributeName:(const char* const)attributeName withAttributeType:(ActivityAttributeType) attributeValue
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		return;
-	}
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// Activity is in the database.
-	SetHistoricalActivityAttribute(activityIndex, attributeName, attributeValue);
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+		{
+			return;
+		}
+
+		// Activity is in the database.
+		SetHistoricalActivityAttribute(activityIndex, attributeName, attributeValue);
+	}
 }
 
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		if (self->healthMgr)
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
 		{
-			return [self->healthMgr loadHistoricalActivitySensorData:sensorType forActivityId:activityId withCallback:callback withContext:context];
+			if (self->healthMgr)
+			{
+				return [self->healthMgr loadHistoricalActivitySensorData:sensorType forActivityId:activityId withCallback:callback withContext:context];
+			}
 		}
-	}
 
-	// Activity is in the database.
-	else
-	{
-		return LoadHistoricalActivitySensorData(activityIndex, sensorType, callback, context);
+		// Activity is in the database.
+		else
+		{
+			return LoadHistoricalActivitySensorData(activityIndex, sensorType, callback, context);
+		}
 	}
 	return FALSE;
 }
 
 - (BOOL)loadAllHistoricalActivitySensorData:(NSString*)activityId
 {
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	// If the activity is not in the database, try HealthKit.
-	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	@synchronized(self)
 	{
-		// No need to do anything.
-		return TRUE;
-	}
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 
-	// Activity is in the database.
-	return LoadAllHistoricalActivitySensorData(activityIndex);
+		// If the activity is not in the database, try HealthKit.
+		if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+		{
+			// No need to do anything.
+			return TRUE;
+		}
+
+		// Activity is in the database.
+		return LoadAllHistoricalActivitySensorData(activityIndex);
+	}
+	return FALSE;
 }
 
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart
 {
-	if (TrimActivityData([activityId UTF8String], newTime, fromStart))
+	@synchronized(self)
 	{
-		InitializeHistoricalActivityList();
-		return TRUE;
+		if (TrimActivityData([activityId UTF8String], newTime, fromStart))
+		{
+			InitializeHistoricalActivityList();
+			return TRUE;
+		}
 	}
 	return FALSE;
 }
 
 - (void)deleteActivity:(NSString*)activityId
 {
-	DeleteActivity([activityId UTF8String]);
-	InitializeHistoricalActivityList();
+	@synchronized(self)
+	{
+		DeleteActivity([activityId UTF8String]);
+		InitializeHistoricalActivityList();
+	}
 }
 
 - (void)freeHistoricalActivityList
 {
-	FreeHistoricalActivityList();
+	@synchronized(self)
+	{
+		FreeHistoricalActivityList();
+	}
 }
 
 #pragma mark hash methods
@@ -1401,11 +1539,16 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getActivityHash:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* activityHash = GetHashForActivityId([activityId UTF8String]);
-	if (activityHash)
+
+	@synchronized(self)
 	{
-		result = [NSString stringWithFormat:@"%s", activityHash];
-		free((void*)activityHash);
+		char* activityHash = GetHashForActivityId([activityId UTF8String]);
+
+		if (activityHash)
+		{
+			result = [NSString stringWithFormat:@"%s", activityHash];
+			free((void*)activityHash);
+		}
 	}
 	return result;
 }
@@ -1414,9 +1557,13 @@ void startSensorCallback(SensorType type, void* context)
 {
 	ActivityHash* hash = [[ActivityHash alloc] init];
 	NSString* hashStr = [hash calculateWithActivityId:activityId];
+
 	if (hashStr)
 	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		@synchronized(self)
+		{
+			StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		}
 	}
 	return hashStr;
 }
@@ -1426,9 +1573,13 @@ void startSensorCallback(SensorType type, void* context)
 	ActivityHash* hash = [[ActivityHash alloc] init];
 	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 	NSString* hashStr = [hash calculateWithActivityId:activityId];
+
 	if (hashStr)
 	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		@synchronized(self)
+		{
+			StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		}
 	}
 	return hashStr;
 }
@@ -1437,22 +1588,37 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)initializeBikeProfileList
 {
-	return InitializeBikeProfileList();
+	@synchronized(self)
+	{
+		InitializeBikeProfileList();
+	}
 }
 
 - (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm
 {
-	return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm);
+	@synchronized(self)
+	{
+		return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm);
+	}
+	return FALSE;
 }
 
 - (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId
 {
-	return GetActivityBikeProfile([activityId UTF8String], bikeId);
+	@synchronized(self)
+	{
+		return GetActivityBikeProfile([activityId UTF8String], bikeId);
+	}
+	return FALSE;
 }
 
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm
 {
-	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm);
+	@synchronized(self)
+	{
+		return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm);
+	}
+	return FALSE;
 }
 
 - (void)setBikeForCurrentActivity:(NSString*)bikeName
@@ -1461,9 +1627,12 @@ void startSensorCallback(SensorType type, void* context)
 	double weightKg = (double)0.0;
 	double wheelSize = (double)0.0;
 
-	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
+	@synchronized(self)
 	{
-		SetActivityBikeProfile(GetCurrentActivityId(), bikeId);
+		if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
+		{
+			SetActivityBikeProfile(GetCurrentActivityId(), bikeId);
+		}
 	}
 }
 
@@ -1473,42 +1642,68 @@ void startSensorCallback(SensorType type, void* context)
 	double weightKg = (double)0.0;
 	double wheelSize = (double)0.0;
 	
-	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
+	@synchronized(self)
 	{
-		SetActivityBikeProfile([activityId UTF8String], bikeId);
+		if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
+		{
+			SetActivityBikeProfile([activityId UTF8String], bikeId);
+		}
 	}
 }
 
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName
 {
-	return GetBikeIdFromName([bikeName UTF8String]);
+	@synchronized(self)
+	{
+		return GetBikeIdFromName([bikeName UTF8String]);
+	}
+	return 0;
 }
 
 - (BOOL)deleteBikeProfile:(uint64_t)bikeId
 {
-	return DeleteBikeProfile(bikeId);
+	@synchronized(self)
+	{
+		return DeleteBikeProfile(bikeId);
+	}
+	return FALSE;
 }
 
 #pragma mark methods for managing shoes
 
 - (void)initializeShoeList
 {
-	return InitializeShoeList();
+	@synchronized(self)
+	{
+		InitializeShoeList();
+	}
 }
 
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
-	return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
+	@synchronized(self)
+	{
+		return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
+	}
+	return FALSE;
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
 {
-	return GetShoeIdFromName([shoeName UTF8String]);
+	@synchronized(self)
+	{
+		return GetShoeIdFromName([shoeName UTF8String]);
+	}
+	return 0;
 }
 
 - (BOOL)deleteShoeProfile:(uint64_t)shoeId
 {
-	return DeleteShoeProfile(shoeId);
+	@synchronized(self)
+	{
+		return DeleteShoeProfile(shoeId);
+	}
+	return FALSE;
 }
 
 #pragma mark sound methods
@@ -1582,6 +1777,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
+
 	if (exportDir)
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
@@ -1613,6 +1809,7 @@ void startSensorCallback(SensorType type, void* context)
 {	
 	NSString* exportFileName = nil;
 	NSString* exportDir = [self createExportDir];
+
 	if (exportDir)
 	{
 		char* tempExportFileName = ExportActivitySummary([activityType UTF8String], [exportDir UTF8String]);
@@ -1628,6 +1825,7 @@ void startSensorCallback(SensorType type, void* context)
 - (void)clearExportDir
 {
 	NSString* exportDir = [self createExportDir];
+
 	if (exportDir)
 	{
 		NSError* error;
@@ -1643,6 +1841,7 @@ void startSensorCallback(SensorType type, void* context)
 - (NSMutableArray*)getEnabledFileImportCloudServices
 {
 	NSMutableArray* services = [[NSMutableArray alloc] init];
+
 	if (services)
 	{
 		if ([self isFeatureEnabled:FEATURE_DROPBOX])
@@ -1656,6 +1855,7 @@ void startSensorCallback(SensorType type, void* context)
 - (NSMutableArray*)getEnabledFileExportCloudServices
 {
 	NSMutableArray* services = [[NSMutableArray alloc] init];
+
 	if (services)
 	{
 		if ([self isFeatureEnabled:FEATURE_DROPBOX])
@@ -1681,6 +1881,7 @@ void startSensorCallback(SensorType type, void* context)
 - (NSMutableArray*)getEnabledFileExportServices
 {
 	NSMutableArray* services = [self getEnabledFileExportCloudServices];
+
 	if (services)
 	{
 		[services addObject:@EXPORT_TO_EMAIL_STR];
@@ -1693,11 +1894,15 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* activityName = GetActivityName([activityId UTF8String]);
-	if (activityName)
+
+	@synchronized(self)
 	{
-		result = [NSString stringWithFormat:@"%s", activityName];
-		free((void*)activityName);
+		char* activityName = GetActivityName([activityId UTF8String]);
+		if (activityName)
+		{
+			result = [NSString stringWithFormat:@"%s", activityName];
+			free((void*)activityName);
+		}
 	}
 	return result;
 }
@@ -1715,7 +1920,10 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		GetTags([activityId UTF8String], tagCallback, (__bridge void*)names);
+		@synchronized(self)
+		{
+			GetTags([activityId UTF8String], tagCallback, (__bridge void*)names);
+		}
 	}
 	return names;
 }
@@ -1725,17 +1933,21 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		size_t bikeIndex = 0;
-		char* bikeName = NULL;
-		uint64_t bikeId = 0;
-		double weightKg = (double)0.0;
-		double wheelCircumference = (double)0.0;
-
-		InitializeBikeProfileList();
-		while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference))
+		@synchronized(self)
 		{
-			[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
-			free((void*)bikeName);
+			size_t bikeIndex = 0;
+			char* bikeName = NULL;
+			uint64_t bikeId = 0;
+			double weightKg = (double)0.0;
+			double wheelCircumference = (double)0.0;
+
+			InitializeBikeProfileList();
+
+			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference))
+			{
+				[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
+				free((void*)bikeName);
+			}
 		}
 	}
 	return names;
@@ -1746,17 +1958,21 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		size_t shoeIndex = 0;
-		uint64_t shoeId = 0;
-		char* shoeName = NULL;
-		char* shoeDescription = NULL;
-
-		InitializeShoeList();
-		while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, &shoeDescription))
+		@synchronized(self)
 		{
-			[names addObject:[[NSString alloc] initWithUTF8String:shoeName]];
-			free((void*)shoeName);
-			free((void*)shoeDescription);
+			size_t shoeIndex = 0;
+			uint64_t shoeId = 0;
+			char* shoeName = NULL;
+			char* shoeDescription = NULL;
+
+			InitializeShoeList();
+
+			while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, &shoeDescription))
+			{
+				[names addObject:[[NSString alloc] initWithUTF8String:shoeName]];
+				free((void*)shoeName);
+				free((void*)shoeDescription);
+			}
 		}
 	}
 	return names;
@@ -1767,21 +1983,24 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
 	if (namesAndIds)
 	{
-		if (InitializeIntervalWorkoutList())
+		@synchronized(self)
 		{
-			char* workoutId = NULL;
-			char* workoutName = NULL;
-			size_t index = 0;
-
-			while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
+			if (InitializeIntervalWorkoutList())
 			{
-				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
-				[namesAndIds addObject:mutDic];
-				free((void*)workoutId);
-				free((void*)workoutName);
-				++index;
+				char* workoutId = NULL;
+				char* workoutName = NULL;
+				size_t index = 0;
+
+				while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
+				{
+					NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+					[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
+					[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
+					[namesAndIds addObject:mutDic];
+					free((void*)workoutId);
+					free((void*)workoutName);
+					++index;
+				}
 			}
 		}
 	}
@@ -1793,21 +2012,24 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
 	if (namesAndIds)
 	{
-		if (InitializePacePlanList())
+		@synchronized(self)
 		{
-			char* pacePlanId = NULL;
-			char* pacePlanName = NULL;
-			size_t index = 0;
-
-			while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
+			if (InitializePacePlanList())
 			{
-				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
-				[namesAndIds addObject:mutDic];
-				free((void*)pacePlanId);
-				free((void*)pacePlanName);
-				++index;
+				char* pacePlanId = NULL;
+				char* pacePlanName = NULL;
+				size_t index = 0;
+
+				while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
+				{
+					NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+					[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
+					[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
+					[namesAndIds addObject:mutDic];
+					free((void*)pacePlanId);
+					free((void*)pacePlanName);
+					++index;
+				}
 			}
 		}
 	}
@@ -1825,7 +2047,10 @@ void activityTypeCallback(const char* type, void* context)
 	NSMutableArray* types = [[NSMutableArray alloc] init];
 	if (types)
 	{
-		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
+		@synchronized(self)
+		{
+			GetActivityTypes(activityTypeCallback, (__bridge void*)types);
+		}
 	}
 	return types;
 }
@@ -1841,7 +2066,10 @@ void attributeNameCallback(const char* name, void* context)
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
+		@synchronized(self)
+		{
+			GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
+		}
 	}
 	return names;
 }
@@ -1930,19 +2158,31 @@ void attributeNameCallback(const char* name, void* context)
 
 - (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport
 {
-	return CreateNewIntervalWorkout([workoutId UTF8String], [workoutName UTF8String], [sport UTF8String]);
+	@synchronized(self)
+	{
+		return CreateNewIntervalWorkout([workoutId UTF8String], [workoutName UTF8String], [sport UTF8String]);
+	}
+	return FALSE;
 }
 
 - (BOOL)deleteIntervalWorkout:(NSString*)workoutId
 {
-	return DeleteIntervalWorkout([workoutId UTF8String]);
+	@synchronized(self)
+	{
+		return DeleteIntervalWorkout([workoutId UTF8String]);
+	}
+	return FALSE;
 }
 
 #pragma mark methods for managing pace plans
 
 - (BOOL)createNewPacePlan:(NSString*)planName withPlanId:(NSString*)planId
 {
-	return CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
+	@synchronized(self)
+	{
+		return CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
+	}
+	return FALSE;
 }
 
 - (BOOL)retrievePacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits
@@ -2007,29 +2247,48 @@ void attributeNameCallback(const char* name, void* context)
 	ConvertToMetric(&attr);
 	splits = attr.value.doubleVal;
 
-	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits);
+	@synchronized(self)
+	{
+		return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits);
+	}
+	return FALSE;
 }
 
 - (BOOL)deletePacePlanWithId:(NSString*)planId
 {
-	return DeletePacePlan([planId UTF8String]);
+	@synchronized(self)
+	{
+		return DeletePacePlan([planId UTF8String]);
+	}
+	return FALSE;
 }
 
 #pragma mark methods for managing tags
 
 - (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId
 {
-	return StoreTag([activityId UTF8String], [tag UTF8String]);
+	@synchronized(self)
+	{
+		return StoreTag([activityId UTF8String], [tag UTF8String]);
+	}
+	return FALSE;
 }
 
 - (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId
 {
-	return DeleteTag([activityId UTF8String], [tag UTF8String]);
+	@synchronized(self)
+	{
+		return DeleteTag([activityId UTF8String], [tag UTF8String]);
+	}
+	return FALSE;
 }
 
 - (void)searchForTags:(NSString*)searchText
 {
-	SearchForTags([searchText UTF8String]);
+	@synchronized(self)
+	{
+		SearchForTags([searchText UTF8String]);
+	}
 }
 
 #pragma mark utility methods
@@ -2134,7 +2393,10 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)resetDatabase
 {
-	ResetDatabase();
+	@synchronized(self)
+	{
+		ResetDatabase();
+	}
 }
 
 - (void)resetPreferences
@@ -2154,9 +2416,11 @@ void attributeNameCallback(const char* name, void* context)
 	if (activityHash)
 	{
 		const char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+
 		if (activityId == NULL)
 		{
 			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+
 			[msgData setObject:@WATCH_MSG_REQUEST_ACTIVITY forKey:@WATCH_MSG_TYPE];
 			[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
