@@ -67,7 +67,6 @@
 
 #pragma mark
 
-- (void)
 - (void)drawChart
 {	
 	const NSInteger  BAR_HEIGHT = 100;
