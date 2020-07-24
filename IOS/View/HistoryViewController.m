@@ -151,6 +151,7 @@
 		if (self->historyDictionary)
 		{
 			NSString* activityId;
+
 			while ((activityId = [appDelegate getNextActivityId]) != nil)
 			{
 				time_t startTime = 0;
@@ -250,6 +251,7 @@
 	if (self->sortedKeys && self->historyDictionary)
 	{
 		NSString* secName = [self->sortedKeys objectAtIndex:section];
+
 		if (secName)
 		{
 			return [[self->historyDictionary objectForKey:secName] count];

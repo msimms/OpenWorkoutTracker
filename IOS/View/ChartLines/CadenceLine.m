@@ -44,7 +44,7 @@ void CadenceDataCallback(const char* const activityId, void* context)
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate createHistoricalActivityObject:self->activityId];
 
-		if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_ACCELEROMETER forActivityId:self->activityId withCallback:CadenceDataCallback withContext:(__bridge void*)self])
+		if ([appDelegate loadHistoricalActivitySensorData:SENSOR_TYPE_CADENCE forActivityId:self->activityId withCallback:CadenceDataCallback withContext:(__bridge void*)self])
 		{
 			[super draw];
 		}

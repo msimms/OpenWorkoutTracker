@@ -30,10 +30,49 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	
+	[self drawChart];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(deviceOrientationDidChange:)
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (BOOL)shouldAutorotate
+{
+	return YES;
+}
+
+- (void)deviceOrientationDidChange:(NSNotification*)notification
+{
+	[self drawChart];
+}
+
+#pragma mark
+
+- (void)
+- (void)drawChart
+{	
 	const NSInteger  BAR_HEIGHT = 100;
 	const NSUInteger NUM_X_HASH_MARKS = 5;
-	const NSUInteger NUM_Y_HASH_MARKS = 5;
+	const NSUInteger NUM_Y_HASH_MARKS = 8;
 
 	NSUInteger numPoints = [self numPointsToDraw];
 	
@@ -88,7 +127,7 @@
 
 	// Axis line style.
 	CPTMutableLineStyle* axisLineStyle  = [CPTMutableLineStyle lineStyle];
-	axisLineStyle.lineWidth             = 3.0f;
+	axisLineStyle.lineWidth             = 1.0f;
 	axisLineStyle.lineColor             = [[CPTColor blackColor] colorWithAlphaComponent:1];
 
 	// Line style for the overlay lines.
@@ -99,8 +138,8 @@
 
 	// Line style for the main line.
 	CPTMutableLineStyle* lineStyle  = [CPTMutableLineStyle lineStyle];
-	lineStyle.miterLimit            = 2.0f;
-	lineStyle.lineWidth             = 2.0f;
+	lineStyle.miterLimit            = 1.0f;
+	lineStyle.lineWidth             = 1.0f;
 	lineStyle.lineColor             = [CPTColor blackColor];
 
 	NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
@@ -163,7 +202,7 @@
 	areaGradient1.angle             = -90.0;
 	CPTFill* areaGradientFill       = [CPTFill fillWithGradient:areaGradient1];
 	boundLinePlot.areaFill          = areaGradientFill;
-	boundLinePlot.areaBaseValue     = @(0.0);
+	boundLinePlot.areaBaseValue     = @(0.1);
 
 	// Add hash marks to the x axis.
 	NSMutableSet* xLabels    = [NSMutableSet setWithCapacity:NUM_X_HASH_MARKS];
@@ -190,10 +229,11 @@
 	for (NSUInteger i = 1; i < NUM_Y_HASH_MARKS; ++i)
 	{
 		double yValue        = self->minY + ((double)i * yHashSpacing);
-		NSString* labelStr   = [[NSString alloc] initWithFormat:@"%.1f", yValue];
+		NSString* labelStr   = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)yValue];
+
 		CPTAxisLabel* label  = [[CPTAxisLabel alloc] initWithText:labelStr textStyle:y.labelTextStyle];
 
-		CGFloat location     = yValue;
+		CGFloat location     = yValue + 1;
 		label.tickLocation   = @(location);
 		label.offset         = y.majorTickLength;
 
@@ -234,11 +274,6 @@
 	}
 
 	self->graph.plotAreaFrame.masksToBorder = NO;
-}
-
-- (void)didReceiveMemoryWarning
-{
-	[super didReceiveMemoryWarning];
 }
 
 - (NSUInteger)numPointsToDraw

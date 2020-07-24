@@ -285,6 +285,7 @@
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
 		NSString* imgPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
 		CGFloat imageY = (self.view.bounds.size.height - self.view.bounds.size.width) / 2;
+
 		self->lastCountdownImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
 		self->lastCountdownImage.frame = CGRectMake(0, imageY, self.view.bounds.size.width, self.view.bounds.size.width);
 
@@ -310,6 +311,7 @@
 		if (([self->messages count] > 0) && (self->messageDisplayCounter == 0))
 		{
 			NSString* msg = [self->messages objectAtIndex:0];
+
 			[self->messages removeObjectAtIndex:0];
 			[self->messagesLabel setText:msg];
 
