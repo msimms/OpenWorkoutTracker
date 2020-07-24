@@ -19,7 +19,7 @@ typedef enum GearSections
 	NUM_GEAR_SECTIONS
 } GearSections;
 
-#define TITLE                   NSLocalizedString(@"Profile", nil)
+#define TITLE                   NSLocalizedString(@"Gear", nil)
 
 #define TITLE_BIKES             NSLocalizedString(@"Bicycles", nil)
 #define TITLE_SHOES             NSLocalizedString(@"Shoes", nil)
