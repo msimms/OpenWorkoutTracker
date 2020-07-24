@@ -15,21 +15,30 @@
 typedef enum ProfileSections
 {
 	SECTION_USER = 0,
+	SECTION_PERFORMANCE,
 	NUM_PROFILE_SECTIONS
 } ProfileSections;
 
-typedef enum ProfileRows
+typedef enum ProfileUserRows
 {
-	ROW_ACTIVITY_LEVEL = 0,
-	ROW_GENDER,
+	ROW_GENDER = 0,
 	ROW_BIRTHDATE,
 	ROW_HEIGHT,
 	ROW_WEIGHT,
+	NUM_PROFILE_USER_ROWS
+} ProfileUserRows;
+
+typedef enum ProfilePerformanceRows
+{
+	ROW_ACTIVITY_LEVEL = 0,
 	ROW_FTP,
-	NUM_PROFILE_ROWS
-} ProfileRows;
+	NUM_PROFILE_PERFORMANCE_ROWS
+} ProfilePerformanceRows;
 
 #define TITLE                             NSLocalizedString(@"Profile", nil)
+
+#define TITLE_USER                        NSLocalizedString(@"Profile", nil)
+#define TITLE_PERFORMANCE                 NSLocalizedString(@"Activity Level", nil)
 
 #define ACTION_SHEET_TITLE_ACTIVITY_LEVEL NSLocalizedString(@"Activity Level", nil)
 #define ACTION_SHEET_TITLE_BIRTHDATE      NSLocalizedString(@"Enter your birthdate", nil)
@@ -132,7 +141,9 @@ typedef enum ProfileRows
 	switch (section)
 	{
 		case SECTION_USER:
-			return TITLE;
+			return TITLE_USER;
+		case SECTION_PERFORMANCE:
+			return TITLE_PERFORMANCE;
 	}
 	return @"";
 }
@@ -142,7 +153,9 @@ typedef enum ProfileRows
 	switch (section)
 	{
 		case SECTION_USER:
-			return NUM_PROFILE_ROWS;
+			return NUM_PROFILE_USER_ROWS;
+		case SECTION_PERFORMANCE:
+			return NUM_PROFILE_PERFORMANCE_ROWS;
 	}
 	return 0;
 }
@@ -168,10 +181,6 @@ typedef enum ProfileRows
 			{
 				switch (row)
 				{
-					case ROW_ACTIVITY_LEVEL:
-						cell.textLabel.text = ACTION_SHEET_TITLE_ACTIVITY_LEVEL;
-						cell.detailTextLabel.text = [StringUtils activityLevelToStr:[appDelegate userActivityLevel]];
-						break;
 					case ROW_GENDER:
 						cell.textLabel.text = STR_GENDER;
 						cell.detailTextLabel.text = [StringUtils genderToStr:[appDelegate userGender]];
@@ -197,10 +206,24 @@ typedef enum ProfileRows
 							cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
 						}
 						break;
+					default:
+						break;
+				}
+			}
+			break;
+		case SECTION_PERFORMANCE:
+			{
+				switch (row)
+				{
+					case ROW_ACTIVITY_LEVEL:
+						cell.textLabel.text = ACTION_SHEET_TITLE_ACTIVITY_LEVEL;
+						cell.detailTextLabel.text = [StringUtils activityLevelToStr:[appDelegate userActivityLevel]];
+						break;
 					case ROW_FTP:
 						{
 							double ftp = [appDelegate userFtp];
 							cell.textLabel.text = STR_FTP;
+
 							if (ftp >= (double)1.0)
 								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@", ftp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 							else
@@ -211,6 +234,8 @@ typedef enum ProfileRows
 						break;
 				}
 			}
+			break;
+		case NUM_PROFILE_SECTIONS:
 			break;
 	}
 
@@ -227,6 +252,9 @@ typedef enum ProfileRows
 		case SECTION_USER:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
+		case SECTION_PERFORMANCE:
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			break;
 	}
 }
 
@@ -240,6 +268,84 @@ typedef enum ProfileRows
 
 		switch (row)
 		{
+			case ROW_GENDER:
+				{
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																							 message:STR_GENDER
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserGender:GENDER_MALE];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_FEMALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserGender:GENDER_FEMALE];
+						[self.profileTableView reloadData];
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
+				}
+				break;
+			case ROW_BIRTHDATE:
+				[self performSegueWithIdentifier:@SEGUE_TO_DATE_VIEW sender:self];
+				break;
+			case ROW_HEIGHT:
+				{
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_HEIGHT
+																							 message:ALERT_MSG_HEIGHT
+																					  preferredStyle:UIAlertControllerStyleAlert];
+
+					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+						AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
+						textField.keyboardType = UIKeyboardTypeNumberPad;
+					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						UITextField* field = alertController.textFields.firstObject;
+						double height = [[field text] doubleValue];
+
+						if (height > (double)0.0)
+						{
+							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+							[appDelegate setUserHeight:height];
+							[self.profileTableView reloadData];
+						}
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
+				}
+				break;
+			case ROW_WEIGHT:
+				{
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_WEIGHT
+																							 message:ALERT_MSG_WEIGHT
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					
+					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
+						textField.keyboardType = UIKeyboardTypeNumberPad;
+					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						UITextField* field = alertController.textFields.firstObject;
+						double weight = [[field text] doubleValue];
+
+						if (weight > (double)0.0)
+						{
+							[appDelegate setUserWeight:weight];
+							[self.profileTableView reloadData];
+						}
+					}]];
+					[self presentViewController:alertController animated:YES completion:nil];
+				}
+				break;
+			case NUM_PROFILE_USER_ROWS:
+				break;
+		}
+		if (section == SECTION_PERFORMANCE)
+		{
+			NSInteger row = [indexPath row];
+
+			switch (row)
+			{
 			case ROW_ACTIVITY_LEVEL:
 				{
 					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -269,75 +375,6 @@ typedef enum ProfileRows
 					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
-			case ROW_GENDER:
-				{
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																							 message:STR_GENDER
-																					  preferredStyle:UIAlertControllerStyleAlert];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserGender:GENDER_MALE];
-						[self.profileTableView reloadData];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_FEMALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserGender:GENDER_FEMALE];
-						[self.profileTableView reloadData];
-					}]];
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
-				break;
-			case ROW_BIRTHDATE:
-				{
-					[self performSegueWithIdentifier:@SEGUE_TO_DATE_VIEW sender:self];
-				}
-				break;
-			case ROW_HEIGHT:
-				{
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_HEIGHT
-																							 message:ALERT_MSG_HEIGHT
-																					  preferredStyle:UIAlertControllerStyleAlert];
-
-					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
-						textField.keyboardType = UIKeyboardTypeNumberPad;
-					}];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						UITextField* field = alertController.textFields.firstObject;
-						double height = [[field text] doubleValue];
-						if (height > (double)0.0)
-						{
-							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-							[appDelegate setUserHeight:height];
-							[self.profileTableView reloadData];
-						}
-					}]];
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
-				break;
-			case ROW_WEIGHT:
-				{
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_WEIGHT
-																							 message:ALERT_MSG_WEIGHT
-																					  preferredStyle:UIAlertControllerStyleAlert];
-					
-					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
-						textField.keyboardType = UIKeyboardTypeNumberPad;
-					}];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						UITextField* field = alertController.textFields.firstObject;
-						double weight = [[field text] doubleValue];
-						if (weight > (double)0.0)
-						{
-							[appDelegate setUserWeight:weight];
-							[self.profileTableView reloadData];
-						}
-					}]];
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
-				break;
 			case ROW_FTP:
 				{
 					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -352,6 +389,7 @@ typedef enum ProfileRows
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 						UITextField* field = alertController.textFields.firstObject;
 						double ftp = [[field text] doubleValue];
+
 						if (ftp > (double)0.0)
 						{
 							[appDelegate setUserFtp:ftp];
@@ -361,8 +399,9 @@ typedef enum ProfileRows
 					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
-			case NUM_PROFILE_ROWS:
+			case NUM_PROFILE_PERFORMANCE_ROWS:
 				break;
+			}
 		}
 	}
 }
