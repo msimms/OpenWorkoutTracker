@@ -22,6 +22,9 @@
 #define ACTIVITY_ATTRIBUTE_3_SEC_POWER                "3 Second Power"          // power meter reading, averaged over the last three seconds
 #define ACTIVITY_ATTRIBUTE_20_MIN_POWER               "20 Minute Power"         // power meter reading, averaged over the last 20 minutes
 #define ACTIVITY_ATTRIBUTE_1_HOUR_POWER               "1 Hour Power"            // power meter reading, averaged over the last hour
+#define ACTIVITY_ATTRIBUTE_HIGHEST_3_SEC_POWER        "Highest 3 Second Power"  // highest power meter reading, averaged over three seconds
+#define ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER       "Highest 20 Minute Power" // highest power meter reading, averaged over 20 minutes
+#define ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER       "Highest 1 Hour Power"    // highest power meter reading, averaged over 1 hour
 #define ACTIVITY_ATTRIBUTE_AVG_POWER                  "Average Power"           // average power meter reading
 #define ACTIVITY_ATTRIBUTE_NORMALIZED_POWER           "Normalized Power"        // normalized power meter reading
 #define ACTIVITY_ATTRIBUTE_MAX_POWER                  "Maximum Power"           // maximum power meter reading

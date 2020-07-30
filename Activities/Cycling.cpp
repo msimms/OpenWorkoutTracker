@@ -29,9 +29,9 @@ Cycling::Cycling() : MovingActivity()
 	m_3SecPower                         = (double)0.0;
 	m_20MinPower                        = (double)0.0;
 	m_1HourPower                        = (double)0.0;
-	m_best3SecPower                     = (double)0.0;
-	m_best20MinPower                    = (double)0.0;
-	m_best1HourPower                    = (double)0.0;
+	m_highest3SecPower                  = (double)0.0;
+	m_highest20MinPower                 = (double)0.0;
+	m_highest1HourPower                 = (double)0.0;
 
 	m_current30SecBufferStartTime       = 0;
 
@@ -157,9 +157,9 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 				m_recentPowerReadings3Sec.erase(m_recentPowerReadings3Sec.begin());
 			}
 			m_3SecPower = LibMath::Statistics::averageDouble(m_recentPowerReadings3Sec);
-			if (m_3SecPower > m_best3SecPower)
+			if (m_3SecPower > m_highest3SecPower)
 			{
-				m_best3SecPower = m_3SecPower;
+				m_highest3SecPower = m_3SecPower;
 			}
 
 			// Update the 20 minute power.
@@ -169,9 +169,9 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 				m_recentPowerReadings20Min.erase(m_recentPowerReadings20Min.begin());
 			}
 			m_20MinPower = LibMath::Statistics::averageDouble(m_recentPowerReadings20Min);
-			if (m_20MinPower > m_best20MinPower)
+			if (m_20MinPower > m_highest20MinPower)
 			{
-				m_best20MinPower = m_20MinPower;
+				m_highest20MinPower = m_20MinPower;
 			}
 
 			// Update the 1 hour power.
@@ -181,9 +181,9 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 				m_recentPowerReadings1Hour.erase(m_recentPowerReadings1Hour.begin());
 			}
 			m_1HourPower = LibMath::Statistics::averageDouble(m_recentPowerReadings1Hour);
-			if (m_1HourPower > m_best1HourPower)
+			if (m_1HourPower > m_highest1HourPower)
 			{
-				m_best1HourPower = m_1HourPower;
+				m_highest1HourPower = m_1HourPower;
 			}
 
 			// Update the normalized power calculation and supporting variables.
@@ -251,39 +251,6 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.endTime = m_lastPowerUpdateTime;
 		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_3_SEC_POWER) == 0)
-	{
-		uint64_t timeSinceLastUpdate = 0;
-		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
-		
-		result.value.doubleVal = ThreeSecPower();
-		result.valueType = TYPE_DOUBLE;
-		result.measureType = MEASURE_POWER;
-		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
-	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_20_MIN_POWER) == 0)
-	{
-		uint64_t timeSinceLastUpdate = 0;
-		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
-		
-		result.value.doubleVal = TwentyMinPower();
-		result.valueType = TYPE_DOUBLE;
-		result.measureType = MEASURE_POWER;
-		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
-	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_1_HOUR_POWER) == 0)
-	{
-		uint64_t timeSinceLastUpdate = 0;
-		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
-		
-		result.value.doubleVal = OneHourPower();
-		result.valueType = TYPE_DOUBLE;
-		result.measureType = MEASURE_POWER;
-		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
-	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_POWER) == 0)
 	{
 		result.value.doubleVal = AveragePower();
@@ -304,6 +271,72 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_POWER;
 		result.valid = m_numPowerReadings > 0;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_3_SEC_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = ThreeSecPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_20_MIN_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = TwentyMinPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < (20 * 60000));
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_1_HOUR_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = OneHourPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < (60 * 60000));
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HIGHEST_3_SEC_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = HighestThreeSecPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = HighestTwentyMinPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < (20 * 60000));
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = HighestOneHourPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < (60 * 60000));
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_POWER_ZONE) == 0)
 	{
@@ -448,11 +481,14 @@ void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_3_SEC_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_20_MIN_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_1_HOUR_POWER);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_3_SEC_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER_ZONE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
@@ -466,6 +502,9 @@ void Cycling::BuildSummaryAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_3_SEC_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS);

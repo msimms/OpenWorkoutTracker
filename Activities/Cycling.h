@@ -50,6 +50,9 @@ public:
 	virtual double ThreeSecPower() const { return m_3SecPower; };
 	virtual double TwentyMinPower() const { return m_20MinPower; };
 	virtual double OneHourPower() const { return m_1HourPower; };
+	virtual double HighestThreeSecPower() const { return m_highest3SecPower; };
+	virtual double HighestTwentyMinPower() const { return m_highest20MinPower; };
+	virtual double HighestOneHourPower() const { return m_highest1HourPower; };
 	virtual uint8_t CurrentPowerZone() const;
 
 	virtual uint16_t NumWheelRevolutions() const { return m_currentWheelSpeedReading - m_firstWheelSpeedReading; };
@@ -79,9 +82,9 @@ private:
 	double          m_3SecPower; // The current 3 second average power (average over the last 3 seconds)
 	double          m_20MinPower; // The current 20 minute average power (average over the last 20 minutes)
 	double          m_1HourPower; // The current 1 hour average power (average over the last hour)
-	double          m_best3SecPower; // The highest 3 second average power seen so far
-	double          m_best20MinPower; // The highest 20 minute average power seen so far
-	double          m_best1HourPower; // The highest 1 hour average power seen so far
+	double          m_highest3SecPower; // The highest 3 second average power seen so far
+	double          m_highest20MinPower; // The highest 20 minute average power seen so far
+	double          m_highest1HourPower; // The highest 1 hour average power seen so far
 	std::vector<double> m_recentPowerReadings3Sec; // Used for 3 second average power
 	std::vector<double> m_recentPowerReadings20Min; // Used for 20 minute average power
 	std::vector<double> m_recentPowerReadings1Hour; // Used for 1 hour average power
