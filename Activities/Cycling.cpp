@@ -24,8 +24,15 @@ Cycling::Cycling() : MovingActivity()
 	m_totalCadenceReadings              = (double)0.0;
 
 	m_currentPower                      = (double)0.0;
-	m_maximumPower                      = (double)0.0;
 	m_totalPowerReadings                = (double)0.0;
+	m_maximumPower                      = (double)0.0;
+	m_3SecPower                         = (double)0.0;
+	m_20MinPower                        = (double)0.0;
+	m_1HourPower                        = (double)0.0;
+	m_best3SecPower                     = (double)0.0;
+	m_best20MinPower                    = (double)0.0;
+	m_best1HourPower                    = (double)0.0;
+
 	m_current30SecBufferStartTime       = 0;
 
 	m_numCadenceReadings                = 0;
@@ -132,21 +139,54 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 		{
 			m_lastPowerUpdateTime = reading.time;
 			m_currentPower = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
+
+			// Update values needed for the average power calculation.
 			m_totalPowerReadings += m_currentPower;
 			m_numPowerReadings++;
-			
-			m_recentPowerReadings.push_back(m_currentPower);
-			if (m_recentPowerReadings.size() > 3)
-			{
-				m_recentPowerReadings.erase(m_recentPowerReadings.begin());
-			}
 
+			// Update the maximum power value.
 			if (m_currentPower > m_maximumPower)
 			{
 				m_maximumPower = m_currentPower;
 			}
 
-			// Things we need for the normalized power calculation.
+			// Update the 3 second power.
+			m_recentPowerReadings3Sec.push_back(m_currentPower);
+			if (m_recentPowerReadings3Sec.size() > 3)
+			{
+				m_recentPowerReadings3Sec.erase(m_recentPowerReadings3Sec.begin());
+			}
+			m_3SecPower = LibMath::Statistics::averageDouble(m_recentPowerReadings3Sec);
+			if (m_3SecPower > m_best3SecPower)
+			{
+				m_best3SecPower = m_3SecPower;
+			}
+
+			// Update the 20 minute power.
+			m_recentPowerReadings20Min.push_back(m_currentPower);
+			if (m_recentPowerReadings20Min.size() > (20 * 60))
+			{
+				m_recentPowerReadings20Min.erase(m_recentPowerReadings20Min.begin());
+			}
+			m_20MinPower = LibMath::Statistics::averageDouble(m_recentPowerReadings20Min);
+			if (m_20MinPower > m_best20MinPower)
+			{
+				m_best20MinPower = m_20MinPower;
+			}
+
+			// Update the 1 hour power.
+			m_recentPowerReadings1Hour.push_back(m_currentPower);
+			if (m_recentPowerReadings1Hour.size() > (60 * 60))
+			{
+				m_recentPowerReadings1Hour.erase(m_recentPowerReadings1Hour.begin());
+			}
+			m_1HourPower = LibMath::Statistics::averageDouble(m_recentPowerReadings1Hour);
+			if (m_1HourPower > m_best1HourPower)
+			{
+				m_best1HourPower = m_1HourPower;
+			}
+
+			// Update the normalized power calculation and supporting variables.
 			m_current30SecBuffer.push_back(m_currentPower);
 			if (reading.time - this->m_current30SecBufferStartTime > 30000)
 			{
@@ -218,6 +258,28 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
 		
 		result.value.doubleVal = ThreeSecPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_20_MIN_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = TwentyMinPower();
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_1_HOUR_POWER) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+		
+		result.value.doubleVal = OneHourPower();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_POWER;
 		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
@@ -387,6 +449,8 @@ void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_CADENCE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_3_SEC_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_20_MIN_POWER);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_1_HOUR_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NORMALIZED_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER_ZONE);

@@ -44,10 +44,12 @@ public:
 	virtual double MaximumCadence() const { return m_maximumCadence; };
 
 	virtual double CurrentPower() const { return m_currentPower; };
-	virtual double ThreeSecPower() const { return LibMath::Statistics::averageDouble(m_recentPowerReadings); };
 	virtual double AveragePower() const { return m_numPowerReadings > 0 ? (m_totalPowerReadings / m_numPowerReadings) : (double)0.0; };
 	virtual double NormalizedPower() const;
 	virtual double MaximumPower() const { return m_maximumPower; };
+	virtual double ThreeSecPower() const { return m_3SecPower; };
+	virtual double TwentyMinPower() const { return m_20MinPower; };
+	virtual double OneHourPower() const { return m_1HourPower; };
 	virtual uint8_t CurrentPowerZone() const;
 
 	virtual uint16_t NumWheelRevolutions() const { return m_currentWheelSpeedReading - m_firstWheelSpeedReading; };
@@ -67,20 +69,28 @@ private:
 	
 	double          m_distanceAtFirstWheelSpeedReadingM;
 
-	double          m_currentCadence;
-	double          m_maximumCadence;
-	double          m_totalCadenceReadings;
+	double          m_currentCadence; // The most recent cadence reading
+	double          m_maximumCadence; // The highest cadence value seen so far
+	double          m_totalCadenceReadings; // Intermediate value for average cadence calculation
 
-	double          m_currentPower;
-	double          m_maximumPower;
-	double          m_totalPowerReadings;
-	std::vector<double> m_recentPowerReadings; // used for 3 second average power
-	std::vector<double> m_normalizedPowerBuffer; // contains 30 second power averages
-	std::vector<double> m_current30SecBuffer; // contains data from the most recent 30 second power block
-	uint64_t        m_current30SecBufferStartTime; // used with the normalized power calculation
+	double          m_currentPower; // The most recent power reading
+	double          m_totalPowerReadings; // Intermediate value for average power calculation
+	double          m_maximumPower; // The highest power value seen so far
+	double          m_3SecPower; // The current 3 second average power (average over the last 3 seconds)
+	double          m_20MinPower; // The current 20 minute average power (average over the last 20 minutes)
+	double          m_1HourPower; // The current 1 hour average power (average over the last hour)
+	double          m_best3SecPower; // The highest 3 second average power seen so far
+	double          m_best20MinPower; // The highest 20 minute average power seen so far
+	double          m_best1HourPower; // The highest 1 hour average power seen so far
+	std::vector<double> m_recentPowerReadings3Sec; // Used for 3 second average power
+	std::vector<double> m_recentPowerReadings20Min; // Used for 20 minute average power
+	std::vector<double> m_recentPowerReadings1Hour; // Used for 1 hour average power
+	std::vector<double> m_normalizedPowerBuffer; // Contains 30 second power averages
+	std::vector<double> m_current30SecBuffer; // Contains data from the most recent 30 second power block, needed for normalized power calculation
+	uint64_t        m_current30SecBufferStartTime; // Used with the normalized power calculation
 
-	uint16_t        m_numCadenceReadings;
-	uint16_t        m_numPowerReadings;
+	uint16_t        m_numCadenceReadings; // Used with the average cadence calculation
+	uint16_t        m_numPowerReadings; // Used with the average power calculation
 
 	uint16_t        m_firstWheelSpeedReading;
 	uint64_t        m_firstWheelSpeedTime;
