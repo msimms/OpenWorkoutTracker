@@ -87,6 +87,7 @@
 		[msgData setObject:@WATCH_MSG_ACTIVITY forKey:@WATCH_MSG_TYPE];
 		[msgData setObject:activityId forKey:@WATCH_MSG_ACTIVITY_ID];
 		[msgData setObject:activityType forKey:@WATCH_MSG_ACTIVITY_TYPE];
+		[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
 		[msgData setObject:startTime forKey:@WATCH_MSG_ACTIVITY_START_TIME];
 		[msgData setObject:endTime forKey:@WATCH_MSG_ACTIVITY_END_TIME];
 

@@ -198,6 +198,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSString* activityId = [[NSUUID UUID] UUIDString];
 	BOOL result = StartActivity([activityId UTF8String]);
+
 	if (result)
 	{
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
@@ -219,6 +220,7 @@ void startSensorCallback(SensorType type, void* context)
 - (BOOL)startActivityWithBikeName:(NSString*)bikeName
 {
 	BOOL result = [self startActivity];
+
 	if (result)
 	{
 		SetCurrentBicycle([bikeName UTF8String]);
@@ -447,6 +449,7 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getDeviceId;
 {
 	NSString* uuid = [Preferences uuid];
+
 	if ((uuid == nil) || ([uuid length] == 0))
 	{
 		uuid = [[NSUUID UUID] UUIDString];
@@ -753,12 +756,15 @@ void attributeNameCallback(const char* name, void* context)
 	@synchronized(self)
 	{
 		size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
+
 		for (size_t i = 0; i < numAttributes; ++i)
 		{
 			char* attrName = GetHistoricalActivityAttributeName(activityIndex, i);
+
 			if (attrName)
 			{
 				NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", attrName];
+
 				if (attrTitle)
 				{
 					[attributes addObject:attrTitle];
@@ -828,6 +834,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* activityTypeStr = nil;
 	char* activityType = GetCurrentActivityType();
+
 	if (activityType)
 	{
 		activityTypeStr = [NSString stringWithFormat:@"%s", activityType];
@@ -840,6 +847,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* result = nil;
 	char* activityType = GetHistoricalActivityType((size_t)activityIndex);
+
 	if (activityType)
 	{
 		result = [NSString stringWithFormat:@"%s", activityType];
@@ -852,6 +860,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* result = nil;
 	char* activityName = GetHistoricalActivityName((size_t)activityIndex);
+
 	if (activityName)
 	{
 		result = [NSString stringWithFormat:@"%s", activityName];

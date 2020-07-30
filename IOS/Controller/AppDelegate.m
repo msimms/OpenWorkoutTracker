@@ -2432,8 +2432,9 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* activityId = [message objectForKey:@WATCH_MSG_ACTIVITY_ID];
 	NSString* activityType = [message objectForKey:@WATCH_MSG_ACTIVITY_TYPE];
+	NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
 
-	if (activityId && activityType)
+	if (activityId && activityType && activityHash)
 	{
 		@synchronized(self)
 		{
@@ -2443,6 +2444,7 @@ void attributeNameCallback(const char* name, void* context)
 			while (ConvertActivityIdToActivityIndex([activityId UTF8String]) != ACTIVITY_INDEX_UNKNOWN)
 			{
 				DeleteActivity([activityId UTF8String]);
+				InitializeHistoricalActivityList();
 			}
 
 			// Create the activity object and database entry.
@@ -2468,6 +2470,9 @@ void attributeNameCallback(const char* name, void* context)
 
 				// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
 				StopCurrentActivity();
+
+				// Save the hash since we already know it and so that we don't have to compute it.
+				StoreHash([activityId UTF8String], [activityHash UTF8String]);
 			}
 
 			self->currentlyImporting = FALSE;
