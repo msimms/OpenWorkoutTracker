@@ -1780,15 +1780,6 @@ extern "C" {
 		}
 	}
 
-	void SetCurrentActivityStartTime(time_t startTime)
-	{
-		if (g_pCurrentActivity && g_pDatabase)
-		{
-			g_pCurrentActivity->SetStartTimeSecs(startTime);
-			g_pDatabase->UpdateActivityStartTime(g_pCurrentActivity->GetId(), startTime);
-		}
-	}
-
 	void DestroyCurrentActivity()
 	{
 		if (g_pCurrentActivity)
@@ -1827,6 +1818,24 @@ extern "C" {
 		{
 			if (g_pCurrentActivity->Start())
 			{
+				if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+				{
+					g_pCurrentActivity->SetId(activityId);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool StartActivityWithTimestamp(const char* const activityId, time_t startTime)
+	{
+		if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
+		{
+			if (g_pCurrentActivity->Start())
+			{
+				g_pCurrentActivity->SetStartTimeSecs(startTime);
+
 				if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
 				{
 					g_pCurrentActivity->SetId(activityId);

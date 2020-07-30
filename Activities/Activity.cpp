@@ -47,10 +47,7 @@ Activity::~Activity()
 
 void Activity::SetStartTimeSecs(time_t startTime)
 {
-	if (m_startTimeSecs == 0)
-	{
-		m_startTimeSecs = startTime;
-	}
+	m_startTimeSecs = startTime;
 }
 
 void Activity::SetEndTimeSecs(time_t endTime)

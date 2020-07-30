@@ -175,13 +175,13 @@ extern "C" {
 	// Functions for creating and destroying the current activity.
 	void CreateActivityObject(const char* const activityType);
 	void ReCreateOrphanedActivity(size_t activityIndex);
-	void SetCurrentActivityStartTime(time_t startTime);
 	void DestroyCurrentActivity(void);
 	char* GetCurrentActivityType(void);
 	const char* const GetCurrentActivityId(void);
 
 	// Functions for starting/stopping the current activity.
 	bool StartActivity(const char* const activityId);
+	bool StartActivityWithTimestamp(const char* const activityId, time_t startTime);
 	bool StopCurrentActivity(void);
 	bool PauseCurrentActivity(void);
 	bool StartNewLap(void);

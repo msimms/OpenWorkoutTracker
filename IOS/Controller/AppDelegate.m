@@ -2433,8 +2433,9 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* activityId = [message objectForKey:@WATCH_MSG_ACTIVITY_ID];
 	NSString* activityType = [message objectForKey:@WATCH_MSG_ACTIVITY_TYPE];
 	NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+	NSNumber* startTime = [message objectForKey:@WATCH_MSG_ACTIVITY_START_TIME];
 
-	if (activityId && activityType && activityHash)
+	if (activityId && activityType && activityHash && startTime)
 	{
 		@synchronized(self)
 		{
@@ -2449,12 +2450,8 @@ void attributeNameCallback(const char* name, void* context)
 
 			// Create the activity object and database entry.
 			CreateActivityObject([activityType UTF8String]);
-			if (StartActivity([activityId UTF8String]))
+			if (StartActivityWithTimestamp([activityId UTF8String], [startTime longLongValue]))
 			{
-				// Fix the activity start time.
-				NSNumber* startTime = [message objectForKey:@WATCH_MSG_ACTIVITY_START_TIME];
-				SetCurrentActivityStartTime([startTime longLongValue]);
-
 				// Add all the locations.
 				NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
 				if (locationData)
@@ -2470,10 +2467,21 @@ void attributeNameCallback(const char* name, void* context)
 
 				// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
 				StopCurrentActivity();
+				
+				// Store summary data.
+				SaveActivitySummaryData();
 
 				// Save the hash since we already know it and so that we don't have to compute it.
 				StoreHash([activityId UTF8String], [activityHash UTF8String]);
 			}
+			else
+			{
+				// Something went wrong, cleanup and move on.
+				DeleteActivity([activityId UTF8String]);
+			}
+
+			// Re-initialize the list of activities since we added a new activity.
+			InitializeHistoricalActivityList();
 
 			self->currentlyImporting = FALSE;
 		}
