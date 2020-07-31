@@ -161,7 +161,10 @@ extern "C" {
 
 	// Functions for listing sensors used by the current activity.
 	void GetUsableSensorTypes(SensorTypeCallback callback, void* context);
-	
+
+	// Functions for estimating the athlete's fitness.
+	double EstimateFtp(void);
+
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);
 	void ConvertToBroadcastUnits(ActivityAttributeType* value);

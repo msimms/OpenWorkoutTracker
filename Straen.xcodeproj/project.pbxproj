@@ -294,6 +294,9 @@
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
 		27C63293233D950C009BF5CB /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
+		27CF011824D1E87A00263CEC /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF010824D1E87A00263CEC /* FtpCalculator.cpp */; };
+		27CF011A24D3672A00263CEC /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF010824D1E87A00263CEC /* FtpCalculator.cpp */; };
+		27CF011B24D3672B00263CEC /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF010824D1E87A00263CEC /* FtpCalculator.cpp */; };
 		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
 		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
 		27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -903,6 +906,8 @@
 		27C0844919BFD063007CE934 /* Treadmill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Treadmill.h; path = Activities/Treadmill.h; sourceTree = SOURCE_ROOT; };
 		27C0844A19BFD063007CE934 /* UnitMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitMgr.cpp; path = Activities/UnitMgr.cpp; sourceTree = SOURCE_ROOT; };
 		27C0844B19BFD063007CE934 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = SOURCE_ROOT; };
+		27CF010824D1E87A00263CEC /* FtpCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FtpCalculator.cpp; path = Activities/FtpCalculator.cpp; sourceTree = SOURCE_ROOT; };
+		27CF011724D1E87A00263CEC /* FtpCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FtpCalculator.h; path = Activities/FtpCalculator.h; sourceTree = SOURCE_ROOT; };
 		27DCF5BE22B193B5009A23C2 /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1536,6 +1541,8 @@
 				27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */,
 				27C0842319BFD063007CE934 /* Cycling.cpp */,
 				27C0842419BFD063007CE934 /* Cycling.h */,
+				27CF010824D1E87A00263CEC /* FtpCalculator.cpp */,
+				27CF011724D1E87A00263CEC /* FtpCalculator.h */,
 				27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */,
 				27C0842719BFD063007CE934 /* GForceAnalyzer.h */,
 				27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */,
@@ -2017,6 +2024,7 @@
 				270CF4442391F05200584058 /* MovingActivity.h in Sources */,
 				270CF4452391F05200584058 /* PullUp.cpp in Sources */,
 				270CF4462391F05200584058 /* PullUp.h in Sources */,
+				27CF011B24D3672B00263CEC /* FtpCalculator.cpp in Sources */,
 				270CF4472391F05200584058 /* PullUpAnalyzer.cpp in Sources */,
 				270CF4482391F05200584058 /* PullUpAnalyzer.h in Sources */,
 				270CF4492391F05200584058 /* PushUp.cpp in Sources */,
@@ -2169,6 +2177,7 @@
 				2768E502239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */,
 				27B7CDA419BFD91C000383E3 /* SensorsViewController.m in Sources */,
 				27B7CD2219BFD807000383E3 /* HeatMapGenerator.cpp in Sources */,
+				27CF011824D1E87A00263CEC /* FtpCalculator.cpp in Sources */,
 				27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */,
 				27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */,
 				27B7CD3E19BFD903000383E3 /* ActivityViewController.m in Sources */,
@@ -2213,6 +2222,7 @@
 				27DCF65C22B72F24009A23C2 /* UnitConverter.h in Sources */,
 				27DCF65D22B72F24009A23C2 /* UnitSystem.h in Sources */,
 				27DCF64222B72EFA009A23C2 /* CsvFileWriter.cpp in Sources */,
+				27CF011A24D3672A00263CEC /* FtpCalculator.cpp in Sources */,
 				27DCF64322B72EFA009A23C2 /* CsvFileWriter.h in Sources */,
 				27DCF64422B72EFA009A23C2 /* File.cpp in Sources */,
 				27DCF64522B72EFA009A23C2 /* File.h in Sources */,

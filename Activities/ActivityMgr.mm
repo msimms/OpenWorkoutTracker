@@ -19,6 +19,7 @@
 #include "WorkoutImporter.h"
 
 #include "Cycling.h"
+#include "FtpCalculator.h"
 #include "Hike.h"
 #include "LiftingActivity.h"
 #include "MountainBiking.h"
@@ -1629,6 +1630,7 @@ extern "C" {
 		if (g_pActivityFactory)
 		{
 			std::vector<std::string> activityTypes = g_pActivityFactory->ListActivityTypes();
+
 			for (auto iter = activityTypes.begin(); iter != activityTypes.end(); ++iter)
 			{
 				callback((*iter).c_str(), context);
@@ -1665,6 +1667,7 @@ extern "C" {
 		if (g_pCurrentActivity)
 		{
 			std::vector<SensorType> sensorTypes;
+
 			g_pCurrentActivity->ListUsableSensors(sensorTypes);
 
 			for (auto iter = sensorTypes.begin(); iter != sensorTypes.end(); ++iter)
@@ -1672,6 +1675,47 @@ extern "C" {
 				callback((*iter), context);
 			}
 		}
+	}
+
+	//
+	// Functions for estimating the athlete's fitness.
+	//
+
+	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
+	double EstimateFtp(void)
+	{
+		FtpCalculator calc;
+		double bestEstimate = (double)0.0;
+
+		// Look through all activity summaries.
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
+		{
+			const ActivitySummary& summary = (*iter);
+
+			if ((summary.type.compare(ACTIVITY_TYPE_CYCLING) == 0) ||
+				(summary.type.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0))
+			{
+				double best20MinPower = (double)0.0;
+				double best1HourPower = (double)0.0;
+
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER) == summary.summaryAttributes.end())
+				{
+					best20MinPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER).value.doubleVal;
+				}
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER) == summary.summaryAttributes.end())
+				{
+					best1HourPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER).value.doubleVal;
+				}
+
+				double estimate = calc.Estimate(best20MinPower, best1HourPower);
+
+				if (estimate > bestEstimate)
+				{
+					bestEstimate = estimate;
+				}
+			}
+		}
+		return bestEstimate;
 	}
 
 	//
@@ -1767,6 +1811,7 @@ extern "C" {
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (!summary.pActivity)
 			{
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
@@ -2271,6 +2316,7 @@ extern "C" {
 		result.unitSystem  = UNIT_SYSTEM_US_CUSTOMARY;
 
 		std::string attributeName = pAttributeName;
+
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			const ActivitySummary& summary = (*iter);
