@@ -39,7 +39,7 @@ std::vector<std::string> ActivityFactory::ListActivityTypes()
 	types.push_back(Hike::Type());
 	types.push_back(MountainBiking::Type());
 	types.push_back(OpenWaterSwim::Type());
-	types.push_back(PoolSwim::Type());
+//	types.push_back(PoolSwim::Type());
 	types.push_back(PullUp::Type());
 	types.push_back(PushUp::Type());
 	types.push_back(Run::Type());
