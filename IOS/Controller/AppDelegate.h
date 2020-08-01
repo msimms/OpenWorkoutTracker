@@ -66,7 +66,8 @@
 - (struct tm)userBirthDate;
 - (double)userHeight;
 - (double)userWeight;
-- (double)userFtp;
+- (double)userSpecifiedFtp;
+- (double)userEstimatedFtp;
 
 - (void)setUserActivityLevel:(ActivityLevel)activityLevel;
 - (void)setUserGender:(Gender)gender;

@@ -221,13 +221,22 @@ typedef enum ProfilePerformanceRows
 						break;
 					case ROW_FTP:
 						{
-							double ftp = [appDelegate userFtp];
+							double declaredFtp = [appDelegate userSpecifiedFtp];
 							cell.textLabel.text = STR_FTP;
 
-							if (ftp >= (double)1.0)
-								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@", ftp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+							if (declaredFtp >= (double)1.0)
+							{
+								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@", declaredFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+							}
 							else
-								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"Not Set"];
+							{
+								double estimatedFtp = [appDelegate userEstimatedFtp];
+
+								if (estimatedFtp >= (double)1.0)
+									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@ (Estimated)", estimatedFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+								else
+									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"Not Set"];
+							}
 						}
 						break;
 					default:
@@ -383,7 +392,7 @@ typedef enum ProfilePerformanceRows
 																					  preferredStyle:UIAlertControllerStyleAlert];
 					
 					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userFtp]];
+						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userSpecifiedFtp]];
 						textField.keyboardType = UIKeyboardTypeNumberPad;
 					}];
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {

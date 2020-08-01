@@ -375,9 +375,14 @@
 	return (double)0.0;
 }
 
-- (double)userFtp
+- (double)userSpecifiedFtp
 {
 	return [UserProfile ftp];
+}
+
+- (double)userEstimatedFtp
+{
+	return EstimateFtp();
 }
 
 - (void)setUserActivityLevel:(ActivityLevel)activityLevel
