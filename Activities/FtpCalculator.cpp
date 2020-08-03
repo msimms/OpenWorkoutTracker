@@ -19,7 +19,7 @@ double FtpCalculator::Estimate(double best20MinPower, double best1HourPower)
 {
 	double max20MinAdjusted = (double)0.0;
 
-	// Loop for each activity summary data.
+	// Source: https://www.youtube.com/watch?v=kmxhVO5H-f8.
 	if (best20MinPower > 0.0)
 	{
 		max20MinAdjusted = best20MinPower * 0.95;
