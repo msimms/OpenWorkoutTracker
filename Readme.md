@@ -8,7 +8,8 @@ Why develop a workout tracker when there are so many closed-source options avail
 * The existing apps on the market function poorly as bike computers, in my opinion. I feel this is because the screens are not customizable, or are hard to read, and the screens won't stay on or prevent the phone from locking.  Using the phone as a bike computer makes a lot of sense, since dedicated bike computers are expensive and you probably have your phone with you anyway.
 * Lack of support for strength-based exercises.
 * Other applications require you to create an account to use the application at all.
-* I think users should have control over their own data and this is only possible with an open source application.
+* Users should have control over their own data and this is only possible with an open source application.
+* The network should be optional. It should be possible to use the app without sending any data to the cloud.
 
 ## Major Features
 * Support for cycling, running, hiking, walking, pull-ups, push-ups (press-ups), 
