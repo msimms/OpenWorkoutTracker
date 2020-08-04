@@ -143,7 +143,7 @@
 		2728FD2C19C1250E00CE2BAD /* Icon_120px.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2319C1248700CE2BAD /* Icon_120px.png */; };
 		2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852919C8F69900FE0077 /* InfoPlist.strings */; };
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
-		27345D0A19EDEE4600059FFF /* LeScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* LeScale.m */; };
+		27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* BtleScale.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
@@ -259,12 +259,12 @@
 		27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDD119BFD979000383E3 /* OverlayFactory.m */; };
 		27B7CDD619BFD979000383E3 /* RepititionOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDD319BFD979000383E3 /* RepititionOverlay.m */; };
 		27B7CDF219BFD99B000383E3 /* Accelerometer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDD919BFD99B000383E3 /* Accelerometer.m */; };
-		27B7CDF319BFD99B000383E3 /* LeBikeSpeedAndCadence.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDDD19BFD99B000383E3 /* LeBikeSpeedAndCadence.m */; };
-		27B7CDF419BFD99B000383E3 /* LeBluetoothSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDDF19BFD99B000383E3 /* LeBluetoothSensor.m */; };
-		27B7CDF519BFD99B000383E3 /* LeDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE119BFD99B000383E3 /* LeDiscovery.m */; };
-		27B7CDF619BFD99B000383E3 /* LeFootPod.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE319BFD99B000383E3 /* LeFootPod.m */; };
-		27B7CDF719BFD99B000383E3 /* LeHeartRateMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE519BFD99B000383E3 /* LeHeartRateMonitor.m */; };
-		27B7CDF819BFD99B000383E3 /* LePowerMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE719BFD99B000383E3 /* LePowerMeter.m */; };
+		27B7CDF319BFD99B000383E3 /* BtleBikeSpeedAndCadence.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDDD19BFD99B000383E3 /* BtleBikeSpeedAndCadence.m */; };
+		27B7CDF419BFD99B000383E3 /* BtleSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDDF19BFD99B000383E3 /* BtleSensor.m */; };
+		27B7CDF519BFD99B000383E3 /* BtleDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE119BFD99B000383E3 /* BtleDiscovery.m */; };
+		27B7CDF619BFD99B000383E3 /* BtleFootPod.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE319BFD99B000383E3 /* BtleFootPod.m */; };
+		27B7CDF719BFD99B000383E3 /* BtleHeartRateMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE519BFD99B000383E3 /* BtleHeartRateMonitor.m */; };
+		27B7CDF819BFD99B000383E3 /* BtlePowerMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE719BFD99B000383E3 /* BtlePowerMeter.m */; };
 		27B7CDF919BFD99B000383E3 /* LocationSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE919BFD99B000383E3 /* LocationSensor.m */; };
 		27B7CDFA19BFD99B000383E3 /* SensorFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEC19BFD99B000383E3 /* SensorFactory.m */; };
 		27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEE19BFD99B000383E3 /* SensorMgr.m */; };
@@ -611,8 +611,8 @@
 		2729852C19C8F69900FE0077 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		2729852F19C8F69900FE0077 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = InfoPlist.strings; sourceTree = "<group>"; };
 		2729853119C8F69900FE0077 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
-		27345D0819EDEE4600059FFF /* LeScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeScale.h; path = IOS/Sensors/LeScale.h; sourceTree = SOURCE_ROOT; };
-		27345D0919EDEE4600059FFF /* LeScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeScale.m; path = IOS/Sensors/LeScale.m; sourceTree = SOURCE_ROOT; };
+		27345D0819EDEE4600059FFF /* BtleScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleScale.h; path = IOS/Sensors/BtleScale.h; sourceTree = SOURCE_ROOT; };
+		27345D0919EDEE4600059FFF /* BtleScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleScale.m; path = IOS/Sensors/BtleScale.m; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
 		275BA6D8234BC16B0086A50F /* ZwoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileReader.h; path = FileLib/ZwoFileReader.h; sourceTree = SOURCE_ROOT; };
@@ -838,18 +838,18 @@
 		27B7CDD919BFD99B000383E3 /* Accelerometer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Accelerometer.m; path = IOS/Sensors/Accelerometer.m; sourceTree = SOURCE_ROOT; };
 		27B7CDDA19BFD99B000383E3 /* BluetoothCharacteristics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothCharacteristics.h; path = IOS/Sensors/BluetoothCharacteristics.h; sourceTree = SOURCE_ROOT; };
 		27B7CDDB19BFD99B000383E3 /* BluetoothServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BluetoothServices.h; path = IOS/Sensors/BluetoothServices.h; sourceTree = SOURCE_ROOT; };
-		27B7CDDC19BFD99B000383E3 /* LeBikeSpeedAndCadence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeBikeSpeedAndCadence.h; path = IOS/Sensors/LeBikeSpeedAndCadence.h; sourceTree = SOURCE_ROOT; };
-		27B7CDDD19BFD99B000383E3 /* LeBikeSpeedAndCadence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeBikeSpeedAndCadence.m; path = IOS/Sensors/LeBikeSpeedAndCadence.m; sourceTree = SOURCE_ROOT; };
-		27B7CDDE19BFD99B000383E3 /* LeBluetoothSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeBluetoothSensor.h; path = IOS/Sensors/LeBluetoothSensor.h; sourceTree = SOURCE_ROOT; };
-		27B7CDDF19BFD99B000383E3 /* LeBluetoothSensor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeBluetoothSensor.m; path = IOS/Sensors/LeBluetoothSensor.m; sourceTree = SOURCE_ROOT; };
-		27B7CDE019BFD99B000383E3 /* LeDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeDiscovery.h; path = IOS/Sensors/LeDiscovery.h; sourceTree = SOURCE_ROOT; };
-		27B7CDE119BFD99B000383E3 /* LeDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeDiscovery.m; path = IOS/Sensors/LeDiscovery.m; sourceTree = SOURCE_ROOT; };
-		27B7CDE219BFD99B000383E3 /* LeFootPod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeFootPod.h; path = IOS/Sensors/LeFootPod.h; sourceTree = SOURCE_ROOT; };
-		27B7CDE319BFD99B000383E3 /* LeFootPod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeFootPod.m; path = IOS/Sensors/LeFootPod.m; sourceTree = SOURCE_ROOT; };
-		27B7CDE419BFD99B000383E3 /* LeHeartRateMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LeHeartRateMonitor.h; path = IOS/Sensors/LeHeartRateMonitor.h; sourceTree = SOURCE_ROOT; };
-		27B7CDE519BFD99B000383E3 /* LeHeartRateMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LeHeartRateMonitor.m; path = IOS/Sensors/LeHeartRateMonitor.m; sourceTree = SOURCE_ROOT; };
-		27B7CDE619BFD99B000383E3 /* LePowerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LePowerMeter.h; path = IOS/Sensors/LePowerMeter.h; sourceTree = SOURCE_ROOT; };
-		27B7CDE719BFD99B000383E3 /* LePowerMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LePowerMeter.m; path = IOS/Sensors/LePowerMeter.m; sourceTree = SOURCE_ROOT; };
+		27B7CDDC19BFD99B000383E3 /* BtleBikeSpeedAndCadence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleBikeSpeedAndCadence.h; path = IOS/Sensors/BtleBikeSpeedAndCadence.h; sourceTree = SOURCE_ROOT; };
+		27B7CDDD19BFD99B000383E3 /* BtleBikeSpeedAndCadence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleBikeSpeedAndCadence.m; path = IOS/Sensors/BtleBikeSpeedAndCadence.m; sourceTree = SOURCE_ROOT; };
+		27B7CDDE19BFD99B000383E3 /* BtleSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleSensor.h; path = IOS/Sensors/BtleSensor.h; sourceTree = SOURCE_ROOT; };
+		27B7CDDF19BFD99B000383E3 /* BtleSensor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleSensor.m; path = IOS/Sensors/BtleSensor.m; sourceTree = SOURCE_ROOT; };
+		27B7CDE019BFD99B000383E3 /* BtleDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleDiscovery.h; path = IOS/Sensors/BtleDiscovery.h; sourceTree = SOURCE_ROOT; };
+		27B7CDE119BFD99B000383E3 /* BtleDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleDiscovery.m; path = IOS/Sensors/BtleDiscovery.m; sourceTree = SOURCE_ROOT; };
+		27B7CDE219BFD99B000383E3 /* BtleFootPod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleFootPod.h; path = IOS/Sensors/BtleFootPod.h; sourceTree = SOURCE_ROOT; };
+		27B7CDE319BFD99B000383E3 /* BtleFootPod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleFootPod.m; path = IOS/Sensors/BtleFootPod.m; sourceTree = SOURCE_ROOT; };
+		27B7CDE419BFD99B000383E3 /* BtleHeartRateMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleHeartRateMonitor.h; path = IOS/Sensors/BtleHeartRateMonitor.h; sourceTree = SOURCE_ROOT; };
+		27B7CDE519BFD99B000383E3 /* BtleHeartRateMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleHeartRateMonitor.m; path = IOS/Sensors/BtleHeartRateMonitor.m; sourceTree = SOURCE_ROOT; };
+		27B7CDE619BFD99B000383E3 /* BtlePowerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtlePowerMeter.h; path = IOS/Sensors/BtlePowerMeter.h; sourceTree = SOURCE_ROOT; };
+		27B7CDE719BFD99B000383E3 /* BtlePowerMeter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtlePowerMeter.m; path = IOS/Sensors/BtlePowerMeter.m; sourceTree = SOURCE_ROOT; };
 		27B7CDE819BFD99B000383E3 /* LocationSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocationSensor.h; path = IOS/Sensors/LocationSensor.h; sourceTree = SOURCE_ROOT; };
 		27B7CDE919BFD99B000383E3 /* LocationSensor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocationSensor.m; path = IOS/Sensors/LocationSensor.m; sourceTree = SOURCE_ROOT; };
 		27B7CDEA19BFD99B000383E3 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = IOS/Sensors/Sensor.h; sourceTree = SOURCE_ROOT; };
@@ -1502,20 +1502,20 @@
 				2773EB381A74102F00B088B3 /* Discovery.h */,
 				27055BF61A7322AB00417D94 /* GoPro.h */,
 				27055BF11A73227300417D94 /* GoPro.m */,
-				27B7CDDC19BFD99B000383E3 /* LeBikeSpeedAndCadence.h */,
-				27B7CDDD19BFD99B000383E3 /* LeBikeSpeedAndCadence.m */,
-				27B7CDDE19BFD99B000383E3 /* LeBluetoothSensor.h */,
-				27B7CDDF19BFD99B000383E3 /* LeBluetoothSensor.m */,
-				27B7CDE019BFD99B000383E3 /* LeDiscovery.h */,
-				27B7CDE119BFD99B000383E3 /* LeDiscovery.m */,
-				27B7CDE219BFD99B000383E3 /* LeFootPod.h */,
-				27B7CDE319BFD99B000383E3 /* LeFootPod.m */,
-				27B7CDE419BFD99B000383E3 /* LeHeartRateMonitor.h */,
-				27B7CDE519BFD99B000383E3 /* LeHeartRateMonitor.m */,
-				27B7CDE619BFD99B000383E3 /* LePowerMeter.h */,
-				27B7CDE719BFD99B000383E3 /* LePowerMeter.m */,
-				27345D0819EDEE4600059FFF /* LeScale.h */,
-				27345D0919EDEE4600059FFF /* LeScale.m */,
+				27B7CDDC19BFD99B000383E3 /* BtleBikeSpeedAndCadence.h */,
+				27B7CDDD19BFD99B000383E3 /* BtleBikeSpeedAndCadence.m */,
+				27B7CDDE19BFD99B000383E3 /* BtleSensor.h */,
+				27B7CDDF19BFD99B000383E3 /* BtleSensor.m */,
+				27B7CDE019BFD99B000383E3 /* BtleDiscovery.h */,
+				27B7CDE119BFD99B000383E3 /* BtleDiscovery.m */,
+				27B7CDE219BFD99B000383E3 /* BtleFootPod.h */,
+				27B7CDE319BFD99B000383E3 /* BtleFootPod.m */,
+				27B7CDE419BFD99B000383E3 /* BtleHeartRateMonitor.h */,
+				27B7CDE519BFD99B000383E3 /* BtleHeartRateMonitor.m */,
+				27B7CDE619BFD99B000383E3 /* BtlePowerMeter.h */,
+				27B7CDE719BFD99B000383E3 /* BtlePowerMeter.m */,
+				27345D0819EDEE4600059FFF /* BtleScale.h */,
+				27345D0919EDEE4600059FFF /* BtleScale.m */,
 				27B7CDE819BFD99B000383E3 /* LocationSensor.h */,
 				27B7CDE919BFD99B000383E3 /* LocationSensor.m */,
 				27B7CDEA19BFD99B000383E3 /* Sensor.h */,
@@ -2095,10 +2095,10 @@
 				2797F14F19BFE3B7008F8672 /* BroadcastManager.m in Sources */,
 				27B7CDA519BFD91C000383E3 /* SettingsViewController.m in Sources */,
 				27055BF21A73227300417D94 /* GoPro.m in Sources */,
-				27345D0A19EDEE4600059FFF /* LeScale.m in Sources */,
+				27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */,
 				276D5AF11AA169AF008F55AF /* DataCloud.m in Sources */,
 				27B7CD9B19BFD91C000383E3 /* LiveSummaryViewController.m in Sources */,
-				27B7CDF319BFD99B000383E3 /* LeBikeSpeedAndCadence.m in Sources */,
+				27B7CDF319BFD99B000383E3 /* BtleBikeSpeedAndCadence.m in Sources */,
 				27B7CD2019BFD807000383E3 /* DataExporter.cpp in Sources */,
 				27AAB9D62389E76C00C0A91F /* Version.m in Sources */,
 				27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */,
@@ -2134,7 +2134,7 @@
 				27B7CD8A19BFD91C000383E3 /* CorePlotViewController.m in Sources */,
 				27B7CDA319BFD91C000383E3 /* ProfileViewController.m in Sources */,
 				27B7CDC619BFD953000383E3 /* ChartPoint.m in Sources */,
-				27B7CDF619BFD99B000383E3 /* LeFootPod.m in Sources */,
+				27B7CDF619BFD99B000383E3 /* BtleFootPod.m in Sources */,
 				27C0845019BFD063007CE934 /* ActivityMgr.mm in Sources */,
 				27C0846019BFD063007CE934 /* SquatAnalyzer.cpp in Sources */,
 				27B7CD3C19BFD903000383E3 /* AboutViewController.m in Sources */,
@@ -2150,7 +2150,7 @@
 				2797F15C19BFE3F5008F8672 /* User.cpp in Sources */,
 				27C0845119BFD063007CE934 /* ChinUp.cpp in Sources */,
 				27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */,
-				27B7CDF519BFD99B000383E3 /* LeDiscovery.m in Sources */,
+				27B7CDF519BFD99B000383E3 /* BtleDiscovery.m in Sources */,
 				27CF011F24D7A53B00263CEC /* Workout.cpp in Sources */,
 				27F4240823A44D4A00F59F50 /* Swim.cpp in Sources */,
 				27B7CDCA19BFD953000383E3 /* PowerLine.m in Sources */,
@@ -2161,11 +2161,11 @@
 				2797F18E19BFE48E008F8672 /* GpxFileWriter.cpp in Sources */,
 				276E3BA223B83ADA00EAC341 /* PacePlansViewController.m in Sources */,
 				2797F18F19BFE48E008F8672 /* KmlFileReader.cpp in Sources */,
-				27B7CDF419BFD99B000383E3 /* LeBluetoothSensor.m in Sources */,
+				27B7CDF419BFD99B000383E3 /* BtleSensor.m in Sources */,
 				27B7CDC819BFD953000383E3 /* HeartRateLine.m in Sources */,
 				27F6D0782300165100A248BE /* Double.cpp in Sources */,
 				27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */,
-				27B7CDF719BFD99B000383E3 /* LeHeartRateMonitor.m in Sources */,
+				27B7CDF719BFD99B000383E3 /* BtleHeartRateMonitor.m in Sources */,
 				27C0845E19BFD063007CE934 /* Run.cpp in Sources */,
 				27B7CD3D19BFD903000383E3 /* ActivityPreferencesViewController.m in Sources */,
 				27B7CDA219BFD91C000383E3 /* Pin.m in Sources */,
@@ -2220,7 +2220,7 @@
 				2797F18B19BFE48E008F8672 /* CsvFileWriter.cpp in Sources */,
 				276D5AF01AA169AF008F55AF /* CloudService.m in Sources */,
 				276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */,
-				27B7CDF819BFD99B000383E3 /* LePowerMeter.m in Sources */,
+				27B7CDF819BFD99B000383E3 /* BtlePowerMeter.m in Sources */,
 				27B7CD2119BFD807000383E3 /* DataImporter.cpp in Sources */,
 				27CF012624D852EA00263CEC /* RunPlanGenerator.cpp in Sources */,
 				276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */,

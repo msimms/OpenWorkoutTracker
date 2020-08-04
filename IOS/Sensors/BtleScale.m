@@ -5,7 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "LeScale.h"
+#import "BtleScale.h"
 
 typedef struct TimeDateReading
 {
@@ -39,7 +39,7 @@ typedef struct WeightScaleFeature
 	uint32_t flags;
 } __attribute__((packed)) WeightScaleFeature;
 
-@implementation LeScale
+@implementation BtleScale
 
 #pragma mark init methods
 

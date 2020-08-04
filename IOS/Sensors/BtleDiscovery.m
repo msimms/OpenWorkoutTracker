@@ -52,12 +52,12 @@
 // Modified by Michael Simms on 2/19/13.
 // Copyright (c) 2013 Michael J. Simms. All rights reserved.
 
-#import "LeDiscovery.h"
-#import "LeBluetoothSensor.h"
-#import "LeBikeSpeedAndCadence.h"
-#import "LeFootPod.h"
-#import "LeHeartRateMonitor.h"
-#import "LePowerMeter.h"
+#import "BtleDiscovery.h"
+#import "BtleSensor.h"
+#import "BtleBikeSpeedAndCadence.h"
+#import "BtleFootPod.h"
+#import "BtleHeartRateMonitor.h"
+#import "BtlePowerMeter.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
 
@@ -135,7 +135,7 @@
 {
 	@synchronized(self->discoveredSensors)
 	{
-		for (LeBluetoothSensor* sensor in self->discoveredSensors)
+		for (BtleSensor* sensor in self->discoveredSensors)
 		{
 			if ([sensor sensorType] == sensorType)
 			{
@@ -178,7 +178,7 @@
 	
 	@synchronized(self->discoveredSensors)
 	{
-		for (LeBluetoothSensor* sensor in self->discoveredSensors)
+		for (BtleSensor* sensor in self->discoveredSensors)
 		{
 			if ([[sensor peripheral] identifier] == [peripheral identifier])
 			{
@@ -357,7 +357,7 @@
 
 		@synchronized(self->discoveredSensors)
 		{
-			for (LeBluetoothSensor* sensor in self->discoveredSensors)
+			for (BtleSensor* sensor in self->discoveredSensors)
 			{
 				if ([sensor peripheral] == peripheral)
 				{
@@ -368,7 +368,7 @@
 			
 			if (!alreadyDiscovered)
 			{
-				LeBluetoothSensor* sensor = nil;
+				BtleSensor* sensor = nil;
 				
 				if ([self serviceEquals:service withBTService:BT_SERVICE_HEART_RATE])
 				{
@@ -471,7 +471,7 @@
 	{
 		@synchronized(self->discoveredSensors)
 		{
-			for (LeBluetoothSensor* sensor in self->discoveredSensors)
+			for (BtleSensor* sensor in self->discoveredSensors)
 			{
 				if ([sensor peripheral] == peripheral)
 				{

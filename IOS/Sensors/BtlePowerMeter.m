@@ -5,8 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "LePowerMeter.h"
-#import "LeDiscovery.h"
+#import "BtlePowerMeter.h"
+#import "BtleDiscovery.h"
 
 #define ERROR_INAPPROPRIATE_CONNECTION_PARAMETER 0x80
 
@@ -24,7 +24,7 @@
 #define FLAGS_ACCUMULATED_ENERGY_PRESENT        0x0800
 #define FLAGS_OFFSET_COMPENSATION_INDICATOR     0x1000
 
-@implementation LePowerMeter
+@implementation BtlePowerMeter
 
 #pragma mark init methods
 

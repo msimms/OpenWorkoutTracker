@@ -28,52 +28,52 @@
 	return sensor;
 }
 
-- (LeHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral
+- (BtleHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
 	return nil;
 #else
-	LeHeartRateMonitor* sensor = [[LeHeartRateMonitor alloc] initWithPeripheral:peripheral];
+	BtleHeartRateMonitor* sensor = [[BtleHeartRateMonitor alloc] initWithPeripheral:peripheral];
 	return sensor;
 #endif
 }
 
-- (LeBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral
+- (BtleBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
 	return nil;
 #else
-	LeBikeSpeedAndCadence* sensor = [[LeBikeSpeedAndCadence alloc] initWithPeripheral:peripheral];
+	BtleBikeSpeedAndCadence* sensor = [[BtleBikeSpeedAndCadence alloc] initWithPeripheral:peripheral];
 	return sensor;
 #endif
 }
 
-- (LePowerMeter*)createPowerMeter:(CBPeripheral*)peripheral
+- (BtlePowerMeter*)createPowerMeter:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
 	return nil;
 #else
-	LePowerMeter* sensor = [[LePowerMeter alloc] initWithPeripheral:peripheral];
+	BtlePowerMeter* sensor = [[BtlePowerMeter alloc] initWithPeripheral:peripheral];
 	return sensor;
 #endif
 }
 
-- (LeFootPod*)createFootPodSensor:(CBPeripheral*)peripheral
+- (BtleFootPod*)createFootPodSensor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
 	return nil;
 #else
-	LeFootPod* sensor = [[LeFootPod alloc] initWithPeripheral:peripheral];
+	BtleFootPod* sensor = [[BtleFootPod alloc] initWithPeripheral:peripheral];
 	return sensor;
 #endif
 }
 
-- (LeScale*)createWeightSensor:(CBPeripheral*)peripheral
+- (BtleScale*)createWeightSensor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
 	return nil;
 #else
-	LeScale* sensor = [[LeScale alloc] initWithPeripheral:peripheral];
+	BtleScale* sensor = [[BtleScale alloc] initWithPeripheral:peripheral];
 	return sensor;
 #endif
 }

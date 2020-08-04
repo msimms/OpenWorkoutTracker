@@ -10,11 +10,11 @@
 
 #import "Accelerometer.h"
 #import "LocationSensor.h"
-#import "LeBikeSpeedAndCadence.h"
-#import "LeFootPod.h"
-#import "LeHeartRateMonitor.h"
-#import "LePowerMeter.h"
-#import "LeScale.h"
+#import "BtleBikeSpeedAndCadence.h"
+#import "BtleFootPod.h"
+#import "BtleHeartRateMonitor.h"
+#import "BtlePowerMeter.h"
+#import "BtleScale.h"
 
 @interface SensorFactory : NSObject
 {
@@ -24,10 +24,10 @@
 
 - (Accelerometer*)createAccelerometer;
 - (LocationSensor*)createLocationSensor;
-- (LeHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral;
-- (LeBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral;
-- (LePowerMeter*)createPowerMeter:(CBPeripheral*)peripheral;
-- (LeFootPod*)createFootPodSensor:(CBPeripheral*)peripheral;
-- (LeScale*)createWeightSensor:(CBPeripheral*)peripheral;
+- (BtleHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral;
+- (BtleBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral;
+- (BtlePowerMeter*)createPowerMeter:(CBPeripheral*)peripheral;
+- (BtleFootPod*)createFootPodSensor:(CBPeripheral*)peripheral;
+- (BtleScale*)createWeightSensor:(CBPeripheral*)peripheral;
 
 @end

@@ -1,4 +1,4 @@
-// Created by Michael Simms on 2/27/13.
+// Created by Michael Simms on 11/9/13.
 // Copyright (c) 2013 Michael J. Simms. All rights reserved.
 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,19 +8,17 @@
 #import <Foundation/Foundation.h>
 
 #import "BluetoothServices.h"
+#import "BtleSensor.h"
 #import "CadenceCalculator.h"
-#import "LeBluetoothSensor.h"
 
-#define NOTIFICATION_NAME_BIKE_WHEEL_SPEED "WheelSpeedUdpated"
+#define NOTIFICATION_NAME_POWER       "PowerUpdated"
 
-#define KEY_NAME_WHEEL_SPEED               "Wheel Speed"
-#define KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS  "Time"
-#define KEY_NAME_WSC_PERIPHERAL_OBJ        "Peripheral"
+#define KEY_NAME_POWER                "Power"
+#define KEY_NAME_POWER_TIMESTAMP_MS   "Time"
+#define KEY_NAME_POWER_PERIPHERAL_OBJ "Peripheral"
 
-@interface LeBikeSpeedAndCadence : LeBluetoothSensor
+@interface BtlePowerMeter : BtleSensor
 {
-	uint16_t currentCadence;
-	uint16_t currentWheelRevCount;
 	CadenceCalculator* cadenceCalc;
 }
 

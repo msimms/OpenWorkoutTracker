@@ -1,4 +1,4 @@
-// Created by Michael Simms on 2/19/13.
+// Created by Michael Simms on 2/27/13.
 // Copyright (c) 2013 Michael J. Simms. All rights reserved.
 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,17 +8,20 @@
 #import <Foundation/Foundation.h>
 
 #import "BluetoothServices.h"
-#import "LeBluetoothSensor.h"
+#import "BtleSensor.h"
+#import "CadenceCalculator.h"
 
-#define NOTIFICATION_NAME_HRM       "HeartRateUpdated"
-#define KEY_NAME_HEART_RATE         "HeartRate"
-#define KEY_NAME_HRM_TIMESTAMP_MS   "Time"
-#define KEY_NAME_HRM_PERIPHERAL_OBJ "Peripheral"
+#define NOTIFICATION_NAME_BIKE_WHEEL_SPEED "WheelSpeedUdpated"
 
-@interface LeHeartRateMonitor : LeBluetoothSensor
+#define KEY_NAME_WHEEL_SPEED               "Wheel Speed"
+#define KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS  "Time"
+#define KEY_NAME_WSC_PERIPHERAL_OBJ        "Peripheral"
+
+@interface BtleBikeSpeedAndCadence : BtleSensor
 {
-	uint16_t  currentHeartRate;
-	NSString* locationStr;
+	uint16_t currentCadence;
+	uint16_t currentWheelRevCount;
+	CadenceCalculator* cadenceCalc;
 }
 
 - (SensorType)sensorType;

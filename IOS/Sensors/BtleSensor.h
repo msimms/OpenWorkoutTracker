@@ -12,7 +12,7 @@
 #import "BluetoothServices.h"
 #import "Sensor.h"
 
-@interface LeBluetoothSensor : NSObject<Sensor, CBPeripheralDelegate>
+@interface BtleSensor : NSObject<Sensor, CBPeripheralDelegate>
 {
 	CBPeripheral* peripheral;
 	NSString*     deviceName;

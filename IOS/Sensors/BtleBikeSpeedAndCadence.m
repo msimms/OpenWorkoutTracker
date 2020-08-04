@@ -5,8 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "LeBikeSpeedAndCadence.h"
-#import "LeDiscovery.h"
+#import "BtleBikeSpeedAndCadence.h"
+#import "BtleDiscovery.h"
 
 #import <sys/time.h>
 
@@ -32,7 +32,7 @@ typedef struct RevMeasurement
 	uint16_t lastCrankEventTime;
 } __attribute__((packed)) RevMeasurement;
 
-@implementation LeBikeSpeedAndCadence
+@implementation BtleBikeSpeedAndCadence
 
 #pragma mark init methods
 

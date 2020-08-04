@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 #import "BluetoothServices.h"
-#import "LeBluetoothSensor.h"
+#import "BtleSensor.h"
 
 #define NOTIFICATION_NAME_FOOTSTEPS         "FootstepsUpdated"
 #define NOTIFICATION_NAME_RUN_CADENCE       "RunCadenceUpdated"
@@ -23,7 +23,7 @@
 #define KEY_NAME_RUN_DISTANCE_TIMESTAMP_MS  "Time"
 #define KEY_NAME_FOOT_POD_PERIPHERAL_OBJ    "Peripheral"
 
-@interface LeFootPod : LeBluetoothSensor
+@interface BtleFootPod : BtleSensor
 {
 	uint16_t count;
 	uint64_t lastCadenceUpdateTimeMs;

@@ -8,8 +8,8 @@
 #import <Foundation/Foundation.h>
 
 #import "BluetoothServices.h"
+#import "BtleSensor.h"
 #import "CadenceCalculator.h"
-#import "LeBluetoothSensor.h"
 
 #define NOTIFICATION_NAME_LIVE_WEIGHT_READING       "LiveWeightReading"
 #define NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING "HistoricalWeightReading"
@@ -17,7 +17,7 @@
 #define KEY_NAME_TIME                               "Time"
 #define KEY_NAME_SCALE_PERIPHERAL_OBJ               "Peripheral"
 
-@interface LeScale : LeBluetoothSensor
+@interface BtleScale : BtleSensor
 {
 }
 

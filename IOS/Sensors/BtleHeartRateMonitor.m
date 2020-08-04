@@ -5,8 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "LeHeartRateMonitor.h"
-#import "LeDiscovery.h"
+#import "BtleHeartRateMonitor.h"
+#import "BtleDiscovery.h"
 
 #define ERROR_HEART_RATE_CONTROL_POINT_NO_SUPPORTED  0x80
 
@@ -24,7 +24,7 @@ typedef struct HeartRateMeasurement
 	uint16_t rrInterval;
 } __attribute__((packed)) HeartRateMeasurement;
 
-@implementation LeHeartRateMonitor
+@implementation BtleHeartRateMonitor
 
 #pragma mark init methods
 

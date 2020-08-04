@@ -6,7 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "CommonViewController.h"
-#import "LeDiscovery.h"
+#import "BtleDiscovery.h"
 
 @interface SensorsViewController : CommonViewController <DiscoveryDelegate>
 {

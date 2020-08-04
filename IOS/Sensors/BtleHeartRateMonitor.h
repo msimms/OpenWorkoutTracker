@@ -1,4 +1,4 @@
-// Created by Michael Simms on 11/9/13.
+// Created by Michael Simms on 2/19/13.
 // Copyright (c) 2013 Michael J. Simms. All rights reserved.
 
 // This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,18 +8,17 @@
 #import <Foundation/Foundation.h>
 
 #import "BluetoothServices.h"
-#import "CadenceCalculator.h"
-#import "LeBluetoothSensor.h"
+#import "BtleSensor.h"
 
-#define NOTIFICATION_NAME_POWER       "PowerUpdated"
+#define NOTIFICATION_NAME_HRM       "HeartRateUpdated"
+#define KEY_NAME_HEART_RATE         "HeartRate"
+#define KEY_NAME_HRM_TIMESTAMP_MS   "Time"
+#define KEY_NAME_HRM_PERIPHERAL_OBJ "Peripheral"
 
-#define KEY_NAME_POWER                "Power"
-#define KEY_NAME_POWER_TIMESTAMP_MS   "Time"
-#define KEY_NAME_POWER_PERIPHERAL_OBJ "Peripheral"
-
-@interface LePowerMeter : LeBluetoothSensor
+@interface BtleHeartRateMonitor : BtleSensor
 {
-	CadenceCalculator* cadenceCalc;
+	uint16_t  currentHeartRate;
+	NSString* locationStr;
 }
 
 - (SensorType)sensorType;

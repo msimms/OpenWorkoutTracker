@@ -56,7 +56,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 #import "Discovery.h"
-#import "LeBluetoothSensor.h"
+#import "BtleSensor.h"
 #import "BluetoothServices.h"
 
 @interface LeDiscovery : NSObject<CBCentralManagerDelegate, CBPeripheralDelegate, Discovery>
