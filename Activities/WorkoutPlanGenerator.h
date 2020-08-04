@@ -8,5 +8,24 @@
 #ifndef __WORKOUTPLANGENERATOR__
 #define __WORKOUTPLANGENERATOR__
 
+#include <map>
+#include <string>
+#include <vector>
+
+#include "ActivitySummary.h"
+#include "Workout.h"
+
+class WorkoutPlanGenerator
+{
+public:
+	WorkoutPlanGenerator();
+	virtual ~WorkoutPlanGenerator();
+
+	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities);
+	std::vector<Workout> GenerateWorkouts(std::map<std::string, double>& inputs);
+
+private:
+	void CalculateRunTrainingPaces(const ActivitySummaryList& historicalActivities, std::map<std::string, double>& inputs);
+};
 
 #endif

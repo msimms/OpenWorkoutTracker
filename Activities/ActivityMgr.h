@@ -165,6 +165,9 @@ extern "C" {
 	// Functions for estimating the athlete's fitness.
 	double EstimateFtp(void);
 
+	// Functions for managing workout generation.
+	void GenerateWorkouts(void);
+
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);
 	void ConvertToBroadcastUnits(ActivityAttributeType* value);

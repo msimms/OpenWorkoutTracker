@@ -8,6 +8,8 @@
 #ifndef __FTPCALCULATOR__
 #define __FTPCALCULATOR__
 
+#include "ActivitySummary.h"
+
 class FtpCalculator
 {
 public:
@@ -15,6 +17,7 @@ public:
 	virtual ~FtpCalculator();
 
 	double Estimate(double best20MinPower, double best1HourPower);
+	double Estimate(const ActivitySummaryList& historicalActivities);
 };
 
 #endif

@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "FtpCalculator.h"
+#include "ActivityAttribute.h"
 
 FtpCalculator::FtpCalculator()
 {
@@ -29,4 +30,43 @@ double FtpCalculator::Estimate(double best20MinPower, double best1HourPower)
 		return best1HourPower;
 	}
 	return max20MinAdjusted;
+}
+
+double FtpCalculator::Estimate(const ActivitySummaryList& historicalActivities)
+{
+	double bestEstimate = (double)0.0;
+	time_t cutoffTime = time(NULL) - ((365.25 / 2.0) * 24.0 * 60.0 * 60.0); // last six months
+
+	// Look through all activity summaries.
+	for (auto iter = historicalActivities.begin(); iter != historicalActivities.end(); ++iter)
+	{
+		const ActivitySummary& summary = (*iter);
+
+		if (summary.startTime > cutoffTime)
+		{
+			if ((summary.type.compare(ACTIVITY_TYPE_CYCLING) == 0) ||
+				(summary.type.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0))
+			{
+				double best20MinPower = (double)0.0;
+				double best1HourPower = (double)0.0;
+
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER) == summary.summaryAttributes.end())
+				{
+					best20MinPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER).value.doubleVal;
+				}
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER) == summary.summaryAttributes.end())
+				{
+					best1HourPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER).value.doubleVal;
+				}
+
+				double estimate = this->Estimate(best20MinPower, best1HourPower);
+
+				if (estimate > bestEstimate)
+				{
+					bestEstimate = estimate;
+				}
+			}
+		}
+	}
+	return bestEstimate;
 }

@@ -17,6 +17,7 @@
 #include "HeatMapGenerator.h"
 #include "IntervalWorkout.h"
 #include "WorkoutImporter.h"
+#include "WorkoutPlanGenerator.h"
 
 #include "Cycling.h"
 #include "FtpCalculator.h"
@@ -1685,41 +1686,20 @@ extern "C" {
 	double EstimateFtp(void)
 	{
 		FtpCalculator calc;
-		double bestEstimate = (double)0.0;
-		time_t cutoffTime = time(NULL) - ((365.25 / 2.0) * 24.0 * 60.0 * 60.0); // last six months
+		return calc.Estimate(g_historicalActivityList);
+	}
 
-		// Look through all activity summaries.
-		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
-		{
-			const ActivitySummary& summary = (*iter);
+	//
+	// Functions for managing workout generation.
+	//
 
-			if (summary.startTime > cutoffTime)
-			{
-				if ((summary.type.compare(ACTIVITY_TYPE_CYCLING) == 0) ||
-					(summary.type.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0))
-				{
-					double best20MinPower = (double)0.0;
-					double best1HourPower = (double)0.0;
+	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
+	void GenerateWorkouts(void)
+	{
+		WorkoutPlanGenerator gen;
 
-					if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER) == summary.summaryAttributes.end())
-					{
-						best20MinPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER).value.doubleVal;
-					}
-					if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER) == summary.summaryAttributes.end())
-					{
-						best1HourPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER).value.doubleVal;
-					}
-
-					double estimate = calc.Estimate(best20MinPower, best1HourPower);
-
-					if (estimate > bestEstimate)
-					{
-						bestEstimate = estimate;
-					}
-				}
-			}
-		}
-		return bestEstimate;
+		std::map<std::string, double> inputs = gen.CalculateInputs(g_historicalActivityList);
+		std::vector<Workout> workouts = gen.GenerateWorkouts(inputs);
 	}
 
 	//
