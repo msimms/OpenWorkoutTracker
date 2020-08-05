@@ -52,4 +52,6 @@ typedef enum BluetoothService
 	BT_SERVICE_WEIGHT =                        0x1901
 } BluetoothService;
 
+#define CUSTOM_BT_SERVICE_LIGHT "f000dd03-0451-4000-b000-000000000000"
+
 #endif

@@ -307,6 +307,8 @@
 		27CF012824D8539300263CEC /* RunPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF012524D852EA00263CEC /* RunPlanGenerator.cpp */; };
 		27CF012A24D8DDDB00263CEC /* TrainingPaceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */; };
 		27CF012B24D8DDE900263CEC /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */; };
+		27CF013224DAF68700263CEC /* BtleLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CF012F24DAF68600263CEC /* BtleLight.m */; };
+		27CF013324DAF68700263CEC /* BtleRadar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CF013024DAF68600263CEC /* BtleRadar.m */; };
 		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
 		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
 		27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -923,6 +925,10 @@
 		27CF012424D852EA00263CEC /* RunPlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunPlanGenerator.h; path = Activities/RunPlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		27CF012524D852EA00263CEC /* RunPlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RunPlanGenerator.cpp; path = Activities/RunPlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
 		27CF012924D8853600263CEC /* WorkoutPlanInputs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanInputs.h; path = Activities/WorkoutPlanInputs.h; sourceTree = SOURCE_ROOT; };
+		27CF012E24DAF68600263CEC /* BtleLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleLight.h; path = IOS/Sensors/BtleLight.h; sourceTree = SOURCE_ROOT; };
+		27CF012F24DAF68600263CEC /* BtleLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleLight.m; path = IOS/Sensors/BtleLight.m; sourceTree = SOURCE_ROOT; };
+		27CF013024DAF68600263CEC /* BtleRadar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleRadar.m; path = IOS/Sensors/BtleRadar.m; sourceTree = SOURCE_ROOT; };
+		27CF013124DAF68700263CEC /* BtleRadar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleRadar.h; path = IOS/Sensors/BtleRadar.h; sourceTree = SOURCE_ROOT; };
 		27DCF5BE22B193B5009A23C2 /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1512,8 +1518,12 @@
 				27B7CDE319BFD99B000383E3 /* BtleFootPod.m */,
 				27B7CDE419BFD99B000383E3 /* BtleHeartRateMonitor.h */,
 				27B7CDE519BFD99B000383E3 /* BtleHeartRateMonitor.m */,
+				27CF012E24DAF68600263CEC /* BtleLight.h */,
+				27CF012F24DAF68600263CEC /* BtleLight.m */,
 				27B7CDE619BFD99B000383E3 /* BtlePowerMeter.h */,
 				27B7CDE719BFD99B000383E3 /* BtlePowerMeter.m */,
+				27CF013124DAF68700263CEC /* BtleRadar.h */,
+				27CF013024DAF68600263CEC /* BtleRadar.m */,
 				27345D0819EDEE4600059FFF /* BtleScale.h */,
 				27345D0919EDEE4600059FFF /* BtleScale.m */,
 				27B7CDE819BFD99B000383E3 /* LocationSensor.h */,
@@ -2104,6 +2114,7 @@
 				27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */,
 				27C0845C19BFD063007CE934 /* PushUp.cpp in Sources */,
 				27B7CD3219BFD8AC000383E3 /* AppDelegate.m in Sources */,
+				27CF013224DAF68700263CEC /* BtleLight.m in Sources */,
 				2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */,
 				27B7CD9C19BFD91C000383E3 /* LoginViewController.m in Sources */,
 				27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */,
@@ -2210,6 +2221,7 @@
 				27C0845519BFD063007CE934 /* GForceAnalyzerFactory.cpp in Sources */,
 				27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */,
 				27F4240B23A45FAC00F59F50 /* Walk.cpp in Sources */,
+				27CF013324DAF68700263CEC /* BtleRadar.m in Sources */,
 				276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */,
 				27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */,
 				27C0845819BFD063007CE934 /* MountainBiking.cpp in Sources */,

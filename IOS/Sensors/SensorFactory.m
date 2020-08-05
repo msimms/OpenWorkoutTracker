@@ -38,6 +38,16 @@
 #endif
 }
 
+- (BtleLight*)createLight:(CBPeripheral*)peripheral
+{
+#if TARGET_OS_WATCH
+	return nil;
+#else
+	BtleLight* sensor = [[BtleLight alloc] initWithPeripheral:peripheral];
+	return sensor;
+#endif
+}
+
 - (BtleBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
@@ -58,6 +68,16 @@
 #endif
 }
 
+- (BtleRadar*)createRadar:(CBPeripheral*)peripheral
+{
+#if TARGET_OS_WATCH
+	return nil;
+#else
+	BtleRadar* sensor = [[BtleRadar alloc] initWithPeripheral:peripheral];
+	return sensor;
+#endif
+}
+
 - (BtleFootPod*)createFootPodSensor:(CBPeripheral*)peripheral
 {
 #if TARGET_OS_WATCH
@@ -74,6 +94,16 @@
 	return nil;
 #else
 	BtleScale* sensor = [[BtleScale alloc] initWithPeripheral:peripheral];
+	return sensor;
+#endif
+}
+
+- (BtleLight*)createLightSensor:(CBPeripheral*)peripheral
+{
+#if TARGET_OS_WATCH
+	return nil;
+#else
+	BtleLight* sensor = [[BtleLight alloc] initWithPeripheral:peripheral];
 	return sensor;
 #endif
 }

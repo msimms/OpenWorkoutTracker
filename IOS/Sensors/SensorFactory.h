@@ -13,7 +13,9 @@
 #import "BtleBikeSpeedAndCadence.h"
 #import "BtleFootPod.h"
 #import "BtleHeartRateMonitor.h"
+#import "BtleLight.h"
 #import "BtlePowerMeter.h"
+#import "BtleRadar.h"
 #import "BtleScale.h"
 
 @interface SensorFactory : NSObject
@@ -25,9 +27,12 @@
 - (Accelerometer*)createAccelerometer;
 - (LocationSensor*)createLocationSensor;
 - (BtleHeartRateMonitor*)createHeartRateMonitor:(CBPeripheral*)peripheral;
+- (BtleLight*)createLight:(CBPeripheral*)peripheral;
 - (BtleBikeSpeedAndCadence*)createBikeSpeedAndCadenceSensor:(CBPeripheral*)peripheral;
 - (BtlePowerMeter*)createPowerMeter:(CBPeripheral*)peripheral;
+- (BtleRadar*)createRadar:(CBPeripheral*)peripheral;
 - (BtleFootPod*)createFootPodSensor:(CBPeripheral*)peripheral;
 - (BtleScale*)createWeightSensor:(CBPeripheral*)peripheral;
+- (BtleLight*)createLightSensor:(CBPeripheral*)peripheral;
 
 @end

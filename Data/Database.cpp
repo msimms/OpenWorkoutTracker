@@ -1639,6 +1639,10 @@ bool Database::CreateSensorReading(const std::string& activityId, const SensorRe
 			return CreateFootPodReading(activityId, reading);
 		case SENSOR_TYPE_SCALE:
 			break;
+		case SENSOR_TYPE_LIGHT:
+			break;
+		case SENSOR_TYPE_RADAR:
+			break;
 		case SENSOR_TYPE_GOPRO:
 			break;
 		case NUM_SENSOR_TYPES:
@@ -1668,6 +1672,10 @@ bool Database::RetrieveSensorReadingsOfType(const std::string& activityId, Senso
 		case SENSOR_TYPE_FOOT_POD:
 			return RetrieveActivityFootPodReadings(activityId, readings);
 		case SENSOR_TYPE_SCALE:
+			break;
+		case SENSOR_TYPE_LIGHT:
+			break;
+		case SENSOR_TYPE_RADAR:
 			break;
 		case SENSOR_TYPE_GOPRO:
 			break;

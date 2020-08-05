@@ -1205,6 +1205,8 @@ extern "C" {
 						result = true;
 						break;
 					case SENSOR_TYPE_SCALE:
+					case SENSOR_TYPE_LIGHT:
+					case SENSOR_TYPE_RADAR:
 					case SENSOR_TYPE_GOPRO:
 					case NUM_SENSOR_TYPES:
 						result = false;

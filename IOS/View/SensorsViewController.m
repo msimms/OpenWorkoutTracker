@@ -34,6 +34,8 @@
 #define NAME_POWER_METER            NSLocalizedString(@"Power Meter", nil)
 #define NAME_FOOT_POD               NSLocalizedString(@"Running Speed and Cadence", nil)
 #define NAME_SCALE                  NSLocalizedString(@"Scale", nil)
+#define NAME_LIGHT                  NSLocalizedString(@"Light", nil)
+#define NAME_RADAR                  NSLocalizedString(@"Radar", nil)
 
 typedef enum SettingsSections
 {
@@ -43,6 +45,8 @@ typedef enum SettingsSections
 	SECTION_POWER_METER,
 	SECTION_FOOT_POD,
 	SECTION_SCALE,
+	SECTION_LIGHT,
+	SECTION_RADAR,
 	NUM_SETTINGS_SECTIONS
 } SettingsSections;
 
@@ -145,6 +149,16 @@ typedef enum SettingsSections
 		else
 			[appDelegate stopSensorDiscovery];
 	}
+	else if (switchControl.tag >= (SECTION_RADAR * 100))
+	{
+		NSUInteger index = switchControl.tag - (SECTION_RADAR * 100);
+		peripheral = [self->connectedRadarUnits objectAtIndex:index];
+	}
+	else if (switchControl.tag >= (SECTION_LIGHT * 100))
+	{
+		NSUInteger index = switchControl.tag - (SECTION_LIGHT * 100);
+		peripheral = [self->connectedLights objectAtIndex:index];
+	}
 	else if (switchControl.tag >= (SECTION_SCALE * 100))
 	{
 		NSUInteger index = switchControl.tag - (SECTION_SCALE * 100);
@@ -220,6 +234,10 @@ typedef enum SettingsSections
 			return NAME_FOOT_POD;
 		case SECTION_SCALE:
 			return NAME_SCALE;
+		case SECTION_LIGHT:
+			return NAME_LIGHT;
+		case SECTION_RADAR:
+			return NAME_RADAR;
 		case NUM_SETTINGS_SECTIONS:
 			break;
 	}
@@ -254,6 +272,14 @@ typedef enum SettingsSections
 		case SECTION_SCALE:
 			self->connectedScales = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_WEIGHT];
 			numRows = [self->connectedScales count];
+			break;
+		case SECTION_LIGHT:
+			//self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_LIGHT];
+			numRows = [self->connectedLights count];
+			break;
+		case SECTION_RADAR:
+			//self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RADAR];
+			numRows = [self->connectedRadarUnits count];
 			break;
 	}
 	if (numRows == 0)
@@ -297,6 +323,12 @@ typedef enum SettingsSections
 			break;
 		case SECTION_SCALE:
 			peripheralList = self->connectedScales;
+			break;
+		case SECTION_LIGHT:
+			peripheralList = self->connectedLights;
+			break;
+		case SECTION_RADAR:
+			peripheralList = self->connectedRadarUnits;
 			break;
 		case NUM_SETTINGS_SECTIONS:
 			break;

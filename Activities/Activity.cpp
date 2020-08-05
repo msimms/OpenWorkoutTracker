@@ -160,6 +160,10 @@ bool Activity::ProcessSensorReading(const SensorReading& reading)
 			break;
 		case SENSOR_TYPE_SCALE:
 			break;
+		case SENSOR_TYPE_LIGHT:
+			break;
+		case SENSOR_TYPE_RADAR:
+			break;
 		case SENSOR_TYPE_GOPRO:
 			break;
 		case NUM_SENSOR_TYPES:

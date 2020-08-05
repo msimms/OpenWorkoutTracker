@@ -18,6 +18,8 @@
 	NSMutableArray* connectedCadenceWheelSpeedSensors;
 	NSMutableArray* connectedPowerMeters;
 	NSMutableArray* connectedFootPods;
+	NSMutableArray* connectedLights;
+	NSMutableArray* connectedRadarUnits;
 
 	CBPeripheral* selectedPeripheral;
 }

@@ -394,6 +394,10 @@
 				{
 					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
 				}
+				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_LIGHT]])
+				{
+					sensor = [[[SensorFactory alloc] init] createLightSensor:peripheral];
+				}
 
 				if (sensor)
 				{
@@ -487,8 +491,10 @@
 
 - (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)serviceType
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", serviceType];
-	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
+	NSString* serviceTypeStr = [[NSString alloc] initWithFormat:@"%x", serviceType];
+	CBUUID* serviceUuid = service1.UUID;
+
+	return ([serviceUuid isEqual:[CBUUID UUIDWithString:serviceTypeStr]]);
 }
 
 @end
