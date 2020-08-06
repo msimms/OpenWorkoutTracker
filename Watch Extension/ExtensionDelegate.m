@@ -602,19 +602,6 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark sensor update methods
 
-- (void)weightHistoryUpdated:(NSNotification*)notification
-{
-	NSDictionary* weightData = [notification object];
-
-	@synchronized(self)
-	{
-		NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
-		NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
-		
-		ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
-	}
-}
-
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
 	@synchronized(self)
