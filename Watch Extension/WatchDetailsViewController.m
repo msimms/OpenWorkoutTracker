@@ -153,7 +153,7 @@
 		CLLocationCoordinate2D startLocation = CLLocationCoordinate2DMake(startCoordinate.latitude, startCoordinate.longitude);
 		[self.map addAnnotation:startLocation withPinColor: WKInterfaceMapPinColorGreen];
 
-		MKCoordinateSpan coordinateSpan = MKCoordinateSpanMake(1, 1);
+		MKCoordinateSpan coordinateSpan = MKCoordinateSpanMake(0.05, 0.05);
 		[self.map setRegion:(MKCoordinateRegionMake(startLocation, coordinateSpan))];
 	}
 	else
