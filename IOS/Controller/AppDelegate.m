@@ -1187,7 +1187,7 @@ void startSensorCallback(SensorType type, void* context)
 {
 	@synchronized(self)
 	{
-		// The number of activities from out database.
+		// The number of activities from our database.
 		NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
 
 		// Add in the activities from HealthKit.

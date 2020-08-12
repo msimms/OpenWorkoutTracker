@@ -26,6 +26,9 @@
 
 	BOOL badGps;
 	BOOL receivingLocations; // TRUE if we have received at least one location
+
+	NSLock* currentActivityLock;
+	NSLock* historicalActivityLock;
 }
 
 // watch sensor methods

@@ -43,6 +43,9 @@
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
 
+	currentActivityLock = [[NSLock alloc] init];
+	historicalActivityLock = [[NSLock alloc] init];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
@@ -183,13 +186,14 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)startSensors
 {
-	@synchronized(self)
+	[self->currentActivityLock lock];
+
+	if (self->sensorMgr)
 	{
-		if (self->sensorMgr)
-		{
-			GetUsableSensorTypes(startSensorCallback, (__bridge void*)self->sensorMgr);
-		}
+		GetUsableSensorTypes(startSensorCallback, (__bridge void*)self->sensorMgr);
 	}
+
+	[self->currentActivityLock unlock];
 }
 
 #pragma mark methods for starting and stopping activities, etc.
@@ -244,10 +248,9 @@ void startSensorCallback(SensorType type, void* context)
 
 		dispatch_queue_t summarizerQueue = dispatch_queue_create("summarizer", NULL);
 		dispatch_async(summarizerQueue, ^{
-			@synchronized(self)
-			{
-				SaveActivitySummaryData();
-			}
+			[self->currentActivityLock lock];
+			SaveActivitySummaryData();
+			[self->currentActivityLock unlock];
 		});
 
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -267,20 +270,18 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)pauseActivity
 {
-	@synchronized(self)
-	{
-		return PauseCurrentActivity();
-	}
-	return FALSE;
+	[self->currentActivityLock lock];
+	BOOL paused = PauseCurrentActivity();
+	[self->currentActivityLock unlock];
+	return paused;
 }
 
 - (BOOL)startNewLap
 {
-	@synchronized(self)
-	{
-		return StartNewLap();
-	}
-	return FALSE;
+	[self->currentActivityLock lock];
+	BOOL started = StartNewLap();
+	[self->currentActivityLock unlock];
+	return started;
 }
 
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
@@ -292,156 +293,152 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)createActivity:(NSString*)activityType
 {
-	@synchronized(self)
-	{
-		CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
-	}
+	[self->currentActivityLock lock];
+	CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	[self->currentActivityLock unlock];
 }
 
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex
 {
-	@synchronized(self)
-	{
-		DestroyCurrentActivity();
-		ReCreateOrphanedActivity(activityIndex);
-	}
+	[self->currentActivityLock lock];
+	DestroyCurrentActivity();
+	ReCreateOrphanedActivity(activityIndex);
+	[self->currentActivityLock unlock];
 }
 
 - (void)endOrpanedActivity:(NSInteger)activityIndex
 {
-	@synchronized(self)
-	{
-		FixHistoricalActivityEndTime(activityIndex);
-	}
+	[self->historicalActivityLock lock];
+	FixHistoricalActivityEndTime(activityIndex);
+	[self->historicalActivityLock unlock];
 }
 
 #pragma mark methods for querying the status of the current activity.
 
 - (BOOL)isActivityCreated
 {
-	@synchronized(self)
-	{
-		return IsActivityCreated();
-	}
-	return FALSE;
+	[self->currentActivityLock lock];
+	BOOL created = IsActivityCreated();
+	[self->currentActivityLock unlock];
+	return created;
 }
 
 - (BOOL)isActivityInProgress
 {
-	@synchronized(self)
-	{
-		return IsActivityInProgress();
-	}
-	return FALSE;
+	[self->currentActivityLock lock];
+	BOOL inProgress = IsActivityInProgress();
+	[self->currentActivityLock unlock];
+	return inProgress;
 }
 
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex
 {
-	@synchronized(self)
-	{
-		return IsActivityOrphaned(activityIndex);
-	}
-	return FALSE;
+	[self->currentActivityLock lock];
+	BOOL isOrphaned = IsActivityOrphaned(activityIndex);
+	[self->currentActivityLock unlock];
+	return isOrphaned;
 }
 
 #pragma mark methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList
 {
-	@synchronized(self)
-	{
-		InitializeHistoricalActivityList();
-	}
-	return [self getNumHistoricalActivities];
+	[self->historicalActivityLock lock];
+	InitializeHistoricalActivityList();
+	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
+	[self->historicalActivityLock unlock];
+	return numActivities;
 }
 
 - (NSInteger)getNumHistoricalActivities
 {
-	@synchronized(self)
-	{
-		// The number of activities from out database.
-		return (NSInteger)GetNumHistoricalActivities();
-	}
-	return 0;
+	[self->historicalActivityLock lock];
+	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
+	[self->historicalActivityLock unlock];
+	return numActivities;
 }
 
 - (void)createHistoricalActivityObject:(NSInteger)activityIndex
 {
-	@synchronized(self)
-	{
-		CreateHistoricalActivityObject(activityIndex);
-	}
+	[self->historicalActivityLock lock];
+	CreateHistoricalActivityObject(activityIndex);
+	[self->historicalActivityLock unlock];
 }
 
 - (void)loadHistoricalActivitySummaryData:(NSInteger)activityIndex
 {
-	@synchronized(self)
-	{
-		LoadHistoricalActivitySummaryData(activityIndex);
-	}
+	[self->historicalActivityLock lock];
+	LoadHistoricalActivitySummaryData(activityIndex);
+	[self->historicalActivityLock unlock];
 }
 
 - (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
-	@synchronized(self)
-	{
-		GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
-	}
+	[self->historicalActivityLock lock];
+	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
+	[self->historicalActivityLock unlock];
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
 {
-	return QueryHistoricalActivityAttribute((size_t)activityIndex, attributeName);
+	[self->historicalActivityLock lock];
+	ActivityAttributeType attr = QueryHistoricalActivityAttribute((size_t)activityIndex, attributeName);
+	[self->historicalActivityLock unlock];
+	return attr;
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
 {
+	[self->historicalActivityLock lock];
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
+	ActivityAttributeType attr = QueryHistoricalActivityAttribute(activityIndex, attributeName);
+	[self->historicalActivityLock unlock];
+	return attr;
 }
 
 - (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId
 {
 	NSMutableArray* locationData = [[NSMutableArray alloc] init];
 
-	@synchronized(self)
+	[self->historicalActivityLock lock];
+
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
 	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+		InitializeHistoricalActivityList();
+		CreateHistoricalActivityObject(activityIndex);
 
-		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
 		{
-			InitializeHistoricalActivityList();
-			CreateHistoricalActivityObject(activityIndex);
+			NSInteger pointIndex = 0;
+			BOOL result = FALSE;
 
-			if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
-			{
-				NSInteger pointIndex = 0;
-				BOOL result = FALSE;
+			do {
+				Coordinate coordinate;
 
-				do {
-					Coordinate coordinate;
-
-					result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
-					if (result)
-					{
-						NSArray* locations = @[[NSNumber numberWithFloat:coordinate.latitude], [NSNumber numberWithFloat:coordinate.longitude], [NSNumber numberWithFloat:coordinate.altitude], [NSNumber numberWithFloat:coordinate.horizontalAccuracy], [NSNumber numberWithFloat:coordinate.verticalAccuracy], [NSNumber numberWithFloat:coordinate.time]];
-						[locationData addObject:locations];
-						++pointIndex;
-					}
-				} while (result);
-			}
+				result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+				if (result)
+				{
+					NSArray* locations = @[[NSNumber numberWithFloat:coordinate.latitude], [NSNumber numberWithFloat:coordinate.longitude], [NSNumber numberWithFloat:coordinate.altitude], [NSNumber numberWithFloat:coordinate.horizontalAccuracy], [NSNumber numberWithFloat:coordinate.verticalAccuracy], [NSNumber numberWithFloat:coordinate.time]];
+					[locationData addObject:locations];
+					++pointIndex;
+				}
+			} while (result);
 		}
 	}
+
+	[self->historicalActivityLock unlock];
+
 	return locationData;
 }
 
 - (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId
 {
-	@synchronized(self)
-	{
-		return ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	}
-	return 0;
+	[self->historicalActivityLock lock];
+	NSInteger index = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+	[self->historicalActivityLock unlock];
+	return index;
 }
 
 #pragma mark retrieves or creates and retrieves the applications unique identifier
@@ -514,10 +511,9 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (hashStr)
 	{
-		@synchronized(self)
-		{
-			StoreHash([activityId UTF8String], [hashStr UTF8String]);
-		}
+		[self->historicalActivityLock lock];
+		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		[self->historicalActivityLock unlock];
 	}
 	return hashStr;
 }
@@ -531,10 +527,9 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (hashStr)
 	{
-		@synchronized(self)
-		{
-			StoreHash([activityId UTF8String], [hashStr UTF8String]);
-		}
+		[self->historicalActivityLock lock];
+		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		[self->historicalActivityLock unlock];
 	}
 	return hashStr;
 }
@@ -568,16 +563,18 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSString* result = nil;
 
-	@synchronized(self)
-	{
-		char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+	[self->historicalActivityLock lock];
 
-		if (activityId)
-		{
-			result = [NSString stringWithFormat:@"%s", activityId];
-			free((void*)activityId);
-		}
+	char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+
+	if (activityId)
+	{
+		result = [NSString stringWithFormat:@"%s", activityId];
+		free((void*)activityId);
 	}
+
+	[self->historicalActivityLock unlock];
+
 	return result;
 }
 
@@ -587,16 +584,18 @@ void startSensorCallback(SensorType type, void* context)
 {
 	NSString* result = nil;
 
-	@synchronized(self)
-	{
-		char* activityName = GetActivityName([activityId UTF8String]);
+	[self->historicalActivityLock lock];
 
-		if (activityName)
-		{
-			result = [NSString stringWithFormat:@"%s", activityName];
-			free((void*)activityName);
-		}
+	char* activityName = GetActivityName([activityId UTF8String]);
+
+	if (activityName)
+	{
+		result = [NSString stringWithFormat:@"%s", activityName];
+		free((void*)activityName);
 	}
+
+	[self->historicalActivityLock unlock];
+
 	return result;
 }
 
@@ -604,100 +603,103 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	@synchronized(self)
+	[self->currentActivityLock lock];
+
+	if (IsActivityInProgress() && IsLiftingActivity())
 	{
-		if (IsActivityInProgress() && IsLiftingActivity())
-		{
-			NSDictionary* accelerometerData = [notification object];
-			
-			NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
-			NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
-			NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
-			NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
-			
-			ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
-		}
+		NSDictionary* accelerometerData = [notification object];
+		
+		NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
+		NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
+		NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
+		NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
+		
+		ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
 	}
+
+	[self->currentActivityLock unlock];
 }
 
 - (void)locationUpdated:(NSNotification*)notification
 {
 	self->receivingLocations = TRUE;
 
-	@synchronized(self)
+	[self->currentActivityLock lock];
+
+	if (IsActivityInProgressAndNotPaused())
 	{
-		if (IsActivityInProgressAndNotPaused())
+		NSDictionary* locationData = [notification object];
+
+		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
+		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
+		NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
+
+		NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
+		NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
+
+		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
+
+		NSString* activityType = [self getCurrentActivityType];
+
+		BOOL tempBadGps = FALSE;
+
+		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+		if (minHAccuracy != (uint8_t)-1)
 		{
-			NSDictionary* locationData = [notification object];
-
-			NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
-			NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-			NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
-
-			NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
-			NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
-
-			NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
-
-			NSString* activityType = [self getCurrentActivityType];
-
-			BOOL tempBadGps = FALSE;
-
-			uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
-			if (minHAccuracy != (uint8_t)-1)
+			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
+			if (minHAccuracy != 0 && accuracy > minHAccuracy)
 			{
-				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
-				if (minHAccuracy != 0 && accuracy > minHAccuracy)
-				{
-					tempBadGps = TRUE;
-				}
-			}
-			
-			uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
-			if (minVAccuracy != (uint8_t)-1)
-			{
-				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
-				if (minVAccuracy != 0 && accuracy > minVAccuracy)
-				{
-					tempBadGps = TRUE;
-				}
-			}
-
-			self->badGps = tempBadGps;
-
-			BOOL shouldProcessReading = TRUE;
-			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
-			
-			if (filterOption == GPS_FILTER_DROP && self->badGps)
-			{
-				shouldProcessReading = FALSE;
-			}
-			
-			if (shouldProcessReading)
-			{
-				ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+				tempBadGps = TRUE;
 			}
 		}
+		
+		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+		if (minVAccuracy != (uint8_t)-1)
+		{
+			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
+			if (minVAccuracy != 0 && accuracy > minVAccuracy)
+			{
+				tempBadGps = TRUE;
+			}
+		}
+
+		self->badGps = tempBadGps;
+
+		BOOL shouldProcessReading = TRUE;
+		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+		
+		if (filterOption == GPS_FILTER_DROP && self->badGps)
+		{
+			shouldProcessReading = FALSE;
+		}
+		
+		if (shouldProcessReading)
+		{
+			ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+		}
 	}
+
+	[self->currentActivityLock unlock];
 }
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
-	@synchronized(self)
+	[self->currentActivityLock lock];
+
+	if (IsActivityInProgressAndNotPaused())
 	{
-		if (IsActivityInProgressAndNotPaused())
+		NSDictionary* heartRateData = [notification object];
+
+		NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+		NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+
+		if (timestampMs && rate)
 		{
-			NSDictionary* heartRateData = [notification object];
-
-			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
-			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
-
-			if (timestampMs && rate)
-			{
-				ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
-			}
+			ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
 		}
 	}
+
+	[self->currentActivityLock unlock];
 }
 
 #pragma mark accessor methods
@@ -711,11 +713,7 @@ void activityTypeCallback(const char* type, void* context)
 - (NSMutableArray*)getActivityTypes
 {
 	NSMutableArray* types = [[NSMutableArray alloc] init];
-
-	@synchronized(self)
-	{
-		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
-	}
+	GetActivityTypes(activityTypeCallback, (__bridge void*)types);
 	return types;
 }
 
@@ -728,11 +726,9 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getCurrentActivityAttributes
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
-
-	@synchronized(self)
-	{
-		GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
-	}
+	[self->currentActivityLock lock];
+	GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
+	[self->currentActivityLock unlock];
 	return names;
 }
 
@@ -740,26 +736,28 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSMutableArray* attributes = [[NSMutableArray alloc] init];
 
-	@synchronized(self)
+	[self->historicalActivityLock lock];
+
+	size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
+
+	for (size_t i = 0; i < numAttributes; ++i)
 	{
-		size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
+		char* attrName = GetHistoricalActivityAttributeName(activityIndex, i);
 
-		for (size_t i = 0; i < numAttributes; ++i)
+		if (attrName)
 		{
-			char* attrName = GetHistoricalActivityAttributeName(activityIndex, i);
+			NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", attrName];
 
-			if (attrName)
+			if (attrTitle)
 			{
-				NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", attrName];
-
-				if (attrTitle)
-				{
-					[attributes addObject:attrTitle];
-				}
-				free((void*)attrName);
+				[attributes addObject:attrTitle];
 			}
+			free((void*)attrName);
 		}
 	}
+
+	[self->historicalActivityLock unlock];
+
 	return attributes;
 }
 
@@ -767,24 +765,21 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
 
-	@synchronized(self)
+	if (InitializeIntervalWorkoutList())
 	{
-		if (InitializeIntervalWorkoutList())
-		{
-			char* workoutId = NULL;
-			char* workoutName = NULL;
-			size_t index = 0;
+		char* workoutId = NULL;
+		char* workoutName = NULL;
+		size_t index = 0;
 
-			while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
-			{
-				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
-				[namesAndIds addObject:mutDic];
-				free((void*)workoutId);
-				free((void*)workoutName);
-				++index;
-			}
+		while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
+		{
+			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
+			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
+			[namesAndIds addObject:mutDic];
+			free((void*)workoutId);
+			free((void*)workoutName);
+			++index;
 		}
 	}
 	return namesAndIds;
@@ -794,24 +789,21 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
 
-	@synchronized(self)
+	if (InitializePacePlanList())
 	{
-		if (InitializePacePlanList())
-		{
-			char* pacePlanId = NULL;
-			char* pacePlanName = NULL;
-			size_t index = 0;
+		char* pacePlanId = NULL;
+		char* pacePlanName = NULL;
+		size_t index = 0;
 
-			while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
-			{
-				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
-				[namesAndIds addObject:mutDic];
-				free((void*)pacePlanId);
-				free((void*)pacePlanName);
-				++index;
-			}
+		while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
+		{
+			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+			[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
+			[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
+			[namesAndIds addObject:mutDic];
+			free((void*)pacePlanId);
+			free((void*)pacePlanName);
+			++index;
 		}
 	}
 	return namesAndIds;
@@ -860,10 +852,13 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)resetDatabase
 {
-	@synchronized(self)
-	{
-		ResetDatabase();
-	}
+	[self->currentActivityLock lock];
+	[self->historicalActivityLock lock];
+
+	ResetDatabase();
+
+	[self->historicalActivityLock unlock];
+	[self->currentActivityLock unlock];
 }
 
 @end
