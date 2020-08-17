@@ -194,7 +194,6 @@ time_t LiftingActivity::Pace() const
 void LiftingActivity::BuildAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_REPS);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_SETS);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT);
 	Activity::BuildAttributeList(attributes);
@@ -205,7 +204,6 @@ void LiftingActivity::BuildSummaryAttributeList(std::vector<std::string>& attrib
 	attributes.push_back(ACTIVITY_ATTRIBUTE_REPS);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_REPS_COMPUTED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_REPS_CORRECTED);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_SETS);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT);
 	Activity::BuildSummaryAttributeList(attributes);
