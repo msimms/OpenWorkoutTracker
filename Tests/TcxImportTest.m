@@ -38,8 +38,8 @@
 	NSURL* tempUrl = [fm temporaryDirectory];
 
 	NSMutableArray* testFileNames = [[NSMutableArray alloc] init];
-	[testFileNames addObject:@"20181108_intra_run_club.tcx"];
-	[testFileNames addObject:@"20180331_crescent_city_classic.tcx"];
+	[testFileNames addObject:@"20180331_run_garmin_fenix_3_hr.tcx];
+	[testFileNames addObject:@"20181108_run_garmin_fenix_3_hr.tcx"];
 	
 	dispatch_group_t queryGroup = dispatch_group_create();
 
