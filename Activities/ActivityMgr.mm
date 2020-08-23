@@ -666,6 +666,7 @@ extern "C" {
 			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
 				const IntervalWorkout& workout = (*iter);
+
 				if (workout.workoutId.compare(workoutId) == 0)
 				{
 					return &workout;
@@ -757,6 +758,7 @@ extern "C" {
 			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
 				IntervalWorkout& workout = (*iter);
+
 				if (!g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments))
 				{
 					result = false;
@@ -1701,7 +1703,13 @@ extern "C" {
 		WorkoutPlanGenerator gen;
 
 		std::map<std::string, double> inputs = gen.CalculateInputs(g_historicalActivityList);
-		std::vector<Workout> workouts = gen.GenerateWorkouts(inputs);
+		std::vector<Workout*> plannedWorkouts = gen.GenerateWorkouts(inputs);
+
+		for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+		{
+			Workout* workout = (*iter);
+			delete workout;
+		}
 	}
 
 	//

@@ -46,11 +46,11 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	return inputs;
 }
 
-std::vector<Workout> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
+std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
 {
 	RunPlanGenerator runGen;
 
-	std::vector<Workout> workouts = runGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> workouts = runGen.GenerateWorkouts(inputs);
 	return workouts;
 }
 

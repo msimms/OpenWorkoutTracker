@@ -22,7 +22,7 @@ public:
 	virtual ~WorkoutPlanGenerator();
 
 	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities);
-	std::vector<Workout> GenerateWorkouts(std::map<std::string, double>& inputs);
+	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 
 private:
 	void CalculateRunTrainingPaces(const ActivitySummaryList& historicalActivities, std::map<std::string, double>& inputs);

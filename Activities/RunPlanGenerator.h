@@ -21,7 +21,21 @@ public:
 	RunPlanGenerator();
 	virtual ~RunPlanGenerator();
 
-	std::vector<Workout> GenerateWorkouts(std::map<std::string, double>& inputs);
+	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
+	
+private:
+	uint64_t m_easyDistanceTotalMeters;
+	uint64_t m_hardDistanceTotalMeters;
+
+	static bool ValidFloat(double num, double minValue);
+	static double RoundDistance(double distance);
+	static uint64_t NearestIntervalDistance(double distance, double minDistanceInMeters);
+
+	Workout* GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
+	Workout* GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance);
+	Workout* GenerateSpeedRun(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance);
+	Workout* GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance);
+	Workout* GenerateFreeRun(void);
 };
 
 #endif

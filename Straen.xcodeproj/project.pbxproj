@@ -432,6 +432,9 @@
 		27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
 		27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
 		27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27E299532336B25600B864FA /* LaunchScreen.storyboard */; };
+		27E3021C24F0976D00EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
+		27E3021E24F0A6E000EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
+		27E3021F24F0A6E100EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
 		27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB22244A39C7000FBFA0 /* GearViewController.m */; };
 		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
 		27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
@@ -954,6 +957,11 @@
 		27DCF67C22BD6BE6009A23C2 /* HashUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = HashUtils.h; path = IOS/Utilities/HashUtils.h; sourceTree = SOURCE_ROOT; };
 		27DCF68E22CD483A009A23C2 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = SOURCE_ROOT; };
 		27E299532336B25600B864FA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IOS/Storyboards/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
+		27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutFactory.cpp; path = Activities/WorkoutFactory.cpp; sourceTree = SOURCE_ROOT; };
+		27E3021B24F0976D00EB5501 /* WorkoutFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutFactory.h; path = Activities/WorkoutFactory.h; sourceTree = SOURCE_ROOT; };
+		27E3021D24F0A0DF00EB5501 /* WorkoutType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutType.h; path = Activities/WorkoutType.h; sourceTree = SOURCE_ROOT; };
+		27E3022024F2FA7100EB5501 /* GoalType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoalType.h; path = Activities/GoalType.h; sourceTree = SOURCE_ROOT; };
+		27E3022124F2FB0B00EB5501 /* ExperienceLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperienceLevel.h; path = Activities/ExperienceLevel.h; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27EAAB22244A39C7000FBFA0 /* GearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GearViewController.m; path = IOS/View/GearViewController.m; sourceTree = SOURCE_ROOT; };
 		27EAAB30244A39C7000FBFA0 /* GearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GearViewController.h; path = IOS/View/GearViewController.h; sourceTree = SOURCE_ROOT; };
@@ -1566,8 +1574,10 @@
 				27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */,
 				27C0842319BFD063007CE934 /* Cycling.cpp */,
 				27C0842419BFD063007CE934 /* Cycling.h */,
+				27E3022124F2FB0B00EB5501 /* ExperienceLevel.h */,
 				27CF010824D1E87A00263CEC /* FtpCalculator.cpp */,
 				27CF011724D1E87A00263CEC /* FtpCalculator.h */,
+				27E3022024F2FA7100EB5501 /* GoalType.h */,
 				27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */,
 				27C0842719BFD063007CE934 /* GForceAnalyzer.h */,
 				27C0842819BFD063007CE934 /* GForceAnalyzerFactory.cpp */,
@@ -1619,9 +1629,12 @@
 				27F4240923A45FAC00F59F50 /* Walk.h */,
 				27CF011D24D7A53B00263CEC /* Workout.cpp */,
 				27CF011E24D7A53B00263CEC /* Workout.h */,
+				27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */,
+				27E3021B24F0976D00EB5501 /* WorkoutFactory.h */,
 				27CF012924D8853600263CEC /* WorkoutPlanInputs.h */,
 				27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */,
 				27F423EF23A430F300F59F50 /* WorkoutPlanGenerator.h */,
+				27E3021D24F0A0DF00EB5501 /* WorkoutType.h */,
 				2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */,
 				2768E51A23A0270500DD06E9 /* VO2MaxCalculator.h */,
 			);
@@ -2064,6 +2077,7 @@
 				270CF44A2391F05200584058 /* PushUp.h in Sources */,
 				27F4240F23A46A5900F59F50 /* OpenWaterSwim.cpp in Sources */,
 				270CF44B2391F05200584058 /* PushUpAnalyzer.cpp in Sources */,
+				27E3021F24F0A6E100EB5501 /* WorkoutFactory.cpp in Sources */,
 				270CF44C2391F05200584058 /* PushUpAnalyzer.h in Sources */,
 				270CF44D2391F05200584058 /* Run.cpp in Sources */,
 				27F4241323A46A6400F59F50 /* Swim.cpp in Sources */,
@@ -2133,6 +2147,7 @@
 				2704717B216D997000EE47FF /* Peaks.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
 				27B7CDC319BFD953000383E3 /* AccelerometerLine.m in Sources */,
+				27E3021C24F0976D00EB5501 /* WorkoutFactory.cpp in Sources */,
 				27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */,
 				27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */,
 				276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */,
@@ -2283,6 +2298,7 @@
 				27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */,
 				27DCF65322B72EFA009A23C2 /* TextFileReader.cpp in Sources */,
 				27DCF65422B72EFA009A23C2 /* TextFileReader.h in Sources */,
+				27E3021E24F0A6E000EB5501 /* WorkoutFactory.cpp in Sources */,
 				27AAB9DA2389EC7B00C0A91F /* WatchAboutViewController.m in Sources */,
 				27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */,
 				27DCF65622B72EFA009A23C2 /* XmlFileReader.h in Sources */,
