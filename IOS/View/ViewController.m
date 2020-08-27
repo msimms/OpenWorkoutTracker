@@ -19,6 +19,7 @@
 #define BUTTON_TITLE_RESET           NSLocalizedString(@"Reset", nil)
 #define BUTTON_TITLE_VIEW_HISTORY    NSLocalizedString(@"History", nil)
 #define BUTTON_TITLE_VIEW_STATISTICS NSLocalizedString(@"Statistics", nil)
+#define BUTTON_TITLE_VIEW_WORKOUTS   NSLocalizedString(@"Workouts", nil)
 #define BUTTON_TITLE_VIEW_HEATMAP    NSLocalizedString(@"Heatmap", nil)
 #define BUTTON_TITLE_EDIT_PROFILE    NSLocalizedString(@"Profile", nil)
 #define BUTTON_TITLE_EDIT_SETTINGS   NSLocalizedString(@"Settings", nil)
@@ -151,6 +152,8 @@
 
 - (IBAction)onView:(id)sender
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_VIEW
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -161,6 +164,12 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_STATISTICS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_STATISTICS_VIEW sender:self];
 	}]];
+	if ([appDelegate isFeatureEnabled:FEATURE_WORKOUT_PLAN_GENERATION])
+	{
+		[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_WORKOUTS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self performSegueWithIdentifier:@SEQUE_TO_WORKOUTS_VIEW sender:self];
+		}]];
+	}
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

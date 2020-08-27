@@ -435,6 +435,7 @@
 		27E3021C24F0976D00EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
 		27E3021E24F0A6E000EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
 		27E3021F24F0A6E100EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
+		27E3022424F593C100EB5501 /* WorkoutsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3022324F593C100EB5501 /* WorkoutsViewController.m */; };
 		27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB22244A39C7000FBFA0 /* GearViewController.m */; };
 		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
 		27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
@@ -962,6 +963,8 @@
 		27E3021D24F0A0DF00EB5501 /* WorkoutType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutType.h; path = Activities/WorkoutType.h; sourceTree = SOURCE_ROOT; };
 		27E3022024F2FA7100EB5501 /* GoalType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoalType.h; path = Activities/GoalType.h; sourceTree = SOURCE_ROOT; };
 		27E3022124F2FB0B00EB5501 /* ExperienceLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperienceLevel.h; path = Activities/ExperienceLevel.h; sourceTree = SOURCE_ROOT; };
+		27E3022224F593C100EB5501 /* WorkoutsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutsViewController.h; path = IOS/View/WorkoutsViewController.h; sourceTree = SOURCE_ROOT; };
+		27E3022324F593C100EB5501 /* WorkoutsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorkoutsViewController.m; path = IOS/View/WorkoutsViewController.m; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27EAAB22244A39C7000FBFA0 /* GearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GearViewController.m; path = IOS/View/GearViewController.m; sourceTree = SOURCE_ROOT; };
 		27EAAB30244A39C7000FBFA0 /* GearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GearViewController.h; path = IOS/View/GearViewController.h; sourceTree = SOURCE_ROOT; };
@@ -1186,6 +1189,8 @@
 				27B7CD8619BFD91C000383E3 /* TagViewController.m */,
 				27B7CD8719BFD91C000383E3 /* ViewController.h */,
 				27B7CD8819BFD91C000383E3 /* ViewController.m */,
+				27E3022224F593C100EB5501 /* WorkoutsViewController.h */,
+				27E3022324F593C100EB5501 /* WorkoutsViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -2242,6 +2247,7 @@
 				27C0845819BFD063007CE934 /* MountainBiking.cpp in Sources */,
 				275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */,
 				2704717C216D997000EE47FF /* Distance.cpp in Sources */,
+				27E3022424F593C100EB5501 /* WorkoutsViewController.m in Sources */,
 				27B7CDA719BFD91C000383E3 /* SimpleActivityViewController.m in Sources */,
 				27C0846119BFD063007CE934 /* StationaryCycling.cpp in Sources */,
 				2797F18B19BFE48E008F8672 /* CsvFileWriter.cpp in Sources */,

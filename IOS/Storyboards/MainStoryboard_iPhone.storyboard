@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -157,6 +157,7 @@
                         <segue destination="sJ4-y9-qRG" kind="push" identifier="SegueToSettingsView" id="Qdm-QW-9lB"/>
                         <segue destination="A9N-FN-6yC" kind="push" identifier="SegueToPacePlansView" id="frI-i4-eiK"/>
                         <segue destination="ObN-8C-jua" kind="push" identifier="SegueToGearView" id="Xdw-9G-X6h"/>
+                        <segue destination="Yuq-BJ-ges" kind="push" identifier="SegueToWorkoutsView" id="nhc-zk-lNW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -2499,6 +2500,51 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             </objects>
             <point key="canvasLocation" x="1990" y="-1298"/>
         </scene>
+        <!--Workouts View Controller-->
+        <scene sceneID="CPr-In-7nj">
+            <objects>
+                <viewController id="Yuq-BJ-ges" customClass="WorkoutsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5uJ-ft-hY6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bf3-gh-9hW">
+                                <rect key="frame" x="0.0" y="88" width="375" height="646"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9P9-KK-ntB">
+                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="y0V-0W-uXs"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="euL-8d-aC6"/>
+                                    <barButtonItem systemItem="refresh" id="dAT-Yg-1IA">
+                                        <connections>
+                                            <action selector="onGenerateWorkouts:" destination="Yuq-BJ-ges" id="kZo-Op-L3w"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bf3-gh-9hW" firstAttribute="leading" secondItem="ITH-Gr-Xar" secondAttribute="leading" id="9OL-Fa-zNw"/>
+                            <constraint firstItem="9P9-KK-ntB" firstAttribute="top" secondItem="bf3-gh-9hW" secondAttribute="bottom" id="F2z-fE-s9P"/>
+                            <constraint firstItem="bf3-gh-9hW" firstAttribute="centerX" secondItem="5uJ-ft-hY6" secondAttribute="centerX" id="GWQ-uv-3TT"/>
+                            <constraint firstItem="bf3-gh-9hW" firstAttribute="top" secondItem="ITH-Gr-Xar" secondAttribute="top" id="K7n-eC-lzO"/>
+                            <constraint firstItem="bf3-gh-9hW" firstAttribute="leading" secondItem="9P9-KK-ntB" secondAttribute="leading" id="LaK-fH-BSP"/>
+                            <constraint firstItem="9P9-KK-ntB" firstAttribute="bottom" secondItem="ITH-Gr-Xar" secondAttribute="bottom" id="YBc-ZZ-noG"/>
+                            <constraint firstItem="bf3-gh-9hW" firstAttribute="trailing" secondItem="9P9-KK-ntB" secondAttribute="trailing" id="Yx0-go-M0Q"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ITH-Gr-Xar"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="bEy-hg-a2T"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YDo-K2-6Te" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-122.40000000000001" y="-565.27093596059115"/>
+        </scene>
         <!--Pace Plans View Controller-->
         <scene sceneID="zLl-Au-iUN">
             <objects>
@@ -2516,7 +2562,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 </connections>
                             </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IzN-VU-DL2">
-                                <rect key="frame" x="0.0" y="724" width="375" height="54"/>
+                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="mFP-dg-bAT"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="zly-Gx-C6s"/>
                                     <barButtonItem systemItem="add" id="Cl0-L9-uVv">
@@ -2532,7 +2581,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <constraint firstItem="IzN-VU-DL2" firstAttribute="leading" secondItem="fUO-t0-pEF" secondAttribute="leading" id="9zw-c7-Ap4"/>
                             <constraint firstItem="IzN-VU-DL2" firstAttribute="trailing" secondItem="fUO-t0-pEF" secondAttribute="trailing" id="A5R-P2-e6L"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="top" secondItem="BmK-jm-Hlr" secondAttribute="top" id="Dkh-S4-X4q"/>
-                            <constraint firstItem="IzN-VU-DL2" firstAttribute="top" secondItem="fUO-t0-pEF" secondAttribute="bottom" id="Huh-NO-nke"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="trailing" secondItem="BmK-jm-Hlr" secondAttribute="trailing" id="KOy-Wi-QZc"/>
                             <constraint firstItem="BmK-jm-Hlr" firstAttribute="bottom" secondItem="IzN-VU-DL2" secondAttribute="bottom" id="QFB-Bb-r0G"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="centerY" secondItem="heL-qQ-kTG" secondAttribute="centerY" id="XSt-hh-ROT"/>
@@ -2899,9 +2947,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="2hX-Kx-fHg"/>
-        <segue reference="zxl-cL-SNo"/>
-        <segue reference="YOw-2o-8H3"/>
+        <segue reference="UtV-9X-A4d"/>
+        <segue reference="V9h-tU-0NS"/>
+        <segue reference="g4d-Zp-BfC"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
