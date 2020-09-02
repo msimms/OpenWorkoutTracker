@@ -50,13 +50,17 @@ double FtpCalculator::Estimate(const ActivitySummaryList& historicalActivities)
 				double best20MinPower = (double)0.0;
 				double best1HourPower = (double)0.0;
 
-				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER) == summary.summaryAttributes.end())
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER) != summary.summaryAttributes.end())
 				{
-					best20MinPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER).value.doubleVal;
+					ActivityAttributeType attr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER);
+					if (attr.valid)
+						best20MinPower = attr.value.doubleVal;
 				}
-				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER) == summary.summaryAttributes.end())
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER) != summary.summaryAttributes.end())
 				{
-					best1HourPower = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER).value.doubleVal;
+					ActivityAttributeType attr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER);
+					if (attr.valid)
+						best1HourPower = attr.value.doubleVal;
 				}
 
 				double estimate = this->Estimate(best20MinPower, best1HourPower);
