@@ -25,6 +25,7 @@
 	IBOutlet UIBarButtonItem*  customizeButton;
 	IBOutlet UIBarButtonItem*  bikeButton;
 	IBOutlet UIBarButtonItem*  intervalsButton;
+	IBOutlet UIBarButtonItem*  paceButton;
 	IBOutlet UIBarButtonItem*  lapButton;
 	IBOutlet UIBarButtonItem*  autoStartButton;
 	IBOutlet UIBarButtonItem*  startStopButton;

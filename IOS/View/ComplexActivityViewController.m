@@ -134,10 +134,13 @@
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
 	{
-		NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
-		if ([workoutNamesAndIds count] == 0)
+		if ([[appDelegate getIntervalWorkoutNamesAndIds] count] == 0)
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.intervalsButton];
+		}
+		if ([[appDelegate getPacePlanNamesAndIds] count] == 0)
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.paceButton];
 		}
 
 		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
@@ -158,6 +161,7 @@
 	{
 		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
 
 		if (!IsMovingActivity())
 		{

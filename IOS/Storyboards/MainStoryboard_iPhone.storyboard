@@ -2521,7 +2521,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="euL-8d-aC6"/>
                                     <barButtonItem systemItem="refresh" id="dAT-Yg-1IA">
                                         <connections>
-                                            <action selector="onGenerateWorkouts:" destination="Yuq-BJ-ges" id="kZo-Op-L3w"/>
+                                            <action selector="onGenerateWorkouts:" destination="Yuq-BJ-ges" id="qRO-dL-fyf"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
