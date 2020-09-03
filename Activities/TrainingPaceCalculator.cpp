@@ -27,17 +27,24 @@ std::map<TrainingPaceType, double> TrainingPaceCalculator::CalcFromVO2Max(double
 	double longRunPace = vo2max * 0.6;
 	double easyPace = vo2max * 0.7;
 	double tempoPace = vo2max * 0.88;
+	double functionalThresholdPace = vo2max;
 	double speedPace = vo2max * 1.1;
+	double shortIntervalPace = vo2max * 1.15;
+
 	longRunPace = this->ConvertToSpeed(longRunPace);
 	easyPace = this->ConvertToSpeed(easyPace);
 	tempoPace = this->ConvertToSpeed(tempoPace);
+	functionalThresholdPace = this->ConvertToSpeed(functionalThresholdPace);
 	speedPace = this->ConvertToSpeed(speedPace);
+	shortIntervalPace = this->ConvertToSpeed(shortIntervalPace);
 	
 	std::map<TrainingPaceType, double> paces;
 	paces.insert(std::pair<TrainingPaceType, double>(LONG_RUN_PACE, longRunPace));
 	paces.insert(std::pair<TrainingPaceType, double>(EASY_RUN_PACE, easyPace));
 	paces.insert(std::pair<TrainingPaceType, double>(TEMPO_RUN_PACE, tempoPace));
+	paces.insert(std::pair<TrainingPaceType, double>(FUNCTIONAL_THRESHOLD_PACE, functionalThresholdPace));
 	paces.insert(std::pair<TrainingPaceType, double>(SPEED_RUN_PACE, speedPace));
+	paces.insert(std::pair<TrainingPaceType, double>(SHORT_INTERVAL_RUN_PACE, shortIntervalPace));
 	return paces;
 }
 

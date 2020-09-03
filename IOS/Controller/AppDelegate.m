@@ -2268,6 +2268,22 @@ void attributeNameCallback(const char* name, void* context)
 	return FALSE;
 }
 
+#pragma mark methods for managing workouts
+
+- (BOOL)generateWorkouts
+{
+	// Gather inputs from HealthKit.
+	
+	// Load raw data from the local database.
+	InitializeHistoricalActivityList();
+	LoadAllHistoricalActivitySummaryData();
+
+	// Run the algorithm.
+	GenerateWorkouts();
+
+	return FALSE;
+}
+
 #pragma mark methods for managing tags
 
 - (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId

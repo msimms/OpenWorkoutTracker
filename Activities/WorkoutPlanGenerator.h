@@ -25,7 +25,7 @@ public:
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 
 private:
-	void CalculateRunTrainingPaces(const ActivitySummaryList& historicalActivities, std::map<std::string, double>& inputs);
+	void CalculateRunTrainingPaces(double best5K, std::map<std::string, double>& inputs);
 };
 
 #endif

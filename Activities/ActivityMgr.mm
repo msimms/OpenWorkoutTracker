@@ -47,6 +47,7 @@ extern "C" {
 	std::vector<Shoes>            g_shoes; // cache of shoe profiles
 	std::vector<IntervalWorkout>  g_intervalWorkouts; // cache of interval workouts
 	std::vector<PacePlan>         g_pacePlans; // cache of pace plans
+	std::vector<Workout>          g_workouts; // cache of planned workouts
 
 	//
 	// Functions for managing the database.
@@ -62,6 +63,7 @@ extern "C" {
 		if (!g_pDatabase)
 		{
 			g_pDatabase = new Database();
+
 			if (g_pDatabase)
 			{
 				if (g_pDatabase->Open(dbFileName))
@@ -401,6 +403,7 @@ extern "C" {
 				{
 					ActivityAttributeType revs = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS)->second;
 					ActivityAttributeType distance = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)->second;
+
 					if (revs.valid && distance.valid)
 					{
 						double distanceMm = UnitConverter::MilesToKilometers(distance.value.doubleVal) * 1000000;	// Convert to millimeters
@@ -729,24 +732,7 @@ extern "C" {
 	// Functions for managing interval workouts.
 	//
 
-	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
-	{
-		if (g_pDatabase && workoutId && workoutName && sport)
-		{
-			return g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
-		}
-		return false;
-	}
-
-	bool DeleteIntervalWorkout(const char* const workoutId)
-	{
-		if (g_pDatabase && workoutId)
-		{
-			return g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
-		}
-		return false;
-	}
-
+	// To be called before iterating over the interval workout list.
 	bool InitializeIntervalWorkoutList()
 	{
 		g_intervalWorkouts.clear();
@@ -794,6 +780,24 @@ extern "C" {
 			return strdup(g_intervalWorkouts.at(workoutIndex).sport.c_str());
 		}
 		return NULL;		
+	}
+
+	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
+	{
+		if (g_pDatabase && workoutId && workoutName && sport)
+		{
+			return g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
+		}
+		return false;
+	}
+
+	bool DeleteIntervalWorkout(const char* const workoutId)
+	{
+		if (g_pDatabase && workoutId)
+		{
+			return g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
+		}
+		return false;
 	}
 
 	//
@@ -856,6 +860,7 @@ extern "C" {
 	// Functions for managing pace plans.
 	//
 
+	// To be called before iterating over the pace plan list with GetPacePlanId or GetPacePlanName.
 	bool InitializePacePlanList(void)
 	{
 		g_pacePlans.clear();
@@ -1075,9 +1080,11 @@ extern "C" {
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(summary.pActivity);
+
 				if (pMovingActivity)
 				{
 					LapSummaryList laps;
@@ -1096,6 +1103,7 @@ extern "C" {
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				switch (sensor)
@@ -1226,6 +1234,7 @@ extern "C" {
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				std::vector<SensorType> sensorTypes;
@@ -1298,6 +1307,7 @@ extern "C" {
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				std::vector<std::string> attributes;
@@ -1309,6 +1319,7 @@ extern "C" {
 				{
 					const std::string& attribute = (*iter);
 					ActivityAttributeType value = summary.pActivity->QueryActivityAttribute(attribute);
+
 					if (value.valid)
 					{
 						UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
@@ -1403,6 +1414,7 @@ extern "C" {
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				summary.pActivity->SetEndTimeFromSensorReadings();
@@ -1435,6 +1447,7 @@ extern "C" {
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				std::vector<std::string> attributeNames;
@@ -1674,7 +1687,6 @@ extern "C" {
 			std::vector<SensorType> sensorTypes;
 
 			g_pCurrentActivity->ListUsableSensors(sensorTypes);
-
 			for (auto iter = sensorTypes.begin(); iter != sensorTypes.end(); ++iter)
 			{
 				callback((*iter), context);
@@ -1696,6 +1708,22 @@ extern "C" {
 	//
 	// Functions for managing workout generation.
 	//
+
+	bool InitializeWorkoutList(void)
+	{
+		g_workouts.clear();
+
+		if (g_pDatabase)
+		{
+			//return g_pDatabase->RetrieveWorkouts(g_workouts);
+		}
+		return false;
+	}
+
+	char* GetWorkoutId(size_t workoutIndex)
+	{
+		return NULL;
+	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
 	void GenerateWorkouts(void)
@@ -1914,6 +1942,7 @@ extern "C" {
 		if (g_pCurrentActivity && g_pCurrentActivity->HasStarted() && g_pDatabase)
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
+
 			if (pMovingActivity)
 			{
 				pMovingActivity->StartNewLap();
@@ -1936,6 +1965,7 @@ extern "C" {
 			{
 				const std::string& attribute = (*iter);
 				ActivityAttributeType value = g_pCurrentActivity->QueryActivityAttribute(attribute);
+
 				if (value.valid)
 				{
 					UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);

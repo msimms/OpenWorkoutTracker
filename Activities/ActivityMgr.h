@@ -81,12 +81,12 @@ extern "C" {
 	void AdvanceCurrentIntervalWorkout(void);
 
 	// Functions for managing interval workouts.
-	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
-	bool DeleteIntervalWorkout(const char* const workoutId);
 	bool InitializeIntervalWorkoutList(void);
 	char* GetIntervalWorkoutId(size_t workoutIndex);
 	char* GetIntervalWorkoutName(size_t workoutIndex);
 	char* GetIntervalWorkoutSport(size_t workoutIndex);
+	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
+	bool DeleteIntervalWorkout(const char* const workoutId);
 
 	// Functions for managing interval workout segments.
 	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId);
@@ -166,6 +166,8 @@ extern "C" {
 	double EstimateFtp(void);
 
 	// Functions for managing workout generation.
+	bool InitializeWorkoutList(void);
+	char* GetWorkoutId(size_t workoutIndex);
 	void GenerateWorkouts(void);
 
 	// Functions for converting units.

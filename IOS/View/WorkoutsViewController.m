@@ -47,7 +47,6 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-	[self updatePacePlanNames];
 	[self.workoutsView reloadData];
 }
 
@@ -74,18 +73,12 @@
 {
 }
 
-#pragma mark miscellaneous methods
-
-- (void)updatePacePlanNames
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	self->planNamesAndIds = [appDelegate getPacePlanNamesAndIds];
-}
-
 #pragma mark button handlers
 
 - (IBAction)onGenerateWorkouts:(id)sender
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate generateWorkouts];
 }
 
 #pragma mark UITableView methods
@@ -150,7 +143,7 @@
 	if (section == 0)
 	{
 		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
-		self->selectedPlanId = nameAndId[@"id"];
+		self->selectedWorkoutId = nameAndId[@"id"];
 		
 		[self performSegueWithIdentifier:@SEGUE_TO_PACE_PLAN_EDIT_VIEW sender:self];
 	}

@@ -224,7 +224,7 @@
 
 - (NSString*)getCurrentActivityId;
 
-// methods for managing interval workotus
+// methods for managing interval workouts
 
 - (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport;
 - (BOOL)deleteIntervalWorkout:(NSString*)workoutId;
@@ -235,6 +235,10 @@
 - (BOOL)retrievePacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits;
 - (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits;
 - (BOOL)deletePacePlanWithId:(NSString*)planId;
+
+// methods for managing workouts
+
+- (BOOL)generateWorkouts;
 
 // methods for managing tags
 
