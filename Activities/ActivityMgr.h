@@ -18,6 +18,7 @@
 #include "IntervalWorkoutSegment.h"
 #include "SensorType.h"
 #include "UnitSystem.h"
+#include "WorkoutType.h"
 
 #define ACTIVITY_INDEX_UNKNOWN (size_t)-1
 
@@ -167,8 +168,10 @@ extern "C" {
 
 	// Functions for managing workout generation.
 	bool InitializeWorkoutList(void);
-	char* GetWorkoutId(size_t workoutIndex);
-	void GenerateWorkouts(void);
+	char* GetWorkoutIdByIndex(size_t workoutIndex);
+	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex);
+	bool GenerateWorkouts(void);
+	bool DeleteWorkout(const char* const workoutId);
 
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);

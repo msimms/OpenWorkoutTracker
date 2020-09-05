@@ -38,6 +38,7 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.addPlanButton setTitle:ADD_PACE_PLAN];
+	[self updatePacePlanNames];
 }
 
 - (void)viewDidAppear:(BOOL)animated

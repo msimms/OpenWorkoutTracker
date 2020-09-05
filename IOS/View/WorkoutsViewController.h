@@ -15,7 +15,7 @@
 	IBOutlet UIBarButtonItem* generateButton;
 	
 	NSString* selectedWorkoutId;
-	NSMutableArray* planNamesAndIds;
+	NSMutableArray* plannedWorkouts;
 }
 
 - (IBAction)onGenerateWorkouts:(id)sender;

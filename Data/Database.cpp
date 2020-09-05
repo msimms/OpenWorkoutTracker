@@ -679,11 +679,11 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 			WorkoutType workoutType;
 			std::string sport;
 
-			workoutId.append((const char*)sqlite3_column_text(statement, 1));
-			workoutType = (WorkoutType)sqlite3_column_int64(statement, 2);
-			sport.append((const char*)sqlite3_column_text(statement, 3));
-			double estimatedStress = (double)sqlite3_column_double(statement, 4);
-			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 5);
+			workoutId.append((const char*)sqlite3_column_text(statement, 0));
+			workoutType = (WorkoutType)sqlite3_column_int64(statement, 1);
+			sport.append((const char*)sqlite3_column_text(statement, 2));
+			double estimatedStress = (double)sqlite3_column_double(statement, 3);
+			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 4);
 
 			Workout workoutObj;
 			workoutObj.SetId(workoutId);

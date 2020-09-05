@@ -239,6 +239,8 @@
 // methods for managing workouts
 
 - (BOOL)generateWorkouts;
+- (NSMutableArray*)getPlannedWorkouts;
+- (BOOL)deleteWorkoutWithId:(NSString*)workoutId;
 
 // methods for managing tags
 

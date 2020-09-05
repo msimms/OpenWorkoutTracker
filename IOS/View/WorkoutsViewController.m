@@ -39,6 +39,7 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.generateButton setTitle:GENERATE_WORKOUTS];
+	[self updateWorkoutNames];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -47,6 +48,7 @@
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
+	[self updateWorkoutNames];
 	[self.workoutsView reloadData];
 }
 
@@ -81,6 +83,14 @@
 	[appDelegate generateWorkouts];
 }
 
+#pragma mark miscelaneous methods
+
+- (void)updateWorkoutNames
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	self->plannedWorkouts = [appDelegate getPlannedWorkouts];
+}
+
 #pragma mark UITableView methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
@@ -98,7 +108,7 @@
 	switch (section)
 	{
 		case 0:
-			return [self->planNamesAndIds count];
+			return [self->plannedWorkouts count];
 	}
 	return 0;
 }
@@ -120,8 +130,8 @@
 	{
 		case 0:
 			{
-				NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:row];
-				cell.textLabel.text = nameAndId[@"name"];
+				NSDictionary* workoutData = [self->plannedWorkouts objectAtIndex:row];
+				cell.textLabel.text = workoutData[@"type"];
 			}
 			break;
 		default:
@@ -142,8 +152,8 @@
 	NSInteger section = [indexPath section];	
 	if (section == 0)
 	{
-		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
-		self->selectedWorkoutId = nameAndId[@"id"];
+		NSDictionary* workoutData = [self->plannedWorkouts objectAtIndex:[indexPath row]];
+		self->selectedWorkoutId = workoutData[@"id"];
 		
 		[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
 	}
@@ -168,11 +178,11 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete)
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
+		NSDictionary* workoutData = [self->plannedWorkouts objectAtIndex:[indexPath row]];
 
-		if ([appDelegate deletePacePlanWithId:nameAndId[@"id"]])
+		if ([appDelegate deleteWorkoutWithId:workoutData[@"id"]])
 		{
-			[self->planNamesAndIds removeObjectAtIndex:indexPath.row];
+			[self->plannedWorkouts removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
 		else

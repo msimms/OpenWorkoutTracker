@@ -2527,6 +2527,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bf3-gh-9hW">
                                 <rect key="frame" x="0.0" y="88" width="375" height="646"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Yuq-BJ-ges" id="7OT-0D-yQZ"/>
+                                    <outlet property="delegate" destination="Yuq-BJ-ges" id="Xdm-AZ-16m"/>
+                                </connections>
                             </tableView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9P9-KK-ntB">
                                 <rect key="frame" x="0.0" y="734" width="375" height="44"/>

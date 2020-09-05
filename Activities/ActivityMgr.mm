@@ -1723,13 +1723,28 @@ extern "C" {
 		return false;
 	}
 
-	char* GetWorkoutId(size_t workoutIndex)
+	// InitializeWorkoutList should be called before calling this.
+	char* GetWorkoutIdByIndex(size_t workoutIndex)
 	{
+		if (workoutIndex < g_workouts.size())
+		{
+			return strdup(g_workouts.at(workoutIndex).GetId().c_str());
+		}
 		return NULL;
 	}
 
+	// InitializeWorkoutList should be called before calling this.
+	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex)
+	{
+		if (workoutIndex < g_workouts.size())
+		{
+			return g_workouts.at(workoutIndex).GetType();
+		}
+		return WORKOUT_TYPE_REST;
+	}
+
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	void GenerateWorkouts(void)
+	bool GenerateWorkouts(void)
 	{
 		if (g_pDatabase)
 		{
@@ -1740,8 +1755,8 @@ extern "C" {
 			std::vector<Workout*> plannedWorkouts = gen.GenerateWorkouts(inputs);
 
 			// Delete old workouts.
-			g_pDatabase->DeleteAllWorkouts();
-			
+			bool result = g_pDatabase->DeleteAllWorkouts();
+
 			// Store the new workouts.
 			for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
 			{
@@ -1749,11 +1764,23 @@ extern "C" {
 
 				if (workout)
 				{
-					g_pDatabase->CreateWorkout(*workout);
+					result &= g_pDatabase->CreateWorkout(*workout);
 					delete workout;
 				}
 			}
+
+			return result;
 		}
+		return false;
+	}
+
+	bool DeleteWorkout(const char* const workoutId)
+	{
+		if (g_pDatabase)
+		{
+			g_pDatabase->DeleteWorkout(workoutId);
+		}
+		return false;
 	}
 
 	//
