@@ -7,6 +7,7 @@
 
 #include "WorkoutPlanGenerator.h"
 #include "ActivityAttribute.h"
+#include "BikePlanGenerator.h"
 #include "Cycling.h"
 #include "ExperienceLevel.h"
 #include "FtpCalculator.h"
@@ -47,7 +48,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	double estimatedFtp = ftpCalc.Estimate(historicalActivities);
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, estimatedFtp));
 
-	// Need last four weeks averages and bests.
+	// Need last four weeks averages, bests, etc.
 	double best5K = (double)0.0; // needed to compute training paces.
 	double longestRunInFourWeeks = (double)0.0;
 	double longestRunWeek1 = (double)0.0;
@@ -61,8 +62,10 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	{
 		const ActivitySummary& summary = (*iter);
 
+		// Only consider activities within the last four weeks.
 		if (summary.startTime > fourWeekCutoffTime)
 		{
+			// Examine run activity.
 			if (summary.type.compare(Run::Type()) == 0)
 			{
 				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED) != summary.summaryAttributes.end())
@@ -78,15 +81,15 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 							longestRunInFourWeeks = activityDistance;
 						}
 
-						if (summary.startTime > threeWeekCutoffTime && activityDistance > longestRunWeek3)
+						if ((summary.startTime > threeWeekCutoffTime) && (activityDistance > longestRunWeek3))
 						{
 							longestRunWeek3 = activityDistance;
 						}
-						if (summary.startTime > twoWeekCutoffTime && summary.startTime < threeWeekCutoffTime && activityDistance > longestRunWeek2)
+						else if ((summary.startTime > twoWeekCutoffTime) && (summary.startTime < threeWeekCutoffTime) && (activityDistance > longestRunWeek2))
 						{
 							longestRunWeek2 = activityDistance;
 						}
-						if (summary.startTime > oneWeekCutoffTime && summary.startTime < twoWeekCutoffTime && activityDistance > longestRunWeek1)
+						else if ((summary.startTime > oneWeekCutoffTime) && (summary.startTime < twoWeekCutoffTime) && (activityDistance > longestRunWeek1))
 						{
 							longestRunWeek1 = activityDistance;
 						}
@@ -96,6 +99,8 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 					}
 				}
 			}
+
+			// Examine cycling activity.
 			else if (summary.type.compare(Cycling::Type()) == 0)
 			{
 				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED) != summary.summaryAttributes.end())
@@ -137,8 +142,15 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
 {
 	RunPlanGenerator runGen;
+	BikePlanGenerator bikeGen;
 
-	std::vector<Workout*> workouts = runGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> workouts;
+
+	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
+	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());
+
 	return workouts;
 }
 

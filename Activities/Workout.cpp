@@ -3,11 +3,19 @@
 
 #include "Workout.h"
 
-Workout::Workout(WorkoutType type, const std::string& sport)
+Workout::Workout()
 {
+	this->m_estimatedTrainingStress = 0.0;
+	this->m_scheduledTime = 0;
+}
+
+Workout::Workout(const std::string& workoutId, WorkoutType type, const std::string& sport)
+{
+	this->m_id = workoutId;
 	this->m_type = type;
 	this->m_sport = sport;
 	this->m_estimatedTrainingStress = 0.0;
+	this->m_scheduledTime = 0;
 }
 
 Workout::~Workout()

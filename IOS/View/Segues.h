@@ -40,6 +40,7 @@
 #define SEGUE_TO_SPLIT_TIMES_VIEW        "SegueToSplitTimesView"
 #define SEQUE_TO_STATISTICS_VIEW         "SegueToStatisticsView"
 #define SEGUE_TO_TAG_VIEW                "SegueToTagViewController"
+#define SEGUE_TO_WORKOUT_DETAILS_VIEW    "SegueToWorkoutDetailsView"
 #define SEQUE_TO_WORKOUTS_VIEW           "SegueToWorkoutsView"
 
 #endif

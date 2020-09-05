@@ -1591,12 +1591,13 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for managing bike profiles
 
-- (void)initializeBikeProfileList
+- (BOOL)initializeBikeProfileList
 {
 	@synchronized(self)
 	{
-		InitializeBikeProfileList();
+		return InitializeBikeProfileList();
 	}
+	return FALSE;
 }
 
 - (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm
@@ -1676,12 +1677,13 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for managing shoes
 
-- (void)initializeShoeList
+- (BOOL)initializeShoeList
 {
 	@synchronized(self)
 	{
-		InitializeShoeList();
+		return InitializeShoeList();
 	}
+	return FALSE;
 }
 
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
@@ -1940,18 +1942,19 @@ void tagCallback(const char* name, void* context)
 	{
 		@synchronized(self)
 		{
-			size_t bikeIndex = 0;
-			char* bikeName = NULL;
-			uint64_t bikeId = 0;
-			double weightKg = (double)0.0;
-			double wheelCircumference = (double)0.0;
-
-			InitializeBikeProfileList();
-
-			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference))
+			if (InitializeBikeProfileList())
 			{
-				[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
-				free((void*)bikeName);
+				size_t bikeIndex = 0;
+				char* bikeName = NULL;
+				uint64_t bikeId = 0;
+				double weightKg = (double)0.0;
+				double wheelCircumference = (double)0.0;
+
+				while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference))
+				{
+					[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
+					free((void*)bikeName);
+				}
 			}
 		}
 	}
@@ -1965,18 +1968,19 @@ void tagCallback(const char* name, void* context)
 	{
 		@synchronized(self)
 		{
-			size_t shoeIndex = 0;
-			uint64_t shoeId = 0;
-			char* shoeName = NULL;
-			char* shoeDescription = NULL;
-
-			InitializeShoeList();
-
-			while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, &shoeDescription))
+			if (InitializeShoeList())
 			{
-				[names addObject:[[NSString alloc] initWithUTF8String:shoeName]];
-				free((void*)shoeName);
-				free((void*)shoeDescription);
+				size_t shoeIndex = 0;
+				uint64_t shoeId = 0;
+				char* shoeName = NULL;
+				char* shoeDescription = NULL;
+
+				while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, &shoeDescription))
+				{
+					[names addObject:[[NSString alloc] initWithUTF8String:shoeName]];
+					free((void*)shoeName);
+					free((void*)shoeDescription);
+				}
 			}
 		}
 	}

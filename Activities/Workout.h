@@ -23,19 +23,35 @@ typedef struct WorkoutInterval
 class Workout
 {
 public:
-	Workout(WorkoutType type, const std::string& sport);
+	Workout();
+	Workout(const std::string& workoutId, WorkoutType type, const std::string& sport);
 	virtual ~Workout();
+
+	std::string GetId() const { return m_id; };
+	WorkoutType GetType() const { return m_type; };
+	std::string GetSport() const { return m_sport; };
+	double GetEstimatedTrainingStress() const { return m_estimatedTrainingStress; };
+	time_t GetScheduledTime() const { return m_scheduledTime; };
+
+	void SetId(const std::string& workoutId) { m_id = workoutId; };
+	void SetType(WorkoutType type) { m_type = type; };
+	void SetSport(const std::string& sport) { m_sport = sport; };
+	void SetEstimatedStress(double estimatedStress) { m_estimatedTrainingStress = estimatedStress; };
+	void SetScheduledTime(time_t scheduledTime) { m_scheduledTime = scheduledTime; };
 
 	void AddWarmup(uint64_t seconds);
 	void AddCooldown(uint64_t seconds);
 	void AddInterval(uint8_t repeat, double distance, double pace, double recoveryDistance, double recoveryPace);
+
 	double CalculateEstimatedTrainingStress(double thresholdPaceMinute);
 
 private:
+	std::string m_id;
 	WorkoutType m_type;
 	std::string m_sport;
 	std::vector<WorkoutInterval> m_intervals;
 	double m_estimatedTrainingStress;
+	time_t m_scheduledTime;
 
 	double CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute);
 };

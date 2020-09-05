@@ -23,6 +23,7 @@
 #include "PacePlan.h"
 #include "SensorReading.h"
 #include "Shoes.h"
+#include "Workout.h"
 
 class Database
 {
@@ -60,6 +61,11 @@ public:
 	bool RetrieveIntervalSegments(const std::string& workoutId, std::vector<IntervalWorkoutSegment>& segments);
 	bool DeleteIntervalSegment(uint64_t segmentId);
 	bool DeleteIntervalSegmentsForWorkout(const std::string& workoutId);
+
+	bool CreateWorkout(const Workout& workout);
+	bool RetrieveWorkouts(std::vector<Workout>& workouts);
+	bool DeleteWorkout(const std::string& workoutId);
+	bool DeleteAllWorkouts(void);
 
 	bool CreatePacePlan(const std::string& name, const std::string& planId);
 	bool RetrievePacePlans(std::vector<PacePlan>& plans);

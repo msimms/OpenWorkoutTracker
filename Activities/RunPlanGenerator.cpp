@@ -7,6 +7,7 @@
 
 #include "RunPlanGenerator.h"
 #include "ActivityAttribute.h"
+#include "ActivitySummary.h"
 #include "ExperienceLevel.h"
 #include "GoalType.h"
 #include "WorkoutFactory.h"

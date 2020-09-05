@@ -51,7 +51,7 @@ extern "C" {
 	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
 
 	// Functions for managing bike profiles.
-	void InitializeBikeProfileList(void);
+	bool InitializeBikeProfileList(void);
 	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm);
 	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm);
 	bool DeleteBikeProfile(uint64_t bikeId);
@@ -65,7 +65,7 @@ extern "C" {
 	uint64_t GetBikeIdFromName(const char* const name);
 
 	// Functions for managing shoes.
-	void InitializeShoeList(void);
+	bool InitializeShoeList(void);
 	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool DeleteShoeProfile(uint64_t shoeId);

@@ -119,6 +119,11 @@ bool Database::CreateTables()
 		sql = "create table interval_workout_segment (id integer primary key, workout_id test, sets integer, reps integer, duration integer, distance double, pace double, power double, units integer)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("workout"))
+	{
+		sql = "create table workout (id integer primary key, workout_id test, type unsigned big int, sport text, estimated_stress double, scheduled_time unsigned big int)";
+		queries.push_back(sql);
+	}
 	if (!DoesTableExist("pace_plan"))
 	{
 		sql = "create table pace_plan (id integer primary key, plan_id text, name text, target_pace double, target_distance double, splits double, route text)";
@@ -227,6 +232,8 @@ bool Database::Reset()
 	sql = "delete from interval_workout";
 	queries.push_back(sql);
 	sql = "delete from interval_workout_segment";
+	queries.push_back(sql);
+	sql = "delete from workout";
 	queries.push_back(sql);
 	sql = "delete from pace_plan";
 	queries.push_back(sql);
@@ -565,7 +572,7 @@ bool Database::DeleteIntervalWorkout(const std::string& workoutId)
 bool Database::CreateIntervalSegment(const std::string& workoutId, IntervalWorkoutSegment segment)
 {
 	sqlite3_stmt* statement = NULL;
-	
+
 	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_workout_segment values (NULL,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
@@ -587,7 +594,7 @@ bool Database::RetrieveIntervalSegments(const std::string& workoutId, std::vecto
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
-	
+
 	if (sqlite3_prepare_v2(m_pDb, "select id, sets, reps, duration, distance, pace, power, units from interval_workout_segment where workout_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
@@ -635,6 +642,85 @@ bool Database::DeleteIntervalSegmentsForWorkout(const std::string& workoutId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::CreateWorkout(const Workout& workout)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "insert into workout values (NULL,?,?,?,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 2, workout.GetType());
+		sqlite3_bind_text(statement, 3, workout.GetSport().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 4, workout.GetEstimatedTrainingStress());
+		sqlite3_bind_int64(statement, 5, workout.GetScheduledTime());
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select workout_id, type, sport, estimated_stress, scheduled_time from workout", -1, &statement, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			std::string workoutId;
+			WorkoutType workoutType;
+			std::string sport;
+
+			workoutId.append((const char*)sqlite3_column_text(statement, 1));
+			workoutType = (WorkoutType)sqlite3_column_int64(statement, 2);
+			sport.append((const char*)sqlite3_column_text(statement, 3));
+			double estimatedStress = (double)sqlite3_column_double(statement, 4);
+			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 5);
+
+			Workout workoutObj;
+			workoutObj.SetId(workoutId);
+			workoutObj.SetType(workoutType);
+			workoutObj.SetEstimatedStress(estimatedStress);
+			workoutObj.SetScheduledTime(scheduledTime);
+
+			workouts.push_back(workoutObj);
+		}
+		
+		sqlite3_finalize(statement);
+		result = true;
+	}
+	return result;
+}
+
+bool Database::DeleteWorkout(const std::string& workoutId)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "delete from workout where workout_id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::DeleteAllWorkouts(void)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "delete from workout", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

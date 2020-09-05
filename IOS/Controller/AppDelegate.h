@@ -170,7 +170,7 @@
 
 // methods for managing bike profiles
 
-- (void)initializeBikeProfileList;
+- (BOOL)initializeBikeProfileList;
 - (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm;
 - (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId;
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm;
@@ -181,7 +181,7 @@
 
 // methods for managing shoes
 
-- (void)initializeShoeList;
+- (BOOL)initializeShoeList;
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired;
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName;
 - (BOOL)deleteShoeProfile:(uint64_t)shoeId;

@@ -6,13 +6,13 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WorkoutsViewController.h"
+#import "WorkoutDetailsViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
-#import "PacePlanEditViewController.h"
 #import "Segues.h"
 
-#define TITLE                     NSLocalizedString(@"Workouts", nil)
-#define GENERATE_WORKOUTS         NSLocalizedString(@"Generate", nil)
+#define TITLE             NSLocalizedString(@"Workouts", nil)
+#define GENERATE_WORKOUTS NSLocalizedString(@"Generate", nil)
 
 @interface WorkoutsViewController ()
 
@@ -145,7 +145,7 @@
 		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
 		self->selectedWorkoutId = nameAndId[@"id"];
 		
-		[self performSegueWithIdentifier:@SEGUE_TO_PACE_PLAN_EDIT_VIEW sender:self];
+		[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
 	}
 }
 

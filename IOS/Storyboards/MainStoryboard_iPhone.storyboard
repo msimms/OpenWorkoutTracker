@@ -2500,6 +2500,22 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
             </objects>
             <point key="canvasLocation" x="1990" y="-1298"/>
         </scene>
+        <!--Workout Details View Controller-->
+        <scene sceneID="3Kl-LP-ZgI">
+            <objects>
+                <viewController id="PIf-L5-EEn" customClass="WorkoutDetailsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MsZ-fA-U3N">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="yfY-wB-EOx"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="c1N-ZX-eb0"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="02u-cb-wYc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="918" y="-1298"/>
+        </scene>
         <!--Workouts View Controller-->
         <scene sceneID="CPr-In-7nj">
             <objects>
@@ -2540,6 +2556,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <viewLayoutGuide key="safeArea" id="ITH-Gr-Xar"/>
                     </view>
                     <navigationItem key="navigationItem" id="bEy-hg-a2T"/>
+                    <connections>
+                        <segue destination="PIf-L5-EEn" kind="push" identifier="SegueToWorkoutDetailsView" id="IUw-Ek-UZs"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YDo-K2-6Te" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

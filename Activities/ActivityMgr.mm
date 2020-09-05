@@ -296,14 +296,15 @@ extern "C" {
 	// Functions for managing bike profiles.
 	//
 
-	void InitializeBikeProfileList()
+	bool InitializeBikeProfileList()
 	{
 		g_bikes.clear();
 
 		if (g_pDatabase)
 		{
-			g_pDatabase->RetrieveBikes(g_bikes);
+			return g_pDatabase->RetrieveBikes(g_bikes);
 		}
+		return false;
 	}
 
 	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm)
@@ -325,7 +326,7 @@ extern "C" {
 				
 				if (result)
 				{
-					InitializeBikeProfileList();
+					result = InitializeBikeProfileList();
 				}
 			}
 		}
@@ -343,11 +344,12 @@ extern "C" {
 			bike.name = name;
 			bike.weightKg = weightKg;
 			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
+
 			result = g_pDatabase->UpdateBike(bike);
 
 			if (result)
 			{
-				InitializeBikeProfileList();
+				result = InitializeBikeProfileList();
 			}
 		}
 		return result;
@@ -363,7 +365,7 @@ extern "C" {
 
 			if (result)
 			{
-				InitializeBikeProfileList();
+				result = InitializeBikeProfileList();
 			}
 		}
 		return result;
@@ -540,14 +542,15 @@ extern "C" {
 	// Functions for managing shoes.
 	//
 
-	void InitializeShoeList(void)
+	bool InitializeShoeList(void)
 	{
 		g_shoes.clear();
 
 		if (g_pDatabase)
 		{
-			g_pDatabase->RetrieveAllShoes(g_shoes);
+			return g_pDatabase->RetrieveAllShoes(g_shoes);
 		}
+		return false;
 	}
 
 	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
@@ -571,7 +574,7 @@ extern "C" {
 				
 				if (result)
 				{
-					InitializeShoeList();
+					result = InitializeShoeList();
 				}
 			}
 		}
@@ -595,7 +598,7 @@ extern "C" {
 
 			if (result)
 			{
-				InitializeShoeList();
+				result = InitializeShoeList();
 			}
 		}
 		return result;
@@ -611,7 +614,7 @@ extern "C" {
 
 			if (result)
 			{
-				InitializeShoeList();
+				result = InitializeShoeList();
 			}
 		}
 		return result;
@@ -1715,7 +1718,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			//return g_pDatabase->RetrieveWorkouts(g_workouts);
+			return g_pDatabase->RetrieveWorkouts(g_workouts);
 		}
 		return false;
 	}
@@ -1728,15 +1731,28 @@ extern "C" {
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
 	void GenerateWorkouts(void)
 	{
-		WorkoutPlanGenerator gen;
-
-		std::map<std::string, double> inputs = gen.CalculateInputs(g_historicalActivityList);
-		std::vector<Workout*> plannedWorkouts = gen.GenerateWorkouts(inputs);
-
-		for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+		if (g_pDatabase)
 		{
-			Workout* workout = (*iter);
-			delete workout;
+			WorkoutPlanGenerator gen;
+
+			// Generate new workouts.
+			std::map<std::string, double> inputs = gen.CalculateInputs(g_historicalActivityList);
+			std::vector<Workout*> plannedWorkouts = gen.GenerateWorkouts(inputs);
+
+			// Delete old workouts.
+			g_pDatabase->DeleteAllWorkouts();
+			
+			// Store the new workouts.
+			for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+			{
+				Workout* workout = (*iter);
+
+				if (workout)
+				{
+					g_pDatabase->CreateWorkout(*workout);
+					delete workout;
+				}
+			}
 		}
 	}
 

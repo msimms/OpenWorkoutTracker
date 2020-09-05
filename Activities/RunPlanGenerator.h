@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "ActivitySummary.h"
 #include "Workout.h"
 
 class RunPlanGenerator
