@@ -13,6 +13,7 @@
 {
 	IBOutlet UINavigationItem* navItem;
 
+	CPTGraphHostingView* hostingView;
 	CPTXYGraph* graph;
 	ChartLine*  dataForPlot;
 

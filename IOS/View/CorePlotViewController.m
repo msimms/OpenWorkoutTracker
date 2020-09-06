@@ -30,7 +30,6 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	[self drawChart];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -42,6 +41,8 @@
                                              selector:@selector(deviceOrientationDidChange:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
+
+	[self drawChart];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -62,38 +63,32 @@
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
 {
-	[self drawChart];
+	[self->hostingView setFrame:[self.view bounds]];
 }
 
 #pragma mark
 
 - (void)drawChart
 {	
-	const NSInteger  BAR_HEIGHT = 100;
 	const NSUInteger NUM_X_HASH_MARKS = 5;
 	const NSUInteger NUM_Y_HASH_MARKS = 8;
 
 	NSUInteger numPoints = [self numPointsToDraw];
-	
-	// Create graph from a custom theme
-	self->graph = [[CPTXYGraph alloc] initWithFrame:CGRectZero];
 
-	CGRect parentRect = self.view.bounds;
-	parentRect = CGRectMake((parentRect.origin.x),
-							(parentRect.origin.y + BAR_HEIGHT),
-							(parentRect.size.width),
-							(parentRect.size.height - BAR_HEIGHT));
+	// Create the host view.
+	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.view.bounds];
+	[self->hostingView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+	[self.view addSubview:self->hostingView];
 
-	CPTGraphHostingView* hostingView = [(CPTGraphHostingView*)[CPTGraphHostingView alloc] initWithFrame:parentRect];
-	hostingView.collapsesLayers      = NO; // Setting to YES reduces GPU memory usage, but can slow drawing/scrolling
-	hostingView.hostedGraph          = self->graph;
+	// Create the graph from a custom theme.
+	self->graph = [[CPTXYGraph alloc] initWithFrame:self->hostingView.bounds];
+	[self->hostingView setHostedGraph:self->graph];
 
-	[self.view addSubview:hostingView];
-
-	self->graph.paddingLeft   = 40.0;
-	self->graph.paddingTop    = 10.0;
-	self->graph.paddingRight  = 15.0;
-	self->graph.paddingBottom = 40.0;
+	// Set graph padding and theme.
+	self->graph.plotAreaFrame.paddingTop = 80.0f;
+	self->graph.plotAreaFrame.paddingRight = 20.0f;
+	self->graph.plotAreaFrame.paddingBottom = 40.0f;
+	self->graph.plotAreaFrame.paddingLeft = 40.0f;
 
 	self->minX = (double)0.0;
 	self->maxX = (double)numPoints;
@@ -176,11 +171,11 @@
 	y.minorTickLength               = 3.0f;
 	y.labelFormatter                = numberFormatter;
 	CPTMutableTextStyle* newStyle   = [y.labelTextStyle mutableCopy];
-	newStyle.color                  = [CPTColor redColor];
+	newStyle.color                  = [CPTColor blackColor];
 	y.labelTextStyle                = newStyle;
     NSArray* exclusionRanges        = @[[CPTPlotRange plotRangeWithLocation:@(1.99) length:@(0.02)],
-                                      [CPTPlotRange plotRangeWithLocation:@(0.99) length:@(0.02)],
-                                      [CPTPlotRange plotRangeWithLocation:@(3.99) length:@(0.02)]];
+                                        [CPTPlotRange plotRangeWithLocation:@(0.99) length:@(0.02)],
+                                        [CPTPlotRange plotRangeWithLocation:@(3.99) length:@(0.02)]];
     y.labelExclusionRanges          = exclusionRanges;
 	y.tickDirection                 = CPTSignNegative;
 	y.title                         = self->yLabelStr;
@@ -222,7 +217,7 @@
 	//x.axisLabels = xLabels;
 	x.majorTickLocations = xLocations;
 
-	// Add hash marks to the y axis
+	// Add hash marks to the y axis.
 	NSMutableSet* yLabels    = [NSMutableSet setWithCapacity:NUM_Y_HASH_MARKS];
 	NSMutableSet* yLocations = [NSMutableSet setWithCapacity:NUM_Y_HASH_MARKS];
 	for (NSUInteger i = 1; i < NUM_Y_HASH_MARKS; ++i)
