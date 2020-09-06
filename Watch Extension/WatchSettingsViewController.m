@@ -20,6 +20,7 @@
 @implementation WatchSettingsViewController
 
 @synthesize broadcast;
+@synthesize metric;
 @synthesize resetButton;
 
 - (instancetype)init
@@ -44,15 +45,23 @@
 
 - (void)awakeWithContext:(id)context
 {
-	BOOL broadcastOn = [Preferences shouldBroadcastGlobally];
-	[broadcast setOn:broadcastOn];
+	[broadcast setOn:[Preferences shouldBroadcastGlobally]];
+	[metric setOn:[Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC];
 }
 
 #pragma mark switch methods
 
-- (IBAction)switchAction:(BOOL)on
+- (IBAction)switchBroadcastAction:(BOOL)on
 {
 	[Preferences setBroadcastGlobally:on];
+}
+
+- (IBAction)switchMetricAction:(BOOL)on
+{
+	if (on)
+		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
+	else
+		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
 }
 
 #pragma mark button handlers

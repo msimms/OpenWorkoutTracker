@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="16097" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="16097.2" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
@@ -242,7 +242,12 @@
                     <items>
                         <switch width="1" alignment="left" value="YES" title="Broadcast" id="8A2-ad-Uee">
                             <connections>
-                                <action selector="switchAction:" destination="hJl-mE-pcA" id="Hac-M4-mre"/>
+                                <action selector="switchBroadcastAction:" destination="hJl-mE-pcA" id="WLm-9V-7O6"/>
+                            </connections>
+                        </switch>
+                        <switch width="1" alignment="left" value="YES" title="Metric" id="IQG-Gm-neq">
+                            <connections>
+                                <action selector="switchMetricAction:" destination="hJl-mE-pcA" id="nvw-yL-NrA"/>
                             </connections>
                         </switch>
                         <button width="1" alignment="left" title="Reset" id="RLD-SD-HYq">
@@ -255,6 +260,7 @@
                     </items>
                     <connections>
                         <outlet property="broadcast" destination="8A2-ad-Uee" id="W3g-zr-jsL"/>
+                        <outlet property="metric" destination="IQG-Gm-neq" id="dSF-Eh-GZE"/>
                         <outlet property="resetButton" destination="RLD-SD-HYq" id="eh9-SE-X1V"/>
                     </connections>
                 </controller>

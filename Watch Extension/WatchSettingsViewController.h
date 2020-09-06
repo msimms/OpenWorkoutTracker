@@ -11,10 +11,12 @@
 @interface WatchSettingsViewController : WKInterfaceController
 {
 	IBOutlet __strong WKInterfaceSwitch* broadcast;
+	IBOutlet __strong WKInterfaceSwitch* metric;
 	IBOutlet __strong WKInterfaceButton* resetButton;
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceSwitch* broadcast;
+@property (nonatomic, retain) IBOutlet WKInterfaceSwitch* metric;
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* resetButton;
 
 @end
