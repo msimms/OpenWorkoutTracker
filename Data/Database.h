@@ -37,11 +37,15 @@ public:
 	bool CreateTables();
 	bool Reset();
 
+	// Methods for managing the bicycle inventory.
+
 	bool CreateBike(const Bike& bike);
 	bool RetrieveBike(uint64_t bikeId, Bike& bike);
 	bool RetrieveBikes(std::vector<Bike>& bikes);
 	bool UpdateBike(const Bike& bike);
 	bool DeleteBike(uint64_t bikeId);
+	
+	// Methods for managing the shoe inventory.
 
 	bool CreateShoe(Shoes& shoes);
 	bool RetrieveShoe(uint64_t shoeId, Shoes& shoes);
@@ -49,10 +53,14 @@ public:
 	bool UpdateShoe(Shoes& shoes);
 	bool DeleteShoe(uint64_t shoeId);
 
+	// Methods for associating bikes to activities.
+	
 	bool CreateBikeActivity(uint64_t bikeId, const std::string& activityId);
 	bool RetrieveBikeActivity(const std::string& activityId, uint64_t& bikeId);
 	bool UpdateBikeActivity(uint64_t bikeId, const std::string& activityId);
 
+	// Methods for interval workouts.
+	
 	bool CreateIntervalWorkout(const std::string& workoutId, const std::string& name, const std::string& sport);
 	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
 	bool DeleteIntervalWorkout(const std::string& workoutId);
@@ -62,18 +70,26 @@ public:
 	bool DeleteIntervalSegment(uint64_t segmentId);
 	bool DeleteIntervalSegmentsForWorkout(const std::string& workoutId);
 
+	// Methods for planned workouts.
+
 	bool CreateWorkout(const Workout& workout);
 	bool RetrieveWorkouts(std::vector<Workout>& workouts);
 	bool DeleteWorkout(const std::string& workoutId);
 	bool DeleteAllWorkouts(void);
+
+	// Methods for managing pace plans.
 
 	bool CreatePacePlan(const std::string& name, const std::string& planId);
 	bool RetrievePacePlans(std::vector<PacePlan>& plans);
 	bool UpdatePacePlan(const PacePlan& plan);
 	bool DeletePacePlan(const std::string& planId);
 
+	// Methods for managing custom activities.
+
 	bool CreateCustomActivity(const std::string& activityType, ActivityViewType viewType);
 	bool DeleteCustomActivity(const std::string& activityType);
+
+	// Methods for managing activities.
 
 	bool StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, time_t startTime);
 	bool StopActivity(time_t endTime, const std::string& activityId);
@@ -92,22 +108,32 @@ public:
 	bool CreateNewLap(const std::string& activityId, uint64_t startTimeMs);
 	bool RetrieveLaps(const std::string& activityId, LapSummaryList& laps);
 
+	// Methods for managing tags.
+	
 	bool CreateTag(const std::string& activityId, const std::string& tag);
 	bool RetrieveTags(const std::string& activityId, std::vector<std::string>& tags);
 	bool DeleteTag(const std::string& activityId, const std::string& tag);
 	bool SearchForTags(const std::string& searchStr, std::vector<std::string>& matchingActivities);
 
+	// Methods for creating and retrieving summary data. Delete is handled by DeleteActivity.
+
 	bool CreateSummaryData(const std::string& activityId, const std::string& attribute, ActivityAttributeType value);
 	bool RetrieveSummaryData(const std::string& activityId, ActivityAttributeMap& values);
+
+	// Methods for managing activity hashes.
 
 	bool CreateActivityHash(const std::string& activityId, const std::string& hash);
 	bool RetrieveActivityIdFromHash(const std::string& hash, std::string& activityId);
 	bool RetrieveHashForActivityId(const std::string& activityId, std::string& hash);
 	bool UpdateActivityHash(const std::string& activityId, const std::string& hash);
 
+	// Methods for storing and retrieving the user's weight measurements.
+
 	bool CreateWeightMeasurement(time_t measurementTime, double weightKg);
 	bool RetrieveNearestWeightMeasurement(time_t measurementTime, double& weightKg);
 	bool RetrieveNewestWeightMeasurement(time_t& measurementTime, double& weightKg);
+
+	// Methods for retrieving activity sensor data.
 
 	typedef void (*coordinateCallback)(uint64_t time, double latitude, double longitude, double altitude, void* context);
 	bool ProcessAllCoordinates(coordinateCallback callback, void* context);
@@ -122,6 +148,8 @@ public:
 	bool RetrieveActivityWheelSpeedReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityPowerMeterReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityFootPodReadings(const std::string& activityId, SensorReadingList& readings);
+
+	// Methods for trimming activity data.
 
 	bool TrimActivityPositionReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);
 	bool TrimActivityAccelerometerReadings(const std::string& activityId, uint64_t timeStamp, bool fromStart);

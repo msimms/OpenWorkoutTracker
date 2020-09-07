@@ -121,7 +121,12 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("workout"))
 	{
-		sql = "create table workout (id integer primary key, workout_id test, type unsigned big int, sport text, estimated_stress double, scheduled_time unsigned big int)";
+		sql = "create table workout (id integer primary key, workout_id text, type unsigned big int, sport text, estimated_stress double, scheduled_time unsigned big int)";
+		queries.push_back(sql);
+	}
+	if (!DoesTableExist("workout_interval"))
+	{
+		sql = "create table workout_interval (id integer primary key, workout_id text, repeat integer, duration double, power_low double, power_high double, distance double, pace double, recovery_distance double, recovery_pace double)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("pace_plan"))
@@ -234,6 +239,8 @@ bool Database::Reset()
 	sql = "delete from interval_workout_segment";
 	queries.push_back(sql);
 	sql = "delete from workout";
+	queries.push_back(sql);
+	sql = "delete from workout_interval";
 	queries.push_back(sql);
 	sql = "delete from pace_plan";
 	queries.push_back(sql);
