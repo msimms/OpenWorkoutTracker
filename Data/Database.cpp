@@ -687,6 +687,7 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 
 			Workout workoutObj;
 			workoutObj.SetId(workoutId);
+			workoutObj.SetSport(sport);
 			workoutObj.SetType(workoutType);
 			workoutObj.SetEstimatedStress(estimatedStress);
 			workoutObj.SetScheduledTime(scheduledTime);

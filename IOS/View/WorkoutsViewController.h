@@ -14,7 +14,7 @@
 	IBOutlet UITableView* workoutsView;
 	IBOutlet UIBarButtonItem* generateButton;
 	
-	NSString* selectedWorkoutId;
+	NSMutableDictionary* selectedWorkoutDetails;
 	NSMutableArray* plannedWorkouts;
 }
 

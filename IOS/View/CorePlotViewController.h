@@ -23,10 +23,10 @@
 	BOOL showMinLine;
 	BOOL showMaxLine;
 	BOOL showAvgLine;
+	CPTColor* lineColor;
 
 	double minX;
 	double maxX;
-
 	double minY;
 	double maxY;
 	double avgY;
@@ -36,6 +36,7 @@
 - (void)setShowMinLine:(BOOL)value;
 - (void)setShowMaxLine:(BOOL)value;
 - (void)setShowAvgLine:(BOOL)value;
+- (void)setLineColor:(CPTColor*)color;
 
 - (IBAction)onHome:(id)sender;
 

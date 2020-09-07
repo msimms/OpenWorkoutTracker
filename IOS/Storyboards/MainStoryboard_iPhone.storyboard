@@ -2507,10 +2507,27 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <view key="view" contentMode="scaleToFill" id="MsZ-fA-U3N">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crS-Zx-Fo1">
+                                <rect key="frame" x="0.0" y="734" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Export" id="LYi-2r-111">
+                                        <connections>
+                                            <action selector="onExport:" destination="PIf-L5-EEn" id="mSw-sE-eaQ"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="yfY-wB-EOx"/>
                     </view>
                     <navigationItem key="navigationItem" id="c1N-ZX-eb0"/>
+                    <connections>
+                        <outlet property="toolbar" destination="crS-Zx-Fo1" id="K1b-Yc-6Gk"/>
+                        <outlet property="view" destination="MsZ-fA-U3N" id="9qT-By-qdV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="02u-cb-wYc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2561,6 +2578,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     </view>
                     <navigationItem key="navigationItem" id="bEy-hg-a2T"/>
                     <connections>
+                        <outlet property="generateButton" destination="dAT-Yg-1IA" id="em2-o6-Pi9"/>
+                        <outlet property="toolbar" destination="9P9-KK-ntB" id="2oL-LD-93Q"/>
+                        <outlet property="view" destination="5uJ-ft-hY6" id="0nh-U1-ihV"/>
+                        <outlet property="workoutsView" destination="bf3-gh-9hW" id="agC-Bu-gTU"/>
                         <segue destination="PIf-L5-EEn" kind="push" identifier="SegueToWorkoutDetailsView" id="IUw-Ek-UZs"/>
                     </connections>
                 </viewController>

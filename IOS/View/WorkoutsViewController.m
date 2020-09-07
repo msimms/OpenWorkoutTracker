@@ -73,6 +73,14 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
+	if ([[segue identifier] isEqualToString:@SEGUE_TO_WORKOUT_DETAILS_VIEW])
+	{
+		WorkoutDetailsViewController* detailsVC = (WorkoutDetailsViewController*)[segue destinationViewController];
+		if (detailsVC)
+		{
+			[detailsVC setWorkoutDetails:self->selectedWorkoutDetails];
+		}
+	}
 }
 
 #pragma mark button handlers
@@ -130,8 +138,55 @@
 	{
 		case 0:
 			{
-				NSDictionary* workoutData = [self->plannedWorkouts objectAtIndex:row];
-				cell.textLabel.text = workoutData[@"type"];
+				NSDictionary* workoutDetails = [self->plannedWorkouts objectAtIndex:row];
+				WorkoutType workoutType = (WorkoutType)([workoutDetails[@"type"] integerValue]);
+
+				switch (workoutType)
+				{
+				case WORKOUT_TYPE_REST:
+					cell.textLabel.text = @"Rest";
+					break;
+				case WORKOUT_TYPE_EVENT:
+					cell.textLabel.text = @"Event";
+					break;
+				case WORKOUT_TYPE_SPEED_RUN:
+					cell.textLabel.text = @"Speed Run";
+					break;
+				case WORKOUT_TYPE_TEMPO_RUN:
+					cell.textLabel.text = @"Tempo Run";
+					break;
+				case WORKOUT_TYPE_EASY_RUN:
+					cell.textLabel.text = @"Easy Run";
+					break;
+				case WORKOUT_TYPE_LONG_RUN:
+					cell.textLabel.text = @"Long Run";
+					break;
+				case WORKOUT_TYPE_FREE_RUN:
+					cell.textLabel.text = @"Free Run";
+					break;
+				case WORKOUT_TYPE_HILL_REPEATS:
+					cell.textLabel.text = @"Hill Repeats";
+					break;
+				case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
+					cell.textLabel.text = @"Middle Distance Run";
+					break;
+				case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
+					cell.textLabel.text = @"Interval Ride";
+					break;
+				case WORKOUT_TYPE_TEMPO_RIDE:
+					cell.textLabel.text = @"Tempo Run";
+					break;
+				case WORKOUT_TYPE_EASY_RIDE:
+					cell.textLabel.text = @"Easy Ride";
+					break;
+				case WORKOUT_TYPE_OPEN_WATER_SWIM:
+					cell.textLabel.text = @"Open Water Swim";
+					break;
+				case WORKOUT_TYPE_POOL_WATER_SWIM:
+					cell.textLabel.text = @"Pool Swim";
+					break;
+				}
+				//cell.detailTextLabel.text = workoutDetails[@"sport"];
 			}
 			break;
 		default:
@@ -152,9 +207,7 @@
 	NSInteger section = [indexPath section];	
 	if (section == 0)
 	{
-		NSDictionary* workoutData = [self->plannedWorkouts objectAtIndex:[indexPath row]];
-		self->selectedWorkoutId = workoutData[@"id"];
-		
+		self->selectedWorkoutDetails = [self->plannedWorkouts objectAtIndex:[indexPath row]];
 		[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
 	}
 }

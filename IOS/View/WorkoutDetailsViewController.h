@@ -4,15 +4,26 @@
 #import <UIKit/UIKit.h>
 #import "CommonViewController.h"
 
-@interface WorkoutDetailsViewController : CommonViewController
+#import "CorePlot-CocoaTouch.h"
+
+@interface WorkoutDetailsViewController : CommonViewController<CPTBarPlotDataSource, CPTBarPlotDelegate>
 {
 	IBOutlet UIToolbar* toolbar;
-	IBOutlet UITableView* workoutsView;
-	
-	NSString* selectedWorkoutId;
+
+	CPTGraphHostingView* hostingView;
+	CPTGraph* graph;
+
+	NSMutableDictionary* workoutDetails;
+
+	double minX;
+	double maxX;
+	double minY;
+	double maxY;
 }
 
+- (IBAction)onExport:(id)sender;
+- (void)setWorkoutDetails:(NSMutableDictionary*)details;
+
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
-@property (nonatomic, retain) IBOutlet UITableView* workoutsView;
 
 @end

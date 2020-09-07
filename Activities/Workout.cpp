@@ -67,7 +67,7 @@ void Workout::AddInterval(uint8_t repeat, double distance, double pace, double r
 }
 
 // Utility function for calculating the number of seconds for an interval.
-double Workout::CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute)
+double Workout::CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const
 {
 	double intervalDurationSecs = intervalMeters / (intervalPaceMetersPerMinute / 60.0);
 	return intervalDurationSecs;
@@ -104,4 +104,24 @@ double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMinute)
 
 	m_estimatedTrainingStress = ((workoutDurationSecs * avgWorkoutPace) / (thresholdPaceMinute * 60.0)) * 100.0;
 	return m_estimatedTrainingStress;
+}
+
+double Workout::CalculateDuration() const
+{
+	double workoutDurationSecs = 0.0;
+
+	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
+	{
+		if (interval->m_distance > 0 && interval->m_pace > 0.0)
+		{
+			double intervalDurationSecs = interval->m_repeat * CalculateIntervalDuration(interval->m_distance, interval->m_pace);
+			workoutDurationSecs += intervalDurationSecs;
+		}
+		if (interval->m_recoveryDistance > 0 && interval->m_recoveryPace > 0.0)
+		{
+			double intervalDurationSecs = (interval->m_repeat - 1) * CalculateIntervalDuration(interval->m_recoveryDistance, interval->m_recoveryPace);
+			workoutDurationSecs += intervalDurationSecs;
+		}
+	}
+	return workoutDurationSecs;
 }

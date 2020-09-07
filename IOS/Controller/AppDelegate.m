@@ -2297,59 +2297,18 @@ void attributeNameCallback(const char* name, void* context)
 		
 		while ((workoutId = GetWorkoutIdByIndex(workoutIndex)) != NULL)
 		{
+			char* sport = GetWorkoutSportByIndex(workoutIndex);
 			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-
-			WorkoutType workoutType = GetWorkoutTypeByIndex(workoutIndex);
-			switch (workoutType)
-			{
-			case WORKOUT_TYPE_REST:
-				[mutDic setValue:@"Rest" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_EVENT:
-				[mutDic setValue:@"Event" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_SPEED_RUN:
-				[mutDic setValue:@"Speed Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_TEMPO_RUN:
-				[mutDic setValue:@"Tempo Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_EASY_RUN:
-				[mutDic setValue:@"Easy Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_LONG_RUN:
-				[mutDic setValue:@"Long Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_FREE_RUN:
-				[mutDic setValue:@"Free Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_HILL_REPEATS:
-				[mutDic setValue:@"Hill Repeats" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
-				[mutDic setValue:@"Middle Distance Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
-				[mutDic setValue:@"Interval Ride" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_TEMPO_RIDE:
-				[mutDic setValue:@"Tempo Run" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_EASY_RIDE:
-				[mutDic setValue:@"Easy Ride" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_OPEN_WATER_SWIM:
-				[mutDic setValue:@"Open Water Swim" forKey:@"type"];
-				break;
-			case WORKOUT_TYPE_POOL_WATER_SWIM:
-				[mutDic setValue:@"Pool Swim" forKey:@"type"];
-				break;
-			}
-
+			[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
+			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutTypeByIndex(workoutIndex)] forKey:@"type"];
+			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutDurationyIndex(workoutIndex)] forKey:@"duration"];
 			[workoutData addObject:mutDic];
 
+			if (sport)
+				free(sport);
 			free(workoutId);
+
 			++workoutIndex;
 		}
 	}

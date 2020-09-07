@@ -126,14 +126,17 @@
 	else if ([chartName isEqualToString:@CHART_NAME_HEART_RATE])
 	{
 		line = [[HeartRateLine alloc] init];
+		[view setLineColor:[CPTColor redColor]];
 	}
 	else if ([chartName isEqualToString:@CHART_NAME_CADENCE])
 	{
 		line = [[CadenceLine alloc] init];
+		[view setLineColor:[CPTColor greenColor]];
 	}
 	else if ([chartName isEqualToString:@CHART_NAME_POWER])
 	{
 		line = [[PowerLine alloc] init];
+		[view setLineColor:[CPTColor blueColor]];
 	}
 	if (line)
 	{

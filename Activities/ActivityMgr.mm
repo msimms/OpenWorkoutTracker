@@ -1734,6 +1734,16 @@ extern "C" {
 	}
 
 	// InitializeWorkoutList should be called before calling this.
+	char* GetWorkoutSportByIndex(size_t workoutIndex)
+	{
+		if (workoutIndex < g_workouts.size())
+		{
+			return strdup(g_workouts.at(workoutIndex).GetSport().c_str());
+		}
+		return NULL;
+	}
+
+	// InitializeWorkoutList should be called before calling this.
 	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex)
 	{
 		if (workoutIndex < g_workouts.size())
@@ -1741,6 +1751,16 @@ extern "C" {
 			return g_workouts.at(workoutIndex).GetType();
 		}
 		return WORKOUT_TYPE_REST;
+	}
+
+	// InitializeWorkoutList should be called before calling this.
+	uint64_t GetWorkoutDurationyIndex(size_t workoutIndex)
+	{
+		if (workoutIndex < g_workouts.size())
+		{
+			return g_workouts.at(workoutIndex).GetType();
+		}
+		return 0;
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.

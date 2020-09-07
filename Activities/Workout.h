@@ -28,32 +28,33 @@ public:
 	virtual ~Workout();
 
 	std::string GetId() const { return m_id; };
-	WorkoutType GetType() const { return m_type; };
 	std::string GetSport() const { return m_sport; };
-	double GetEstimatedTrainingStress() const { return m_estimatedTrainingStress; };
+	WorkoutType GetType() const { return m_type; };
 	time_t GetScheduledTime() const { return m_scheduledTime; };
+	double GetEstimatedTrainingStress() const { return m_estimatedTrainingStress; };
 
 	void SetId(const std::string& workoutId) { m_id = workoutId; };
-	void SetType(WorkoutType type) { m_type = type; };
 	void SetSport(const std::string& sport) { m_sport = sport; };
-	void SetEstimatedStress(double estimatedStress) { m_estimatedTrainingStress = estimatedStress; };
+	void SetType(WorkoutType type) { m_type = type; };
 	void SetScheduledTime(time_t scheduledTime) { m_scheduledTime = scheduledTime; };
+	void SetEstimatedStress(double estimatedStress) { m_estimatedTrainingStress = estimatedStress; };
 
 	void AddWarmup(uint64_t seconds);
 	void AddCooldown(uint64_t seconds);
 	void AddInterval(uint8_t repeat, double distance, double pace, double recoveryDistance, double recoveryPace);
 
 	double CalculateEstimatedTrainingStress(double thresholdPaceMinute);
+	double CalculateDuration() const;
 
 private:
 	std::string m_id;
-	WorkoutType m_type;
 	std::string m_sport;
+	WorkoutType m_type;
 	std::vector<WorkoutInterval> m_intervals;
-	double m_estimatedTrainingStress;
 	time_t m_scheduledTime;
+	double m_estimatedTrainingStress;
 
-	double CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute);
+	double CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const;
 };
 
 #endif

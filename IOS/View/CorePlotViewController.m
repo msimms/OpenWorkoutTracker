@@ -85,14 +85,14 @@
 	[self->hostingView setHostedGraph:self->graph];
 
 	// Set graph padding and theme.
-	self->graph.plotAreaFrame.paddingTop = 80.0f;
-	self->graph.plotAreaFrame.paddingRight = 20.0f;
+	self->graph.plotAreaFrame.paddingTop    = 70.0f;
+	self->graph.plotAreaFrame.paddingRight  = 20.0f;
 	self->graph.plotAreaFrame.paddingBottom = 40.0f;
-	self->graph.plotAreaFrame.paddingLeft = 40.0f;
+	self->graph.plotAreaFrame.paddingLeft   = 40.0f;
 
+	// Axis min and max values.
 	self->minX = (double)0.0;
 	self->maxX = (double)numPoints;
-
 	self->minY = (double)0.0;
 	self->maxY = (double)0.0;
 	self->avgY = (double)0.0;
@@ -109,10 +109,10 @@
 
 	// Setup plot space.
 	CPTXYPlotSpace* plotSpace       = (CPTXYPlotSpace*)self->graph.defaultPlotSpace;
-	plotSpace.allowsUserInteraction = YES;
+	plotSpace.allowsUserInteraction = NO;
 	plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(self->minX) length:@(self->maxX)];
 	plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(self->minY) length:@(self->maxY)];
-    
+
 	// Axis title style.
 	CPTMutableTextStyle* axisTitleStyle = [CPTMutableTextStyle textStyle];
 	axisTitleStyle.color                = [CPTColor blackColor];
@@ -134,7 +134,10 @@
 	CPTMutableLineStyle* lineStyle  = [CPTMutableLineStyle lineStyle];
 	lineStyle.miterLimit            = 1.0f;
 	lineStyle.lineWidth             = 1.0f;
-	lineStyle.lineColor             = [CPTColor blackColor];
+	if (self->lineColor)
+		lineStyle.lineColor         = self->lineColor;
+	else
+		lineStyle.lineColor         = [CPTColor blackColor];
 
 	NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -191,8 +194,7 @@
 	[self->graph addPlot:boundLinePlot];
 
 	// Do a gradient.
-	CPTColor* areaColor1            = [CPTColor colorWithComponentRed:0.3 green:0.3 blue:0.3 alpha:0.8];
-	CPTGradient* areaGradient1      = [CPTGradient gradientWithBeginningColor:areaColor1 endingColor:[CPTColor clearColor]];
+	CPTGradient* areaGradient1      = [CPTGradient gradientWithBeginningColor:lineStyle.lineColor endingColor:[CPTColor whiteColor]];
 	areaGradient1.angle             = -90.0;
 	CPTFill* areaGradientFill       = [CPTFill fillWithGradient:areaGradient1];
 	boundLinePlot.areaFill          = areaGradientFill;
@@ -375,6 +377,11 @@
 - (void)setShowAvgLine:(BOOL)value
 {
 	self->showAvgLine = value;
+}
+
+- (void)setLineColor:(CPTColor*)color
+{
+	self->lineColor = color;
 }
 
 #pragma mark button handlers
