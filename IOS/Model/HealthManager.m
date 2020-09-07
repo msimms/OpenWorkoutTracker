@@ -118,40 +118,77 @@
 	}
 }
 
-#pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc.
+#pragma mark methods for reading quantity samples (height, weight, etc.) from HealthKit.
 
-- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType predicate:(NSPredicate*)predicate completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
 {
+	// It's invalid to call this without a completion handler.
+	if (!completion)
+	{
+		return;
+	}
+
 	NSSortDescriptor* timeSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:NO];
 
 	// Since we are interested in retrieving the user's latest sample, we sort the samples in descending
 	// order, and set the limit to 1. We are not filtering the data, and so the predicate is set to nil.
-	HKSampleQuery* query = [[HKSampleQuery alloc] initWithSampleType:quantityType predicate:nil
+	HKSampleQuery* query = [[HKSampleQuery alloc] initWithSampleType:quantityType
+														   predicate:nil
 															   limit:1
 													 sortDescriptors:@[timeSortDescriptor]
 													  resultsHandler:^(HKSampleQuery* query, NSArray* results, NSError* error)
 	{
+		// Error case: Call the completion handler, passing nil for the results.
 		if (!results)
 		{
-			if (completion)
-			{
-				completion(nil, nil, error);
-			}
-			return;
+			completion(nil, nil, error);
 		}
 
-		if (completion)
+		// Normal case: Call the completion handler with the results.
+		else
 		{
-			// If quantity isn't in the database, return nil in the completion block.
 			HKQuantitySample* quantitySample = results.firstObject;
-			HKQuantity* quantity = quantitySample.quantity;
-			NSDate* startDate = quantitySample.startDate;
-			completion(quantity, startDate, error);
+			completion(quantitySample.quantity, quantitySample.startDate, error);
 		}
 	}];
-	
+
 	[self.healthStore executeQuery:query];
 }
+
+- (void)quantitySamplesOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+{
+	// It's invalid to call this without a completion handler.
+	if (!completion)
+	{
+		return;
+	}
+
+	HKSampleQuery* query = [[HKSampleQuery alloc] initWithSampleType:quantityType
+														   predicate:nil
+															   limit:1
+													 sortDescriptors:nil
+													  resultsHandler:^(HKSampleQuery* query, NSArray* results, NSError* error)
+	{
+		// Error case: Call the completion handler, passing nil for the results.
+		if (!results)
+		{
+			completion(nil, nil, error);
+		}
+
+		// Normal case: Call the completion handler with the results.
+		else
+		{
+			for (HKQuantitySample* quantitySample in results)
+			{
+				completion(quantitySample.quantity, quantitySample.startDate, error);
+			}
+		}
+	}];
+
+	[self.healthStore executeQuery:query];
+}
+
+#pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc. and storing it in our database.
 
 - (void)updateUsersAge
 {
@@ -162,6 +199,7 @@
 	{
 		NSCalendar* gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
 		NSDate* tempDate = [gregorianCalendar dateFromComponents:dateOfBirth];
+
 		[UserProfile setBirthDate:tempDate];
 	}
 }
@@ -171,13 +209,13 @@
 	HKQuantityType* heightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	
 	[self mostRecentQuantitySampleOfType:heightType
-							   predicate:nil
 							  completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 	 {
 		 if (mostRecentQuantity)
 		 {
 			 HKUnit* heightUnit = [HKUnit inchUnit];
 			 double usersHeight = [mostRecentQuantity doubleValueForUnit:heightUnit];
+
 			 [UserProfile setHeightInInches:usersHeight];
 		 }
 	 }];
@@ -188,13 +226,13 @@
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 
 	[self mostRecentQuantitySampleOfType:weightType
-							   predicate:nil
 							  completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 	 {
 		if (mostRecentQuantity)
 		{
 			HKUnit* weightUnit = [HKUnit poundUnit];
 			double usersWeight = [mostRecentQuantity doubleValueForUnit:weightUnit];
+
 			[UserProfile setWeightInLbs:usersWeight];
 
 			ActivityAttributeType tempWeight = InitializeActivityAttribute(TYPE_DOUBLE, MEASURE_WEIGHT, UNIT_SYSTEM_US_CUSTOMARY);
@@ -210,11 +248,32 @@
 	 }];
 }
 
+// methods for returning HealthKit data.
+
+- (NSArray*)readWeightHistory
+{
+	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+
+	[self quantitySamplesOfType:weightType
+					 completion:^(HKQuantity* nextQuantity, NSDate* startDate, NSError* error)
+	 {
+		if (nextQuantity)
+		{
+		}
+	 }];
+
+	return nil;
+}
+
 #pragma mark methods for managing workouts
 
 - (NSInteger)getNumWorkouts
 {
-	return [self->workouts count];
+	if (self->workouts)
+	{
+		return [self->workouts count];
+	}
+	return 0;
 }
 
 - (void)clearWorkoutsList
@@ -614,6 +673,7 @@
 	{
 		const char* activityIdStr = [activityId UTF8String];
 		NSInteger numLocationPoints = [self getNumLocationPoints:activityId];
+
 		for (self->tempPointIndex = 0; self->tempPointIndex < numLocationPoints; ++self->tempPointIndex)
 		{
 			if (callback)
@@ -633,6 +693,7 @@
 	HKQuantityType* heightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	NSDate* now = [NSDate date];
 	HKQuantitySample* heightSample = [HKQuantitySample quantitySampleWithType:heightType quantity:heightQuantity startDate:now endDate:now];
+
 	[self.healthStore saveObject:heightSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
@@ -643,6 +704,7 @@
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 	NSDate* now = [NSDate date];
 	HKQuantitySample* weightSample = [HKQuantitySample quantitySampleWithType:weightType quantity:weightQuantity startDate:now endDate:now];
+
 	[self.healthStore saveObject:weightSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
@@ -663,11 +725,14 @@
 	{
 		double averageRate = (double)0.0;
 
-		for (NSNumber* sample in self->heartRates)
+		if ([self->heartRates count] > 0)
 		{
-			averageRate += [sample doubleValue];
+			for (NSNumber* sample in self->heartRates)
+			{
+				averageRate += [sample doubleValue];
+			}
+			averageRate /= [self->heartRates count];
 		}
-		averageRate /= [self->heartRates count];
 
 		HKQuantityType* rateType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
 		HKQuantity* rateQuantity = [HKQuantity quantityWithUnit:[HKUnit heartBeatsPerMinuteUnit] doubleValue:averageRate];
@@ -685,30 +750,33 @@
 	}
 }
 
-- (void)saveRunningWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
+- (void)saveRunningWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
 {
 	HKUnit* mileUnit = [HKUnit mileUnit];
 	HKQuantity* distanceQuantity = [HKQuantity quantityWithUnit:mileUnit doubleValue:miles];
 	HKQuantityType* distanceType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
 	HKQuantitySample* distanceSample = [HKQuantitySample quantitySampleWithType:distanceType quantity:distanceQuantity startDate:startDate endDate:endDate];
+
 	[self.healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
-- (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
+- (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
 {
 	HKUnit* mileUnit = [HKUnit mileUnit];
 	HKQuantity* distanceQuantity = [HKQuantity quantityWithUnit:mileUnit doubleValue:miles];
 	HKQuantityType* distanceType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceCycling];
 	HKQuantitySample* distanceSample = [HKQuantitySample quantitySampleWithType:distanceType quantity:distanceQuantity startDate:startDate endDate:endDate];
+
 	[self.healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
-- (void)saveCaloriesBurnedIntoHealthStore:(double)calories withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
+- (void)saveCaloriesBurnedIntoHealthStore:(double)calories withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
 {
 	HKUnit* calorieUnit = [HKUnit largeCalorieUnit];
 	HKQuantity* calorieQuantity = [HKQuantity quantityWithUnit:calorieUnit doubleValue:calories];
 	HKQuantityType* calorieType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierActiveEnergyBurned];
 	HKQuantitySample* calorieSample = [HKQuantitySample quantitySampleWithType:calorieType quantity:calorieQuantity startDate:startDate endDate:endDate];
+
 	[self.healthStore saveObject:calorieSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
@@ -777,7 +845,6 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 			 HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
 
 			 [self mostRecentQuantitySampleOfType:hrType
-										predicate:nil
 									   completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 			  {
 				  if (mostRecentQuantity)
@@ -800,7 +867,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	[self.healthStore executeQuery:query];
 }
 
-#pragma mark notifications
+#pragma mark notification handlers
 
 - (void)activityStopped:(NSNotification*)notification
 {

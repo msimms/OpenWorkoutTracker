@@ -30,6 +30,16 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 - (void)requestAuthorization;
 
+// methods for reading HealthKit data pertaining to the user's height, weight, etc.
+
+- (void)updateUsersAge;
+- (void)updateUsersHeight;
+- (void)updateUsersWeight;
+
+// methods for returning HealthKit data.
+
+- (NSArray*)readWeightHistory;
+
 // methods for managing workouts.
 
 - (NSInteger)getNumWorkouts;
