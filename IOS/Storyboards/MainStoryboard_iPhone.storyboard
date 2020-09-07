@@ -2508,9 +2508,11 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="crS-Zx-Fo1">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crS-Zx-Fo1">
                                 <rect key="frame" x="0.0" y="734" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="z6R-pF-L7S"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem title="Export" id="LYi-2r-111">
                                         <connections>
@@ -2519,19 +2521,33 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nRf-kq-h8G">
+                                <rect key="frame" x="0.0" y="88" width="375" height="646"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="nRf-kq-h8G" firstAttribute="top" secondItem="yfY-wB-EOx" secondAttribute="top" id="2LT-ud-SyO"/>
+                            <constraint firstItem="crS-Zx-Fo1" firstAttribute="top" secondItem="nRf-kq-h8G" secondAttribute="bottom" id="3eW-0U-FXL"/>
+                            <constraint firstItem="nRf-kq-h8G" firstAttribute="leading" secondItem="yfY-wB-EOx" secondAttribute="leading" id="CUX-eL-2Jm"/>
+                            <constraint firstItem="crS-Zx-Fo1" firstAttribute="bottom" secondItem="yfY-wB-EOx" secondAttribute="bottom" id="INF-hr-fLX"/>
+                            <constraint firstItem="nRf-kq-h8G" firstAttribute="trailing" secondItem="crS-Zx-Fo1" secondAttribute="trailing" id="MfQ-bp-TeC"/>
+                            <constraint firstItem="nRf-kq-h8G" firstAttribute="centerX" secondItem="MsZ-fA-U3N" secondAttribute="centerX" id="ajZ-KJ-0fr"/>
+                            <constraint firstItem="nRf-kq-h8G" firstAttribute="leading" secondItem="crS-Zx-Fo1" secondAttribute="leading" id="cDR-od-n5c"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="yfY-wB-EOx"/>
                     </view>
                     <navigationItem key="navigationItem" id="c1N-ZX-eb0"/>
                     <connections>
+                        <outlet property="chartView" destination="nRf-kq-h8G" id="423-Ze-F5M"/>
                         <outlet property="toolbar" destination="crS-Zx-Fo1" id="K1b-Yc-6Gk"/>
                         <outlet property="view" destination="MsZ-fA-U3N" id="9qT-By-qdV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="02u-cb-wYc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="918" y="-1298"/>
+            <point key="canvasLocation" x="917.60000000000002" y="-1298.2758620689656"/>
         </scene>
         <!--Workouts View Controller-->
         <scene sceneID="CPr-In-7nj">
@@ -2728,7 +2744,19 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <view key="view" contentMode="scaleToFill" id="XSu-9B-5NA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7MD-Cu-cOa">
+                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="leading" secondItem="khU-og-qjx" secondAttribute="leading" id="G1T-r9-Lj9"/>
+                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="top" secondItem="khU-og-qjx" secondAttribute="top" id="KXf-25-krH"/>
+                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="centerX" secondItem="XSu-9B-5NA" secondAttribute="centerX" id="UYN-RS-a4c"/>
+                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="bottom" secondItem="khU-og-qjx" secondAttribute="bottom" id="dMc-W0-Fhq"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="khU-og-qjx"/>
                     </view>
                     <navigationItem key="navigationItem" id="Fae-2l-XhH">
@@ -2739,12 +2767,13 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="chartView" destination="7MD-Cu-cOa" id="1XN-ea-boa"/>
                         <outlet property="navItem" destination="Fae-2l-XhH" id="kYH-Tg-C7k"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gpV-rz-xaS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2921" y="1057"/>
+            <point key="canvasLocation" x="2920.8000000000002" y="1056.6502463054187"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hBI-zy-UCy">

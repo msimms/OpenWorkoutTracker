@@ -15,6 +15,7 @@
 @implementation WorkoutDetailsViewController
 
 @synthesize toolbar;
+@synthesize chartView;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -59,6 +60,7 @@
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
 {
+	[self->hostingView setFrame:[self.chartView bounds]];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
@@ -68,19 +70,19 @@
 - (void)drawChart
 {	
 	// Create the host view.
-	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.view.bounds];
+	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.chartView.bounds];
 	[self->hostingView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-	[self.view addSubview:self->hostingView];
+	[self.chartView addSubview:self->hostingView];
 
 	// Create the graph from a custom theme.
 	self->graph = [[CPTXYGraph alloc] initWithFrame:self->hostingView.bounds];
 	[self->hostingView setHostedGraph:self->graph];
 
 	// Set graph padding and theme.
-	self->graph.plotAreaFrame.paddingTop    = 80.0f;
+	self->graph.plotAreaFrame.paddingTop    = 20.0f;
 	self->graph.plotAreaFrame.paddingRight  = 20.0f;
-	self->graph.plotAreaFrame.paddingBottom = 120.0f;
-	self->graph.plotAreaFrame.paddingLeft   = 40.0f;
+	self->graph.plotAreaFrame.paddingBottom = 20.0f;
+	self->graph.plotAreaFrame.paddingLeft   = 20.0f;
 
 	// Axis min and max values.
 	self->minX = (double)0.0;

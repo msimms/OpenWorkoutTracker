@@ -12,6 +12,7 @@
 @interface CorePlotViewController : UIViewController<CPTPlotDataSource, CPTAxisDelegate>
 {
 	IBOutlet UINavigationItem* navItem;
+	IBOutlet UIView* chartView;
 
 	CPTGraphHostingView* hostingView;
 	CPTXYGraph* graph;
@@ -41,5 +42,6 @@
 - (IBAction)onHome:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
+@property (nonatomic, retain) IBOutlet UIView* chartView;
 
 @end
