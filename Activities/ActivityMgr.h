@@ -171,7 +171,7 @@ extern "C" {
 	char* GetWorkoutIdByIndex(size_t workoutIndex);
 	char* GetWorkoutSportByIndex(size_t workoutIndex);
 	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex);
-	uint64_t GetWorkoutDurationyIndex(size_t workoutIndex);
+	double GetWorkoutDurationyIndex(size_t workoutIndex);
 	bool GenerateWorkouts(void);
 	bool DeleteWorkout(const char* const workoutId);
 

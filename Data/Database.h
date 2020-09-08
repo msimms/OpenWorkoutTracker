@@ -65,7 +65,7 @@ public:
 	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
 	bool DeleteIntervalWorkout(const std::string& workoutId);
 
-	bool CreateIntervalSegment(const std::string& workoutId, IntervalWorkoutSegment segment);
+	bool CreateIntervalSegment(const std::string& workoutId, const IntervalWorkoutSegment& segment);
 	bool RetrieveIntervalSegments(const std::string& workoutId, std::vector<IntervalWorkoutSegment>& segments);
 	bool DeleteIntervalSegment(uint64_t segmentId);
 	bool DeleteIntervalSegmentsForWorkout(const std::string& workoutId);
@@ -76,6 +76,10 @@ public:
 	bool RetrieveWorkouts(std::vector<Workout>& workouts);
 	bool DeleteWorkout(const std::string& workoutId);
 	bool DeleteAllWorkouts(void);
+
+	bool CreateWorkoutInterval(const Workout& workout, const WorkoutInterval& interval);
+	bool RetrieveWorkoutIntervals(Workout& workout);
+	bool DeleteWorkoutIntervals(const std::string& workoutId);
 
 	// Methods for managing pace plans.
 

@@ -2302,7 +2302,7 @@ void attributeNameCallback(const char* name, void* context)
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
 			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutTypeByIndex(workoutIndex)] forKey:@"type"];
-			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutDurationyIndex(workoutIndex)] forKey:@"duration"];
+			[mutDic setValue:[NSNumber numberWithDouble:GetWorkoutDurationyIndex(workoutIndex)] forKey:@"duration"];
 			[workoutData addObject:mutDic];
 
 			if (sport)

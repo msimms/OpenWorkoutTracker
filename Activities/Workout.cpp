@@ -65,6 +65,10 @@ void Workout::AddInterval(uint8_t repeat, double distance, double pace, double r
 	interval.m_recoveryPace = recoveryPace;
 	this->m_intervals.push_back(interval);
 }
+void Workout::AddInterval(const WorkoutInterval& interval)
+{
+	this->m_intervals.push_back(interval);
+}
 
 // Utility function for calculating the number of seconds for an interval.
 double Workout::CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const

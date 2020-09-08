@@ -30,6 +30,7 @@ public:
 	std::string GetId() const { return m_id; };
 	std::string GetSport() const { return m_sport; };
 	WorkoutType GetType() const { return m_type; };
+	std::vector<WorkoutInterval> GetIntervals() const { return m_intervals; };
 	time_t GetScheduledTime() const { return m_scheduledTime; };
 	double GetEstimatedTrainingStress() const { return m_estimatedTrainingStress; };
 
@@ -42,6 +43,7 @@ public:
 	void AddWarmup(uint64_t seconds);
 	void AddCooldown(uint64_t seconds);
 	void AddInterval(uint8_t repeat, double distance, double pace, double recoveryDistance, double recoveryPace);
+	void AddInterval(const WorkoutInterval& interval);
 
 	double CalculateEstimatedTrainingStress(double thresholdPaceMinute);
 	double CalculateDuration() const;

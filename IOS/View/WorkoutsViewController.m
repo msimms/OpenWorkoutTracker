@@ -89,6 +89,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate generateWorkouts];
+	[self.workoutsView reloadData];
 }
 
 #pragma mark miscelaneous methods

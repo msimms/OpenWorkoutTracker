@@ -1754,11 +1754,11 @@ extern "C" {
 	}
 
 	// InitializeWorkoutList should be called before calling this.
-	uint64_t GetWorkoutDurationyIndex(size_t workoutIndex)
+	double GetWorkoutDurationyIndex(size_t workoutIndex)
 	{
 		if (workoutIndex < g_workouts.size())
 		{
-			return g_workouts.at(workoutIndex).GetType();
+			return g_workouts.at(workoutIndex).CalculateDuration();
 		}
 		return 0;
 	}
