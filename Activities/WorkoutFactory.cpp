@@ -14,6 +14,8 @@ WorkoutFactory::~WorkoutFactory()
 
 Workout* WorkoutFactory::Create(WorkoutType type, const std::string& sport)
 {
+	const char HEX_CHARS[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
 	uuid_t id;
 	std::string idStr;
 
@@ -23,7 +25,11 @@ Workout* WorkoutFactory::Create(WorkoutType type, const std::string& sport)
 	// Convert the UUID to a string.
 	for (size_t i = 0; i < sizeof(id); ++i)
 	{
-		idStr += (id[i]);
+		uint8_t bin = (uint8_t)id[i];
+		uint8_t temp = (bin & 0xf0) >> (uint8_t)4;
+		idStr += HEX_CHARS[temp];
+		temp = bin & 0x0f;
+		idStr += HEX_CHARS[temp];
 	}
 
 	// Create the workout object.
