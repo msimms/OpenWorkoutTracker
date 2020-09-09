@@ -308,6 +308,8 @@ typedef enum ProfilePerformanceRows
 						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
 						textField.keyboardType = UIKeyboardTypeNumberPad;
 					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					}]];
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 						UITextField* field = alertController.textFields.firstObject;
 						double height = [[field text] doubleValue];
@@ -333,6 +335,8 @@ typedef enum ProfilePerformanceRows
 						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
 						textField.keyboardType = UIKeyboardTypeNumberPad;
 					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					}]];
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 						UITextField* field = alertController.textFields.firstObject;
 						double weight = [[field text] doubleValue];
