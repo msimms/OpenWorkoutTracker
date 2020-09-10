@@ -2302,7 +2302,9 @@ void attributeNameCallback(const char* name, void* context)
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
 			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutTypeByIndex(workoutIndex)] forKey:@"type"];
-			[mutDic setValue:[NSNumber numberWithDouble:GetWorkoutDurationyIndex(workoutIndex)] forKey:@"duration"];
+			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutNumIntervalsByIndex(workoutIndex)] forKey:@"num intervals"];
+			[mutDic setValue:[NSNumber numberWithDouble:GetWorkoutDurationByIndex(workoutIndex)] forKey:@"duration"];
+			[mutDic setValue:[NSNumber numberWithDouble:GetWorkoutDistanceByIndex(workoutIndex)] forKey:@"distance"];
 			[workoutData addObject:mutDic];
 
 			if (sport)
@@ -2319,6 +2321,11 @@ void attributeNameCallback(const char* name, void* context)
 - (BOOL)deleteWorkoutWithId:(NSString*)workoutId
 {
 	return DeleteWorkout([workoutId UTF8String]);
+}
+
+- (BOOL)exportWorkoutWithId:(NSString*)workoutId
+{
+	return ExportWorkout([workoutId UTF8String]);
 }
 
 #pragma mark methods for managing tags

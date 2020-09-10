@@ -84,10 +84,27 @@
 	self->graph.plotAreaFrame.paddingBottom = 20.0f;
 	self->graph.plotAreaFrame.paddingLeft   = 20.0f;
 
+	// Axis set.
+	CPTXYAxisSet* axisSet = (CPTXYAxisSet*)self->graph.axisSet;
+	CPTXYAxis* x          = axisSet.xAxis;
+	CPTXYAxis* y          = axisSet.yAxis;
+
 	// Axis min and max values.
 	self->minX = (double)0.0;
-	self->maxX = (double)[self numPointsOnXAxis]; // duration of the workout, in seconds
-	self->minY = (double)0.0;
+	if (self->workoutDetails)
+	{
+		self->maxX = (NSUInteger)([workoutDetails[@"duration"] integerValue]);
+		if (self->maxX == 0) // Duration not specified, use distance instead.
+		{
+			self->maxX = (NSUInteger)([workoutDetails[@"distance"] integerValue] / 100);
+			x.title = @"Distance";
+		}
+		else
+		{
+			x.title = @"Duration";
+		}
+	}
+	self->minY = (double)0.0; // minimum intensity
 	self->maxY = (double)10.0; // maximum intensity
 
 	// Setup plot space.
@@ -107,40 +124,55 @@
 	axisLineStyle.lineWidth            = 1.0f;
 	axisLineStyle.lineColor            = [[CPTColor blackColor] colorWithAlphaComponent:1];
 
-	// Axis data.
-	CPTXYAxisSet* axisSet = (CPTXYAxisSet*)self->graph.axisSet;
-	CPTXYAxis* x          = axisSet.xAxis;
-    x.orthogonalPosition  = @(self->minY);
-	x.title               = @"Duration";
-	CPTXYAxis* y          = axisSet.yAxis;
-    y.orthogonalPosition  = @(self->minX);
-	y.title               = @"";
-	y.delegate            = self;
+	// Axis configuration.
+	double spreadX          = self->maxX - self->minX;
+	double xHashSpacing     = spreadX / [workoutDetails[@"num intervals"] integerValue];
+    x.orthogonalPosition    = @(self->minY);
+	x.majorIntervalLength   = @(xHashSpacing);
+	x.minorTicksPerInterval = 0;
+	x.labelingPolicy        = CPTAxisLabelingPolicyNone;
+	x.titleTextStyle        = axisTitleStyle;
+	x.titleOffset           = 5.0f;
+    y.orthogonalPosition    = @(self->minX);
+	y.title                 = @"Pace";
+	y.delegate              = self;
+	y.labelingPolicy        = CPTAxisLabelingPolicyNone;
+	y.titleTextStyle        = axisTitleStyle;
+	y.titleOffset           = 5.0f;
 
 	// Create the plot.
 	CPTBarPlot* plot     = [[CPTBarPlot alloc] init];
 	plot.dataSource      = self;
 	plot.delegate        = self;
-	plot.barWidth        = [NSNumber numberWithInteger:5];
-	plot.barOffset       = [NSNumber numberWithInteger:10];
+	plot.barWidth        = [NSNumber numberWithInteger:spreadX];
+	plot.barOffset       = [NSNumber numberWithInteger:0];
 	plot.barCornerRadius = 5.0;
 
 	[self->graph addPlot:plot];
-}
-
-- (NSUInteger)numPointsOnXAxis
-{
-	if (self->workoutDetails)
-	{
-		return (NSUInteger)([workoutDetails[@"duration"] integerValue]);
-	}
-	return 0;
 }
 
 #pragma mark button handlers
 
 - (IBAction)onExport:(id)sender
 {
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_EXPORT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Add an option to export as a ZWO file.
+	[alertController addAction:[UIAlertAction actionWithTitle:@"ZWO" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		if (![appDelegate exportWorkoutWithId:self->workoutDetails[@"id"]])
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+		}
+	}]];
+
+	// Show the menu.
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark accessor methods
@@ -154,12 +186,12 @@
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot*)plot
 {
-	return [self numPointsOnXAxis];
+	return (NSUInteger)([workoutDetails[@"num intervals"] integerValue]);
 }
 
 - (NSNumber*)numberForPlot:(CPTPlot*)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-	return [[NSNumber alloc] initWithInt:2];
+	return [[NSNumber alloc] initWithInt:5];
 }
 
 #pragma mark CPTAxisDelegate methods

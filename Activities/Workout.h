@@ -47,6 +47,7 @@ public:
 
 	double CalculateEstimatedTrainingStress(double thresholdPaceMinute);
 	double CalculateDuration() const;
+	double CalculateDistance() const;
 
 private:
 	std::string m_id;

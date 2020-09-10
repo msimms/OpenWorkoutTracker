@@ -27,6 +27,7 @@ void Workout::AddWarmup(uint64_t seconds)
 {
 	WorkoutInterval warmup;
 
+	warmup.m_repeat = 1.0;
 	warmup.m_duration = seconds;
 	warmup.m_powerLow = 0.25;
 	warmup.m_powerHigh = 0.75;
@@ -34,6 +35,7 @@ void Workout::AddWarmup(uint64_t seconds)
 	warmup.m_pace = 0.0;
 	warmup.m_recoveryDistance = 0.0;
 	warmup.m_recoveryPace = 0.0;
+	this->m_intervals.push_back(warmup);
 }
 
 // Defines the workout cooldown.
@@ -41,6 +43,7 @@ void Workout::AddCooldown(uint64_t seconds)
 {
 	WorkoutInterval cooldown;
 
+	cooldown.m_repeat = 1.0;
 	cooldown.m_duration = seconds;
 	cooldown.m_powerLow = 0.75;
 	cooldown.m_powerHigh = 0.25;
@@ -48,6 +51,7 @@ void Workout::AddCooldown(uint64_t seconds)
 	cooldown.m_pace = 0.0;
 	cooldown.m_recoveryDistance = 0.0;
 	cooldown.m_recoveryPace = 0.0;
+	this->m_intervals.push_back(cooldown);
 }
 
 // Appends an interval to the workout.
@@ -73,8 +77,7 @@ void Workout::AddInterval(const WorkoutInterval& interval)
 // Utility function for calculating the number of seconds for an interval.
 double Workout::CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const
 {
-	double intervalDurationSecs = intervalMeters / (intervalPaceMetersPerMinute / 60.0);
-	return intervalDurationSecs;
+	return intervalMeters / (intervalPaceMetersPerMinute / 60.0);
 }
 
 // Computes the estimated training stress for this workout.
@@ -128,4 +131,16 @@ double Workout::CalculateDuration() const
 		}
 	}
 	return workoutDurationSecs;
+}
+
+double Workout::CalculateDistance() const
+{
+	double workoutDistanceMeters = 0.0;
+
+	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
+	{
+		workoutDistanceMeters += interval->m_repeat * interval->m_distance;
+		workoutDistanceMeters += (interval->m_repeat - 1) * interval->m_recoveryDistance;
+	}
+	return workoutDistanceMeters;
 }

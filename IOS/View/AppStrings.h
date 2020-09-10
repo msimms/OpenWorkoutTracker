@@ -65,3 +65,4 @@
 #define MSG_NO_INTERVAL_WORKOUTS         NSLocalizedString(@"No interval workouts have been created.", nil)
 
 #define MSG_INTERNAL_ERROR               NSLocalizedString(@"Internal error.", nil)
+#define MSG_EXPORT_FAILED                NSLocalizedString(@"Export failed!", nil)

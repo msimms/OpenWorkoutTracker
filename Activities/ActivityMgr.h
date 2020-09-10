@@ -171,9 +171,12 @@ extern "C" {
 	char* GetWorkoutIdByIndex(size_t workoutIndex);
 	char* GetWorkoutSportByIndex(size_t workoutIndex);
 	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex);
-	double GetWorkoutDurationyIndex(size_t workoutIndex);
+	size_t GetWorkoutNumIntervalsByIndex(size_t workoutIndex);
+	double GetWorkoutDurationByIndex(size_t workoutIndex);
+	double GetWorkoutDistanceByIndex(size_t workoutIndex);
 	bool GenerateWorkouts(void);
 	bool DeleteWorkout(const char* const workoutId);
+	bool ExportWorkout(const char* const workoutId);
 
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);

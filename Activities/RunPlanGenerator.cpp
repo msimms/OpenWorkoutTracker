@@ -198,10 +198,10 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 Workout* RunPlanGenerator::GenerateFreeRun(void)
 {
 	// Create the workout object.
-	Workout* longRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_FREE_RUN, ACTIVITY_TYPE_RUNNING);
-	longRunWorkout->AddInterval(1, 5000, 0, 0, 0);
+	Workout* freeRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_FREE_RUN, ACTIVITY_TYPE_RUNNING);
+	freeRunWorkout->AddInterval(1, 5000, 0, 0, 0);
 
-	return longRunWorkout;
+	return freeRunWorkout;
 }
 
 std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)

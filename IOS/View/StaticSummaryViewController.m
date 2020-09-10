@@ -55,8 +55,6 @@
 
 #define ALERT_TITLE_FIX_REPS           NSLocalizedString(@"Repetitions", nil)
 
-#define EXPORT_FAILED                  NSLocalizedString(@"Export failed!", nil)
-
 #define MSG_DELETE_QUESTION            NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
 #define MSG_LOW_MEMORY                 NSLocalizedString(@"Low memory", nil)
@@ -395,13 +393,13 @@ typedef enum ExportFileTypeButtons
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 			if (![appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportLocation])
 			{
-				[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
+				[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
 			}
 		}
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
 	}
 }
 
@@ -416,7 +414,7 @@ typedef enum ExportFileTypeButtons
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:EXPORT_FAILED];
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
 	}
 }
 

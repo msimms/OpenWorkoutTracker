@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -189,6 +189,7 @@
                     <connections>
                         <outlet property="profileTableView" destination="TFu-Tc-0Aa" id="zpw-cK-Jza"/>
                         <segue destination="4eY-Zm-Fkn" kind="push" identifier="SegueToDatePickerViewController" id="dLs-Za-PEd"/>
+                        <segue destination="Hzl-Rw-NWa" kind="push" identifier="SegueToCorePlotViewFromProfile" id="gtm-yZ-0Yg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FvW-eZ-qzD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3020,6 +3021,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="gtm-yZ-0Yg"/>
         <segue reference="UtV-9X-A4d"/>
         <segue reference="V9h-tU-0NS"/>
         <segue reference="g4d-Zp-BfC"/>

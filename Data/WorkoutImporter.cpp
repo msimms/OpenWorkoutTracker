@@ -52,7 +52,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 				dbSegment.units = INTERVAL_UNIT_SECONDS;
 				
 				const FileLib::ZwoWarmup* warmupSegment = dynamic_cast<const FileLib::ZwoWarmup*>(fileSegment);
-				if (warmupSegment != NULL)
+				if (warmupSegment)
 				{
 					dbSegment.duration = warmupSegment->duration;
 					dbSegment.power = warmupSegment->powerHigh;
@@ -60,7 +60,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 				}
 
 				const FileLib::ZwoInterval* intervalSegment = dynamic_cast<const FileLib::ZwoInterval*>(fileSegment);
-				if (intervalSegment != NULL)
+				if (intervalSegment)
 				{
 					dbSegment.reps = intervalSegment->repeat;
 					dbSegment.duration = intervalSegment->onDuration;
@@ -68,7 +68,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 				}
 
 				const FileLib::ZwoCooldown* coolDown = dynamic_cast<const FileLib::ZwoCooldown*>(fileSegment);
-				if (coolDown != NULL)
+				if (coolDown)
 				{
 					dbSegment.duration = coolDown->duration;
 					dbSegment.power = coolDown->powerHigh;
@@ -76,7 +76,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 				}
 
 				const FileLib::ZwoFreeride* freeRide = dynamic_cast<const FileLib::ZwoFreeride*>(fileSegment);
-				if (freeRide != NULL)
+				if (freeRide)
 				{
 					dbSegment.duration = freeRide->duration;
 				}

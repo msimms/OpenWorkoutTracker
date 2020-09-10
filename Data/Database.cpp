@@ -692,11 +692,10 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			std::string workoutId;
-			WorkoutType workoutType;
 			std::string sport;
 
 			workoutId.append((const char*)sqlite3_column_text(statement, 0));
-			workoutType = (WorkoutType)sqlite3_column_int64(statement, 1);
+			WorkoutType workoutType = (WorkoutType)sqlite3_column_int64(statement, 1);
 			sport.append((const char*)sqlite3_column_text(statement, 2));
 			double estimatedStress = (double)sqlite3_column_double(statement, 3);
 			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 4);

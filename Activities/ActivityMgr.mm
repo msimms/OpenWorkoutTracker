@@ -625,6 +625,7 @@ extern "C" {
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
 		{
 			const Shoes& shoes = (*iter);
+
 			if (shoes.id == shoeId)
 			{
 				(*name) = strdup(shoes.name.c_str());
@@ -640,6 +641,7 @@ extern "C" {
 		if (shoeIndex < g_shoes.size())
 		{
 			const Shoes& shoes = g_shoes.at(shoeIndex);
+
 			(*shoeId) = shoes.id;
 			(*name) = strdup(shoes.name.c_str());
 			(*description) = strdup(shoes.description.c_str());
@@ -653,6 +655,7 @@ extern "C" {
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
 		{
 			const Shoes& shoe = (*iter);
+
 			if (shoe.name.compare(name) == 0)
 			{
 				return shoe.id;
@@ -687,6 +690,7 @@ extern "C" {
 		if (g_pCurrentActivity && workoutId)
 		{
 			const IntervalWorkout* workout = GetIntervalWorkout(workoutId);
+
 			if (workout)
 			{
 				g_pCurrentActivity->SetIntervalWorkout((*workout));
@@ -812,6 +816,7 @@ extern "C" {
 		if (g_pDatabase && workoutId)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+
 			if (pWorkout)
 			{
 				return pWorkout->segments.size();
@@ -823,6 +828,7 @@ extern "C" {
 	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment)
 	{
 		const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+
 		if (pWorkout)
 		{
 			return g_pDatabase->CreateIntervalSegment(workoutId, segment);
@@ -835,6 +841,7 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+
 			if (pWorkout)
 			{
 				const IntervalWorkoutSegment& segment = pWorkout->segments.at(segmentIndex);
@@ -849,6 +856,7 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+
 			if (pWorkout)
 			{
 				const IntervalWorkoutSegment& tempSegment = pWorkout->segments.at(segmentIndex);
@@ -909,6 +917,7 @@ extern "C" {
 			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
 			{
 				const PacePlan& pacePlan = (*iter);
+
 				if (pacePlan.planId.compare(planId) == 0)
 				{
 					if (name)
@@ -933,6 +942,7 @@ extern "C" {
 			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
 			{
 				PacePlan& pacePlan = (*iter);
+
 				if (pacePlan.planId.compare(planId) == 0)
 				{
 					pacePlan.name = name;
@@ -966,6 +976,7 @@ extern "C" {
 			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
 			{
 				const PacePlan& pacePlan = (*iter);
+
 				if (pacePlan.planId.compare(planId) == 0)
 				{
 					return &pacePlan;
@@ -980,6 +991,7 @@ extern "C" {
 		if (g_pCurrentActivity && planId)
 		{
 			const PacePlan* pacePlan = GetPacePlan(planId);
+
 			if (pacePlan)
 			{
 				g_pCurrentActivity->SetPacePlan((*pacePlan));
@@ -1055,6 +1067,7 @@ extern "C" {
 		if (g_pActivityFactory && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (!summary.pActivity)
 			{
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
@@ -1367,6 +1380,7 @@ extern "C" {
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				delete summary.pActivity;
@@ -1380,6 +1394,7 @@ extern "C" {
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			summary.locationPoints.clear();
 			summary.accelerometerReadings.clear();
 			summary.heartRateMonitorReadings.clear();
@@ -1523,6 +1538,7 @@ extern "C" {
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				std::vector<std::string> attributeNames;
@@ -1545,6 +1561,7 @@ extern "C" {
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			ActivitySummary& summary = (*iter);
+
 			if (summary.type.compare(pActivityType) == 0)
 			{
 				++numActivities;
@@ -1558,6 +1575,7 @@ extern "C" {
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (summary.pActivity)
 			{
 				summary.pActivity->SetActivityAttribute(attributeName, attributeValue);
@@ -1581,6 +1599,7 @@ extern "C" {
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			if (pointIndex < summary.locationPoints.size())
 			{
 				SensorReading& reading = summary.locationPoints.at(pointIndex);
@@ -1606,6 +1625,7 @@ extern "C" {
 		if (g_pCurrentActivity)
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
+
 			if (pMovingActivity)
 			{
 				result = pMovingActivity->GetCoordinate(pointIndex, coordinate);
@@ -1754,11 +1774,31 @@ extern "C" {
 	}
 
 	// InitializeWorkoutList should be called before calling this.
-	double GetWorkoutDurationyIndex(size_t workoutIndex)
+	size_t GetWorkoutNumIntervalsByIndex(size_t workoutIndex)
+	{
+		if (workoutIndex < g_workouts.size())
+		{
+			return g_workouts.at(workoutIndex).GetIntervals().size();
+		}
+		return 0;
+	}
+
+	// InitializeWorkoutList should be called before calling this.
+	double GetWorkoutDurationByIndex(size_t workoutIndex)
 	{
 		if (workoutIndex < g_workouts.size())
 		{
 			return g_workouts.at(workoutIndex).CalculateDuration();
+		}
+		return 0;
+	}
+
+	// InitializeWorkoutList should be called before calling this.
+	double GetWorkoutDistanceByIndex(size_t workoutIndex)
+	{
+		if (workoutIndex < g_workouts.size())
+		{
+			return g_workouts.at(workoutIndex).CalculateDistance();
 		}
 		return 0;
 	}
@@ -1800,6 +1840,11 @@ extern "C" {
 		{
 			g_pDatabase->DeleteWorkout(workoutId);
 		}
+		return false;
+	}
+
+	bool ExportWorkout(const char* const workoutId)
+	{
 		return false;
 	}
 
