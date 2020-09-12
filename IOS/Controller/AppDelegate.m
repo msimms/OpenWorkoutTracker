@@ -2323,9 +2323,21 @@ void attributeNameCallback(const char* name, void* context)
 	return DeleteWorkout([workoutId UTF8String]);
 }
 
-- (BOOL)exportWorkoutWithId:(NSString*)workoutId
+- (NSString*)exportWorkoutWithId:(NSString*)workoutId
 {
-	return ExportWorkout([workoutId UTF8String]);
+	NSString* exportFileName = nil;
+	NSString* exportDir = [self createExportDir];
+
+	if (exportDir)
+	{
+		char* tempExportFileName = ExportWorkout([workoutId UTF8String], [exportDir UTF8String]);
+		if (tempExportFileName)
+		{
+			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
+			free((void*)tempExportFileName);
+		}
+	}
+	return exportFileName;
 }
 
 #pragma mark methods for managing tags

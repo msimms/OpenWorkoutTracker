@@ -197,7 +197,7 @@
 "Select the map type" = "Select the map type";
 "Select the overlay" = "Select the overlay";
 "Select the workout to perform." = "Select the workout to perform.";
-"Sending mail is disabled" = "Sending mail is disabled";
+"Sending mail is disabled." = "Sending mail is disabled.";
 "Sensors" = "Sensors";
 "Settings" = "Settings";
 "Set Interval" = "Set Interval";
@@ -269,3 +269,4 @@
 "You need a foot pod to use this app with a treadmill." = "You need a foot pod to use this app with a treadmill.";
 "You need to choose a bike." = "You need to choose a bike.";
 "Your device does not support Bluetooth Smart, which is required for this feature." = "Your device does not support Bluetooth Smart, which is required for this feature.";
+"ZWO File" = "ZWO File";

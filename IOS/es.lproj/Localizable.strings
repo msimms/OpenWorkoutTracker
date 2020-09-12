@@ -197,7 +197,7 @@
 "Select the map type" = "Seleccione el tipo de mapa";
 "Select the overlay" = "Seleccione la superposición";
 "Select the workout to perform." = "Seleccione el entrenamiento.";
-"Sending mail is disabled" = "El envío de correo está deshabilitado";
+"Sending mail is disabled." = "El envío de correo está deshabilitado.";
 "Sensors" = "Sensores";
 "Settings" = "Configuración";
 "Set Interval" = "Intervalo de los Sets";
@@ -269,3 +269,4 @@
 "You need a foot pod to use this app with a treadmill." = "Necesita un podómetro para utilizar esta aplicación con una cinta de correr.";
 "You need to choose a bike." = "Usted tiene que elegir una bicicleta.";
 "Your device does not support Bluetooth Smart, which is required for this feature." = "El dispositivo no es compatible con Bluetooth Smart, que se requiere para esta función.";
+"ZWO File" = "ZWO Archivo";

@@ -444,7 +444,7 @@
 	self->exportedFileName = [appDelegate exportActivitySummary:self->selectedExportActivity];
 	if (self->exportedFileName)
 	{
-		[self displayEmailComposerSheet];
+		[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
 	}
 }
 
@@ -486,35 +486,6 @@
 }
 
 #pragma mark mail composition methods
-
-- (void)displayEmailComposerSheet
-{
-	if ([MFMailComposeViewController canSendMail])
-	{
-		NSString* subjectStr = EMAIL_TITLE;
-		NSString* bodyStr = EMAIL_CONTENTS;
-
-		MFMailComposeViewController* mailController = [[MFMailComposeViewController alloc] init];
-		mailController.navigationBar.barStyle = UIBarStyleBlack;
-
-		[mailController setEditing:TRUE];		
-		[mailController setSubject:subjectStr];
-		[mailController setMessageBody:bodyStr isHTML:YES];
-		[mailController setMailComposeDelegate:self];
-
-		[self.parentViewController resignFirstResponder];
-		[self becomeFirstResponder];
-		
-		if (self->exportedFileName)
-		{
-			NSString* justTheFileName = [[[NSFileManager defaultManager] displayNameAtPath:self->exportedFileName] lastPathComponent];
-			NSData* myData = [NSData dataWithContentsOfFile:self->exportedFileName];
-			[mailController addAttachmentData:myData mimeType:@"text/xml" fileName:justTheFileName];
-		}
-		
-		[self presentViewController:mailController animated:YES completion:nil];
-	}
-}
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {

@@ -64,5 +64,7 @@
 #define MSG_IN_PROGRESS                  NSLocalizedString(@"An unfinished activity has been found. Do you wish to resume it?", nil)
 #define MSG_NO_INTERVAL_WORKOUTS         NSLocalizedString(@"No interval workouts have been created.", nil)
 
-#define MSG_INTERNAL_ERROR               NSLocalizedString(@"Internal error.", nil)
-#define MSG_EXPORT_FAILED                NSLocalizedString(@"Export failed!", nil)
+#define MSG_LOW_MEMORY        NSLocalizedString(@"Low memory", nil)
+#define MSG_MAIL_DISABLED     NSLocalizedString(@"Sending mail is disabled.", nil)
+#define MSG_INTERNAL_ERROR    NSLocalizedString(@"Internal error.", nil)
+#define MSG_EXPORT_FAILED     NSLocalizedString(@"Export failed!", nil)

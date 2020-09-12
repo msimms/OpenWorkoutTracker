@@ -7,6 +7,10 @@
 #import "Segues.h"
 
 #define TITLE NSLocalizedString(@"Workout", nil)
+#define ACTION_SHEET_BUTTON_ZWO NSLocalizedString(@"ZWO File", nil)
+
+#define EMAIL_TITLE             NSLocalizedString(@"Workout Data", nil)
+#define EMAIL_CONTENTS          NSLocalizedString(@"The data file is attached.", nil)
 
 @interface WorkoutDetailsViewController ()
 
@@ -151,9 +155,9 @@
 	[self->graph addPlot:plot];
 }
 
-#pragma mark button handlers
+#pragma mark action sheet methods
 
-- (IBAction)onExport:(id)sender
+- (void)showFileFormatSheet
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_EXPORT
@@ -163,9 +167,15 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 
 	// Add an option to export as a ZWO file.
-	[alertController addAction:[UIAlertAction actionWithTitle:@"ZWO" style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_ZWO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		if (![appDelegate exportWorkoutWithId:self->workoutDetails[@"id"]])
+		self->exportedFileName = [appDelegate exportWorkoutWithId:self->workoutDetails[@"id"]];
+
+		if (self->exportedFileName)
+		{
+			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+		}
+		else
 		{
 			[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
 		}
@@ -173,6 +183,43 @@
 
 	// Show the menu.
 	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)showCloudSheet:(NSMutableArray*)fileExportServices
+{	
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_EXPORT
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	for (NSString* fileExportService in fileExportServices)
+	{
+		[alertController addAction:[UIAlertAction actionWithTitle:fileExportService style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			self->selectedExportLocation = fileExportService;
+			[self showFileFormatSheet];
+		}]];
+	}
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onExport:(id)sender
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
+	if ([fileExportServices count] == 1)
+	{
+		self->selectedExportLocation = [fileExportServices objectAtIndex:0];
+		[self showFileFormatSheet];
+	}
+	else
+	{
+		[self showCloudSheet:fileExportServices];
+	}
 }
 
 #pragma mark accessor methods

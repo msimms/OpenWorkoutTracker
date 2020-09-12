@@ -1843,9 +1843,16 @@ extern "C" {
 		return false;
 	}
 
-	bool ExportWorkout(const char* const workoutId)
+	char* ExportWorkout(const char* const workoutId, const char* pDirName)
 	{
-		return false;
+		std::string tempFileName = pDirName;
+		DataExporter exporter;
+
+		if (exporter.ExportWorkoutFromDatabase(FILE_ZWO, tempFileName, g_pDatabase, workoutId))
+		{
+			return strdup(tempFileName.c_str());
+		}
+		return NULL;
 	}
 
 	//
@@ -2221,7 +2228,7 @@ extern "C" {
 			std::string tempFileName = pDirName;
 			DataExporter exporter;
 
-			if (exporter.ExportFromDatabase(format, tempFileName, g_pDatabase, pActivity))
+			if (exporter.ExportActivityFromDatabase(format, tempFileName, g_pDatabase, pActivity))
 			{
 				return strdup(tempFileName.c_str());
 			}
@@ -2235,7 +2242,7 @@ extern "C" {
 		std::string tempSportType = sportType;
 		DataExporter exporter;
 
-		if (exporter.ExportUsingCallbackData(format, tempFileName, startTime, tempSportType, activityId, nextCoordinateCallback, context))
+		if (exporter.ExportActivityUsingCallbackData(format, tempFileName, startTime, tempSportType, activityId, nextCoordinateCallback, context))
 		{
 			return strdup(tempFileName.c_str());
 		}

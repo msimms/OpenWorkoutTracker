@@ -680,6 +680,42 @@ bool Database::CreateWorkout(const Workout& workout)
 	return result;
 }
 
+bool Database::RetrieveWorkout(const std::string& workoutId, Workout& workout)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select type, sport, estimated_stress, scheduled_time from workout where workout_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		result = true;
+
+		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+
+		if (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			std::string sport;
+
+			WorkoutType workoutType = (WorkoutType)sqlite3_column_int64(statement, 0);
+			sport.append((const char*)sqlite3_column_text(statement, 1));
+			double estimatedStress = (double)sqlite3_column_double(statement, 2);
+			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 3);
+
+			Workout workoutObj;
+			workoutObj.SetId(workoutId);
+			workoutObj.SetSport(sport);
+			workoutObj.SetType(workoutType);
+			workoutObj.SetEstimatedStress(estimatedStress);
+			workoutObj.SetScheduledTime(scheduledTime);
+
+			// Retrieve the intervals too.
+			result &= this->RetrieveWorkoutIntervals(workoutObj);
+		}
+		
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
 bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 {
 	bool result = false;

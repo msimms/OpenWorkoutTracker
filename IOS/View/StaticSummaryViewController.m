@@ -57,8 +57,6 @@
 
 #define MSG_DELETE_QUESTION            NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
-#define MSG_LOW_MEMORY                 NSLocalizedString(@"Low memory", nil)
-#define MSG_MAIL_DISABLED              NSLocalizedString(@"Sending mail is disabled", nil)
 
 #define EMAIL_TITLE                    NSLocalizedString(@"Workout Data", nil)
 #define EMAIL_CONTENTS                 NSLocalizedString(@"The data file is attached.", nil)
@@ -380,17 +378,18 @@ typedef enum ExportFileTypeButtons
 
 #pragma mark action sheet methods
 
-- (void)handleFileFormatSelection
+- (void)handleFileDestinationSelection
 {
 	if (self->exportedFileName)
 	{
 		if ([self->selectedExportLocation isEqualToString:@"Email"])
 		{
-			[self displayEmailComposerSheet];
+			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
 		}
 		else
 		{
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 			if (![appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportLocation])
 			{
 				[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
@@ -410,7 +409,7 @@ typedef enum ExportFileTypeButtons
 	self->exportedFileName = [appDelegate exportActivityToTempFile:self->activityId withFileFormat:format];
 	if (self->exportedFileName)
 	{
-		[self handleFileFormatSelection];
+		[self handleFileDestinationSelection];
 	}
 	else
 	{
@@ -985,37 +984,6 @@ typedef enum ExportFileTypeButtons
 }
 
 #pragma mark mail composition methods
-
-- (void)displayEmailComposerSheet
-{
-	NSString* subjectStr = EMAIL_TITLE;
-	NSString* bodyStr = EMAIL_CONTENTS;
-
-	if ([MFMailComposeViewController canSendMail])
-	{
-		MFMailComposeViewController* mailController = [[MFMailComposeViewController alloc] init];
-		if (mailController)
-		{
-			[mailController setEditing:TRUE];
-			[mailController setSubject:subjectStr];
-			[mailController setMessageBody:bodyStr isHTML:NO];
-			[mailController setMailComposeDelegate:self];
-			
-			if (self->exportedFileName)
-			{
-				NSString* justTheFileName = [[[NSFileManager defaultManager] displayNameAtPath:self->exportedFileName] lastPathComponent];
-				NSData* myData = [NSData dataWithContentsOfFile:self->exportedFileName];
-				[mailController addAttachmentData:myData mimeType:@"text/xml" fileName:justTheFileName];
-			}
-			
-			[self presentViewController:mailController animated:YES completion:nil];
-		}
-	}
-	else
-	{
-		[super showOneButtonAlert:STR_ERROR withMsg:MSG_MAIL_DISABLED];
-	}
-}
 
 - (void)messageComposeViewController:(MFMessageComposeViewController*)controller didFinishWithResult:(MessageComposeResult)result
 {

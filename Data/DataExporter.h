@@ -25,18 +25,20 @@ public:
 	DataExporter();
 	virtual ~DataExporter();
 
-	bool ExportFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-	bool ExportUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context);
+	bool ExportActivityFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportActivityUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 
-	bool ExportActivitySummary(const ActivitySummaryList& activities, std::string& activityType, std::string& fileName);
+	bool ExportActivitySummary(const ActivitySummaryList& activities, const std::string& activityType, std::string& fileName);
+
+	bool ExportWorkoutFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const std::string& workoutId);
 
 protected:
 	bool ExportToTcxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, const std::string& activityType, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 	bool ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context);
 
-	bool ExportFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-	bool ExportFromDatabaseToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
-	bool ExportFromDatabaseToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportActivityFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportActivityFromDatabaseToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
+	bool ExportActivityFromDatabaseToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity);
 
 private:
 	bool NearestSensorReading(uint64_t time, const SensorReadingList& list, SensorReadingList::const_iterator& iter);
@@ -46,6 +48,7 @@ private:
 	bool ExportHeartRateDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
 	bool ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, const std::string& activityId, Database* const pDatabase);
 
+	std::string GenerateFileName(FileFormat format, const std::string& name);
 	std::string GenerateFileName(FileFormat format, time_t startTime, const std::string& sportType);
 };
 

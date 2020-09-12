@@ -16,6 +16,9 @@
 
 	NSMutableDictionary* workoutDetails;
 
+	NSString* exportedFileName;
+	NSString* selectedExportLocation;
+
 	double minX;
 	double maxX;
 	double minY;

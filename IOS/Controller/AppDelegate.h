@@ -241,7 +241,7 @@
 - (BOOL)generateWorkouts;
 - (NSMutableArray*)getPlannedWorkouts;
 - (BOOL)deleteWorkoutWithId:(NSString*)workoutId;
-- (BOOL)exportWorkoutWithId:(NSString*)workoutId;
+- (NSString*)exportWorkoutWithId:(NSString*)workoutId;
 
 // methods for managing tags
 

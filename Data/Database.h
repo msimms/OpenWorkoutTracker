@@ -73,6 +73,7 @@ public:
 	// Methods for planned workouts.
 
 	bool CreateWorkout(const Workout& workout);
+	bool RetrieveWorkout(const std::string& workoutId, Workout& workout);
 	bool RetrieveWorkouts(std::vector<Workout>& workouts);
 	bool DeleteWorkout(const std::string& workoutId);
 	bool DeleteAllWorkouts(void);

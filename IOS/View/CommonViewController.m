@@ -19,4 +19,34 @@
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
+- (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate
+{
+	if ([MFMailComposeViewController canSendMail])
+	{
+		MFMailComposeViewController* mailController = [[MFMailComposeViewController alloc] init];
+
+		if (mailController)
+		{
+			[mailController setEditing:TRUE];
+			[mailController setSubject:subjectStr];
+			[mailController setMessageBody:bodyStr isHTML:NO];
+			[mailController setMailComposeDelegate:delegate];
+			
+			if (fileName)
+			{
+				NSString* justTheFileName = [[[NSFileManager defaultManager] displayNameAtPath:fileName] lastPathComponent];
+				NSData* myData = [NSData dataWithContentsOfFile:fileName];
+
+				[mailController addAttachmentData:myData mimeType:mimeType fileName:justTheFileName];
+			}
+			
+			[self presentViewController:mailController animated:YES completion:nil];
+		}
+	}
+	else
+	{
+		[self showOneButtonAlert:STR_ERROR withMsg:MSG_MAIL_DISABLED];
+	}
+}
+
 @end

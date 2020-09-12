@@ -14,6 +14,7 @@
 #include "CsvFileWriter.h"
 #include "MovingActivity.h"
 #include "TcxTags.h"
+#include "ZwoFileWriter.h"
 
 DataExporter::DataExporter()
 {
@@ -139,7 +140,7 @@ bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t
 	return result;
 }
 
-bool DataExporter::ExportFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	const MovingActivity* const pMovingActivity = dynamic_cast<const MovingActivity* const>(pActivity);
 	if (!pMovingActivity)
@@ -279,7 +280,7 @@ bool DataExporter::ExportFromDatabaseToTcx(const std::string& fileName, Database
 	return result;
 }
 
-bool DataExporter::ExportFromDatabaseToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportActivityFromDatabaseToGpx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	bool result = false;
 	FileLib::GpxFileWriter writer;
@@ -567,7 +568,7 @@ bool DataExporter::ExportCadenceDataToCsv(FileLib::CsvFileWriter& writer, const 
 	return result;
 }
 
-bool DataExporter::ExportFromDatabaseToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportActivityFromDatabaseToCsv(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	bool result = false;
 	FileLib::CsvFileWriter writer;
@@ -591,6 +592,36 @@ bool DataExporter::ExportFromDatabaseToCsv(const std::string& fileName, Database
 		writer.CloseFile();
 	}
 	return result;
+}
+
+std::string DataExporter::GenerateFileName(FileFormat format, const std::string& name)
+{
+	std::string fileName = name;
+
+	switch (format)
+	{
+		case FILE_UNKNOWN:
+			break;
+		case FILE_TEXT:
+			fileName.append(".txt");
+			break;
+		case FILE_TCX:
+			fileName.append(".tcx");
+			break;
+		case FILE_GPX:
+			fileName.append(".gpx");
+			break;
+		case FILE_CSV:
+			fileName.append(".csv");
+			break;
+		case FILE_ZWO:
+			fileName.append(".zwo");
+			break;
+		default:
+			break;
+	}
+
+	return fileName;
 }
 
 std::string DataExporter::GenerateFileName(FileFormat format, time_t startTime, const std::string& sportType)
@@ -630,7 +661,7 @@ std::string DataExporter::GenerateFileName(FileFormat format, time_t startTime, 
 	return fileName;
 }
 
-bool DataExporter::ExportFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+bool DataExporter::ExportActivityFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	if (pActivity)
 	{
@@ -644,11 +675,11 @@ bool DataExporter::ExportFromDatabase(FileFormat format, std::string& fileName, 
 			case FILE_TEXT:
 				return false;
 			case FILE_TCX:
-				return ExportFromDatabaseToTcx(fileName, pDatabase, pActivity);
+				return ExportActivityFromDatabaseToTcx(fileName, pDatabase, pActivity);
 			case FILE_GPX:
-				return ExportFromDatabaseToGpx(fileName, pDatabase, pActivity);
+				return ExportActivityFromDatabaseToGpx(fileName, pDatabase, pActivity);
 			case FILE_CSV:
-				return ExportFromDatabaseToCsv(fileName, pDatabase, pActivity);
+				return ExportActivityFromDatabaseToCsv(fileName, pDatabase, pActivity);
 			case FILE_ZWO:
 			default:
 				return false;
@@ -657,7 +688,7 @@ bool DataExporter::ExportFromDatabase(FileFormat format, std::string& fileName, 
 	return false;
 }
 
-bool DataExporter::ExportUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+bool DataExporter::ExportActivityUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
 {
 	fileName.append("/");
 	fileName.append(GenerateFileName(format, startTime, sportType));
@@ -681,7 +712,7 @@ bool DataExporter::ExportUsingCallbackData(FileFormat format, std::string& fileN
 	return false;
 }
 
-bool DataExporter::ExportActivitySummary(const ActivitySummaryList& activities, std::string& activityType, std::string& fileName)
+bool DataExporter::ExportActivitySummary(const ActivitySummaryList& activities, const std::string& activityType, std::string& fileName)
 {
 	bool result = false;
 	FileLib::CsvFileWriter writer;
@@ -779,5 +810,38 @@ bool DataExporter::ExportActivitySummary(const ActivitySummaryList& activities, 
 		writer.CloseFile();
 	}
 
+	return result;
+}
+
+bool DataExporter::ExportWorkoutFromDatabase(FileFormat format, std::string& fileName, Database* const pDatabase, const std::string& workoutId)
+{
+	bool result = false;
+
+	fileName.append("/");
+	fileName.append(GenerateFileName(format, "workout"));
+
+	if (format == FILE_ZWO)
+	{
+		Workout workout;
+
+		if (pDatabase->RetrieveWorkout(workoutId, workout))
+		{
+			FileLib::ZwoFileWriter writer;
+
+			if (writer.CreateFile(fileName, APP_NAME, "", ""))
+			{
+				std::vector<WorkoutInterval> intervals = workout.GetIntervals();
+
+				result  = writer.StartWorkout();
+				for (auto intervalIter = intervals.begin(); intervalIter != intervals.end(); ++intervalIter)
+				{
+					const WorkoutInterval& interval = (*intervalIter);
+
+					result &= writer.StartIntervals(interval.m_repeat, 0.0, 0.0, interval.m_distance * interval.m_pace, interval.m_recoveryDistance * interval.m_recoveryPace, interval.m_pace);
+				}
+				result &= writer.EndWorkout();
+			}
+		}
+	}
 	return result;
 }

@@ -176,7 +176,7 @@ extern "C" {
 	double GetWorkoutDistanceByIndex(size_t workoutIndex);
 	bool GenerateWorkouts(void);
 	bool DeleteWorkout(const char* const workoutId);
-	bool ExportWorkout(const char* const workoutId);
+	char* ExportWorkout(const char* const workoutId, const char* pDirName);
 
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);
