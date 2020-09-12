@@ -756,19 +756,19 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 
 bool Database::DeleteWorkout(const std::string& workoutId)
 {
+	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "delete from workout where workout_id = ?", -1, &statement, 0);
-	if (result == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "delete from workout where workout_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
-		result = sqlite3_step(statement);
+		result = (sqlite3_step(statement) == SQLITE_DONE);
 		sqlite3_finalize(statement);
 		
 		// Delete the intervals too.
 		result &= this->DeleteWorkoutIntervals(workoutId);
 	}
-	return result == SQLITE_DONE;
+	return result;
 }
 
 bool Database::DeleteAllWorkouts(void)

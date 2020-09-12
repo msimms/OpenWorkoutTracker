@@ -1843,7 +1843,7 @@ extern "C" {
 	{
 		if (g_pDatabase)
 		{
-			g_pDatabase->DeleteWorkout(workoutId);
+			return g_pDatabase->DeleteWorkout(workoutId);
 		}
 		return false;
 	}

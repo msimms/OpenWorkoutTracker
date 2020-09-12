@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -2597,7 +2596,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <connections>
                         <outlet property="generateButton" destination="dAT-Yg-1IA" id="em2-o6-Pi9"/>
                         <outlet property="toolbar" destination="9P9-KK-ntB" id="2oL-LD-93Q"/>
-                        <outlet property="view" destination="5uJ-ft-hY6" id="0nh-U1-ihV"/>
                         <outlet property="workoutsView" destination="bf3-gh-9hW" id="agC-Bu-gTU"/>
                         <segue destination="PIf-L5-EEn" kind="push" identifier="SegueToWorkoutDetailsView" id="IUw-Ek-UZs"/>
                     </connections>
@@ -3028,7 +3026,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
-        <image name="Background1.png" width="1280" height="1920"/>
+        <image name="Background1.png" width="640" height="1136"/>
         <image name="ComplexScreen.png" width="640" height="1136"/>
         <image name="MappedScreen.png" width="640" height="1136"/>
         <image name="SimpleScreen.png" width="640" height="1136"/>
