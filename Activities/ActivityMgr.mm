@@ -1051,13 +1051,18 @@ extern "C" {
 		
 		if (g_pDatabase)
 		{
+			// Get the activity list out of the database.
 			g_pDatabase->RetrieveActivities(g_historicalActivityList);
 
-			// Build the activity id to index hash map.
 			for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
+				// Build the activity id to index hash map.
 				g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex));
+
+				// Load cached summary data because this is quicker than recreated the activity object and recomputing everything.
+				g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
 			}
 		}
 	}

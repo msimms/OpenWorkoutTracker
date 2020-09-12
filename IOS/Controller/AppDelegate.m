@@ -1820,6 +1820,7 @@ void startSensorCallback(SensorType type, void* context)
 	if (exportDir)
 	{
 		char* tempExportFileName = ExportActivitySummary([activityType UTF8String], [exportDir UTF8String]);
+
 		if (tempExportFileName)
 		{
 			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];

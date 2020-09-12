@@ -730,61 +730,51 @@ bool DataExporter::ExportActivitySummary(const ActivitySummaryList& activities, 
 
 	if (writer.CreateFile(fileName))
 	{
-		std::vector<std::string> attributes;
-		
+		std::vector<std::string> attributesNames;
+
 		result = true;
 
-		ActivitySummaryList::const_iterator activityIter = activities.begin();
-		while (activityIter != activities.end())
+		for (auto activityIter = activities.begin(); activityIter != activities.end(); ++activityIter)
 		{
 			const ActivitySummary& summary = (*activityIter);
 
 			if (summary.type.compare(activityType) == 0)
 			{
-				const Activity* pActivity = summary.pActivity;
-
-				if (attributes.size() == 0)
-				{
-					pActivity->BuildSummaryAttributeList(attributes);
-					std::sort(attributes.begin(), attributes.end());
-					result &= writer.WriteValues(attributes);
-				}
-
 				std::vector<std::string> values;
 
-				std::vector<std::string>::const_iterator attrIter = attributes.begin();
-				while (attrIter != attributes.end())
+				// The first time we go through here we need to write out the column titles.
+				if (attributesNames.size() == 0)
+				{
+					for (auto attrIter = summary.summaryAttributes.begin(); attrIter != summary.summaryAttributes.end(); ++attrIter)
+						attributesNames.push_back(attrIter->first);
+					std::sort(attributesNames.begin(), attributesNames.end());
+					result &= writer.WriteValues(attributesNames);
+				}
+
+				for (auto attrIter = attributesNames.begin(); attrIter != attributesNames.end(); ++attrIter)
 				{
 					const std::string& attrName = (*attrIter);
 
 					try
 					{
 						ActivityAttributeType value = summary.summaryAttributes.at(attrName);
+
 						switch (value.valueType)
 						{
 							case TYPE_NOT_SET:
 								values.push_back("-");
 								break;
 							case TYPE_TIME:
-								{
-									char buf[32];
-									snprintf(buf, sizeof(buf) - 1, "%ld", value.value.timeVal);
-									values.push_back(buf);
-								}
+								snprintf(buf, sizeof(buf) - 1, "%ld", value.value.timeVal);
+								values.push_back(buf);
 								break;
 							case TYPE_DOUBLE:
-								{
-									char buf[32];
-									snprintf(buf, sizeof(buf) - 1, "%.8lf", value.value.doubleVal);
-									values.push_back(buf);
-								}
+								snprintf(buf, sizeof(buf) - 1, "%.8lf", value.value.doubleVal);
+								values.push_back(buf);
 								break;
 							case TYPE_INTEGER:
-								{
-									char buf[32];
-									snprintf(buf, sizeof(buf) - 1, "%llu", value.value.intVal);
-									values.push_back(buf);
-								}
+								snprintf(buf, sizeof(buf) - 1, "%llu", value.value.intVal);
+								values.push_back(buf);
 								break;
 							default:
 								values.push_back("-");
@@ -795,17 +785,11 @@ bool DataExporter::ExportActivitySummary(const ActivitySummaryList& activities, 
 					{
 						values.push_back("-");
 					}
-
-					attrIter++;
 				}
 
 				result &= writer.WriteValues(values);
 			}
-
-			activityIter++;
 		}
-		
-		result = true;
 
 		writer.CloseFile();
 	}

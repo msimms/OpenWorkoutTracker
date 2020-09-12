@@ -128,6 +128,7 @@
 	if ([[segue identifier] isEqualToString:@SEGUE_TO_ACTIVITY_SUMMARY])
 	{
 		StaticSummaryViewController* summaryVC = (StaticSummaryViewController*)[segue destinationViewController];
+
 		if (summaryVC)
 		{
 			[summaryVC setActivityId:self->selectedActivityId];
@@ -209,6 +210,7 @@
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 	NSString* month = [self->sortedKeys objectAtIndex:section];
+
 	return [[[self->historyDictionary objectForKey:month] objectAtIndex:row] activityId];
 }
 
@@ -432,6 +434,10 @@
 		}]];
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+	}
 	return FALSE;
 }
 
@@ -445,6 +451,10 @@
 	if (self->exportedFileName)
 	{
 		[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
 	}
 }
 
