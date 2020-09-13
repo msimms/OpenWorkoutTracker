@@ -19,9 +19,7 @@ ChinUp::~ChinUp()
 
 double ChinUp::CaloriesBurned() const
 {
-	// work (joules) = force (newtons) * displacement (meters)
-	double massKg = m_athlete.GetWeightKg() + AdditionalWeightUsedKg();
-	double distanceM = (double)0.25;
-	double caloriesPerRep = massKg * distanceM * CALORIES_PER_JOULE;
-	return (double)Total() * caloriesPerRep;
+	double avgHr = AverageHeartRate();
+	double durationSecs = (double)ElapsedTimeInSeconds();
+	return m_athlete.CaloriesBurnedForActivityDuration(avgHr, durationSecs, AdditionalWeightUsedKg());
 }

@@ -19,9 +19,7 @@ Squat::~Squat()
 
 double Squat::CaloriesBurned() const
 {
-	// work (joules) = force (newtons) * displacement (meters)
-	double massKg = (m_athlete.GetWeightKg() / 4) + AdditionalWeightUsedKg();	// not lifting entire body weight
-	double distanceM = (0.25 * (m_athlete.GetHeightCm() / 100));
-	double caloriesPerRep = massKg * distanceM * CALORIES_PER_JOULE;
-	return (double)Total() * caloriesPerRep;
+	double avgHr = AverageHeartRate();
+	double durationSecs = (double)ElapsedTimeInSeconds();
+	return m_athlete.CaloriesBurnedForActivityDuration(avgHr, durationSecs, AdditionalWeightUsedKg());
 }

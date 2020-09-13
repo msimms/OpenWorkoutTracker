@@ -26,9 +26,9 @@ double Hike::CaloriesBurned() const
 {
 	double avgHeartRate = AverageHeartRate();
 
-	if (avgHeartRate < (double)1.0)	// data not available, estimate 50% of Max. Heart Rate
+	if (avgHeartRate < (double)1.0)	// data not available, make an estimation
 	{
-		avgHeartRate = (double)0.50 * m_athlete.EstimateMaxHeartRate();
+		avgHeartRate = m_athlete.EstimateModerateIntensityHeartRate();
 	}
 	
 	// Source: http://www.livestrong.com/article/202403-calories-burned-running-speed/
@@ -37,11 +37,9 @@ double Hike::CaloriesBurned() const
 		case GENDER_MALE:
 			return ((0.634 * avgHeartRate) + (0.271 * m_athlete.GetAgeInYears()) + (0.179 * m_athlete.GetLeanBodyMassLbs()) +
 					(0.404 * m_athlete.EstimateVO2Max()) - 95.7735) * MovingTimeInMinutes() / 4.184;
-			break;
 		case GENDER_FEMALE:
 			return ((0.450 * avgHeartRate) + (0.274 * m_athlete.GetAgeInYears()) + (0.0468 * m_athlete.GetLeanBodyMassLbs()) +
 					(0.380 * m_athlete.EstimateVO2Max()) - 59.3954) * MovingTimeInMinutes() / 4.184;
-			break;
 	}
 	return (double)0.0;
 }

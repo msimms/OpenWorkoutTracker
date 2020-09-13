@@ -25,46 +25,59 @@ public:
 
 	void SetToDefaults();
 
+	// Unique identifier.
 	void SetId(uint64_t id) { m_id = id; };
 	uint64_t GetId() const { return m_id; };
 
+	// Real name.
 	void SetName(const std::string& name) { m_name = name; };
 	std::string GetName() const { return m_name; };
 
+	// Rough indication of how active the user is.
 	void SetActivityLevel(ActivityLevel level) { m_activityLevel = level; };
 	ActivityLevel GetActivityLevel() const { return m_activityLevel; };
 
 	void SetBmrFormula(BmrFormula formula) { m_bmrFormula = formula; };
 	BmrFormula GetBmrFormula() const { return m_bmrFormula; };
 
+	// Gender, for use in calorie calculations.
 	void SetGender(Gender gender) { m_gender = gender; };
 	Gender GetGender() const { return m_gender; };
 
+	// Birth date.
 	void SetBirthDate(struct tm bday) { m_birthDate = bday; };
 	void SetBaseDateForComputingAge(struct tm baseDate) { m_baseDate = baseDate; };
 	
-	float GetAgeInYears() const;
+	// Current age.
+	double GetAgeInYears() const;
 
-	float EstimateMaxHeartRate() const;
-	float EstimateRestingHeartRate() const;
-	float EstimateVO2Max() const;
+	// Heart rate and VO2 max estimations.
+	double EstimateMaxHeartRate() const;
+	double EstimateRestingHeartRate() const;
+	double EstimateModerateIntensityHeartRate() const;
+	double EstimateVO2Max() const;
 
-	void SetHeightCm(float cm) { m_heightCm = cm; };
-	float GetHeightCm() const { return m_heightCm; };
+	// Height.
+	void SetHeightCm(double cm) { m_heightCm = cm; };
+	double GetHeightCm() const { return m_heightCm; };
 
-	void SetWeightKg(float kg) { m_weightKg = kg; };
-	float GetWeightKg() const { return m_weightKg; };
+	// Weight.
+	void SetWeightKg(double kg) { m_weightKg = kg; };
+	double GetWeightKg() const { return m_weightKg; };
 
-	void SetLeanBodyMassKg(float kg) { m_leanBodyMassKg = kg; };
-	float GetLeanBodyMassKg() const { return m_leanBodyMassKg; };
-	float GetLeanBodyMassLbs() const { return UnitConverter::KilogramsToPounds(m_leanBodyMassKg); };
+	void SetLeanBodyMassKg(double kg) { m_leanBodyMassKg = kg; };
+	double GetLeanBodyMassKg() const { return m_leanBodyMassKg; };
+	double GetLeanBodyMassLbs() const { return UnitConverter::KilogramsToPounds(m_leanBodyMassKg); };
 
-	void SetFtp(float ftp) { m_ftp = ftp; };
-	float GetFtp() const { return m_ftp; };
+	// Functional Threshold Power, for cycling.
+	void SetFtp(double ftp) { m_ftp = ftp; };
+	double GetFtp() const { return m_ftp; };
 	
-	float ComputeBasalMetabolicRate();
-	float ComputeBasalMetabolicRateHarrisBenedict();
-	float ComputeBasalMetabolicRateKatchMcArdle();
+	double ComputeBasalMetabolicRate() const;
+	double ComputeBasalMetabolicRateHarrisBenedict() const;
+	double ComputeBasalMetabolicRateKatchMcArdle() const;
+
+	double CaloriesBurnedForActivityDuration(double avgHr, double durationSecs, double additionalWeightKg) const;
 
 private:
 	uint64_t      m_id;
@@ -74,13 +87,13 @@ private:
 	Gender        m_gender;
 	struct tm     m_birthDate;
 	struct tm     m_baseDate;      // date from which age is calculated
-	float         m_heightCm;
-	float         m_weightKg;
-	float         m_leanBodyMassKg;
-	float         m_ftp;
+	double        m_heightCm;
+	double        m_weightKg;
+	double        m_leanBodyMassKg;
+	double        m_ftp;
 
-	float EstimateRestingHeartRateMale() const;
-	float EstimateRestingHeartRateFemale() const;
+	double EstimateRestingHeartRateMale() const;
+	double EstimateRestingHeartRateFemale() const;
 };
 
 #endif

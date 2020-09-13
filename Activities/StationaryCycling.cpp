@@ -41,9 +41,9 @@ double StationaryCycling::CaloriesBurned() const
 {
 	double avgHeartRate = AverageHeartRate();
 	
-	if (avgHeartRate < (double)1.0)	// data not available, estimate 67% of Max. Heart Rate
+	if (avgHeartRate < (double)1.0)	// data not available, make an estimation
 	{
-		avgHeartRate = (double)0.67 * m_athlete.EstimateMaxHeartRate();
+		avgHeartRate = m_athlete.EstimateModerateIntensityHeartRate();
 	}
 	
 	// Source: http://www.livestrong.com/article/73356-calculate-calories-burned-cycling/
