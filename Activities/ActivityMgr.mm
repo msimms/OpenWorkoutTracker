@@ -436,6 +436,7 @@ extern "C" {
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
+
 			if (bike.id == bikeId)
 			{
 				(*name) = strdup(bike.name.c_str());
@@ -452,6 +453,7 @@ extern "C" {
 		if (bikeIndex < g_bikes.size())
 		{
 			const Bike& bike = g_bikes.at(bikeIndex);
+
 			(*bikeId) = bike.id;
 			(*name) = strdup(bike.name.c_str());
 			(*weightKg) = bike.weightKg;
@@ -466,6 +468,7 @@ extern "C" {
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
+
 			if (bike.name.compare(name) == 0)
 			{
 				(*bikeId) = bike.id;
@@ -530,6 +533,7 @@ extern "C" {
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
+
 			if (bike.name.compare(name) == 0)
 			{
 				return bike.id;
@@ -731,7 +735,7 @@ extern "C" {
 	{
 		if (IsActivityInProgress())
 		{
-			return g_pCurrentActivity->UserWantsToAdvanceIntervalState();
+			g_pCurrentActivity->UserWantsToAdvanceIntervalState();
 		}		
 	}
 
@@ -1052,17 +1056,18 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			// Get the activity list out of the database.
-			g_pDatabase->RetrieveActivities(g_historicalActivityList);
-
-			for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
+			if (g_pDatabase->RetrieveActivities(g_historicalActivityList))
 			{
-				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+				for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
+				{
+					ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
-				// Build the activity id to index hash map.
-				g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex));
+					// Build the activity id to index hash map.
+					g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex));
 
-				// Load cached summary data because this is quicker than recreated the activity object and recomputing everything.
-				g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
+					// Load cached summary data because this is quicker than recreated the activity object and recomputing everything.
+					g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
+				}
 			}
 		}
 	}
@@ -1088,7 +1093,11 @@ extern "C" {
 	void CreateHistoricalActivityObjectById(const char* activityId)
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
-		CreateHistoricalActivityObject(activityIndex);
+
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+		{
+			CreateHistoricalActivityObject(activityIndex);
+		}
 	}
 
 	void CreateAllHistoricalActivityObjects()
@@ -1479,6 +1488,7 @@ extern "C" {
 			if (summary.pActivity)
 			{
 				std::vector<std::string> attributeNames;
+
 				summary.pActivity->BuildSummaryAttributeList(attributeNames);
 				std::sort(attributeNames.begin(), attributeNames.end());
 
@@ -1552,6 +1562,7 @@ extern "C" {
 			if (summary.pActivity)
 			{
 				std::vector<std::string> attributeNames;
+
 				summary.pActivity->BuildSummaryAttributeList(attributeNames);
 				return attributeNames.size();
 			}
