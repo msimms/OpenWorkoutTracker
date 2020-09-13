@@ -333,9 +333,12 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex
 {
-	[self->currentActivityLock lock];
+	if (HistoricalActivityListIsInitialized())
+		return FALSE;
+
+	[self->historicalActivityLock lock];
 	BOOL isOrphaned = IsActivityOrphaned(activityIndex);
-	[self->currentActivityLock unlock];
+	[self->historicalActivityLock unlock];
 	return isOrphaned;
 }
 

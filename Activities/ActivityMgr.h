@@ -116,6 +116,7 @@ extern "C" {
 
 	// Functions for loading history.
 	void InitializeHistoricalActivityList(void);
+	bool HistoricalActivityListIsInitialized(void);
 	void CreateHistoricalActivityObject(size_t activityIndex);
 	void CreateHistoricalActivityObjectById(const char* activityId);
 	void CreateAllHistoricalActivityObjects(void);

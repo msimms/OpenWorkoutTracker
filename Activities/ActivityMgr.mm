@@ -1067,6 +1067,11 @@ extern "C" {
 		}
 	}
 
+	bool HistoricalActivityListIsInitialized(void)
+	{
+		return g_historicalActivityList.size() > 0;
+	}
+
 	void CreateHistoricalActivityObject(size_t activityIndex)
 	{
 		if (g_pActivityFactory && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
@@ -2075,7 +2080,7 @@ extern "C" {
 	bool SaveActivitySummaryData()
 	{
 		bool result = false;
-		
+
 		if (g_pCurrentActivity && g_pCurrentActivity->HasStopped())
 		{
 			std::vector<std::string> attributes;
@@ -2104,7 +2109,7 @@ extern "C" {
 	{
 		return g_autoStartEnabled;
 	}
-	
+
 	void SetAutoStart(bool value)
 	{
 		g_autoStartEnabled = value;
@@ -2123,7 +2128,7 @@ extern "C" {
 	{
 		return (g_pCurrentActivity && g_pCurrentActivity->HasStarted() && !g_pCurrentActivity->HasStopped());
 	}
-	
+
 	bool IsActivityInProgressAndNotPaused()
 	{
 		return IsActivityInProgress() && !IsActivityPaused();
