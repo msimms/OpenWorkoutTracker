@@ -23,6 +23,9 @@
 	NSString* docDir = [paths objectAtIndex: 0];
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
 
+	self->currentActivityLock = [[NSLock alloc] init];
+	self->historicalActivityLock = [[NSLock alloc] init];
+
 	Initialize([dbFileName UTF8String]);
 
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
@@ -42,9 +45,6 @@
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
-
-	currentActivityLock = [[NSLock alloc] init];
-	historicalActivityLock = [[NSLock alloc] init];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
@@ -69,10 +69,15 @@
 {
 	// Called as part of the transition from the background to the inactive state; here you can undo many of
 	// the changes made on entering the background.
+
+	[self->currentActivityLock lock];
+
 	if (IsActivityCreated())
 	{
 		[self startSensors];
 	}
+
+	[self->currentActivityLock unlock];
 
 	if (self->sensorMgr)
 	{
@@ -85,6 +90,9 @@
 	// Use this method to release shared resources, save user data, invalidate timers, and store enough application
 	// state information to restore your application to its current state in case it is terminated later. If your
 	// application supports background execution, this method is called instead of applicationWillTerminate when the user quits.
+
+	[self->currentActivityLock lock];
+
 	if (IsActivityInProgress() || IsAutoStartEnabled())
 	{
 		if (self->sensorMgr)
@@ -96,6 +104,8 @@
 	{
 		[self stopSensors];
 	}
+
+	[self->currentActivityLock unlock];
 }
 
 - (void)handleBackgroundTasks:(NSSet<WKRefreshBackgroundTask *> *)backgroundTasks
@@ -153,7 +163,10 @@
 - (void)startWatchSession
 {
 	self->watchSession = [[WatchSessionManager alloc] init];
-	[self->watchSession startWatchSession];
+	if (self->watchSession)
+	{
+		[self->watchSession startWatchSession];
+	}
 }
 
 #pragma mark healthkit methods
@@ -333,12 +346,17 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex
 {
-	if (HistoricalActivityListIsInitialized())
-		return FALSE;
+	BOOL isOrphaned = FALSE;
 
 	[self->historicalActivityLock lock];
-	BOOL isOrphaned = IsActivityOrphaned(activityIndex);
+
+	if (HistoricalActivityListIsInitialized())
+	{
+		isOrphaned = IsActivityOrphaned(activityIndex);
+	}
+
 	[self->historicalActivityLock unlock];
+
 	return isOrphaned;
 }
 

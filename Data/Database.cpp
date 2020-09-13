@@ -1084,11 +1084,15 @@ bool Database::RetrieveActivity(const std::string& activityId, ActivitySummary& 
 
 bool Database::RetrieveActivities(ActivitySummaryList& activities)
 {
+	const size_t SIZE_INCREMENT = 128;
+
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
 	if (sqlite3_prepare_v2(m_pDb, "select activity_id, user_id, type, name, start_time, end_time from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
 	{
+		activities.reserve(SIZE_INCREMENT);
+
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			ActivitySummary summary;
