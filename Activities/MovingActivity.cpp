@@ -7,6 +7,7 @@
 
 #include <iomanip>
 #include <sstream>
+#include <math.h>
 
 #include "MovingActivity.h"
 #include "ActivityAttribute.h"
@@ -37,6 +38,7 @@ MovingActivity::MovingActivity() : Activity()
 	m_prevDistanceTraveledM = (double)0.0;
 	m_distanceTraveledM = (double)0.0;
 	m_totalAscentM = (double)0.0;
+	m_currentGradient = (double)0.0;
 	m_stoppedTimeMS = 0;
 	
 	SegmentType nullSegment = { 0, 0, 0 };
@@ -548,6 +550,23 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.endTime = segment.endTime;
 		result.valid = true;
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_GRADIENT) == 0)
+	{
+		result.value.doubleVal = m_currentGradient;
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_PERCENTAGE;
+		result.valid = true;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_GRADE_ADJUSTED_PACE) == 0)
+	{
+		SegmentType segment = GradeAdjustedPace();
+		result.value.timeVal = (time_t)segment.value.doubleVal;
+		result.valueType = TYPE_TIME;
+		result.measureType = MEASURE_PACE;
+		result.startTime = segment.startTime;
+		result.endTime = segment.endTime;
+		result.valid = true;
+	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE) == 0)
 	{
 		result.value.timeVal = GapToTargetPace();
@@ -981,6 +1000,7 @@ SegmentType MovingActivity::CurrentPace() const
 			if (tdPair2.distanceM >= MIN_METERS_MOVED)
 			{
 				double sum = (double)0.0;
+
 				for (auto iter = values.begin(); iter != values.end(); ++iter)
 				{
 					sum += (*iter);
@@ -1016,13 +1036,23 @@ SegmentType MovingActivity::CurrentPace() const
 	return segment;
 }
 
+// GAP algorithm from https://journals.physiology.org/doi/pdf/10.1152/japplphysiol.01177.2001
+SegmentType MovingActivity::GradeAdjustedPace() const
+{
+	SegmentType segment = CurrentPace();
+	double cost = (155.4 * (pow(m_currentGradient, 5))) - (30.4 * pow(m_currentGradient, 4)) - (43.4 * pow(m_currentGradient, 3)) - (46.3 * (m_currentGradient * m_currentGradient)) - (19.5 * m_currentGradient) + 3.6;
+	segment.value.doubleVal = segment.value.doubleVal + (cost - 3.6) / 3.6;
+	return segment;
+}
+
 time_t MovingActivity::GapToTargetPace() const
 {
 	// Make sure a pace plan is selected.
 	if (m_pacePlan.targetDistanceInKms > (double)0.01 && m_pacePlan.targetPaceMinKm > (double)0.0)
 	{
-		// Are we there yet?
 		double remainingDistanceInMeters = (m_pacePlan.targetDistanceInKms * 1000.0) - DistanceTraveledInMeters();
+
+		// Are we there yet?
 		if (remainingDistanceInMeters > (double)0.01)
 		{
 			SegmentType currentPaceSegment = CurrentPace();
@@ -1037,6 +1067,7 @@ time_t MovingActivity::GapToTargetPace() const
 				if (targetFinishTimeInMins > (double)0.01)
 				{
 					double remainingDistanceInUserUnits = UnitMgr::ConvertToPreferredDistanceFromMeters(remainingDistanceInMeters);
+
 					if (remainingDistanceInUserUnits > (double)0.01)
 					{
 						// Percentage remaining. Needed to compute splits.
@@ -1190,7 +1221,7 @@ SegmentType MovingActivity::CurrentClimb() const
 	
 	if (m_distances.size() > 0)
 	{
-		uint8_t numPoints  = 0;
+		uint8_t numPoints = 0;
 		double  climbM = (double)0.0;
 		double  maxClimbM = (double)0.0;
 
@@ -1241,6 +1272,8 @@ void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_PACE);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_GRADIENT);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_GRADE_ADJUSTED_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
@@ -1277,7 +1310,6 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_PACE);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MOVING_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_SPEED);
@@ -1303,6 +1335,7 @@ bool MovingActivity::CheckPositionInterval()
 	}
 	
 	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);	
+
 	if (DistanceTraveledInMeters() - m_intervalWorkoutState.lastDistanceMeters >= segment.distance)
 	{
 		return true;
@@ -1322,13 +1355,10 @@ double MovingActivity::RunningAltitudeAverage() const
 
 	if (m_altitudeBuffer.size() > 0)
 	{
-		std::vector<double>::const_iterator iter = m_altitudeBuffer.begin();
-		while (iter != m_altitudeBuffer.end())
+		for (auto iter = m_altitudeBuffer.begin(); iter != m_altitudeBuffer.end(); ++iter)
 		{
 			avg += (*iter);
-			++iter;
 		}
-
 		avg /= m_altitudeBuffer.size();
 	}
 	return avg;

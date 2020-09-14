@@ -62,6 +62,7 @@ public:
 	virtual double MovingPace() const;
 
 	virtual SegmentType CurrentPace() const;
+	virtual SegmentType GradeAdjustedPace() const;
 	virtual SegmentType FastestPace() const { return m_fastestPace; };
 	virtual time_t GapToTargetPace() const;
 
@@ -118,6 +119,7 @@ protected:
 	double               m_prevDistanceTraveledM;   // total distance - second to last reading (in meters)
 	double               m_distanceTraveledM;       // total distance (in meters)
 	double               m_totalAscentM;            // sum of all ascents (in meters)
+	double               m_currentGradient;         // last computed gradient
 	std::vector<double>  m_altitudeBuffer;          // for computing a running average of altitude
 	uint64_t             m_stoppedTimeMS;           // amount of time spent not moving (in milliseconds)
 	SegmentType          m_minAltitudeM;
