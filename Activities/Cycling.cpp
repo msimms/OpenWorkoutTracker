@@ -423,23 +423,9 @@ double Cycling::CaloriesBurned() const
 	}
 	else
 	{
-		double avgHeartRate = AverageHeartRate();
-
-		if (avgHeartRate < (double)1.0)	// data not available, make an estimation
-		{
-			avgHeartRate = m_athlete.EstimateModerateIntensityHeartRate();
-		}
-
-		// Source: http://www.livestrong.com/article/73356-calculate-calories-burned-cycling/
-		switch (m_athlete.GetGender())
-		{
-			case GENDER_MALE:
-				return ((0.271 * m_athlete.GetAgeInYears()) + (0.634 * avgHeartRate) + (0.179 * m_athlete.GetLeanBodyMassLbs()) +
-						(0.404 * m_athlete.EstimateVO2Max()) - 95.7735) * MovingTimeInMinutes() / 4.184;
-			case GENDER_FEMALE:
-				return ((0.274 * m_athlete.GetAgeInYears()) + (0.450 * avgHeartRate) + (0.0468 * m_athlete.GetLeanBodyMassLbs()) +
-						(0.380 * m_athlete.EstimateVO2Max()) - 59.3954) * MovingTimeInMinutes() / 4.184;
-		}
+		double avgHr = AverageHeartRate();
+		double durationSecs = (double)ElapsedTimeInSeconds();
+		return m_athlete.CaloriesBurnedForActivityDuration(avgHr, durationSecs, (double)0.0);
 	}
 	return (double)0.0;
 }

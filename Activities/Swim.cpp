@@ -14,7 +14,6 @@ Swim::Swim()
 {
 	m_lastPeakCalculationTime = 0;
 	m_strokesTaken = 0;
-	m_currentCalories = (double)0.0;
 }
 
 Swim::~Swim()

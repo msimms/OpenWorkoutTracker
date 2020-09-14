@@ -38,19 +38,15 @@ public:
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
 
 protected:
-	virtual bool ProcessLocationReading(const SensorReading& reading);
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 
 protected:
 	LibMath::GraphLine m_graphLine;
 	LibMath::Peaks     m_peakFinder;
-	uint64_t m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
-	uint16_t m_stepsTaken;
-	double   m_lastAvgAltitudeM; // previous value of calling RunningAltitudeAverage(), for calorie calculation
-	double   m_currentCalories;
+	uint64_t           m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
+	uint16_t           m_stepsTaken;
 
 protected:
-	double CaloriesBetweenPoints(const Coordinate& pt1, const Coordinate& pt2);
 	void CalculateStepsTaken();
 };
 
