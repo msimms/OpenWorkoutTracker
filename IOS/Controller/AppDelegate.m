@@ -103,8 +103,12 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strideLengthUpdated:) name:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListReturned:) name:@NOTIFICATION_NAME_GEAR_LIST object:nil];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(workoutUpdated:) name:@NOTIFICATION_NAME_WORKOUT_UPDATED object:nil];
+ 
 	[self startInteralTimer];
 
 	return YES;
@@ -124,7 +128,12 @@
 	[self setUnits];
 	[self setUserProfile];
 
-	[self retrieveRemoteGearList];
+	// If the broadcast feature is both present and enabled then check the login status.
+	// If logged in, query the server for pertinent information.
+	if ([self isFeaturePresent:FEATURE_BROADCAST])
+	{
+		[self serverIsLoggedInAsync];
+	}
 }
 
 - (void)applicationWillResignActive:(UIApplication*)application
@@ -333,6 +342,7 @@
 	double userWeightKg     = [UserProfile weightInKg];
 	double userHeightCm     = [UserProfile heightInCm];
 	double userFtp          = [UserProfile ftp];
+
 	SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm, userFtp);
 }
 
@@ -853,7 +863,22 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-- (void)gearListReturned:(NSNotification*)notification
+#pragma mark methods for handling responses from the server
+
+- (void)loginChecked:(NSNotification*)notification
+{
+	NSDictionary* loginData = [notification object];
+	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+
+	// The user is logged in, request the most recent gear list and planned workout list.
+	if (responseCode && [responseCode intValue] == 200)
+	{
+		[self serverListGear];
+		[self serverListPlannedWorkouts];
+	}
+}
+
+- (void)gearListUpdated:(NSNotification*)notification
 {
 	NSDictionary* gearData = [notification object];
 	NSString* responseStr = [gearData objectForKey:@KEY_NAME_RESPONSE_STR];
@@ -873,6 +898,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSNumber* addTime = [gearDict objectForKey:@KEY_NAME_ADD_TIME];
 			NSNumber* retireTime = [gearDict objectForKey:@KEY_NAME_RETIRE_TIME];
 
+			// Don't bother listing items that have been retired.
 			if ([retireTime intValue] == 0)
 			{
 				if ([gearType isEqualToString:@"shoes"])
@@ -900,6 +926,36 @@ void startSensorCallback(SensorType type, void* context)
 			}
 		}
 	}
+}
+
+- (void)plannedWorkoutsUpdated:(NSNotification*)notification
+{
+	NSDictionary* workoutData = [notification object];
+	NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
+    NSError* error = nil;
+    NSArray* workoutObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+	if (workoutObjects)
+	{
+		InitializeWorkoutList();
+
+		for (NSDictionary* workoutDict in workoutObjects)
+		{
+			NSString* workoutId = [workoutDict objectForKey:@KEY_NAME_WORKOUT_ID];
+
+			// If the workout is not in the database then request the details.
+			if (ConvertWorkoutIdToIndex([workoutId UTF8String]) == WORKOUT_INDEX_UNKNOWN)
+			{
+				[self serverRequestWorkoutDetails:workoutId];
+			}
+		}
+	}
+}
+
+- (void)workoutUpdated:(NSNotification*)notification
+{
+	NSDictionary* workoutData = [notification object];
+	NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
 }
 
 #pragma mark methods for managing intervals
@@ -1415,6 +1471,7 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			Coordinate coordinate;
 			BOOL result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
+
 			if (result)
 			{
 				(*latitude) = coordinate.latitude;
@@ -2300,6 +2357,7 @@ void attributeNameCallback(const char* name, void* context)
 		{
 			char* sport = GetWorkoutSportByIndex(workoutIndex);
 			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
 			[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
 			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutTypeByIndex(workoutIndex)] forKey:@"type"];
@@ -2437,9 +2495,19 @@ void attributeNameCallback(const char* name, void* context)
 	return [ApiClient serverListFollowedByAsync];
 }
 
-- (BOOL)retrieveRemoteGearList
+- (BOOL)serverListGear
 {
-	return [ApiClient retrieveRemoteGearList];
+	return [ApiClient serverListGear];
+}
+
+- (BOOL)serverListPlannedWorkouts
+{
+	return [ApiClient serverListPlannedWorkouts];
+}
+
+- (BOOL)serverRequestWorkoutDetails:(NSString*)workoutId
+{
+	return [ApiClient serverRequestWorkoutDetails:workoutId];
 }
 
 - (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername

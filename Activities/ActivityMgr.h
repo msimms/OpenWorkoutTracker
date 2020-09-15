@@ -21,6 +21,7 @@
 #include "WorkoutType.h"
 
 #define ACTIVITY_INDEX_UNKNOWN (size_t)-1
+#define WORKOUT_INDEX_UNKNOWN (size_t)-1
 
 #ifdef __cplusplus
 extern "C" {
@@ -169,6 +170,7 @@ extern "C" {
 
 	// Functions for managing workout generation.
 	bool InitializeWorkoutList(void);
+	size_t ConvertWorkoutIdToIndex(const char* const workoutId);
 	char* GetWorkoutIdByIndex(size_t workoutIndex);
 	char* GetWorkoutSportByIndex(size_t workoutIndex);
 	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex);
@@ -176,6 +178,7 @@ extern "C" {
 	double GetWorkoutDurationByIndex(size_t workoutIndex);
 	double GetWorkoutDistanceByIndex(size_t workoutIndex);
 	bool GenerateWorkouts(void);
+	bool CreateWorkout(const char* const workoutId);
 	bool DeleteWorkout(const char* const workoutId);
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);
 

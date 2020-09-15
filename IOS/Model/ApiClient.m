@@ -95,7 +95,19 @@
 		else if ([urlStr rangeOfString:@REMOTE_API_LIST_GEAR].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_GEAR_LIST object:downloadedData];
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:downloadedData];
+			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_WORKOUTS].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:downloadedData];
+			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_WORKOUT_UPDATED object:downloadedData];
 			} );
 		}
 		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
@@ -116,6 +128,9 @@
 		else if ([urlStr rangeOfString:@REMOTE_API_CLAIM_DEVICE_URL].location != NSNotFound)
 		{
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_UPDATE_PROFILE].location != NSNotFound)
+		{
+		}
 	}];
 	[dataTask resume];
 	
@@ -132,6 +147,7 @@
 
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+
 	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"password\": \"%@\",", password] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -151,6 +167,7 @@
 
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+
 	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"password1\": \"%@\",", password1] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"password2\": \"%@\",", password2] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -187,9 +204,25 @@
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
-+ (BOOL)retrieveRemoteGearList
++ (BOOL)serverListGear
 {
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_GEAR];
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+}
+
++ (BOOL)serverListPlannedWorkouts
+{
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_WORKOUTS];
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+}
+
++ (BOOL)serverRequestWorkoutDetails:(NSString*)workoutId
+{
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_WORKOUT_DETAILS];
+
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"workout_id=%@&", workoutId]];
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"format=json"]];
+
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 }
 
@@ -213,6 +246,7 @@
 {
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+
 	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -225,6 +259,7 @@
 {
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+
 	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -237,10 +272,22 @@
 {
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+
 	[postData appendData:[[NSString stringWithFormat:@"\"device_id\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CLAIM_DEVICE_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+}
+
++ (BOOL)serverSetUserWeight:(NSNumber*)weightKg
+{
+	NSString* post = [NSString stringWithFormat:@"{"];
+	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
+
+	[postData appendData:[[NSString stringWithFormat:@"\"weight\": \"%@\"", weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPDATE_PROFILE];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 }
 

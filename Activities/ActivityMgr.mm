@@ -1765,6 +1765,22 @@ extern "C" {
 	}
 
 	// InitializeWorkoutList should be called before calling this.
+	size_t ConvertWorkoutIdToIndex(const char* const workoutId)
+	{
+		size_t index = 0;
+
+		for (auto iter = g_workouts.begin(); iter != g_workouts.end(); ++iter)
+		{
+			if ((*iter).GetId().compare(workoutId) == 0)
+			{
+				return index;
+			}
+			++index;
+		}
+		return WORKOUT_INDEX_UNKNOWN;
+	}
+
+	// InitializeWorkoutList should be called before calling this.
 	char* GetWorkoutIdByIndex(size_t workoutIndex)
 	{
 		if (workoutIndex < g_workouts.size())
@@ -1851,6 +1867,18 @@ extern "C" {
 			}
 
 			return result;
+		}
+		return false;
+	}
+
+	bool CreateWorkout(const char* const workoutId)
+	{
+		if (g_pDatabase)
+		{
+			Workout workout;
+			
+			workout.SetId(workoutId);
+			//return g_pDatabase->CreateWorkout(workout);
 		}
 		return false;
 	}
