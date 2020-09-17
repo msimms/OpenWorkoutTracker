@@ -18,9 +18,6 @@
 		return FALSE;
 	}
 
-	NSMutableDictionary* downloadedData = [[NSMutableDictionary alloc] init];
-	[downloadedData setObject:urlStr forKey:@KEY_NAME_URL];
-
 	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 	[request setURL:[NSURL URLWithString:urlStr]];
 	[request setHTTPMethod:method];
@@ -40,21 +37,20 @@
 		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
 		NSInteger httpCode = [httpResponse statusCode];
 
-		if (downloadedData)
+		NSMutableDictionary* downloadedData = [[NSMutableDictionary alloc] init];
+		[downloadedData setObject:urlStr forKey:@KEY_NAME_URL];
+		[downloadedData setObject:[[NSNumber alloc] initWithInteger:httpCode] forKey:@KEY_NAME_RESPONSE_CODE];
+
+		NSString* dataStr = [NSString stringWithFormat:@""];
+		if (data && [data length] > 0)
 		{
-			[downloadedData setObject:[[NSNumber alloc] initWithInteger:httpCode] forKey:@KEY_NAME_RESPONSE_CODE];
-
-			NSString* dataStr = [NSString stringWithFormat:@""];
-			if (data && [data length] > 0)
-			{
-				NSString* tempStr = [NSString stringWithUTF8String:[data bytes]];
-				if (tempStr)
-					dataStr = tempStr;
-			}
-
-			[downloadedData setObject:dataStr forKey:@KEY_NAME_RESPONSE_STR];
-			[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
+			NSString* tempStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+			if (tempStr)
+				dataStr = tempStr;
 		}
+
+		[downloadedData setObject:dataStr forKey:@KEY_NAME_RESPONSE_STR];
+		[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
 
 		if ([urlStr rangeOfString:@REMOTE_API_IS_LOGGED_IN_URL].location != NSNotFound)
 		{
@@ -132,6 +128,7 @@
 		{
 		}
 	}];
+
 	[dataTask resume];
 	
 	return TRUE;
