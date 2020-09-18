@@ -626,240 +626,294 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)weightHistoryUpdated:(NSNotification*)notification
 {
-	NSDictionary* weightData = [notification object];
-
-	NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
-	NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
-
-	@synchronized(self)
+	@try
 	{
-		ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+		NSDictionary* weightData = [notification object];
+
+		NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
+		NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
+
+		@synchronized(self)
+		{
+			ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
+		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* accelerometerData = [notification object];
-
-		NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
-		NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
-		NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
-		NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
-
-		@synchronized(self)
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+			NSDictionary* accelerometerData = [notification object];
+
+			NSNumber* x = [accelerometerData objectForKey:@KEY_NAME_ACCEL_X];
+			NSNumber* y = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Y];
+			NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
+			NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
+
+			@synchronized(self)
+			{
+				ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)locationUpdated:(NSNotification*)notification
 {
-	NSDictionary* locationData = [notification object];
-
-	NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
-	NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-	NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
-	
-	NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
-	NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
-
-	NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
-
-	NSString* activityType = [self getCurrentActivityType];
-
-	BOOL tempBadGps = FALSE;
-
-	uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
-	if (minHAccuracy != (uint8_t)-1)
+	@try
 	{
-		uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
-		if (minHAccuracy != 0 && accuracy > minHAccuracy)
-		{
-			tempBadGps = TRUE;
-		}
-	}
-	
-	uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
-	if (minVAccuracy != (uint8_t)-1)
-	{
-		uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
-		if (minVAccuracy != 0 && accuracy > minVAccuracy)
-		{
-			tempBadGps = TRUE;
-		}
-	}
-	
-	self->badGps = tempBadGps;
+		NSDictionary* locationData = [notification object];
 
-	if ([self isActivityInProgressAndNotPaused])
-	{
-		BOOL shouldProcessReading = TRUE;
-		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
+		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
+		NSNumber* alt = [locationData objectForKey:@KEY_NAME_ALTITUDE];
+		
+		NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
+		NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
 
-		if (filterOption == GPS_FILTER_DROP && self->badGps)
-		{
-			shouldProcessReading = FALSE;
-		}
+		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
 
-		if (shouldProcessReading)
+		NSString* activityType = [self getCurrentActivityType];
+
+		BOOL tempBadGps = FALSE;
+
+		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+		if (minHAccuracy != (uint8_t)-1)
 		{
-			@synchronized(self)
+			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
+			if (minHAccuracy != 0 && accuracy > minHAccuracy)
 			{
-				ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+				tempBadGps = TRUE;
 			}
 		}
+		
+		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+		if (minVAccuracy != (uint8_t)-1)
+		{
+			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
+			if (minVAccuracy != 0 && accuracy > minVAccuracy)
+			{
+				tempBadGps = TRUE;
+			}
+		}
+		
+		self->badGps = tempBadGps;
+
+		if ([self isActivityInProgressAndNotPaused])
+		{
+			BOOL shouldProcessReading = TRUE;
+			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+
+			if (filterOption == GPS_FILTER_DROP && self->badGps)
+			{
+				shouldProcessReading = FALSE;
+			}
+
+			if (shouldProcessReading)
+			{
+				@synchronized(self)
+				{
+					ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+				}
+			}
+		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* heartRateData = [notification object];
-		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
-			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+			NSDictionary* heartRateData = [notification object];
+			CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (timestampMs && rate)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				@synchronized(self)
-				{
-					ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
-				}
+				NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+				NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
 
-				if (self->healthMgr)
+				if (timestampMs && rate)
 				{
-					[self->healthMgr saveHeartRateIntoHealthStore:[rate doubleValue]];
+					@synchronized(self)
+					{
+						ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
+					}
+
+					if (self->healthMgr)
+					{
+						[self->healthMgr saveHeartRateIntoHealthStore:[rate doubleValue]];
+					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)cadenceUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* cadenceData = [notification object];
-		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			NSNumber* timestampMs = [cadenceData objectForKey:@KEY_NAME_CADENCE_TIMESTAMP_MS];
-			NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
+			NSDictionary* cadenceData = [notification object];
+			CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (timestampMs && rate)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				@synchronized(self)
+				NSNumber* timestampMs = [cadenceData objectForKey:@KEY_NAME_CADENCE_TIMESTAMP_MS];
+				NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
+
+				if (timestampMs && rate)
 				{
-					ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
+					@synchronized(self)
+					{
+						ProcessCadenceReading([rate doubleValue], [timestampMs longLongValue]);
+					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)wheelSpeedUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* wheelSpeedData = [notification object];
-		CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS];
-			NSNumber* count = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED];
+			NSDictionary* wheelSpeedData = [notification object];
+			CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (timestampMs && count)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				@synchronized(self)
+				NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS];
+				NSNumber* count = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED];
+
+				if (timestampMs && count)
 				{
-					ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
+					@synchronized(self)
+					{
+						ProcessWheelSpeedReading([count doubleValue], [timestampMs longLongValue]);
+					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)powerUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* powerData = [notification object];
-		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_POWER_TIMESTAMP_MS];
-			NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
+			NSDictionary* powerData = [notification object];
+			CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (timestampMs && watts)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				@synchronized(self)
+				NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_POWER_TIMESTAMP_MS];
+				NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
+
+				if (timestampMs && watts)
 				{
-					ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
+					@synchronized(self)
+					{
+						ProcessPowerMeterReading([watts doubleValue], [timestampMs longLongValue]);
+					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)strideLengthUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* strideData = [notification object];
-		CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			NSNumber* timestampMs = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH_TIMESTAMP_MS];
-			NSNumber* value = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH];
+			NSDictionary* strideData = [notification object];
+			CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (timestampMs && value)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				@synchronized(self)
+				NSNumber* timestampMs = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH_TIMESTAMP_MS];
+				NSNumber* value = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH];
+
+				if (timestampMs && value)
 				{
-					ProcessRunStrideLengthReading([value doubleValue], [timestampMs longLongValue]);
+					@synchronized(self)
+					{
+						ProcessRunStrideLengthReading([value doubleValue], [timestampMs longLongValue]);
+					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)runDistanceUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPaused])
+	@try
 	{
-		NSDictionary* distanceData = [notification object];
-		CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if ([self isActivityInProgressAndNotPaused])
 		{
-			NSNumber* timestampMs = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE_TIMESTAMP_MS];
-			NSNumber* value = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE];
+			NSDictionary* distanceData = [notification object];
+			CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (timestampMs && value)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				@synchronized(self)
+				NSNumber* timestampMs = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE_TIMESTAMP_MS];
+				NSNumber* value = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE];
+
+				if (timestampMs && value)
 				{
-					ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
+					@synchronized(self)
+					{
+						ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
+					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
@@ -867,95 +921,163 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)loginChecked:(NSNotification*)notification
 {
-	NSDictionary* loginData = [notification object];
-	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
-
-	// The user is logged in, request the most recent gear list and planned workout list.
-	if (responseCode && [responseCode intValue] == 200)
+	@try
 	{
-		[self serverListGear];
-		[self serverListPlannedWorkouts];
+		NSDictionary* loginData = [notification object];
+		NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+
+		// The user is logged in, request the most recent gear list and planned workout list.
+		if (responseCode && [responseCode intValue] == 200)
+		{
+			[self serverListGear];
+			[self serverListPlannedWorkouts];
+		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)gearListUpdated:(NSNotification*)notification
 {
-	NSDictionary* gearData = [notification object];
-	NSString* responseStr = [gearData objectForKey:@KEY_NAME_RESPONSE_STR];
-    NSError* error = nil;
-    NSArray* gearObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-	
-	[self initializeBikeProfileList];
-	[self initializeShoeList];
-
-	if (gearObjects)
+	@try
 	{
-		for (NSDictionary* gearDict in gearObjects)
+		NSDictionary* gearData = [notification object];
+		NSString* responseStr = [gearData objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSError* error = nil;
+		NSArray* gearObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+		
+		[self initializeBikeProfileList];
+		[self initializeShoeList];
+
+		if (gearObjects)
 		{
-			NSString* gearType = [gearDict objectForKey:@KEY_NAME_GEAR_TYPE];
-			NSString* gearName = [gearDict objectForKey:@KEY_NAME_GEAR_NAME];
-			NSString* gearDescription = [gearDict objectForKey:@KEY_NAME_GEAR_DESCRIPTION];
-			NSNumber* addTime = [gearDict objectForKey:@KEY_NAME_ADD_TIME];
-			NSNumber* retireTime = [gearDict objectForKey:@KEY_NAME_RETIRE_TIME];
-
-			// Don't bother listing items that have been retired.
-			if ([retireTime intValue] == 0)
+			for (NSDictionary* gearDict in gearObjects)
 			{
-				if ([gearType isEqualToString:@"shoes"])
-				{				
-					// Do we already have shoes with this name?
-					uint64_t gearId = [self getShoeIdFromName:gearName];
+				NSString* gearType = [gearDict objectForKey:@KEY_NAME_GEAR_TYPE];
+				NSString* gearName = [gearDict objectForKey:@KEY_NAME_GEAR_NAME];
+				NSString* gearDescription = [gearDict objectForKey:@KEY_NAME_GEAR_DESCRIPTION];
+				NSNumber* addTime = [gearDict objectForKey:@KEY_NAME_ADD_TIME];
+				NSNumber* retireTime = [gearDict objectForKey:@KEY_NAME_RETIRE_TIME];
 
-					// If not, add it.
-					if (gearId == (uint64_t)-1)
-					{
-						[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];						
-					}
-				}
-				else if ([gearType isEqualToString:@"bike"])
+				// Don't bother listing items that have been retired.
+				if ([retireTime intValue] == 0)
 				{
-					// Do we already have shoes with this name?
-					uint64_t gearId = [self getBikeIdFromName:gearName];
+					if ([gearType isEqualToString:@"shoes"])
+					{				
+						// Do we already have shoes with this name?
+						uint64_t gearId = [self getShoeIdFromName:gearName];
 
-					// If not, add it.
-					if (gearId == (uint64_t)-1)
+						// If not, add it.
+						if (gearId == (uint64_t)-1)
+						{
+							[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];						
+						}
+					}
+					else if ([gearType isEqualToString:@"bike"])
 					{
-						[self addBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0];
+						// Do we already have shoes with this name?
+						uint64_t gearId = [self getBikeIdFromName:gearName];
+
+						// If not, add it.
+						if (gearId == (uint64_t)-1)
+						{
+							[self addBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0];
+						}
 					}
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)plannedWorkoutsUpdated:(NSNotification*)notification
 {
-	NSDictionary* workoutData = [notification object];
-	NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
-    NSError* error = nil;
-    NSArray* workoutObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-
-	if (workoutObjects)
+	@try
 	{
-		InitializeWorkoutList();
+		NSDictionary* workoutData = [notification object];
+		NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSError* error = nil;
+		NSArray* workoutObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
 
-		for (NSDictionary* workoutDict in workoutObjects)
+		if (workoutObjects)
 		{
-			NSString* workoutId = [workoutDict objectForKey:@KEY_NAME_WORKOUT_ID];
+			InitializeWorkoutList();
 
-			// If the workout is not in the database then request the details.
-			if (ConvertWorkoutIdToIndex([workoutId UTF8String]) == WORKOUT_INDEX_UNKNOWN)
+			for (NSDictionary* workoutDict in workoutObjects)
 			{
-				[self serverRequestWorkoutDetails:workoutId];
+				NSString* workoutId = [workoutDict objectForKey:@KEY_NAME_WORKOUT_ID];
+
+				// If the workout is not in the database then request the details.
+				if (ConvertWorkoutIdToIndex([workoutId UTF8String]) == WORKOUT_INDEX_UNKNOWN)
+				{
+					[self serverRequestWorkoutDetails:workoutId];
+				}
 			}
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)workoutUpdated:(NSNotification*)notification
 {
-	NSDictionary* workoutData = [notification object];
-	NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
+	@try
+	{
+		NSDictionary* workoutData = [notification object];
+		NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSError* error = nil;
+		NSDictionary* details = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+		if (details)
+		{
+			NSString* workoutId = [details objectForKey:@KEY_NAME_WORKOUT_ID];
+			NSString* workoutTypeStr = [details objectForKey:@KEY_NAME_WORKOUT_WORKOUT_TYPE];
+			NSString* sportType = [details objectForKey:@KEY_NAME_WORKOUT_SPORT_TYPE];
+			NSNumber* estimatedStress = [details objectForKey:@KEY_NAME_WORKOUT_ESTIMATED_STRESS];
+			NSNumber* scheduledTime = [details objectForKey:@KEY_NAME_WORKOUT_SCHEDULED_TIME];
+			NSDictionary* warmup = [details objectForKey:@KEY_NAME_WORKOUT_WARMUP];
+			NSDictionary* cooldown = [details objectForKey:@KEY_NAME_WORKOUT_COOLDOWN];
+
+			// Convert the workout type string to an enum.
+			WorkoutType workoutType = WorkoutTypeStrToEnum([workoutTypeStr UTF8String]);
+
+			// Create the workout.
+			if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedStress doubleValue], [scheduledTime intValue]))
+			{
+				NSArray* intervals = [details objectForKey:@KEY_NAME_WORKOUT_INTERVALS];
+
+				// Add the warmup.
+				if (warmup)
+				{
+				}
+
+				// Add the cooldown.
+				if (cooldown)
+				{
+				}
+
+				// Add the intervals.
+				for (NSDictionary* interval in intervals)
+				{
+					NSNumber* repeat = [interval objectForKey:@KEY_NAME_WORKOUT_INTERVAL_REPEAT];
+					NSNumber* pace = [interval objectForKey:@KEY_NAME_WORKOUT_PACE];
+					NSNumber* distance = [interval objectForKey:@KEY_NAME_WORKOUT_DISTANCE];
+					NSNumber* recoveryPace = [interval objectForKey:@KEY_NAME_WORKOUT_RECOVERY_PACE];
+					NSNumber* recoveryDistance = [interval objectForKey:@KEY_NAME_WORKOUT_RECOVERY_DISTANCE];
+
+					AddWorkoutInterval([workoutId UTF8String], [repeat intValue], [pace doubleValue], [distance doubleValue], [recoveryPace doubleValue], [recoveryDistance doubleValue]);
+				}
+			}
+		}
+	}
+	@catch (...)
+	{
+	}
 }
 
 #pragma mark methods for managing intervals
@@ -2356,15 +2478,23 @@ void attributeNameCallback(const char* name, void* context)
 		while ((workoutId = GetWorkoutIdByIndex(workoutIndex)) != NULL)
 		{
 			char* sport = GetWorkoutSportByIndex(workoutIndex);
-			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+			WorkoutType workoutType = WORKOUT_TYPE_REST;
+			size_t numIntervals = 0;
+			double duration = (double)0.0;
+			double distance = (double)0.0;
 
-			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-			[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
-			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutTypeByIndex(workoutIndex)] forKey:@"type"];
-			[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)GetWorkoutNumIntervalsByIndex(workoutIndex)] forKey:@"num intervals"];
-			[mutDic setValue:[NSNumber numberWithDouble:GetWorkoutDurationByIndex(workoutIndex)] forKey:@"duration"];
-			[mutDic setValue:[NSNumber numberWithDouble:GetWorkoutDistanceByIndex(workoutIndex)] forKey:@"distance"];
-			[workoutData addObject:mutDic];
+			if (GetWorkoutDetailsByIndex(workoutIndex, &workoutType, &numIntervals, &duration, &distance))
+			{
+				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
+
+				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
+				[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
+				[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)workoutType] forKey:@"type"];
+				[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)numIntervals] forKey:@"num intervals"];
+				[mutDic setValue:[NSNumber numberWithDouble:duration] forKey:@"duration"];
+				[mutDic setValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
+				[workoutData addObject:mutDic];
+			}
 
 			if (sport)
 				free(sport);

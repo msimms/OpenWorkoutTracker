@@ -74,6 +74,7 @@
 {
 	NSDictionary* loginData = [notification object];
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+	NSString* responseDataStr = [loginData objectForKey:@KEY_NAME_RESPONSE_STR];
 
 	if (responseCode && [responseCode intValue] == 200)
 	{
@@ -91,7 +92,6 @@
 	}
 	else
 	{
-		NSString* responseDataStr = [loginData objectForKey:@KEY_NAME_RESPONSE_STR];
 		if (responseDataStr && [responseDataStr length] > 0)
 		{
 			[super showOneButtonAlert:STR_ERROR withMsg:responseDataStr];
@@ -129,11 +129,15 @@
 	{
 		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
-		
+
 		self->username = self.usernameTextField.text;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate serverLoginAsync:self.usernameTextField.text withPassword:self.passwordTextField.text];
+		if (![appDelegate serverLoginAsync:self.usernameTextField.text withPassword:self.passwordTextField.text])
+		{
+			[self.spinner stopAnimating];
+			[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOGIN_FAILED];
+		}
 	}
 }
 

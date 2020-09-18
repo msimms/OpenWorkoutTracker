@@ -209,6 +209,7 @@ typedef enum SettingsRowsHealthKit
 	}];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
+
 		[Preferences setBroadcastUserName:[field text]];
 		[self.settingsTableView reloadData];
 	}]];
@@ -228,6 +229,7 @@ typedef enum SettingsRowsHealthKit
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
 		NSInteger value = [[field text] integerValue];
+
 		[Preferences setBroadcastRate:value];
 		[self.settingsTableView reloadData];
 	}]];
@@ -243,9 +245,12 @@ typedef enum SettingsRowsHealthKit
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.placeholder = [Preferences broadcastHostName];
 	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
 		NSString* hostname = [field text];
+
 		if ([hostname rangeOfString:@"://"].location == NSNotFound)
 		{
 			[Preferences setBroadcastHostName:hostname];
@@ -374,6 +379,7 @@ typedef enum SettingsRowsHealthKit
 		case SECTION_HEALTHKIT:
 			{
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
 
@@ -410,6 +416,7 @@ typedef enum SettingsRowsHealthKit
 				}
 
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+
 				cell.accessoryView = switchview;
 				[switchview setTag:(section * 100) + row];
 
@@ -445,6 +452,7 @@ typedef enum SettingsRowsHealthKit
 		case SECTION_BROADCAST:
 			{
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+
 				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
 					(row != SETTINGS_ROW_BROADCAST_HOST) &&
 					(row != SETTINGS_ROW_MANAGE_FOLLOWING) &&

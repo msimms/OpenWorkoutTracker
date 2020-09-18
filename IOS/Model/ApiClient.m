@@ -13,11 +13,6 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	if (![Preferences shouldBroadcastGlobally])
-	{
-		return FALSE;
-	}
-
 	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 	[request setURL:[NSURL URLWithString:urlStr]];
 	[request setHTTPMethod:method];

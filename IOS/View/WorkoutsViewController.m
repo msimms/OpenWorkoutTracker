@@ -176,7 +176,7 @@
 					cell.textLabel.text = @"Interval Ride";
 					break;
 				case WORKOUT_TYPE_TEMPO_RIDE:
-					cell.textLabel.text = @"Tempo Run";
+					cell.textLabel.text = @"Tempo Ride";
 					break;
 				case WORKOUT_TYPE_EASY_RIDE:
 					cell.textLabel.text = @"Easy Ride";

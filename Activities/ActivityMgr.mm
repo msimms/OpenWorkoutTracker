@@ -1801,43 +1801,19 @@ extern "C" {
 	}
 
 	// InitializeWorkoutList should be called before calling this.
-	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex)
-	{
+	bool GetWorkoutDetailsByIndex(size_t workoutIndex, WorkoutType* workoutType, size_t* numIntervals, double* duration, double* distance)
+{
 		if (workoutIndex < g_workouts.size())
 		{
-			return g_workouts.at(workoutIndex).GetType();
-		}
-		return WORKOUT_TYPE_REST;
-	}
+			const Workout& workout = g_workouts.at(workoutIndex);
 
-	// InitializeWorkoutList should be called before calling this.
-	size_t GetWorkoutNumIntervalsByIndex(size_t workoutIndex)
-	{
-		if (workoutIndex < g_workouts.size())
-		{
-			return g_workouts.at(workoutIndex).GetIntervals().size();
+			(*workoutType) = workout.GetType();
+			(*numIntervals) = workout.GetIntervals().size();
+			(*duration) = workout.CalculateDuration();
+			(*distance) = workout.CalculateDistance();
+			return true;
 		}
-		return 0;
-	}
-
-	// InitializeWorkoutList should be called before calling this.
-	double GetWorkoutDurationByIndex(size_t workoutIndex)
-	{
-		if (workoutIndex < g_workouts.size())
-		{
-			return g_workouts.at(workoutIndex).CalculateDuration();
-		}
-		return 0;
-	}
-
-	// InitializeWorkoutList should be called before calling this.
-	double GetWorkoutDistanceByIndex(size_t workoutIndex)
-	{
-		if (workoutIndex < g_workouts.size())
-		{
-			return g_workouts.at(workoutIndex).CalculateDistance();
-		}
-		return 0;
+		return false;
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
@@ -1871,14 +1847,42 @@ extern "C" {
 		return false;
 	}
 
-	bool CreateWorkout(const char* const workoutId)
+	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime)
 	{
 		if (g_pDatabase)
 		{
 			Workout workout;
 			
 			workout.SetId(workoutId);
-			//return g_pDatabase->CreateWorkout(workout);
+			workout.SetType(type);
+			workout.SetSport(sport);
+			workout.SetEstimatedStress(estimatedStress);
+			workout.SetScheduledTime(scheduledTime);
+			return g_pDatabase->CreateWorkout(workout);
+		}
+		return false;
+	}
+
+	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance)
+	{
+		if (g_pDatabase)
+		{
+			Workout workout;
+
+			if (g_pDatabase->RetrieveWorkout(workoutId, workout))
+			{
+				WorkoutInterval interval;
+				interval.m_repeat = repeat;
+				interval.m_duration = 0.0;
+				interval.m_powerLow = 0.0;
+				interval.m_powerHigh = 0.0;
+				interval.m_distance = distance;
+				interval.m_pace = pace;
+				interval.m_recoveryDistance = recoveryDistance;
+				interval.m_recoveryPace = recoveryPace;
+
+				return g_pDatabase->CreateWorkoutInterval(workout, interval);
+			}
 		}
 		return false;
 	}
@@ -1902,6 +1906,39 @@ extern "C" {
 			return strdup(tempFileName.c_str());
 		}
 		return NULL;
+	}
+
+	WorkoutType WorkoutTypeStrToEnum(const char* const workoutTypeStr)
+	{
+		std::string temp = workoutTypeStr;
+
+		if (temp.compare("Rest") == 0)
+			return WORKOUT_TYPE_REST;
+		if (temp.compare("Event") == 0)
+			return WORKOUT_TYPE_EVENT;
+		if (temp.compare("Speed Run") == 0)
+			return WORKOUT_TYPE_SPEED_RUN;
+		if (temp.compare("Tempo Run") == 0)
+			return WORKOUT_TYPE_TEMPO_RUN;
+		if (temp.compare("Easy Run") == 0)
+			return WORKOUT_TYPE_EASY_RUN;
+		if (temp.compare("Long Run") == 0)
+			return WORKOUT_TYPE_LONG_RUN;
+		if (temp.compare("Free Run") == 0)
+			return WORKOUT_TYPE_FREE_RUN;
+		if (temp.compare("Hill Repeats") == 0)
+			return WORKOUT_TYPE_HILL_REPEATS;
+		if (temp.compare("Middle Distance Run") == 0)
+			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN;
+		if (temp.compare("Interval Ride") == 0)
+			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE;
+		if (temp.compare("Tempo Ride") == 0)
+			return WORKOUT_TYPE_TEMPO_RIDE;
+		if (temp.compare("Open Water Swim") == 0)
+			return WORKOUT_TYPE_OPEN_WATER_SWIM;
+		if (temp.compare("Pool Swim") == 0)
+			return WORKOUT_TYPE_POOL_WATER_SWIM;
+		return WORKOUT_TYPE_REST;
 	}
 
 	//

@@ -173,14 +173,13 @@ extern "C" {
 	size_t ConvertWorkoutIdToIndex(const char* const workoutId);
 	char* GetWorkoutIdByIndex(size_t workoutIndex);
 	char* GetWorkoutSportByIndex(size_t workoutIndex);
-	WorkoutType GetWorkoutTypeByIndex(size_t workoutIndex);
-	size_t GetWorkoutNumIntervalsByIndex(size_t workoutIndex);
-	double GetWorkoutDurationByIndex(size_t workoutIndex);
-	double GetWorkoutDistanceByIndex(size_t workoutIndex);
+	bool GetWorkoutDetailsByIndex(size_t workoutIndex, WorkoutType* workoutType, size_t* numIntervals, double* duration, double* distance);
 	bool GenerateWorkouts(void);
-	bool CreateWorkout(const char* const workoutId);
+	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime);
+	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance);
 	bool DeleteWorkout(const char* const workoutId);
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);
+	WorkoutType WorkoutTypeStrToEnum(const char* const workoutTypeStr);
 
 	// Functions for converting units.
 	void ConvertToMetric(ActivityAttributeType* value);
