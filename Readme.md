@@ -41,6 +41,11 @@ The software architecture uses a model-view-controller philosophy. Keeping the v
 
 ## Building
 Straen is built using Apple XCode. Every attempt is made to stay up-to-date with the latest version of XCode and the latest version of iOS. In theory, if you have cloned the source code and initialized the submodules, then you should be able to open the project in XCode, build, and deploy.
+```
+git clone https://github.com/msimms/Straen
+cd Straen
+git submodule update --init --recursive
+```
 
 ## Version History
 2019-06-13 Version 1.0.0 - Initial Release
