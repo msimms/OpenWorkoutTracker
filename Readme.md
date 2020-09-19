@@ -35,7 +35,7 @@ The User Documentation is stored [on this wiki page](https://github.com/msimms/S
 
 ## Architecture
 
-The software architecture uses a model-view-controller philosophy.
+The software architecture uses a model-view-controller philosophy. Keeping the view separate from the model allows porting the application to different platforms without the need to rewrite everything. As much as possible, the view layer is written in C/C++. This is because it can be compiled for any hardware platform and can also be called from almost any other programming language. For example, the iOS and watchOS apps utilize Objective-C for their view and controller layers and call into C for model functionality. In the future, the iOS and watch OS view and controller classes could be re-written in Swift. Likewise, an Android app could be written in Java, all while retaining the same backend (i.e. model) code.
 
 ![Architecture Diagram](https://github.com/msimms/Straen/blob/master/Docs/Architecture.png?raw=true)
 
