@@ -75,6 +75,10 @@
 	const NSUInteger NUM_Y_HASH_MARKS = 8;
 
 	NSUInteger numPoints = [self numPointsToDraw];
+	if (numPoints == 0)
+	{
+		return;
+	}
 
 	// Create the host view.
 	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.chartView.bounds];
@@ -102,6 +106,7 @@
 	for (ChartPoint* point in self->dataForPlot->points)
 	{
 		double y = [point->y doubleValue];
+
 		if (y > self->maxY)
 			self->maxY = y;
 		self->avgY += y;
