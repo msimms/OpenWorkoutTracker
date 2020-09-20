@@ -51,6 +51,7 @@ extern "C" {
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);
 	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
+	bool GetWeightHistory(WeightCallback callback, void* context);
 
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);
@@ -101,7 +102,7 @@ extern "C" {
 	char* GetPacePlanId(size_t planIndex);
 	char* GetPacePlanName(size_t planIndex);
 	bool CreateNewPacePlan(const char* const planName, const char* const planId);
-	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits);
+	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits);
 	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceMinKm, double targetDistanceInKms, double splits);
 	bool DeletePacePlan(const char* planId);
 
@@ -223,7 +224,7 @@ extern "C" {
 	// Functions for importing/exporting activities.
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType, const char* const activityId);
 	char* ExportActivityFromDatabase(const char* const activityId, FileFormat format, const char* const dirName);
-	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const dirName, time_t startTime, const char* const sportType, GetNextCoordinateCallback nextCoordinateCallback, void* context);
+	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const dirName, time_t startTime, const char* const sportType, NextCoordinateCallback nextCoordinateCallback, void* context);
 	char* ExportActivitySummary(const char* activityType, const char* const dirName);
 
 	// Functions for processing sensor reads.

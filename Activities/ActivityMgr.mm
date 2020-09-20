@@ -292,6 +292,24 @@ extern "C" {
 		}
 	}
 
+	bool GetWeightHistory(WeightCallback callback, void* context)
+	{
+		if (g_pDatabase)
+		{
+			std::vector<std::pair<time_t, double>> measurementData;
+
+			if (g_pDatabase->RetrieveAllWeightMeasurements(measurementData))
+			{
+				for (auto iter = measurementData.begin(); iter != measurementData.end(); ++iter)
+				{
+					callback((*iter).first, (*iter).second, context);
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
 	//
 	// Functions for managing bike profiles.
 	//
@@ -914,7 +932,7 @@ extern "C" {
 		return false;
 	}
 
-	bool RetrievePacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits)
+	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits)
 	{
 		if (planId)
 		{
@@ -2322,7 +2340,7 @@ extern "C" {
 		return NULL;
 	}
 
-	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const pDirName, time_t startTime, const char* const sportType, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const pDirName, time_t startTime, const char* const sportType, NextCoordinateCallback nextCoordinateCallback, void* context)
 	{
 		std::string tempFileName = pDirName;
 		std::string tempSportType = sportType;
@@ -2374,16 +2392,9 @@ extern "C" {
 			double mostRecentWeightKg = (double)0.0;
 
 			// Don't store redundant measurements.
-			if (g_pDatabase->RetrieveNewestWeightMeasurement(mostRecentWeightTime, mostRecentWeightKg))
+			if (g_pDatabase->RetrieveWeightMeasurementForTime(mostRecentWeightTime, mostRecentWeightKg))
 			{
-				if (mostRecentWeightKg != weightKg)
-				{
-					return g_pDatabase->CreateWeightMeasurement(timestamp, weightKg);
-				}
-				else
-				{
-					return true;
-				}
+				return true;
 			}
 			else
 			{

@@ -178,6 +178,7 @@
 		27754B1C233DA154003F2C53 /* WatchDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */; };
 		27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B16233DA0B4003F2C53 /* WatchSettingsViewController.m */; };
 		27754B20233DA8A2003F2C53 /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14119BFE3B7008F8672 /* BroadcastManager.m */; };
+		277C7E89251686E800117766 /* WeightLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 277C7E88251686E700117766 /* WeightLine.m */; };
 		2790A04D1B0D4DF3000E6205 /* SelectLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */; };
 		2797F13C19BFE2C1008F8672 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
 		2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
@@ -681,6 +682,8 @@
 		27754B17233DA0B5003F2C53 /* WatchDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchDetailsViewController.m; sourceTree = "<group>"; };
 		27754B18233DA0B5003F2C53 /* WatchSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchSettingsViewController.h; sourceTree = "<group>"; };
 		27754B19233DA0B5003F2C53 /* WatchDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchDetailsViewController.h; sourceTree = "<group>"; };
+		277C7E87251686E700117766 /* WeightLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeightLine.h; path = IOS/View/ChartLines/WeightLine.h; sourceTree = SOURCE_ROOT; };
+		277C7E88251686E700117766 /* WeightLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WeightLine.m; path = IOS/View/ChartLines/WeightLine.m; sourceTree = SOURCE_ROOT; };
 		2790A04B1B0D4DF3000E6205 /* SelectLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectLoginViewController.h; path = IOS/View/SelectLoginViewController.h; sourceTree = SOURCE_ROOT; };
 		2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectLoginViewController.m; path = IOS/View/SelectLoginViewController.m; sourceTree = SOURCE_ROOT; };
 		2797F13A19BFE2C1008F8672 /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StringUtils.h; path = IOS/Utilities/StringUtils.h; sourceTree = SOURCE_ROOT; };
@@ -1511,6 +1514,8 @@
 				27B7CDC019BFD953000383E3 /* SpeedLine.m */,
 				27B7CDC119BFD953000383E3 /* VerticalSpeedLine.h */,
 				27B7CDC219BFD953000383E3 /* VerticalSpeedLine.m */,
+				277C7E87251686E700117766 /* WeightLine.h */,
+				277C7E88251686E700117766 /* WeightLine.m */,
 			);
 			name = "Chart Lines";
 			sourceTree = "<group>";
@@ -2181,6 +2186,7 @@
 				276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */,
 				2704717A216D997000EE47FF /* Statistics.cpp in Sources */,
 				27B7CDAA19BFD91C000383E3 /* StatisticsViewController.m in Sources */,
+				277C7E89251686E800117766 /* WeightLine.m in Sources */,
 				27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */,
 				2797F15519BFE3B7008F8672 /* UserProfile.m in Sources */,
 				276B57E919E21ABD006F47BB /* HealthManager.m in Sources */,

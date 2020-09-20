@@ -15,15 +15,15 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 @interface HealthManager : NSObject
 {
-	NSMutableDictionary* workouts; // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
-	NSMutableDictionary* locations; // arrays of locations stored in the health store, key is the activity ID
-	NSMutableDictionary* distances; // arrays of distances computed from the locations array, key is the activity ID
-	NSMutableDictionary* speeds; // arrays of speeds computed from the distances array, key is the activity ID
-	NSMutableArray* heartRates; // we write average heart rates to the health store; this stores the intermediate values
-	NSDate* firstHeartRateSample; // timestamp associated with the above array
-	NSDate* lastHeartRateSample; // timestamp associated with the above array
-	dispatch_group_t queryGroup; // tracks queries until they are completed
-	NSInteger tempPointIndex;
+	NSMutableDictionary* workouts;             // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
+	NSMutableDictionary* locations;            // arrays of locations stored in the health store, key is the activity ID
+	NSMutableDictionary* distances;            // arrays of distances computed from the locations array, key is the activity ID
+	NSMutableDictionary* speeds;               // arrays of speeds computed from the distances array, key is the activity ID
+	NSMutableArray*      heartRates;           // we write average heart rates to the health store; this stores the intermediate values
+	NSDate*              firstHeartRateSample; // timestamp associated with the above array
+	NSDate*              lastHeartRateSample;  // timestamp associated with the above array
+	dispatch_group_t     queryGroup;           // tracks queries until they are completed
+	NSInteger            tempPointIndex;
 }
 
 // methods for managing authorization.
@@ -38,7 +38,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 // methods for returning HealthKit data.
 
-- (NSArray*)readWeightHistory;
+- (void)readWeightHistory:(void (^)(HKQuantity*, NSDate*, NSError*))completion;
 
 // methods for managing workouts.
 

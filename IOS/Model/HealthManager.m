@@ -163,9 +163,10 @@
 		return;
 	}
 
+	// We are not filtering the data, and so the predicate is set to nil.
 	HKSampleQuery* query = [[HKSampleQuery alloc] initWithSampleType:quantityType
 														   predicate:nil
-															   limit:1
+															   limit:HKObjectQueryNoLimit
 													 sortDescriptors:nil
 													  resultsHandler:^(HKSampleQuery* query, NSArray* results, NSError* error)
 	{
@@ -250,19 +251,10 @@
 
 // methods for returning HealthKit data.
 
-- (NSArray*)readWeightHistory
+- (void)readWeightHistory:(void (^)(HKQuantity*, NSDate*, NSError*))completion
 {
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
-
-	[self quantitySamplesOfType:weightType
-					 completion:^(HKQuantity* nextQuantity, NSDate* startDate, NSError* error)
-	 {
-		if (nextQuantity)
-		{
-		}
-	 }];
-
-	return nil;
+	[self quantitySamplesOfType:weightType completion:completion];
 }
 
 #pragma mark methods for managing workouts

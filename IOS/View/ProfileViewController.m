@@ -8,9 +8,11 @@
 #import "ProfileViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "CorePlotViewController.h"
 #import "DateViewController.h"
 #import "Segues.h"
 #import "StringUtils.h"
+#import "WeightLine.h"
 
 typedef enum ProfileSections
 {
@@ -46,6 +48,11 @@ typedef enum ProfilePerformanceRows
 #define ALERT_MSG_WEIGHT                  NSLocalizedString(@"Please enter your weight", nil)
 #define ALERT_MSG_FTP                     NSLocalizedString(@"Please enter your FTP", nil)
 #define TITLE_BIRTHDATE                   NSLocalizedString(@"Birthdate", nil)
+
+#define STR_TIME                          NSLocalizedString(@"Time", nil)
+#define STR_WEIGHT                        NSLocalizedString(@"Weight", nil)
+#define STR_EDIT_WEIGHT                   NSLocalizedString(@"Edit Weight", nil)
+#define STR_VIEW_WEIGHT_HISTORY           NSLocalizedString(@"View Weight History", nil)
 
 @interface ProfileViewController ()
 
@@ -127,6 +134,90 @@ typedef enum ProfilePerformanceRows
 			[self->dateVC setInitialValue:dateObj];
 		}
 	}
+	else if ([segueId isEqualToString:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE])
+	{
+		CorePlotViewController* plotVC = (CorePlotViewController*)[segue destinationViewController];
+		if (plotVC)
+		{
+			WeightLine* line = [[WeightLine alloc] init];
+
+			[line draw];
+			[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:STR_WEIGHT];
+			[plotVC setTitle:STR_WEIGHT];
+		}
+	}
+}
+
+#pragma mark 
+
+- (void)showGenderDialog
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_GENDER
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[appDelegate setUserGender:GENDER_MALE];
+		[self.profileTableView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_FEMALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[appDelegate setUserGender:GENDER_FEMALE];
+		[self.profileTableView reloadData];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)showHeightDialog
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_HEIGHT
+																			 message:ALERT_MSG_HEIGHT
+																	  preferredStyle:UIAlertControllerStyleAlert];
+
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
+		textField.keyboardType = UIKeyboardTypeNumberPad;
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		double height = [[field text] doubleValue];
+
+		if (height > (double)0.0)
+		{
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+			[appDelegate setUserHeight:height];
+			[self.profileTableView reloadData];
+		}
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)showWeightDialog
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_WEIGHT
+																			 message:ALERT_MSG_WEIGHT
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+		textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
+		textField.keyboardType = UIKeyboardTypeNumberPad;
+	}];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		UITextField* field = alertController.textFields.firstObject;
+		double weight = [[field text] doubleValue];
+
+		if (weight > (double)0.0)
+		{
+			[appDelegate setUserWeight:weight];
+			[self.profileTableView reloadData];
+		}
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark UITableView methods
@@ -278,74 +369,26 @@ typedef enum ProfilePerformanceRows
 		switch (row)
 		{
 			case ROW_GENDER:
-				{
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																							 message:STR_GENDER
-																					  preferredStyle:UIAlertControllerStyleAlert];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserGender:GENDER_MALE];
-						[self.profileTableView reloadData];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_FEMALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserGender:GENDER_FEMALE];
-						[self.profileTableView reloadData];
-					}]];
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
+				[self showGenderDialog];
 				break;
 			case ROW_BIRTHDATE:
 				[self performSegueWithIdentifier:@SEGUE_TO_DATE_VIEW sender:self];
 				break;
 			case ROW_HEIGHT:
-				{
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_HEIGHT
-																							 message:ALERT_MSG_HEIGHT
-																					  preferredStyle:UIAlertControllerStyleAlert];
-
-					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
-						textField.keyboardType = UIKeyboardTypeNumberPad;
-					}];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						UITextField* field = alertController.textFields.firstObject;
-						double height = [[field text] doubleValue];
-
-						if (height > (double)0.0)
-						{
-							AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-							[appDelegate setUserHeight:height];
-							[self.profileTableView reloadData];
-						}
-					}]];
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
+				[self showHeightDialog];
 				break;
 			case ROW_WEIGHT:
 				{
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_WEIGHT
-																							 message:ALERT_MSG_WEIGHT
-																					  preferredStyle:UIAlertControllerStyleAlert];
-					
-					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
-						textField.keyboardType = UIKeyboardTypeNumberPad;
-					}];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																							 message:STR_WEIGHT
+																					  preferredStyle:UIAlertControllerStyleActionSheet];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_EDIT_WEIGHT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[self showWeightDialog];
 					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						UITextField* field = alertController.textFields.firstObject;
-						double weight = [[field text] doubleValue];
-
-						if (weight > (double)0.0)
-						{
-							[appDelegate setUserWeight:weight];
-							[self.profileTableView reloadData];
-						}
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_VIEW_WEIGHT_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE sender:self];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 					}]];
 					[self presentViewController:alertController animated:YES completion:nil];
 				}

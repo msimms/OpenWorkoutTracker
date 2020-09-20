@@ -51,7 +51,7 @@
 	double splitsMin = (double)0.0;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate retrievePacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin])
+	if ([appDelegate getPacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin])
 	{
 		if (planName != nil)
 			nameTextField.text = planName;

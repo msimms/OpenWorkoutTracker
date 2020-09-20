@@ -49,7 +49,7 @@ bool DataExporter::NearestSensorReading(uint64_t timeMs, const SensorReadingList
 	return (timeDiff < 3000);
 }
 
-bool DataExporter::ExportToTcxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, const std::string& activityType, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+bool DataExporter::ExportToTcxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, const std::string& activityType, NextCoordinateCallback nextCoordinateCallback, void* context)
 {
 	bool result = false;
 	FileLib::TcxFileWriter writer;
@@ -105,7 +105,7 @@ bool DataExporter::ExportToTcxUsingCallbacks(const std::string& fileName, time_t
 	return result;
 }
 
-bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t startTime, const std::string& activityId, NextCoordinateCallback nextCoordinateCallback, void* context)
 {
 	bool result = false;
 	FileLib::GpxFileWriter writer;
@@ -688,7 +688,7 @@ bool DataExporter::ExportActivityFromDatabase(FileFormat format, std::string& fi
 	return false;
 }
 
-bool DataExporter::ExportActivityUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, GetNextCoordinateCallback nextCoordinateCallback, void* context)
+bool DataExporter::ExportActivityUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, NextCoordinateCallback nextCoordinateCallback, void* context)
 {
 	fileName.append("/");
 	fileName.append(GenerateFileName(format, startTime, sportType));

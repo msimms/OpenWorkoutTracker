@@ -492,6 +492,7 @@
 
 #pragma mark healthkit methods
 
+// Initializes our Health Manager object and does anything that needs to be done with HealthKit at startup.
 - (void)startHealthMgr
 {
 	self->healthMgr = [[HealthManager alloc] init];
@@ -509,6 +510,18 @@
 			[self->healthMgr readCyclingWorkoutsFromHealthStore];
 			[self->healthMgr waitForHealthKitQueries];
 		}
+
+		// Read weight history from HealthKit.
+		[self->healthMgr readWeightHistory:^(HKQuantity* quantity, NSDate* date, NSError* error)
+		{
+			if (quantity && date)
+			{
+				double measurementValue = [quantity doubleValueForUnit:[HKUnit gramUnit]] / (double)1000.0; // Convert to kg
+				time_t measurementTime = [date timeIntervalSince1970];
+
+				ProcessWeightReading(measurementValue, measurementTime);
+			}
+		}];
 	}
 }
 
@@ -2374,10 +2387,10 @@ void attributeNameCallback(const char* name, void* context)
 	return FALSE;
 }
 
-- (BOOL)retrievePacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits
+- (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits
 {
 	char* tempName = NULL;
-	BOOL result = RetrievePacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits);
+	BOOL result = GetPacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits);
 	if (tempName)
 	{
 		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 

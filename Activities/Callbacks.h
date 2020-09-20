@@ -24,7 +24,8 @@ extern "C" {
 	typedef void (*ActivityTypeCallback)(const char* name, void* context);
 	typedef void (*AttributeNameCallback)(const char* name, void* context);
 	typedef void (*SensorTypeCallback)(SensorType type, void* context);
-	typedef bool (*GetNextCoordinateCallback)(const char* activityId, Coordinate* coordinate, void* context);
+	typedef bool (*NextCoordinateCallback)(const char* activityId, Coordinate* coordinate, void* context);
+	typedef void (*WeightCallback)(time_t timestamp, double value, void* context);
 
 #ifdef __cplusplus
 }

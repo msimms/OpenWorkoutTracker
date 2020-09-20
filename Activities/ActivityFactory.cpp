@@ -137,6 +137,7 @@ void ActivityFactory::CreateActivity(ActivitySummary& summary, Database& databas
 		struct tm* pStartTime = localtime(&summary.startTime);
 		double userWeightKg = user.GetWeightKg();
 		database.RetrieveNearestWeightMeasurement(summary.startTime, userWeightKg);
+
 		user.SetBaseDateForComputingAge(*pStartTime);
 		user.SetWeightKg(userWeightKg);
 		user.SetFtp(user.GetFtp());

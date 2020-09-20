@@ -1577,12 +1577,29 @@ bool Database::CreateWeightMeasurement(time_t measurementTime, double weightKg)
 	return result == SQLITE_DONE;
 }
 
-bool Database::RetrieveNearestWeightMeasurement(time_t measurementTime, double& weightKg)
+bool Database::RetrieveWeightMeasurementForTime(time_t measurementTime, double& weightKg)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select id, time, value from weight order by time asc", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select value from weight where time = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_int64(statement, 1, measurementTime) == SQLITE_OK)
+		{
+			weightKg = sqlite3_column_double(statement, 0);
+			result = true;
+		}
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveNearestWeightMeasurement(time_t measurementTime, double& weightKg)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+ 
+	if (sqlite3_prepare_v2(m_pDb, "select time, value from weight order by time asc", -1, &statement, 0) == SQLITE_OK)
 	{
 		uint64_t currentTime = 0;
 		uint64_t lastTime = 0;
@@ -1594,8 +1611,8 @@ bool Database::RetrieveNearestWeightMeasurement(time_t measurementTime, double& 
 		{
 			lastTime = currentTime;
 			lastWeight = currentWeight;
-			currentTime = (u_int64_t)sqlite3_column_int64(statement, 1);
-			currentWeight = sqlite3_column_double(statement, 2);
+			currentTime = (u_int64_t)sqlite3_column_int64(statement, 0);
+			currentWeight = sqlite3_column_double(statement, 1);
 		}
 
 		if (currentTime > 0)
@@ -1621,13 +1638,35 @@ bool Database::RetrieveNewestWeightMeasurement(time_t& measurementTime, double& 
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, time, value from weight order by time desc limit 1", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select time, value from weight order by time desc limit 1", -1, &statement, 0) == SQLITE_OK)
 	{
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			measurementTime = (time_t)sqlite3_column_int64(statement, 1);
-			weightKg = sqlite3_column_double(statement, 2);
+			measurementTime = (time_t)sqlite3_column_int64(statement, 0);
+			weightKg = sqlite3_column_double(statement, 1);
 			result = true;
+		}
+		
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveAllWeightMeasurements(std::vector<std::pair<time_t, double>>& measurements)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select time, value from weight order by time desc", -1, &statement, 0) == SQLITE_OK)
+	{
+		result = true;
+
+		while (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			time_t measurementTime = (time_t)sqlite3_column_int64(statement, 0);
+			double weightKg = sqlite3_column_double(statement, 1);
+
+			measurements.push_back(std::make_pair(measurementTime, weightKg));
 		}
 		
 		sqlite3_finalize(statement);

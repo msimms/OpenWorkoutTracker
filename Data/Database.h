@@ -135,8 +135,10 @@ public:
 	// Methods for storing and retrieving the user's weight measurements.
 
 	bool CreateWeightMeasurement(time_t measurementTime, double weightKg);
+	bool RetrieveWeightMeasurementForTime(time_t measurementTime, double& weightKg);
 	bool RetrieveNearestWeightMeasurement(time_t measurementTime, double& weightKg);
 	bool RetrieveNewestWeightMeasurement(time_t& measurementTime, double& weightKg);
+	bool RetrieveAllWeightMeasurements(std::vector<std::pair<time_t, double>>& measurements);
 
 	// Methods for retrieving activity sensor data.
 
