@@ -57,7 +57,7 @@ Straen uses three other source projects to work properly:
 * [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities, including a peak finding algorithm.
 * [sqlite](https://www.sqlite.org) - Database for storing activities.
 
-The app is written in a combination of Objective-C and C++ and targets the Apple iPhone.
+The app is written in a combination of Objective-C and C++ and targets the Apple iPhone and Apple Watch.
 
 ## Social
 Twitter: [@StraenApp](https://twitter.com/StraenApp)
