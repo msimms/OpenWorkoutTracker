@@ -70,15 +70,10 @@
 	// Called as part of the transition from the background to the inactive state; here you can undo many of
 	// the changes made on entering the background.
 
-	[self->currentActivityLock lock];
-
-	if (IsActivityCreated())
+	if ([self isActivityCreated])
 	{
 		[self startSensors];
 	}
-
-	[self->currentActivityLock unlock];
-
 	if (self->sensorMgr)
 	{
 		[self->sensorMgr enteredForeground];
