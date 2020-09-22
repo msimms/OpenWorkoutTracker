@@ -97,18 +97,39 @@
 
 	// Axis min and max values.
 	self->minX = (double)0.0;
-	self->maxX = (double)numPoints;
+	self->maxX = (double)0.0;
 	self->minY = (double)0.0;
 	self->maxY = (double)0.0;
 	self->avgY = (double)0.0;
 
 	// Find the extremes and the average.
+	bool firstIter = true;
 	for (ChartPoint* point in self->dataForPlot->points)
 	{
+		double x = [point->x doubleValue];
 		double y = [point->y doubleValue];
 
-		if (y > self->maxY)
+		if (firstIter)
+		{
+			self->minX = x;
+			self->maxX = x;
+			self->minY = y;
 			self->maxY = y;
+			firstIter = false;
+		}
+		else
+		{
+			if (x > self->maxX)
+				self->maxX = x;
+			else if (x < self->minX)
+				self->minX = x;
+
+			if (y > self->maxY)
+				self->maxY = y;
+			else if (y < self->minY)
+				self->minY = y;
+		}
+
 		self->avgY += y;
 	}
 	self->avgY /= [self->dataForPlot->points count];
