@@ -34,7 +34,7 @@ std::vector<std::string> ActivityFactory::ListActivityTypes()
 {
 	std::vector<std::string> types;
 
-	types.push_back(ChinUp::Type());
+//	types.push_back(ChinUp::Type());
 	types.push_back(Cycling::Type());
 	types.push_back(Hike::Type());
 	types.push_back(MountainBiking::Type());
