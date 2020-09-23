@@ -231,10 +231,10 @@
 	 {
 		if (mostRecentQuantity)
 		{
-			HKUnit* weightUnit = [HKUnit poundUnit];
-			double usersWeight = [mostRecentQuantity doubleValueForUnit:weightUnit];
+			HKUnit* weightUnit = [HKUnit gramUnit];
+			double usersWeight = [mostRecentQuantity doubleValueForUnit:weightUnit] / 1000.0; // Convert to kilograms
 
-			[UserProfile setWeightInLbs:usersWeight];
+			[UserProfile setWeightInKg:usersWeight];
 
 			ActivityAttributeType tempWeight = InitializeActivityAttribute(TYPE_DOUBLE, MEASURE_WEIGHT, UNIT_SYSTEM_US_CUSTOMARY);
 			tempWeight.value.doubleVal = usersWeight;

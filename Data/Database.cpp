@@ -301,6 +301,7 @@ bool Database::RetrieveBike(uint64_t bikeId, Bike& bike)
 	if (sqlite3_prepare_v2(m_pDb, "select id, name, weight_kg, wheel_circumference_mm, time_added, time_retired from bike where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, bikeId);
+
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			bike.id = sqlite3_column_int64(statement, 0);
@@ -401,6 +402,7 @@ bool Database::RetrieveShoe(uint64_t shoeId, Shoes& shoes)
 	if (sqlite3_prepare_v2(m_pDb, "select id, name, description, time_added, time_retired from shoe where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, shoeId);
+
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			shoes.id = shoeId;
@@ -1586,8 +1588,11 @@ bool Database::RetrieveWeightMeasurementForTime(time_t measurementTime, double& 
 	{
 		if (sqlite3_bind_int64(statement, 1, measurementTime) == SQLITE_OK)
 		{
-			weightKg = sqlite3_column_double(statement, 0);
-			result = true;
+			if (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				weightKg = sqlite3_column_double(statement, 0);
+				result = true;
+			}
 		}
 		sqlite3_finalize(statement);
 	}

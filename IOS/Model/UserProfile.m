@@ -11,16 +11,16 @@
 
 #define KEY_ACTIVITY_LEVEL "Activity Level"
 #define KEY_GENDER         "Gender"
-#define KEY_HEIGHT         "Height"
-#define KEY_WEIGHT         "Weight"
+#define KEY_HEIGHT_CM      "Height"
+#define KEY_WEIGHT_KG      "Weight"
 #define KEY_FTP            "FTP"
 #define KEY_BIRTH_MONTH    "Month"
 #define KEY_BIRTH_DAY      "Day"
 #define KEY_BIRTH_YEAR     "Year"
 
-#define DEFAULT_HEIGHT     70
-#define DEFAULT_WEIGHT     170
-#define DEFAULT_BIRTH_YEAR 1980
+#define DEFAULT_HEIGHT_CM  178
+#define DEFAULT_WEIGHT_KG  77
+#define DEFAULT_BIRTH_YEAR 1985
 #define MIN_BIRTH_YEAR     1900
 
 @implementation UserProfile
@@ -126,12 +126,12 @@
 
 + (void)setHeightInCm:(double)height
 {
-	[self setHeightInInches:(height * (double)2.54)];
+	[Preferences writeDoubleValue:@KEY_HEIGHT_CM withValue:height];
 }
 
 + (void)setWeightInKg:(double)weight
 {
-	[self setWeightInLbs:(weight / (double)0.453592)];
+	[Preferences writeDoubleValue:@KEY_WEIGHT_KG withValue:weight];
 }
 
 + (void)setFtp:(double)ftp
@@ -141,17 +141,18 @@
 
 + (void)setHeightInInches:(double)height
 {
-	[Preferences writeDoubleValue:@KEY_HEIGHT withValue:height];
+	[self setHeightInCm:(height * (double)CENTIMETERS_PER_INCH)];
 }
 
 + (void)setWeightInLbs:(double)weight
 {
-	[Preferences writeDoubleValue:@KEY_WEIGHT withValue:weight];
+	[self setWeightInKg:(weight / (double)POUNDS_PER_KILOGRAM)];
 }
 
 + (ActivityLevel)activityLevel
 {
 	NSString* str = [Preferences readStringValue:@KEY_ACTIVITY_LEVEL];
+
 	if (str != nil)
 	{		
 		if ([str compare:@"ACTIVITY_LEVEL_SEDENTARY"] == 0)
@@ -171,6 +172,7 @@
 + (Gender)gender
 {
 	NSString* str = [Preferences readStringValue:@KEY_GENDER];
+
 	if (str != nil)
 	{
 		if ([str compare:@"GENDER_MALE"] == 0)
@@ -184,6 +186,7 @@
 + (NSInteger)birthMonth
 {
 	NSString* str = [Preferences readStringValue:@KEY_BIRTH_MONTH];
+
 	if (str != nil)
 	{
 		if ([str compare:@"MONTH_JANUARY"] == 0)
@@ -217,6 +220,7 @@
 + (NSInteger)birthDay
 {
 	NSInteger day = [Preferences readNumericValue:@KEY_BIRTH_DAY];
+
 	if (day <= 0)
 		day = 1;
 	else if (day > 31)
@@ -227,6 +231,7 @@
 + (NSInteger)birthYear
 {
 	NSInteger year = [Preferences readNumericValue:@KEY_BIRTH_YEAR];
+
 	if (year == 0)
 		year = DEFAULT_BIRTH_YEAR;
 	else if (year < 1900)
@@ -246,32 +251,34 @@
 
 + (double)heightInCm
 {
-	return [self heightInInches] * (double)CENTIMETERS_PER_INCH;
+	double heightCm = (double)[Preferences readNumericValue:@KEY_HEIGHT_CM];	// value is stored in inches
+
+	if (heightCm == 0)
+	{
+		heightCm = DEFAULT_HEIGHT_CM;
+	}
+	return heightCm;
 }
 
 + (double)weightInKg
 {
-	return [self weightInLbs] * (double)KILOGRAMS_PER_POUND;
+	double weightKg = (double)[Preferences readNumericValue:@KEY_WEIGHT_KG];	// value is stored in pounds
+
+	if (weightKg == 0)
+	{
+		weightKg = DEFAULT_WEIGHT_KG;
+	}
+	return weightKg;
 }
 
 + (double)heightInInches
 {
-	double height = (double)[Preferences readNumericValue:@KEY_HEIGHT];	// value is stored in inches
-	if (height == 0)
-	{
-		height = DEFAULT_HEIGHT;
-	}
-	return height;
+	return [self heightInCm] / (double)CENTIMETERS_PER_INCH;
 }
 
 + (double)weightInLbs
 {
-	double weight = (double)[Preferences readNumericValue:@KEY_WEIGHT];	// value is stored in pounds
-	if (weight == 0)
-	{
-		weight = DEFAULT_WEIGHT;
-	}
-	return weight;
+	return [self weightInKg] * (double)POUNDS_PER_KILOGRAM;
 }
 
 + (double)ftp
