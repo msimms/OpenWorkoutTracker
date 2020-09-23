@@ -137,8 +137,8 @@
 	// Setup plot space.
 	CPTXYPlotSpace* plotSpace       = (CPTXYPlotSpace*)self->graph.defaultPlotSpace;
 	plotSpace.allowsUserInteraction = NO;
-	plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(self->minX) length:@(self->maxX)];
-	plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(self->minY) length:@(self->maxY)];
+	plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(self->minX) length:@(self->maxX - self->minX)];
+	plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(self->minY) length:@(self->maxY - self->minY)];
 
 	// Axis title style.
 	CPTMutableTextStyle* axisTitleStyle = [CPTMutableTextStyle textStyle];
