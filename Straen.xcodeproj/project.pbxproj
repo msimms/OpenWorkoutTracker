@@ -179,7 +179,6 @@
 		27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27754B16233DA0B4003F2C53 /* WatchSettingsViewController.m */; };
 		27754B20233DA8A2003F2C53 /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14119BFE3B7008F8672 /* BroadcastManager.m */; };
 		277C7E89251686E800117766 /* WeightLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 277C7E88251686E700117766 /* WeightLine.m */; };
-		2790A04D1B0D4DF3000E6205 /* SelectLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */; };
 		2797F13C19BFE2C1008F8672 /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
 		2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13F19BFE3B7008F8672 /* ActivityPreferences.m */; };
 		2797F14F19BFE3B7008F8672 /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14119BFE3B7008F8672 /* BroadcastManager.m */; };
@@ -684,8 +683,6 @@
 		27754B19233DA0B5003F2C53 /* WatchDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchDetailsViewController.h; sourceTree = "<group>"; };
 		277C7E87251686E700117766 /* WeightLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeightLine.h; path = IOS/View/ChartLines/WeightLine.h; sourceTree = SOURCE_ROOT; };
 		277C7E88251686E700117766 /* WeightLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WeightLine.m; path = IOS/View/ChartLines/WeightLine.m; sourceTree = SOURCE_ROOT; };
-		2790A04B1B0D4DF3000E6205 /* SelectLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectLoginViewController.h; path = IOS/View/SelectLoginViewController.h; sourceTree = SOURCE_ROOT; };
-		2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SelectLoginViewController.m; path = IOS/View/SelectLoginViewController.m; sourceTree = SOURCE_ROOT; };
 		2797F13A19BFE2C1008F8672 /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StringUtils.h; path = IOS/Utilities/StringUtils.h; sourceTree = SOURCE_ROOT; };
 		2797F13B19BFE2C1008F8672 /* StringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StringUtils.m; path = IOS/Utilities/StringUtils.m; sourceTree = SOURCE_ROOT; };
 		2797F13E19BFE3B7008F8672 /* ActivityPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityPreferences.h; path = IOS/Model/ActivityPreferences.h; sourceTree = SOURCE_ROOT; };
@@ -1186,8 +1183,6 @@
 				27B7CD7419BFD91C000383E3 /* ProfileViewController.h */,
 				27B7CD7519BFD91C000383E3 /* ProfileViewController.m */,
 				27B7CD7619BFD91C000383E3 /* Segues.h */,
-				2790A04B1B0D4DF3000E6205 /* SelectLoginViewController.h */,
-				2790A04C1B0D4DF3000E6205 /* SelectLoginViewController.m */,
 				27B7CD7719BFD91C000383E3 /* SensorsViewController.h */,
 				27B7CD7819BFD91C000383E3 /* SensorsViewController.m */,
 				27B7CD7919BFD91C000383E3 /* SettingsViewController.h */,
@@ -2238,7 +2233,6 @@
 				27B7CD9D19BFD91C000383E3 /* MapOverviewViewController.m in Sources */,
 				27B7CD8E19BFD91C000383E3 /* DateViewController.m in Sources */,
 				27B7CDF219BFD99B000383E3 /* Accelerometer.m in Sources */,
-				2790A04D1B0D4DF3000E6205 /* SelectLoginViewController.m in Sources */,
 				2772FEAC2503DFD300ED9F2A /* BikePlanGenerator.cpp in Sources */,
 				275214C119BFDBB8006D9877 /* main.m in Sources */,
 				27C0845F19BFD063007CE934 /* Squat.cpp in Sources */,

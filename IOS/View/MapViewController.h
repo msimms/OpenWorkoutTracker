@@ -35,7 +35,6 @@
 
 @property (nonatomic, retain) IBOutlet MKMapView* mapView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* mapTypeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* overlayButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 
 @end

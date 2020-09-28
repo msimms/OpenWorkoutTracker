@@ -73,7 +73,6 @@ MapViewController* g_ptrToMapViewCtrl;
 
 @synthesize mapView;
 @synthesize mapTypeButton;
-@synthesize overlayButton;
 @synthesize homeButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
