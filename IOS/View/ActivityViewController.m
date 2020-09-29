@@ -955,18 +955,42 @@
 			}
 			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE])
 			{
-				bool isNeg = (value.value.timeVal < 0);
-				if (isNeg)
+				if (value.valid)
 				{
-					value.value.timeVal *= -1;
-				}
-				NSString* formattedText = [StringUtils formatActivityViewType:value];
-				if (isNeg)
-				{
-					[valueLabel setText:[NSString stringWithFormat:@"-%@", formattedText]];
+					bool isNeg = (value.value.timeVal < 0);
+					if (isNeg)
+					{
+						value.value.timeVal *= -1;
+					}
+
+					// Set the text.
+					NSString* formattedText = [StringUtils formatActivityViewType:value];
+					if (isNeg)
+					{
+						[valueLabel setText:[NSString stringWithFormat:@"-%@", formattedText]];
+					}
+					else
+					{
+						[valueLabel setText:formattedText];
+					}
+
+					// Set the color.
+					// Intensity of the color in which the value will be rendered (more red for more bad, more green for more good).
+					double intensity = (double)value.value.timeVal / (double)60.0;
+					if (intensity > (double)1.0)
+						intensity = (double)1.0;
+					if (isNeg)
+					{
+						valueLabel.textColor = [UIColor colorWithRed:intensity green:0 blue:0 alpha:1];
+					}
+					else
+					{
+						valueLabel.textColor = [UIColor colorWithRed:0 green:intensity blue:0 alpha:1];
+					}
 				}
 				else
 				{
+					NSString* formattedText = [StringUtils formatActivityViewType:value];
 					[valueLabel setText:formattedText];
 				}
 			}
