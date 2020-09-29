@@ -213,6 +213,9 @@
 	NSMutableArray* intervalWorkoutInfo = [extDelegate getIntervalWorkoutNamesAndIds];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[actions addObject:[WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void) {}]];
+
 	for (NSDictionary* info in intervalWorkoutInfo)
 	{
 		NSString* name = info[@"name"];
@@ -230,6 +233,9 @@
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
 	NSMutableArray* pacePlanInfo = [extDelegate getPacePlanNamesAndIds];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[actions addObject:[WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void) {}]];
 
 	for (NSDictionary* info in pacePlanInfo)
 	{
@@ -337,6 +343,9 @@
 
 	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[actions addObject:[WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void) {}]];
+
 	// Add an option for each possible attribute.
 	for (NSString* attribute in attributeNames)
 	{
@@ -344,10 +353,6 @@
 		}];	
 		[actions addObject:action];
 	}
-
-	// Add a cancel option.
-	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
-	[actions addObject:action];
 
 	// Show the action sheet.
 	[self presentAlertControllerWithTitle:nil message:STR_ATTRIBUTES preferredStyle:WKAlertControllerStyleAlert actions:actions];
