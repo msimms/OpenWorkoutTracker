@@ -80,6 +80,11 @@
 {
 }
 
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event 
+{
+	 [[self view] endEditing:YES];
+}
+
 - (IBAction)onSave:(id)sender
 {
 	uint16_t hours = 0;
