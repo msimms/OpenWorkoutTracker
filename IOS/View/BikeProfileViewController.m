@@ -200,12 +200,24 @@
 			switch ([Preferences preferredUnitSystem])
 			{
 				case UNIT_SYSTEM_METRIC:
-					self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg];
-					self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter];
+					if (weightKg < (double)1.0)
+						self->weightTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+					else
+						self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg];
+					if (wheelCircumferenceMm < (double)1.0)
+						self->wheelSizeTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+					else
+						self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter];
 					break;
 				case UNIT_SYSTEM_US_CUSTOMARY:
-					self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg * POUNDS_PER_KILOGRAM];
-					self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter / (CENTIMETERS_PER_INCH * 10)];
+					if (weightKg < (double)1.0)
+						self->weightTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+					else
+						self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg * POUNDS_PER_KILOGRAM];
+					if (wheelCircumferenceMm < (double)1.0)
+						self->wheelSizeTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+					else
+						self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter / (CENTIMETERS_PER_INCH * 10)];
 					break;
 			}
 

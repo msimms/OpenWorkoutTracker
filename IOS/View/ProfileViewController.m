@@ -324,7 +324,7 @@ typedef enum ProfilePerformanceRows
 								if (estimatedFtp >= (double)1.0)
 									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@ (Estimated)", estimatedFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 								else
-									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"Not Set"];
+									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
 							}
 						}
 						break;
