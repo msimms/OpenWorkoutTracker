@@ -51,7 +51,6 @@
 
 #define START_PIN_NAME                 NSLocalizedString(@"Start", nil)
 #define FINISH_PIN_NAME                NSLocalizedString(@"Finish", nil)
-#define TIME                           NSLocalizedString(@"Time", nil)
 
 #define ALERT_TITLE_FIX_REPS           NSLocalizedString(@"Repetitions", nil)
 
@@ -343,7 +342,7 @@ typedef enum ExportFileTypeButtons
 			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId withView:plotVC];
 			if (line)
 			{
-				[plotVC appendChartLine:line withXLabel:TIME withYLabel:self->selectedRowStr];
+				[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:self->selectedRowStr];
 				[plotVC setTitle:self->selectedRowStr];
 			}
 		}

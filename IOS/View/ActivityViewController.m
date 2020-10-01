@@ -40,16 +40,12 @@
 
 #define UNSPECIFIED_INTERVAL          NSLocalizedString(@"Waiting for screen touch", nil)
 
-#define HELP_PULLUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
+#define HELP_PHONE_ON_ARM             NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
 #define HELP_CYCLING                  NSLocalizedString(@"You can mount the phone on the bicycle's handlebars, though you should pay attention to the road and obey all applicable laws.", nil)
-#define HELP_PUSHUP                   NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
-#define HELP_RUNNING                  NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
-#define HELP_SQUAT                    NSLocalizedString(@"This exercise should be performed with the phone positioned on the upper arm.", nil)
 #define HELP_STATIONARY_BIKE          NSLocalizedString(@"Stationary cycling requires the use of a Bluetooth wheel speed sensor.", nil)
 #define HELP_TREADMILL                NSLocalizedString(@"Treadmill running requires the use of a Bluetooth foot pod.", nil)
 
-#define INTERVAL_COMPLETE             NSLocalizedString(@"Interval Workout Complete", nil)
-
+#define MESSAGE_INTERVAL_COMPLETE     NSLocalizedString(@"Interval Workout Complete", nil)
 #define MESSAGE_BAD_GPS               NSLocalizedString(@"Poor GPS Signal", nil)
 #define MESSAGE_NO_LOCATION_SERVICES  NSLocalizedString(@"Location Services is disabled", nil)
 
@@ -234,7 +230,7 @@
 		if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
 			[activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
 		{
-			text = HELP_PULLUP;
+			text = HELP_PHONE_ON_ARM;
 		}
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
 				 [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
@@ -243,15 +239,15 @@
 		}
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
 		{
-			text = HELP_PUSHUP;
+			text = HELP_PHONE_ON_ARM;
 		}
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
 		{
-			text = HELP_RUNNING;
+			text = HELP_PHONE_ON_ARM;
 		}
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
 		{
-			text = HELP_SQUAT;
+			text = HELP_PHONE_ON_ARM;
 		}
 		else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
 		{
@@ -481,6 +477,7 @@
 - (void)doStop
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	if ([appDelegate stopActivity])
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];
@@ -500,6 +497,7 @@
 - (void)doPause
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	if ([appDelegate pauseActivity])
 	{
 		[self setUIForPausedActivity];
@@ -738,6 +736,7 @@
 - (void)locationUpdated:(NSNotification*)notification
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	if ([appDelegate hasBadGps])
 	{
 		@synchronized(self->messages)
@@ -815,13 +814,16 @@
 - (void)cadenceUpdated:(NSNotification*)notification
 {
 	NSDictionary* cadenceData = [notification object];
+
 	if (cadenceData)
 	{
 		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
+
 			if (rate)
 			{
 				self->lastCadenceValue = [rate doubleValue];
@@ -833,13 +835,16 @@
 - (void)powerUpdated:(NSNotification*)notification
 {
 	NSDictionary* powerData = [notification object];
+
 	if (powerData)
 	{
 		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
+
 			if (watts)
 			{
 				self->lastPowerValue = [watts doubleValue];
@@ -851,9 +856,11 @@
 - (void)intervalSegmentUpdated:(NSNotification*)notification
 {
 	NSDictionary* intervalData = [notification object];
+
 	if (intervalData)
 	{
 		NSValue* segmentValue = [intervalData objectForKey:@KEY_NAME_INTERVAL_SEGMENT];
+
 		if (segmentValue)
 		{
 			IntervalWorkoutSegment* segment = (IntervalWorkoutSegment*)[segmentValue objCType];
@@ -889,16 +896,18 @@
 	@synchronized(self->messages)
 	{
 		[self->messages removeAllObjects];
-		[self->messages addObject:INTERVAL_COMPLETE];
+		[self->messages addObject:MESSAGE_INTERVAL_COMPLETE];
 	}
 }
 
 - (void)printMessage:(NSNotification*)notification
 {
 	NSDictionary* msgData = [notification object];
+
 	if (msgData)
 	{
 		NSString* msg = [msgData objectForKey:@KEY_NAME_MESSAGE];
+
 		if (msg)
 		{
 			@synchronized(self->messages)

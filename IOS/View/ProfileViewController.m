@@ -49,8 +49,6 @@ typedef enum ProfilePerformanceRows
 #define ALERT_MSG_FTP                     NSLocalizedString(@"Please enter your FTP", nil)
 #define TITLE_BIRTHDATE                   NSLocalizedString(@"Birthdate", nil)
 
-#define STR_TIME                          NSLocalizedString(@"Time", nil)
-#define STR_WEIGHT                        NSLocalizedString(@"Weight", nil)
 #define STR_EDIT_WEIGHT                   NSLocalizedString(@"Edit Weight", nil)
 #define STR_VIEW_WEIGHT_HISTORY           NSLocalizedString(@"View Weight History", nil)
 

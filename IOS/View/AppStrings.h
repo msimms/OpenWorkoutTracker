@@ -33,6 +33,7 @@
 #define STR_FTP               NSLocalizedString(@"FTP", nil)
 #define STR_STARTED           NSLocalizedString(@"Started", nil)
 #define STR_FINISHED          NSLocalizedString(@"Finished", nil)
+#define STR_TIME              NSLocalizedString(@"Time", nil)
 #define STR_NONE              NSLocalizedString(@"None", nil)
 
 #define STR_SECONDS           NSLocalizedString(@"Seconds", nil)
@@ -54,7 +55,8 @@
 #define STR_RESET_PREFS       NSLocalizedString(@"Reset Settings", nil)
 #define STR_RESET_DATA        NSLocalizedString(@"Reset Data", nil)
 
-#define SUMMARY_MAP                      NSLocalizedString(@"Map", nil)
+#define STR_NOT_SET           NSLocalizedString(@"Not Set", nil)
+
 #define SUMMARY_ATTRIBUTE_TOTAL_DISTANCE NSLocalizedString(@"Total Distance", nil)
 #define SUMMARY_ATTRIBUTE_MAX_DISTANCE   NSLocalizedString(@"Max. Distance", nil)
 #define SUMMARY_ATTRIBUTE_TOTAL_CALORIES NSLocalizedString(@"Total Calories", nil)

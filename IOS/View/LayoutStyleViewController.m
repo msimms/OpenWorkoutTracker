@@ -52,6 +52,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+
 	if (prefs)
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];
@@ -64,6 +65,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+
 	if (prefs)
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];
@@ -76,6 +78,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+
 	if (prefs)
 	{
 		NSString* activityType = [appDelegate getCurrentActivityType];

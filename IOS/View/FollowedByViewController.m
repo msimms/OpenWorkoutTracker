@@ -63,6 +63,7 @@
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
 	NSString* responseDataStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+
 	if ([responseCode intValue] == 200)
 	{
 		@synchronized(self->users)
@@ -82,6 +83,7 @@
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
 	NSString* responseDataStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+
 	if ([responseCode intValue] == 200)
 	{
 	}
