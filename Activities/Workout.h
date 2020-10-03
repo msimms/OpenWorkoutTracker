@@ -45,7 +45,7 @@ public:
 	void AddInterval(uint8_t repeat, double distance, double pace, double recoveryDistance, double recoveryPace);
 	void AddInterval(const WorkoutInterval& interval);
 
-	double CalculateEstimatedTrainingStress(double thresholdPaceMinute);
+	double CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMinute);
 	double CalculateDuration() const;
 	double CalculateDistance() const;
 

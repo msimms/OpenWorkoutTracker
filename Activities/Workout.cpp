@@ -2,6 +2,7 @@
 // Copyright (c) 2020 Michael J. Simms. All rights reserved.
 
 #include "Workout.h"
+#include "TrainingStressCalculator.h"
 
 Workout::Workout()
 {
@@ -82,10 +83,11 @@ double Workout::CalculateIntervalDuration(double intervalMeters, double interval
 
 // Computes the estimated training stress for this workout.
 // May be overridden by child classes, depending on the type of workout.
-double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMinute)
+double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMinute)
 {
 	double workoutDurationSecs = 0.0;
-	double avgWorkoutPace = 0.0;
+	double avgWorkoutPaceMetersPerSec = 0.0;
+	TrainingStressCalculator calc;
 
 	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
 	{
@@ -94,22 +96,22 @@ double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMinute)
 		{
 			double intervalDurationSecs = interval->m_repeat * CalculateIntervalDuration(interval->m_distance, interval->m_pace);
 			workoutDurationSecs += intervalDurationSecs;
-			avgWorkoutPace += (interval->m_pace * (intervalDurationSecs / 60.0));
+			avgWorkoutPaceMetersPerSec += (interval->m_pace * (intervalDurationSecs / 60.0));
 		}
 		if (interval->m_recoveryDistance > 0 && interval->m_recoveryPace > 0.0)
 		{
 			double intervalDurationSecs = (interval->m_repeat - 1) * CalculateIntervalDuration(interval->m_recoveryDistance, interval->m_recoveryPace);
 			workoutDurationSecs += intervalDurationSecs;
-			avgWorkoutPace += (interval->m_recoveryPace * (intervalDurationSecs / 60.0));
+			avgWorkoutPaceMetersPerSec += (interval->m_recoveryPace * (intervalDurationSecs / 60.0));
 		}
 	}
 
 	if (workoutDurationSecs > 0.0)
 	{
-		avgWorkoutPace = avgWorkoutPace / workoutDurationSecs;
+		avgWorkoutPaceMetersPerSec = avgWorkoutPaceMetersPerSec / workoutDurationSecs;
 	}
 
-	m_estimatedTrainingStress = ((workoutDurationSecs * avgWorkoutPace) / (thresholdPaceMinute * 60.0)) * 100.0;
+	m_estimatedTrainingStress = calc.EstimateTrainingStress(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
 	return m_estimatedTrainingStress;
 }
 
