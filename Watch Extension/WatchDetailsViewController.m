@@ -101,10 +101,18 @@
 	[valueStrs addObject:temp];
 
 	// Format the end time.
-	temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]];
-	[nameStrs addObject:STR_FINISHED];
-	[valueStrs addObject:temp];
-	
+	if (endTime > 0)
+	{
+		temp = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]];
+		[nameStrs addObject:STR_FINISHED];
+		[valueStrs addObject:temp];
+	}
+	else
+	{
+		[nameStrs addObject:STR_FINISHED];
+		[valueStrs addObject:@"--"];
+	}
+
 	// Format the attributes.
 	for (NSString* attributeName in attributeNames)
 	{
