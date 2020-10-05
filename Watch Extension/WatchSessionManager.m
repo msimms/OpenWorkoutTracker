@@ -29,19 +29,18 @@
 
 - (void)sendSyncPrefsMsg
 {
-	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_SYNC_PREFS, @WATCH_MSG_TYPE, nil];
 
-	[msgData setObject:@WATCH_MSG_SYNC_PREFS forKey:@WATCH_MSG_TYPE];
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
 - (void)sendRegisterDeviceMsg
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
-	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_REGISTER_DEVICE, @WATCH_MSG_TYPE,
+							 [extDelegate getDeviceId], @WATCH_MSG_DEVICE_ID,
+							 nil];
 
-	[msgData setObject:@WATCH_MSG_REGISTER_DEVICE forKey:@WATCH_MSG_TYPE];
-	[msgData setObject:[extDelegate getDeviceId] forKey:@WATCH_MSG_DEVICE_ID];
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
@@ -53,12 +52,13 @@
 	for (size_t i = 0; i < numHistoricalActivities; ++i)
 	{
 		NSString* hash = [extDelegate retrieveHashForActivityIndex:i];
+
 		if (hash)
 		{
-			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+			NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
+									 hash, @WATCH_MSG_ACTIVITY_HASH,
+									 nil];
 
-			[msgData setObject:@WATCH_MSG_CHECK_ACTIVITY forKey:@WATCH_MSG_TYPE];
-			[msgData setObject:hash forKey:@WATCH_MSG_ACTIVITY_HASH];
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 		}
 	}
@@ -73,8 +73,6 @@
 
 	if (activityId && activityType)
 	{
-		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
-
 		NSString* activityName = [extDelegate getHistoricalActivityName:activityIndex];
 		NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
 
@@ -84,12 +82,14 @@
 		NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
 		NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
 
-		[msgData setObject:@WATCH_MSG_ACTIVITY forKey:@WATCH_MSG_TYPE];
-		[msgData setObject:activityId forKey:@WATCH_MSG_ACTIVITY_ID];
-		[msgData setObject:activityType forKey:@WATCH_MSG_ACTIVITY_TYPE];
-		[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
-		[msgData setObject:startTime forKey:@WATCH_MSG_ACTIVITY_START_TIME];
-		[msgData setObject:endTime forKey:@WATCH_MSG_ACTIVITY_END_TIME];
+		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+										@WATCH_MSG_ACTIVITY, @WATCH_MSG_TYPE,
+										activityId, @WATCH_MSG_ACTIVITY_ID,
+										activityType, @WATCH_MSG_ACTIVITY_TYPE,
+										activityHash, @WATCH_MSG_ACTIVITY_HASH,
+										startTime, @WATCH_MSG_ACTIVITY_START_TIME,
+										endTime, @WATCH_MSG_ACTIVITY_END_TIME,
+										nil];
 
 		if ([activityName length] > 0)
 			[msgData setObject:activityName forKey:@WATCH_MSG_ACTIVITY_NAME];
@@ -132,7 +132,15 @@
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
+	// Don't process phone messages when we're doing an activity.
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	if ([extDelegate isActivityInProgress])
+	{
+		return;
+	}
+
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
 	{
 		// The phone app wants to sync preferences.
@@ -144,7 +152,19 @@
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
-		// The phone app is sending interval workouts.
+		// The phone app wants to download interval workouts.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
+	{
+		// The phone app wants to download pace plans.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
+	{
+		// The phone app is sending an interval workout.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_PACE_PLAN])
+	{
+		// The phone app is sending a pace plan.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
@@ -164,7 +184,15 @@
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
+	// Don't process phone messages when we're doing an activity.
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	if ([extDelegate isActivityInProgress])
+	{
+		return;
+	}
+
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
+
 	if ([msgType isEqualToString:@WATCH_MSG_SYNC_PREFS])
 	{
 		// The phone app wants to sync preferences.
@@ -177,6 +205,10 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The phone app is sending interval workouts.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
+	{
+		// The phone app is sending pace plans.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
@@ -219,6 +251,7 @@
 	if (self->watchSession)
 	{
 		NSMutableDictionary* msgData = [[notification object] mutableCopy];
+
 		[msgData setObject:@WATCH_MSG_CHECK_ACTIVITY forKey:@WATCH_MSG_TYPE];
 		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 	}

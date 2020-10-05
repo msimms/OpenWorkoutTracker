@@ -243,6 +243,7 @@ void startSensorCallback(SensorType type, void* context)
 - (BOOL)stopActivity
 {
 	BOOL result = StopCurrentActivity();
+
 	if (result)
 	{		
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
@@ -412,38 +413,19 @@ void startSensorCallback(SensorType type, void* context)
 	return attr;
 }
 
+void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context)
+{
+	NSMutableArray* locationData = (__bridge NSMutableArray*)context;
+	NSArray* locations = @[[NSNumber numberWithFloat:coordinate.latitude], [NSNumber numberWithFloat:coordinate.longitude], [NSNumber numberWithFloat:coordinate.altitude], [NSNumber numberWithFloat:coordinate.horizontalAccuracy], [NSNumber numberWithFloat:coordinate.verticalAccuracy], [NSNumber numberWithFloat:coordinate.time]];
+	[locationData addObject:locations];
+}
+
 - (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId
 {
 	NSMutableArray* locationData = [[NSMutableArray alloc] init];
 
 	[self->historicalActivityLock lock];
-
-	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-
-	if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
-	{
-		InitializeHistoricalActivityList();
-		CreateHistoricalActivityObject(activityIndex);
-
-		if (LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, NULL, NULL))
-		{
-			NSInteger pointIndex = 0;
-			BOOL result = FALSE;
-
-			do {
-				Coordinate coordinate;
-
-				result = GetHistoricalActivityPoint(activityIndex, pointIndex, &coordinate);
-				if (result)
-				{
-					NSArray* locations = @[[NSNumber numberWithFloat:coordinate.latitude], [NSNumber numberWithFloat:coordinate.longitude], [NSNumber numberWithFloat:coordinate.altitude], [NSNumber numberWithFloat:coordinate.horizontalAccuracy], [NSNumber numberWithFloat:coordinate.verticalAccuracy], [NSNumber numberWithFloat:coordinate.time]];
-					[locationData addObject:locations];
-					++pointIndex;
-				}
-			} while (result);
-		}
-	}
-
+	LoadHistoricalActivityPoints([activityId UTF8String], HistoricalActivityLocationLoadCallback, (__bridge void*)locationData);
 	[self->historicalActivityLock unlock];
 
 	return locationData;
@@ -553,7 +535,11 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)retrieveHashForActivityId:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* activityHash = GetHashForActivityId([activityId UTF8String]);
+	char* activityHash = NULL;
+	
+	[self->historicalActivityLock lock];
+	activityHash = GetHashForActivityId([activityId UTF8String]);
+	[self->historicalActivityLock unlock];
 
 	if (activityHash)
 	{
@@ -578,18 +564,17 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)retrieveActivityIdByHash:(NSString*)activityHash
 {
 	NSString* result = nil;
+	char* activityId = NULL;
 
 	[self->historicalActivityLock lock];
-
-	char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+	activityId = GetActivityIdByHash([activityHash UTF8String]);
+	[self->historicalActivityLock unlock];
 
 	if (activityId)
 	{
 		result = [NSString stringWithFormat:@"%s", activityId];
 		free((void*)activityId);
 	}
-
-	[self->historicalActivityLock unlock];
 
 	return result;
 }
@@ -599,18 +584,17 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
+	char* activityName = NULL;
 
 	[self->historicalActivityLock lock];
-
-	char* activityName = GetActivityName([activityId UTF8String]);
+	activityName = GetActivityName([activityId UTF8String]);
+	[self->historicalActivityLock unlock];
 
 	if (activityName)
 	{
 		result = [NSString stringWithFormat:@"%s", activityName];
 		free((void*)activityName);
 	}
-
-	[self->historicalActivityLock unlock];
 
 	return result;
 }
@@ -742,9 +726,11 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getCurrentActivityAttributes
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
+
 	[self->currentActivityLock lock];
 	GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
 	[self->currentActivityLock unlock];
+
 	return names;
 }
 
@@ -783,18 +769,17 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (InitializeIntervalWorkoutList())
 	{
-		char* workoutId = NULL;
-		char* workoutName = NULL;
 		size_t index = 0;
+		char* workoutJson = NULL;
 
-		while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
+		while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index)) != NULL)
 		{
-			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-			[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
-			[namesAndIds addObject:mutDic];
-			free((void*)workoutId);
-			free((void*)workoutName);
+			NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
+			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+			NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+
+			[namesAndIds addObject:jsonObject];
+			free((void*)workoutJson);
 			++index;
 		}
 	}
@@ -807,18 +792,17 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (InitializePacePlanList())
 	{
-		char* pacePlanId = NULL;
-		char* pacePlanName = NULL;
 		size_t index = 0;
+		char* pacePlanJson = NULL;
 
-		while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
+		while ((pacePlanJson = RetrievePacePlanAsJSON(index)) != NULL)
 		{
-			NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-			[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
-			[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
-			[namesAndIds addObject:mutDic];
-			free((void*)pacePlanId);
-			free((void*)pacePlanName);
+			NSString* jsonString = [[NSString alloc] initWithUTF8String:pacePlanJson];
+			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+			NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+
+			[namesAndIds addObject:jsonObject];
+			free((void*)pacePlanJson);
 			++index;
 		}
 	}
@@ -828,7 +812,11 @@ void attributeNameCallback(const char* name, void* context)
 - (NSString*)getCurrentActivityType
 {
 	NSString* activityTypeStr = nil;
-	char* activityType = GetCurrentActivityType();
+	char* activityType = NULL;
+
+	[self->historicalActivityLock lock];
+	activityType = GetCurrentActivityType();
+	[self->historicalActivityLock unlock];
 
 	if (activityType)
 	{
@@ -841,7 +829,11 @@ void attributeNameCallback(const char* name, void* context)
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex
 {
 	NSString* result = nil;
-	char* activityType = GetHistoricalActivityType((size_t)activityIndex);
+	char* activityType = NULL;
+	
+	[self->historicalActivityLock lock];
+	activityType = GetHistoricalActivityType((size_t)activityIndex);
+	[self->historicalActivityLock unlock];
 
 	if (activityType)
 	{
@@ -854,7 +846,11 @@ void attributeNameCallback(const char* name, void* context)
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex
 {
 	NSString* result = nil;
-	char* activityName = GetHistoricalActivityName((size_t)activityIndex);
+	char* activityName = NULL;
+
+	[self->historicalActivityLock lock];
+	activityName = GetHistoricalActivityName((size_t)activityIndex);
+	[self->historicalActivityLock unlock];
 
 	if (activityName)
 	{

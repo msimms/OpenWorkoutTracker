@@ -1986,6 +1986,36 @@ bool Database::RetrieveActivityCoordinates(const std::string& activityId, Coordi
 	return result;
 }
 
+bool Database::RetrieveActivityPositionReadings(const std::string& activityId, CoordinateCallback coordinateCallback, void* context)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select time,latitude,longitude,altitude from gps where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
+		{
+			while (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				Coordinate coord;
+
+				coord.latitude  = sqlite3_column_double(statement, 1);
+				coord.longitude = sqlite3_column_double(statement, 2);
+				coord.altitude  = sqlite3_column_double(statement, 3);
+				coord.time = sqlite3_column_int64(statement, 0);
+				coord.horizontalAccuracy = (double)0.0;
+				coord.verticalAccuracy = (double)0.0;
+
+				(*coordinateCallback)(coord, context);
+			}
+
+			result = true;
+		}
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
 bool Database::RetrieveActivityPositionReadings(const std::string& activityId, SensorReadingList& readings)
 {
 	const size_t SIZE_INCREMENT = 2048;

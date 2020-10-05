@@ -85,9 +85,7 @@ extern "C" {
 
 	// Functions for managing interval workouts.
 	bool InitializeIntervalWorkoutList(void);
-	char* GetIntervalWorkoutId(size_t workoutIndex);
-	char* GetIntervalWorkoutName(size_t workoutIndex);
-	char* GetIntervalWorkoutSport(size_t workoutIndex);
+	char* RetrieveIntervalWorkoutAsJSON(size_t workoutIndex);
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
 	bool DeleteIntervalWorkout(const char* const workoutId);
 
@@ -99,8 +97,7 @@ extern "C" {
 
 	// Functions for managing pace plans.
 	bool InitializePacePlanList(void);
-	char* GetPacePlanId(size_t planIndex);
-	char* GetPacePlanName(size_t planIndex);
+	char* RetrievePacePlanAsJSON(size_t planIndex);
 	bool CreateNewPacePlan(const char* const planName, const char* const planId);
 	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits);
 	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceMinKm, double targetDistanceInKms, double splits);
@@ -119,8 +116,8 @@ extern "C" {
 	// Functions for loading history.
 	void InitializeHistoricalActivityList(void);
 	bool HistoricalActivityListIsInitialized(void);
-	void CreateHistoricalActivityObject(size_t activityIndex);
-	void CreateHistoricalActivityObjectById(const char* activityId);
+	bool CreateHistoricalActivityObject(size_t activityIndex);
+	bool CreateHistoricalActivityObjectById(const char* activityId);
 	void CreateAllHistoricalActivityObjects(void);
 	bool LoadHistoricalActivityLapData(size_t activityIndex);
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context);
@@ -151,6 +148,7 @@ extern "C" {
 	void SetHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName, ActivityAttributeType attributeValue);
 
 	// Functions for accessing historical location data.
+	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context);
 	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate);
 	bool GetActivityPoint(size_t pointIndex, Coordinate* const coordinate);
 
@@ -252,10 +250,10 @@ extern "C" {
 	bool ImportZwoFile(const char* const fileName, const char* const workoutId, const char* const workoutName);
 
 	// Functions for importing KML files.
-	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, KmlCoordinateCallback coordinateCallback, void* context);
+	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, CoordinateCallback coordinateCallback, void* context);
 
 	// Functions for creating a heat map.
-	bool CreateHeatMap(HeadMapPointCallback callback, void* context);
+	bool CreateHeatMap(HeatMapPointCallback callback, void* context);
 
 	// Functions for doing coordinate calculations.
 	double DistanceBetweenCoordinates(const Coordinate c1, const Coordinate c2);

@@ -18,8 +18,8 @@ extern "C" {
 	typedef void (*SensorDataCallback)(const char* activityId, void* context);
 	typedef void (*KmlPlacemarkStartCallback)(const char* name, void* context);
 	typedef void (*KmlPlacemarkEndCallback)(const char* name, void* context);
-	typedef void (*KmlCoordinateCallback)(Coordinate coordinate, void* context);
-	typedef void (*HeadMapPointCallback)(Coordinate coordinate, uint32_t count, void* context);
+	typedef void (*CoordinateCallback)(Coordinate coordinate, void* context);
+	typedef void (*HeatMapPointCallback)(Coordinate coordinate, uint32_t count, void* context);
 	typedef void (*TagCallback)(const char* name, void* context);
 	typedef void (*ActivityTypeCallback)(const char* name, void* context);
 	typedef void (*AttributeNameCallback)(const char* name, void* context);

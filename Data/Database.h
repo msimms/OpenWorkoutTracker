@@ -17,6 +17,7 @@
 #include "ActivitySummary.h"
 #include "ActivityViewType.h"
 #include "Bike.h"
+#include "Callbacks.h"
 #include "Coordinate.h"
 #include "IntervalWorkout.h"
 #include "MovingActivity.h"
@@ -148,6 +149,7 @@ public:
 	bool CreateSensorReading(const std::string& activityId, const SensorReading& reading);
 	bool RetrieveSensorReadingsOfType(const std::string& activityId, SensorType type, SensorReadingList& readings);
 	bool RetrieveActivityCoordinates(const std::string& activityId, CoordinateList& coordinates);
+	bool RetrieveActivityPositionReadings(const std::string& activityId, CoordinateCallback coordinateCallback, void* context);
 	bool RetrieveActivityPositionReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityAccelerometerReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityHeartRateMonitorReadings(const std::string& activityId, SensorReadingList& readings);

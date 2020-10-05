@@ -2189,18 +2189,17 @@ void tagCallback(const char* name, void* context)
 		{
 			if (InitializeIntervalWorkoutList())
 			{
-				char* workoutId = NULL;
-				char* workoutName = NULL;
 				size_t index = 0;
+				char* workoutJson = NULL;
 
-				while (((workoutName = GetIntervalWorkoutName(index)) != NULL) && ((workoutId = GetIntervalWorkoutId(index)) != NULL))
+				while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index)) != NULL)
 				{
-					NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-					[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-					[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutName] forKey:@"name"];
-					[namesAndIds addObject:mutDic];
-					free((void*)workoutId);
-					free((void*)workoutName);
+					NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
+					NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+					NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+
+					[namesAndIds addObject:jsonObject];
+					free((void*)workoutJson);
 					++index;
 				}
 			}
@@ -2218,18 +2217,17 @@ void tagCallback(const char* name, void* context)
 		{
 			if (InitializePacePlanList())
 			{
-				char* pacePlanId = NULL;
-				char* pacePlanName = NULL;
 				size_t index = 0;
+				char* pacePlanJson = NULL;
 
-				while (((pacePlanName = GetPacePlanName(index)) != NULL) && ((pacePlanId = GetPacePlanId(index)) != NULL))
+				while ((pacePlanJson = RetrievePacePlanAsJSON(index)) != NULL)
 				{
-					NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-					[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanId] forKey:@"id"];
-					[mutDic setValue:[[NSString alloc] initWithUTF8String:pacePlanName] forKey:@"name"];
-					[namesAndIds addObject:mutDic];
-					free((void*)pacePlanId);
-					free((void*)pacePlanName);
+					NSString* jsonString = [[NSString alloc] initWithUTF8String:pacePlanJson];
+					NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+					NSDictionary* jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+
+					[namesAndIds addObject:jsonObject];
+					free((void*)pacePlanJson);
 					++index;
 				}
 			}
@@ -2310,6 +2308,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* activityTypeStr = nil;
 	char* activityType = GetCurrentActivityType();
+
 	if (activityType)
 	{
 		activityTypeStr = [NSString stringWithFormat:@"%s", activityType];
@@ -2322,6 +2321,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* result = nil;
 	char* activityType = GetHistoricalActivityType((size_t)activityIndex);
+
 	if (activityType)
 	{
 		result = [NSString stringWithFormat:@"%s", activityType];
@@ -2717,6 +2717,31 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
+- (void)sendIntervalWorkouts
+{
+	if (InitializeIntervalWorkoutList())
+	{
+		size_t index = 0;
+		char* workoutJson = NULL;
+
+		while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index)) != NULL)
+		{
+			NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
+			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+			NSMutableDictionary* msgData = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+
+			[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
+			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			free((void*)workoutJson);
+		}
+	}
+}
+
+- (void)sendPacePlans
+{
+
+}
+
 - (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
 {
 	NSString* activityId = [message objectForKey:@WATCH_MSG_ACTIVITY_ID];
@@ -2830,6 +2855,20 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
+		[self sendIntervalWorkouts];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
+	{
+		// The watch app wants to download pace plans.
+		[self sendPacePlans];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
+	{
+		// The watch app is sending an interval workout.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_PACE_PLAN])
+	{
+		// The watch app is sending a pace plan.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
@@ -2865,6 +2904,20 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
+		[self sendIntervalWorkouts];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
+	{
+		// The watch app wants to download pace plans.
+		[self sendPacePlans];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
+	{
+		// The watch app is sending an interval workout.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_PACE_PLAN])
+	{
+		// The watch app is sending a pace plan.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{

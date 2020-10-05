@@ -32,6 +32,60 @@
 #include <time.h>
 #include <sys/time.h>
 
+//
+// Private utility functions.
+//
+
+std::string FormatDouble(double d)
+{
+	char buf[32];
+	snprintf(buf, sizeof(buf) - 1, "%.10lf", d);
+	return buf;
+}
+
+std::string EscapeString(const std::string& s)
+{
+	std::string newS;
+
+	for (auto c = s.cbegin(); c != s.cend(); ++c)
+	{
+		char tempC = (*c);
+
+		if ((tempC == '"') || (tempC == '\\') || ('\x00' <= tempC && tempC <= '\x1f'))
+		{
+			char buf[32];
+			snprintf(buf, sizeof(buf) - 1, "\\u%04u", (uint16_t)tempC);
+			newS.append(buf);
+		}
+		else
+		{
+			newS += tempC;
+		}
+	}
+	return newS;
+}
+
+std::string MapToJsonStr(const std::map<std::string, std::string>& data)
+{
+	std::string json = "{";
+	bool first = true;
+	
+	for (auto iter = data.begin(); iter != data.end(); ++iter)
+	{
+		if (!first)
+			json += ", ";
+		first = false;
+
+		json += "\"";
+		json += EscapeString(iter->first);
+		json += "\": \"";
+		json += EscapeString(iter->second);
+		json += "\"";
+	}
+	json += "}";
+	return json;
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -784,31 +838,18 @@ extern "C" {
 		return false;
 	}
 
-	char* GetIntervalWorkoutId(size_t workoutIndex)
+	char* RetrieveIntervalWorkoutAsJSON(size_t workoutIndex)
 	{
 		if (workoutIndex < g_intervalWorkouts.size())
 		{
-			return strdup(g_intervalWorkouts.at(workoutIndex).workoutId.c_str());
-		}
-		return NULL;		
-	}
+			const IntervalWorkout& workout = g_intervalWorkouts.at(workoutIndex);
+			std::map<std::string, std::string> params;
 
-	char* GetIntervalWorkoutName(size_t workoutIndex)
-	{
-		if (workoutIndex < g_intervalWorkouts.size())
-		{
-			return strdup(g_intervalWorkouts.at(workoutIndex).name.c_str());
+			params.insert(std::make_pair("id", workout.workoutId));
+			params.insert(std::make_pair("name", workout.name));
+			return strdup(MapToJsonStr(params).c_str());
 		}
-		return NULL;		
-	}
-
-	char* GetIntervalWorkoutSport(size_t workoutIndex)
-	{
-		if (workoutIndex < g_intervalWorkouts.size())
-		{
-			return strdup(g_intervalWorkouts.at(workoutIndex).sport.c_str());
-		}
-		return NULL;		
+		return NULL;
 	}
 
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
@@ -905,22 +946,22 @@ extern "C" {
 		return false;
 	}
 
-	char* GetPacePlanId(size_t planIndex)
+	char* RetrievePacePlanAsJSON(size_t planIndex)
 	{
 		if (planIndex < g_pacePlans.size())
 		{
-			return strdup(g_pacePlans.at(planIndex).planId.c_str());
-		}
-		return NULL;		
-	}
+			const PacePlan& plan = g_pacePlans.at(planIndex);
+			std::map<std::string, std::string> params;
 
-	char* GetPacePlanName(size_t planIndex)
-	{
-		if (planIndex < g_pacePlans.size())
-		{
-			return strdup(g_pacePlans.at(planIndex).name.c_str());
+			params.insert(std::make_pair("id", plan.planId));
+			params.insert(std::make_pair("name", plan.name));
+			params.insert(std::make_pair("targetPaceMinKm", FormatDouble(plan.targetPaceMinKm)));
+			params.insert(std::make_pair("targetDistanceInKms", FormatDouble(plan.targetDistanceInKms)));
+			params.insert(std::make_pair("splits", FormatDouble(plan.splits)));
+			params.insert(std::make_pair("route", plan.route));
+			return strdup(MapToJsonStr(params).c_str());
 		}
-		return NULL;		
+		return NULL;
 	}
 
 	bool CreateNewPacePlan(const char* const planName, const char* planId)
@@ -1095,7 +1136,7 @@ extern "C" {
 		return g_historicalActivityList.size() > 0;
 	}
 
-	void CreateHistoricalActivityObject(size_t activityIndex)
+	bool CreateHistoricalActivityObject(size_t activityIndex)
 	{
 		if (g_pActivityFactory && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -1105,17 +1146,20 @@ extern "C" {
 			{
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
 			}
+			return true;
 		}
+		return false;
 	}
 
-	void CreateHistoricalActivityObjectById(const char* activityId)
+	bool CreateHistoricalActivityObjectById(const char* activityId)
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
 
 		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
 		{
-			CreateHistoricalActivityObject(activityIndex);
+			return CreateHistoricalActivityObject(activityIndex);
 		}
+		return false;
 	}
 
 	void CreateAllHistoricalActivityObjects()
@@ -1625,6 +1669,19 @@ extern "C" {
 	//
 	// Functions for accessing historical routes.
 	//
+
+	// Added this function as a performance optimization for when you just need the location data and don't need
+	// to recreate the entire Activity object, etc. Useful on the Apple Watch since it isn't very powerful.
+	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context)
+	{
+		bool result = false;
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->RetrieveActivityPositionReadings(activityId, coordinateCallback, context);
+		}
+		return result;
+	}
 
 	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate)
 	{
@@ -2755,7 +2812,7 @@ extern "C" {
 	// Functions for importing KML files.
 	//
 
-	bool ImportKmlFile(const char* const pFileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, KmlCoordinateCallback coordinateCallback, void* context)
+	bool ImportKmlFile(const char* const pFileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, CoordinateCallback coordinateCallback, void* context)
 	{
 		bool result = false;
 
@@ -2795,7 +2852,7 @@ extern "C" {
 	// Functions for creating a heat map.
 	//
 
-	bool CreateHeatMap(HeadMapPointCallback callback, void* context)
+	bool CreateHeatMap(HeatMapPointCallback callback, void* context)
 	{
 		HeatMap heatMap;
 		HeatMapGenerator generator;
