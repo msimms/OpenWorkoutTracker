@@ -10,7 +10,6 @@
 
 #import "AppDelegate.h"
 #import "ActivityHash.h"
-#import "ActivityMgr.h"
 #import "Accelerometer.h"
 #import "ActivityAttribute.h"
 #import "ApiClient.h"
@@ -512,16 +511,19 @@
 		}
 
 		// Read weight history from HealthKit.
-		[self->healthMgr readWeightHistory:^(HKQuantity* quantity, NSDate* date, NSError* error)
+		if (![self isActivityInProgress])
 		{
-			if (quantity && date)
+			[self->healthMgr readWeightHistory:^(HKQuantity* quantity, NSDate* date, NSError* error)
 			{
-				double measurementValue = [quantity doubleValueForUnit:[HKUnit gramUnit]] / (double)1000.0; // Convert to kg
-				time_t measurementTime = [date timeIntervalSince1970];
+				if (quantity && date)
+				{
+					double measurementValue = [quantity doubleValueForUnit:[HKUnit gramUnit]] / (double)1000.0; // Convert to kg
+					time_t measurementTime = [date timeIntervalSince1970];
 
-				ProcessWeightReading(measurementValue, measurementTime);
-			}
-		}];
+					ProcessWeightReading(measurementValue, measurementTime);
+				}
+			}];
+		}
 	}
 }
 
@@ -2533,6 +2535,7 @@ void attributeNameCallback(const char* name, void* context)
 	if (exportDir)
 	{
 		char* tempExportFileName = ExportWorkout([workoutId UTF8String], [exportDir UTF8String]);
+
 		if (tempExportFileName)
 		{
 			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
@@ -2576,6 +2579,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSString* activityType = [self getCurrentActivityType];
 	BOOL screenLocking = [activityPrefs getScreenAutoLocking:activityType];
+
 	[UIApplication sharedApplication].idleTimerDisabled = !screenLocking;
 }
 

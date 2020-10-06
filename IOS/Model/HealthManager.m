@@ -8,7 +8,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import "HealthManager.h"
 #import "ActivityAttribute.h"
-#import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "BtleHeartRateMonitor.h"
 #import "BtleScale.h"
@@ -447,6 +446,7 @@
 	@synchronized(self->workouts)
 	{
 		HKWorkout* workout = [self->workouts objectForKey:activityId];
+
 		if (workout)
 		{
 			[self readLocationPointsFromHealthStoreForWorkout:workout withActivityId:activityId];
@@ -501,9 +501,11 @@
 	@synchronized(self->workouts)
 	{
 		HKWorkout* workout = [self->workouts objectForKey:activityId];
+
 		if (workout)
 		{
 			HKWorkoutActivityType type = [workout workoutActivityType];
+
 			switch (type)
 			{
 				case HKWorkoutActivityTypeCycling:
@@ -525,6 +527,7 @@
 	@synchronized(self->workouts)
 	{
 		HKWorkout* workout = [self->workouts objectForKey:activityId];
+
 		if (workout)
 		{
 			(*startTime) = [workout.startDate timeIntervalSince1970];
@@ -538,6 +541,7 @@
 	@synchronized(self->locations)
 	{
 		NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+
 		if (activityLocations)
 		{
 			return [activityLocations count];
@@ -551,11 +555,13 @@
 	@synchronized(self->locations)
 	{
 		NSArray<CLLocation*>* activityLocations = [self->locations objectForKey:activityId];
+
 		if (activityLocations)
 		{
 			if (pointIndex < [activityLocations count])
 			{
 				CLLocation* loc = [activityLocations objectAtIndex:pointIndex];
+
 				if (loc)
 				{
 					if (latitude)
@@ -864,6 +870,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 - (void)activityStopped:(NSNotification*)notification
 {
 	NSDictionary* activityData = [notification object];
+
 	if (activityData)
 	{
 		NSString* activityType = [activityData objectForKey:@KEY_NAME_ACTIVITY_TYPE];
