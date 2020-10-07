@@ -36,10 +36,17 @@
 // Private utility functions.
 //
 
-std::string FormatDouble(double d)
+std::string FormatDouble(double num)
 {
 	char buf[32];
-	snprintf(buf, sizeof(buf) - 1, "%.10lf", d);
+	snprintf(buf, sizeof(buf) - 1, "%.10lf", num);
+	return buf;
+}
+
+std::string FormatInt(uint64_t num)
+{
+	char buf[32];
+	snprintf(buf, sizeof(buf) - 1, "%llu", num);
 	return buf;
 }
 
@@ -1840,6 +1847,25 @@ extern "C" {
 	}
 
 	// InitializeWorkoutList should be called before calling this.
+	char* RetrieveWorkoutAsJSON(size_t workoutIndex)
+	{
+		if (workoutIndex < g_workouts.size())
+		{
+			const Workout& workout = g_workouts.at(workoutIndex);
+			std::map<std::string, std::string> params;
+
+			params.insert(std::make_pair("id", workout.GetId()));
+			params.insert(std::make_pair("sport", workout.GetSport()));
+			params.insert(std::make_pair("type", FormatInt((uint64_t)workout.GetType())));
+			params.insert(std::make_pair("num intervals", FormatInt((uint64_t)workout.GetIntervals().size())));
+			params.insert(std::make_pair("duration", FormatDouble(workout.CalculateDuration())));
+			params.insert(std::make_pair("distance", FormatDouble(workout.CalculateDistance())));
+			return strdup(MapToJsonStr(params).c_str());
+		}
+		return NULL;
+	}
+
+	// InitializeWorkoutList should be called before calling this.
 	size_t ConvertWorkoutIdToIndex(const char* const workoutId)
 	{
 		size_t index = 0;
@@ -1863,32 +1889,6 @@ extern "C" {
 			return strdup(g_workouts.at(workoutIndex).GetId().c_str());
 		}
 		return NULL;
-	}
-
-	// InitializeWorkoutList should be called before calling this.
-	char* GetWorkoutSportByIndex(size_t workoutIndex)
-	{
-		if (workoutIndex < g_workouts.size())
-		{
-			return strdup(g_workouts.at(workoutIndex).GetSport().c_str());
-		}
-		return NULL;
-	}
-
-	// InitializeWorkoutList should be called before calling this.
-	bool GetWorkoutDetailsByIndex(size_t workoutIndex, WorkoutType* workoutType, size_t* numIntervals, double* duration, double* distance)
-{
-		if (workoutIndex < g_workouts.size())
-		{
-			const Workout& workout = g_workouts.at(workoutIndex);
-
-			(*workoutType) = workout.GetType();
-			(*numIntervals) = workout.GetIntervals().size();
-			(*duration) = workout.CalculateDuration();
-			(*distance) = workout.CalculateDistance();
-			return true;
-		}
-		return false;
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.

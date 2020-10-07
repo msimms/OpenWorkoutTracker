@@ -169,10 +169,9 @@ extern "C" {
 
 	// Functions for managing workout generation.
 	bool InitializeWorkoutList(void);
+	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
 	size_t ConvertWorkoutIdToIndex(const char* const workoutId);
 	char* GetWorkoutIdByIndex(size_t workoutIndex);
-	char* GetWorkoutSportByIndex(size_t workoutIndex);
-	bool GetWorkoutDetailsByIndex(size_t workoutIndex, WorkoutType* workoutType, size_t* numIntervals, double* duration, double* distance);
 	bool GenerateWorkouts(void);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime);
 	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance);

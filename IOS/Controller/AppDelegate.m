@@ -2487,35 +2487,18 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (InitializeWorkoutList())
 	{
-		size_t workoutIndex = 0;
-		char* workoutId = NULL;
-		
-		while ((workoutId = GetWorkoutIdByIndex(workoutIndex)) != NULL)
+		size_t index = 0;
+		char* workoutJson = NULL;
+
+		while ((workoutJson = RetrieveWorkoutAsJSON(index)) != NULL)
 		{
-			char* sport = GetWorkoutSportByIndex(workoutIndex);
-			WorkoutType workoutType = WORKOUT_TYPE_REST;
-			size_t numIntervals = 0;
-			double duration = (double)0.0;
-			double distance = (double)0.0;
+			NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
+			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+			NSMutableDictionary* workoutDict = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
 
-			if (GetWorkoutDetailsByIndex(workoutIndex, &workoutType, &numIntervals, &duration, &distance))
-			{
-				NSMutableDictionary* mutDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:workoutId] forKey:@"id"];
-				[mutDic setValue:[[NSString alloc] initWithUTF8String:sport] forKey:@"sport"];
-				[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)workoutType] forKey:@"type"];
-				[mutDic setValue:[NSNumber numberWithInteger:(unsigned int)numIntervals] forKey:@"num intervals"];
-				[mutDic setValue:[NSNumber numberWithDouble:duration] forKey:@"duration"];
-				[mutDic setValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
-				[workoutData addObject:mutDic];
-			}
-
-			if (sport)
-				free(sport);
-			free(workoutId);
-
-			++workoutIndex;
+			[workoutData addObject:workoutDict];
+			free((void*)workoutJson);
+			++index;
 		}
 	}
 
@@ -2737,6 +2720,7 @@ void attributeNameCallback(const char* name, void* context)
 			[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 			free((void*)workoutJson);
+			++index;
 		}
 	}
 }
