@@ -2194,7 +2194,7 @@ void tagCallback(const char* name, void* context)
 				size_t index = 0;
 				char* workoutJson = NULL;
 
-				while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index)) != NULL)
+				while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index++)) != NULL)
 				{
 					NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
 					NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -2202,7 +2202,6 @@ void tagCallback(const char* name, void* context)
 
 					[namesAndIds addObject:jsonObject];
 					free((void*)workoutJson);
-					++index;
 				}
 			}
 		}
@@ -2222,7 +2221,7 @@ void tagCallback(const char* name, void* context)
 				size_t index = 0;
 				char* pacePlanJson = NULL;
 
-				while ((pacePlanJson = RetrievePacePlanAsJSON(index)) != NULL)
+				while ((pacePlanJson = RetrievePacePlanAsJSON(index++)) != NULL)
 				{
 					NSString* jsonString = [[NSString alloc] initWithUTF8String:pacePlanJson];
 					NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -2230,7 +2229,6 @@ void tagCallback(const char* name, void* context)
 
 					[namesAndIds addObject:jsonObject];
 					free((void*)pacePlanJson);
-					++index;
 				}
 			}
 		}
@@ -2695,10 +2693,11 @@ void attributeNameCallback(const char* name, void* context)
 
 		if (activityId == NULL)
 		{
-			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] init];
+			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+											@WATCH_MSG_REQUEST_ACTIVITY, @WATCH_MSG_TYPE,
+											activityHash, @WATCH_MSG_ACTIVITY_HASH,
+											nil];
 
-			[msgData setObject:@WATCH_MSG_REQUEST_ACTIVITY forKey:@WATCH_MSG_TYPE];
-			[msgData setObject:activityHash forKey:@WATCH_MSG_ACTIVITY_HASH];
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 		}
 	}
@@ -2711,23 +2710,37 @@ void attributeNameCallback(const char* name, void* context)
 		size_t index = 0;
 		char* workoutJson = NULL;
 
-		while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index)) != NULL)
+		while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index++)) != NULL)
 		{
 			NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
 			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-			NSMutableDictionary* msgData = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+			NSMutableDictionary* msgData = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
 
 			[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 			free((void*)workoutJson);
-			++index;
 		}
 	}
 }
 
 - (void)sendPacePlans
 {
+	if (InitializePacePlanList())
+	{
+		size_t index = 0;
+		char* pacePlanJson = NULL;
 
+		while ((pacePlanJson = RetrievePacePlanAsJSON(index++)) != NULL)
+		{
+			NSString* jsonString = [[NSString alloc] initWithUTF8String:pacePlanJson];
+			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+			NSMutableDictionary* msgData = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+
+			[msgData setObject:@WATCH_MSG_PACE_PLAN forKey:@WATCH_MSG_TYPE];
+			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			free((void*)pacePlanJson);
+		}
+	}
 }
 
 - (void)importWatchActivity:(NSDictionary<NSString*,id>*)message

@@ -84,16 +84,6 @@ bool Database::CreateTables()
 	std::vector<std::string> queries;
 	std::string sql;
 
-	// The format of these tables changed. If we find old ones, delete them so they can be re-created.
-	if (DoesTableExist("interval_workout") && !DoesTableHaveColumn("interval_workout", "workout_id"))
-	{
-		DropTable("interval_workout");
-	}
-	if (DoesTableExist("interval_workout_segment") && !DoesTableHaveColumn("interval_workout_segment", "power"))
-	{
-		DropTable("interval_workout_segment");
-	}
-
 	if (!DoesTableExist("bike"))
 	{
 		sql = "create table bike (id integer primary key, name text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int)";

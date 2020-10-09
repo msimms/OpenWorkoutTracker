@@ -64,9 +64,45 @@
 	}
 }
 
+- (void)requestIntervalWorkouts
+{
+	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS, @WATCH_MSG_TYPE,
+									nil];
+
+	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+}
+
+- (void)requestPacePlans
+{
+	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									@WATCH_MSG_DOWNLOAD_PACE_PLANS, @WATCH_MSG_TYPE,
+									nil];
+
+	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+}
+
+- (void)loadIntervalWorkout:(nonnull NSDictionary<NSString*,id> *)message
+{
+}
+
+- (void)loadPacePlan:(nonnull NSDictionary<NSString*,id> *)message
+{
+	NSString* planId = [message objectForKey:@WATCH_MSG_PACE_PLAN_ID];
+	NSString* planName = [message objectForKey:@WATCH_MSG_PACE_PLAN_NAME];
+	NSString* targetPaceMinKm = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE];
+	NSString* targetDistanceKms = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE];
+	NSString* splits = [message objectForKey:@WATCH_MSG_PACE_PLAN_SPLITS];
+	NSString* route = [message objectForKey:@WATCH_MSG_PACE_PLAN_ROUTE];
+	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
+	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceMinKm:[targetPaceMinKm floatValue] withTargetDistanceKms:[targetDistanceKms floatValue] withSplits:[splits floatValue] withRoute:route];
+}
+
 - (void)sendActivity:(NSString*)activityHash
 {
 	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+
 	NSString* activityId = [extDelegate retrieveActivityIdByHash:activityHash];
 	NSInteger activityIndex = [extDelegate getActivityIndexFromActivityId:activityId];
 	NSString* activityType = [extDelegate getHistoricalActivityType:activityIndex];
@@ -127,6 +163,8 @@
 	{
 		[self sendRegisterDeviceMsg];
 		[self checkIfActivitiesAreUploaded];
+		[self requestIntervalWorkouts];
+		[self requestPacePlans];
 	}
 }
 
@@ -161,10 +199,12 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{
 		// The phone app is sending an interval workout.
+		[self loadIntervalWorkout:message];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_PACE_PLAN])
 	{
 		// The phone app is sending a pace plan.
+		[self loadPacePlan:message];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
@@ -204,11 +244,21 @@
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
-		// The phone app is sending interval workouts.
+		// The phone app wants to download interval workouts.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
-		// The phone app is sending pace plans.
+		// The phone app wants to download pace plans.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
+	{
+		// The phone app is sending an interval workout.
+		[self loadIntervalWorkout:message];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_PACE_PLAN])
+	{
+		// The phone app is sending a pace plan.
+		[self loadPacePlan:message];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
@@ -248,13 +298,6 @@
 
 - (void)activityStopped:(NSNotification*)notification
 {
-	if (self->watchSession)
-	{
-		NSMutableDictionary* msgData = [[notification object] mutableCopy];
-
-		[msgData setObject:@WATCH_MSG_CHECK_ACTIVITY forKey:@WATCH_MSG_TYPE];
-		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
-	}
 }
 
 @end

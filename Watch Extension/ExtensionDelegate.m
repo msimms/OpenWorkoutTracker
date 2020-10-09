@@ -24,7 +24,7 @@
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
 
 	self->currentActivityLock = [[NSLock alloc] init];
-	self->historicalActivityLock = [[NSLock alloc] init];
+	self->databaseLock = [[NSLock alloc] init];
 
 	Initialize([dbFileName UTF8String]);
 
@@ -317,9 +317,9 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)endOrpanedActivity:(NSInteger)activityIndex
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	FixHistoricalActivityEndTime(activityIndex);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 }
 
 #pragma mark methods for querying the status of the current activity.
@@ -344,14 +344,14 @@ void startSensorCallback(SensorType type, void* context)
 {
 	BOOL isOrphaned = FALSE;
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 
 	if (HistoricalActivityListIsInitialized())
 	{
 		isOrphaned = IsActivityOrphaned(activityIndex);
 	}
 
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	return isOrphaned;
 }
@@ -360,56 +360,56 @@ void startSensorCallback(SensorType type, void* context)
 
 - (NSInteger)initializeHistoricalActivityList
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	InitializeHistoricalActivityList();
 	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 	return numActivities;
 }
 
 - (NSInteger)getNumHistoricalActivities
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 	return numActivities;
 }
 
 - (void)createHistoricalActivityObject:(NSInteger)activityIndex
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	CreateHistoricalActivityObject(activityIndex);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 }
 
 - (void)loadHistoricalActivitySummaryData:(NSInteger)activityIndex
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	LoadHistoricalActivitySummaryData(activityIndex);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 }
 
 - (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	GetHistoricalActivityStartAndEndTime((size_t)activityIndex, startTime, endTime);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	ActivityAttributeType attr = QueryHistoricalActivityAttribute((size_t)activityIndex, attributeName);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 	return attr;
 }
 
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
 	ActivityAttributeType attr = QueryHistoricalActivityAttribute(activityIndex, attributeName);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 	return attr;
 }
 
@@ -424,18 +424,18 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 {
 	NSMutableArray* locationData = [[NSMutableArray alloc] init];
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	LoadHistoricalActivityPoints([activityId UTF8String], HistoricalActivityLocationLoadCallback, (__bridge void*)locationData);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	return locationData;
 }
 
 - (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId
 {
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	NSInteger index = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 	return index;
 }
 
@@ -509,9 +509,9 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 
 	if (hashStr)
 	{
-		[self->historicalActivityLock lock];
+		[self->databaseLock lock];
 		StoreHash([activityId UTF8String], [hashStr UTF8String]);
-		[self->historicalActivityLock unlock];
+		[self->databaseLock unlock];
 	}
 	return hashStr;
 }
@@ -525,9 +525,9 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 
 	if (hashStr)
 	{
-		[self->historicalActivityLock lock];
+		[self->databaseLock lock];
 		StoreHash([activityId UTF8String], [hashStr UTF8String]);
-		[self->historicalActivityLock unlock];
+		[self->databaseLock unlock];
 	}
 	return hashStr;
 }
@@ -537,9 +537,9 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 	NSString* result = nil;
 	char* activityHash = NULL;
 	
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	activityHash = GetHashForActivityId([activityId UTF8String]);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	if (activityHash)
 	{
@@ -566,9 +566,9 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 	NSString* result = nil;
 	char* activityId = NULL;
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	activityId = GetActivityIdByHash([activityHash UTF8String]);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	if (activityId)
 	{
@@ -586,9 +586,9 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 	NSString* result = nil;
 	char* activityName = NULL;
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	activityName = GetActivityName([activityId UTF8String]);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	if (activityName)
 	{
@@ -738,7 +738,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSMutableArray* attributes = [[NSMutableArray alloc] init];
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 
 	size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
 
@@ -758,7 +758,7 @@ void attributeNameCallback(const char* name, void* context)
 		}
 	}
 
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	return attributes;
 }
@@ -814,9 +814,9 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* activityTypeStr = nil;
 	char* activityType = NULL;
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	activityType = GetCurrentActivityType();
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	if (activityType)
 	{
@@ -831,9 +831,9 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* result = nil;
 	char* activityType = NULL;
 	
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	activityType = GetHistoricalActivityType((size_t)activityIndex);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	if (activityType)
 	{
@@ -848,9 +848,9 @@ void attributeNameCallback(const char* name, void* context)
 	NSString* result = nil;
 	char* activityName = NULL;
 
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 	activityName = GetHistoricalActivityName((size_t)activityIndex);
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 
 	if (activityName)
 	{
@@ -860,16 +860,34 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
+#pragma mark
+
+- (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceMinKm:(double)targetPaceMinKm withTargetDistanceKms:(double)targetDistanceKms withSplits:(double)splits withRoute:(NSString*)route
+{
+	[self->databaseLock lock];
+
+	if (InitializePacePlanList())
+	{
+		if (!GetPacePlanDetails([planId UTF8String], NULL, NULL, NULL, NULL))
+		{
+			CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
+		}
+		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceMinKm, targetDistanceKms, splits);
+	}
+
+	[self->databaseLock unlock];
+}
+
 #pragma mark reset methods
 
 - (void)resetDatabase
 {
 	[self->currentActivityLock lock];
-	[self->historicalActivityLock lock];
+	[self->databaseLock lock];
 
 	ResetDatabase();
 
-	[self->historicalActivityLock unlock];
+	[self->databaseLock unlock];
 	[self->currentActivityLock unlock];
 }
 

@@ -28,7 +28,7 @@
 	BOOL receivingLocations; // TRUE if we have received at least one location
 
 	NSLock* currentActivityLock;
-	NSLock* historicalActivityLock;
+	NSLock* databaseLock;
 }
 
 // watch sensor methods
@@ -100,6 +100,10 @@
 - (NSString*)getCurrentActivityType;
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex;
+
+//
+
+- (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceMinKm:(double)targetPaceMinKm withTargetDistanceKms:(double)targetDistanceKms withSplits:(double)splits withRoute:(NSString*)route;
 
 // reset methods
 
