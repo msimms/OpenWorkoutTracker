@@ -1852,7 +1852,12 @@ extern "C" {
 		if (workoutIndex < g_workouts.size())
 		{
 			const Workout& workout = g_workouts.at(workoutIndex);
+			const std::vector<WorkoutInterval> intervals = workout.GetIntervals();
+
 			std::map<std::string, std::string> params;
+			std::map<std::string, std::string> intervalsParam;
+			std::string intervalsJsonStr = "[";
+			std::string workoutJson;
 
 			params.insert(std::make_pair("id", workout.GetId()));
 			params.insert(std::make_pair("sport", workout.GetSport()));
@@ -1860,7 +1865,26 @@ extern "C" {
 			params.insert(std::make_pair("num intervals", FormatInt((uint64_t)workout.GetIntervals().size())));
 			params.insert(std::make_pair("duration", FormatDouble(workout.CalculateDuration())));
 			params.insert(std::make_pair("distance", FormatDouble(workout.CalculateDistance())));
-			return strdup(MapToJsonStr(params).c_str());
+			
+			for (auto interIter = intervals.begin(); interIter != intervals.end(); ++interIter)
+			{
+				const WorkoutInterval& interval = (*interIter);
+
+				intervalsParam.insert(std::make_pair("repeat", FormatInt((uint64_t)interval.m_repeat)));
+				intervalsParam.insert(std::make_pair("duration", FormatDouble(interval.m_duration)));
+				intervalsParam.insert(std::make_pair("distance", FormatDouble(interval.m_distance)));
+				intervalsParam.insert(std::make_pair("pace", FormatDouble(interval.m_pace)));
+				intervalsParam.insert(std::make_pair("recovery distance", FormatDouble(interval.m_recoveryDistance)));
+				intervalsParam.insert(std::make_pair("recovery pace", FormatDouble(interval.m_recoveryPace)));
+			}
+			
+			intervalsJsonStr += MapToJsonStr(intervalsParam);
+			intervalsJsonStr += "]";
+
+			workoutJson = MapToJsonStr(params);
+			workoutJson.insert(workoutJson.size() - 1, ", \"intervals\": ");
+			workoutJson.insert(workoutJson.size() - 1, intervalsJsonStr);
+			return strdup(workoutJson.c_str());
 		}
 		return NULL;
 	}

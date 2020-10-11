@@ -76,6 +76,7 @@
 	if ([[segue identifier] isEqualToString:@SEGUE_TO_WORKOUT_DETAILS_VIEW])
 	{
 		WorkoutDetailsViewController* detailsVC = (WorkoutDetailsViewController*)[segue destinationViewController];
+
 		if (detailsVC)
 		{
 			[detailsVC setWorkoutDetails:self->selectedWorkoutDetails];
@@ -88,6 +89,7 @@
 - (IBAction)onGenerateWorkouts:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	[appDelegate generateWorkouts];
 	[self updateWorkoutNames];
 	[self.workoutsView reloadData];
@@ -206,7 +208,8 @@
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	NSInteger section = [indexPath section];	
+	NSInteger section = [indexPath section];
+
 	if (section == 0)
 	{
 		self->selectedWorkoutDetails = [self->plannedWorkouts objectAtIndex:[indexPath row]];

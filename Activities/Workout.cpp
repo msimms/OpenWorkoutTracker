@@ -128,7 +128,7 @@ double Workout::CalculateDuration() const
 		}
 		if (interval->m_recoveryDistance > 0 && interval->m_recoveryPace > 0.0)
 		{
-			double intervalDurationSecs = (interval->m_repeat - 1) * CalculateIntervalDuration(interval->m_recoveryDistance, interval->m_recoveryPace);
+			double intervalDurationSecs = interval->m_repeat * CalculateIntervalDuration(interval->m_recoveryDistance, interval->m_recoveryPace);
 			workoutDurationSecs += intervalDurationSecs;
 		}
 	}
@@ -142,7 +142,7 @@ double Workout::CalculateDistance() const
 	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
 	{
 		workoutDistanceMeters += interval->m_repeat * interval->m_distance;
-		workoutDistanceMeters += (interval->m_repeat - 1) * interval->m_recoveryDistance;
+		workoutDistanceMeters += interval->m_repeat * interval->m_recoveryDistance;
 	}
 	return workoutDistanceMeters;
 }

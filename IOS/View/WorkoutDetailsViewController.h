@@ -14,7 +14,7 @@
 	CPTGraphHostingView* hostingView;
 	CPTGraph* graph;
 
-	NSMutableDictionary* workoutDetails;
+	NSDictionary* workoutDetails;
 
 	NSString* exportedFileName;
 	NSString* selectedExportLocation;

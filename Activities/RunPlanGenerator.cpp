@@ -131,7 +131,7 @@ Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double 
 	const uint8_t NUM_POSSIBLE_WORKOUTS = 7;
 
 	// Build a collection of possible run interval sessions, sorted by target distance. Order is { min reps, max reps, distance in meters }.
-	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][3] = { { 4, 8, 100 }, { 4, 8, 200 }, { 4, 8, 400 }, { 4, 6, 600 }, { 2, 4, 800 }, { 2, 4, 1000 }, { 2, 4, 1600 } };
+	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][3] = { { 4, 8, 100 }, { 4, 8, 200 }, { 4, 8, 400 }, { 4, 8, 600 }, { 2, 8, 800 }, { 2, 4, 1000 }, { 2, 4, 1600 } };
 
 	uint64_t warmupDuration = 10 * 60;
 	uint64_t cooldownDuration = 10 * 60;
@@ -154,9 +154,14 @@ Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double 
 	std::uniform_int_distribution<uint16_t> repsDistribution(selectedIntervalWorkout[MIN_REPS_INDEX], selectedIntervalWorkout[MAX_REPS_INDEX]);
 	uint16_t selectedReps = repsDistribution(generator);
 
-	// Determine the distance for this workout.
+	// Fetch the distance for this workout.
 	uint16_t intervalDistance = selectedIntervalWorkout[REP_DISTANCE_INDEX];
-	uint16_t restIntervalDistance = intervalDistance * 2;
+
+	// Determine the rest interval distance. This will be some multiplier of the interval.
+	double POSSIBLE_REST_MULTIPLIERS[3] = { 1.0, 1.5, 2.0 };
+	std::uniform_int_distribution<uint16_t> restMultiplierDistribution(0, 3);
+	uint16_t selectedRestMultiplierIndex = restMultiplierDistribution(generator);
+	uint16_t restIntervalDistance = intervalDistance * POSSIBLE_REST_MULTIPLIERS[selectedRestMultiplierIndex];
 
 	// Create the workout object.
 	Workout* intervalRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);

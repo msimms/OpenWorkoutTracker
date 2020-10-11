@@ -15,6 +15,7 @@
 #include "Run.h"
 #include "RunPlanGenerator.h"
 #include "TrainingPaceCalculator.h"
+#include "UnitMgr.h"
 #include "WorkoutPlanInputs.h"
 
 WorkoutPlanGenerator::WorkoutPlanGenerator()
@@ -74,7 +75,8 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 
 					if (attr.valid)
 					{
-						double activityDistance = attr.value.doubleVal;
+						UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
+						double activityDistance = attr.value.doubleVal * 1000.0; // km to meters
 
 						if (activityDistance > longestRunInFourWeeks)
 						{
@@ -109,7 +111,8 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 
 					if (attr.valid)
 					{
-						double activityDistance = attr.value.doubleVal;
+						UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
+						double activityDistance = attr.value.doubleVal * 1000.0; // km to meters
 
 						avgCyclingDistanceFourWeeks += activityDistance;
 						++bikeCount;

@@ -112,6 +112,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)400.0))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			if (endTime == 0)
 				endTime = item.time;
 			startTime = item.time;
@@ -134,6 +135,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)1000.0))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			if (endTime == 0)
 				endTime = item.time;
 			startTime = item.time;
@@ -156,6 +158,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)METERS_PER_MILE))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -176,6 +179,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)5000.0))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -196,6 +200,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)10000.0))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -216,6 +221,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)METERS_PER_HALF_MARATHON))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -236,6 +242,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)METERS_PER_MARATHON))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -256,6 +263,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)100000.0))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -276,6 +284,7 @@ void MovingActivity::RecomputeRecordTimes()
 		while ((iter != m_distances.rend()) && (distance < (double)METERS_PER_CENTURY))
 		{
 			const TimeDistancePair& item = (*iter);
+
 			startTime = item.time;
 			distance += item.distanceM;
 			iter++;
@@ -392,6 +401,7 @@ bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 	if (m_previousLocSet)
 	{
 		TimeDistancePair distanceInfo;
+
 		distanceInfo.verticalDistanceM = m_currentLoc.altitude - m_previousLoc.altitude;
 		distanceInfo.distanceM = LibMath::Distance::haversineDistance(m_previousLoc.latitude, m_previousLoc.longitude, m_previousLoc.altitude, m_currentLoc.latitude, m_currentLoc.longitude, m_currentLoc.altitude);
 		distanceInfo.time = reading.time;

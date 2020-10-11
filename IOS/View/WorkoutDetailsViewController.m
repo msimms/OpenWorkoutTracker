@@ -95,21 +95,33 @@
 
 	// Axis min and max values.
 	self->minX = (double)0.0;
+	self->maxX = (double)1.0;
+	self->minY = (double)0.0; // minimum intensity
+	self->maxY = (double)10.0; // maximum intensity
 	if (self->workoutDetails)
 	{
-		self->maxX = (NSUInteger)([workoutDetails[@"duration"] integerValue]);
+		self->maxX = (double)([workoutDetails[@"duration"] doubleValue]);
+
 		if (self->maxX == 0) // Duration not specified, use distance instead.
 		{
-			self->maxX = (NSUInteger)([workoutDetails[@"distance"] integerValue] / 100);
+			self->maxX = (double)([workoutDetails[@"distance"] doubleValue] / 100.0);
 			x.title = @"Distance";
 		}
 		else
 		{
 			x.title = @"Duration";
 		}
+		
+		NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
+
+		for (NSDictionary* interval in intervals)
+		{
+			double pace = (double)([interval[@"pace"] doubleValue]);
+
+			if (pace > self->maxY)
+				self->maxY = pace;
+		}
 	}
-	self->minY = (double)0.0; // minimum intensity
-	self->maxY = (double)10.0; // maximum intensity
 
 	// Setup plot space.
 	CPTXYPlotSpace* plotSpace       = (CPTXYPlotSpace*)self->graph.defaultPlotSpace;
@@ -148,7 +160,7 @@
 	CPTBarPlot* plot     = [[CPTBarPlot alloc] init];
 	plot.dataSource      = self;
 	plot.delegate        = self;
-	plot.barWidth        = [NSNumber numberWithInteger:spreadX];
+	plot.barWidth        = [NSNumber numberWithInteger:xHashSpacing];
 	plot.barOffset       = [NSNumber numberWithInteger:0];
 	plot.barCornerRadius = 5.0;
 
@@ -209,8 +221,8 @@
 - (IBAction)onExport:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
+
 	if ([fileExportServices count] == 1)
 	{
 		self->selectedExportLocation = [fileExportServices objectAtIndex:0];
@@ -233,12 +245,45 @@
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot*)plot
 {
-	return (NSUInteger)([workoutDetails[@"num intervals"] integerValue]);
+	NSUInteger numPaceBlocks = 0;
+	NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
+
+	// Sum up the total number of intervals as well as their corresponding recoveries
+	// to get the total number of pace blocks.
+	for (NSDictionary* interval in intervals)
+	{
+		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
+		numPaceBlocks += numRepeats;
+
+		if ([interval[@"recovery pace"] doubleValue] > (double)0.1)
+			numPaceBlocks += numRepeats;
+	}
+	return numPaceBlocks;
 }
 
 - (NSNumber*)numberForPlot:(CPTPlot*)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-	return [[NSNumber alloc] initWithInt:5];
+	if (fieldEnum == CPTScatterPlotFieldX)
+	{
+		return [[NSNumber alloc] initWithInt:(int)index];
+	}
+	else if (fieldEnum == CPTScatterPlotFieldY)
+	{
+		NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
+		NSUInteger paceBlockIndex = 0;
+
+		for (NSDictionary* interval in intervals)
+		{
+			if (index == paceBlockIndex++)
+				return interval[@"pace"];
+			if ([interval[@"recovery pace"] doubleValue] > (double)0.1)
+			{
+				if (index == paceBlockIndex++)
+					return interval[@"recovery pace"] ;
+			}
+		}
+	}
+	return 0;
 }
 
 #pragma mark CPTAxisDelegate methods
