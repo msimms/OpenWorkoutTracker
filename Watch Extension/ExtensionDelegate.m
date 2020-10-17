@@ -26,7 +26,9 @@
 	self->currentActivityLock = [[NSLock alloc] init];
 	self->databaseLock = [[NSLock alloc] init];
 
-	Initialize([dbFileName UTF8String]);
+	if (!Initialize([dbFileName UTF8String]))
+	{
+	}
 
 	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
 	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];

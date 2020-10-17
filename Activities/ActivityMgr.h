@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 	// Functions for managing the database.
-	void Initialize(const char* const dbFileName);
+	bool Initialize(const char* const dbFileName);
 	bool DeleteActivity(const char* const activityId);
 	bool ResetDatabase(void);
 	bool CloseDatabase(void);
@@ -168,11 +168,13 @@ extern "C" {
 	double EstimateFtp(void);
 
 	// Functions for managing workout generation.
+	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
+	bool GenerateWorkouts(void);
+
+	// Functions for managing workout generation.
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
 	size_t ConvertWorkoutIdToIndex(const char* const workoutId);
-	char* GetWorkoutIdByIndex(size_t workoutIndex);
-	bool GenerateWorkouts(void);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime);
 	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance);
 	bool DeleteWorkout(const char* const workoutId);

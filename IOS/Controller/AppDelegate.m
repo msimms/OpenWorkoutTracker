@@ -67,7 +67,9 @@
 	NSString* docDir = [paths objectAtIndex: 0];
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
 
-	Initialize([dbFileName UTF8String]);
+	if (!Initialize([dbFileName UTF8String]))
+	{
+	}
 
 	[self configureWatchSession];
 	[self clearExportDir];
@@ -1354,6 +1356,14 @@ void startSensorCallback(SensorType type, void* context)
 	return 0;
 }
 
+- (void)loadAllHistoricalActivitySummaryData
+{
+	@synchronized(self)
+	{
+		LoadAllHistoricalActivitySummaryData();
+	}
+}
+
 - (NSString*)getNextActivityId
 {
 	if (self->currentActivityIndex < [self getNumHistoricalActivities])
@@ -1363,12 +1373,14 @@ void startSensorCallback(SensorType type, void* context)
 		if (tempActivityId)
 		{
 			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", tempActivityId];
+
 			++self->currentActivityIndex;
 			return activityId;
 		}
 		else if (self->healthMgr)
 		{
 			size_t healthMgrIndex = self->currentActivityIndex - GetNumHistoricalActivities();
+
 			++self->currentActivityIndex;
 			return [self->healthMgr convertIndexToActivityId:healthMgrIndex];
 		}
@@ -1912,6 +1924,7 @@ void startSensorCallback(SensorType type, void* context)
 - (void)playSound:(NSString*)soundPath
 {
 	NSURL* mySoundUrl = [NSURL fileURLWithPath:soundPath];
+
 	if (mySoundUrl)
 	{
 		SystemSoundID mySoundId;
@@ -1923,6 +1936,7 @@ void startSensorCallback(SensorType type, void* context)
 - (void)playBeepSound
 {
 	NSString* mySoundPath = [[NSBundle mainBundle] pathForResource:@"Beep" ofType:@"aif"];
+
 	if (mySoundPath)
 	{
 		[self playSound:mySoundPath];
@@ -1932,6 +1946,7 @@ void startSensorCallback(SensorType type, void* context)
 - (void)playPingSound
 {
 	NSString* mySoundPath = [[NSBundle mainBundle] pathForResource:@"Ping" ofType:@"aif"];
+
 	if (mySoundPath)
 	{
 		[self playSound:mySoundPath];
@@ -1996,6 +2011,7 @@ void startSensorCallback(SensorType type, void* context)
 		else
 		{
 			char* tempExportFileName = ExportActivityFromDatabase([activityId UTF8String], format, [exportDir UTF8String]);
+
 			if (tempExportFileName)
 			{
 				exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
@@ -2032,6 +2048,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		NSError* error;
 		NSArray* directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:exportDir error:&error];
+
 		for (NSString* file in directoryContents)
 		{
 			NSString* filePath = [[NSString alloc] initWithFormat:@"%@/%@", exportDir, file];
@@ -2293,9 +2310,11 @@ void attributeNameCallback(const char* name, void* context)
 	else
 	{
 		size_t numAttributes = GetNumHistoricalActivityAttributes(activityIndex);
+
 		for (size_t i = 0; i < numAttributes; ++i)
 		{
 			char* attrName = GetHistoricalActivityAttributeName(activityIndex, i);
+
 			if (attrName)
 			{
 				NSString* attrTitle = [[NSString alloc] initWithFormat:@"%s", attrName];
@@ -2472,11 +2491,31 @@ void attributeNameCallback(const char* name, void* context)
 
 - (BOOL)generateWorkouts
 {
-	// Gather inputs from HealthKit.
+	// Load raw data from the local database and (possibly) from HealthKit.
+	[self initializeHistoricalActivityList];
 	
-	// Load raw data from the local database.
-	InitializeHistoricalActivityList();
-	LoadAllHistoricalActivitySummaryData();
+	// Load summary data for the activities in the local database.
+	[self loadAllHistoricalActivitySummaryData];
+
+	// Load summary data for the activities in HealthKit.
+	if (self->healthMgr)
+	{
+		NSInteger numWorkouts = [self->healthMgr getNumWorkouts];
+
+		for (NSInteger i = 0; i < numWorkouts; ++i)
+		{
+			NSString* activityId = [self->healthMgr convertIndexToActivityId:i];
+			NSString* activityType = [self->healthMgr getHistoricalActivityType:activityId];
+			time_t startTime = 0;
+			time_t endTime = 0;
+			ActivityAttributeType distanceAttr;
+
+			[self->healthMgr getWorkoutStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];
+			distanceAttr = [self->healthMgr getWorkoutAttribute:ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED forActivityId:activityId];
+
+			InsertAdditionalAttributesForWorkoutGeneration([activityId UTF8String], [activityType UTF8String], startTime, endTime, distanceAttr);
+		}
+	}
 
 	// Run the algorithm.
 	return GenerateWorkouts();
@@ -2692,7 +2731,12 @@ void attributeNameCallback(const char* name, void* context)
 {
 	if (activityHash)
 	{
-		const char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+		const char* activityId = NULL;
+
+		@synchronized(self)
+		{
+			activityId = GetActivityIdByHash([activityHash UTF8String]);
+		}
 
 		if (activityId == NULL)
 		{
@@ -2720,8 +2764,10 @@ void attributeNameCallback(const char* name, void* context)
 			NSMutableDictionary* msgData = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
 
 			if (msgData)
+			{
 				[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
-			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			}
 			free((void*)workoutJson);
 		}
 	}
@@ -2741,8 +2787,10 @@ void attributeNameCallback(const char* name, void* context)
 			NSMutableDictionary* msgData = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
 
 			if (msgData)
+			{
 				[msgData setObject:@WATCH_MSG_PACE_PLAN forKey:@WATCH_MSG_TYPE];
-			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			}
 			free((void*)pacePlanJson);
 		}
 	}
@@ -2787,7 +2835,7 @@ void attributeNameCallback(const char* name, void* context)
 
 				// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
 				StopCurrentActivity();
-				
+
 				// Store summary data.
 				SaveActivitySummaryData();
 

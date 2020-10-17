@@ -109,13 +109,16 @@ extern "C" {
 	std::vector<IntervalWorkout>  g_intervalWorkouts; // cache of interval workouts
 	std::vector<PacePlan>         g_pacePlans; // cache of pace plans
 	std::vector<Workout>          g_workouts; // cache of planned workouts
+	WorkoutPlanGenerator          g_workoutGen;
 
 	//
 	// Functions for managing the database.
 	//
 
-	void Initialize(const char* const dbFileName)
+	bool Initialize(const char* const dbFileName)
 	{
+		bool result = true;
+
 		if (!g_pActivityFactory)
 		{
 			g_pActivityFactory = new ActivityFactory();
@@ -129,15 +132,21 @@ extern "C" {
 			{
 				if (g_pDatabase->Open(dbFileName))
 				{
-					g_pDatabase->CreateTables();
+					result = g_pDatabase->CreateTables();
 				}
 				else
 				{
 					delete g_pDatabase;
 					g_pDatabase = NULL;
+					result = false;
 				}
 			}
+			else
+			{
+				result = false;
+			}
 		}
+		return result;
 	}
 
 	bool DeleteActivity(const char* const activityId)
@@ -1835,6 +1844,46 @@ extern "C" {
 	// Functions for managing workout generation.
 	//
 
+	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
+	{
+		g_workoutGen.InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr);
+	}
+
+	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
+	bool GenerateWorkouts(void)
+	{
+		if (g_pDatabase)
+		{
+			// Calculate inputs from activities in the database.
+			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList);
+
+			// Generate new workouts.
+			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
+
+			// Delete old workouts.
+			bool result = g_pDatabase->DeleteAllWorkouts();
+
+			// Store the new workouts.
+			for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+			{
+				Workout* workout = (*iter);
+
+				if (workout)
+				{
+					result &= g_pDatabase->CreateWorkout(*workout);
+					delete workout;
+				}
+			}
+
+			return result;
+		}
+		return false;
+	}
+
+	//
+	// Functions for managing workout generation.
+	//
+
 	bool InitializeWorkoutList(void)
 	{
 		g_workouts.clear();
@@ -1903,47 +1952,6 @@ extern "C" {
 			++index;
 		}
 		return WORKOUT_INDEX_UNKNOWN;
-	}
-
-	// InitializeWorkoutList should be called before calling this.
-	char* GetWorkoutIdByIndex(size_t workoutIndex)
-	{
-		if (workoutIndex < g_workouts.size())
-		{
-			return strdup(g_workouts.at(workoutIndex).GetId().c_str());
-		}
-		return NULL;
-	}
-
-	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	bool GenerateWorkouts(void)
-	{
-		if (g_pDatabase)
-		{
-			WorkoutPlanGenerator gen;
-
-			// Generate new workouts.
-			std::map<std::string, double> inputs = gen.CalculateInputs(g_historicalActivityList);
-			std::vector<Workout*> plannedWorkouts = gen.GenerateWorkouts(inputs);
-
-			// Delete old workouts.
-			bool result = g_pDatabase->DeleteAllWorkouts();
-
-			// Store the new workouts.
-			for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
-			{
-				Workout* workout = (*iter);
-
-				if (workout)
-				{
-					result &= g_pDatabase->CreateWorkout(*workout);
-					delete workout;
-				}
-			}
-
-			return result;
-		}
-		return false;
 	}
 
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime)

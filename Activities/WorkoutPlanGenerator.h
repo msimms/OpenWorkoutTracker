@@ -21,11 +21,27 @@ public:
 	WorkoutPlanGenerator();
 	virtual ~WorkoutPlanGenerator();
 
+	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
+
 	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities);
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 
 private:
-	void CalculateRunTrainingPaces(double best5K, std::map<std::string, double>& inputs);
+	double m_best5K; // needed to compute training paces.
+	double m_longestRunInFourWeeks;
+	double m_longestRunWeek1;
+	double m_longestRunWeek2;
+	double m_longestRunWeek3;
+	double m_avgCyclingDistanceFourWeeks;
+	double m_avgRunningDistanceFourWeeks;
+	size_t m_bikeCount; // For average bike distance
+	size_t m_runCount; // for average run distance
+	
+	std::map<std::string, ActivitySummary> m_additionalActivitySummaries; // populated by InsertAdditionalAttributesForWorkoutGeneration
+
+	void Reset();
+	void ProcessActivitySummary(const ActivitySummary& summary);
+	void CalculateRunTrainingPaces(std::map<std::string, double>& inputs);
 };
 
 #endif

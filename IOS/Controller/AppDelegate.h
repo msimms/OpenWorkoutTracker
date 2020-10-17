@@ -141,6 +141,7 @@
 // methods for loading and editing historical activities
 
 - (NSInteger)initializeHistoricalActivityList;
+- (void)loadAllHistoricalActivitySummaryData;
 - (NSString*)getNextActivityId;
 - (NSInteger)getNumHistoricalActivities;
 - (NSInteger)getNumHistoricalActivityLocationPoints:(NSString*)activityId;
