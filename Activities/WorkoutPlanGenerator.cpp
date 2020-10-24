@@ -34,6 +34,9 @@ void WorkoutPlanGenerator::Reset()
 	m_longestRunWeek1 = (double)0.0;
 	m_longestRunWeek2 = (double)0.0;
 	m_longestRunWeek3 = (double)0.0;
+	m_numRunsWeek1 = 0;
+	m_numRunsWeek2 = 0;
+	m_numRunsWeek3 = 0;
 	m_avgCyclingDistanceFourWeeks = (double)0.0;
 	m_avgRunningDistanceFourWeeks = (double)0.0;
 	m_bikeCount = 0;
@@ -72,19 +75,27 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 					if ((summary.startTime > threeWeekCutoffTime) && (activityDistance > m_longestRunWeek3))
 					{
 						m_longestRunWeek3 = activityDistance;
+						++m_numRunsWeek1;
 					}
 					else if ((summary.startTime > twoWeekCutoffTime) && (summary.startTime < threeWeekCutoffTime) && (activityDistance > m_longestRunWeek2))
 					{
 						m_longestRunWeek2 = activityDistance;
+						++m_numRunsWeek2;
 					}
 					else if ((summary.startTime > oneWeekCutoffTime) && (summary.startTime < twoWeekCutoffTime) && (activityDistance > m_longestRunWeek1))
 					{
 						m_longestRunWeek1 = activityDistance;
+						++m_numRunsWeek1;
 					}
 
 					m_avgRunningDistanceFourWeeks += activityDistance;
 					++m_runCount;
 				}
+			}
+
+			// Examine bike activity.
+			if (summary.type.compare(Cycling::Type()) == 0)
+			{
 			}
 		}
 
@@ -164,6 +175,8 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS, m_runCount));
 
 	// Run training paces.
 	this->CalculateRunTrainingPaces(inputs);

@@ -229,10 +229,19 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
 	//double inTaper = inputs.at(WORKOUT_INPUT_IN_TAPER);
 	double avgRunDistance = inputs.at(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS);
+	double numRuns = inputs.at(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS);
 	double expLevel = inputs.at(WORKOUT_INPUT_EXPERIENCE_LEVEL);
 
 	// Handle situation in which the user hasn't run in four weeks.
 	if (!RunPlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
+	{
+		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun());
+		return workouts;
+	}
+
+	// Handle situation in which the user hasn't run *much* in the last four weeks.
+	if (numRuns < 4)
 	{
 		workouts.push_back(this->GenerateFreeRun());
 		workouts.push_back(this->GenerateFreeRun());

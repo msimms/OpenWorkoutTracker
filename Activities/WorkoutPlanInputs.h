@@ -25,8 +25,10 @@
 #define WORKOUT_INPUT_GOAL_RUN_DISTANCE "Goal Run Distance"
 #define WORKOUT_INPUT_WEEKS_UNTIL_GOAL "Weeks Until Goal"
 #define WORKOUT_INPUT_IN_TAPER "Is In Taper"
-#define WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS "Average Cycling Distance (Last 4 Weeks)"
 #define WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS "Average Running Distance (Last 4 Weeks)"
+#define WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS "Average Cycling Distance (Last 4 Weeks)"
+#define WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS "Number of Rides (Last 4 Weeks)"
+#define WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS "Number of Runs (Last 4 Weeks)"
 #define WORKOUT_INPUT_THRESHOLD_POWER "FTP"
 
 #endif

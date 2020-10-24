@@ -32,6 +32,9 @@ private:
 	double m_longestRunWeek1;
 	double m_longestRunWeek2;
 	double m_longestRunWeek3;
+	size_t m_numRunsWeek1;
+	size_t m_numRunsWeek2;
+	size_t m_numRunsWeek3;
 	double m_avgCyclingDistanceFourWeeks;
 	double m_avgRunningDistanceFourWeeks;
 	size_t m_bikeCount; // For average bike distance
