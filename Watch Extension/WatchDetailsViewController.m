@@ -75,7 +75,7 @@
 {	
 	NSDictionary* passedData = (NSDictionary*)context;
 
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
 	NSNumber* tempActivityIndex = [passedData objectForKey:@"activityIndex"];
 	NSInteger activityIndex = [tempActivityIndex integerValue];

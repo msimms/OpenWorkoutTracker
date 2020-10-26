@@ -48,7 +48,7 @@
 
 - (void)willActivate
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
 	if (self->isPopping)
 	{
@@ -145,7 +145,7 @@
 
 - (void)doStart
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	BOOL started = [extDelegate startActivity];
 	if (started)
 	{		
@@ -155,7 +155,7 @@
 
 - (void)doStop
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	if ([extDelegate stopActivity])
 	{
 		[self setUIForStoppedActivity];
@@ -166,7 +166,7 @@
 
 - (void)doPause
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	if ([extDelegate pauseActivity])
 	{
 		[self setUIForPausedActivity];
@@ -209,7 +209,7 @@
 
 - (IBAction)onIntervals
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	NSMutableArray* intervalWorkoutInfo = [extDelegate getIntervalWorkoutNamesAndIds];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
@@ -230,7 +230,7 @@
 
 - (IBAction)onPacePlan
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	NSMutableArray* pacePlanInfo = [extDelegate getPacePlanNamesAndIds];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
@@ -264,7 +264,7 @@
 - (void)onRefreshTimer:(NSTimer*)timer
 {
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSString* activityType = [extDelegate getCurrentActivityType];
@@ -336,7 +336,7 @@
 
 - (void)showAttributesMenu
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];

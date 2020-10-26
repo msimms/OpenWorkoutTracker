@@ -36,7 +36,7 @@
 
 - (void)sendRegisterDeviceMsg
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_REGISTER_DEVICE, @WATCH_MSG_TYPE,
 							 [extDelegate getDeviceId], @WATCH_MSG_DEVICE_ID,
 							 nil];
@@ -46,7 +46,7 @@
 
 - (void)checkIfActivitiesAreUploaded
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	size_t numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
 
 	for (size_t i = 0; i < numHistoricalActivities; ++i)
@@ -94,14 +94,14 @@
 	NSString* targetDistanceKms = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE];
 	NSString* splits = [message objectForKey:@WATCH_MSG_PACE_PLAN_SPLITS];
 	NSString* route = [message objectForKey:@WATCH_MSG_PACE_PLAN_ROUTE];
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
 	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceMinKm:[targetPaceMinKm floatValue] withTargetDistanceKms:[targetDistanceKms floatValue] withSplits:[splits floatValue] withRoute:route];
 }
 
 - (void)sendActivity:(NSString*)activityHash
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
 	NSString* activityId = [extDelegate retrieveActivityIdByHash:activityHash];
 	NSInteger activityIndex = [extDelegate getActivityIndexFromActivityId:activityId];
@@ -171,7 +171,7 @@
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	// Don't process phone messages when we're doing an activity.
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	if ([extDelegate isActivityInProgress])
 	{
 		return;
@@ -225,7 +225,7 @@
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	// Don't process phone messages when we're doing an activity.
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	if ([extDelegate isActivityInProgress])
 	{
 		return;

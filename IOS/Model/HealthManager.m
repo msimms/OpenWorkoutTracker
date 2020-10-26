@@ -15,12 +15,6 @@
 #import "Preferences.h"
 #import "UserProfile.h"
 
-@interface HKUnit (HKManager)
-
-+ (HKUnit*)heartBeatsPerMinuteUnit;
-
-@end
-
 @implementation HKUnit (HKManager)
 
 + (HKUnit*)heartBeatsPerMinuteUnit
@@ -36,7 +30,7 @@
 {
 	if (self = [super init])
 	{
-		self.healthStore = [[HKHealthStore alloc] init];
+		self->healthStore = [[HKHealthStore alloc] init];
 		self->heartRates = [[NSMutableArray alloc] init];
 		self->workouts = [[NSMutableDictionary alloc] init];
 		self->locations = [[NSMutableDictionary alloc] init];
@@ -103,7 +97,7 @@
 		NSSet* readDataTypes = [self dataTypesToRead];
 
 		// Request authorization. If granted update the user's metrics.
-		[self.healthStore requestAuthorizationToShareTypes:writeDataTypes readTypes:readDataTypes completion:^(BOOL success, NSError* error)
+		[self->healthStore requestAuthorizationToShareTypes:writeDataTypes readTypes:readDataTypes completion:^(BOOL success, NSError* error)
 		{
 			if (success)
 			{
@@ -127,10 +121,9 @@
 		return;
 	}
 
-	NSSortDescriptor* timeSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:NO];
-
 	// Since we are interested in retrieving the user's latest sample, we sort the samples in descending
 	// order, and set the limit to 1. We are not filtering the data, and so the predicate is set to nil.
+	NSSortDescriptor* timeSortDescriptor = [[NSSortDescriptor alloc] initWithKey:HKSampleSortIdentifierEndDate ascending:NO];
 	HKSampleQuery* query = [[HKSampleQuery alloc] initWithSampleType:quantityType
 														   predicate:nil
 															   limit:1
@@ -151,7 +144,8 @@
 		}
 	}];
 
-	[self.healthStore executeQuery:query];
+	// Execute asynchronously.
+	[self->healthStore executeQuery:query];
 }
 
 - (void)quantitySamplesOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
@@ -185,7 +179,8 @@
 		}
 	}];
 
-	[self.healthStore executeQuery:query];
+	// Execute asynchronously.
+	[self->healthStore executeQuery:query];
 }
 
 #pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc. and storing it in our database.
@@ -193,7 +188,7 @@
 - (void)updateUsersAge
 {
 	NSError* error;
-	NSDateComponents* dateOfBirth = [self.healthStore dateOfBirthComponentsWithError:&error];
+	NSDateComponents* dateOfBirth = [self->healthStore dateOfBirthComponentsWithError:&error];
 
 	if (dateOfBirth)
 	{
@@ -253,6 +248,7 @@
 - (void)readWeightHistory:(void (^)(HKQuantity*, NSDate*, NSError*))completion
 {
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
+
 	[self quantitySamplesOfType:weightType completion:completion];
 }
 
@@ -307,8 +303,9 @@
 		dispatch_group_leave(self->queryGroup);
 	}];
 
+	// Execute and wait.
 	dispatch_group_enter(self->queryGroup);
-	[self.healthStore executeQuery:sampleQuery];
+	[self->healthStore executeQuery:sampleQuery];
 }
 
 - (void)readRunningWorkoutsFromHealthStore
@@ -411,8 +408,9 @@
 		// Remove any existing data.
 		[self->locations removeObjectForKey:activityId];
 
+		// Execute and wait.
 		dispatch_group_enter(self->queryGroup);
-		[self.healthStore executeQuery:query];
+		[self->healthStore executeQuery:query];
 	}
 }
 
@@ -437,8 +435,9 @@
 		dispatch_group_leave(self->queryGroup);
 	}];
 
+	// Execute and wait.
 	dispatch_group_enter(self->queryGroup);
-	[self.healthStore executeQuery:query];
+	[self->healthStore executeQuery:query];
 }
 
 - (void)readLocationPointsFromHealthStoreForActivityId:(NSString*)activityId
@@ -692,7 +691,7 @@
 	NSDate* now = [NSDate date];
 	HKQuantitySample* heightSample = [HKQuantitySample quantitySampleWithType:heightType quantity:heightQuantity startDate:now endDate:now];
 
-	[self.healthStore saveObject:heightSample withCompletion:^(BOOL success, NSError *error) {}];
+	[self->healthStore saveObject:heightSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
 - (void)saveWeightIntoHealthStore:(double)weightInPounds
@@ -703,7 +702,7 @@
 	NSDate* now = [NSDate date];
 	HKQuantitySample* weightSample = [HKQuantitySample quantitySampleWithType:weightType quantity:weightQuantity startDate:now endDate:now];
 
-	[self.healthStore saveObject:weightSample withCompletion:^(BOOL success, NSError *error) {}];
+	[self->healthStore saveObject:weightSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
 - (void)saveHeartRateIntoHealthStore:(double)beats
@@ -744,7 +743,7 @@
 		self->firstHeartRateSample = NULL;
 		self->lastHeartRateSample = NULL;
 
-		[self.healthStore saveObject:rateSample withCompletion:^(BOOL success, NSError *error) {}];
+		[self->healthStore saveObject:rateSample withCompletion:^(BOOL success, NSError *error) {}];
 	}
 }
 
@@ -755,7 +754,7 @@
 	HKQuantityType* distanceType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
 	HKQuantitySample* distanceSample = [HKQuantitySample quantitySampleWithType:distanceType quantity:distanceQuantity startDate:startDate endDate:endDate];
 
-	[self.healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
+	[self->healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
 - (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
@@ -765,7 +764,7 @@
 	HKQuantityType* distanceType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceCycling];
 	HKQuantitySample* distanceSample = [HKQuantitySample quantitySampleWithType:distanceType quantity:distanceQuantity startDate:startDate endDate:endDate];
 
-	[self.healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
+	[self->healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
 - (void)saveCaloriesBurnedIntoHealthStore:(double)calories withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
@@ -775,7 +774,7 @@
 	HKQuantityType* calorieType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierActiveEnergyBurned];
 	HKQuantitySample* calorieSample = [HKQuantitySample quantitySampleWithType:calorieType quantity:calorieQuantity startDate:startDate endDate:endDate];
 
-	[self.healthStore saveObject:calorieSample withCompletion:^(BOOL success, NSError *error) {}];
+	[self->healthStore saveObject:calorieSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
 #pragma mark methods for exporting HealthKit data.
@@ -829,42 +828,6 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	return newFileName;
 }
 
-#pragma mark methods for getting heart rate updates from the watch
-
-- (void)subscribeToHeartRateUpdates
-{
-	HKSampleType* sampleType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
-	HKObserverQuery* query = [[HKObserverQuery alloc] initWithSampleType:sampleType
-															   predicate:nil
-														   updateHandler:^(HKObserverQuery* query, HKObserverQueryCompletionHandler completionHandler, NSError* error)
-	{
-		 if (!error)
-		 {
-			 HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
-
-			 [self mostRecentQuantitySampleOfType:hrType
-									   completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
-			  {
-				  if (mostRecentQuantity)
-				  {
-					  double hr = [mostRecentQuantity doubleValueForUnit:[HKUnit heartBeatsPerMinuteUnit]];
-					  time_t unixTime = (time_t) [startDate timeIntervalSince1970];
-					  NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
-													 [NSNumber numberWithLong:(long)hr], @KEY_NAME_HEART_RATE,
-													 [NSNumber numberWithLongLong:unixTime], @KEY_NAME_HRM_TIMESTAMP_MS,
-													nil];
-					  if (heartRateData)
-					  {
-						  [[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
-					  }
-				  }
-			  }];
-		 }
-	}];
-
-	[self.healthStore executeQuery:query];
-}
-
 #pragma mark notification handlers
 
 - (void)activityStopped:(NSNotification*)notification
@@ -894,6 +857,122 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 		
 		[self saveCaloriesBurnedIntoHealthStore:[calories doubleValue] withStartDate:startDate withEndDate:endDate];
 	}
+}
+
+#pragma mark methods for converting between our activity type strings and HealthKit's workout enum
+
+- (HKWorkoutActivityType)activityTypeToHKWorkoutType:(NSString*)activityType
+{
+	if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP])
+	{
+		return HKWorkoutActivityTypeTraditionalStrengthTraining;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING])
+	{
+		return HKWorkoutActivityTypeCycling;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_HIKING])
+	{
+		return HKWorkoutActivityTypeHiking;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+	{
+		return HKWorkoutActivityTypeCycling;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
+	{
+		return HKWorkoutActivityTypeRunning;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
+	{
+		return HKWorkoutActivityTypeTraditionalStrengthTraining;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
+	{
+		return HKWorkoutActivityTypeCycling;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
+	{
+		return HKWorkoutActivityTypeRunning;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
+	{
+		return HKWorkoutActivityTypeTraditionalStrengthTraining;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
+	{
+		return HKWorkoutActivityTypeTraditionalStrengthTraining;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
+	{
+		return HKWorkoutActivityTypeWalking;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING])
+	{
+		return HKWorkoutActivityTypeSwimming;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+	{
+		return HKWorkoutActivityTypeSwimming;
+	}
+	return HKWorkoutActivityTypeFencing; // Shouldn't get here, so return something funny to make it easier to debug if we do.
+}
+
+- (HKWorkoutSessionLocationType)activityTypeToHKWorkoutSessionLocationType:(NSString*)activityType
+{
+	if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING])
+	{
+		return HKWorkoutSessionLocationTypeOutdoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_HIKING])
+	{
+		return HKWorkoutSessionLocationTypeOutdoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+	{
+		return HKWorkoutSessionLocationTypeOutdoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
+	{
+		return HKWorkoutSessionLocationTypeOutdoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
+	{
+		return HKWorkoutSessionLocationTypeOutdoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING])
+	{
+		return HKWorkoutSessionLocationTypeOutdoor;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+	{
+		return HKWorkoutSessionLocationTypeIndoor;
+	}
+	return HKWorkoutSessionLocationTypeUnknown; // Shouldn't get here
 }
 
 @end

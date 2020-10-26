@@ -69,7 +69,7 @@
 - (IBAction)onReset
 {
 	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void){
-		ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+		ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 		[extDelegate resetDatabase];
 	}];
 	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){

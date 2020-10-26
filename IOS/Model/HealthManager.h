@@ -13,8 +13,15 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 @import HealthKit;
 
+@interface HKUnit (HKManager)
+
++ (HKUnit*)heartBeatsPerMinuteUnit;
+
+@end
+
 @interface HealthManager : NSObject
 {
+	HKHealthStore*       healthStore;
 	NSMutableDictionary* workouts;             // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
 	NSMutableDictionary* locations;            // arrays of locations stored in the health store, key is the activity ID
 	NSMutableDictionary* distances;            // arrays of distances computed from the locations array, key is the activity ID
@@ -29,6 +36,10 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 // methods for managing authorization.
 
 - (void)requestAuthorization;
+
+// methods for reading quantity samples (height, weight, etc.) from HealthKit.
+
+- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion;
 
 // methods for reading HealthKit data pertaining to the user's height, weight, etc.
 
@@ -73,10 +84,9 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 - (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDir:(NSString*)dir;
 
-// methods for getting heart rate updates from the watch
+// methods for converting between our activity type strings and HealthKit's workout enum
 
-- (void)subscribeToHeartRateUpdates;
-
-@property (nonatomic) HKHealthStore* healthStore;
+- (HKWorkoutActivityType)activityTypeToHKWorkoutType:(NSString*)activityType;
+- (HKWorkoutSessionLocationType)activityTypeToHKWorkoutSessionLocationType:(NSString*)activityType;
 
 @end

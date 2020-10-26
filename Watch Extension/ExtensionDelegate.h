@@ -10,7 +10,7 @@
 #import "ActivityPreferences.h"
 #import "BroadcastManager.h"
 #import "Feature.h"
-#import "HealthManager.h"
+#import "WatchHealthManager.h"
 #import "SensorMgr.h"
 #import "WatchSessionManager.h"
 
@@ -18,17 +18,17 @@
 {
 	SensorMgr*           sensorMgr;
 	ActivityPreferences* activityPrefs;
-	WatchSessionManager* watchSession;
+	WatchSessionManager* watchSession; // Handles interactions between the watch and the phone
 #if !OMIT_BROADCAST
-	BroadcastManager*    broadcastMgr;
+	BroadcastManager*    broadcastMgr; // Handles interactions between the watch and the web service, if applicable
 #endif
-	HealthManager*       healthMgr;
+	WatchHealthManager*  healthMgr; // For HealthKit interactions
 
-	BOOL badGps;
+	BOOL badGps; // TRUE when bad GPS location data has been detected
 	BOOL receivingLocations; // TRUE if we have received at least one location
 
 	NSLock* currentActivityLock;
-	NSLock* databaseLock;
+	NSLock* databaseLock; // Lock for all backend calls except those pertaining to the current activity.
 }
 
 // watch sensor methods

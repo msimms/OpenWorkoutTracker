@@ -64,7 +64,7 @@
 
 - (void)redraw
 {
-	ExtensionDelegate* extDelegate = [WKExtension sharedExtension].delegate;
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	size_t numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
 
 	if (numHistoricalActivities == 0)

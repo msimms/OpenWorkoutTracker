@@ -170,7 +170,7 @@
 
 - (void)startHealthMgr
 {
-	self->healthMgr = [[HealthManager alloc] init];
+	self->healthMgr = [[WatchHealthManager alloc] init];
 	if (self->healthMgr)
 	{
 		[self->healthMgr requestAuthorization];
@@ -210,22 +210,26 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)startActivity
 {
+	// Generate a unique identifier for the activity.
 	NSString* activityId = [[NSUUID UUID] UUIDString];
+
+	// Create the backend data structures for the activity.
 	BOOL result = StartActivity([activityId UTF8String]);
 
 	if (result)
 	{
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
-
-		NSString* activityType = [self getCurrentActivityType];
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
-		
+		NSString* activityType = [self getCurrentActivityType];		
 		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								   activityId, @KEY_NAME_ACTIVITY_ID,
 								   activityType, @KEY_NAME_ACTIVITY_TYPE,
 								   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								   nil];
-		
+
+		// Start the activity in HealthKit.
+		[self->healthMgr startWorkout:activityType withStartTime:[[NSDate alloc] initWithTimeIntervalSince1970:startTime.value.intVal]];
+
+		// Let the others know.
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
 	}
 	return result;
@@ -274,6 +278,10 @@ void startSensorCallback(SensorType type, void* context)
 								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 								  nil];
 
+		// Start the activity in HealthKit.
+		[self->healthMgr stopWorkout:[[NSDate alloc] initWithTimeIntervalSince1970:endTime.value.intVal]];
+
+		// Let the others know.
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
 	}
 	return result;

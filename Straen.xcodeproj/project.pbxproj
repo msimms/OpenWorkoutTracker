@@ -16,6 +16,7 @@
 		270547B422EF9AA20071F3C2 /* ActivityHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 270547B222EF9A9B0071F3C2 /* ActivityHash.m */; };
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
+		2705895225463E7F0032E43E /* WatchHealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2705894425463D6B0032E43E /* WatchHealthManager.m */; };
 		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
 		270CF40A2391BBF400584058 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF4092391BBF400584058 /* Tests.m */; };
@@ -600,6 +601,8 @@
 		27055BF61A7322AB00417D94 /* GoPro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = GoPro.h; path = IOS/Sensors/GoPro.h; sourceTree = SOURCE_ROOT; };
 		27055BF71A7336D100417D94 /* WiFiDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WiFiDiscovery.h; path = IOS/Sensors/WiFiDiscovery.h; sourceTree = SOURCE_ROOT; };
 		27055BF81A7337EE00417D94 /* WiFiDiscovery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WiFiDiscovery.m; path = IOS/Sensors/WiFiDiscovery.m; sourceTree = SOURCE_ROOT; };
+		2705893525463D6B0032E43E /* WatchHealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchHealthManager.h; path = IOS/Model/WatchHealthManager.h; sourceTree = SOURCE_ROOT; };
+		2705894425463D6B0032E43E /* WatchHealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WatchHealthManager.m; path = IOS/Model/WatchHealthManager.m; sourceTree = SOURCE_ROOT; };
 		27072DEF1D40528B00045624 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
 		2709420F215ABD2200C3BCBE /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		270CF3F92391B63700584058 /* ZwoImportTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZwoImportTest.m; sourceTree = "<group>"; };
@@ -1250,6 +1253,8 @@
 				2797F14D19BFE3B7008F8672 /* UserProfile.m */,
 				27AAB9C72389E76C00C0A91F /* Version.h */,
 				27AAB9D52389E76C00C0A91F /* Version.m */,
+				2705893525463D6B0032E43E /* WatchHealthManager.h */,
+				2705894425463D6B0032E43E /* WatchHealthManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2406,6 +2411,7 @@
 				27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */,
 				27CF012224D7A68300263CEC /* WorkoutPlanGenerator.cpp in Sources */,
 				27DCF61622B71628009A23C2 /* MountainBiking.h in Sources */,
+				2705895225463E7F0032E43E /* WatchHealthManager.m in Sources */,
 				27DCF68422C294D4009A23C2 /* SensorFactory.m in Sources */,
 				27DCF61722B71628009A23C2 /* MovingActivity.cpp in Sources */,
 				27DCF61822B71628009A23C2 /* MovingActivity.h in Sources */,
