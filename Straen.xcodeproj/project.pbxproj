@@ -280,6 +280,10 @@
 		27B7CDFA19BFD99B000383E3 /* SensorFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEC19BFD99B000383E3 /* SensorFactory.m */; };
 		27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEE19BFD99B000383E3 /* SensorMgr.m */; };
 		27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7CDFC19BFD9AD000383E3 /* MapKit.framework */; };
+		27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
+		27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
+		27B8D01A25479BF50014B257 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
+		27B8D01F25479BFF0014B257 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
 		27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C044FC19F8622B00E32E96 /* ComplexScreen.png */; };
 		27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C081FC2383780700BEB105 /* CloudKit.framework */; };
 		27C0844E19BFD063007CE934 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
@@ -889,6 +893,8 @@
 		27B7CDF019BFD99B000383E3 /* SensorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStyle.h; path = IOS/Sensors/SensorStyle.h; sourceTree = SOURCE_ROOT; };
 		27B7CDF119BFD99B000383E3 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = IOS/Sensors/SensorType.h; sourceTree = SOURCE_ROOT; };
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		27B8CFEE25476A210014B257 /* Broadcasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Broadcasting.png; path = Images/Broadcasting.png; sourceTree = SOURCE_ROOT; };
+		27B8CFFD25476A220014B257 /* BroadcastingFailed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingFailed.png; path = Images/BroadcastingFailed.png; sourceTree = SOURCE_ROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
 		27C081FC2383780700BEB105 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		27C0841219BFD063007CE934 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = SOURCE_ROOT; };
@@ -1412,8 +1418,10 @@
 		27B44D0319BFEFDC0058FE00 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				27C044FC19F8622B00E32E96 /* ComplexScreen.png */,
 				27B44D0419BFF01A0058FE00 /* Background1.png */,
+				27B8CFFD25476A220014B257 /* BroadcastingFailed.png */,
+				27B8CFEE25476A210014B257 /* Broadcasting.png */,
+				27C044FC19F8622B00E32E96 /* ComplexScreen.png */,
 				27B44D0519BFF01A0058FE00 /* Countdown1.png */,
 				27B44D0619BFF01A0058FE00 /* Countdown2.png */,
 				27B44D0719BFF01A0058FE00 /* Countdown3.png */,
@@ -1980,6 +1988,8 @@
 				27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */,
 				27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */,
 				27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */,
+				27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */,
+				27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */,
 				27B44D1219BFF01A0058FE00 /* Countdown2.png in Resources */,
 				27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */,
 				27B44D1319BFF01A0058FE00 /* Countdown3.png in Resources */,
@@ -2000,7 +2010,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27B8D01F25479BFF0014B257 /* Broadcasting.png in Resources */,
 				27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */,
+				27B8D01A25479BF50014B257 /* BroadcastingFailed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

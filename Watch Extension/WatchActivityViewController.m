@@ -9,6 +9,7 @@
 #import "ActivityPreferences.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
+#import "Notifications.h"
 #import "StringUtils.h"
 
 #define ACTIVITY_BUTTON_START       NSLocalizedString(@"Start", nil)
@@ -38,6 +39,7 @@
 @synthesize group1;
 @synthesize group2;
 @synthesize group3;
+@synthesize broadcastImage;
 
 - (instancetype)init
 {
@@ -102,6 +104,9 @@
 	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNamesAndIds];
 	self.pacePlanButton.hidden = ([pacePlanNames count] == 0);
 
+	// Notification subscriptions.
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
+
 	[self startTimer];
 }
 
@@ -147,6 +152,7 @@
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	BOOL started = [extDelegate startActivity];
+
 	if (started)
 	{		
 		[self setUIForStartedActivity];
@@ -156,6 +162,7 @@
 - (void)doStop
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
 	if ([extDelegate stopActivity])
 	{
 		[self setUIForStoppedActivity];
@@ -167,6 +174,7 @@
 - (void)doPause
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
 	if ([extDelegate pauseActivity])
 	{
 		[self setUIForPausedActivity];
@@ -269,6 +277,7 @@
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSString* activityType = [extDelegate getCurrentActivityType];
 
+	// Refresh the activity attributes.
 	for (uint8_t i = 0; i < [self->valueLabels count]; i++)
 	{
 		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
@@ -303,6 +312,29 @@
 					[unitsLabel setText:@""];
 				}
 			}
+		}
+	}
+
+	// Refresh the display status icon.
+	if (self->currentBroadcastStatus)
+	{
+		@synchronized(self->currentBroadcastStatus)
+		{
+			if ((self->displayedBroadcastStatus == nil) || ([self->currentBroadcastStatus boolValue] != [self->displayedBroadcastStatus boolValue]))
+			{
+				NSString* imgPath;
+
+				if ([self->currentBroadcastStatus boolValue])
+				{
+					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
+				}
+				else
+				{
+					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
+				}
+				[self->broadcastImage setImageNamed:imgPath];
+			}
+			self->displayedBroadcastStatus = self->currentBroadcastStatus;
 		}
 	}
 }
@@ -363,6 +395,30 @@
 - (IBAction)handleGesture:(WKTapGestureRecognizer*)gestureRecognizer
 {
 	[self showAttributesMenu];
+}
+
+#pragma mark notification handlers
+
+- (void)broadcastStatus:(NSNotification*)notification
+{
+	NSDictionary* msgData = [notification object];
+
+	if (msgData)
+	{
+		NSNumber* status = [msgData objectForKey:@KEY_NAME_STATUS];
+		
+		if (self->currentBroadcastStatus)
+		{
+			@synchronized(self->currentBroadcastStatus)
+			{
+				self->currentBroadcastStatus = status;
+			}
+		}
+		else
+		{
+			self->currentBroadcastStatus = status;
+		}
+	}
 }
 
 @end

@@ -192,7 +192,7 @@
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication*)application
 {
-	FreeHistoricalActivityList();
+	[self freeHistoricalActivityList];
 }
 
 - (void)applicationSignificantTimeChange:(UIApplication*)application
@@ -224,6 +224,7 @@
 - (NSString*)getDeviceId;
 {
 	NSString* uuid = [Preferences uuid];
+
 	if ((uuid == nil) || ([uuid length] == 0))
 	{
 		uuid = [[NSUUID UUID] UUIDString];
@@ -344,7 +345,10 @@
 	double userHeightCm     = [UserProfile heightInCm];
 	double userFtp          = [UserProfile ftp];
 
-	SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm, userFtp);
+	@synchronized(self)
+	{
+		SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm, userFtp);
+	}
 }
 
 - (ActivityLevel)userActivityLevel
@@ -393,7 +397,11 @@
 
 - (double)userEstimatedFtp
 {
-	return EstimateFtp();
+	@synchronized(self)
+	{
+		return EstimateFtp();
+	}
+	return (double)0.0;
 }
 
 - (void)setUserActivityLevel:(ActivityLevel)activityLevel
@@ -522,7 +530,10 @@
 					double measurementValue = [quantity doubleValueForUnit:[HKUnit gramUnit]] / (double)1000.0; // Convert to kg
 					time_t measurementTime = [date timeIntervalSince1970];
 
-					ProcessWeightReading(measurementValue, measurementTime);
+					@synchronized(self)
+					{
+						ProcessWeightReading(measurementValue, measurementTime);
+					}
 				}
 			}];
 		}

@@ -174,7 +174,7 @@
 "Pull Up" = "La Tracción";
 "Push Up" = "La Flexión";
 "Radar" = "Radar";
-"Read activities from HealthKit" = "Leer actividades de HealthKit";
+"Read Activities From HealthKit" = "Leer Actividades de HealthKit";
 "Records" = "El Mejor";
 "Rep Interval" = "Intervalo de los Repeticións";
 "Repetitions" = "Repeticións";
@@ -229,7 +229,6 @@
 "This feature is not implemented." = "Esta función no está implementada.";
 "Time" = "Tiempo";
 "Time Interval" = "Intervalo de Tiempo";
-"To the Internet" = "a la Internet";
 "To view your broadcast visit this webpage" = "Para ver su visita emisión esta página";
 "Total Calories" = "Las Calorías Totales";
 "Total Distance" = "Distancia Totales";

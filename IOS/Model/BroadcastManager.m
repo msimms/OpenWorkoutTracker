@@ -51,11 +51,17 @@
 
 - (void)displayMessage:(NSString*)text
 {	
-	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:
-							 text, @KEY_NAME_MESSAGE,
-							 nil];
+	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:text, @KEY_NAME_MESSAGE, nil];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PRINT_MESSAGE object:msgData];
+}
+
+- (void)updateBroadcastStatus:(BOOL)status
+{
+	NSNumber* numStatus = [[NSNumber alloc] initWithBool:status];
+	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:numStatus, @KEY_NAME_STATUS, nil];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BROADCAST_STATUS object:msgData];
 }
 
 - (void)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
@@ -79,14 +85,17 @@
 												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
 	{
 		NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+
 		if ([httpResponse statusCode] == 200)
 		{
+			[self updateBroadcastStatus:TRUE];
 			self->dataBeingSent = nil;
 			self->errorSending = FALSE;
 		}
 		else
 		{
 			[self displayMessage:MESSAGE_ERROR_SENDING];
+			[self updateBroadcastStatus:FALSE];
 			self->errorSending = TRUE;
 		}
 	}];

@@ -39,7 +39,7 @@ typedef enum SettingsRowsServices
 
 typedef enum SettingsRowsBroadcast
 {
-	SETTINGS_ROW_GLOBAL_BROADCAST = 0,
+	SETTINGS_ROW_BROADCAST_ENABLED = 0,
 	SETTINGS_ROW_BROADCAST_RATE,
 	SETTINGS_ROW_BROADCAST_PROTOCOL,
 	SETTINGS_ROW_BROADCAST_HOST,
@@ -63,7 +63,7 @@ typedef enum SettingsRowsHealthKit
 #define ICLOUD_BACKUP                  NSLocalizedString(@"Save Files to iCloud Drive", nil)
 #define CLOUD_SERVICES                 NSLocalizedString(@"Cloud Services", nil)
 #define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
-#define BROADCAST_GLOBALLY             NSLocalizedString(@"To the Internet", nil)
+#define BROADCAST_ENABLED              NSLocalizedString(@"Enabled", nil)
 #define BROADCAST_NAME                 NSLocalizedString(@"Name", nil)
 #define BROADCAST_RATE                 NSLocalizedString(@"Update Rate", nil)
 #define BROADCAST_HTTPS                NSLocalizedString(@"Use HTTPS", nil)
@@ -74,7 +74,7 @@ typedef enum SettingsRowsHealthKit
 #define DEVICE_ID                      NSLocalizedString(@"Device ID", nil)
 #define BUTTON_TITLE_COPY              NSLocalizedString(@"Copy", nil)
 #define HEALTHKIT                      NSLocalizedString(@"HealthKit", nil)
-#define READ_ACTIVITIES_FROM_HEALTHKIT NSLocalizedString(@"Read activities from HealthKit", nil)
+#define READ_ACTIVITIES_FROM_HEALTHKIT NSLocalizedString(@"Read Activities From HealthKit", nil)
 #define HIDE_DUPLICATES                NSLocalizedString(@"Hide Duplicates", nil)
 #define ALERT_TITLE_BROADCAST_USER     NSLocalizedString(@"Enter the name you want to use", nil)
 #define ALERT_TITLE_BROADCAST_RATE     NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
@@ -465,8 +465,8 @@ typedef enum SettingsRowsHealthKit
 
 				switch (row)
 				{
-					case SETTINGS_ROW_GLOBAL_BROADCAST:
-						cell.textLabel.text = BROADCAST_GLOBALLY;
+					case SETTINGS_ROW_BROADCAST_ENABLED:
+						cell.textLabel.text = BROADCAST_ENABLED;
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[Preferences shouldBroadcastGlobally]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
@@ -523,7 +523,7 @@ typedef enum SettingsRowsHealthKit
 		case SECTION_BROADCAST:
 			switch (row)
 			{
-				case SETTINGS_ROW_GLOBAL_BROADCAST:
+				case SETTINGS_ROW_BROADCAST_ENABLED:
 				case SETTINGS_ROW_BROADCAST_RATE:
 				case SETTINGS_ROW_BROADCAST_PROTOCOL:
 				case SETTINGS_ROW_BROADCAST_HOST:
@@ -609,7 +609,7 @@ typedef enum SettingsRowsHealthKit
 			break;
 		case (SECTION_SERVICES * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
 			break;
-		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_GLOBAL_BROADCAST:
+		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_ENABLED:
 			[Preferences setBroadcastGlobally:switchControl.isOn];
 			[appDelegate configureBroadcasting];
 			if (switchControl.isOn)

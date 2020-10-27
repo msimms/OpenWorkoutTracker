@@ -22,8 +22,11 @@
 	IBOutlet __strong WKInterfaceGroup* group1;
 	IBOutlet __strong WKInterfaceGroup* group2;
 	IBOutlet __strong WKInterfaceGroup* group3;
+	IBOutlet __strong WKInterfaceImage* broadcastImage;
 
-	NSTimer*        refreshTimer;
+	NSNumber*       currentBroadcastStatus; // Last broadcast status message regarding broadcast, or nil if not set
+	NSNumber*       displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set
+	NSTimer*        refreshTimer; // Timer for updating the screen
 	NSMutableArray* valueLabels;
 	NSMutableArray* unitsLabels;
 	NSMutableArray* groups;
@@ -42,5 +45,6 @@
 @property (nonatomic, retain) IBOutlet WKInterfaceGroup* group1;
 @property (nonatomic, retain) IBOutlet WKInterfaceGroup* group2;
 @property (nonatomic, retain) IBOutlet WKInterfaceGroup* group3;
+@property (nonatomic, retain) IBOutlet WKInterfaceImage* broadcastImage;
 
 @end

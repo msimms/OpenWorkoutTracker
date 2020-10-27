@@ -31,25 +31,28 @@
 	IBOutlet UIBarButtonItem*  startStopButton;
 	IBOutlet UIBarButtonItem*  weightButton;
 
-	uint8_t                    countdownSecs;
-	NSTimer*                   countdownTimer;
-	NSTimer*                   refreshTimer;
-	NSInteger                  screenHeight;
-	UIImageView*               lastCountdownImage;
-	NSMutableArray*            attributesToDisplay;
+	uint8_t                    countdownSecs; // Number of seconds left in the countdown
+	NSTimer*                   countdownTimer; // Timer object for the countdown
+	NSTimer*                   refreshTimer; // Timer object that controls refreshing the screen
+	NSInteger                  screenHeight; // Screen height, in pixels
+	NSNumber*                  currentBroadcastStatus; // Last broadcast status message regarding broadcast, or nil if not set
+	NSNumber*                  displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set
+	UIImageView*               lastCountdownImage; // Last countdown image that was displayed, or nil if no image is displayed
+	UIImageView*               broadcastImage; // Currently displayed broadcast status image, or nil if no image is displayed
+	NSMutableArray*            attributesToDisplay; // Names of the things to display
 	NSMutableArray*            valueLabels;
 	NSMutableArray*            titleLabels;
 	NSMutableArray*            unitsLabels;
-	NSMutableArray*            messages;
-	uint8_t                    messageDisplayCounter;
+	NSMutableArray*            messages; // List of messages that need to be displayed
+	uint8_t                    messageDisplayCounter; // The number of seconds remaining before we remove the currently displayed message
 	uint8_t                    numAttributes;
-	double                     lastHeartRateValue;
-	double                     lastCadenceValue;
-	double                     lastPowerValue;
+	double                     lastHeartRateValue; // Most recent heart rate value
+	double                     lastCadenceValue; // Most recent cadence value
+	double                     lastPowerValue; // Most recent power meter value
 	ActivityPreferences*       activityPrefs;
 	NSString*                  bikeName;
-	bool                       autoStartCoordinateSet;
-	Coordinate                 autoStartCoordinate;
+	bool                       autoStartCoordinateSet; // TRUE if we have a meaningful value in 'autoStartCoordinate'
+	Coordinate                 autoStartCoordinate; // Location reference for the autostart on move feature
 	NSInteger                  tappedButtonIndex;
 }
 

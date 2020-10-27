@@ -15,6 +15,7 @@
 #define NOTIFICATION_NAME_LOGGED_OUT               "LogoutProcessed"
 #define NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT "RequestToFollowResult"
 #define NOTIFICATION_NAME_PRINT_MESSAGE            "PrintMessage"
+#define NOTIFICATION_NAME_BROADCAST_STATUS         "BroadcastStatus"
 
 #define KEY_NAME_ACTIVITY_ID                       "ActivityId"
 #define KEY_NAME_ACTIVITY_TYPE                     "ActivityType"
@@ -29,6 +30,7 @@
 #define KEY_NAME_URL                               "URL"
 #define KEY_NAME_TAG                               "Tag"
 #define KEY_NAME_MESSAGE                           "Message"
+#define KEY_NAME_STATUS                            "Status"
 
 #define NOTIFICATION_NAME_INTERVAL_UPDATED         "IntervalUpdated"
 #define NOTIFICATION_NAME_INTERVAL_COMPLETE        "IntervalComplete"

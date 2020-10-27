@@ -174,7 +174,7 @@
 "Pull Up" = "Pull Up";
 "Push Up" = "Push Up";
 "Radar" = "Radar";
-"Read activities from HealthKit" = "Read activities from HealthKit";
+"Read Activities From HealthKit" = "Read Activities From HealthKit";
 "Records" = "Records";
 "Rep Interval" = "Rep Interval";
 "Repetitions" = "Repetitions";
@@ -229,7 +229,6 @@
 "This feature is not implemented." = "This feature is not implemented.";
 "Time" = "Time";
 "Time Interval" = "Time Interval";
-"To the Internet" = "To the Internet";
 "To view your broadcast visit this webpage" = "To view your broadcast visit this webpage";
 "Total Calories" = "Total Calories";
 "Total Distance" = "Total Distance";

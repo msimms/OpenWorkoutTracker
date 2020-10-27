@@ -146,6 +146,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalSegmentUpdated:) name:@NOTIFICATION_NAME_INTERVAL_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutComplete:) name:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(printMessage:) name:@NOTIFICATION_NAME_PRINT_MESSAGE object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
 
 	[self startTimer];
 	[self showHelp];
@@ -176,6 +177,7 @@
 	if ([[segue identifier] isEqualToString:@SEGUE_TO_ACTIVITY_SUMMARY])
 	{
 		StaticSummaryViewController* summaryVC = (StaticSummaryViewController*)[segue destinationViewController];
+
 		if (summaryVC)
 		{
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -223,6 +225,7 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* activityType = [appDelegate getCurrentActivityType];
+
 	if (![self->activityPrefs hasShownHelp:activityType])
 	{
 		NSString* text = nil;
@@ -271,11 +274,13 @@
 
 - (void)onCountdownTimer:(NSTimer*)timer
 {
+	// Remove the previous image, if any.
 	if (self->lastCountdownImage)
 	{
 		[self->lastCountdownImage removeFromSuperview];
 	}
-	
+
+	// If we're supposed to display a countdown image.
 	if (self->countdownSecs > 0)
 	{
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
@@ -290,6 +295,8 @@
 
 		self->countdownSecs--;
 	}
+	
+	// Timer has expired, start the activity, destroy the timer, and delete the image.
 	else
 	{
 		[self doStart];
@@ -302,6 +309,8 @@
 
 - (void)onRefreshTimer:(NSTimer*)timer
 {
+	// Update the messages label. Messages should only stay up for a few seconds
+	// before being replaced by the next message (if any).
 	@synchronized(self->messages)
 	{
 		if (([self->messages count] > 0) && (self->messageDisplayCounter == 0))
@@ -322,6 +331,8 @@
 			[self->messagesLabel setText:@""];
 		}
 	}
+	
+	// Update the broadcast image.
 }
 
 - (void)startTimer
@@ -796,10 +807,12 @@
 - (void)heartRateUpdated:(NSNotification*)notification
 {
 	NSDictionary* heartRateData = [notification object];
+
 	if (heartRateData)
 	{
 		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
+
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
@@ -900,6 +913,8 @@
 	}
 }
 
+#pragma mark notification handlers
+
 - (void)printMessage:(NSNotification*)notification
 {
 	NSDictionary* msgData = [notification object];
@@ -918,6 +933,28 @@
 	}
 }
 
+- (void)broadcastStatus:(NSNotification*)notification
+{
+	NSDictionary* msgData = [notification object];
+
+	if (msgData)
+	{
+		NSNumber* status = [msgData objectForKey:@KEY_NAME_STATUS];
+		
+		if (self->currentBroadcastStatus)
+		{
+			@synchronized(self->currentBroadcastStatus)
+			{
+				self->currentBroadcastStatus = status;
+			}
+		}
+		else
+		{
+			self->currentBroadcastStatus = status;
+		}
+	}
+}
+
 #pragma mark method for refreshing screen values
 
 - (void)displayValue:(UILabel*)valueLabel withValue:(double)value
@@ -930,6 +967,7 @@
 
 - (void)refreshScreen
 {
+	// Refresh the activity attributes.
 	for (uint8_t i = 0; i < self->numAttributes; i++)
 	{
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
@@ -1014,6 +1052,42 @@
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
 				[unitsLabel setText:unitsStr];
 			}
+		}
+	}
+	
+	// Refresh the display status icon.
+	if (self->currentBroadcastStatus)
+	{
+		@synchronized(self->currentBroadcastStatus)
+		{
+			if ((self->displayedBroadcastStatus == nil) || ([self->displayedBroadcastStatus boolValue] != [self->currentBroadcastStatus boolValue]))
+			{
+				const CGFloat IMAGE_SIZE = 40;
+
+				CGFloat imageX = (self.view.bounds.size.width / 2) - (IMAGE_SIZE / 2);
+				CGFloat imageY = self.view.bounds.size.height - self.toolbar.bounds.size.height - (IMAGE_SIZE * 2);
+				NSString* imgPath;
+
+				if ([self->currentBroadcastStatus boolValue])
+				{
+					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
+				}
+				else
+				{
+					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
+				}
+
+				if (self->broadcastImage)
+				{
+					[self->broadcastImage removeFromSuperview];
+				}
+
+				self->broadcastImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
+				self->broadcastImage.frame = CGRectMake(imageX, imageY, IMAGE_SIZE, IMAGE_SIZE);
+
+				[self.view addSubview:self->broadcastImage];
+			}
+			self->displayedBroadcastStatus = self->currentBroadcastStatus;
 		}
 	}
 }
