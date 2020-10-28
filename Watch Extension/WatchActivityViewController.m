@@ -322,17 +322,17 @@
 		{
 			if ((self->displayedBroadcastStatus == nil) || ([self->currentBroadcastStatus boolValue] != [self->displayedBroadcastStatus boolValue]))
 			{
-				NSString* imgPath;
-
 				if ([self->currentBroadcastStatus boolValue])
 				{
-					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
+					[self->broadcastImage setImageNamed:@"BroadcastingOnWatch"];
 				}
 				else
 				{
-					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
+					[self->broadcastImage setImageNamed:@"BroadcastingFailedOnWatch"];
 				}
-				[self->broadcastImage setImageNamed:imgPath];
+				[self->broadcastImage setHeight:64.0];
+				[self->broadcastImage setWidth:64.0];
+				[self->broadcastImage setHorizontalAlignment:WKInterfaceObjectHorizontalAlignmentCenter];
 			}
 			self->displayedBroadcastStatus = self->currentBroadcastStatus;
 		}

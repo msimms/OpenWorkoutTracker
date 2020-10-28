@@ -47,16 +47,19 @@
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
+	self->hasCellular = FALSE;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusUpdated:) name:@KEY_NAME_NETWORK_STATUS object:nil];
 }
 
 - (void)applicationDidBecomeActive
 {
 	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application
 	// was previously in the background, optionally refresh the user interface.
+	[self startNetworkMonitoring];
 	[self configureBroadcasting];
 }
 
@@ -65,6 +68,7 @@
 	// Sent when the application is about to move from active to inactive state. This can occur for certain types of
 	// temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application
 	// and it begins the transition to the background state. Use this method to pause ongoing tasks, disable timers, etc.
+	[self stopNetworkMonitoring];
 }
 
 - (void)applicationWillEnterForeground
@@ -153,6 +157,48 @@
 			[task setTaskCompletedWithSnapshot:NO];
 		}
 	}
+}
+
+#pragma mark network monitoring methods
+
+- (BOOL)hasCellular
+{
+	return self->hasCellular;
+}
+
+- (void)networkStatusUpdated:(NSNotification*)notification
+{
+	NSDictionary* networkData = [notification object];
+	NSNumber* cellularAvailable = [networkData objectForKey:@KEY_NAME_CELLULAR_AVAILABLE];
+	self->hasCellular = self->hasCellular || [cellularAvailable boolValue]; // We only need to find cellular data on one network interface
+}
+
+- (void)startNetworkMonitoring
+{
+	dispatch_queue_attr_t attrs = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_UTILITY, DISPATCH_QUEUE_PRIORITY_DEFAULT);
+
+	self->nwMonitorQueue = dispatch_queue_create("NetworkAvailabilityQueue", attrs);
+	self->nwMonitor = nw_path_monitor_create();
+
+	nw_path_monitor_set_queue(self->nwMonitor, self->nwMonitorQueue);
+	nw_path_monitor_set_update_handler(self->nwMonitor, ^(nw_path_t _Nonnull path) {
+		NSDictionary* msgData = @{	@KEY_NAME_WIFI_AVAILABLE : @(nw_path_uses_interface_type(path, nw_interface_type_wifi)),
+									@KEY_NAME_CELLULAR_AVAILABLE : @(nw_path_uses_interface_type(path, nw_interface_type_cellular)),
+									@KEY_NAME_ETHERNET_AVAILABLE : @(nw_path_uses_interface_type(path, nw_interface_type_wired)),
+									@KEY_NAME_NETWORK_STATUS : @(nw_path_get_status(path)),
+								 };
+
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@KEY_NAME_NETWORK_STATUS object:msgData];
+		});
+	});
+
+	nw_path_monitor_start(self->nwMonitor);
+}
+
+- (void)stopNetworkMonitoring
+{
+	nw_path_monitor_cancel(self->nwMonitor);
 }
 
 #pragma mark watch session methods

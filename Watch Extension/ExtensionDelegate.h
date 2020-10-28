@@ -7,6 +7,7 @@
 
 #import <WatchKit/WatchKit.h>
 #import <WatchConnectivity/WatchConnectivity.h>
+#import <Network/Network.h>
 #import "ActivityPreferences.h"
 #import "BroadcastManager.h"
 #import "Feature.h"
@@ -23,13 +24,20 @@
 	BroadcastManager*    broadcastMgr; // Handles interactions between the watch and the web service, if applicable
 #endif
 	WatchHealthManager*  healthMgr; // For HealthKit interactions
+	nw_path_monitor_t    nwMonitor; // For monitoring network connectivity
+	dispatch_queue_t     nwMonitorQueue;
 
 	BOOL badGps; // TRUE when bad GPS location data has been detected
 	BOOL receivingLocations; // TRUE if we have received at least one location
+	BOOL hasCellular; // TRUE if we have confirmed the existence of a cellular/mobile data network
 
 	NSLock* currentActivityLock;
 	NSLock* databaseLock; // Lock for all backend calls except those pertaining to the current activity.
 }
+
+// network monitoring methods
+
+- (BOOL)hasCellular;
 
 // watch sensor methods
 

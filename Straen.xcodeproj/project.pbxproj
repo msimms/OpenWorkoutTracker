@@ -282,8 +282,8 @@
 		27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7CDFC19BFD9AD000383E3 /* MapKit.framework */; };
 		27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
 		27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
-		27B8D01A25479BF50014B257 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
-		27B8D01F25479BFF0014B257 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
+		27B8D04A254A03050014B257 /* BroadcastingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */; };
+		27B8D065254A03FA0014B257 /* BroadcastingFailedOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8D05B254A03F10014B257 /* BroadcastingFailedOnWatch.png */; };
 		27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C044FC19F8622B00E32E96 /* ComplexScreen.png */; };
 		27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C081FC2383780700BEB105 /* CloudKit.framework */; };
 		27C0844E19BFD063007CE934 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
@@ -895,6 +895,8 @@
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		27B8CFEE25476A210014B257 /* Broadcasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Broadcasting.png; path = Images/Broadcasting.png; sourceTree = SOURCE_ROOT; };
 		27B8CFFD25476A220014B257 /* BroadcastingFailed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingFailed.png; path = Images/BroadcastingFailed.png; sourceTree = SOURCE_ROOT; };
+		27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingOnWatch.png; path = Images/BroadcastingOnWatch.png; sourceTree = SOURCE_ROOT; };
+		27B8D05B254A03F10014B257 /* BroadcastingFailedOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingFailedOnWatch.png; path = Images/BroadcastingFailedOnWatch.png; sourceTree = SOURCE_ROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
 		27C081FC2383780700BEB105 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		27C0841219BFD063007CE934 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = SOURCE_ROOT; };
@@ -1419,8 +1421,10 @@
 			isa = PBXGroup;
 			children = (
 				27B44D0419BFF01A0058FE00 /* Background1.png */,
-				27B8CFFD25476A220014B257 /* BroadcastingFailed.png */,
 				27B8CFEE25476A210014B257 /* Broadcasting.png */,
+				27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */,
+				27B8CFFD25476A220014B257 /* BroadcastingFailed.png */,
+				27B8D05B254A03F10014B257 /* BroadcastingFailedOnWatch.png */,
 				27C044FC19F8622B00E32E96 /* ComplexScreen.png */,
 				27B44D0519BFF01A0058FE00 /* Countdown1.png */,
 				27B44D0619BFF01A0058FE00 /* Countdown2.png */,
@@ -2003,6 +2007,8 @@
 			files = (
 				27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */,
 				27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */,
+				27B8D065254A03FA0014B257 /* BroadcastingFailedOnWatch.png in Resources */,
+				27B8D04A254A03050014B257 /* BroadcastingOnWatch.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2010,9 +2016,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27B8D01F25479BFF0014B257 /* Broadcasting.png in Resources */,
 				27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */,
-				27B8D01A25479BF50014B257 /* BroadcastingFailed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

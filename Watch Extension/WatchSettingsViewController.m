@@ -31,6 +31,8 @@
 
 - (void)willActivate
 {
+//	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+//	[self->broadcast setEnabled:[extDelegate hasCellular]];
 	[super willActivate];
 }
 
@@ -45,8 +47,8 @@
 
 - (void)awakeWithContext:(id)context
 {
-	[broadcast setOn:[Preferences shouldBroadcastGlobally]];
-	[metric setOn:[Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC];
+	[self->broadcast setOn:[Preferences shouldBroadcastGlobally]];
+	[self->metric setOn:[Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC];
 }
 
 #pragma mark switch methods
