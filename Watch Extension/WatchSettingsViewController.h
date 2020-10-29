@@ -10,9 +10,9 @@
 
 @interface WatchSettingsViewController : WKInterfaceController
 {
-	IBOutlet __strong WKInterfaceSwitch* broadcast;
-	IBOutlet __strong WKInterfaceSwitch* metric;
-	IBOutlet __strong WKInterfaceButton* resetButton;
+	IBOutlet __strong WKInterfaceSwitch* broadcast; // Allows the user to enable/disable the broadcast option
+	IBOutlet __strong WKInterfaceSwitch* metric; // Allows the user to toggle between metric and standard units
+	IBOutlet __strong WKInterfaceButton* resetButton; // Allows the user to reset the app, removing all data from the database
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceSwitch* broadcast;

@@ -9,8 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface InterfaceController : WKInterfaceController
-{
-	NSString* newActivityType;
-}
 
 @end

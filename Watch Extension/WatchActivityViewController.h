@@ -19,10 +19,10 @@
 	IBOutlet __strong WKInterfaceLabel* units1;
 	IBOutlet __strong WKInterfaceLabel* units2;
 	IBOutlet __strong WKInterfaceLabel* units3;
-	IBOutlet __strong WKInterfaceGroup* group1;
-	IBOutlet __strong WKInterfaceGroup* group2;
-	IBOutlet __strong WKInterfaceGroup* group3;
-	IBOutlet __strong WKInterfaceImage* broadcastImage;
+	IBOutlet __strong WKInterfaceGroup* group1; // Contains value1 and units1
+	IBOutlet __strong WKInterfaceGroup* group2; // Contains value2 and units2
+	IBOutlet __strong WKInterfaceGroup* group3; // Contains value3 and units3
+	IBOutlet __strong WKInterfaceImage* broadcastImage; // Visual indication of the broadcast status
 
 	NSNumber*       currentBroadcastStatus; // Last broadcast status message regarding broadcast, or nil if not set
 	NSNumber*       displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set

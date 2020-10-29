@@ -20,7 +20,7 @@
 + (void)setWeightInKg:(double)weight;
 + (void)setHeightInInches:(double)height;
 + (void)setWeightInLbs:(double)weight;
-+ (void)setFtp:(double)ftp;
++ (void)setFtp:(double)ftp; // Cycling threshold power, in watts
 
 + (ActivityLevel)activityLevel;
 + (Gender)gender;

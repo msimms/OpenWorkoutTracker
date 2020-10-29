@@ -14,12 +14,12 @@
 
 @interface BroadcastManager : NSObject<NSURLConnectionDelegate>
 {
-	NSMutableArray* locationCache;
-	NSMutableArray* accelerometerCache;
-	time_t          lastCacheFlush;
-	NSString*       deviceId;
-	NSMutableData*  dataBeingSent;
-	BOOL            errorSending;
+	NSMutableArray* locationCache; // locations to be sent
+	NSMutableArray* accelerometerCache; // accelerometer readings to be sent
+	time_t          lastCacheFlush; // Unix time of the cache flush
+	NSString*       deviceId; // Unique identifier for the device doing the sending
+	NSMutableData*  dataBeingSent; // Formatted data to be sent
+	BOOL            errorSending; // Whether or not the last send was successful
 }
 
 - (void)setDeviceId:(NSString*)deviceId;

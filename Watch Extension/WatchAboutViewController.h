@@ -6,7 +6,7 @@
 
 @interface WatchAboutViewController : WKInterfaceController
 {
-	IBOutlet __strong WKInterfaceLabel* compileDate;
+	IBOutlet __strong WKInterfaceLabel* compileDate; // Displays the timestamp for when this version was built
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceLabel* compileDate;

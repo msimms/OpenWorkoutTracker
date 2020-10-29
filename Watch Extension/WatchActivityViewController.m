@@ -330,8 +330,8 @@
 				{
 					[self->broadcastImage setImageNamed:@"BroadcastingFailedOnWatch"];
 				}
-				[self->broadcastImage setHeight:64.0];
-				[self->broadcastImage setWidth:64.0];
+				[self->broadcastImage setHeight:56.0];
+				[self->broadcastImage setWidth:56.0];
 				[self->broadcastImage setHorizontalAlignment:WKInterfaceObjectHorizontalAlignmentCenter];
 			}
 			self->displayedBroadcastStatus = self->currentBroadcastStatus;

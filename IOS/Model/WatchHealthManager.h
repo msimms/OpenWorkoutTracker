@@ -10,6 +10,7 @@
 
 @import HealthKit;
 
+// Contains watch-specific healthkit functionality
 @interface WatchHealthManager : HealthManager <HKWorkoutSessionDelegate>
 {
 	HKWorkoutSession* workoutSession;

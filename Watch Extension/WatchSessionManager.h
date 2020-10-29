@@ -10,7 +10,7 @@
 
 @interface WatchSessionManager : NSObject<WCSessionDelegate>
 {
-	WCSession* watchSession;
+	WCSession* watchSession; // Handles communication between the watch and the phone
 }
 
 - (void)startWatchSession;
