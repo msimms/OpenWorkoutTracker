@@ -2035,6 +2035,8 @@ extern "C" {
 			return WORKOUT_TYPE_FREE_RUN;
 		if (temp.compare("Hill Repeats") == 0)
 			return WORKOUT_TYPE_HILL_REPEATS;
+		if (temp.compare("WORKOUT_TYPE_FARTLEK_RUN") == 0)
+			return WORKOUT_TYPE_FARTLEK_RUN;
 		if (temp.compare("Middle Distance Run") == 0)
 			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN;
 		if (temp.compare("Interval Ride") == 0)

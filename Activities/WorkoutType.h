@@ -14,6 +14,7 @@ typedef enum WorkoutType
 	WORKOUT_TYPE_LONG_RUN,
 	WORKOUT_TYPE_FREE_RUN, // A run at no specific pace
 	WORKOUT_TYPE_HILL_REPEATS, // 4-10 repeats, depending on skill level, done at 5K pace
+	WORKOUT_TYPE_FARTLEK_RUN,
 	WORKOUT_TYPE_MIDDLE_DISTANCE_RUN, // 2 hour run for advanced distance runners
 	WORKOUT_TYPE_SPEED_INTERVAL_RIDE,
 	WORKOUT_TYPE_TEMPO_RIDE,

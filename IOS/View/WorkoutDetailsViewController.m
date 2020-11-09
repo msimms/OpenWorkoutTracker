@@ -82,7 +82,7 @@
 	self->graph = [[CPTXYGraph alloc] initWithFrame:self->hostingView.bounds];
 	[self->hostingView setHostedGraph:self->graph];
 
-	// Set graph padding and theme.
+	// Set graph padding.
 	self->graph.plotAreaFrame.paddingTop    = 20.0f;
 	self->graph.plotAreaFrame.paddingRight  = 20.0f;
 	self->graph.plotAreaFrame.paddingBottom = 20.0f;
@@ -95,25 +95,15 @@
 
 	// Axis min and max values.
 	self->minX = (double)0.0;
-	self->maxX = (double)1.0;
-	self->minY = (double)0.0; // minimum intensity
-	self->maxY = (double)10.0; // maximum intensity
+	self->maxX = (double)1.0; // distance, in 100s of meters
+	self->minY = (double)0.0; // minimum intensity/pace
+	self->maxY = (double)10.0; // maximum intensity/pace
 	if (self->workoutDetails)
 	{
-		self->maxX = (double)([workoutDetails[@"duration"] doubleValue]);
+		self->maxX = (double)([self->workoutDetails[@"distance"] doubleValue] / 100.0);
+		x.title = @"Distance";
 
-		if (self->maxX == 0) // Duration not specified, use distance instead.
-		{
-			self->maxX = (double)([workoutDetails[@"distance"] doubleValue] / 100.0);
-			x.title = @"Distance";
-		}
-		else
-		{
-			x.title = @"Duration";
-		}
-		
 		NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
-
 		for (NSDictionary* interval in intervals)
 		{
 			double pace = (double)([interval[@"pace"] doubleValue]);
@@ -241,49 +231,63 @@
 	self->workoutDetails = details;
 }
 
+#pragma mark 
+
+- (NSNumber*)paceAtDistance:(double)distanceKm
+{
+	NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
+	double currentDistanceKm = (double)0.0;
+
+	for (NSDictionary* interval in intervals)
+	{
+		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
+		double intervalDistance = [interval[@"distance"] doubleValue];
+		double recoveryDistance = [interval[@"recoveryDistance"] doubleValue];
+
+		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)
+		{
+			currentDistanceKm += intervalDistance;
+			if (currentDistanceKm > distanceKm)
+			{
+				NSNumber* pace = interval[@"pace"];
+				double tempPace = [pace doubleValue];
+
+				if (tempPace < (double)0.1)
+				{
+					return [[NSNumber alloc] initWithDouble:self->maxY * 0.25];
+				}
+			}
+
+			currentDistanceKm += recoveryDistance;
+			if (currentDistanceKm > distanceKm)
+				return interval[@"recovery pace"];
+		}
+	}
+	return [[NSNumber alloc] initWithDouble:0.0];
+}
+
 #pragma mark CPTPlotDataSource methods
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot*)plot
 {
-	NSUInteger numPaceBlocks = 0;
-	NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
-
-	// Sum up the total number of intervals as well as their corresponding recoveries
-	// to get the total number of pace blocks.
-	for (NSDictionary* interval in intervals)
-	{
-		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
-		numPaceBlocks += numRepeats;
-
-		if ([interval[@"recovery pace"] doubleValue] > (double)0.1)
-			numPaceBlocks += numRepeats;
-	}
-	return numPaceBlocks;
+	return self->maxX;
 }
 
 - (NSNumber*)numberForPlot:(CPTPlot*)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
-	if (fieldEnum == CPTScatterPlotFieldX)
+	switch (fieldEnum)
 	{
-		return [[NSNumber alloc] initWithInt:(int)index];
-	}
-	else if (fieldEnum == CPTScatterPlotFieldY)
-	{
-		NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
-		NSUInteger paceBlockIndex = 0;
-
-		for (NSDictionary* interval in intervals)
-		{
-			if (index == paceBlockIndex++)
-				return interval[@"pace"];
-			if ([interval[@"recovery pace"] doubleValue] > (double)0.1)
+		case CPTScatterPlotFieldX:
+			return [[NSNumber alloc] initWithInt:(int)index];
+		case CPTScatterPlotFieldY:
 			{
-				if (index == paceBlockIndex++)
-					return interval[@"recovery pace"] ;
+				double distanceKm = (double)index * 100.0;
+				return [self paceAtDistance:distanceKm];
 			}
-		}
+		default:
+			break;
 	}
-	return 0;
+	return nil;
 }
 
 #pragma mark CPTAxisDelegate methods
