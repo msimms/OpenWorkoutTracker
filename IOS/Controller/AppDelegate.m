@@ -714,45 +714,48 @@ void startSensorCallback(SensorType type, void* context)
 
 		NSString* activityType = [self getCurrentActivityType];
 
-		BOOL tempBadGps = FALSE;
-
-		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
-		if (minHAccuracy != (uint8_t)-1)
+		if (activityType)
 		{
-			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
-			if (minHAccuracy != 0 && accuracy > minHAccuracy)
-			{
-				tempBadGps = TRUE;
-			}
-		}
-		
-		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
-		if (minVAccuracy != (uint8_t)-1)
-		{
-			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
-			if (minVAccuracy != 0 && accuracy > minVAccuracy)
-			{
-				tempBadGps = TRUE;
-			}
-		}
-		
-		self->badGps = tempBadGps;
+			BOOL tempBadGps = FALSE;
 
-		if ([self isActivityInProgressAndNotPaused])
-		{
-			BOOL shouldProcessReading = TRUE;
-			GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
-
-			if (filterOption == GPS_FILTER_DROP && self->badGps)
+			uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+			if (minHAccuracy != (uint8_t)-1)
 			{
-				shouldProcessReading = FALSE;
-			}
-
-			if (shouldProcessReading)
-			{
-				@synchronized(self)
+				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
+				if (minHAccuracy != 0 && accuracy > minHAccuracy)
 				{
-					ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+					tempBadGps = TRUE;
+				}
+			}
+			
+			uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+			if (minVAccuracy != (uint8_t)-1)
+			{
+				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
+				if (minVAccuracy != 0 && accuracy > minVAccuracy)
+				{
+					tempBadGps = TRUE;
+				}
+			}
+			
+			self->badGps = tempBadGps;
+
+			if ([self isActivityInProgressAndNotPaused])
+			{
+				BOOL shouldProcessReading = TRUE;
+				GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+
+				if (filterOption == GPS_FILTER_DROP && self->badGps)
+				{
+					shouldProcessReading = FALSE;
+				}
+
+				if (shouldProcessReading)
+				{
+					@synchronized(self)
+					{
+						ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+					}
 				}
 			}
 		}
@@ -1215,10 +1218,12 @@ void startSensorCallback(SensorType type, void* context)
 			ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
 			ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 			ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
+
 			NSString* activityType = [self getCurrentActivityType];
 			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 			NSString* activityHash = [self hashCurrentActivity];
 
+			// So we don't have to recompute everything each time the activity is loaded, save a summary.
 			SaveActivitySummaryData();
 
 			NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -1231,7 +1236,11 @@ void startSensorCallback(SensorType type, void* context)
 									  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 									  nil];
 
+			// Let other modules know that the activity is stopped.
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
+
+			// Stop requesting data from sensors.
+			[self stopSensors];
 		}
 		return result;
 	}
