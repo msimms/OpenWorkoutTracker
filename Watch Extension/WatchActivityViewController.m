@@ -12,10 +12,6 @@
 #import "Notifications.h"
 #import "StringUtils.h"
 
-#define ACTIVITY_BUTTON_START       NSLocalizedString(@"Start", nil)
-#define ACTIVITY_BUTTON_STOP        NSLocalizedString(@"Stop", nil)
-#define ACTIVITY_BUTTON_PAUSE       NSLocalizedString(@"Pause", nil)
-#define ACTIVITY_BUTTON_RESUME      NSLocalizedString(@"Resume", nil)
 #define ALERT_MSG_STOP              NSLocalizedString(@"Are you sure you want to stop?", nil)
 #define MSG_SELECT_INTERVAL_WORKOUT NSLocalizedString(@"Select the interval workout you wish to perform.", nil)
 #define MSG_SELECT_PACE_PLAN        NSLocalizedString(@"Select the pace plan you wish to use.", nil)
@@ -44,7 +40,11 @@
 - (instancetype)init
 {
 	self = [super init];
-	self->isPopping = FALSE;
+	if (self)
+	{
+		self->isPopping = FALSE;
+		self->attributePosToReplace = 0;
+	}
 	return self;
 }
 
@@ -124,25 +124,25 @@
 
 - (void)setUIForStartedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setTitle:STR_STOP];
 	[self.startStopButton setBackgroundColor:[UIColor redColor]];
 }
 
 - (void)setUIForStoppedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+	[self.startStopButton setTitle:STR_START];
 	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
 }
 
 - (void)setUIForPausedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_RESUME];
+	[self.startStopButton setTitle:STR_RESUME];
 	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
 }
 
 - (void)setUIForResumedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setTitle:STR_STOP];
 	[self.startStopButton setBackgroundColor:[UIColor redColor]];
 }
 
@@ -227,6 +227,7 @@
 	for (NSDictionary* info in intervalWorkoutInfo)
 	{
 		NSString* name = info[@"name"];
+
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
 		}];	
 		[actions addObject:action];
@@ -248,6 +249,7 @@
 	for (NSDictionary* info in pacePlanInfo)
 	{
 		NSString* name = info[@"name"];
+
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
 		}];	
 		[actions addObject:action];
@@ -293,9 +295,10 @@
 			WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
 			if (unitsLabel)
 			{
-				NSString* unitsStr = [StringUtils formatActivityMeasureType:value.measureType];
-				if (unitsStr)
+				NSString* unitsValueStr = [StringUtils formatActivityMeasureType:value.measureType];
+				if (unitsValueStr)
 				{
+					NSString* unitsStr = [[NSString alloc] initWithFormat:@"%@\n%@", attribute, unitsValueStr];
 					[unitsLabel setText:unitsStr];
 				}
 
@@ -330,6 +333,7 @@
 				{
 					[self->broadcastImage setImageNamed:@"BroadcastingFailedOnWatch"];
 				}
+
 				[self->broadcastImage setHeight:56.0];
 				[self->broadcastImage setWidth:56.0];
 				[self->broadcastImage setHorizontalAlignment:WKInterfaceObjectHorizontalAlignmentCenter];
@@ -372,6 +376,8 @@
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
+	NSString* activityType = [extDelegate getCurrentActivityType];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:FALSE];
 
 	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
@@ -381,7 +387,12 @@
 	// Add an option for each possible attribute.
 	for (NSString* attribute in attributeNames)
 	{
-		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
+		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void)
+		{
+			// Save the new setting, removing the old setting.
+			NSString* oldAttributeName = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:self->attributePosToReplace];
+			[prefs setViewAttributePosition:activityType withAttributeName:attribute withPos:self->attributePosToReplace];
+			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
 		}];	
 		[actions addObject:action];
 	}
@@ -390,11 +401,38 @@
 	[self presentAlertControllerWithTitle:nil message:STR_ATTRIBUTES preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
+- (void)showReplacementMenu
+{
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
+	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
+	NSMutableArray* actions = [[NSMutableArray alloc] init];
+	NSString* activityType = [extDelegate getCurrentActivityType];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:FALSE];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[actions addObject:[WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void) {}]];
+
+	for (uint8_t i = 0; i < 3; i++)
+	{
+		NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
+
+		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
+			self->attributePosToReplace = i;
+			[self showAttributesMenu];
+		}];	
+		[actions addObject:action];
+	}
+
+	// Show the action sheet.
+	[self presentAlertControllerWithTitle:nil message:STR_REPLACE preferredStyle:WKAlertControllerStyleAlert actions:actions];
+}
+
 #pragma mark UIGestureRecognizer methods
 
 - (IBAction)handleGesture:(WKTapGestureRecognizer*)gestureRecognizer
 {
-	[self showAttributesMenu];
+	[self showReplacementMenu];
 }
 
 #pragma mark notification handlers

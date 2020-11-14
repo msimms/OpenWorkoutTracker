@@ -91,6 +91,7 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	self->messages = [[NSMutableArray alloc] init];
+	self->tappedButtonIndex = 0;
 
 	[self.moreButton setTitle:BUTTON_TITLE_MORE];
 	[self.lapButton setTitle:BUTTON_TITLE_LAP];
@@ -203,13 +204,17 @@
 	// Add an option for each possible attribute.
 	for (NSString* attribute in attributeNames)
 	{
-		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+		{
 			NSString* activityType = [appDelegate getCurrentActivityType];
+			ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+
+			// Save the new setting, removing the old setting.
 			NSString* oldAttributeName = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:self->tappedButtonIndex];
-			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
 			[prefs setViewAttributePosition:activityType withAttributeName:attribute withPos:self->tappedButtonIndex];
-			
+			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+
+			// Update the label.
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
 			titleLabel.text = attribute;
 		}]];
@@ -379,6 +384,7 @@
 	for (NSString* attributeName in attributeNames)
 	{
 		uint8_t viewPos = [self->activityPrefs getAttributePos:activityType withAttributeName:attributeName];
+
 		if ((viewPos != ERROR_ATTRIBUTE_NOT_FOUND) && (viewPos < self->titleLabels.count))
 		{
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:viewPos];
@@ -816,6 +822,7 @@
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+
 			if (rate)
 			{
 				self->lastHeartRateValue = [rate doubleValue];

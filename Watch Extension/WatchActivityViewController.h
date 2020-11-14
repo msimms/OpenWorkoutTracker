@@ -30,6 +30,7 @@
 	NSMutableArray* valueLabels;
 	NSMutableArray* unitsLabels;
 	NSMutableArray* groups;
+	NSInteger       attributePosToReplace; // Indicates which attribute was pressed
 	BOOL            isPopping;
 }
 

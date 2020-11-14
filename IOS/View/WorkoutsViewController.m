@@ -11,9 +11,6 @@
 #import "AppStrings.h"
 #import "Segues.h"
 
-#define TITLE             NSLocalizedString(@"Workouts", nil)
-#define GENERATE_WORKOUTS NSLocalizedString(@"Generate", nil)
-
 @interface WorkoutsViewController ()
 
 @end
@@ -32,13 +29,13 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_WORKOUTS;
 
 	[super viewDidLoad];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-	[self.generateButton setTitle:GENERATE_WORKOUTS];
+	[self.generateButton setTitle:STR_GENERATE];
 	[self updateWorkoutNames];
 }
 
@@ -112,7 +109,7 @@
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return TITLE;
+	return STR_WORKOUT;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section

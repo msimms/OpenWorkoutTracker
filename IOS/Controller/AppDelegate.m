@@ -69,6 +69,7 @@
 
 	if (!Initialize([dbFileName UTF8String]))
 	{
+		NSLog(@"Database not created.");
 	}
 
 	[self configureWatchSession];
@@ -78,17 +79,17 @@
 	[Preferences registerDefaultsFromSettingsBundle:@"Profile.plist"];
 	[Preferences registerDefaultsFromSettingsBundle:@"SocialCloud.plist"];
 
-	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
+	//
+	// Sensor management object. Add the accelerometer and location sensors by default.
+	//
 
+	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
 	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 
 	self->sensorMgr = [SensorMgr sharedInstance];
-	if (self->sensorMgr)
-	{
-		[self->sensorMgr addSensor:accelerometerController];
-		[self->sensorMgr addSensor:locationController];
-	}
+	[self->sensorMgr addSensor:accelerometerController];
+	[self->sensorMgr addSensor:locationController];
 
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[self hasLeBluetooth]];
 	self->currentlyImporting = FALSE;
@@ -192,6 +193,7 @@
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication*)application
 {
+	NSLog(@"Received low memory warning.");
 	[self freeHistoricalActivityList];
 }
 
@@ -479,7 +481,7 @@
 #if !OMIT_BROADCAST
 	if ([self isFeaturePresent:FEATURE_BROADCAST])
 	{
-		if ([Preferences shouldBroadcastGlobally])
+		if ([Preferences shouldBroadcastToServer])
 		{
 			if (!self->broadcastMgr)
 			{

@@ -72,6 +72,7 @@
 
 	NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
 	request.timeoutInterval = 30.0;
+	request.allowsExpensiveNetworkAccess = TRUE;
 	[request setURL:[NSURL URLWithString:urlStr]];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
@@ -217,7 +218,7 @@
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if (![Preferences shouldBroadcastGlobally])
+	if (![Preferences shouldBroadcastToServer])
 	{
 		return;
 	}
@@ -242,7 +243,7 @@
 
 - (void)locationUpdated:(NSNotification*)notification
 {
-	if (![Preferences shouldBroadcastGlobally])
+	if (![Preferences shouldBroadcastToServer])
 	{
 		return;
 	}

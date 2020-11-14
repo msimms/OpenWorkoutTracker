@@ -6,7 +6,6 @@
 #import "AppStrings.h"
 #import "Segues.h"
 
-#define TITLE NSLocalizedString(@"Workout", nil)
 #define ACTION_SHEET_BUTTON_ZWO NSLocalizedString(@"ZWO File", nil)
 
 #define EMAIL_TITLE             NSLocalizedString(@"Workout Data", nil)
@@ -29,7 +28,7 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_WORKOUT;
 
 	[super viewDidLoad];
 

@@ -359,6 +359,7 @@
 {
 	NSString* tempAttrName = [[NSString alloc] initWithFormat:@"%@ Pos", attributeName];
 	NSInteger value = [self getValueAsInteger:activityType withAttributeName:tempAttrName];
+
 	if (value == -1)
 	{
 		uint8_t index = 0;

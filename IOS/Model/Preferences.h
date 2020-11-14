@@ -29,7 +29,7 @@
 + (NSString*)uuid;
 + (UnitSystem)preferredUnitSystem;
 + (BOOL)shouldScanForSensors;
-+ (BOOL)shouldBroadcastGlobally;
++ (BOOL)shouldBroadcastToServer;
 + (NSString*)broadcastUserName;
 + (NSInteger)broadcastRate;
 + (NSString*)broadcastProtocol;
@@ -44,13 +44,14 @@
 + (BOOL)hasShownSquatHelp;
 + (BOOL)hasShownStationaryBikeHelp;
 + (BOOL)hasShownTreadmillHelp;
++ (BOOL)useWatchHeartRate;
 
 #pragma mark set methods
 
 + (void)setUuid:(NSString*)value;
 + (void)setPreferredUnitSystem:(UnitSystem)system;
 + (void)setScanForSensors:(BOOL)value;
-+ (void)setBroadcastGlobally:(BOOL)value;
++ (void)setBroadcastToServer:(BOOL)value;
 + (void)setBroadcastUserName:(NSString*)value;
 + (void)setBroadcastRate:(NSInteger)value;
 + (void)setBroadcastProtocol:(NSString*)value;
@@ -65,6 +66,7 @@
 + (void)setHasShownSquatHelp:(BOOL)value;
 + (void)setHasShownStationaryBikeHelp:(BOOL)value;
 + (void)setHasShownTreadmillHelp:(BOOL)value;
++ (void)setUseWatchHeartRate:(BOOL)value;
 
 #pragma mark methods for managing the list of accessories
 

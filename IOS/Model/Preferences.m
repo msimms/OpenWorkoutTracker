@@ -10,7 +10,7 @@
 #define PREF_NAME_UUID                                 "UUID"
 #define PREF_NAME_UNITS                                "Units"
 #define PREF_NAME_SCAN_FOR_SENSORS                     "Scan for Sensors"
-#define PREF_NAME_BROADCAST_GLOBAL                     "Broadcast Global"
+#define PREF_NAME_BROADCAST_TO_SERVER                  "Broadcast Global"
 #define PREF_NAME_BROADCAST_USER_NAME                  "Broadcast User Name"
 #define PREF_NAME_BROADCAST_RATE                       "Broadcast Rate"
 #define PREF_NAME_BROADCAST_PROTOCOL                   "Broadcast Protocol"
@@ -26,6 +26,7 @@
 #define PREF_NAME_HAS_SHOWN_SQUAT_HELP                 "Has Shown Squat Help"
 #define PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP       "Has Shown Stationary Bike Help"
 #define PREF_NAME_HAS_SHOWN_TREADMILL_HELP             "Has Shown Treadmill Help"
+#define PREF_NAME_USE_WATCH_HEART_RATE                 "Use Watch Heart Rate"
 
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
@@ -128,9 +129,9 @@
 	return [self readBooleanValue:@PREF_NAME_SCAN_FOR_SENSORS];
 }
 
-+ (BOOL)shouldBroadcastGlobally
++ (BOOL)shouldBroadcastToServer
 {
-	return [self readBooleanValue:@PREF_NAME_BROADCAST_GLOBAL];
+	return [self readBooleanValue:@PREF_NAME_BROADCAST_TO_SERVER];
 }
 
 + (NSString*)broadcastUserName
@@ -216,6 +217,11 @@
 	return [self readBooleanValue:@PREF_NAME_HAS_SHOWN_TREADMILL_HELP];
 }
 
++ (BOOL)useWatchHeartRate
+{
+	return [self readBooleanValue:@PREF_NAME_USE_WATCH_HEART_RATE];
+}
+
 #pragma mark set methods
 
 + (void)setUuid:(NSString*)value
@@ -241,9 +247,9 @@
 	[self writeBoolValue:@PREF_NAME_SCAN_FOR_SENSORS withValue:value];
 }
 
-+ (void)setBroadcastGlobally:(BOOL)value
++ (void)setBroadcastToServer:(BOOL)value
 {
-	[self writeBoolValue:@PREF_NAME_BROADCAST_GLOBAL withValue:value];
+	[self writeBoolValue:@PREF_NAME_BROADCAST_TO_SERVER withValue:value];
 }
 
 + (void)setBroadcastUserName:(NSString*)value
@@ -320,6 +326,11 @@
 	[self writeBoolValue:@PREF_NAME_HAS_SHOWN_TREADMILL_HELP withValue:value];
 }
 
++ (void)setUseWatchHeartRate:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_USE_WATCH_HEART_RATE withValue:value];
+}
+
 #pragma mark methods for managing the list of accessories
 
 + (NSArray*)listPeripheralsToUse
@@ -375,7 +386,7 @@
 	NSMutableDictionary* prefs = [[NSMutableDictionary alloc] init];
 	[prefs setObject:[NSNumber numberWithInteger:[self preferredUnitSystem]] forKey:@PREF_NAME_UNITS];
 	[prefs setObject:[NSNumber numberWithBool:[self shouldScanForSensors]] forKey:@PREF_NAME_SCAN_FOR_SENSORS];
-	[prefs setObject:[NSNumber numberWithBool:[self shouldBroadcastGlobally]] forKey:@PREF_NAME_BROADCAST_GLOBAL];
+	[prefs setObject:[NSNumber numberWithBool:[self shouldBroadcastToServer]] forKey:@PREF_NAME_BROADCAST_TO_SERVER];
 	NSString* temp = [self broadcastUserName];
 	if (temp)
 		[prefs setObject:temp forKey:@PREF_NAME_BROADCAST_USER_NAME];
@@ -411,10 +422,10 @@
 			bool value = (bool)[prefs objectForKey:key];
 			[Preferences setScanForSensors:value];
 		}
-		else if ([key isEqualToString:@PREF_NAME_BROADCAST_GLOBAL])
+		else if ([key isEqualToString:@PREF_NAME_BROADCAST_TO_SERVER])
 		{
 			bool value = (bool)[prefs objectForKey:key];
-			[Preferences setBroadcastGlobally:value];
+			[Preferences setBroadcastToServer:value];
 		}
 		else if ([key isEqualToString:@PREF_NAME_BROADCAST_USER_NAME])
 		{

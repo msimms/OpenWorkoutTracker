@@ -8,6 +8,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "WatchHealthManager.h"
 #import "BtleHeartRateMonitor.h"
+#import "Preferences.h"
 
 @implementation WatchHealthManager
 
@@ -35,6 +36,11 @@
 		self->workoutSession = [[HKWorkoutSession alloc] initWithHealthStore:self->healthStore configuration:workoutConfig error:nil];
 		self->workoutSession.delegate = self;
 		[self->workoutSession startActivityWithDate:startTime];
+
+		if ([Preferences useWatchHeartRate])
+		{
+			[self subscribeToHeartRateUpdates];
+		}
 	}
 }
 

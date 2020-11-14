@@ -21,6 +21,7 @@
 
 @synthesize broadcast;
 @synthesize metric;
+@synthesize heartRate;
 @synthesize resetButton;
 
 - (instancetype)init
@@ -31,8 +32,12 @@
 
 - (void)willActivate
 {
-//	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-//	[self->broadcast setEnabled:[extDelegate hasCellular]];
+	// Is broadcasting available? If not, no point in even showing the switch.
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+	BOOL hasConnectivity = [extDelegate hasConnectivity];
+	[self->broadcast setEnabled:hasConnectivity];
+	[self->broadcast setHidden:!hasConnectivity];
+
 	[super willActivate];
 }
 
@@ -47,15 +52,16 @@
 
 - (void)awakeWithContext:(id)context
 {
-	[self->broadcast setOn:[Preferences shouldBroadcastGlobally]];
+	[self->broadcast setOn:[Preferences shouldBroadcastToServer]];
 	[self->metric setOn:[Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC];
+	[self->heartRate setOn:[Preferences useWatchHeartRate]];
 }
 
 #pragma mark switch methods
 
 - (IBAction)switchBroadcastAction:(BOOL)on
 {
-	[Preferences setBroadcastGlobally:on];
+	[Preferences setBroadcastToServer:on];
 }
 
 - (IBAction)switchMetricAction:(BOOL)on
@@ -64,6 +70,11 @@
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
 	else
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
+}
+
+- (IBAction)switchHeartRateAction:(BOOL)on
+{
+	[Preferences setUseWatchHeartRate:on];
 }
 
 #pragma mark button handlers

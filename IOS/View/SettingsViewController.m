@@ -468,7 +468,7 @@ typedef enum SettingsRowsHealthKit
 					case SETTINGS_ROW_BROADCAST_ENABLED:
 						cell.textLabel.text = BROADCAST_ENABLED;
 						cell.detailTextLabel.text = @"";
-						[switchview setOn:[Preferences shouldBroadcastGlobally]];
+						[switchview setOn:[Preferences shouldBroadcastToServer]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_BROADCAST_RATE:
@@ -610,7 +610,7 @@ typedef enum SettingsRowsHealthKit
 		case (SECTION_SERVICES * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_ENABLED:
-			[Preferences setBroadcastGlobally:switchControl.isOn];
+			[Preferences setBroadcastToServer:switchControl.isOn];
 			[appDelegate configureBroadcasting];
 			if (switchControl.isOn)
 			{

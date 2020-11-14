@@ -53,7 +53,7 @@
 	NSString*                  bikeName;
 	bool                       autoStartCoordinateSet; // TRUE if we have a meaningful value in 'autoStartCoordinate'
 	Coordinate                 autoStartCoordinate; // Location reference for the autostart on move feature
-	NSInteger                  tappedButtonIndex;
+	NSInteger                  tappedButtonIndex; // Indicates which attribute was pressed
 }
 
 - (void)onRefreshTimer:(NSTimer*)timer;

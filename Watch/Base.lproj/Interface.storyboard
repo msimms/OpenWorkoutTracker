@@ -63,8 +63,8 @@
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
                                     <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
                                 </label>
-                                <label alignment="center" verticalAlignment="center" text=" Units" id="eHx-Fy-G0d">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                <label alignment="center" verticalAlignment="center" text=" Units" textAlignment="center" numberOfLines="2" id="eHx-Fy-G0d">
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -77,12 +77,12 @@
                         </group>
                         <group width="1" alignment="left" verticalAlignment="center" id="PPr-6M-NT3">
                             <items>
-                                <label alignment="left" text="--" id="jW7-ae-vrm">
+                                <label alignment="left" verticalAlignment="center" text="--" id="jW7-ae-vrm">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
-                                <label alignment="right" verticalAlignment="center" text=" Units" id="lAO-ig-DSV">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                <label alignment="right" verticalAlignment="center" text=" Units" textAlignment="center" numberOfLines="2" id="lAO-ig-DSV">
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -95,12 +95,12 @@
                         </group>
                         <group width="1" alignment="left" verticalAlignment="center" id="8Du-RJ-V9w">
                             <items>
-                                <label alignment="left" text="--" id="pED-pN-z8m">
+                                <label alignment="left" verticalAlignment="center" text="--" id="pED-pN-z8m">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
                                     <fontDescription key="font" style="UICTFontTextStyleTitle2"/>
                                 </label>
-                                <label alignment="right" verticalAlignment="center" text=" Units" id="pgE-yK-xEC">
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle3"/>
+                                <label alignment="right" verticalAlignment="center" text=" Units" textAlignment="center" numberOfLines="2" id="pgE-yK-xEC">
+                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                                 </label>
                             </items>
                             <gestureRecognizers>
@@ -252,6 +252,11 @@
                                 <action selector="switchMetricAction:" destination="hJl-mE-pcA" id="nvw-yL-NrA"/>
                             </connections>
                         </switch>
+                        <switch width="1" alignment="left" value="YES" title="Heart Rate" id="q8D-TC-rC0">
+                            <connections>
+                                <action selector="switchHeartRateAction:" destination="hJl-mE-pcA" id="yty-tJ-Rwt"/>
+                            </connections>
+                        </switch>
                         <button width="1" alignment="left" title="Reset" id="RLD-SD-HYq">
                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -262,6 +267,7 @@
                     </items>
                     <connections>
                         <outlet property="broadcast" destination="8A2-ad-Uee" id="W3g-zr-jsL"/>
+                        <outlet property="heartRate" destination="q8D-TC-rC0" id="FVN-qr-3TL"/>
                         <outlet property="metric" destination="IQG-Gm-neq" id="dSF-Eh-GZE"/>
                         <outlet property="resetButton" destination="RLD-SD-HYq" id="eh9-SE-X1V"/>
                     </connections>

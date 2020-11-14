@@ -29,9 +29,9 @@ public:
 private:
 	double m_best5K; // needed to compute training paces.
 	double m_longestRunInFourWeeks;
-	double m_longestRunWeek1;
-	double m_longestRunWeek2;
-	double m_longestRunWeek3;
+	double m_longestRunWeek1; // longest run (in meters) for the 3rd most recent week
+	double m_longestRunWeek2; // longest run (in meters) for the 2nd most recent week
+	double m_longestRunWeek3; // longest run (in meters) for the most recent week
 	size_t m_numRunsWeek1;
 	size_t m_numRunsWeek2;
 	size_t m_numRunsWeek3;
