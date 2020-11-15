@@ -35,6 +35,7 @@
 
 		self->workoutSession = [[HKWorkoutSession alloc] initWithHealthStore:self->healthStore configuration:workoutConfig error:nil];
 		self->workoutSession.delegate = self;
+
 		[self->workoutSession startActivityWithDate:startTime];
 
 		if ([Preferences useWatchHeartRate])
@@ -47,6 +48,7 @@
 - (void)stopWorkout:(NSDate*)endTime
 {
 	[self->workoutSession stopActivityWithDate:endTime];
+	[self->workoutSession end];
 }
 
 #pragma mark workout session delegate methods
