@@ -242,11 +242,15 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)startActivity
 {
+	BOOL result = FALSE;
+
 	// Generate a unique identifier for the activity.
 	NSString* activityId = [[NSUUID UUID] UUIDString];
 
 	// Create the backend data structures for the activity.
-	BOOL result = StartActivity([activityId UTF8String]);
+	[self->currentActivityLock lock];
+	result = StartActivity([activityId UTF8String]);
+	[self->currentActivityLock unlock];
 
 	if (result)
 	{
@@ -280,7 +284,11 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)stopActivity
 {
-	BOOL result = StopCurrentActivity();
+	BOOL result = FALSE;
+
+	[self->currentActivityLock lock];
+	result = StopCurrentActivity();
+	[self->currentActivityLock unlock];
 
 	if (result)
 	{		
