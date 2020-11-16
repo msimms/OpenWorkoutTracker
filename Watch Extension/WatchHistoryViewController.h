@@ -18,6 +18,8 @@
 @interface WatchHistoryViewController : WKInterfaceController
 {
 	IBOutlet __strong WKInterfaceTable* historyTable;
+
+	BOOL isPopping; // Prevents us from redrawing if we're about to pop
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceTable* historyTable;

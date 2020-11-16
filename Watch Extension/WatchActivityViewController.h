@@ -31,7 +31,7 @@
 	NSMutableArray* unitsLabels;
 	NSMutableArray* groups;
 	NSInteger       attributePosToReplace; // Indicates which attribute was pressed
-	BOOL            isPopping;
+	BOOL            isPopping; // Prevents us from redrawing if we're about to pop
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* startStopButton;

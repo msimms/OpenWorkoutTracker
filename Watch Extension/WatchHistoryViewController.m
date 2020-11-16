@@ -30,12 +30,21 @@
 - (instancetype)init
 {
 	self = [super init];
+	if (self)
+	{
+		self->isPopping = FALSE;
+	}
 	return self;
 }
 
 - (void)willActivate
 {
 	[super willActivate];
+
+	if (!self->isPopping)
+	{
+		[self redraw];
+	}
 }
 
 - (void)didDeactivate
@@ -72,9 +81,10 @@
 		WKAlertAction* action = [WKAlertAction actionWithTitle:@"OK"
 														 style:WKAlertActionStyleDefault
 													   handler:^{
-														   [self popController];
-													   }];
+			[self popController];
+		}];
 
+		self->isPopping = TRUE;
 		[self presentAlertControllerWithTitle:STR_ERROR
 									  message:MSG_NO_WORKOUTS
 							   preferredStyle:WKAlertControllerStyleAlert
