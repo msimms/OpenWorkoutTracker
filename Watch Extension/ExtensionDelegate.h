@@ -29,8 +29,7 @@
 	BOOL receivingLocations; // TRUE if we have received at least one location
 	BOOL hasConnectivity; // TRUE if we have confirmed the existence of a cellular/mobile data network
 
-	NSLock* currentActivityLock;
-	NSLock* databaseLock; // Lock for all backend calls except those pertaining to the current activity.
+	NSLock* backendLock; // Lock for all backend calls.
 }
 
 // network monitoring methods
@@ -65,6 +64,7 @@
 
 - (BOOL)isActivityCreated;
 - (BOOL)isActivityInProgress;
+- (BOOL)isActivityInProgressAndNotPaused;
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex;
 
 // methods for loading and editing historical activities
@@ -107,7 +107,7 @@
 - (NSString*)getHistoricalActivityType:(NSInteger)activityIndex;
 - (NSString*)getHistoricalActivityName:(NSInteger)activityIndex;
 
-//
+// methods for managing pace plans
 
 - (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceMinKm:(double)targetPaceMinKm withTargetDistanceKms:(double)targetDistanceKms withSplits:(double)splits withRoute:(NSString*)route;
 

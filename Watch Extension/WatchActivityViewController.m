@@ -288,7 +288,7 @@
 			NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
 
 			// Display the value.
-			ActivityAttributeType value = QueryLiveActivityAttribute([attribute cStringUsingEncoding:NSASCIIStringEncoding]);
+			ActivityAttributeType value = [extDelegate queryLiveActivityAttribute:attribute];
 			[valueLabel setText:[StringUtils formatActivityViewType:value]];
 
 			// Display the units.

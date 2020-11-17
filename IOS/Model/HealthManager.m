@@ -71,11 +71,12 @@
 - (NSSet*)dataTypesToRead
 {
 #if TARGET_OS_WATCH
+	HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
 	HKQuantityType* heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	HKQuantityType* weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 	HKCharacteristicType* birthdayType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierDateOfBirth];
 	HKCharacteristicType* biologicalSexType = [HKObjectType characteristicTypeForIdentifier:HKCharacteristicTypeIdentifierBiologicalSex];
-	return [NSSet setWithObjects: heightType, weightType, birthdayType, biologicalSexType, nil];
+	return [NSSet setWithObjects: heightType, weightType, hrType, birthdayType, biologicalSexType, nil];
 #else
 	HKQuantityType* heightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	HKQuantityType* weightType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
@@ -112,6 +113,45 @@
 }
 
 #pragma mark methods for reading quantity samples (height, weight, etc.) from HealthKit.
+
+- (void)subscribeToQuantitySamplesOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+{
+	// It's invalid to call this without a completion handler.
+	if (!completion)
+	{
+		return;
+	}
+
+	NSPredicate* datePredicate = [HKQuery predicateForSamplesWithStartDate:[NSDate date] endDate:nil options:HKQueryOptionStrictStartDate];
+	HKAnchoredObjectQuery* query = [[HKAnchoredObjectQuery alloc] initWithType:quantityType
+																	 predicate:datePredicate
+																		anchor:nil
+																		 limit:HKObjectQueryNoLimit
+																resultsHandler:^(HKAnchoredObjectQuery* query, NSArray<HKSample*>* addedObjects, NSArray<HKDeletedObject*>* deletedObjects, HKQueryAnchor* newAnchor, NSError* error)
+	{
+		if (addedObjects)
+		{
+			for (HKQuantitySample* sample in addedObjects)
+			{
+				completion(sample.quantity, sample.endDate, error);
+			}
+		}
+	}];
+
+	query.updateHandler = ^(HKAnchoredObjectQuery* query, NSArray<HKSample*>* addedObjects, NSArray<HKDeletedObject*>* deletedObjects, HKQueryAnchor* newAnchor, NSError* error)
+	{
+		if (addedObjects)
+		{
+			for (HKQuantitySample* sample in addedObjects)
+			{
+				completion(sample.quantity, sample.endDate, error);
+			}
+		}
+	};
+
+	// Execute asynchronously.
+	[self->healthStore executeQuery:query];
+}
 
 - (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
 {

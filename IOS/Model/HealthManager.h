@@ -39,6 +39,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 // methods for reading quantity samples (height, weight, etc.) from HealthKit.
 
+- (void)subscribeToQuantitySamplesOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion;
 - (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion;
 
 // methods for reading HealthKit data pertaining to the user's height, weight, etc.

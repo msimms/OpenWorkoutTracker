@@ -74,21 +74,19 @@
 		 {
 			 HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
 
-			 [super mostRecentQuantitySampleOfType:hrType
-										completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
+			 [super subscribeToQuantitySamplesOfType:hrType
+										  completion:^(HKQuantity* heartRateQuantity, NSDate* heartRateTime, NSError* error)
 			  {
-				  if (mostRecentQuantity)
+				  if (heartRateQuantity)
 				  {
-					  double hr = [mostRecentQuantity doubleValueForUnit:[HKUnit heartBeatsPerMinuteUnit]];
-					  time_t unixTime = (time_t) [startDate timeIntervalSince1970];
+					  double hr = [heartRateQuantity doubleValueForUnit:[HKUnit heartBeatsPerMinuteUnit]];
+					  time_t unixTime = [heartRateTime timeIntervalSince1970]; // Apple Watch proessor is 32-bit, so time_t is 32-bit as well
+					  uint64_t unixTimeMs = (uint64_t)unixTime * (uint64_t)1000;
 					  NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
 													 [NSNumber numberWithLong:(long)hr], @KEY_NAME_HEART_RATE,
-													 [NSNumber numberWithLongLong:unixTime], @KEY_NAME_HRM_TIMESTAMP_MS,
+													 [NSNumber numberWithLongLong:unixTimeMs], @KEY_NAME_HRM_TIMESTAMP_MS,
 													nil];
-					  if (heartRateData)
-					  {
-						  [[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
-					  }
+					  [[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
 				  }
 			  }];
 		 }
