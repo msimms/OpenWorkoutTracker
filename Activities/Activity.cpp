@@ -5,6 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#import <TargetConditionals.h>
+
 #include <iomanip>
 #include <sys/time.h>
 
@@ -275,7 +277,14 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 		result.measureType = MEASURE_BPM;
 		result.startTime = hr.startTime;
 		result.endTime = hr.endTime;
+		
+		// On the Aople Watch, heart rate updates are sent whenever the watch feels like sending them
+		// so we can't pick a timeout for deciding if the data is missing.
+#if TARGET_OS_WATCH
+		result.valid = (m_numHeartRateReadings > 0);
+#else
 		result.valid = (m_numHeartRateReadings > 0) && (timeSinceLastUpdate < 3000);
+#endif
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE) == 0)
 	{
