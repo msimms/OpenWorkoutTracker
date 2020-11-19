@@ -1166,7 +1166,7 @@ bool Database::MergeActivities(const std::string& activityId1, const std::string
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "delete from activity where id = " << activityId2;
+	sqlStream << "delete from activity where activity_id = " << activityId2;
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
@@ -1180,7 +1180,7 @@ bool Database::RetrieveActivityStartAndEndTime(const std::string& activityId, ti
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select start_time,end_time from activity where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select start_time,end_time from activity where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
@@ -1201,7 +1201,7 @@ bool Database::UpdateActivityStartTime(const std::string& activityId, time_t sta
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "update activity set start_time = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "update activity set start_time = ? where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, startTime);
 		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
@@ -1216,7 +1216,7 @@ bool Database::UpdateActivityEndTime(const std::string& activityId, time_t endTi
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "update activity set end_time = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "update activity set end_time = ? where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, endTime);
 		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
@@ -1231,7 +1231,7 @@ bool Database::RetrieveActivityName(const std::string& activityId, std::string& 
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select name from activity where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select name from activity where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		
@@ -1251,7 +1251,7 @@ bool Database::UpdateActivityName(const std::string& activityId, const std::stri
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "update activity set name = ? where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "update activity set name = ? where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
