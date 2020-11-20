@@ -104,6 +104,9 @@
 	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNamesAndIds];
 	self.pacePlanButton.hidden = ([pacePlanNames count] == 0);
 
+	// Cache the activity type so we don't have to keep looking it up.
+	self->activityType = [extDelegate getCurrentActivityType];
+
 	// Notification subscriptions.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
 
@@ -204,8 +207,7 @@
 				[self doPause];
 			}];
 
-			NSArray* actions = [NSArray new];
-			actions = @[yesAction, noAction, pauseAction];
+			NSArray* actions = @[yesAction, noAction, pauseAction];
 			[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_STOP preferredStyle:WKAlertControllerStyleAlert actions:actions];
 		}
 	}
@@ -275,9 +277,7 @@
 {
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
-	NSString* activityType = [extDelegate getCurrentActivityType];
 
 	// Refresh the activity attributes.
 	for (uint8_t i = 0; i < [self->valueLabels count]; i++)
@@ -285,7 +285,7 @@
 		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
 		if (valueLabel)
 		{
-			NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
+			NSString* attribute = [prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
 
 			// Display the value.
 			ActivityAttributeType value = [extDelegate queryLiveActivityAttribute:attribute];
@@ -376,7 +376,6 @@
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
-	NSString* activityType = [extDelegate getCurrentActivityType];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:FALSE];
 
 	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
@@ -390,9 +389,9 @@
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void)
 		{
 			// Save the new setting, removing the old setting.
-			NSString* oldAttributeName = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:self->attributePosToReplace];
-			[prefs setViewAttributePosition:activityType withAttributeName:attribute withPos:self->attributePosToReplace];
-			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			NSString* oldAttributeName = [prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:self->attributePosToReplace];
+			[prefs setViewAttributePosition:self->activityType withAttributeName:attribute withPos:self->attributePosToReplace];
+			[prefs setViewAttributePosition:self->activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
 		}];	
 		[actions addObject:action];
 	}
@@ -407,7 +406,6 @@
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
-	NSString* activityType = [extDelegate getCurrentActivityType];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:FALSE];
 
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
@@ -415,7 +413,7 @@
 
 	for (uint8_t i = 0; i < 3; i++)
 	{
-		NSString* attribute = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:i];
+		NSString* attribute = [prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
 
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
 			self->attributePosToReplace = i;
@@ -445,7 +443,7 @@
 	{
 		NSNumber* status = [msgData objectForKey:@KEY_NAME_STATUS];
 		
-		if (self->currentBroadcastStatus)
+		if (self->currentBroadcastStatus != nil)
 		{
 			@synchronized(self->currentBroadcastStatus)
 			{

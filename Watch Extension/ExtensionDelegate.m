@@ -110,7 +110,9 @@
 
 - (void)handleBackgroundTasks:(NSSet<WKRefreshBackgroundTask *> *)backgroundTasks
 {
-	// Sent when the system needs to launch the application in the background to process tasks. Tasks arrive in a set, so loop through and process each one.
+	// Sent when the system needs to launch the application in the background to process tasks.
+	// Tasks arrive in a set, so loop through and process each one.
+
 	for (WKRefreshBackgroundTask* task in backgroundTasks)
 	{
 		// Check the Class of each task to decide how to process it
@@ -256,6 +258,7 @@ void startSensorCallback(SensorType type, void* context)
 		[self->backendLock lock];
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 		[self->backendLock unlock];
+
 		NSString* activityType = [self getCurrentActivityType];		
 		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								   activityId, @KEY_NAME_ACTIVITY_ID,
@@ -436,18 +439,24 @@ void startSensorCallback(SensorType type, void* context)
 
 - (NSInteger)initializeHistoricalActivityList
 {
+	NSInteger numActivities = 0;
+
 	[self->backendLock lock];
 	InitializeHistoricalActivityList();
-	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
+	numActivities = (NSInteger)GetNumHistoricalActivities();
 	[self->backendLock unlock];
+
 	return numActivities;
 }
 
 - (NSInteger)getNumHistoricalActivities
 {
+	NSInteger numActivities = 0;
+
 	[self->backendLock lock];
-	NSInteger numActivities = (NSInteger)GetNumHistoricalActivities();
+	numActivities = (NSInteger)GetNumHistoricalActivities();
 	[self->backendLock unlock];
+
 	return numActivities;
 }
 

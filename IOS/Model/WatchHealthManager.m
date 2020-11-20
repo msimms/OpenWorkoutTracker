@@ -80,12 +80,13 @@
 				  if (heartRateQuantity)
 				  {
 					  double hr = [heartRateQuantity doubleValueForUnit:[HKUnit heartBeatsPerMinuteUnit]];
-					  time_t unixTime = [heartRateTime timeIntervalSince1970]; // Apple Watch proessor is 32-bit, so time_t is 32-bit as well
+					  time_t unixTime = [heartRateTime timeIntervalSince1970]; // Apple Watch processor is 32-bit, so time_t is 32-bit as well
 					  uint64_t unixTimeMs = (uint64_t)unixTime * (uint64_t)1000;
 					  NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
 													 [NSNumber numberWithLong:(long)hr], @KEY_NAME_HEART_RATE,
 													 [NSNumber numberWithLongLong:unixTimeMs], @KEY_NAME_HRM_TIMESTAMP_MS,
 													nil];
+
 					  [[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
 				  }
 			  }];

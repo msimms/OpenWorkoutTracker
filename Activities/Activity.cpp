@@ -267,9 +267,11 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HEART_RATE) == 0)
 	{
+#if !TARGET_OS_WATCH
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
 			timeSinceLastUpdate = CurrentTimeInMs() - m_lastHeartRateUpdateTime;
+#endif
 
 		SegmentType hr = CurrentHeartRate();
 		result.value.doubleVal = hr.value.doubleVal;
