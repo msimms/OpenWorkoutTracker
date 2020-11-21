@@ -57,11 +57,6 @@
 	[self.tagTableView setEditing:YES animated: YES];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;

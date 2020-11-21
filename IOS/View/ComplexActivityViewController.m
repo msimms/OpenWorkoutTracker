@@ -131,6 +131,7 @@
 	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityType], nil);
 
 	// Organize the stopped toolbar.
+	size_t numBikes = [[appDelegate getBikeNames] count];
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
 	{
@@ -145,7 +146,7 @@
 
 		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
 
-		if (!IsCyclingActivity() || ([[appDelegate getBikeNames] count] == 0))
+		if (!IsCyclingActivity() || (numBikes == 0))
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
@@ -160,14 +161,14 @@
 	if (self->startedToolbar)
 	{
 		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 
 		if (!IsMovingActivity())
 		{
 			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
 		}
-		if (!IsCyclingActivity())
+		if (!IsCyclingActivity() || (numBikes == 0))
 		{
 			[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
@@ -176,10 +177,10 @@
 	// Create the swipe gesture recognizer.
 	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
 	self.swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self.view addGestureRecognizer:self.swipe];
 	self.swipe.delegate = self;
+	[self.view addGestureRecognizer:self.swipe];
 
-	if (IsActivityInProgress())
+	if ([appDelegate isActivityInProgress])
 	{
 		[self setUIForStartedActivity];
 	}
@@ -205,17 +206,8 @@
 	[super initializeLabelColor];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (void)didMoveToParentViewController:(UIViewController*)parent
 {
-	if (parent == nil)
-	{
-		StopCurrentActivity();
-	}
 }
 
 - (BOOL)shouldAutorotate
@@ -263,7 +255,7 @@
 
 - (void)handleLeftSwipe:(UISwipeGestureRecognizer*)recognizer
 {
-	[self performSegueWithIdentifier:@SEGUE_TO_LIVE_SUMMARY_VIEW sender:self];
+	[self performSegueWithIdentifier:@SEQUE_TO_SIMPLE_VIEW sender:self];
 }
 
 - (void)handleRightSwipe:(UISwipeGestureRecognizer*)recognizer
@@ -276,6 +268,13 @@
 {
 	[super refreshScreen];
 	[super onRefreshTimer:timer];
+}
+
+#pragma mark button handlers
+
+- (IBAction)onSummary:(id)sender
+{
+	[self performSegueWithIdentifier:@SEQUE_TO_SIMPLE_VIEW sender:self];
 }
 
 @end

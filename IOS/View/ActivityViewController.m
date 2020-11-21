@@ -32,8 +32,6 @@
 #define ALERT_MSG_NO_BIKE             NSLocalizedString(@"You need to choose a bike.", nil)
 #define ALERT_MSG_NO_FOOT_POD         NSLocalizedString(@"You need a foot pod to use this app with a treadmill.", nil)
 
-#define BUTTON_TITLE_MORE             NSLocalizedString(@"More", nil)
-#define BUTTON_TITLE_LAP              NSLocalizedString(@"Lap", nil)
 #define BUTTON_TITLE_CUSTOMIZE        NSLocalizedString(@"Customize", nil)
 #define BUTTON_TITLE_INTERVALS        NSLocalizedString(@"Intervals", nil)
 #define BUTTON_TITLE_AUTOSTART        NSLocalizedString(@"AutoStart", nil)
@@ -93,8 +91,8 @@
 	self->messages = [[NSMutableArray alloc] init];
 	self->tappedButtonIndex = 0;
 
-	[self.moreButton setTitle:BUTTON_TITLE_MORE];
-	[self.lapButton setTitle:BUTTON_TITLE_LAP];
+	[self.moreButton setTitle:STR_NEXT];
+	[self.lapButton setTitle:STR_LAP];
 	[self.weightButton setTitle:STR_WEIGHT];
 	[self.customizeButton setTitle:BUTTON_TITLE_CUSTOMIZE];
 	[self.bikeButton setTitle:STR_BIKE];
@@ -157,9 +155,7 @@
 {
 	[super viewDidDisappear:animated];
 	[UIApplication sharedApplication].idleTimerDisabled = FALSE;
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
 	[self stopTimer];
 }
 
@@ -220,7 +216,7 @@
 		}]];
 	}
 
-	// Show the menu.
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -336,8 +332,6 @@
 			[self->messagesLabel setText:@""];
 		}
 	}
-	
-	// Update the broadcast image.
 }
 
 - (void)startTimer
@@ -630,6 +624,10 @@
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.keyboardType = UIKeyboardTypeNumberPad;
 	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
     	UITextField* field = alertController.textFields.firstObject;
 
@@ -640,6 +638,8 @@
 
 		SetLiveActivityAttribute(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT, value);
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -675,8 +675,8 @@
 				[appDelegate setBikeForCurrentActivity:self->bikeName];
 			}]];
 		}
-		
-		// Show the menu.
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
@@ -706,8 +706,8 @@
 				[self->intervalsButton setTitle:name];
 			}]];
 		}
-		
-		// Show the menu.
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
@@ -737,8 +737,8 @@
 				[self->paceButton setTitle:name];
 			}]];
 		}
-		
-		// Show the menu.
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }

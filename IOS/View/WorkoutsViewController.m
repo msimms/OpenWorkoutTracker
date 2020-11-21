@@ -49,11 +49,6 @@
 	[self.workoutsView reloadData];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;

@@ -135,11 +135,6 @@ typedef enum SettingsRowsHealthKit
 	}
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -245,6 +240,8 @@ typedef enum SettingsRowsHealthKit
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.placeholder = [Preferences broadcastHostName];
 	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -261,6 +258,8 @@ typedef enum SettingsRowsHealthKit
 			[super showOneButtonAlert:STR_ERROR withMsg:ALERT_NO_PROTOCOL];
 		}
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

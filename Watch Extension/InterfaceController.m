@@ -54,6 +54,10 @@
 
 	[activityTypes sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
+	[actions addObject:action];
+
 	for (NSString* name in activityTypes)
 	{
 		WKAlertAction* action = [WKAlertAction actionWithTitle:name style:WKAlertActionStyleDefault handler:^(void){
@@ -61,10 +65,6 @@
 		}];	
 		[actions addObject:action];
 	}
-
-	// Add the cancel button.
-	WKAlertAction* action = [WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void){}];	
-	[actions addObject:action];
 
 	// Show the action sheet.
 	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_NEW preferredStyle:WKAlertControllerStyleAlert actions:actions];

@@ -15,9 +15,8 @@
 @interface MappedActivityViewController : ActivityViewController <MKMapViewDelegate, UIActionSheetDelegate>
 {
 	IBOutlet UIBarButtonItem* mapButton;
-	IBOutlet UIBarButtonItem* scaleButton;
 
-	IBOutlet UISwipeGestureRecognizer* swipe;
+	IBOutlet UISwipeGestureRecognizer* leftSwipe;
 
 	IBOutlet MKMapView* mapView;
 	
@@ -66,9 +65,8 @@
 - (IBAction)onMap:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* mapButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* scaleButton;
 
-@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* swipe;
+@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* leftSwipe;
 
 @property (nonatomic, retain) IBOutlet MKMapView* mapView;
 

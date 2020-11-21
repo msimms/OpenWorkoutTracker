@@ -65,11 +65,6 @@
 	[self->intervalTableView reloadData];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -135,11 +130,16 @@
 																			 message:ACTION_SHEET_TITLE_ADD_INTERVAL
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:DISTANCE_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 	{
 		UIAlertController* alertController2 = [UIAlertController alertControllerWithTitle:nil
 																				  message:ACTION_SHEET_TITLE_SELECT_DISTANCE_UNITS
 																		   preferredStyle:UIAlertControllerStyleActionSheet];
+
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_METERS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self promptForDistance:INTERVAL_UNIT_METERS withSegment:segment];
 		}]];
@@ -155,7 +155,8 @@
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_MILES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self promptForDistance:INTERVAL_UNIT_MILES withSegment:segment];
 		}]];
-		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:TIME_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
@@ -173,6 +174,8 @@
 				[self reload];			
 			}
 		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:SET_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
@@ -190,6 +193,8 @@
 				[self reload];			
 			}
 		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:REP_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
@@ -207,9 +212,12 @@
 				[self reload];
 			}
 		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

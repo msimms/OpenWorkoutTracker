@@ -53,11 +53,6 @@
 	[self.spinner stopAnimating];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;

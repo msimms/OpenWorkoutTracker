@@ -26,9 +26,8 @@
 @implementation MappedActivityViewController
 
 @synthesize mapButton;
-@synthesize scaleButton;
 
-@synthesize swipe;
+@synthesize leftSwipe;
 
 @synthesize mapView;
 
@@ -70,9 +69,7 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	[self.mapView setDelegate:self];
-
 	[self.mapButton setTitle:STR_MAP];
-	[self.scaleButton setTitle:STR_SCALE];
 
 	self->valueLabels = [[NSMutableArray alloc] init];
 	if (self->valueLabels)
@@ -135,6 +132,7 @@
 	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityType], nil);
 
 	// Organize the stopped toolbar.
+	size_t numBikes = [[appDelegate getBikeNames] count];
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
 	{
@@ -149,7 +147,7 @@
 
 		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
 
-		if (!IsCyclingActivity() || ([[appDelegate getBikeNames] count] == 0))
+		if (!IsCyclingActivity() || (numBikes == 0))
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
@@ -164,10 +162,10 @@
 	if (self->startedToolbar)
 	{
 		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 
-		if (!IsMovingActivity())
+		if (!IsCyclingActivity() || (numBikes == 0))
 		{
 			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
 		}
@@ -178,12 +176,12 @@
 	}
 
 	// Create the swipe gesture recognizer.
-	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-	self.swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-	[self.view addGestureRecognizer:self.swipe];
-	self.swipe.delegate = self;
+	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
+	self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+	self.leftSwipe.delegate = self;
+	[self.view addGestureRecognizer:self.leftSwipe];
 
-	if (IsActivityInProgress())
+	if ([appDelegate isActivityInProgress])
 	{
 		[self setUIForStartedActivity];
 	}
@@ -211,19 +209,14 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewWillDisappear:animated];
 }
 
 - (void)didMoveToParentViewController:(UIViewController*)parent
 {
-	if (parent == nil)
-	{
-		StopCurrentActivity();
-	}
 }
 
 - (BOOL)shouldAutorotate
@@ -272,14 +265,16 @@
 - (void)locationUpdated:(NSNotification*)notification
 {
 	NSDictionary* locationData = [notification object];
+
 	if (locationData)
 	{
 		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
 		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-		
+
 		CLLocation* newLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
-		
-		if (IsActivityInProgress())
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+		if ([appDelegate isActivityInProgress])
 		{
 			[self addNewLocation:newLocation];
  		}
@@ -290,7 +285,7 @@
 			[self.mapView setRegion:region animated:YES];
 		}
 	}
-	
+
 	[super locationUpdated:notification];
 }
 
@@ -304,7 +299,7 @@
 		// Note: iPhone 3G will locate you using the triangulation of the cell towers so you may experience spikes
 		// in location data (in small time intervals) due to 3G tower triangulation.
 		MKMapRect updateRect = [self->crumbs addCoordinate:newLocation.coordinate];
-		
+
 		if (!MKMapRectIsNull(updateRect))
 		{
 			// There is a non null update rect.
@@ -346,6 +341,7 @@
 
 - (void)handleRightSwipe:(UISwipeGestureRecognizer*)recognizer
 {
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark NSTimer methods
@@ -356,6 +352,12 @@
 	[super onRefreshTimer:timer];
 }
 
+#pragma mark MkMapView methods
+
+- (void)mapView:(MKMapView*)mapView didUpdateUserLocation:(MKUserLocation*)userLocation
+{
+}
+
 #pragma mark button handlers
 
 - (IBAction)onMap:(id)sender
@@ -363,6 +365,10 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_MAP_OPTIONS
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->autoScale = true;
 	}]];
@@ -378,6 +384,8 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->mapView.mapType = MKMapTypeHybrid;
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

@@ -46,11 +46,6 @@
 	[self drawChart];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -192,6 +187,10 @@
 																			 message:STR_EXPORT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+
 	for (NSString* fileExportService in fileExportServices)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:fileExportService style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -199,9 +198,8 @@
 			[self showFileFormatSheet];
 		}]];
 	}
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-	}]];
 
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

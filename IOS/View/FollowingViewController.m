@@ -45,11 +45,6 @@
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;
@@ -70,6 +65,8 @@
 	
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -77,6 +74,8 @@
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate serverRequestToFollowAsync:[field text]];
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

@@ -73,11 +73,6 @@
 	}
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
@@ -140,13 +135,19 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_NEW
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+
 	for (NSString* name in self->activityTypes)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self startActivity:name];
 		}]];
 	}
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -157,7 +158,10 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_VIEW
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_VIEW_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_HISTORY_VIEW sender:self];
 	}]];
@@ -170,6 +174,8 @@
 			[self performSegueWithIdentifier:@SEQUE_TO_WORKOUTS_VIEW sender:self];
 		}]];
 	}
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -178,7 +184,10 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_EDIT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_PROFILE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_PROFILE_VIEW sender:self];
 	}]];
@@ -197,6 +206,8 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_GEAR style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_GEAR_VIEW sender:self];
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 	
@@ -205,7 +216,10 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_RESET
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_RESET_DATA style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate resetDatabase];
@@ -214,6 +228,8 @@
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		[appDelegate resetPreferences];
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -222,6 +238,7 @@
 - (void)createActivity:(NSString*)activityType
 {
 	const char* pActivityType = [activityType cStringUsingEncoding:NSASCIIStringEncoding];
+
 	if (pActivityType)
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

@@ -101,11 +101,17 @@ MapViewController* g_ptrToMapViewCtrl;
 {
 	[super viewDidAppear:animated];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(peerLocationUpdated:) name:@NOTIFICATION_NAME_PEER_LOCATION_UPDATED object:nil];
+
+#if !OMIT_BROADCAST
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendLocationUpdated:) name:@NOTIFICATION_NAME_FRIEND_LOCATION_UPDATED object:nil];
+#endif
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+#if !OMIT_BROADCAST
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+#endif
 	[super viewDidDisappear:animated];
 }
 
@@ -119,18 +125,16 @@ MapViewController* g_ptrToMapViewCtrl;
 	return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)didReceiveMemoryWarning
-{
-	[super didReceiveMemoryWarning];
-}
-
 #pragma mark broadcast notifications
 
-- (void)peerLocationUpdated:(NSNotification*)notification
+#if !OMIT_BROADCAST
+// Updates the position of a friend on the map.
+- (void)friendLocationUpdated:(NSNotification*)notification
 {
 	@try
 	{
 		NSDictionary* locationData = [notification object];
+
 		if (locationData)
 		{
 			NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
@@ -149,6 +153,7 @@ MapViewController* g_ptrToMapViewCtrl;
 	{
 	}
 }
+#endif
 
 #pragma mark memory fix
 

@@ -183,11 +183,6 @@ typedef enum ExportFileTypeButtons
 	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;
@@ -426,6 +421,10 @@ typedef enum ExportFileTypeButtons
 
 	[appDelegate loadAllHistoricalActivitySensorData:self->activityId];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+
 	if ([appDelegate getNumHistoricalActivityLocationPoints:self->activityId] > 0)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_GPX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -441,9 +440,8 @@ typedef enum ExportFileTypeButtons
 			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_CSV];
 		}]];
 	}
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-	}]];
 
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -453,6 +451,10 @@ typedef enum ExportFileTypeButtons
 																			 message:ACTION_SHEET_TITLE_EXPORT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+
 	for (NSString* fileExportService in fileExportServices)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:fileExportService style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -460,9 +462,8 @@ typedef enum ExportFileTypeButtons
 			[self showFileFormatSheet];
 		}]];
 	}
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-	}]];
 
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -606,6 +607,9 @@ typedef enum ExportFileTypeButtons
 																			 message:ACTION_SHEET_TITLE_EDIT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_TRIM_FIRST_1 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		uint64_t newTime = ((uint64_t)self->startTime + 1) * 1000;
 		[appDelegate trimActivityData:self->activityId withNewTime:newTime fromStart:TRUE];
@@ -668,9 +672,8 @@ typedef enum ExportFileTypeButtons
 			[self presentViewController:repsAlertController animated:YES completion:nil];
 		}]];
 	}
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
-	}]];
 
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -690,6 +693,10 @@ typedef enum ExportFileTypeButtons
 																				 message:STR_BIKE
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+
 		for (NSString* fileSite in fileSites)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -697,8 +704,8 @@ typedef enum ExportFileTypeButtons
 				[appDelegate setBikeForActivityId:fileSite withActivityId:self->activityId];
 			}]];
 		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }

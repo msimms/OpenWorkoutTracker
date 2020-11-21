@@ -11,8 +11,6 @@
 #import "LocationSensor.h"
 #import "StringUtils.h"
 
-#define BUTTON_TITLE_AUTO_SCALE NSLocalizedString(@"Autoscale", nil)
-
 @interface LiveMapViewController ()
 
 @end
@@ -40,32 +38,28 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
-	if (self.swipe)
-	{
-		self.swipe.direction = UISwipeGestureRecognizerDirectionRight;
-		[[self view] addGestureRecognizer:self.swipe];
-	}
-	
+	self.swipe.direction = UISwipeGestureRecognizerDirectionRight;
+	[[self view] addGestureRecognizer:self.swipe];
+
 	[self.mapView setShowsUserLocation:TRUE];
 	[self drawExistingRoute];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
-
-	[self.autoScaleButton setTitle:BUTTON_TITLE_AUTO_SCALE];
+	[self.autoScaleButton setTitle:STR_AUTOSCALE];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
+
 	[UIApplication sharedApplication].idleTimerDisabled = FALSE;
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate setScreenLocking];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super viewDidDisappear:animated];
 }
 
@@ -93,14 +87,11 @@
 {	
 	size_t pointIndex = 0;
 	Coordinate coordinate;
-	
+
 	while (GetActivityPoint(pointIndex, &coordinate))
 	{
 		CLLocation* location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
-		if (location)
-		{
-			[self addNewLocation:location];
- 		}
+		[self addNewLocation:location];
 		++pointIndex;
 	}
 }
@@ -108,14 +99,16 @@
 - (void)locationUpdated:(NSNotification*)notification
 {
 	NSDictionary* locationData = [notification object];
+
 	if (locationData)
 	{
 		NSNumber* lat = [locationData objectForKey:@KEY_NAME_LATITUDE];
 		NSNumber* lon = [locationData objectForKey:@KEY_NAME_LONGITUDE];
-		
+
 		CLLocation* loc = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
-		
-		if (IsActivityInProgress())
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+		if ([appDelegate isActivityInProgress])
 		{
 			[self addNewLocation:loc];
  		}
@@ -126,13 +119,6 @@
 			[self.mapView setRegion:region animated:YES];
 		}
 	}
-}
-
-#pragma mark button handlers
-
-- (IBAction)onHome:(id)sender
-{
-	[self.navigationController popToRootViewControllerAnimated:TRUE];
 }
 
 #pragma mark UISwipeGestureRecognizer methods

@@ -38,7 +38,6 @@
 {
 	[super viewDidAppear:animated];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	
 	[self.datePicker setDate:self->date];
 }
 

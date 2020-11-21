@@ -98,11 +98,6 @@ typedef enum ProfilePerformanceRows
 	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -154,6 +149,7 @@ typedef enum ProfilePerformanceRows
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_GENDER
 																	  preferredStyle:UIAlertControllerStyleAlert];
+
 	[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils genderToStr:GENDER_MALE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[appDelegate setUserGender:GENDER_MALE];
 		[self.profileTableView reloadData];
@@ -176,6 +172,8 @@ typedef enum ProfilePerformanceRows
 		textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
 		textField.keyboardType = UIKeyboardTypeNumberPad;
 	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -189,6 +187,8 @@ typedef enum ProfilePerformanceRows
 			[self.profileTableView reloadData];
 		}
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -203,6 +203,8 @@ typedef enum ProfilePerformanceRows
 		textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userWeight]];
 		textField.keyboardType = UIKeyboardTypeNumberPad;
 	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -215,6 +217,8 @@ typedef enum ProfilePerformanceRows
 			[self.profileTableView reloadData];
 		}
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -380,14 +384,18 @@ typedef enum ProfilePerformanceRows
 					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																							 message:STR_WEIGHT
 																					  preferredStyle:UIAlertControllerStyleActionSheet];
+
+					// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+					}]];
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_EDIT_WEIGHT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 						[self showWeightDialog];
 					}]];
 					[alertController addAction:[UIAlertAction actionWithTitle:STR_VIEW_WEIGHT_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 						[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE sender:self];
 					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					}]];
+
+					// Show the action sheet.
 					[self presentViewController:alertController animated:YES completion:nil];
 				}
 				break;
@@ -407,6 +415,7 @@ typedef enum ProfilePerformanceRows
 				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																						 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
 																				  preferredStyle:UIAlertControllerStyleAlert];
+
 				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_SEDENTARY];
 					[self.profileTableView reloadData];
@@ -427,6 +436,8 @@ typedef enum ProfilePerformanceRows
 					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_EXTREME];
 					[self.profileTableView reloadData];
 				}]];
+
+				// Show the action sheet.
 				[self presentViewController:alertController animated:YES completion:nil];
 			}
 			break;
@@ -437,6 +448,7 @@ typedef enum ProfilePerformanceRows
 																						 message:ALERT_MSG_FTP
 																				  preferredStyle:UIAlertControllerStyleAlert];
 				
+				// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 				[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				}]];
 				[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
@@ -453,6 +465,8 @@ typedef enum ProfilePerformanceRows
 						[self.profileTableView reloadData];
 					}
 				}]];
+
+				// Show the action sheet.
 				[self presentViewController:alertController animated:YES completion:nil];
 			}
 			break;

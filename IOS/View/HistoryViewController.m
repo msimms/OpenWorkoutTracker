@@ -104,11 +104,6 @@
 	[self.historyTableView reloadData];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -388,6 +383,10 @@
 																				 message:ACTION_SHEET_TITLE_ACTIVITY
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+
 		for (NSString* type in activityTypes)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:type style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -405,8 +404,8 @@
 				}
 			}]];
 		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	return FALSE;
@@ -423,6 +422,10 @@
 																				 message:ACTION_SHEET_TITLE_EXPORT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		}]];
+
 		for (NSString* fileSite in fileSites)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -430,8 +433,8 @@
 				[self exportSummary];
 			}]];
 		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 	else

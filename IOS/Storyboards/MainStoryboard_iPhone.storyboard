@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -143,7 +143,6 @@
                         <outlet property="startWorkoutButton" destination="e7o-Hb-o9t" id="6N8-Tm-8SK"/>
                         <outlet property="viewButton" destination="H2K-iC-FnB" id="dzv-wL-PJv"/>
                         <segue destination="0n6-g5-UTs" kind="push" identifier="SegueToComplexActivityView" id="9a3-gf-2Lj"/>
-                        <segue destination="pMk-kM-n8i" kind="push" identifier="SegueToMappedActivityView" id="Ijc-qN-Nc8"/>
                         <segue destination="hC7-Vx-aYi" kind="push" identifier="SegueToSimpleActivityView" id="1Bm-YM-doO"/>
                         <segue destination="dJZ-L6-U8P" kind="push" identifier="SegueToHistoryView" id="Hnb-1K-Jfh"/>
                         <segue destination="ubg-tP-SOX" kind="push" identifier="SegueToStatisticsView" id="oQL-vo-6kr"/>
@@ -158,7 +157,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="114" y="354"/>
+            <point key="canvasLocation" x="-943" y="354"/>
         </scene>
         <!--Profile-->
         <scene sceneID="DLc-pZ-sa5">
@@ -872,6 +871,11 @@
                                             <action selector="onPace:" destination="0n6-g5-UTs" id="Nn3-V0-Hms"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Weight" id="4Rs-oZ-4To">
+                                        <connections>
+                                            <action selector="onWeight:" destination="0n6-g5-UTs" id="BH9-WS-8dC"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Lap" id="92T-xb-WOa">
                                         <connections>
                                             <action selector="onLap:" destination="0n6-g5-UTs" id="E4q-2a-8eq"/>
@@ -899,8 +903,8 @@
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="EVZ-hn-yfq" userLabel="Units">
-                                <rect key="frame" x="107" y="230" width="200" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="EVZ-hn-yfq" userLabel="Units">
+                                <rect key="frame" x="107" y="240" width="200" height="21"/>
                                 <fontDescription key="fontDescription" name="Copperplate" family="Copperplate" pointSize="18"/>
                                 <color key="textColor" red="0.49566915760000002" green="0.49566915760000002" blue="0.49566915760000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1188,7 +1192,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="uwA-vG-wXj">
-                        <barButtonItem key="rightBarButtonItem" title="More" id="PMl-gG-wNv">
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="PMl-gG-wNv">
                             <connections>
                                 <action selector="onSummary:" destination="0n6-g5-UTs" id="RXo-UR-sIl"/>
                             </connections>
@@ -1234,8 +1238,9 @@
                         <outlet property="value_r4c2" destination="hzf-be-qyq" id="CGf-jx-bod"/>
                         <outlet property="value_r5c1" destination="DH7-64-NSu" id="OwY-5n-Gaf"/>
                         <outlet property="value_r5c2" destination="iFq-1m-eyD" id="NbK-1e-VqS"/>
+                        <outlet property="weightButton" destination="4Rs-oZ-4To" id="L5n-Hs-9XK"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="zxl-cL-SNo"/>
-                        <segue destination="2uT-mo-S6M" kind="push" identifier="SegueToLiveSummaryView" id="2hX-Kx-fHg"/>
+                        <segue destination="hC7-Vx-aYi" kind="push" identifier="SegueToSimpleActivityView" id="fz0-Br-1wA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sh7-9F-bCw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1315,7 +1320,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0co-R6-U2A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5326.3999999999996" y="-564.01799100449784"/>
+            <point key="canvasLocation" x="5501" y="-243"/>
         </scene>
         <!--Options-->
         <scene sceneID="jAL-HZ-9FM">
@@ -1351,7 +1356,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rZj-QA-LSA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4610.3999999999996" y="-564.53201970443354"/>
+            <point key="canvasLocation" x="4587" y="-243"/>
         </scene>
         <!--Mapped Activity View Controller-->
         <scene sceneID="VHq-nH-8t5">
@@ -1363,6 +1368,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GwT-k9-o3L">
                                 <rect key="frame" x="0.0" y="88" width="414" height="379"/>
+                                <connections>
+                                    <outlet property="delegate" destination="pMk-kM-n8i" id="qTP-4U-ry3"/>
+                                </connections>
                             </mapView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sir-57-T5G">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
@@ -1395,7 +1403,7 @@
                                     </barButtonItem>
                                     <barButtonItem title="Map" id="HTh-Gm-FHv">
                                         <connections>
-                                            <action selector="onMap:" destination="pMk-kM-n8i" id="aEc-f7-GTw"/>
+                                            <action selector="onMap:" destination="pMk-kM-n8i" id="dwh-KB-sMa"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="woX-zW-MOu"/>
@@ -1595,14 +1603,13 @@
                             <constraint firstItem="jKh-tf-MRU" firstAttribute="firstBaseline" secondItem="LAR-e6-oIZ" secondAttribute="firstBaseline" id="xQo-pI-aSV"/>
                             <constraint firstItem="fWa-ef-Rda" firstAttribute="trailing" secondItem="QwQ-sg-mIp" secondAttribute="trailing" id="xTe-cW-aEF"/>
                             <constraint firstItem="jKh-tf-MRU" firstAttribute="trailing" secondItem="nwW-C2-DCc" secondAttribute="trailing" id="yFD-yI-t9i"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="fWa-ef-Rda" secondAttribute="trailing" constant="-16" id="ydX-du-vjk"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="GCW-Lk-NFp" appends="YES" id="tfR-uQ-q3B"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="sdv-7e-4LU">
-                        <barButtonItem key="rightBarButtonItem" title="More" id="bv0-b4-Cmb">
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="bv0-b4-Cmb">
                             <connections>
                                 <action selector="onSummary:" destination="pMk-kM-n8i" id="3so-w0-hQg"/>
                             </connections>
@@ -1614,15 +1621,14 @@
                         <outlet property="customizeButton" destination="5bt-HJ-NJO" id="WHG-hy-0Xs"/>
                         <outlet property="intervalsButton" destination="PNs-eK-OM5" id="Lfv-TR-Mw8"/>
                         <outlet property="lapButton" destination="8vo-Kn-qHg" id="1WR-6t-cAK"/>
-                        <outlet property="mapButton" destination="HTh-Gm-FHv" id="trS-O7-2SH"/>
+                        <outlet property="leftSwipe" destination="GCW-Lk-NFp" id="BqL-B4-Xjq"/>
+                        <outlet property="mapButton" destination="HTh-Gm-FHv" id="f19-zc-SxT"/>
                         <outlet property="mapView" destination="GwT-k9-o3L" id="gtW-0h-qKF"/>
                         <outlet property="messagesLabel" destination="fWa-ef-Rda" id="vGc-8Y-esc"/>
                         <outlet property="moreButton" destination="bv0-b4-Cmb" id="3K8-E8-udi"/>
                         <outlet property="navItem" destination="sdv-7e-4LU" id="o4h-SQ-4Ee"/>
                         <outlet property="paceButton" destination="3qL-0J-Bja" id="4sY-ik-Mw1"/>
-                        <outlet property="scaleButton" destination="HTh-Gm-FHv" id="o80-4C-0QS"/>
                         <outlet property="startStopButton" destination="s0a-k9-ORr" id="TR0-2h-tKJ"/>
-                        <outlet property="swipe" destination="GCW-Lk-NFp" id="r5l-q2-wMY"/>
                         <outlet property="title1" destination="jAL-db-HXU" id="4ot-kR-enB"/>
                         <outlet property="title2" destination="r5V-3T-s5T" id="iVQ-kX-PBX"/>
                         <outlet property="title3" destination="jKh-tf-MRU" id="TkB-1a-Ixh"/>
@@ -1639,14 +1645,13 @@
                         <outlet property="value3" destination="nwW-C2-DCc" id="EaM-ey-Vxn"/>
                         <outlet property="value4" destination="sLF-U3-EmA" id="P7r-8C-X96"/>
                         <outlet property="value_Large" destination="AHP-Iq-h0i" id="YfW-Cw-MRK"/>
-                        <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="j4b-oo-ykq"/>
                         <segue destination="2uT-mo-S6M" kind="push" identifier="SegueToLiveSummaryView" id="rmC-zq-awJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gCn-FM-FKF" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="right" id="GCW-Lk-NFp"/>
             </objects>
-            <point key="canvasLocation" x="2916" y="-565.36731634182911"/>
+            <point key="canvasLocation" x="3752" y="-565"/>
         </scene>
         <!--Simple Activity View Controller-->
         <scene sceneID="RuB-IT-PLj">
@@ -1690,12 +1695,12 @@
                                             <action selector="onLap:" destination="hC7-Vx-aYi" id="msY-Hg-c2B"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ylj-iR-sRy"/>
                                     <barButtonItem title="Autostart" id="Bvl-g0-7qP">
                                         <connections>
                                             <action selector="onAutoStart:" destination="hC7-Vx-aYi" id="fO4-lV-9rQ"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ylj-iR-sRy"/>
                                     <barButtonItem title="Start" id="cqS-Tg-XEP">
                                         <connections>
                                             <action selector="onStartStop:" destination="hC7-Vx-aYi" id="WgY-yF-7eu"/>
@@ -1853,7 +1858,7 @@
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="zFq-xI-Fl3">
-                        <barButtonItem key="rightBarButtonItem" title="More" id="wE7-XD-cTo">
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="wE7-XD-cTo">
                             <connections>
                                 <action selector="onSummary:" destination="hC7-Vx-aYi" id="FCC-VZ-fHf"/>
                             </connections>
@@ -1865,12 +1870,12 @@
                         <outlet property="customizeButton" destination="u0W-qK-ak4" id="Go8-m2-DA8"/>
                         <outlet property="intervalsButton" destination="ji6-6p-aBX" id="mC0-EI-GKH"/>
                         <outlet property="lapButton" destination="z6c-zC-6IQ" id="O0n-qW-Vhp"/>
+                        <outlet property="leftSwipe" destination="L53-oa-T9H" id="HOA-B9-9Pz"/>
                         <outlet property="messagesLabel" destination="ngk-5R-KXr" id="AYU-r9-Nnw"/>
                         <outlet property="moreButton" destination="wE7-XD-cTo" id="JS4-VT-Ipw"/>
                         <outlet property="navItem" destination="zFq-xI-Fl3" id="rzP-QT-l7j"/>
                         <outlet property="paceButton" destination="n7C-Er-Fc8" id="zbx-tI-Kqf"/>
                         <outlet property="startStopButton" destination="cqS-Tg-XEP" id="9R6-8D-aDg"/>
-                        <outlet property="swipe" destination="L53-oa-T9H" id="QR2-Rf-9ex"/>
                         <outlet property="title1" destination="IsL-dv-F2Z" id="9yF-rh-R1e"/>
                         <outlet property="title2" destination="NI6-gV-Fnn" id="M4j-bw-1KM"/>
                         <outlet property="title3" destination="Hzq-We-zTB" id="KMU-If-Ytx"/>
@@ -1886,13 +1891,17 @@
                         <outlet property="value4" destination="TPp-2U-wEl" id="2OS-0H-y0E"/>
                         <outlet property="weightButton" destination="0gz-RG-vbY" id="c2h-M2-zfi"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="V9h-tU-0NS"/>
-                        <segue destination="2uT-mo-S6M" kind="push" identifier="SegueToLiveSummaryView" id="UtV-9X-A4d"/>
+                        <segue destination="pMk-kM-n8i" kind="push" identifier="SegueToMappedActivityView" id="kzb-01-qIL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ubd-uM-Zc6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="L53-oa-T9H"/>
+                <swipeGestureRecognizer direction="right" id="L53-oa-T9H">
+                    <connections>
+                        <outlet property="delegate" destination="hC7-Vx-aYi" id="MIp-8e-I8J"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3753.5999999999999" y="-564.01799100449784"/>
+            <point key="canvasLocation" x="2904" y="-565"/>
         </scene>
         <!--History View Controller-->
         <scene sceneID="bgT-wQ-y9p">
@@ -1970,7 +1979,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xze-nw-l1D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1988" y="167.76611694152925"/>
+            <point key="canvasLocation" x="1990" y="252"/>
         </scene>
         <!--Summary-->
         <scene sceneID="lkO-8B-NmN">
@@ -1984,7 +1993,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="277"/>
                                 <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="277" id="atw-8q-9Vy"/>
+                                    <constraint firstAttribute="height" constant="277" id="39Y-2O-wm9"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="xf7-Mc-VJA" id="VSk-JS-F5I"/>
@@ -1993,9 +2002,6 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="M6E-Tx-gxb">
                                 <rect key="frame" x="0.0" y="365" width="414" height="448"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="364" id="B3g-Ei-oT1"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="xf7-Mc-VJA" id="fTH-Ie-93v"/>
                                     <outlet property="delegate" destination="xf7-Mc-VJA" id="xQ6-ft-k8U"/>
@@ -2007,9 +2013,6 @@
                             </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jfP-Xt-Jaz">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="49" id="nMe-so-laS"/>
-                                </constraints>
                                 <items>
                                     <barButtonItem systemItem="action" id="Kme-ZG-q82">
                                         <connections>
@@ -2082,7 +2085,6 @@
                         <outlet property="navItem" destination="tMM-Bs-yS7" id="AwI-W0-Mez"/>
                         <outlet property="spinner" destination="1ax-kD-CMV" id="d1h-gM-m7n"/>
                         <outlet property="summaryTableView" destination="M6E-Tx-gxb" id="7DR-Ah-880"/>
-                        <outlet property="tableHeightConstraint" destination="B3g-Ei-oT1" id="FQg-Xm-wqe"/>
                         <outlet property="tableTopConstraint" destination="vMk-p6-Ib3" id="W28-Kd-fHF"/>
                         <outlet property="tagsButton" destination="yi4-Xp-L31" id="7HC-fd-lpV"/>
                         <outlet property="toolbar" destination="jfP-Xt-Jaz" id="k50-dG-hFR"/>
@@ -2095,7 +2097,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tCO-8j-efT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2914.4000000000001" y="170.46476761619192"/>
+            <point key="canvasLocation" x="2920" y="252"/>
         </scene>
         <!--Map-->
         <scene sceneID="3QM-XS-JUO">
@@ -2158,7 +2160,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="5326" y="-1318"/>
+            <point key="canvasLocation" x="5464" y="-1319"/>
         </scene>
         <!--Summary-->
         <scene sceneID="rzl-qb-SLK">
@@ -2281,7 +2283,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dhy-qE-EeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3753.5999999999999" y="171.81409295352324"/>
+            <point key="canvasLocation" x="3752" y="252"/>
         </scene>
         <!--SplitTimesViewController-->
         <scene sceneID="bwv-ey-xhM">
@@ -2319,7 +2321,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PRN-n1-vNQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4587.1999999999998" y="691.75412293853083"/>
+            <point key="canvasLocation" x="4606" y="1056"/>
         </scene>
         <!--Statistics View Controller-->
         <scene sceneID="cZz-9u-YAO">
@@ -2404,7 +2406,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2nS-1c-UA1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1990" y="1807"/>
+            <point key="canvasLocation" x="1149" y="1519"/>
         </scene>
         <!--Pace Plan Edit View Controller-->
         <scene sceneID="Kgi-6W-ofn">
@@ -2479,8 +2481,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NOx-tz-E9l">
-                                <rect key="frame" x="68" y="306" width="316" height="34"/>
+                            <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NOx-tz-E9l">
+                                <rect key="frame" x="33" y="306" width="351" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="316" id="zmy-cb-NIs"/>
@@ -2533,7 +2535,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xPy-4Q-FQ8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1989.5999999999999" y="-1298.2758620689656"/>
+            <point key="canvasLocation" x="1988.4057971014495" y="-1298.4375"/>
         </scene>
         <!--Workout Details View Controller-->
         <scene sceneID="3Kl-LP-ZgI">
@@ -2774,7 +2776,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hFT-JM-Jxn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-121" y="1520"/>
+            <point key="canvasLocation" x="-1942" y="1519"/>
         </scene>
         <!--Core Plot View Controller-->
         <scene sceneID="nIB-Ie-bzJ">
@@ -2830,7 +2832,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r1I-f3-c9b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-690" y="354"/>
+            <point key="canvasLocation" x="-1942" y="354"/>
         </scene>
         <!--Lap Times-->
         <scene sceneID="dXw-Cm-b3j">
@@ -2868,7 +2870,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mIL-jz-rh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3753" y="1057"/>
+            <point key="canvasLocation" x="3751" y="1217"/>
         </scene>
         <!--Followers-->
         <scene sceneID="Kgu-41-app">
@@ -3058,13 +3060,13 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2916" y="1807"/>
+            <point key="canvasLocation" x="1990" y="1835"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="gtm-yZ-0Yg"/>
-        <segue reference="rmC-zq-awJ"/>
-        <segue reference="j4b-oo-ykq"/>
+        <segue reference="ksp-tA-xd6"/>
+        <segue reference="V9h-tU-0NS"/>
+        <segue reference="fz0-Br-1wA"/>
         <segue reference="mpc-lI-yFA"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

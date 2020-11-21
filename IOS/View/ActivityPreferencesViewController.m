@@ -118,11 +118,6 @@ typedef enum GpsSectionItems
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;
@@ -451,12 +446,17 @@ typedef enum GpsSectionItems
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:title
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
+
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+
 		for (NSString* buttonName in buttonNames)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:buttonName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+
 				if (prefs)
 				{
 					NSString* activityType = [appDelegate getCurrentActivityType];
@@ -540,7 +540,8 @@ typedef enum GpsSectionItems
 				[self.optionsTableView reloadData];
 			}]];
 		}
-		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }

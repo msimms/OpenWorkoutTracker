@@ -89,11 +89,6 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[self save];
@@ -126,6 +121,11 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_WHEEL_SIZE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_ISO_622 style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self updateWheelDiameter:(double)622.0];
 	}]];
@@ -160,9 +160,12 @@
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self updateWheelDiameter:(double)0.0];			
 		}]];
+
+		// Show the action sheet.
 		[self presentViewController:alertController2 animated:YES completion:nil];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

@@ -62,11 +62,6 @@
 	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[self save];

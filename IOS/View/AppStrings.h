@@ -41,6 +41,10 @@
 #define STR_WORKOUTS          NSLocalizedString(@"Workouts", nil)
 #define STR_GENERATE          NSLocalizedString(@"Generate", nil)
 #define STR_REPLACE           NSLocalizedString(@"Replace", nil)
+#define STR_NEXT              NSLocalizedString(@"Next", nil)
+#define STR_PREVIOUS          NSLocalizedString(@"Previous", nil)
+#define STR_LAP               NSLocalizedString(@"Lap", nil)
+#define STR_AUTOSCALE         NSLocalizedString(@"Autoscale", nil)
 
 #define STR_SECONDS           NSLocalizedString(@"Seconds", nil)
 #define STR_METERS            NSLocalizedString(@"Meters", nil)

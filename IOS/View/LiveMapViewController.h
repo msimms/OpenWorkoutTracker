@@ -20,8 +20,6 @@
 - (void)drawExistingRoute;
 - (void)locationUpdated:(NSNotification*)notification;
 
-- (IBAction)onHome:(id)sender;
-
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* swipe;

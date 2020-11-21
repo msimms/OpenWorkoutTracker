@@ -81,11 +81,6 @@ typedef enum SectionType
 	[super viewDidAppear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;

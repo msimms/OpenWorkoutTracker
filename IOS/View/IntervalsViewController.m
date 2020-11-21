@@ -59,11 +59,6 @@
 	[self.intervalTableView reloadData];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -108,6 +103,8 @@
 	
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -127,6 +124,8 @@
 			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
 		}
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -137,6 +136,10 @@
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ALERT_MSG_NEW_INTERVAL_SPORT
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_RUNNING style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self createIntervalWorkoutForSport:STR_RUNNING];
 	}]];
@@ -146,7 +149,8 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_LIFTING style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self createIntervalWorkoutForSport:STR_LIFTING];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

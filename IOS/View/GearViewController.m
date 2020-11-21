@@ -73,11 +73,6 @@ typedef enum GearSections
 	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return YES;
@@ -265,7 +260,10 @@ typedef enum GearSections
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:MSG_SELECT_GEAR_TYPE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_BIKE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->bikeViewMode = BIKE_PROFILE_NEW;
 		[self performSegueWithIdentifier:@SEGUE_TO_BIKE_PROFILE sender:self];
@@ -274,6 +272,8 @@ typedef enum GearSections
 		self->shoeViewMode = SHOE_PROFILE_NEW;
 		[self performSegueWithIdentifier:@SEQUE_TO_SHOE_PROFILE sender:self];
 	}]];
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 

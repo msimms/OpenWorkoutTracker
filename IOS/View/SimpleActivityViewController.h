@@ -11,7 +11,7 @@
 
 @interface SimpleActivityViewController : ActivityViewController
 {	
-	IBOutlet UISwipeGestureRecognizer* swipe;
+	IBOutlet UISwipeGestureRecognizer* leftSwipe;
 
 	IBOutlet UILabel* value1;
 	IBOutlet UILabel* title1;
@@ -40,7 +40,7 @@
 
 - (void)onRefreshTimer:(NSTimer*)timer;
 
-@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* swipe;
+@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* leftSwipe;
 
 @property (nonatomic, retain) IBOutlet UILabel* value1;
 @property (nonatomic, retain) IBOutlet UILabel* title1;

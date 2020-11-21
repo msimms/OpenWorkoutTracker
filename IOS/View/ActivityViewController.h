@@ -8,7 +8,7 @@
 #import "CommonViewController.h"
 #import "ActivityPreferences.h"
 #import "Segues.h"
-#import "ActivityMgr.h"
+#import "Coordinate.h"
 
 #define ACTIVITY_BUTTON_AUTOSTART NSLocalizedString(@"Autostart", nil)
 #define ACTIVITY_BUTTON_START     NSLocalizedString(@"Start", nil)

@@ -3,7 +3,7 @@
 
 #define NOTIFICATION_NAME_ACTIVITY_STARTED         "ActivityStarted"
 #define NOTIFICATION_NAME_ACTIVITY_STOPPED         "ActivityStopped"
-#define NOTIFICATION_NAME_PEER_LOCATION_UPDATED    "PeerLocationUpdated"
+#define NOTIFICATION_NAME_FRIEND_LOCATION_UPDATED  "FriendLocationUpdated"
 #define NOTIFICATION_NAME_GEAR_LIST_UPDATED        "GearListUpdated"
 #define NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED "PlannedWorkoutsUpdated"
 #define NOTIFICATION_NAME_WORKOUT_UPDATED          "WorkoutUpdated"
