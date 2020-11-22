@@ -394,15 +394,9 @@
 		{
 			CLLocation* loc1 = [activityLocations objectAtIndex:i - 1];
 			CLLocation* loc2 = [activityLocations objectAtIndex:i];
-			Coordinate c1;
-			Coordinate c2;
-			
-			c1.latitude = loc1.coordinate.latitude;
-			c1.longitude = loc1.coordinate.longitude;
-			c1.altitude = 0.0;
-			c2.latitude = loc2.coordinate.latitude;
-			c2.longitude = loc2.coordinate.longitude;
-			c2.altitude = 0.0;
+
+			Coordinate c1 = { loc1.coordinate.latitude, loc1.coordinate.longitude, 0.0, 0.0, 0.0, 0 };
+			Coordinate c2 = { loc2.coordinate.latitude, loc2.coordinate.longitude, 0.0, 0.0, 0.0, 0 };
 
 			double distance = DistanceBetweenCoordinates(c1, c2);
 			[activityDistances addObject:@(distance)];
