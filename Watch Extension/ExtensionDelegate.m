@@ -49,6 +49,7 @@
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
 	self->hasConnectivity = FALSE;
+	self->activityType = nil;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
@@ -259,15 +260,16 @@ void startSensorCallback(SensorType type, void* context)
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 		[self->backendLock unlock];
 
-		NSString* activityType = [self getCurrentActivityType];		
+		self->activityType = [self getCurrentActivityType];		
+
 		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								   activityId, @KEY_NAME_ACTIVITY_ID,
-								   activityType, @KEY_NAME_ACTIVITY_TYPE,
+								   self->activityType, @KEY_NAME_ACTIVITY_TYPE,
 								   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								   nil];
 
 		// Start the activity in HealthKit.
-		[self->healthMgr startWorkout:activityType withStartTime:[[NSDate alloc] initWithTimeIntervalSince1970:startTime.value.intVal]];
+		[self->healthMgr startWorkout:self->activityType withStartTime:[[NSDate alloc] initWithTimeIntervalSince1970:startTime.value.intVal]];
 
 		// Let the others know.
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
@@ -303,7 +305,6 @@ void startSensorCallback(SensorType type, void* context)
 		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
 		[self->backendLock unlock];
 
-		NSString* activityType = [self getCurrentActivityType];
 		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 		NSString* activityHash = [self hashCurrentActivity];
 
@@ -316,7 +317,7 @@ void startSensorCallback(SensorType type, void* context)
 
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								  activityId, @KEY_NAME_ACTIVITY_ID,
-								  activityType, @KEY_NAME_ACTIVITY_TYPE,
+								  self->activityType, @KEY_NAME_ACTIVITY_TYPE,
 								  activityHash, @KEY_NAME_ACTIVITY_HASH,
 								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
@@ -329,6 +330,8 @@ void startSensorCallback(SensorType type, void* context)
 
 		// Let the others know.
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
+		
+		self->activityType = nil;
 	}
 	return result;
 }
@@ -726,11 +729,9 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 
 		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
 
-		NSString* activityType = [self getCurrentActivityType];
-
 		BOOL tempBadGps = FALSE;
 
-		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:self->activityType];
 		if (minHAccuracy != (uint8_t)-1)
 		{
 			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
@@ -740,7 +741,7 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 			}
 		}
 		
-		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:self->activityType];
 		if (minVAccuracy != (uint8_t)-1)
 		{
 			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
@@ -753,7 +754,7 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 		self->badGps = tempBadGps;
 
 		BOOL shouldProcessReading = TRUE;
-		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:self->activityType];
 		
 		if (filterOption == GPS_FILTER_DROP && self->badGps)
 		{

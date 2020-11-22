@@ -8,6 +8,8 @@
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
 
+#import "ActivityPreferences.h"
+
 @interface WatchActivityViewController : WKInterfaceController
 {
 	IBOutlet __strong WKInterfaceButton* startStopButton;
@@ -33,6 +35,7 @@
 	NSInteger       attributePosToReplace; // Indicates which attribute was pressed
 	BOOL            isPopping; // Prevents us from redrawing if we're about to pop
 	NSString*       activityType; // Current activity type, cached here for performance reasons
+	ActivityPreferences* prefs; // Prefs object, cached here for performance reasons
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* startStopButton;

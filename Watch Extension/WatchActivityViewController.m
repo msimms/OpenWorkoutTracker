@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WatchActivityViewController.h"
-#import "ActivityPreferences.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "Notifications.h"
@@ -106,6 +105,9 @@
 
 	// Cache the activity type so we don't have to keep looking it up.
 	self->activityType = [extDelegate getCurrentActivityType];
+	
+	// Cache the preferences.
+	self->prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 
 	// Notification subscriptions.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
@@ -275,7 +277,6 @@
 
 - (void)onRefreshTimer:(NSTimer*)timer
 {
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 
@@ -285,7 +286,7 @@
 		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
 		if (valueLabel)
 		{
-			NSString* attribute = [prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
+			NSString* attribute = [self->prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
 
 			// Display the value.
 			ActivityAttributeType value = [extDelegate queryLiveActivityAttribute:attribute];
@@ -376,7 +377,6 @@
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:FALSE];
 
 	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 
@@ -389,9 +389,9 @@
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void)
 		{
 			// Save the new setting, removing the old setting.
-			NSString* oldAttributeName = [prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:self->attributePosToReplace];
-			[prefs setViewAttributePosition:self->activityType withAttributeName:attribute withPos:self->attributePosToReplace];
-			[prefs setViewAttributePosition:self->activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			NSString* oldAttributeName = [self->prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:self->attributePosToReplace];
+			[self->prefs setViewAttributePosition:self->activityType withAttributeName:attribute withPos:self->attributePosToReplace];
+			[self->prefs setViewAttributePosition:self->activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
 		}];	
 		[actions addObject:action];
 	}
@@ -406,14 +406,13 @@
 
 	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:FALSE];
 
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[actions addObject:[WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void) {}]];
 
 	for (uint8_t i = 0; i < 3; i++)
 	{
-		NSString* attribute = [prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
+		NSString* attribute = [self->prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
 
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
 			self->attributePosToReplace = i;

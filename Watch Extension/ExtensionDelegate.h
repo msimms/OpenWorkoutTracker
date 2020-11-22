@@ -29,6 +29,8 @@
 	BOOL receivingLocations; // TRUE if we have received at least one location
 	BOOL hasConnectivity; // TRUE if we have confirmed the existence of a cellular/mobile data network
 
+	NSString* activityType; // Current activity type, cached here for performance reasons
+
 	NSLock* backendLock; // Lock for all backend calls.
 }
 
