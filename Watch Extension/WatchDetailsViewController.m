@@ -64,8 +64,7 @@
 	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
 	}];
 
-	NSArray* actions = [NSArray new];
-	actions = @[yesAction, noAction];
+	NSArray* actions = @[yesAction, noAction];
 	[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_DELETE preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 

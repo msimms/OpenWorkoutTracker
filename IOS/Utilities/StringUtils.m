@@ -70,9 +70,9 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"mins/km", nil);
+					return NSLocalizedString(@"mins/km", @"Unit string for minutes per kilometer");
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
-					return NSLocalizedString(@"mins/mile", nil);
+					return NSLocalizedString(@"mins/mile", @"Unit string for minutes per mile");
 				else
 					return nil;
 			}
@@ -81,9 +81,9 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"kph", nil);
+					return NSLocalizedString(@"kph", @"Unit string for kilometers per hour");
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
-					return NSLocalizedString(@"mph", nil);
+					return NSLocalizedString(@"mph", @"Unit string for miles per hour");
 				else
 					return nil;
 			}
@@ -92,9 +92,9 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"kms", nil);
+					return NSLocalizedString(@"kms", @"Unit string for kilometers");
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
-					return NSLocalizedString(@"miles", nil);
+					return NSLocalizedString(@"miles", @"Unit string for miles");
 				else
 					return nil;
 			}
@@ -103,9 +103,9 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"kgs", nil);
+					return NSLocalizedString(@"kgs", @"Unit string for kilograms");
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
-					return NSLocalizedString(@"lbs", nil);
+					return NSLocalizedString(@"lbs", @"Unit string for pounds");
 				else
 					return nil;
 			}
@@ -114,9 +114,9 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"cm", nil);
+					return NSLocalizedString(@"cm", @"Unit string for centimeters");
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
-					return NSLocalizedString(@"inches", nil);
+					return NSLocalizedString(@"inches", @"Unit string for inches");
 				else
 					return nil;
 			}
@@ -125,9 +125,9 @@
 			{
 				UnitSystem preferredUnits = [Preferences preferredUnitSystem];
 				if (preferredUnits == UNIT_SYSTEM_METRIC)
-					return NSLocalizedString(@"meters", nil);
+					return NSLocalizedString(@"meters", @"Unit string for meters");
 				else if (preferredUnits == UNIT_SYSTEM_US_CUSTOMARY)
-					return NSLocalizedString(@"ft", nil);
+					return NSLocalizedString(@"ft", @"Unit string for feet");
 				else
 					return nil;
 			}
@@ -135,21 +135,21 @@
 		case MEASURE_COUNT:
 			return nil;
 		case MEASURE_BPM:
-			return NSLocalizedString(@"bpm", nil);
+			return NSLocalizedString(@"bpm", @"Unit string for beats per minute");
 		case MEASURE_POWER:
-			return NSLocalizedString(@"watts", nil);
+			return NSLocalizedString(@"watts", @"Unit string for watts");
 		case MEASURE_CALORIES:
-			return NSLocalizedString(@"kcal", nil);
+			return NSLocalizedString(@"kcal", @"Unit string for kilocalories (or just calories for Americans)");
 		case MEASURE_DEGREES:
-			return NSLocalizedString(@"deg", nil);
+			return NSLocalizedString(@"deg", @"Unit string for temperature in degrees");
 		case MEASURE_G:
 			return @"G";
 		case MEASURE_PERCENTAGE:
 			return @"%";
 		case MEASURE_RPM:
-			return NSLocalizedString(@"rpm", nil);
+			return NSLocalizedString(@"rpm", @"Unit string for revolutions per minute");
 		case MEASURE_GPS_ACCURACY:
-			return NSLocalizedString(@"meters", nil);
+			return NSLocalizedString(@"meters", @"Unit string for meters");
 		case MEASURE_INDEX:
 			return @"";
 		case MEASURE_ID:
