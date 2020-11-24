@@ -207,6 +207,7 @@
 	for (NSString* peripheralUUIDStr in peripheralUUIDStrs)
 	{
 		NSUUID* nsuuid = [[NSUUID alloc] initWithUUIDString:peripheralUUIDStr];
+
 		if (nsuuid)
 		{
 			[uuids addObject:nsuuid];
@@ -238,6 +239,7 @@
 	if (self->centralManager && (self->centralManager.state == CBManagerStatePoweredOn))
 	{
 		NSDictionary* options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:CBCentralManagerScanOptionAllowDuplicatesKey];
+
 		[self->centralManager scanForPeripheralsWithServices:nil options:options];	// scan for all periperals as some may not properly advertise their services
 		[self retrieveConnectedPeripherals];
 	}
@@ -357,15 +359,18 @@
 
 		@synchronized(self->discoveredSensors)
 		{
+			// Have we already seen this peripheral. If so, we may need to update it.
 			for (BtleSensor* sensor in self->discoveredSensors)
 			{
 				if ([sensor peripheral] == peripheral)
 				{
-					alreadyDiscovered = true;
 					[peripheral setDelegate:sensor];
+					[peripheral discoverCharacteristics:nil forService:service];
+					alreadyDiscovered = true;
 				}
 			}
-			
+
+			// If we haven't seen this peripheral yet then instantiate an object to manage it.
 			if (!alreadyDiscovered)
 			{
 				BtleSensor* sensor = nil;

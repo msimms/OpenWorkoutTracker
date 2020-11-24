@@ -12,6 +12,11 @@
 #import "BluetoothServices.h"
 #import "Sensor.h"
 
+#define NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL "PeripheralBatteryLevel"
+
+#define KEY_NAME_BATTERY_LEVEL "BatteryLevel"
+#define KEY_NAME_BATTERY_PERIPHERAL_OBJ "Peripheral"
+
 @interface BtleSensor : NSObject<Sensor, CBPeripheralDelegate>
 {
 	CBPeripheral* peripheral;
@@ -29,6 +34,8 @@
 
 - (void)reset;
 - (void)start;
+
+- (void)checkBatteryLevel:(NSData*)data;
 
 - (SensorType)sensorType;
 

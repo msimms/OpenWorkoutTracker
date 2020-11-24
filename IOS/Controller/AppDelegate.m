@@ -31,6 +31,8 @@
 
 #define DATABASE_NAME "Activities.sqlite"
 
+#define MESSAGE_LOW_BATTERY NSLocalizedString(@"Low accessory battery for ", nil)
+
 @implementation UINavigationController (Rotation_IOS6)
 
 - (BOOL)shouldAutorotate
@@ -105,6 +107,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strideLengthUpdated:) name:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryLevelUpdated:) name:@NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
@@ -942,6 +945,33 @@ void startSensorCallback(SensorType type, void* context)
 						ProcessRunDistanceReading([value doubleValue], [timestampMs longLongValue]);
 					}
 				}
+			}
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+- (void)batteryLevelUpdated:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* batteryData = [notification object];
+		CBPeripheral* peripheral = [batteryData objectForKey:@KEY_NAME_BATTERY_PERIPHERAL_OBJ];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if ([Preferences shouldUsePeripheral:idStr])
+		{
+			NSNumber* batteryLevel = [batteryData objectForKey:@KEY_NAME_BATTERY_LEVEL];
+
+			// Warn if the battery level is less than 25%.
+			if ([batteryLevel intValue] < 25)
+			{
+				NSString* msg = [[NSString alloc] initWithFormat:@"%@%@: %d%%", MESSAGE_LOW_BATTERY, [peripheral name], [batteryLevel intValue]];
+				NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:msg, @KEY_NAME_MESSAGE, nil];
+
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PRINT_MESSAGE object:msgData];
 			}
 		}
 	}
@@ -2543,6 +2573,7 @@ void attributeNameCallback(const char* name, void* context)
 	return GenerateWorkouts();
 }
 
+// Retrieve planned workouts from the database.
 - (NSMutableArray*)getPlannedWorkouts
 {
 	NSMutableArray* workoutData = [[NSMutableArray alloc] init];
@@ -2749,6 +2780,7 @@ void attributeNameCallback(const char* name, void* context)
 	[self serverClaimDeviceAsync:deviceId];
 }
 
+// Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
 - (void)checkForActivity:(NSString*)activityHash
 {
 	if (activityHash)
@@ -2772,6 +2804,7 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
+// Sends interval workouts to the watch.
 - (void)sendIntervalWorkouts
 {
 	if (InitializeIntervalWorkoutList())
@@ -2795,6 +2828,7 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
+// Sends pace plans to the watch.
 - (void)sendPacePlans
 {
 	if (InitializePacePlanList())
@@ -2818,6 +2852,7 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
+// Import an activity that was sent from the watch.
 - (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
 {
 	NSString* activityId = [message objectForKey:@WATCH_MSG_ACTIVITY_ID];

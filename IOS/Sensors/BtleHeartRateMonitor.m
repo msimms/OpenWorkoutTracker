@@ -144,9 +144,11 @@ typedef struct HeartRateMeasurement
 	{
 		NSData* updatedValue = characteristic.value;
 		uint8_t* dataPointer = (uint8_t*)[updatedValue bytes];
+
 		if (dataPointer)
 		{
 			uint8_t location = dataPointer[0];
+
 			switch (location)
 			{
 				case 0:

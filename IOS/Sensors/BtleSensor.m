@@ -76,6 +76,35 @@
 {
 }
 
+#pragma mark battery level reading
+
+// Called when a peripheral is reporting battery level.
+- (void)checkBatteryLevel:(NSData*)data
+{
+	if (data == nil)
+	{
+		return;
+	}
+
+	const uint8_t* reportBytes = [data bytes];
+	NSUInteger reportLen = [data length];
+
+	// Battery level is a single byte with a value from 0 to 100 decimal.
+	if (reportBytes && (reportLen >= 1))
+	{
+		uint8_t batteryLevel = reportBytes[0];
+
+		NSDictionary* powerData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								   [NSNumber numberWithLong:batteryLevel], @KEY_NAME_BATTERY_LEVEL,
+								   self->peripheral, @KEY_NAME_BATTERY_PERIPHERAL_OBJ,
+								   nil];
+		if (powerData)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL object:powerData];
+		}
+	}
+}
+
 #pragma mark characteristics methods
 
 - (SensorType)sensorType

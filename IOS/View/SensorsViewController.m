@@ -387,14 +387,16 @@ typedef enum SettingsSections
 	NSDictionary* data = [notification object];
 	if (data)
 	{
-		NSObject* peripheral = [data objectForKey:@KEY_NAME_SCALE_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_SCALE_PERIPHERAL_OBJ];
 		NSNumber* value = [data objectForKey:@KEY_NAME_WEIGHT_KG];
+
 		if (peripheral && value)
 		{
 			NSInteger row = [self->connectedScales indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_SCALE, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+
 			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
 		}
 	}
@@ -405,14 +407,16 @@ typedef enum SettingsSections
 	NSDictionary* data = [notification object];
 	if (data)
 	{
-		NSObject* peripheral = [data objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
 		NSNumber* value = [data objectForKey:@KEY_NAME_HEART_RATE];
+
 		if (peripheral && value)
 		{
 			NSInteger row = [self->connectedHRMs indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_HRM, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+
 			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]];
 		}
 	}
@@ -423,14 +427,16 @@ typedef enum SettingsSections
 	NSDictionary* data = [notification object];
 	if (data)
 	{
-		NSString* peripheral = [data objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSNumber* value = [data objectForKey:@KEY_NAME_CADENCE];
+
 		if (peripheral && value)
 		{
 			NSInteger row = [self->connectedCadenceWheelSpeedSensors indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_CADENCE_WHEEL_SPEED, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+
 			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]];
 		}
 	}
@@ -453,14 +459,16 @@ typedef enum SettingsSections
 	NSDictionary* data = [notification object];
 	if (data)
 	{
-		NSString* peripheral = [data objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
 		NSNumber* value = [data objectForKey:@KEY_NAME_POWER];
+
 		if (peripheral && value)
 		{
 			NSInteger row = [self->connectedPowerMeters indexOfObject:peripheral];
 			NSUInteger newIndex[] = { SECTION_POWER_METER, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+
 			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 		}
 	}
@@ -471,7 +479,8 @@ typedef enum SettingsSections
 	NSDictionary* data = [notification object];
 	if (data)
 	{
-		NSString* peripheral = [data objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+
 		if (peripheral)
 		{
 		}
@@ -483,7 +492,8 @@ typedef enum SettingsSections
 	NSDictionary* data = [notification object];
 	if (data)
 	{
-		NSString* peripheral = [data objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+
 		if (peripheral)
 		{
 		}

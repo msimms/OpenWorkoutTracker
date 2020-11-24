@@ -77,6 +77,7 @@
 
 #pragma mark CBPeripheral methods
 
+// Called when a power meter is reporting new power data.
 - (void)updateWithPowerData:(NSData*)data
 {
 	if (data == nil)
@@ -85,11 +86,12 @@
 	}
 	
 	const uint8_t* reportBytes = [data bytes];
-	size_t reportBytesIndex = 0;
 	NSUInteger reportLen = [data length];
 
 	if (reportBytes && (reportLen > 4))
 	{
+		size_t reportBytesIndex = 0;
+
 		uint16_t flags = CFSwapInt16LittleToHost(*(uint16_t*)reportBytes);
 		reportBytesIndex += sizeof(uint16_t);
 
@@ -144,6 +146,7 @@
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
+	// Cycling power service.
 	if ([self serviceEquals:service withBTService:BT_SERVICE_CYCLING_POWER])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
@@ -158,15 +161,23 @@
 		}
 		[super handleCharacteristicForService:service];
 	}
+
+	// Battery level service.
+	else if ([self serviceEquals:service withBTService:BT_SERVICE_BATTERY_SERVICE])
+	{
+		for (CBCharacteristic* aChar in service.characteristics)
+		{
+			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_BATTERY_LEVEL])
+			{
+				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
+			}
+		}
+	}
 }
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
 	if (characteristic == nil)
-	{
-		return;
-	}
-	if (!characteristic.value)
 	{
 		return;
 	}
@@ -178,6 +189,19 @@
 	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_MEASUREMENT])
 	{
 		[self updateWithPowerData:characteristic.value];
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_VECTOR])
+	{
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_FEATURE])
+	{
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_CONTROL_POINT])
+	{
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_BATTERY_LEVEL])
+	{
+		[super checkBatteryLevel:characteristic.value];
 	}
 }
 

@@ -156,7 +156,12 @@
 	[super viewDidDisappear:animated];
 	[UIApplication sharedApplication].idleTimerDisabled = FALSE;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
 	[self stopTimer];
+	[super viewWillDisappear:animated];
 }
 
 - (BOOL)shouldAutorotate
