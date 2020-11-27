@@ -364,6 +364,7 @@ typedef enum SettingsSections
 	{
 		cell.textLabel.text = STR_NONE;
 		cell.detailTextLabel.text = @"";
+		cell.accessoryView = nil;
 	}
 	return cell;
 }
