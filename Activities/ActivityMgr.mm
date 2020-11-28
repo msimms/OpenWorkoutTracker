@@ -133,6 +133,10 @@ extern "C" {
 				if (g_pDatabase->Open(dbFileName))
 				{
 					result = g_pDatabase->CreateTables();
+					if (result)
+					{
+						result = g_pDatabase->CreateStatements();
+					}
 				}
 				else
 				{

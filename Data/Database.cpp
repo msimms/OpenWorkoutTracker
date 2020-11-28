@@ -24,6 +24,35 @@ Database::~Database()
 		sqlite3_close(m_pDb);
 		m_pDb = NULL;
 	}
+	
+	if (m_accelerometerInsertStatement)
+	{
+		sqlite3_finalize(m_accelerometerInsertStatement);
+	}
+	if (m_locationInsertStatement)
+	{
+		sqlite3_finalize(m_locationInsertStatement);
+	}
+	if (m_heartRateInsertStatement)
+	{
+		sqlite3_finalize(m_heartRateInsertStatement);
+	}
+	if (m_cadenceInsertStatement)
+	{
+		sqlite3_finalize(m_cadenceInsertStatement);
+	}
+	if (m_wheelSpeedInsertStatement)
+	{
+		sqlite3_finalize(m_wheelSpeedInsertStatement);
+	}
+	if (m_powerInsertStatement)
+	{
+		sqlite3_finalize(m_powerInsertStatement);
+	}
+	if (m_footPodStatement)
+	{
+		sqlite3_finalize(m_footPodStatement);
+	}
 }
 
 bool Database::Open(const std::string& dbFileName)
@@ -211,6 +240,23 @@ bool Database::CreateTables()
 
 	int result = ExecuteQueries(queries);
 	return (result == SQLITE_OK || result == SQLITE_DONE);
+}
+
+bool Database::CreateStatements()
+{
+	if (sqlite3_prepare_v2(m_pDb, "insert into gps values (NULL,?,?,?,?,?)", -1, &m_locationInsertStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "insert into hrm values (NULL,?,?,?)", -1, &m_heartRateInsertStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "insert into cadence values (NULL,?,?,?)", -1, &m_cadenceInsertStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "insert into wheel_speed values (NULL,?,?,?)", -1, &m_wheelSpeedInsertStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "insert into power_meter values (NULL,?,?,?)", -1, &m_powerInsertStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "insert into foot_pod values (NULL,?,?,?)", -1, &m_footPodStatement, 0) != SQLITE_OK)
+		return false;
+	return true;
 }
 
 bool Database::Reset()
@@ -1675,19 +1721,16 @@ bool Database::CreateAccelerometerReading(const std::string& activityId, const S
 	
 	try
 	{
-		sqlite3_stmt* statement = NULL;
-	
-		if (sqlite3_prepare_v2(m_pDb, "insert into accelerometer values (NULL,?,?,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(AXIS_NAME_X));
-			sqlite3_bind_double(statement, 4, reading.reading.at(AXIS_NAME_Y));
-			sqlite3_bind_double(statement, 5, reading.reading.at(AXIS_NAME_Z));
+		sqlite3_bind_text(m_accelerometerInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_accelerometerInsertStatement,  2, reading.time);
+		sqlite3_bind_double(m_accelerometerInsertStatement, 3, reading.reading.at(AXIS_NAME_X));
+		sqlite3_bind_double(m_accelerometerInsertStatement, 4, reading.reading.at(AXIS_NAME_Y));
+		sqlite3_bind_double(m_accelerometerInsertStatement, 5, reading.reading.at(AXIS_NAME_Z));
 
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		result = sqlite3_step(m_accelerometerInsertStatement);
+
+		sqlite3_clear_bindings(m_accelerometerInsertStatement);
+		sqlite3_reset(m_accelerometerInsertStatement);
 	}
 	catch (...)
 	{
@@ -1695,25 +1738,22 @@ bool Database::CreateAccelerometerReading(const std::string& activityId, const S
 	return result == SQLITE_DONE;
 }
 
-bool Database::CreateGpsReading(const std::string& activityId, const SensorReading& reading)
+bool Database::CreateLocationReading(const std::string& activityId, const SensorReading& reading)
 {
 	int result = SQLITE_ERROR;
 
 	try
 	{
-		sqlite3_stmt* statement = NULL;
-		
-		if (sqlite3_prepare_v2(m_pDb, "insert into gps values (NULL,?,?,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE));
-			sqlite3_bind_double(statement, 4, reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE));
-			sqlite3_bind_double(statement, 5, reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE));
-			
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		sqlite3_bind_text(m_locationInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_locationInsertStatement,  2, reading.time);
+		sqlite3_bind_double(m_locationInsertStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE));
+		sqlite3_bind_double(m_locationInsertStatement, 4, reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE));
+		sqlite3_bind_double(m_locationInsertStatement, 5, reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE));
+
+		result = sqlite3_step(m_locationInsertStatement);
+
+		sqlite3_clear_bindings(m_locationInsertStatement);
+		sqlite3_reset(m_locationInsertStatement);
 	}
 	catch (...)
 	{
@@ -1727,17 +1767,14 @@ bool Database::CreateHrmReading(const std::string& activityId, const SensorReadi
 
 	try
 	{
-		sqlite3_stmt* statement = NULL;
-		
-		if (sqlite3_prepare_v2(m_pDb, "insert into hrm values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE));
-			
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		sqlite3_bind_text(m_heartRateInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_heartRateInsertStatement, 2, reading.time);
+		sqlite3_bind_double(m_heartRateInsertStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE));
+
+		result = sqlite3_step(m_heartRateInsertStatement);
+
+		sqlite3_clear_bindings(m_heartRateInsertStatement);
+		sqlite3_reset(m_heartRateInsertStatement);
 	}
 	catch (...)
 	{
@@ -1751,17 +1788,14 @@ bool Database::CreateCadenceReading(const std::string& activityId, const SensorR
 
 	try
 	{
-		sqlite3_stmt* statement = NULL;
+		sqlite3_bind_text(m_cadenceInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_cadenceInsertStatement, 2, reading.time);
+		sqlite3_bind_double(m_cadenceInsertStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE));
 
-		if (sqlite3_prepare_v2(m_pDb, "insert into cadence values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE));
-			
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		result = sqlite3_step(m_cadenceInsertStatement);
+
+		sqlite3_clear_bindings(m_cadenceInsertStatement);
+		sqlite3_reset(m_cadenceInsertStatement);
 	}
 	catch (...)
 	{
@@ -1775,17 +1809,14 @@ bool Database::CreateWheelSpeedReading(const std::string& activityId, const Sens
 
 	try
 	{
-		sqlite3_stmt* statement = NULL;
-		
-		if (sqlite3_prepare_v2(m_pDb, "insert into wheel_speed values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS));
-			
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		sqlite3_bind_text(m_wheelSpeedInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_wheelSpeedInsertStatement, 2, reading.time);
+		sqlite3_bind_double(m_wheelSpeedInsertStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS));
+
+		result = sqlite3_step(m_wheelSpeedInsertStatement);
+
+		sqlite3_clear_bindings(m_wheelSpeedInsertStatement);
+		sqlite3_reset(m_wheelSpeedInsertStatement);
 	}
 	catch (...)
 	{
@@ -1799,17 +1830,14 @@ bool Database::CreatePowerMeterReading(const std::string& activityId, const Sens
 	
 	try
 	{
-		sqlite3_stmt* statement = NULL;
-		
-		if (sqlite3_prepare_v2(m_pDb, "insert into power_meter values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_POWER));
-			
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		sqlite3_bind_text(m_powerInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_powerInsertStatement, 2, reading.time);
+		sqlite3_bind_double(m_powerInsertStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_POWER));
+
+		result = sqlite3_step(m_powerInsertStatement);
+
+		sqlite3_clear_bindings(m_powerInsertStatement);
+		sqlite3_reset(m_powerInsertStatement);
 	}
 	catch (...)
 	{
@@ -1823,17 +1851,14 @@ bool Database::CreateFootPodReading(const std::string& activityId, const SensorR
 	
 	try
 	{
-		sqlite3_stmt* statement = NULL;
-		
-		if (sqlite3_prepare_v2(m_pDb, "insert into foot_pod values (NULL,?,?,?)", -1, &statement, 0) == SQLITE_OK)
-		{
-			sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-			sqlite3_bind_int64(statement,  2, reading.time);
-			sqlite3_bind_double(statement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_RUN_DISTANCE));
-			
-			result = sqlite3_step(statement);
-			sqlite3_finalize(statement);
-		}
+		sqlite3_bind_text(m_footPodStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_footPodStatement, 2, reading.time);
+		sqlite3_bind_double(m_footPodStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_RUN_DISTANCE));
+
+		result = sqlite3_step(m_footPodStatement);
+
+		sqlite3_clear_bindings(m_footPodStatement);
+		sqlite3_reset(m_footPodStatement);
 	}
 	catch (...)
 	{
@@ -1873,7 +1898,7 @@ bool Database::CreateSensorReading(const std::string& activityId, const SensorRe
 		case SENSOR_TYPE_ACCELEROMETER:
 			return CreateAccelerometerReading(activityId, reading);
 		case SENSOR_TYPE_LOCATION:
-			return CreateGpsReading(activityId, reading);
+			return CreateLocationReading(activityId, reading);
 		case SENSOR_TYPE_HEART_RATE:
 			return CreateHrmReading(activityId, reading);
 		case SENSOR_TYPE_CADENCE:

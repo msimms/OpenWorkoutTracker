@@ -36,6 +36,7 @@ public:
 	bool Close();
 
 	bool CreateTables();
+	bool CreateStatements();
 	bool Reset();
 
 	// Methods for managing the bicycle inventory.
@@ -170,13 +171,20 @@ public:
 
 private:
 	sqlite3* m_pDb;
+	sqlite3_stmt* m_accelerometerInsertStatement = NULL;
+	sqlite3_stmt* m_locationInsertStatement = NULL;
+	sqlite3_stmt* m_heartRateInsertStatement = NULL;
+	sqlite3_stmt* m_cadenceInsertStatement = NULL;
+	sqlite3_stmt* m_wheelSpeedInsertStatement = NULL;
+	sqlite3_stmt* m_powerInsertStatement = NULL;
+	sqlite3_stmt* m_footPodStatement = NULL;
 
 	bool DoesTableHaveColumn(const std::string& tableName, const std::string& columnName);
 	bool DoesTableExist(const std::string& tableName);
 	bool DropTable(const std::string& tableName);
 
 	bool CreateAccelerometerReading(const std::string& activityId, const SensorReading& reading);
-	bool CreateGpsReading(const std::string& activityId, const SensorReading& reading);
+	bool CreateLocationReading(const std::string& activityId, const SensorReading& reading);
 	bool CreateHrmReading(const std::string& activityId, const SensorReading& reading);
 	bool CreateCadenceReading(const std::string& activityId, const SensorReading& reading);
 	bool CreateWheelSpeedReading(const std::string& activityId, const SensorReading& reading);
