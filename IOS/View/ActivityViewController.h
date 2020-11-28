@@ -49,7 +49,8 @@
 	double                     lastHeartRateValue; // Most recent heart rate value
 	double                     lastCadenceValue; // Most recent cadence value
 	double                     lastPowerValue; // Most recent power meter value
-	ActivityPreferences*       activityPrefs;
+	ActivityPreferences*       activityPrefs; // Prefs object, cached here for performance reasons
+	NSString*                  activityType; // Current activity type, cached here for performance reasons
 	NSString*                  bikeName;
 	bool                       autoStartCoordinateSet; // TRUE if we have a meaningful value in 'autoStartCoordinate'
 	Coordinate                 autoStartCoordinate; // Location reference for the autostart on move feature

@@ -132,6 +132,8 @@
 	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityType], nil);
 
 	// Organize the stopped toolbar.
+	BOOL isCyclingActivity = [appDelegate isCyclingActivity];
+	BOOL isMovingActivity = [appDelegate isMovingActivity];
 	size_t numBikes = [[appDelegate getBikeNames] count];
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
@@ -147,11 +149,11 @@
 
 		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
 
-		if (!IsCyclingActivity() || (numBikes == 0))
+		if (!isCyclingActivity || (numBikes == 0))
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
-		if (!IsMovingActivity())
+		if (!isMovingActivity)
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.autoStartButton];
 		}
@@ -165,11 +167,11 @@
 		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 
-		if (!IsCyclingActivity() || (numBikes == 0))
+		if (!isCyclingActivity || (numBikes == 0))
 		{
 			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
 		}
-		if (!IsCyclingActivity())
+		if (!isCyclingActivity)
 		{
 			[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
 		}

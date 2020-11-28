@@ -10,6 +10,7 @@
 
 #import "AppDelegate.h"
 #import "ActivityHash.h"
+#import "ActivityMgr.h"
 #import "Accelerometer.h"
 #import "ActivityAttribute.h"
 #import "ApiClient.h"
@@ -1372,6 +1373,24 @@ void startSensorCallback(SensorType type, void* context)
 	@synchronized(self)
 	{
 		return IsActivityPaused();
+	}
+	return FALSE;
+}
+
+- (BOOL)isCyclingActivity
+{
+	@synchronized(self)
+	{
+		return IsCyclingActivity();
+	}
+	return FALSE;
+}
+
+- (BOOL)isMovingActivity
+{
+	@synchronized(self)
+	{
+		return IsMovingActivity();
 	}
 	return FALSE;
 }

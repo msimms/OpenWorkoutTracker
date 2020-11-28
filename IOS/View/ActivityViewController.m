@@ -149,6 +149,8 @@
 
 	[self startTimer];
 	[self showHelp];
+
+	self->activityType = [appDelegate getCurrentActivityType];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -207,13 +209,10 @@
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 		{
-			NSString* activityType = [appDelegate getCurrentActivityType];
-			ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
-
 			// Save the new setting, removing the old setting.
-			NSString* oldAttributeName = [prefs getAttributeName:activityType withAttributeList:attributeNames withPos:self->tappedButtonIndex];
-			[prefs setViewAttributePosition:activityType withAttributeName:attribute withPos:self->tappedButtonIndex];
-			[prefs setViewAttributePosition:activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			NSString* oldAttributeName = [self->activityPrefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:self->tappedButtonIndex];
+			[self->activityPrefs setViewAttributePosition:self->activityType withAttributeName:attribute withPos:self->tappedButtonIndex];
+			[self->activityPrefs setViewAttributePosition:self->activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
 
 			// Update the label.
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
@@ -229,40 +228,37 @@
 
 - (void)showHelp
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* activityType = [appDelegate getCurrentActivityType];
-
-	if (![self->activityPrefs hasShownHelp:activityType])
+	if (![self->activityPrefs hasShownHelp:self->activityType])
 	{
 		NSString* text = nil;
 
-		if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
-			[activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
+		if ([self->activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
+			[self->activityType isEqualToString:@ACTIVITY_TYPE_PULLUP])
 		{
 			text = HELP_PHONE_ON_ARM;
 		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
-				 [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+				 [self->activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
 		{
 			text = HELP_CYCLING;
 		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP])
 		{
 			text = HELP_PHONE_ON_ARM;
 		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
 		{
 			text = HELP_PHONE_ON_ARM;
 		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
 		{
 			text = HELP_PHONE_ON_ARM;
 		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
 		{
 			text = HELP_STATIONARY_BIKE;
 		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
 		{
 			text = HELP_TREADMILL;
 		}
@@ -272,7 +268,7 @@
 			[super showOneButtonAlert:STR_CAUTION withMsg:text];
 		}
 
-		[self->activityPrefs markHasShownHelp:activityType];
+		[self->activityPrefs markHasShownHelp:self->activityType];
 	}
 }
 
@@ -371,8 +367,6 @@
 - (void)initializeLabelText
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSString* activityType = [appDelegate getCurrentActivityType];
 	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
 	
 	for (UILabel* label in self->valueLabels)
@@ -382,7 +376,7 @@
 	
 	for (NSString* attributeName in attributeNames)
 	{
-		uint8_t viewPos = [self->activityPrefs getAttributePos:activityType withAttributeName:attributeName];
+		uint8_t viewPos = [self->activityPrefs getAttributePos:self->activityType withAttributeName:attributeName];
 
 		if ((viewPos != ERROR_ATTRIBUTE_NOT_FOUND) && (viewPos < self->titleLabels.count))
 		{
@@ -394,13 +388,9 @@
 
 - (void)initializeLabelColor
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSString* activityType = [appDelegate getCurrentActivityType];
-	
-	UIColor* valueColor      = [self->activityPrefs getTextColor:activityType];
-	UIColor* titleColor      = [self->activityPrefs getLabelColor:activityType];
-	UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:activityType];
+	UIColor* valueColor      = [self->activityPrefs getTextColor:self->activityType];
+	UIColor* titleColor      = [self->activityPrefs getLabelColor:self->activityType];
+	UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:self->activityType];
 	
 	for (UILabel* label in self->valueLabels)
 	{
@@ -469,8 +459,6 @@
 - (void)doStart
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	NSString* activityType = [appDelegate getCurrentActivityType];
 	BOOL started = FALSE;
 
 	if (self->bikeName)
@@ -480,7 +468,7 @@
 
 	if (started)
 	{
-		if ([self->activityPrefs getStartStopBeepEnabled:activityType])
+		if ([self->activityPrefs getStartStopBeepEnabled:self->activityType])
 		{
 			[self playBeepSound];
 		}
@@ -496,9 +484,7 @@
 
 	if ([appDelegate stopActivity])
 	{
-		NSString* activityType = [appDelegate getCurrentActivityType];
-
-		if ([self->activityPrefs getStartStopBeepEnabled:activityType])
+		if ([self->activityPrefs getStartStopBeepEnabled:self->activityType])
 		{
 			[self playBeepSound];
 		}
@@ -570,10 +556,8 @@
 	}
 	else
 	{
-		NSString* activityType = [appDelegate getCurrentActivityType];
-
 		// If using a stationary bike, make sure a bike has been selected as we need to know the wheel size.
-		if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE] && !self->bikeName)
+		if ([self->activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE] && !self->bikeName)
 		{
 			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																					 message:ALERT_MSG_NO_BIKE
@@ -583,7 +567,7 @@
 		}
 
 		// If using a treadmill, make sure a footpod sensor has been found.
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] && ![appDelegate hasLeBluetoothSensor:SENSOR_TYPE_FOOT_POD])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] && ![appDelegate hasLeBluetoothSensor:SENSOR_TYPE_FOOT_POD])
 		{
 			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																					 message:ALERT_MSG_NO_FOOT_POD
@@ -595,7 +579,7 @@
 		// Everything's ok.
 		else
 		{
-			self->countdownSecs = [self->activityPrefs getCountdown:activityType];
+			self->countdownSecs = [self->activityPrefs getCountdown:self->activityType];
 
 			if (self->countdownSecs > 0)
 			{
@@ -661,8 +645,8 @@
 - (IBAction)onBike:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* bikeNames = [appDelegate getBikeNames];
+
 	if ([bikeNames count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
@@ -689,8 +673,8 @@
 - (IBAction)onIntervals:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
+
 	if ([workoutNamesAndIds count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
@@ -720,8 +704,8 @@
 - (IBAction)onPace:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	
 	NSMutableArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
+
 	if ([pacePlanNamesAndIds count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
@@ -992,10 +976,9 @@
 			if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_HEART_RATE])
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				ActivityAttributeType zoneValue = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE);
+				ActivityAttributeType zoneValue = [appDelegate queryLiveActivityAttribute:@ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE];
 
-				if ([self->activityPrefs getShowHeartRatePercent:activityType] && zoneValue.valid)
+				if ([self->activityPrefs getShowHeartRatePercent:self->activityType] && zoneValue.valid)
 				{
 					[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f (%0.0f%%)", self->lastHeartRateValue, zoneValue.value.doubleVal * (double)100.0]];
 				}

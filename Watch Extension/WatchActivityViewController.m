@@ -192,9 +192,11 @@
 
 - (IBAction)onStartStop
 {
-	if (IsActivityInProgress())
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
+	if ([extDelegate isActivityInProgress])
 	{
-		if (IsActivityPaused())
+		if ([extDelegate isActivityPaused])
 		{
 			[self doPause];
 		}

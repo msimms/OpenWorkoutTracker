@@ -137,6 +137,8 @@
 - (BOOL)isActivityInProgressAndNotPaused;
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex;
 - (BOOL)isActivityPaused;
+- (BOOL)isCyclingActivity;
+- (BOOL)isMovingActivity;
 
 // methods for loading and editing historical activities
 

@@ -28,7 +28,7 @@
 	BOOL badGps; // TRUE when bad GPS location data has been detected
 	BOOL receivingLocations; // TRUE if we have received at least one location
 	BOOL hasConnectivity; // TRUE if we have confirmed the existence of a cellular/mobile data network
-
+	time_t lastHeartRateUpdate; // UNIX timestamp of the most recent heart rate update
 	NSString* activityType; // Current activity type, cached here for performance reasons
 
 	NSLock* backendLock; // Lock for all backend calls.
@@ -67,6 +67,8 @@
 - (BOOL)isActivityCreated;
 - (BOOL)isActivityInProgress;
 - (BOOL)isActivityInProgressAndNotPaused;
+- (BOOL)isActivityInProgressAndNotPausedAndLiftingActivity;
+- (BOOL)isActivityPaused;
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex;
 
 // methods for loading and editing historical activities

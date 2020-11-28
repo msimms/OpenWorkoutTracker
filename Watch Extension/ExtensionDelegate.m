@@ -49,6 +49,7 @@
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
 	self->hasConnectivity = FALSE;
+	self->lastHeartRateUpdate = 0;
 	self->activityType = nil;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
@@ -422,6 +423,28 @@ void startSensorCallback(SensorType type, void* context)
 	return inProgress;
 }
 
+- (BOOL)isActivityInProgressAndNotPausedAndLiftingActivity
+{
+	BOOL inProgress = FALSE;
+
+	[self->backendLock lock];
+	inProgress = IsActivityInProgressAndNotPaused() && IsLiftingActivity();
+	[self->backendLock unlock];
+
+	return inProgress;
+}
+
+- (BOOL)isActivityPaused
+{
+	BOOL isPaused = FALSE;
+
+	[self->backendLock lock];
+	isPaused = IsActivityPaused();
+	[self->backendLock unlock];
+
+	return isPaused;
+}
+
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex
 {
 	BOOL isOrphaned = FALSE;
@@ -695,9 +718,7 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	[self->backendLock lock];
-
-	if (IsActivityInProgress() && IsLiftingActivity())
+	if ([self isActivityInProgressAndNotPausedAndLiftingActivity])
 	{
 		NSDictionary* accelerometerData = [notification object];
 		
@@ -706,10 +727,12 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 		NSNumber* z = [accelerometerData objectForKey:@KEY_NAME_ACCEL_Z];
 		NSNumber* timestampMs = [accelerometerData objectForKey:@KEY_NAME_ACCELEROMETER_TIMESTAMP_MS];
 		
-		ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
-	}
+		[self->backendLock lock];
 
-	[self->backendLock unlock];
+		ProcessAccelerometerReading([x doubleValue], [y doubleValue], [z doubleValue], [timestampMs longLongValue]);
+
+		[self->backendLock unlock];
+	}
 }
 
 - (void)locationUpdated:(NSNotification*)notification
@@ -780,14 +803,18 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 
 		NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
 		NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+		
+		time_t now = time(NULL);
 
-		if (timestampMs && rate)
+		if (timestampMs && rate && (now - lastHeartRateUpdate) > 3)
 		{
 			[self->backendLock lock];
 
 			ProcessHrmReading([rate doubleValue], [timestampMs longLongValue]);
 
 			[self->backendLock unlock];
+
+			lastHeartRateUpdate = now;
 		}
 	}
 }
