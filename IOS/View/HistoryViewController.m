@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "HistoryViewController.h"
+#import "ActivityType.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "Segues.h"
@@ -262,8 +263,8 @@
 	static NSString* CellIdentifier = @"Cell";
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
@@ -330,7 +331,49 @@
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 
-	cell.textLabel.text = NSLocalizedString([appDelegate getHistoricalActivityType:activityId], nil);
+	NSString* activityType = [appDelegate getHistoricalActivityType:activityId];
+	cell.textLabel.text = NSLocalizedString(activityType, nil);
+
+	// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
+	UIImage* img = nil;
+	if (([activityType compare:@ACTIVITY_TYPE_CHINUP] == NSOrderedSame) ||
+		([activityType compare:@ACTIVITY_TYPE_SQUAT] == NSOrderedSame) ||
+		([activityType compare:@ACTIVITY_TYPE_PULLUP] == NSOrderedSame) ||
+		([activityType compare:@ACTIVITY_TYPE_PUSHUP] == NSOrderedSame))
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Weights" ofType:@"png"]];
+	}
+	else if (([activityType compare:@ACTIVITY_TYPE_CYCLING] == NSOrderedSame) ||
+			 ([activityType compare:@ACTIVITY_TYPE_MOUNTAIN_BIKING] == NSOrderedSame) ||
+			 ([activityType compare:@ACTIVITY_TYPE_STATIONARY_BIKE] == NSOrderedSame))
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_HIKING] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Hiking" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_RUNNING] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Running" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_TREADMILL] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Treadmill" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_WALKING] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Walking" ofType:@"png"]];
+	}
+	else if (([activityType compare:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] == NSOrderedSame) ||
+			 ([activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame))
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
+	}
+	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
+	imageView.image = img;
+	[cell.contentView addSubview:imageView];
+	//	cell.imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
 
 	return cell;
 }

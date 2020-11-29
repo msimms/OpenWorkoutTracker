@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--SegueToNewActivityView-->
+        <!--Main View-->
         <scene sceneID="5">
             <objects>
-                <viewController title="SegueToNewActivityView" id="2" customClass="ViewController" sceneMemberID="viewController">
+                <viewController title="SegueToNewActivityView" id="2" userLabel="Main View" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -153,6 +153,7 @@
                         <segue destination="A9N-FN-6yC" kind="push" identifier="SegueToPacePlansView" id="frI-i4-eiK"/>
                         <segue destination="ObN-8C-jua" kind="push" identifier="SegueToGearView" id="Xdw-9G-X6h"/>
                         <segue destination="Yuq-BJ-ges" kind="push" identifier="SegueToWorkoutsView" id="nhc-zk-lNW"/>
+                        <segue destination="pMk-kM-n8i" kind="push" identifier="SegueToMappedActivityView" id="8pE-cX-Fug"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -1646,6 +1647,7 @@
                         <outlet property="value4" destination="sLF-U3-EmA" id="P7r-8C-X96"/>
                         <outlet property="value_Large" destination="AHP-Iq-h0i" id="YfW-Cw-MRK"/>
                         <segue destination="2uT-mo-S6M" kind="push" identifier="SegueToLiveSummaryView" id="rmC-zq-awJ"/>
+                        <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="cVH-8j-NfP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gCn-FM-FKF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1981,10 +1983,10 @@
             </objects>
             <point key="canvasLocation" x="1990" y="252"/>
         </scene>
-        <!--Summary-->
+        <!--Static Summary-->
         <scene sceneID="lkO-8B-NmN">
             <objects>
-                <viewController id="xf7-Mc-VJA" customClass="StaticSummaryViewController" sceneMemberID="viewController">
+                <viewController id="xf7-Mc-VJA" userLabel="Static Summary" customClass="StaticSummaryViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mi4-nO-i8o">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -2162,10 +2164,10 @@
             </objects>
             <point key="canvasLocation" x="5464" y="-1319"/>
         </scene>
-        <!--Summary-->
+        <!--Live Summary-->
         <scene sceneID="rzl-qb-SLK">
             <objects>
-                <viewController id="2uT-mo-S6M" customClass="LiveSummaryViewController" sceneMemberID="viewController">
+                <viewController id="2uT-mo-S6M" userLabel="Live Summary" customClass="LiveSummaryViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WBa-ha-auX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -2285,10 +2287,10 @@
             </objects>
             <point key="canvasLocation" x="3752" y="252"/>
         </scene>
-        <!--SplitTimesViewController-->
+        <!--Split Times-->
         <scene sceneID="bwv-ey-xhM">
             <objects>
-                <viewController title="SplitTimesViewController" id="dpF-uY-DXe" customClass="SplitTimesViewController" sceneMemberID="viewController">
+                <viewController title="SplitTimesViewController" id="dpF-uY-DXe" userLabel="Split Times" customClass="SplitTimesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tAj-m4-jCc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3065,8 +3067,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ksp-tA-xd6"/>
-        <segue reference="V9h-tU-0NS"/>
-        <segue reference="fz0-Br-1wA"/>
+        <segue reference="cVH-8j-NfP"/>
+        <segue reference="1Bm-YM-doO"/>
+        <segue reference="8pE-cX-Fug"/>
         <segue reference="mpc-lI-yFA"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

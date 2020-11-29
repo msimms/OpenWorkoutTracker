@@ -203,6 +203,12 @@
 		2797F19419BFE48E008F8672 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18719BFE48E008F8672 /* XmlFileReader.cpp */; };
 		2797F19519BFE48E008F8672 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */; };
 		2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */; };
+		279E70E425740FD8002B4BB6 /* Running.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70D425740FD7002B4BB6 /* Running.png */; };
+		279E70F125743463002B4BB6 /* Hiking.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70EE25743463002B4BB6 /* Hiking.png */; };
+		279E70F225743463002B4BB6 /* Walking.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70EF25743463002B4BB6 /* Walking.png */; };
+		279E70F325743463002B4BB6 /* Treadmill.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70F025743463002B4BB6 /* Treadmill.png */; };
+		279E70FD2574392C002B4BB6 /* Weights.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70FC2574392C002B4BB6 /* Weights.png */; };
+		279E710325743969002B4BB6 /* Wheel.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E710225743969002B4BB6 /* Wheel.png */; };
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
 		27A71FDA2158556C00995B56 /* CommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A71FD92158556C00995B56 /* CommonViewController.m */; };
@@ -743,6 +749,12 @@
 		2797F1BD19BFE7A4008F8672 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MainStoryboard_iPhone.storyboard; path = IOS/Storyboards/MainStoryboard_iPhone.storyboard; sourceTree = SOURCE_ROOT; };
 		2797F1D319BFEAFA008F8672 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		279E70D425740FD7002B4BB6 /* Running.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Running.png; path = Images/Running.png; sourceTree = SOURCE_ROOT; };
+		279E70EE25743463002B4BB6 /* Hiking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Hiking.png; path = Images/Hiking.png; sourceTree = SOURCE_ROOT; };
+		279E70EF25743463002B4BB6 /* Walking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Walking.png; path = Images/Walking.png; sourceTree = SOURCE_ROOT; };
+		279E70F025743463002B4BB6 /* Treadmill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Treadmill.png; path = Images/Treadmill.png; sourceTree = SOURCE_ROOT; };
+		279E70FC2574392C002B4BB6 /* Weights.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Weights.png; path = Images/Weights.png; sourceTree = SOURCE_ROOT; };
+		279E710225743969002B4BB6 /* Wheel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Wheel.png; path = Images/Wheel.png; sourceTree = SOURCE_ROOT; };
 		27A3624C19BFB0E200F5A17F /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A3624F19BFB0E200F5A17F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1422,6 +1434,7 @@
 		27B44D0319BFEFDC0058FE00 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				279E70FC2574392C002B4BB6 /* Weights.png */,
 				27B44D0419BFF01A0058FE00 /* Background1.png */,
 				27B8CFEE25476A210014B257 /* Broadcasting.png */,
 				27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */,
@@ -1433,8 +1446,13 @@
 				27B44D0719BFF01A0058FE00 /* Countdown3.png */,
 				27B44D0819BFF01A0058FE00 /* Countdown4.png */,
 				27B44D0919BFF01A0058FE00 /* Countdown5.png */,
+				279E70EE25743463002B4BB6 /* Hiking.png */,
 				27B44D0C19BFF01A0058FE00 /* MappedScreen.png */,
+				279E70D425740FD7002B4BB6 /* Running.png */,
 				27B44D0E19BFF01A0058FE00 /* SimpleScreen.png */,
+				279E70F025743463002B4BB6 /* Treadmill.png */,
+				279E710225743969002B4BB6 /* Wheel.png */,
+				279E70EF25743463002B4BB6 /* Walking.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1980,10 +1998,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */,
+				279E710325743969002B4BB6 /* Wheel.png in Resources */,
 				2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */,
 				2728FD2919C1250E00CE2BAD /* Default@2x.png in Resources */,
+				279E70E425740FD8002B4BB6 /* Running.png in Resources */,
 				2728FD2A19C1250E00CE2BAD /* Icon_58px.png in Resources */,
 				27EF2C582560AC6300F06796 /* Assets.xcassets in Resources */,
+				279E70F225743463002B4BB6 /* Walking.png in Resources */,
 				2728FD2B19C1250E00CE2BAD /* Icon_80px.png in Resources */,
 				2728FD2C19C1250E00CE2BAD /* Icon_120px.png in Resources */,
 				27B44D1019BFF01A0058FE00 /* Background1.png in Resources */,
@@ -1993,13 +2014,16 @@
 				2729853319C8F69900FE0077 /* Localizable.strings in Resources */,
 				27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */,
 				27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */,
+				279E70FD2574392C002B4BB6 /* Weights.png in Resources */,
 				27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */,
 				27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */,
 				27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */,
 				27B44D1219BFF01A0058FE00 /* Countdown2.png in Resources */,
 				27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */,
+				279E70F325743463002B4BB6 /* Treadmill.png in Resources */,
 				27B44D1319BFF01A0058FE00 /* Countdown3.png in Resources */,
 				27B44D1519BFF01A0058FE00 /* Countdown5.png in Resources */,
+				279E70F125743463002B4BB6 /* Hiking.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
