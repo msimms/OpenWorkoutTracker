@@ -1,0 +1,6 @@
+/* Localized versions of Info.plist keys (English) */
+
+NSLocationAlwaysUsageDescription = "This is required to monitor location-based activities when the application is in the background.";
+NSLocationAlwaysAndWhenInUseUsageDescription = "This is required to monitor location-based activities.";
+NSLocationWhenInUseUsageDescription = "This is required to monitor location-based activities.";
+

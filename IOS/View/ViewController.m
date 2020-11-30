@@ -142,7 +142,7 @@
 
 	for (NSString* name in self->activityTypes)
 	{
-		[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(name, nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self startActivity:name];
 		}]];
 	}

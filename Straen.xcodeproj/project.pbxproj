@@ -217,6 +217,7 @@
 		279E717B25746FF4002B4BB6 /* HikingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E717925746FF3002B4BB6 /* HikingOnWatch.png */; };
 		279E717C25746FF4002B4BB6 /* WalkingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E717A25746FF3002B4BB6 /* WalkingOnWatch.png */; };
 		279E718A25747281002B4BB6 /* SwimmingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E718925747281002B4BB6 /* SwimmingOnWatch.png */; };
+		279E71A025758D02002B4BB6 /* en-GB.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 279E719F25758D02002B4BB6 /* en-GB.lproj */; };
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
 		27A71FDA2158556C00995B56 /* CommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A71FD92158556C00995B56 /* CommonViewController.m */; };
@@ -771,6 +772,12 @@
 		279E717925746FF3002B4BB6 /* HikingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HikingOnWatch.png; path = Images/HikingOnWatch.png; sourceTree = SOURCE_ROOT; };
 		279E717A25746FF3002B4BB6 /* WalkingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WalkingOnWatch.png; path = Images/WalkingOnWatch.png; sourceTree = SOURCE_ROOT; };
 		279E718925747281002B4BB6 /* SwimmingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SwimmingOnWatch.png; path = Images/SwimmingOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E719C25758BC0002B4BB6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Interface.strings"; sourceTree = "<group>"; };
+		279E719D25758BC0002B4BB6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "../en-GB.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		279E719E25758BC0002B4BB6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "../en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		279E719F25758D02002B4BB6 /* en-GB.lproj */ = {isa = PBXFileReference; lastKnownFileType = file; name = "en-GB.lproj"; path = "IOS/en-GB.lproj"; sourceTree = SOURCE_ROOT; };
+		279E71A925759154002B4BB6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		279E71AA25759159002B4BB6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		27A3624C19BFB0E200F5A17F /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A3624F19BFB0E200F5A17F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1438,6 +1445,7 @@
 		27A3625619BFB0E200F5A17F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				279E719F25758D02002B4BB6 /* en-GB.lproj */,
 				2729852819C8F69900FE0077 /* en.lproj */,
 				2729852D19C8F69900FE0077 /* es.lproj */,
 				276C937B19BFDE3B00D96E7F /* App-Info.plist */,
@@ -1930,6 +1938,7 @@
 				en,
 				es,
 				Base,
+				"en-GB",
 			);
 			mainGroup = 27A3624319BFB0E200F5A17F;
 			productRefGroup = 27A3624D19BFB0E200F5A17F /* Products */;
@@ -2061,6 +2070,7 @@
 				279E717C25746FF4002B4BB6 /* WalkingOnWatch.png in Resources */,
 				27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */,
 				27B8D065254A03FA0014B257 /* BroadcastingFailedOnWatch.png in Resources */,
+				279E71A025758D02002B4BB6 /* en-GB.lproj in Resources */,
 				279E717B25746FF4002B4BB6 /* HikingOnWatch.png in Resources */,
 				279E718A25747281002B4BB6 /* SwimmingOnWatch.png in Resources */,
 				27B8D04A254A03050014B257 /* BroadcastingOnWatch.png in Resources */,
@@ -2550,6 +2560,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				2729852A19C8F69900FE0077 /* en */,
+				279E719D25758BC0002B4BB6 /* en-GB */,
+				279E71AA25759159002B4BB6 /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2558,6 +2570,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				2729852C19C8F69900FE0077 /* en */,
+				279E719E25758BC0002B4BB6 /* en-GB */,
+				279E71A925759154002B4BB6 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2582,6 +2596,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				27DCF5C122B193B6009A23C2 /* Base */,
+				279E719C25758BC0002B4BB6 /* en-GB */,
 			);
 			name = Interface.storyboard;
 			sourceTree = "<group>";

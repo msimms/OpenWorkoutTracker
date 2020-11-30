@@ -34,17 +34,17 @@
 		<true/>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Bluetooth is required to work with external sensors.</string>
+	<string>Bluetooth is required to work with external sensors, such as power meters and heart rate monitors.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Calories burned during exercise can be written to the Health app.</string>
+	<string>Height and weight can be read from the Health app to improve estimations of calories burned.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Calories burned during exercise can be written to the Health app.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location Services are required to monitor certain activities.</string>
+	<string>This is required to monitor location-based activities.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location Services are required to monitor certain activities.</string>
+	<string>This is required to monitor location-based activities when the application is in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location Services are required to monitor certain activities.</string>
+	<string>This is required to monitor location-based activities.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.mjs-software.Straen</key>

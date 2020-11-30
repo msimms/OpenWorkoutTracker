@@ -1,0 +1,75 @@
+
+/* Class = "WKInterfaceLabel"; text = "Label"; ObjectID = "0JT-H8-yfj"; */
+"0JT-H8-yfj.text" = "Label";
+
+/* Class = "WKInterfaceButton"; title = "Start"; ObjectID = "75M-0x-o8w"; */
+"75M-0x-o8w.title" = "Start";
+
+/* Class = "WKInterfaceSwitch"; title = "Broadcast"; ObjectID = "8A2-ad-Uee"; */
+"8A2-ad-Uee.title" = "Broadcast";
+
+/* Class = "WKInterfaceLabel"; text = "Alert Label"; ObjectID = "8hf-A4-kVH"; */
+"8hf-A4-kVH.text" = "Alert Label";
+
+/* Class = "WKInterfaceButton"; title = "View History"; ObjectID = "A6W-ls-Eph"; */
+"A6W-ls-Eph.title" = "View History";
+
+/* Class = "WKInterfaceSwitch"; title = "Metric"; ObjectID = "IQG-Gm-neq"; */
+"IQG-Gm-neq.title" = "Metric";
+
+/* Class = "WKInterfaceLabel"; text = "Sub Label"; ObjectID = "NS0-QE-gQs"; */
+"NS0-QE-gQs.text" = "Sub Label";
+
+/* Class = "WKInterfaceLabel"; text = "Built on:"; ObjectID = "NTE-qx-o3z"; */
+"NTE-qx-o3z.text" = "Built on:";
+
+/* Class = "WKInterfaceButton"; title = "Intervals"; ObjectID = "Nbx-ph-zUl"; */
+"Nbx-ph-zUl.title" = "Intervals";
+
+/* Class = "WKInterfaceButton"; title = "Reset"; ObjectID = "RLD-SD-HYq"; */
+"RLD-SD-HYq.title" = "Reset";
+
+/* Class = "WKInterfaceLabel"; text = "Label"; ObjectID = "Rot-Wy-C4z"; */
+"Rot-Wy-C4z.text" = "Label";
+
+/* Class = "WKInterfaceButton"; title = "Start a Workout"; ObjectID = "TCK-NT-T02"; */
+"TCK-NT-T02.title" = "Start a Workout";
+
+/* Class = "WKInterfaceButton"; title = "Pace Plan"; ObjectID = "TJ5-Yl-Fdq"; */
+"TJ5-Yl-Fdq.title" = "Pace Plan";
+
+/* Class = "WKInterfaceButton"; title = "Delete"; ObjectID = "UZH-zv-QWv"; */
+"UZH-zv-QWv.title" = "Delete";
+
+/* Class = "WKInterfaceLabel"; text = "Copyright (c) 2020 by Michael J. Simms"; ObjectID = "dJC-h1-7Wk"; */
+"dJC-h1-7Wk.text" = "Copyright (c) 2020 by Michael J. Simms";
+
+/* Class = "WKInterfaceLabel"; text = " Units"; ObjectID = "eHx-Fy-G0d"; */
+"eHx-Fy-G0d.text" = " Units";
+
+/* Class = "WKInterfaceLabel"; text = "Label"; ObjectID = "fF5-Fu-kRH"; */
+"fF5-Fu-kRH.text" = "Label";
+
+/* Class = "WKInterfaceLabel"; text = "--"; ObjectID = "fm7-ZA-A65"; */
+"fm7-ZA-A65.text" = "--";
+
+/* Class = "WKInterfaceLabel"; text = "--"; ObjectID = "jW7-ae-vrm"; */
+"jW7-ae-vrm.text" = "--";
+
+/* Class = "WKInterfaceLabel"; text = " Units"; ObjectID = "lAO-ig-DSV"; */
+"lAO-ig-DSV.text" = " Units";
+
+/* Class = "WKInterfaceLabel"; text = "--"; ObjectID = "pED-pN-z8m"; */
+"pED-pN-z8m.text" = "--";
+
+/* Class = "WKInterfaceLabel"; text = " Units"; ObjectID = "pgE-yK-xEC"; */
+"pgE-yK-xEC.text" = " Units";
+
+/* Class = "WKInterfaceSwitch"; title = "Heart Rate"; ObjectID = "q8D-TC-rC0"; */
+"q8D-TC-rC0.title" = "Heart Rate";
+
+/* Class = "WKInterfaceButton"; title = "Settings"; ObjectID = "vTn-z2-rNd"; */
+"vTn-z2-rNd.title" = "Settings";
+
+/* Class = "WKInterfaceButton"; title = "About"; ObjectID = "x9X-9W-OPg"; */
+"x9X-9W-OPg.title" = "About";

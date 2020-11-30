@@ -36,8 +36,8 @@
 "Charts" = "Charts";
 "Clear Wheel Diameter" = "Clear Wheel Diameter";
 "Cloud Services" = "Cloud Services";
-"Color" = "Color";
-"Colors" = "Colors";
+"Color" = "Colour";
+"Colors" = "Colours";
 "Compute Wheel Diameter" = "Compute Wheel Diameter";
 "Connected" = "Connected";
 "Continue" = "Continue";
@@ -176,7 +176,7 @@
 "Previous" = "Previous";
 "Profile" = "Profile";
 "Pull Up" = "Pull Up";
-"Push Up" = "Push Up";
+"Push Up" = "Press Up";
 "Radar" = "Radar";
 "Read Activities From HealthKit" = "Read Activities From HealthKit";
 "Records" = "Records";

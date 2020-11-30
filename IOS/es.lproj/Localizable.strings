@@ -158,11 +158,13 @@
 "No" = "No";
 "None" = "Nada";
 "Not Connected" = "No Conectado";
+"On" = "En";
 "Off" = "Apagado";
 "Ok" = "Bueno";
+"Open Water Swimming" = "Natación en Aguas Abiertas";
 "Overlay" = "Superposición";
 "Overview" = "Visión de Conjunto";
-"Pace Plans" = "Planes de ritmo";
+"Pace Plans" = "Planes de Ritmo";
 "Pause" = "Pausa";
 "Please enter your FTP" = "Por favor ingrese su FTP";
 "Please enter your height" = "Por favor ingrese su altura";
@@ -215,6 +217,7 @@
 "Start a Workout" = "Nuevo Entrenamiento";
 "Start of Workout" = "Comienzo del Entrenamiento";
 "Started" = "Comenzado";
+"Stationary Cycling" = "Bicicleta Estacionaria";
 "Stationary cycling requires the use of a Bluetooth wheel speed sensor." = "Bicicleta estacionaria requiere el uso de un sensor de velocidad de la rueda Bluetooth.";
 "Statistics" = "Estadísticas";
 "Stop" = "Deténgase";
@@ -230,12 +233,14 @@
 "There was an error creating the overlay." = "Se ha producido un error al crear el superposición.";
 "This exercise should be performed with the phone positioned on the upper arm." = "Este ejercicio debe realizarse con el teléfono colocado en la parte superior del brazo.";
 "This feature is not implemented." = "Esta función no está implementada.";
+"This will delete all of your data. Do you wish to continue? This cannot be undone." = "Esto eliminará todos sus datos. ¿Desea continuar? Esto no se puede deshacer.";
 "Time" = "Tiempo";
 "Time Interval" = "Intervalo de Tiempo";
 "To view your broadcast visit this webpage" = "Para ver su visita emisión esta página";
 "Total Calories" = "Las Calorías Totales";
 "Total Distance" = "Distancia Totales";
 "Total Reps" = "Repeticións Totales";
+"Treadmill" = "Rueda de andar";
 "Treadmill running requires the use of a Bluetooth foot pod." = "Correr Cinta de correr requiere el uso de un podómetro Bluetooth.";
 "Trim" = "Recortar";
 "Update" = "Actualizar";
