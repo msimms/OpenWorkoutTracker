@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WatchHistoryViewController.h"
+#import "ActivityType.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "StringUtils.h"
@@ -105,14 +106,49 @@
 			[extDelegate getHistoricalActivityStartAndEndTime:i withStartTime:&startTime withEndTime:&endTime];
 			NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
 
-			NSString* type = [extDelegate getHistoricalActivityType:i];
+			NSString* activityType = [extDelegate getHistoricalActivityType:i];
 			NSString* name = [extDelegate getHistoricalActivityName:i];
 
 			WatchHistoryRowController* row = [self.historyTable rowControllerAtIndex:rowControllerIndex];
 			--rowControllerIndex;
 
+			if (([activityType compare:@ACTIVITY_TYPE_CHINUP] == NSOrderedSame) ||
+				([activityType compare:@ACTIVITY_TYPE_SQUAT] == NSOrderedSame) ||
+				([activityType compare:@ACTIVITY_TYPE_PULLUP] == NSOrderedSame) ||
+				([activityType compare:@ACTIVITY_TYPE_PUSHUP] == NSOrderedSame))
+			{
+				[row.itemImage setImageNamed:@"WeightsOnWatch"];
+			}
+			else if (([activityType compare:@ACTIVITY_TYPE_CYCLING] == NSOrderedSame) ||
+					 ([activityType compare:@ACTIVITY_TYPE_MOUNTAIN_BIKING] == NSOrderedSame) ||
+					 ([activityType compare:@ACTIVITY_TYPE_STATIONARY_BIKE] == NSOrderedSame))
+			{
+				[row.itemImage setImageNamed:@"WheelOnWatch"];
+			}
+			else if ([activityType compare:@ACTIVITY_TYPE_HIKING] == NSOrderedSame)
+			{
+				[row.itemImage setImageNamed:@"HikingOnWatch"];
+			}
+			else if ([activityType compare:@ACTIVITY_TYPE_RUNNING] == NSOrderedSame)
+			{
+				[row.itemImage setImageNamed:@"RunningOnWatch"];
+			}
+			else if ([activityType compare:@ACTIVITY_TYPE_TREADMILL] == NSOrderedSame)
+			{
+				[row.itemImage setImageNamed:@"TreadmillOnWatch"];
+			}
+			else if ([activityType compare:@ACTIVITY_TYPE_WALKING] == NSOrderedSame)
+			{
+				[row.itemImage setImageNamed:@"WalkingOnWatch"];
+			}
+			else if (([activityType compare:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] == NSOrderedSame) ||
+					 ([activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame))
+			{
+				[row.itemImage setImageNamed:@"SwimmingOnWatch"];
+			}
+
 			NSString* rowTitle = [NSString stringWithFormat:@"%@ %@", name, startTimeStr];
-			[row.itemLabel setText:type];
+			[row.itemLabel setText:activityType];
 			[row.itemSubLabel setText:rowTitle];
 		}
 	}

@@ -209,6 +209,14 @@
 		279E70F325743463002B4BB6 /* Treadmill.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70F025743463002B4BB6 /* Treadmill.png */; };
 		279E70FD2574392C002B4BB6 /* Weights.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70FC2574392C002B4BB6 /* Weights.png */; };
 		279E710325743969002B4BB6 /* Wheel.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E710225743969002B4BB6 /* Wheel.png */; };
+		279E711225744491002B4BB6 /* Swimming.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E711125744490002B4BB6 /* Swimming.png */; };
+		279E715E2574699D002B4BB6 /* WeightsOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E715D2574699D002B4BB6 /* WeightsOnWatch.png */; };
+		279E716E25746EC2002B4BB6 /* WheelOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E716B25746EC1002B4BB6 /* WheelOnWatch.png */; };
+		279E716F25746EC2002B4BB6 /* RunningOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E716C25746EC1002B4BB6 /* RunningOnWatch.png */; };
+		279E717025746EC2002B4BB6 /* TreadmillOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E716D25746EC2002B4BB6 /* TreadmillOnWatch.png */; };
+		279E717B25746FF4002B4BB6 /* HikingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E717925746FF3002B4BB6 /* HikingOnWatch.png */; };
+		279E717C25746FF4002B4BB6 /* WalkingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E717A25746FF3002B4BB6 /* WalkingOnWatch.png */; };
+		279E718A25747281002B4BB6 /* SwimmingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E718925747281002B4BB6 /* SwimmingOnWatch.png */; };
 		27A3625019BFB0E200F5A17F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3624F19BFB0E200F5A17F /* Foundation.framework */; };
 		27A3625419BFB0E200F5A17F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A3625319BFB0E200F5A17F /* UIKit.framework */; };
 		27A71FDA2158556C00995B56 /* CommonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27A71FD92158556C00995B56 /* CommonViewController.m */; };
@@ -755,6 +763,14 @@
 		279E70F025743463002B4BB6 /* Treadmill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Treadmill.png; path = Images/Treadmill.png; sourceTree = SOURCE_ROOT; };
 		279E70FC2574392C002B4BB6 /* Weights.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Weights.png; path = Images/Weights.png; sourceTree = SOURCE_ROOT; };
 		279E710225743969002B4BB6 /* Wheel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Wheel.png; path = Images/Wheel.png; sourceTree = SOURCE_ROOT; };
+		279E711125744490002B4BB6 /* Swimming.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Swimming.png; path = Images/Swimming.png; sourceTree = SOURCE_ROOT; };
+		279E715D2574699D002B4BB6 /* WeightsOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WeightsOnWatch.png; path = Images/WeightsOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E716B25746EC1002B4BB6 /* WheelOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WheelOnWatch.png; path = Images/WheelOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E716C25746EC1002B4BB6 /* RunningOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RunningOnWatch.png; path = Images/RunningOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E716D25746EC2002B4BB6 /* TreadmillOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TreadmillOnWatch.png; path = Images/TreadmillOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E717925746FF3002B4BB6 /* HikingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HikingOnWatch.png; path = Images/HikingOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E717A25746FF3002B4BB6 /* WalkingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WalkingOnWatch.png; path = Images/WalkingOnWatch.png; sourceTree = SOURCE_ROOT; };
+		279E718925747281002B4BB6 /* SwimmingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SwimmingOnWatch.png; path = Images/SwimmingOnWatch.png; sourceTree = SOURCE_ROOT; };
 		27A3624C19BFB0E200F5A17F /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A3624F19BFB0E200F5A17F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1434,7 +1450,6 @@
 		27B44D0319BFEFDC0058FE00 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				279E70FC2574392C002B4BB6 /* Weights.png */,
 				27B44D0419BFF01A0058FE00 /* Background1.png */,
 				27B8CFEE25476A210014B257 /* Broadcasting.png */,
 				27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */,
@@ -1447,12 +1462,21 @@
 				27B44D0819BFF01A0058FE00 /* Countdown4.png */,
 				27B44D0919BFF01A0058FE00 /* Countdown5.png */,
 				279E70EE25743463002B4BB6 /* Hiking.png */,
+				279E717925746FF3002B4BB6 /* HikingOnWatch.png */,
 				27B44D0C19BFF01A0058FE00 /* MappedScreen.png */,
 				279E70D425740FD7002B4BB6 /* Running.png */,
+				279E716C25746EC1002B4BB6 /* RunningOnWatch.png */,
 				27B44D0E19BFF01A0058FE00 /* SimpleScreen.png */,
+				279E711125744490002B4BB6 /* Swimming.png */,
+				279E718925747281002B4BB6 /* SwimmingOnWatch.png */,
 				279E70F025743463002B4BB6 /* Treadmill.png */,
-				279E710225743969002B4BB6 /* Wheel.png */,
+				279E716D25746EC2002B4BB6 /* TreadmillOnWatch.png */,
 				279E70EF25743463002B4BB6 /* Walking.png */,
+				279E717A25746FF3002B4BB6 /* WalkingOnWatch.png */,
+				279E710225743969002B4BB6 /* Wheel.png */,
+				279E716B25746EC1002B4BB6 /* WheelOnWatch.png */,
+				279E70FC2574392C002B4BB6 /* Weights.png */,
+				279E715D2574699D002B4BB6 /* WeightsOnWatch.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -2011,6 +2035,7 @@
 				2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */,
 				27B44D1A19BFF01A0058FE00 /* SimpleScreen.png in Resources */,
 				27E299542336B25600B864FA /* LaunchScreen.storyboard in Resources */,
+				279E711225744491002B4BB6 /* Swimming.png in Resources */,
 				2729853319C8F69900FE0077 /* Localizable.strings in Resources */,
 				27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */,
 				27B44D1419BFF01A0058FE00 /* Countdown4.png in Resources */,
@@ -2032,9 +2057,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */,
+				279E717025746EC2002B4BB6 /* TreadmillOnWatch.png in Resources */,
+				279E717C25746FF4002B4BB6 /* WalkingOnWatch.png in Resources */,
 				27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */,
 				27B8D065254A03FA0014B257 /* BroadcastingFailedOnWatch.png in Resources */,
+				279E717B25746FF4002B4BB6 /* HikingOnWatch.png in Resources */,
+				279E718A25747281002B4BB6 /* SwimmingOnWatch.png in Resources */,
 				27B8D04A254A03050014B257 /* BroadcastingOnWatch.png in Resources */,
+				279E716E25746EC2002B4BB6 /* WheelOnWatch.png in Resources */,
+				279E716F25746EC2002B4BB6 /* RunningOnWatch.png in Resources */,
+				279E715E2574699D002B4BB6 /* WeightsOnWatch.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

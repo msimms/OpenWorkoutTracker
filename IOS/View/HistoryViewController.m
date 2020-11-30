@@ -368,7 +368,7 @@
 	else if (([activityType compare:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] == NSOrderedSame) ||
 			 ([activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame))
 	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Swimming" ofType:@"png"]];
 	}
 	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
 	imageView.image = img;
