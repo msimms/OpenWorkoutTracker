@@ -216,7 +216,7 @@
                                     <group key="rootItem" width="1" height="38" alignment="left" id="74V-lq-v0z">
                                         <items>
                                             <imageView width="32" height="32" alignment="left" verticalAlignment="center" id="Xcg-0o-YNR"/>
-                                            <group width="80" alignment="left" layout="vertical" id="a6z-of-9P0">
+                                            <group width="150" alignment="left" layout="vertical" id="a6z-of-9P0">
                                                 <items>
                                                     <label alignment="left" text="Label" id="0JT-H8-yfj"/>
                                                     <label alignment="left" verticalAlignment="bottom" text="Sub Label" id="NS0-QE-gQs">
