@@ -131,6 +131,7 @@
 {
 	[self.startStopButton setTitle:STR_STOP];
 	[self.startStopButton setBackgroundColor:[UIColor redColor]];
+	self.pacePlanButton.hidden = TRUE;
 }
 
 - (void)setUIForStoppedActivity
