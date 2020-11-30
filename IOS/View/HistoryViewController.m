@@ -372,6 +372,7 @@
 	}
 	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
 	imageView.image = img;
+	[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[cell.contentView addSubview:imageView];
 	//	cell.imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
 
