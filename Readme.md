@@ -21,7 +21,7 @@ Why develop a workout tracker when there are so many closed-source options avail
 
 ## Major Todos
 * Unit Tests
-* Ability to upload to services such as Strava, Garmin Connect, Training Peaks, Runkeeper, etc.
+* Ability to upload to services such as Strava, Training Peaks, Runkeeper, etc.
 * Apple Watch Companion App (In Progress)
 * Android Version
 
