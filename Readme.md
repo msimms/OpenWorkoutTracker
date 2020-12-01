@@ -12,12 +12,12 @@ Why develop a workout tracker when there are so many closed-source options avail
 * The network should be optional. It should be possible to use the app without sending any data to the cloud.
 
 ## Major Features
-* Support for cycling, running, hiking, walking, pull-ups, push-ups (press-ups), 
+* Support for cycling, running, hiking, walking, pull-ups, push-ups (press-ups), etc.
 * Customizable workout screens, very useful when using the application a bike computer.
 * Support for Bluetooth LE sensors, including heart rate, cycling power, and cycling cadence.
 * Optional ability to live broadcast to the companion server app (StraenWeb). Note that this is off by default, but is something I added so friends could track me during long cycling events.
 * Integrates with Apple Health.
-* Can export to the iCloud Drive.
+* Can export data to the iCloud Drive.
 
 ## Major Todos
 * Unit Tests
@@ -35,7 +35,9 @@ The User Documentation is stored [on this wiki page](https://github.com/msimms/S
 
 ## Architecture
 
-The software architecture uses a model-view-controller philosophy. Keeping the view separate from the model allows porting the application to different platforms without the need to rewrite everything. As much as possible, the view layer is written in C/C++. This is because it can be compiled for any hardware platform and can also be called from almost any other programming language. For example, the iOS and watchOS apps utilize Objective-C for their view and controller layers and call into C for model functionality. In the future, the iOS and watch OS view and controller classes could be re-written in Swift. Likewise, an Android app could be written in Java, all while retaining the same backend (i.e. model) code.
+The software architecture uses a model-view-controller philosophy. Keeping the view separate from the model allows porting the application to different platforms without the need to rewrite everything.
+
+As much as possible, the view layer is written in C/C++. This is because it can be compiled for any hardware platform and can also be called from almost any other programming language. For example, the iOS and watchOS apps utilize Objective-C for their view and controller layers and call into C for model functionality. In the future, the iOS and watch OS view and controller classes could be re-written in Swift. Likewise, an Android app could be written in Java, all while retaining the same backend (i.e. model) code.
 
 ![Architecture Diagram](https://github.com/msimms/Straen/blob/master/Docs/Architecture.png?raw=true)
 
