@@ -8,11 +8,11 @@
 #import "LapTimesViewController.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "StringUtils.h"
 
-#define TITLE             NSLocalizedString(@"Lap Times", nil)
-#define TEXT_LAP          NSLocalizedString(@"Lap", nil)
-#define BUTTON_TITLE_HOME NSLocalizedString(@"Home", nil)
+#define TITLE    NSLocalizedString(@"Lap Times", nil)
+#define TEXT_LAP NSLocalizedString(@"Lap", nil)
 
 @interface LapTime : NSObject
 {
@@ -61,7 +61,7 @@
 {
 	self.title = TITLE;
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.homeButton setTitle:BUTTON_TITLE_HOME];
+	[self.homeButton setTitle:STR_HOME];
 	[super viewDidLoad];
 }
 

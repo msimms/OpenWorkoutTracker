@@ -5,6 +5,7 @@
  
 */
 
+"About" = "Sobre";
 "Active" = "Activo";
 "Activity Level" = "Nivel de Actividad";
 "Add Bike Profile" = "Añadir un Perfil de Bicicleta";
@@ -21,16 +22,20 @@
 "Autoscale" = "Autoescala";
 "Autoscale On" = "Activado Autoescala";
 "Autoscale Off" = "Discapacitado Autoescala";
+"Average Pace" = "Ritmo Media";
+"Average Speed" = "Velocidad Media";
 "Bicycle" = "Bicicleta";
 "Bicycles" = "Bicicletas";
 "Bicycle Speed and Cadence" = "Velocidad y Cadencia de Bicicleta";
 "Biggest" = "Más Grande";
+"Biggest Climb" = "Mayor Subida";
 "Bike" = "Bicicleta";
 "Bikes" = "Bicicletas";
 "Birthdate" = "Cumpleaño";
 "Bluetooth is powered off. Turn Bluetooth on to scan for sensors." = "Bluetooth está apagado. Activar Bluetooth para buscar los sensores.";
 "Broadcast" = "Transmitir";
 "Broadcast Server" = "Servidor";
+"Calories" = "Calorías";
 "Cancel" = "Cancelar";
 "Caution" = "Precaución";
 "Charts" = "Gráficos";
@@ -56,9 +61,12 @@
 "Delete Last Five Seconds" = "Elimine Último Cinco Segundos";
 "Delete Last Thirty Seconds" = "Elimine Último Treinta Segundos";
 "Disabled" = "Discapacitado";
+"Distance" = "Distancia";
 "Distance Interval" = "Intervalo de Distancia";
 "Do not include the protocol in the URL." = "No incluya el protocolo en la URL.";
 "Edit" = "Editar";
+"Elapsed Time" = "Tiempo Transcurrido";
+"Elevation" = "Elevación";
 "Enabled" = "Activado";
 "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network." = "Al habilitar esta emitirá su posición para que otros puedan seguir. Los datos pueden ser transmitidos, mientras que en la red del proveedor.";
 "End" = "Fin";
@@ -83,6 +91,12 @@
 "Failed to create the account." = "Error al crear la cuenta.";
 "Failed to login to the account." = "Error al iniciar sesión en la cuenta.";
 "Fastest" = "Más Rápido";
+"Fastest 400M" = "400M Más Rápido";
+"Fastest 5K" = "5K Más Rápido";
+"Fastest Km" = "Km Más Rápido";
+"Fastest Mile" = "Milla Más Rápido";
+"Fastest Pace" = "Ritmo Más Rápido";
+"Fastest Speed" = "Velocidad Más Rápida";
 "Feet" = "Pies";
 "Female" = "Mujer";
 "Finish" = "Fin";
@@ -104,7 +118,6 @@
 "Home" = "Casa";
 "How often do you want to update your position to your followers?" = "¿Con qué frecuencia desea actualizar su posición a tus seguidores?";
 "Hybrid View" = "Híbrido Vista";
-"Save Files to iCloud Drive" = "Guardar Archivos en iCloud Drive";
 "Import" = "Importar";
 "Import from" = "Importar de";
 "Import Overlay" = "Importar";
@@ -134,18 +147,22 @@
 "Map Overlays" = "Superposiciónes";
 "Map Type" = "Tipo de Mapa";
 "Max. Distance" = "Distancia Máxima";
+"Maximum Altitude" = "Altitud Máxima";
 "Measure distance in which units?" = "¿Medir la distancia en la que las unidades?";
 "meters" = "metros";
 "Meters" = "Metros";
 "Metric" = "Métrico";
 "miles" = "millas";
 "Miles" = "Millas";
+"Minimum Altitude" = "Altitud Mínima";
 "Minimum GPS Accuracy" = "Precisión Mínima GPS";
 "mins/km" = "mins/km";
 "mins/mile" = "mins/milla";
 "Moderate" = "Moderado";
 "More" = "Más";
 "Mountain Biking" = "Ciclismo de Montaña";
+"Moving Pace" = "Ritmo en Movimiento";
+"Moving Speed" = "Velocidad de Movimiento";
 "Name" = "Nombre";
 "Name:" = "Nombre:";
 "Name this interval workout" = "Introduzca un nombre";
@@ -158,6 +175,7 @@
 "No" = "No";
 "None" = "Nada";
 "Not Connected" = "No Conectado";
+"Not Set" = "No Establecido";
 "On" = "En";
 "Off" = "Apagado";
 "Ok" = "Bueno";
@@ -193,7 +211,9 @@
 "Running" = "Corriendo";
 "Running Speed and Cadence" = "Velocidad y Cadencia de Corriendo";
 "Satellite View" = "Satélite Vista";
-"Save" = "Ahorrar";
+"Save" = "Guardar";
+"Save Files to iCloud Drive" = "Guardar Archivos en iCloud Drive";
+"Scale" = "Escala";
 "Scan" = "Explorar";
 "Scan for Sensors" = "Explorar de Sensores";
 "Screen" = "Pantalla";
@@ -217,6 +237,8 @@
 "Start a Workout" = "Nuevo Entrenamiento";
 "Start of Workout" = "Comienzo del Entrenamiento";
 "Started" = "Comenzado";
+"Starting Latitude" = "Latitud Inicial";
+"Starting Longitude" = "Longitud Inicial";
 "Stationary Cycling" = "Bicicleta Estacionaria";
 "Stationary cycling requires the use of a Bluetooth wheel speed sensor." = "Bicicleta estacionaria requiere el uso de un sensor de velocidad de la rueda Bluetooth.";
 "Statistics" = "Estadísticas";
@@ -235,8 +257,10 @@
 "This feature is not implemented." = "Esta función no está implementada.";
 "This will delete all of your data. Do you wish to continue? This cannot be undone." = "Esto eliminará todos sus datos. ¿Desea continuar? Esto no se puede deshacer.";
 "Time" = "Tiempo";
+"Time in Motion" = "Tiempo En Movimiento";
 "Time Interval" = "Intervalo de Tiempo";
 "To view your broadcast visit this webpage" = "Para ver su visita emisión esta página";
+"Total Ascent" = "Ascenso Total";
 "Total Calories" = "Las Calorías Totales";
 "Total Distance" = "Distancia Totales";
 "Total Reps" = "Repeticións Totales";
@@ -250,6 +274,7 @@
 "US Customary Units" = "Las Unidades de EE.UU.";
 "Use HTTPS" = "Usar HTTPS";
 "View" = "Ver";
+"View Weight History" = "Ver Historial de Peso";
 "Wait for screen touch" = "Espere a que la pantalla táctil";
 "Waiting for screen touch" = "Espera a que la pantalla táctil";
 "Walking" = "Caminar";
@@ -260,7 +285,7 @@
 "What would you like to view?" = "Lo que le gustaría ver?";
 "Wheel Diameter:" = "Diámetro de la Rueda:";
 "Workout Data" = "Datos de Entrenamiento";
-"Workout In Progress" = "Entrenamiento In Progress";
+"Workout In Progress" = "Entrenamiento En Progreso";
 "Workout Summary Data" = "Datos de Sumario";
 "Workout" = "Entrenamiento";
 "Workouts" = "Entrenamientos";

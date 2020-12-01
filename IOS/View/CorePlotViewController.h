@@ -13,6 +13,7 @@
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIView* chartView;
+	IBOutlet UIBarButtonItem* homeButton;
 
 	CPTGraphHostingView* hostingView;
 	CPTXYGraph* graph;
@@ -43,5 +44,6 @@
 
 @property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UIView* chartView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 
 @end

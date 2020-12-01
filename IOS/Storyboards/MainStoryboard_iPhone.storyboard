@@ -2811,6 +2811,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     </navigationItem>
                     <connections>
                         <outlet property="chartView" destination="7MD-Cu-cOa" id="1XN-ea-boa"/>
+                        <outlet property="homeButton" destination="vor-L1-ec4" id="Nxd-63-MQy"/>
                         <outlet property="navItem" destination="Fae-2l-XhH" id="kYH-Tg-C7k"/>
                     </connections>
                 </viewController>

@@ -7,6 +7,7 @@
 
 #import "CorePlotViewController.h"
 #import "ChartPoint.h"
+#import "AppStrings.h"
 
 #define PLOT_ID_MAIN "Main Line"
 #define PLOT_ID_MIN  "Min Line"
@@ -21,6 +22,7 @@
 
 @synthesize navItem;
 @synthesize chartView;
+@synthesize homeButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,6 +32,7 @@
 
 - (void)viewDidLoad
 {
+	[self.homeButton setTitle:STR_HOME];
 	[super viewDidLoad];
 }
 

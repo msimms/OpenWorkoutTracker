@@ -5,6 +5,7 @@
  
 */
 
+"About" = "About";
 "Active" = "Active";
 "Activity Level" = "Activity Level";
 "Add Bike Profile" = "Add Bike Profile";
@@ -21,16 +22,20 @@
 "Autoscale" = "Autoscale";
 "Autoscale On" = "Autoscale On";
 "Autoscale Off" = "Autoscale Off";
+"Average Pace" = "Average Pace";
+"Average Speed" = "Average Speed";
 "Bicycle" = "Bicycle";
 "Bicycles" = "Bicycles";
 "Bicycle Speed and Cadence" = "Bicycle Speed and Cadence";
 "Biggest" = "Biggest";
+"Biggest Climb" = "Biggest Climb";
 "Bike" = "Bike";
 "Bikes" = "Bikes";
 "Birthdate" = "Birthdate";
 "Bluetooth is powered off. Turn Bluetooth on to scan for sensors." = "Bluetooth is powered off. Turn Bluetooth on to scan for sensors.";
 "Broadcast" = "Broadcast";
 "Broadcast Server" = "Broadcast Server";
+"Calories" = "Calories";
 "Cancel" = "Cancel";
 "Caution" = "Caution";
 "Charts" = "Charts";
@@ -56,9 +61,12 @@
 "Delete Last Five Seconds" = "Delete Last Five Seconds";
 "Delete Last Thirty Seconds" = "Delete Last Thirty Seconds";
 "Disabled" = "Disabled";
+"Distance" = "Distance";
 "Distance Interval" = "Distance Interval";
 "Do not include the protocol in the URL." = "Do not include the protocol in the URL.";
 "Edit" = "Edit";
+"Elapsed Time" = "Elapsed Time";
+"Elevation" = "Elevation";
 "Enabled" = "Enabled";
 "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network." = "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.";
 "End" = "End";
@@ -83,6 +91,12 @@
 "Failed to create the account." = "Failed to create the account.";
 "Failed to login to the account." = "Failed to login to the account.";
 "Fastest" = "Fastest";
+"Fastest 400M" = "Fastest 400M";
+"Fastest 5K" = "Fastest 5K";
+"Fastest Km" = "Fastest Km";
+"Fastest Mile" = "Fastest Mile";
+"Fastest Pace" = "Fastest Pace";
+"Fastest Speed" = "Fastest Speed";
 "Feet" = "Feet";
 "Female" = "Female";
 "Finish" = "Finish";
@@ -104,7 +118,6 @@
 "Home" = "Home";
 "How often do you want to update your position to your followers?" = "How often do you want to update your position to your followers?";
 "Hybrid View" = "Hybrid View";
-"Save Files to iCloud Drive" = "Save Files to iCloud Drive";
 "Import" = "Import";
 "Import from" = "Import from";
 "Import Overlay" = "Import Overlay";
@@ -134,18 +147,22 @@
 "Map Overlays" = "Map Overlays";
 "Map Type" = "Map Type";
 "Max. Distance" = "Max. Distance";
+"Maximum Altitude" = "Maximum Altitude";
 "Measure distance in which units?" = "Measure distance in which units?";
 "meters" = "meters";
 "Meters" = "Meters";
 "Metric" = "Metric";
 "miles" = "miles";
 "Miles" = "Miles";
+"Minimum Altitude" = "Minimum Altitude";
 "Minimum GPS Accuracy" = "Minimum GPS Accuracy";
 "mins/km" = "mins/km";
 "mins/mile" = "mins/mile";
 "Moderate" = "Moderate";
 "More" = "More";
 "Mountain Biking" = "Mountain Biking";
+"Moving Pace" = "Moving Pace";
+"Moving Speed" = "Moving Speed";
 "Name" = "Name";
 "Name:" = "Name:";
 "Name this interval workout" = "Name this interval workout";
@@ -158,6 +175,7 @@
 "No" = "No";
 "None" = "None";
 "Not Connected" = "Not Connected";
+"Not Set" = "Not Set";
 "On" = "On";
 "Off" = "Off";
 "Ok" = "Ok";
@@ -194,6 +212,8 @@
 "Running Speed and Cadence" = "Running Speed and Cadence";
 "Satellite View" = "Satellite View";
 "Save" = "Save";
+"Save Files to iCloud Drive" = "Save Files to iCloud Drive";
+"Scale" = "Scale";
 "Scan" = "Scan";
 "Scan for Sensors" = "Scan for Sensors";
 "Screen" = "Screen";
@@ -217,6 +237,8 @@
 "Start a Workout" = "Start a Workout";
 "Start of Workout" = "Start of Workout";
 "Started" = "Started";
+"Starting Latitude" = "Starting Latitude";
+"Starting Longitude" = "Starting Longitude";
 "Stationary Cycling" = "Stationary Cycling";
 "Stationary cycling requires the use of a Bluetooth wheel speed sensor." = "Stationary cycling requires the use of a Bluetooth wheel speed sensor.";
 "Statistics" = "Statistics";
@@ -235,9 +257,11 @@
 "This feature is not implemented." = "This feature is not implemented.";
 "This will delete all of your data. Do you wish to continue? This cannot be undone." = "This will delete all of your data. Do you wish to continue? This cannot be undone.";
 "Time" = "Time";
+"Time in Motion" = "Time In Motion";
 "Time Interval" = "Time Interval";
 "To view your broadcast visit this webpage" = "To view your broadcast visit this webpage";
-"Total Calories" = "Total Calories";
+"Total Ascent" = "Total Ascent";
+"Total Calories" = "Total Kcals";
 "Total Distance" = "Total Distance";
 "Total Reps" = "Total Reps";
 "Treadmill" = "Treadmill";
@@ -247,9 +271,10 @@
 "Update Rate" = "Update Rate";
 "Unimplemented Feature" = "Unimplemented Feature";
 "Units" = "Units";
-"US Customary Units" = "US Customary Units";
+"US Customary Units" = "Customary Units";
 "Use HTTPS" = "Use HTTPS";
 "View" = "View";
+"View Weight History" = "View Weight History";
 "Wait for screen touch" = "Wait for screen touch";
 "Waiting for screen touch" = "Waiting for screen touch";
 "Walking" = "Walking";
