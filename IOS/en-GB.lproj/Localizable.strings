@@ -22,6 +22,7 @@
 "Autoscale" = "Autoscale";
 "Autoscale On" = "Autoscale On";
 "Autoscale Off" = "Autoscale Off";
+"AutoStart" = "AutoStart";
 "Average Pace" = "Average Pace";
 "Average Speed" = "Average Speed";
 "Bicycle" = "Bicycle";
@@ -133,11 +134,13 @@
 "kgs" = "kgs";
 "Kilometers" = "Kilometers";
 "Lap" = "Lap";
+"Lap and Split Times" = "Lap and Split Times";
 "Lap Times" = "Lap Times";
 "Layout" = "Layout";
 "lbs" = "lbs";
 "Light" = "Light";
 "Location Services is disabled" = "Location Services is disabled";
+"Login" = "Login";
 "Low memory" = "Low memory";
 "Male" = "Male";
 "Manage People Following Me" = "Manage People Following Me";
@@ -200,6 +203,8 @@
 "Records" = "Records";
 "Rep Interval" = "Rep Interval";
 "Repetitions" = "Repetitions";
+"Repetitions (Computed)" = "Repetitions (Computed)";
+"Repetitions (Corrected)" = "Repetitions (Corrected)";
 "Replace" = "Replace";
 "Request" = "Request";
 "Reset" = "Reset";
@@ -235,6 +240,7 @@
 "Standard View" = "Standard View";
 "Start" = "Start";
 "Start a Workout" = "Start a Workout";
+"Start and Finish" = "Start and Finish";
 "Start of Workout" = "Start of Workout";
 "Started" = "Started";
 "Starting Latitude" = "Starting Latitude";
@@ -248,6 +254,7 @@
 "Summary" = "Summary";
 "Superlatives" = "Superlatives";
 "Tag" = "Tag";
+"Tags" = "Tags";
 "TCX File" = "TCX File";
 "The data file is attached." = "The data file is attached.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "There are risks with exercise. Do not start an exercise program without consulting your doctor.";

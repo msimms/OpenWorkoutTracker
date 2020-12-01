@@ -22,6 +22,7 @@
 "Autoscale" = "Autoescala";
 "Autoscale On" = "Activado Autoescala";
 "Autoscale Off" = "Discapacitado Autoescala";
+"AutoStart" = "AutoComenzar";
 "Average Pace" = "Ritmo Media";
 "Average Speed" = "Velocidad Media";
 "Bicycle" = "Bicicleta";
@@ -133,11 +134,13 @@
 "kgs" = "kgs";
 "Kilometers" = "Kilómetros";
 "Lap" = "Vuelta";
+"Lap and Split Times" = "Tiempos de Vueltas y Parciales";
 "Lap Times" = "Tiempos de Vueltas";
 "Layout" = "Disposición";
 "lbs" = "lbs";
 "Light" = "Leve";
 "Location Services is disabled" = "Location Services está desactivada";
+"Login" = "Iniciar Sesión";
 "Low memory" = "Poca memoria";
 "Male" = "Hombre";
 "Manage People Following Me" = "Administrar Personas Siguiéndome";
@@ -200,6 +203,8 @@
 "Records" = "El Mejor";
 "Rep Interval" = "Intervalo de los Repeticións";
 "Repetitions" = "Repeticións";
+"Repetitions (Computed)" = "Repeticións (Calculado)";
+"Repetitions (Corrected)" = "Repeticións (Corregido)";
 "Replace" = "Reemplazar";
 "Request" = "Solicitar";
 "Reset" = "Reinicializar";
@@ -235,6 +240,7 @@
 "Standard View" = "Estándar Vista";
 "Start" = "Comienzo";
 "Start a Workout" = "Nuevo Entrenamiento";
+"Start and Finish" = "Comienzo y Terminar";
 "Start of Workout" = "Comienzo del Entrenamiento";
 "Started" = "Comenzado";
 "Starting Latitude" = "Latitud Inicial";
@@ -248,6 +254,7 @@
 "Summary" = "Sumario";
 "Superlatives" = "Superlativos";
 "Tag" = "Etiqueta";
+"Tags" = "Etiquetas";
 "TCX File" = "TCX Archivo";
 "The data file is attached." = "Se adjunta el archivo.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "Hay riesgos con el ejercicio. No comience un programa de ejercicios sin consultar a su médico.";
@@ -264,7 +271,7 @@
 "Total Calories" = "Las Calorías Totales";
 "Total Distance" = "Distancia Totales";
 "Total Reps" = "Repeticións Totales";
-"Treadmill" = "Rueda de andar";
+"Treadmill" = "Rueda de Andar";
 "Treadmill running requires the use of a Bluetooth foot pod." = "Correr Cinta de correr requiere el uso de un podómetro Bluetooth.";
 "Trim" = "Recortar";
 "Update" = "Actualizar";
