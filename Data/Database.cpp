@@ -1157,62 +1157,62 @@ bool Database::MergeActivities(const std::string& activityId1, const std::string
 	std::vector<std::string> queries;
 	std::ostringstream sqlStream;
 	
-	sqlStream << "update bike_activity set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update bike_activity set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "update lap set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update lap set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "update gps set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update gps set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "update accelerometer set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update accelerometer set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "update cadence set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update cadence set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "update hrm set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update hrm set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "update wheel_speed set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update wheel_speed set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "update power_meter set activity_id = " << activityId1 << " where activity_id = " << activityId2;
-	queries.push_back(sqlStream.str());
-	sqlStream.str(std::string());
-	sqlStream.clear();
-	
-	sqlStream << "update foot_pod set activity_id = " << activityId1 << " where activity_id = " << activityId2;
-	queries.push_back(sqlStream.str());
-	sqlStream.str(std::string());
-	sqlStream.clear();
-	
-	sqlStream << "update tag set activity_id = " << activityId1 << " where activity_id = " << activityId2;
+	sqlStream << "update power_meter set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 
-	sqlStream << "delete from activity_summary where activity_id = " << activityId2;
+	sqlStream << "update foot_pod set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
 	
-	sqlStream << "delete from activity where activity_id = " << activityId2;
+	sqlStream << "update tag set activity_id = '" << activityId1 << "' where activity_id = '" << activityId2 << "'";
+	queries.push_back(sqlStream.str());
+	sqlStream.str(std::string());
+	sqlStream.clear();
+
+	sqlStream << "delete from activity_summary where activity_id = '" << activityId2 << "'";
+	queries.push_back(sqlStream.str());
+	sqlStream.str(std::string());
+	sqlStream.clear();
+	
+	sqlStream << "delete from activity where activity_id = '" << activityId2 << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
