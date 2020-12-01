@@ -10,3 +10,4 @@
 #define APP_NAME "Straen"
 
 #define OMIT_BROADCAST FALSE
+#define SHOW_DEBUG_INFO FALSE

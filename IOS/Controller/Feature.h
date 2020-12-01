@@ -10,11 +10,11 @@
 
 typedef enum Feature
 {
-	FEATURE_BROADCAST = 0,
-	FEATURE_WORKOUT_PLAN_GENERATION,
-	FEATURE_DROPBOX,
-	FEATURE_STRAVA,
-	FEATURE_RUNKEEPER,
+	FEATURE_BROADCAST = 0, // Provides the option to send data to the companion seb service
+	FEATURE_WORKOUT_PLAN_GENERATION, 
+	FEATURE_DROPBOX, // Exporting activities to Dropbox
+	FEATURE_STRAVA, // Exporting activities to Strava
+	FEATURE_RUNKEEPER, // Exporting activities to RunKeeper
 } Feature;
 
 #endif

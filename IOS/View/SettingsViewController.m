@@ -334,6 +334,9 @@ typedef enum SettingsRowsHealthKit
 			break;
 		case SECTION_BROADCAST:
 			numRows = NUM_SETTINGS_ROWS_BROADCAST;
+#if !SHOW_DEBUG_INFO
+			numRows--;
+#endif
 			break;
 	}
 	return numRows;
@@ -557,8 +560,12 @@ typedef enum SettingsRowsHealthKit
 		case SECTION_BROADCAST:
 			switch (row)
 			{
+				case SETTINGS_ROW_BROADCAST_ENABLED:
+					break;
 				case SETTINGS_ROW_BROADCAST_RATE:
 					[self showBroadcastRateDialog];
+					break;
+				case SETTINGS_ROW_BROADCAST_PROTOCOL:
 					break;
 				case SETTINGS_ROW_BROADCAST_HOST:
 					[self showBroadcastHostNameDialog];
@@ -568,6 +575,8 @@ typedef enum SettingsRowsHealthKit
 					break;
 				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
 					[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWED_BY_VIEW sender:self];
+					break;
+				case SETTINGS_ROW_DEVICE_ID:
 					break;
 			}
 			break;

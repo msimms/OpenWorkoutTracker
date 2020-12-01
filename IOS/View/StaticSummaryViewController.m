@@ -12,6 +12,7 @@
 #import "AppStrings.h"
 #import "AppDelegate.h"
 #import "CorePlotViewController.h"
+#import "Defines.h"
 #import "ElevationLine.h"
 #import "LapTimesViewController.h"
 #import "LineFactory.h"
@@ -300,7 +301,11 @@ typedef enum ExportFileTypeButtons
 					count = [self->recordNames count];
 					break;
 				case SECTION_INTERNAL:
-					count = 1;
+#if SHOW_DEBUG_INFO
+				count = 1;
+#else
+				count = 0;
+#endif
 					break;
 			}
 
