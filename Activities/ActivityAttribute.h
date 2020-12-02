@@ -89,6 +89,7 @@
 #define ACTIVITY_ATTRIBUTE_LAP_TIME                   "Lap Time "               // "Lap Time 1", etc.
 #define ACTIVITY_ATTRIBUTE_GRAPH_PEAK                 "Graph Peak "             // "Graph Peak 1", etc.
 #define ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME           "Current Lap Time"        //
+#define ACTIVITY_ATTRIBUTE_CURRENT_LAP_NUMBER         "Current Lap Num"         //
 #define ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT          "Additional Weight"       // weight, in kg (such as barbells, etc.)
 #define ACTIVITY_ATTRIBUTE_RUN_STRIDE_LENGTH          "Run Stride Length"       // stride length from a foot pod
 #define ACTIVITY_ATTRIBUTE_RUN_DISTANCE               "Run Distance"            // distance from a foot pod
