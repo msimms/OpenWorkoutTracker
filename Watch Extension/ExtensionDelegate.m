@@ -450,12 +450,7 @@ void startSensorCallback(SensorType type, void* context)
 	BOOL isOrphaned = FALSE;
 
 	[self->backendLock lock];
-
-	if (HistoricalActivityListIsInitialized())
-	{
-		isOrphaned = IsActivityOrphaned(activityIndex);
-	}
-
+	isOrphaned = IsActivityOrphaned(activityIndex);
 	[self->backendLock unlock];
 
 	return isOrphaned;

@@ -35,9 +35,9 @@
 	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
 #endif
 	HealthManager*       healthMgr; // Interfaces with Apple HealthKit.
-	NSTimer*             intervalTimer;
+	NSTimer*             intervalTimer; // Timer that fires when it's time to advance to the next part of an interval workout.
 	WCSession*           watchSession; // Interfaces with the watch app.
-	BOOL                 badGps;
+	BOOL                 badGps; // TRUE if we're getting location data that doesn't look good.
 	BOOL                 currentlyImporting; // TRUE if currently importing an activity (like from the watch, for example).
 	size_t               currentActivityIndex; // Used when iterating over historical activities.
 }

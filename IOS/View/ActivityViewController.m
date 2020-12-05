@@ -196,7 +196,6 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
-
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_ATTRIBUTES
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -262,7 +261,7 @@
 		{
 			text = HELP_TREADMILL;
 		}
-		
+
 		if (text)
 		{
 			[super showOneButtonAlert:STR_CAUTION withMsg:text];
@@ -297,7 +296,7 @@
 
 		self->countdownSecs--;
 	}
-	
+
 	// Timer has expired, start the activity, destroy the timer, and delete the image.
 	else
 	{
@@ -338,19 +337,15 @@
 - (void)startTimer
 {
 	self->messageDisplayCounter = 0;
-
 	self->refreshTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]
 												  interval:1
 													target:self
 												  selector:@selector(onRefreshTimer:)
 												  userInfo:nil
 												   repeats:YES];
-	
+
 	NSRunLoop* runner = [NSRunLoop currentRunLoop];
-	if (runner)
-	{
-		[runner addTimer:self->refreshTimer forMode: NSDefaultRunLoopMode];
-	}
+	[runner addTimer:self->refreshTimer forMode: NSDefaultRunLoopMode];
 }
 
 - (void)stopTimer
@@ -368,12 +363,12 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
-	
+
 	for (UILabel* label in self->valueLabels)
 	{
 		label.text = @"--";
 	}
-	
+
 	for (NSString* attributeName in attributeNames)
 	{
 		uint8_t viewPos = [self->activityPrefs getAttributePos:self->activityType withAttributeName:attributeName];
@@ -391,7 +386,7 @@
 	UIColor* valueColor      = [self->activityPrefs getTextColor:self->activityType];
 	UIColor* titleColor      = [self->activityPrefs getLabelColor:self->activityType];
 	UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:self->activityType];
-	
+
 	for (UILabel* label in self->valueLabels)
 	{
 		[label setTextColor:valueColor];
@@ -400,7 +395,7 @@
 	{
 		[label setTextColor:titleColor];
 	}
-	
+
 	self.view.backgroundColor = backgroundColor;
 }
 
@@ -591,10 +586,7 @@
 																 repeats:YES];
 				
 				NSRunLoop* runner = [NSRunLoop currentRunLoop];
-				if (runner)
-				{
-					[runner addTimer:self->countdownTimer forMode: NSDefaultRunLoopMode];
-				}
+				[runner addTimer:self->countdownTimer forMode: NSDefaultRunLoopMode];
 			}
 			else
 			{

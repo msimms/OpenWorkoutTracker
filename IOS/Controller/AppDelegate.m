@@ -1186,12 +1186,9 @@ void startSensorCallback(SensorType type, void* context)
 												   selector:@selector(onIntervalTimer:)
 												   userInfo:nil
 													repeats:YES];
-	
+
 	NSRunLoop* runner = [NSRunLoop currentRunLoop];
-	if (runner)
-	{
-		[runner addTimer:self->intervalTimer forMode: NSDefaultRunLoopMode];
-	}
+	[runner addTimer:self->intervalTimer forMode: NSDefaultRunLoopMode];
 }
 
 #pragma mark methods for starting and stopping activities, etc.
