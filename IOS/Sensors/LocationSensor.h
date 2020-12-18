@@ -23,6 +23,7 @@
 @interface LocationSensor : NSObject <CLLocationManagerDelegate, Sensor>
 {
 	CLLocationManager* locationManager;
+	CLLocation* currentLocation;
 }
 
 - (id)init;
@@ -43,8 +44,5 @@
 
 - (void)locationManager:(CLLocationManager*)manager didUpdateToLocation:(CLLocation*)newLocation fromLocation:(CLLocation*)oldLocation;
 - (void)locationManager:(CLLocationManager*)manager didFailWithError:(NSError*)error;
-
-@property (nonatomic, retain) CLLocationManager* locationManager;
-@property (strong, nonatomic) CLLocation*        currentLocation;
 
 @end

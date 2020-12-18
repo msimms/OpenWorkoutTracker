@@ -55,10 +55,12 @@
 
 - (void)workoutSession:(HKWorkoutSession*)workoutSession didChangeToState:(HKWorkoutSessionState)toState fromState:(HKWorkoutSessionState)fromState date:(NSDate*)date
 {
+	NSLog(@"Workout Session changed state.");
 }
 
 - (void)workoutSession:(HKWorkoutSession*)workoutSession didFailWithError:(NSError*)error
 {
+	NSLog(@"Workout Session failed.");
 }
 
 #pragma mark methods for getting heart rate updates from the watch

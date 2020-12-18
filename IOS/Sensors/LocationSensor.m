@@ -10,9 +10,6 @@
 
 @implementation LocationSensor
 
-@synthesize locationManager;
-@synthesize currentLocation;
-
 #pragma mark init methods
 
 - (id)init
@@ -20,15 +17,16 @@
 	self = [super init];
 	if (self != nil)
 	{
-		self.locationManager = [[CLLocationManager alloc] init];
-		self.locationManager.delegate = self;
-		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-		self.locationManager.distanceFilter = kCLDistanceFilterNone;
-		self.locationManager.activityType = CLActivityTypeFitness;
+		self->locationManager = [[CLLocationManager alloc] init];
+		self->locationManager.delegate = self;
+		self->locationManager.activityType = CLActivityTypeFitness;
+		self->locationManager.distanceFilter = kCLDistanceFilterNone;
+		self->locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 #if !TARGET_OS_WATCH
-		self.locationManager.pausesLocationUpdatesAutomatically = FALSE;
+		self->locationManager.pausesLocationUpdatesAutomatically = FALSE;
+		self->locationManager.showsBackgroundLocationIndicator = TRUE;
 #endif
-		self.locationManager.allowsBackgroundLocationUpdates = YES;
+		self->locationManager.allowsBackgroundLocationUpdates = TRUE;
 	}
 	return self;
 }
@@ -62,9 +60,9 @@
 		case kCLAuthorizationStatusRestricted:
 		case kCLAuthorizationStatusDenied:
 			break;
-		case kCLAuthorizationStatusAuthorizedWhenInUse:
 		case kCLAuthorizationStatusAuthorizedAlways:
-			[self.locationManager startUpdatingLocation];
+		case kCLAuthorizationStatusAuthorizedWhenInUse:
+			[self->locationManager startUpdatingLocation];
 			break;
 		default:
 			break;
@@ -75,7 +73,7 @@
 {
 	if (error.code == kCLErrorDenied)
 	{
-		[self.locationManager stopUpdatingLocation];
+		[self->locationManager stopUpdatingLocation];
 	}
 }
 
@@ -97,12 +95,14 @@
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager*)manager
 {
 #if TARGET_OS_WATCH
-	[self.locationManager startUpdatingLocation];
+	[self->locationManager startUpdatingLocation];
 #endif
+	NSLog(@"Location updates paused.");
 }
 
 - (void)locationManagerDidResumeLocationUpdates:(CLLocationManager*)manager
 {
+	NSLog(@"Location updates resumed.");
 }
 
 - (void)processNewLocation:(CLLocation*)newLocation
@@ -135,26 +135,30 @@
 		{
 		case kCLAuthorizationStatusDenied:
 		case kCLAuthorizationStatusRestricted:
-			[self.locationManager requestAlwaysAuthorization];
+			[self->locationManager requestAlwaysAuthorization];
 			break;
 		case kCLAuthorizationStatusAuthorizedAlways:
-			[self.locationManager startUpdatingLocation];
+			[self->locationManager startUpdatingLocation];
 			break;
 		case kCLAuthorizationStatusAuthorizedWhenInUse:
-			[self.locationManager startUpdatingLocation];
+			[self->locationManager startUpdatingLocation];
 			break;
 		case kCLAuthorizationStatusNotDetermined:
-			[self.locationManager requestAlwaysAuthorization];
+			[self->locationManager requestAlwaysAuthorization];
 			break;
 		default:
 			break;
 		}
 	}
+
+	NSLog(@"Location updates started.");
 }
 
 - (void)stopUpdates
 {
-	[self.locationManager stopUpdatingLocation];
+	[self->locationManager stopUpdatingLocation];
+
+	NSLog(@"Location updates stopped.");
 }
 
 - (void)update
