@@ -244,6 +244,8 @@ bool Database::CreateTables()
 
 bool Database::CreateStatements()
 {
+	if (sqlite3_prepare_v2(m_pDb, "insert into accelerometer values (NULL,?,?,?,?,?)", -1, &m_accelerometerInsertStatement, 0) != SQLITE_OK)
+		return false;
 	if (sqlite3_prepare_v2(m_pDb, "insert into gps values (NULL,?,?,?,?,?)", -1, &m_locationInsertStatement, 0) != SQLITE_OK)
 		return false;
 	if (sqlite3_prepare_v2(m_pDb, "insert into hrm values (NULL,?,?,?)", -1, &m_heartRateInsertStatement, 0) != SQLITE_OK)
