@@ -35,6 +35,7 @@
 	NSInteger       attributePosToReplace; // Indicates which attribute was pressed
 	BOOL            isPopping; // Prevents us from redrawing if we're about to pop
 	NSString*       activityType; // Current activity type, cached here for performance reasons
+	BOOL            showBroadcastIcon; // TRUE if we should show an icon that represents the broadcast status
 	ActivityPreferences* prefs; // Prefs object, cached here for performance reasons
 }
 

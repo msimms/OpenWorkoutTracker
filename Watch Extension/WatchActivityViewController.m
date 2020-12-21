@@ -9,6 +9,7 @@
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "Notifications.h"
+#import "Preferences.h"
 #import "StringUtils.h"
 
 #define ALERT_MSG_STOP              NSLocalizedString(@"Are you sure you want to stop?", nil)
@@ -105,7 +106,10 @@
 
 	// Cache the activity type so we don't have to keep looking it up.
 	self->activityType = [extDelegate getCurrentActivityType];
-	
+
+	// Cache this setting for efficiency purposes.
+	self->showBroadcastIcon = [Preferences broadcastShowIcon];
+
 	// Cache the preferences.
 	self->prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 
@@ -326,7 +330,7 @@
 	}
 
 	// Refresh the display status icon.
-	if (self->currentBroadcastStatus)
+	if (self->currentBroadcastStatus && self->showBroadcastIcon)
 	{
 		@synchronized(self->currentBroadcastStatus)
 		{

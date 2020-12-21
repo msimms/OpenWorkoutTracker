@@ -43,6 +43,7 @@ typedef enum SettingsRowsBroadcast
 	SETTINGS_ROW_BROADCAST_RATE,
 	SETTINGS_ROW_BROADCAST_PROTOCOL,
 	SETTINGS_ROW_BROADCAST_HOST,
+	SETTINGS_ROW_BROADCAST_SHOW_ICON,
 	SETTINGS_ROW_MANAGE_FOLLOWING,
 	SETTINGS_ROW_MANAGE_FOLLOWED_BY,
 	SETTINGS_ROW_DEVICE_ID,
@@ -68,6 +69,7 @@ typedef enum SettingsRowsHealthKit
 #define BROADCAST_RATE                 NSLocalizedString(@"Update Rate", nil)
 #define BROADCAST_HTTPS                NSLocalizedString(@"Use HTTPS", nil)
 #define BROADCAST_HOST                 NSLocalizedString(@"Broadcast Server", nil)
+#define BROADCAST_SHOW_ICON            NSLocalizedString(@"Broadcast Show Icon", nil)
 #define BROADCAST_UNITS                NSLocalizedString(@"Seconds", nil)
 #define MANAGE_FOLLOWING               NSLocalizedString(@"Manage People I'm Following", nil)
 #define MANAGE_FOLLOWED_BY             NSLocalizedString(@"Manage People Following Me", nil)
@@ -488,6 +490,12 @@ typedef enum SettingsRowsHealthKit
 						cell.textLabel.text = BROADCAST_HOST;
 						cell.detailTextLabel.text = [Preferences broadcastHostName];
 						break;
+					case SETTINGS_ROW_BROADCAST_SHOW_ICON:
+						cell.textLabel.text = BROADCAST_SHOW_ICON;
+						cell.detailTextLabel.text = @"";
+						[switchview setOn:[Preferences broadcastShowIcon]];
+						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+						break;
 					case SETTINGS_ROW_MANAGE_FOLLOWING:
 						cell.textLabel.text = MANAGE_FOLLOWING;
 						cell.detailTextLabel.text = @"";
@@ -529,6 +537,7 @@ typedef enum SettingsRowsHealthKit
 				case SETTINGS_ROW_BROADCAST_RATE:
 				case SETTINGS_ROW_BROADCAST_PROTOCOL:
 				case SETTINGS_ROW_BROADCAST_HOST:
+				case SETTINGS_ROW_BROADCAST_SHOW_ICON:
 					break;
 				case SETTINGS_ROW_MANAGE_FOLLOWING:
 				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
@@ -569,6 +578,8 @@ typedef enum SettingsRowsHealthKit
 					break;
 				case SETTINGS_ROW_BROADCAST_HOST:
 					[self showBroadcastHostNameDialog];
+					break;
+				case SETTINGS_ROW_BROADCAST_SHOW_ICON:
 					break;
 				case SETTINGS_ROW_MANAGE_FOLLOWING:
 					[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWING_VIEW sender:self];

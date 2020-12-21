@@ -34,6 +34,7 @@
 + (NSInteger)broadcastRate;
 + (NSString*)broadcastProtocol;
 + (NSString*)broadcastHostName;
++ (BOOL)broadcastShowIcon;
 + (BOOL)willIntegrateHealthKitActivities;
 + (BOOL)hideHealthKitDuplicates;
 + (BOOL)hasShownFirstTimeUseMessage;

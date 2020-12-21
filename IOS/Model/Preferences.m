@@ -15,6 +15,7 @@
 #define PREF_NAME_BROADCAST_RATE                       "Broadcast Rate"
 #define PREF_NAME_BROADCAST_PROTOCOL                   "Broadcast Protocol"
 #define PREF_NAME_BROADCAST_HOST_NAME                  "Broadcast Host Name"
+#define PREF_NAME_BROADCAST_SHOW_ICON                  "Broadcast Show Icon"
 #define PREF_NAME_ALWAYS_CONNECT                       "Always Connect"
 #define PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES "Will Integrate HealthKit Activities"
 #define PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES           "Hide HealthKit Duplicates"
@@ -142,6 +143,7 @@
 + (NSInteger)broadcastRate
 {
 	NSInteger rate = [self readNumericValue:@PREF_NAME_BROADCAST_RATE];
+
 	if (rate == 0)
 		rate = DEFAULT_BROADCAST_RATE;
 	if (rate < MAX_BROADCAST_RATE)
@@ -154,6 +156,7 @@
 + (NSString*)broadcastProtocol
 {
 	NSString* protocol = [self readStringValue:@PREF_NAME_BROADCAST_PROTOCOL];
+
 	if ((protocol == nil) || ([protocol length] == 0))
 		protocol = @DEFAULT_PROTOCOL;
 	return protocol;
@@ -162,9 +165,15 @@
 + (NSString*)broadcastHostName
 {
 	NSString* hostName = [self readStringValue:@PREF_NAME_BROADCAST_HOST_NAME];
+
 	if ((hostName == nil) || ([hostName length] == 0))
 		hostName = @DEFAULT_HOST_NAME;
 	return hostName;
+}
+
++ (BOOL)broadcastShowIcon
+{
+	return [self readBooleanValue:@PREF_NAME_BROADCAST_SHOW_ICON];
 }
 
 + (BOOL)willIntegrateHealthKitActivities

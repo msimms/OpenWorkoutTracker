@@ -151,6 +151,7 @@
 	[self showHelp];
 
 	self->activityType = [appDelegate getCurrentActivityType];
+	self->showBroadcastIcon = [Preferences broadcastShowIcon];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -1043,7 +1044,7 @@
 	}
 	
 	// Refresh the display status icon.
-	if (self->currentBroadcastStatus)
+	if (self->currentBroadcastStatus && self->showBroadcastIcon)
 	{
 		@synchronized(self->currentBroadcastStatus)
 		{

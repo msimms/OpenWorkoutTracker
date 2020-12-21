@@ -55,6 +55,7 @@
 	bool                       autoStartCoordinateSet; // TRUE if we have a meaningful value in 'autoStartCoordinate'
 	Coordinate                 autoStartCoordinate; // Location reference for the autostart on move feature
 	NSInteger                  tappedButtonIndex; // Indicates which attribute was pressed
+	bool                       showBroadcastIcon; // TRUE if we should show an icon that represents the broadcast status
 }
 
 - (void)onRefreshTimer:(NSTimer*)timer;
