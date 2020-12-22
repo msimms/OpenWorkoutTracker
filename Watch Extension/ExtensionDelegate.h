@@ -30,8 +30,6 @@
 	BOOL hasConnectivity; // TRUE if we have confirmed the existence of a cellular/mobile data network
 	time_t lastHeartRateUpdate; // UNIX timestamp of the most recent heart rate update
 	NSString* activityType; // Current activity type, cached here for performance reasons
-
-	NSLock* backendLock; // Lock for all backend calls.
 }
 
 // network monitoring methods

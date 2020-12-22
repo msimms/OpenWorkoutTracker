@@ -101,6 +101,7 @@ extern "C" {
 	ActivityFactory* g_pActivityFactory = NULL;
 	Database*        g_pDatabase = NULL;
 	bool             g_autoStartEnabled = false;
+	std::mutex       g_dbLock;
 
 	ActivitySummaryList           g_historicalActivityList; // cache of completed activities
 	std::map<std::string, size_t> g_activityIdMap; // maps activity IDs to activity indexes
@@ -123,6 +124,8 @@ extern "C" {
 		{
 			g_pActivityFactory = new ActivityFactory();
 		}
+
+		g_dbLock.lock();
 
 		if (!g_pDatabase)
 		{
@@ -150,12 +153,17 @@ extern "C" {
 				result = false;
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
 	bool DeleteActivity(const char* const activityId)
 	{
 		bool deleted = false;
+
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
@@ -165,6 +173,9 @@ extern "C" {
 		{
 			DestroyCurrentActivity();
 		}
+
+		g_dbLock.unlock();
+
 		return deleted;
 	}
 
@@ -172,10 +183,15 @@ extern "C" {
 	{
 		bool deleted = false;
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			deleted = g_pDatabase->Reset();
 		}
+
+		g_dbLock.unlock();
+
 		return deleted;
 	}
 
@@ -183,10 +199,15 @@ extern "C" {
 	{
 		bool deleted = false;
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			deleted = g_pDatabase->Close();
 		}
+
+		g_dbLock.unlock();
+
 		return deleted;
 	}
 
@@ -196,25 +217,39 @@ extern "C" {
 
 	bool SetActivityName(const char* const activityId, const char* const name)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
-			return g_pDatabase->UpdateActivityName(activityId, name);
+			result = g_pDatabase->UpdateActivityName(activityId, name);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	char* GetActivityName(const char* const activityId)
 	{
+		char* name = NULL;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
-			std::string name;
+			std::string tempName;
 
-			if (g_pDatabase->RetrieveActivityName(activityId, name))
+			if (g_pDatabase->RetrieveActivityName(activityId, tempName))
 			{
-				return strdup(name.c_str());
+				name = strdup(tempName.c_str());
 			}
 		}
-		return NULL;
+
+		g_dbLock.unlock();
+
+		return name;
 	}
 
 	//
@@ -224,6 +259,8 @@ extern "C" {
 	bool GetTags(const char* const activityId, TagCallback callback, void* context)
 	{
 		bool result = false;
+
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
@@ -243,25 +280,42 @@ extern "C" {
 				result = true;
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
 	bool StoreTag(const char* const activityId, const char* const tag)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
-			return g_pDatabase->CreateTag(activityId, tag);
+			result = g_pDatabase->CreateTag(activityId, tag);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool DeleteTag(const char* const activityId, const char* const tag)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
-			return g_pDatabase->DeleteTag(activityId, tag);
+			result = g_pDatabase->DeleteTag(activityId, tag);
 		}
-		return false;
+
+		g_dbLock.lock();
+
+		return result;
 	}
 
 	bool SearchForTags(const char* const searchStr)
@@ -269,6 +323,8 @@ extern "C" {
 		bool result = false;
 
 		FreeHistoricalActivityList();
+
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
@@ -286,6 +342,9 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -296,6 +355,8 @@ extern "C" {
 	bool StoreHash(const char* const activityId, const char* const hash)
 	{
 		bool result = false;
+
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
@@ -310,35 +371,52 @@ extern "C" {
 				result = g_pDatabase->CreateActivityHash(activityId, hash);
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
 	char* GetActivityIdByHash(const char* const hash)
 	{
+		char* activityId = NULL;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			std::string activityId;
 
 			if (g_pDatabase->RetrieveActivityIdFromHash(hash, activityId))
 			{
-				return strdup(activityId.c_str());
+				activityId = strdup(activityId.c_str());
 			}
 		}
-		return NULL;
+
+		g_dbLock.unlock();
+
+		return activityId;
 	}
 
 	char* GetHashForActivityId(const char* const activityId)
 	{
+		char* hash = NULL;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			std::string hash;
 
 			if (g_pDatabase->RetrieveHashForActivityId(activityId, hash))
 			{
-				return strdup(hash.c_str());
+				hash = strdup(hash.c_str());
 			}
 		}
-		return NULL;
+
+		g_dbLock.unlock();
+
+		return hash;
 	}
 
 	//
@@ -368,6 +446,10 @@ extern "C" {
 
 	bool GetWeightHistory(WeightCallback callback, void* context)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			std::vector<std::pair<time_t, double>> measurementData;
@@ -378,10 +460,13 @@ extern "C" {
 				{
 					callback((*iter).first, (*iter).second, context);
 				}
-				return true;
+				result = true;
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	//
@@ -390,19 +475,25 @@ extern "C" {
 
 	bool InitializeBikeProfileList()
 	{
+		bool result = false;
+
 		g_bikes.clear();
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
-			return g_pDatabase->RetrieveBikes(g_bikes);
+			result = g_pDatabase->RetrieveBikes(g_bikes);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm)
 	{
 		bool result = false;
-		
+
 		if (g_pDatabase)
 		{
 			uint64_t existingId = GetBikeIdFromName(name);
@@ -414,14 +505,17 @@ extern "C" {
 				bike.weightKg = weightKg;
 				bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
 
+				g_dbLock.lock();
 				result = g_pDatabase->CreateBike(bike);
-				
+				g_dbLock.unlock();
+
 				if (result)
 				{
 					result = InitializeBikeProfileList();
 				}
 			}
 		}
+
 		return result;
 	}
 
@@ -437,13 +531,16 @@ extern "C" {
 			bike.weightKg = weightKg;
 			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
 
+			g_dbLock.lock();
 			result = g_pDatabase->UpdateBike(bike);
+			g_dbLock.unlock();
 
 			if (result)
 			{
 				result = InitializeBikeProfileList();
 			}
 		}
+
 		return result;
 	}
 
@@ -453,72 +550,76 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
+			g_dbLock.lock();
 			result = g_pDatabase->DeleteBike(bikeId);
+			g_dbLock.unlock();
 
 			if (result)
 			{
 				result = InitializeBikeProfileList();
 			}
 		}
+
 		return result;
 	}
 
 	bool ComputeWheelCircumference(uint64_t bikeId)
 	{
-		if (!g_pDatabase)
-		{
-			return false;
-		}
-
-		char* bikeName = NULL;
-		double weightKg = (double)0.0;
-		double wheelCircumferenceMm = (double)0.0;
-
-		if (!GetBikeProfileById(bikeId, &bikeName, &weightKg, &wheelCircumferenceMm))
-		{
-			return false;
-		}
-
 		bool result = false;
 
-		double circumferenceTotalMm = (double)0.0;
-		uint64_t numSamples = 0;
+		g_dbLock.lock();
 
-		InitializeHistoricalActivityList();
-
-		for (auto activityIter = g_historicalActivityList.begin(); activityIter != g_historicalActivityList.end(); ++activityIter)
+		if (g_pDatabase)
 		{
-			const ActivitySummary& summary = (*activityIter);
-			uint64_t summaryBikeId = 0;
+			char* bikeName = NULL;
+			double weightKg = (double)0.0;
+			double wheelCircumferenceMm = (double)0.0;
 
-			if (g_pDatabase->RetrieveBikeActivity(summary.activityId, summaryBikeId))
+			if (GetBikeProfileById(bikeId, &bikeName, &weightKg, &wheelCircumferenceMm))
 			{
-				if (bikeId == summaryBikeId)
-				{
-					ActivityAttributeType revs = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS)->second;
-					ActivityAttributeType distance = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)->second;
+				double circumferenceTotalMm = (double)0.0;
+				uint64_t numSamples = 0;
 
-					if (revs.valid && distance.valid)
+				InitializeHistoricalActivityList();
+
+				for (auto activityIter = g_historicalActivityList.begin(); activityIter != g_historicalActivityList.end(); ++activityIter)
+				{
+					const ActivitySummary& summary = (*activityIter);
+					uint64_t summaryBikeId = 0;
+
+					if (g_pDatabase->RetrieveBikeActivity(summary.activityId, summaryBikeId))
 					{
-						double distanceMm = UnitConverter::MilesToKilometers(distance.value.doubleVal) * 1000000;	// Convert to millimeters
-						double wheelCircumference = distanceMm / (double)revs.value.intVal;
-						circumferenceTotalMm += wheelCircumference;
-						++numSamples;
+						if (bikeId == summaryBikeId)
+						{
+							ActivityAttributeType revs = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS)->second;
+							ActivityAttributeType distance = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)->second;
+
+							if (revs.valid && distance.valid)
+							{
+								double distanceMm = UnitConverter::MilesToKilometers(distance.value.doubleVal) * 1000000;	// Convert to millimeters
+								double wheelCircumference = distanceMm / (double)revs.value.intVal;
+
+								circumferenceTotalMm += wheelCircumference;
+								++numSamples;
+							}
+						}
 					}
 				}
+
+				if (numSamples > 0)
+				{
+					wheelCircumferenceMm = circumferenceTotalMm / numSamples;
+					result = UpdateBikeProfile(bikeId, bikeName, weightKg, wheelCircumferenceMm);
+				}
+			}
+
+			if (bikeName)
+			{
+				free((void*)bikeName);
 			}
 		}
 
-		if (numSamples > 0)
-		{
-			wheelCircumferenceMm = circumferenceTotalMm / numSamples;
-			result = UpdateBikeProfile(bikeId, bikeName, weightKg, wheelCircumferenceMm);
-		}
-
-		if (bikeName)
-		{
-			free((void*)bikeName);
-		}
+		g_dbLock.unlock();
 
 		return result;
 	}
@@ -574,15 +675,24 @@ extern "C" {
 
 	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
-			return g_pDatabase->RetrieveBikeActivity(activityId, (*bikeId));
+			result = g_pDatabase->RetrieveBikeActivity(activityId, (*bikeId));
 		}
+
+		g_dbLock.unlock();
+
 		return false;
 	}
 
 	void SetActivityBikeProfile(const char* const activityId, uint64_t bikeId)
 	{
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			uint64_t temp;
@@ -596,6 +706,8 @@ extern "C" {
 				g_pDatabase->CreateBikeActivity(bikeId, activityId);
 			}
 		}
+
+		g_dbLock.unlock();
 	}
 
 	void SetCurrentBicycle(const char* const name)
@@ -605,6 +717,7 @@ extern "C" {
 			for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 			{
 				const Bike& bike = (*iter);
+
 				if (bike.name.compare(name) == 0)
 				{
 					SetActivityBikeProfile(g_pCurrentActivity->GetIdCStr(), bike.id);
@@ -640,19 +753,25 @@ extern "C" {
 
 	bool InitializeShoeList(void)
 	{
+		bool result = false;
+
 		g_shoes.clear();
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
-			return g_pDatabase->RetrieveAllShoes(g_shoes);
+			result = g_pDatabase->RetrieveAllShoes(g_shoes);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
 	{
 		bool result = false;
-		
+
 		if (g_pDatabase)
 		{
 			uint64_t existingId = GetShoeIdFromName(name);
@@ -666,7 +785,9 @@ extern "C" {
 				shoes.timeAdded = timeAdded;
 				shoes.timeRetired = timeRetired;
 
+				g_dbLock.lock();
 				result = g_pDatabase->CreateShoe(shoes);
+				g_dbLock.unlock();
 				
 				if (result)
 				{
@@ -674,6 +795,7 @@ extern "C" {
 				}
 			}
 		}
+
 		return result;
 	}
 
@@ -690,13 +812,16 @@ extern "C" {
 			shoes.timeAdded = timeAdded;
 			shoes.timeRetired = timeRetired;
 
+			g_dbLock.lock();
 			result = g_pDatabase->UpdateShoe(shoes);
+			g_dbLock.unlock();
 
 			if (result)
 			{
 				result = InitializeShoeList();
 			}
 		}
+
 		return result;
 	}
 
@@ -706,13 +831,16 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
+			g_dbLock.lock();
 			result = g_pDatabase->DeleteShoe(shoeId);
+			g_dbLock.unlock();
 
 			if (result)
 			{
 				result = InitializeShoeList();
 			}
 		}
+
 		return result;
 	}
 
@@ -838,12 +966,13 @@ extern "C" {
 	// To be called before iterating over the interval workout list.
 	bool InitializeIntervalWorkoutList()
 	{
+		bool result = true;
+
 		g_intervalWorkouts.clear();
+		g_dbLock.lock();
 
 		if (g_pDatabase && g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
 		{
-			bool result = true;
-
 			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
 			{
 				IntervalWorkout& workout = (*iter);
@@ -853,9 +982,11 @@ extern "C" {
 					result = false;
 				}
 			}
-			return result;
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	char* RetrieveIntervalWorkoutAsJSON(size_t workoutIndex)
@@ -874,20 +1005,34 @@ extern "C" {
 
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase && workoutId && workoutName && sport)
 		{
-			return g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
+			result = g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool DeleteIntervalWorkout(const char* const workoutId)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase && workoutId)
 		{
-			return g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
+			result = g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	//
@@ -896,47 +1041,75 @@ extern "C" {
 
 	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId)
 	{
+		size_t numSegments = 0;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase && workoutId)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
 			if (pWorkout)
 			{
-				return pWorkout->segments.size();
+				numSegments = pWorkout->segments.size();
 			}
 		}
-		return 0;
+
+		g_dbLock.unlock();
+
+		return numSegments;
 	}
 
 	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment)
 	{
-		const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+		bool result = false;
 
-		if (pWorkout)
+		g_dbLock.lock();
+
+		if (g_pDatabase && workoutId)
 		{
-			return g_pDatabase->CreateIntervalSegment(workoutId, segment);
+			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+
+			if (pWorkout)
+			{
+				result = g_pDatabase->CreateIntervalSegment(workoutId, segment);
+			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex)
 	{
-		if (g_pDatabase)
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && workoutId)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
 			if (pWorkout)
 			{
 				const IntervalWorkoutSegment& segment = pWorkout->segments.at(segmentIndex);
-				return g_pDatabase->DeleteIntervalSegment(segment.segmentId);
+				result = g_pDatabase->DeleteIntervalSegment(segment.segmentId);
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment)
 	{
-		if (g_pDatabase)
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && workoutId)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
@@ -944,10 +1117,13 @@ extern "C" {
 			{
 				const IntervalWorkoutSegment& tempSegment = pWorkout->segments.at(segmentIndex);
 				(*segment) = tempSegment;
-				return true;
+				result = true;
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	//
@@ -957,13 +1133,19 @@ extern "C" {
 	// To be called before iterating over the pace plan list with GetPacePlanId or GetPacePlanName.
 	bool InitializePacePlanList(void)
 	{
+		bool result = false;
+
 		g_pacePlans.clear();
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
-			return g_pDatabase->RetrievePacePlans(g_pacePlans);
+			result = g_pDatabase->RetrievePacePlans(g_pacePlans);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	char* RetrievePacePlanAsJSON(size_t planIndex)
@@ -986,11 +1168,18 @@ extern "C" {
 
 	bool CreateNewPacePlan(const char* const planName, const char* planId)
 	{
-		if (g_pDatabase)
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && planName && planId)
 		{
-			return g_pDatabase->CreatePacePlan(planName, planId);
+			result = g_pDatabase->CreatePacePlan(planName, planId);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits)
@@ -1020,9 +1209,13 @@ extern "C" {
 
 	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceMinKm, double targetDistanceInKms, double splits)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase && planId)
 		{
-			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end() && !result; ++iter)
 			{
 				PacePlan& pacePlan = (*iter);
 
@@ -1032,20 +1225,30 @@ extern "C" {
 					pacePlan.targetPaceMinKm = targetPaceMinKm;
 					pacePlan.targetDistanceInKms = targetDistanceInKms;
 					pacePlan.splits = splits;
-					return g_pDatabase->UpdatePacePlan(pacePlan);
+					result = g_pDatabase->UpdatePacePlan(pacePlan);
 				}
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool DeletePacePlan(const char* planId)
 	{
-		if (g_pDatabase)
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && planId)
 		{
-			return g_pDatabase->DeletePacePlan(planId);
+			result = g_pDatabase->DeletePacePlan(planId);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	//
@@ -1090,11 +1293,18 @@ extern "C" {
 
 	bool MergeActivities(const char* const activityId1, const char* const activityId2)
 	{
-		if (g_pDatabase)
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && activityId1 && activityId2)
 		{
-			return g_pDatabase->MergeActivities(activityId1, activityId2);
+			result = g_pDatabase->MergeActivities(activityId1, activityId2);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	//
@@ -1131,7 +1341,9 @@ extern "C" {
 	void InitializeHistoricalActivityList()
 	{
 		FreeHistoricalActivityList();
-		
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			// Get the activity list out of the database.
@@ -1149,6 +1361,8 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
 	}
 
 	bool HistoricalActivityListIsInitialized(void)
@@ -1194,6 +1408,8 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_dbLock.lock();
+
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -1205,17 +1421,23 @@ extern "C" {
 				if (pMovingActivity)
 				{
 					LapSummaryList laps;
+
 					result = g_pDatabase->RetrieveLaps(summary.activityId, laps);
 					pMovingActivity->SetLaps(laps);
 				}
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context)
 	{
 		bool result = false;
+
+		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -1341,6 +1563,9 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -1355,6 +1580,7 @@ extern "C" {
 			if (summary.pActivity)
 			{
 				std::vector<SensorType> sensorTypes;
+
 				summary.pActivity->ListUsableSensors(sensorTypes);
 
 				for (auto iter = sensorTypes.begin(); iter != sensorTypes.end() && result; ++iter)
@@ -1376,12 +1602,15 @@ extern "C" {
 		{
 			result = false;
 		}
+
 		return result;
 	}
 
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex)
 	{
 		bool result = false;
+
+		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -1403,6 +1632,9 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -1420,6 +1652,8 @@ extern "C" {
 	bool SaveHistoricalActivitySummaryData(size_t activityIndex)
 	{
 		bool result = false;
+
+		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -1445,6 +1679,9 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -1538,7 +1775,15 @@ extern "C" {
 			{
 				summary.pActivity->SetEndTimeFromSensorReadings();
 				summary.endTime = summary.pActivity->GetEndTimeSecs();
-				g_pDatabase->UpdateActivityEndTime(summary.activityId, summary.endTime);
+
+				g_dbLock.lock();
+
+				if (g_pDatabase)
+				{
+					g_pDatabase->UpdateActivityEndTime(summary.activityId, summary.endTime);
+				}
+
+				g_dbLock.unlock();
 			}
 		}
 	}
@@ -1617,26 +1862,32 @@ extern "C" {
 
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex)
 	{
+		size_t result = 0;
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
-			return summary.locationPoints.size();
+			result = summary.locationPoints.size();
 		}
-		return 0;		
+		return result;
 	}
 
 	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex)
 	{
+		size_t result = 0;
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
-			return summary.accelerometerReadings.size();
+			result = summary.accelerometerReadings.size();
 		}
-		return 0;		
+		return result;		
 	}
 
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex)
 	{
+		size_t result = 0;
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -1646,10 +1897,10 @@ extern "C" {
 				std::vector<std::string> attributeNames;
 
 				summary.pActivity->BuildSummaryAttributeList(attributeNames);
-				return attributeNames.size();
+				result = attributeNames.size();
 			}
 		}
-		return 0;
+		return result;
 	}
 
 	size_t GetNumHistoricalActivities()
@@ -1696,10 +1947,15 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			result = g_pDatabase->RetrieveActivityPositionReadings(activityId, coordinateCallback, context);
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -1707,23 +1963,21 @@ extern "C" {
 	{
 		bool result = false;
 
-		if (coordinate == NULL)
+		if (coordinate != NULL)
 		{
-			return false;
-		}
-
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
-		{
-			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
-
-			if (pointIndex < summary.locationPoints.size())
+			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 			{
-				SensorReading& reading = summary.locationPoints.at(pointIndex);
-				coordinate->latitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE);
-				coordinate->longitude  = reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE);
-				coordinate->altitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE);
-				coordinate->time       = reading.time;
-				result = true;
+				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
+				if (pointIndex < summary.locationPoints.size())
+				{
+					SensorReading& reading = summary.locationPoints.at(pointIndex);
+					coordinate->latitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE);
+					coordinate->longitude  = reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE);
+					coordinate->altitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE);
+					coordinate->time       = reading.time;
+					result = true;
+				}
 			}
 		}
 		return result;
@@ -1758,6 +2012,8 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			result  = g_pDatabase->TrimActivityAccelerometerReadings(activityId, newTime, fromStart);
@@ -1775,6 +2031,9 @@ extern "C" {
 					result = g_pDatabase->UpdateActivityEndTime(activityId, (time_t)newTime);
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -1856,6 +2115,10 @@ extern "C" {
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
 	bool GenerateWorkouts(void)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			// Calculate inputs from activities in the database.
@@ -1865,7 +2128,7 @@ extern "C" {
 			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
 
 			// Delete old workouts.
-			bool result = g_pDatabase->DeleteAllWorkouts();
+			result = g_pDatabase->DeleteAllWorkouts();
 
 			// Store the new workouts.
 			for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
@@ -1878,10 +2141,11 @@ extern "C" {
 					delete workout;
 				}
 			}
-
-			return result;
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	//
@@ -1890,18 +2154,26 @@ extern "C" {
 
 	bool InitializeWorkoutList(void)
 	{
+		bool result = false;
+
 		g_workouts.clear();
+		g_dbLock.lock();
 
 		if (g_pDatabase)
 		{
-			return g_pDatabase->RetrieveWorkouts(g_workouts);
+			result = g_pDatabase->RetrieveWorkouts(g_workouts);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	// InitializeWorkoutList should be called before calling this.
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex)
 	{
+		char* result = NULL;
+
 		if (workoutIndex < g_workouts.size())
 		{
 			const Workout& workout = g_workouts.at(workoutIndex);
@@ -1937,9 +2209,10 @@ extern "C" {
 			workoutJson = MapToJsonStr(params);
 			workoutJson.insert(workoutJson.size() - 1, ", \"intervals\": ");
 			workoutJson.insert(workoutJson.size() - 1, intervalsJsonStr);
-			return strdup(workoutJson.c_str());
+
+			result = strdup(workoutJson.c_str());
 		}
-		return NULL;
+		return result;
 	}
 
 	// InitializeWorkoutList should be called before calling this.
@@ -1960,6 +2233,10 @@ extern "C" {
 
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			Workout workout;
@@ -1969,13 +2246,21 @@ extern "C" {
 			workout.SetSport(sport);
 			workout.SetEstimatedStress(estimatedStress);
 			workout.SetScheduledTime(scheduledTime);
-			return g_pDatabase->CreateWorkout(workout);
+
+			result = g_pDatabase->CreateWorkout(workout);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			Workout workout;
@@ -1992,19 +2277,29 @@ extern "C" {
 				interval.m_recoveryDistance = recoveryDistance;
 				interval.m_recoveryPace = recoveryPace;
 
-				return g_pDatabase->CreateWorkoutInterval(workout, interval);
+				result = g_pDatabase->CreateWorkoutInterval(workout, interval);
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool DeleteWorkout(const char* const workoutId)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
-			return g_pDatabase->DeleteWorkout(workoutId);
+			result = g_pDatabase->DeleteWorkout(workoutId);
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	char* ExportWorkout(const char* const workoutId, const char* pDirName)
@@ -2098,10 +2393,14 @@ extern "C" {
 			return;
 		}
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			g_pDatabase->CreateCustomActivity(name, viewType);
 		}
+
+		g_dbLock.unlock();
 	}
 
 	void DestroyCustomActivity(const char* const name)
@@ -2111,10 +2410,14 @@ extern "C" {
 			return;
 		}
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			g_pDatabase->DeleteCustomActivity(name);
 		}
+
+		g_dbLock.unlock();
 	}
 
 	//
@@ -2195,64 +2498,96 @@ extern "C" {
 
 	bool StartActivity(const char* const activityId)
 	{
-		if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
 		{
-			if (g_pCurrentActivity->Start())
+			if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
 			{
-				if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+				if (g_pCurrentActivity->Start())
 				{
-					g_pCurrentActivity->SetId(activityId);
-					return true;
+					if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+					{
+						g_pCurrentActivity->SetId(activityId);
+						result = true;
+					}
 				}
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool StartActivityWithTimestamp(const char* const activityId, time_t startTime)
 	{
-		if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
-		{
-			if (g_pCurrentActivity->Start())
-			{
-				g_pCurrentActivity->SetStartTimeSecs(startTime);
+		bool result = false;
 
-				if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
+			{
+				if (g_pCurrentActivity->Start())
 				{
-					g_pCurrentActivity->SetId(activityId);
-					return true;
+					g_pCurrentActivity->SetStartTimeSecs(startTime);
+
+					if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+					{
+						g_pCurrentActivity->SetId(activityId);
+						result = true;
+					}
 				}
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool StopCurrentActivity()
 	{
+		bool result = false;
+
 		if (g_pCurrentActivity && g_pCurrentActivity->HasStarted())
 		{
 			g_pCurrentActivity->Stop();
 
+			g_dbLock.lock();
+
 			if (g_pDatabase)
 			{
-				return g_pDatabase->StopActivity(g_pCurrentActivity->GetEndTimeSecs(), g_pCurrentActivity->GetId());
+				result = g_pDatabase->StopActivity(g_pCurrentActivity->GetEndTimeSecs(), g_pCurrentActivity->GetId());
 			}
+
+			g_dbLock.unlock();
 		}
-		return false;
+		return result;
 	}
 
 	bool PauseCurrentActivity()
 	{
+		bool result = false;
+
 		if (g_pCurrentActivity && g_pCurrentActivity->HasStarted())
 		{
 			g_pCurrentActivity->Pause();
-			return g_pCurrentActivity->IsPaused();
+			result = g_pCurrentActivity->IsPaused();
 		}
-		return false;
+		return result;
 	}
 
 	bool StartNewLap()
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pCurrentActivity && g_pCurrentActivity->HasStarted() && g_pDatabase)
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
@@ -2260,17 +2595,22 @@ extern "C" {
 			if (pMovingActivity)
 			{
 				pMovingActivity->StartNewLap();
-				return g_pDatabase->CreateNewLap(g_pCurrentActivity->GetId(), pMovingActivity->GetCurrentLapStartTime());
+				result = g_pDatabase->CreateNewLap(g_pCurrentActivity->GetId(), pMovingActivity->GetCurrentLapStartTime());
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool SaveActivitySummaryData()
 	{
 		bool result = false;
 
-		if (g_pCurrentActivity && g_pCurrentActivity->HasStopped())
+		g_dbLock.lock();
+
+		if (g_pDatabase && g_pCurrentActivity && g_pCurrentActivity->HasStopped())
 		{
 			std::vector<std::string> attributes;
 			g_pCurrentActivity->BuildSummaryAttributeList(attributes);
@@ -2287,6 +2627,9 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
+
 		return result;
 	}
 
@@ -2409,6 +2752,7 @@ extern "C" {
 
 	char* ExportActivityFromDatabase(const char* const activityId, FileFormat format, const char* const pDirName)
 	{
+		char* result = NULL;
 		const Activity* pActivity = NULL;
 
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
@@ -2429,36 +2773,40 @@ extern "C" {
 
 			if (exporter.ExportActivityFromDatabase(format, tempFileName, g_pDatabase, pActivity))
 			{
-				return strdup(tempFileName.c_str());
+				result = strdup(tempFileName.c_str());
 			}
 		}
-		return NULL;
+		return result;
 	}
 
 	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const pDirName, time_t startTime, const char* const sportType, NextCoordinateCallback nextCoordinateCallback, void* context)
 	{
+		char* result = NULL;
+
 		std::string tempFileName = pDirName;
 		std::string tempSportType = sportType;
 		DataExporter exporter;
 
 		if (exporter.ExportActivityUsingCallbackData(format, tempFileName, startTime, tempSportType, activityId, nextCoordinateCallback, context))
 		{
-			return strdup(tempFileName.c_str());
+			result = strdup(tempFileName.c_str());
 		}
-		return NULL;
+		return result;
 	}
 
 	char* ExportActivitySummary(const char* activityType, const char* const dirName)
 	{
+		char* result = NULL;
+
 		std::string activityTypeStr = activityType;
 		std::string tempFileName = dirName;
 		DataExporter exporter;
 
 		if (exporter.ExportActivitySummary(g_historicalActivityList, activityTypeStr, tempFileName))
 		{
-			return strdup(tempFileName.c_str());
+			result = strdup(tempFileName.c_str());
 		}
-		return NULL;
+		return result;
 	}
 
 	//
@@ -2467,20 +2815,30 @@ extern "C" {
 
 	bool ProcessSensorReading(const SensorReading& reading)
 	{
+		bool processed = false;
+
 		if (IsActivityInProgress())
 		{
-			bool processed = g_pCurrentActivity->ProcessSensorReading(reading);
+			processed = g_pCurrentActivity->ProcessSensorReading(reading);
+
+			g_dbLock.lock();
 
 			if (processed && g_pDatabase)
 			{
-				return g_pDatabase->CreateSensorReading(g_pCurrentActivity->GetId(), reading);
+				processed = g_pDatabase->CreateSensorReading(g_pCurrentActivity->GetId(), reading);
 			}
+
+			g_dbLock.unlock();
 		}
-		return false;
+		return processed;
 	}
 
 	bool ProcessWeightReading(double weightKg, time_t timestamp)
 	{
+		bool result = false;
+
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			time_t mostRecentWeightTime = 0;
@@ -2489,14 +2847,17 @@ extern "C" {
 			// Don't store redundant measurements.
 			if (g_pDatabase->RetrieveWeightMeasurementForTime(mostRecentWeightTime, mostRecentWeightKg))
 			{
-				return true;
+				result = true;
 			}
 			else
 			{
-				return g_pDatabase->CreateWeightMeasurement(timestamp, weightKg);
+				result = g_pDatabase->CreateWeightMeasurement(timestamp, weightKg);
 			}
 		}
-		return false;
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool ProcessAccelerometerReading(double x, double y, double z, uint64_t timestampMs)
@@ -2550,6 +2911,8 @@ extern "C" {
 
 		bool processed = ProcessSensorReading(reading);
 
+		g_dbLock.lock();
+
 		if (g_pDatabase)
 		{
 			Cycling* pCycling = dynamic_cast<Cycling*>(g_pCurrentActivity);
@@ -2562,6 +2925,8 @@ extern "C" {
 				}
 			}
 		}
+
+		g_dbLock.unlock();
 
 		return processed;
 	}
