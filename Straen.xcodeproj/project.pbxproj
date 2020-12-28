@@ -17,7 +17,6 @@
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		2705895225463E7F0032E43E /* WatchHealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2705894425463D6B0032E43E /* WatchHealthManager.m */; };
-		27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
 		270CF40A2391BBF400584058 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF4092391BBF400584058 /* Tests.m */; };
 		270CF40F2391BE0800584058 /* GpxImportTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF3FA2391B63800584058 /* GpxImportTest.m */; };
@@ -150,6 +149,7 @@
 		27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* BtleScale.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
+		2750B00A259979D60080F3D6 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E041D40528B00045624 /* CorePlot.framework */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		27649BFD252910E700E24022 /* TrainingStressCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */; };
@@ -518,20 +518,6 @@
 			remoteGlobalIDString = C38A09821A46185300D45436;
 			remoteInfo = "UnitTests iOS";
 		};
-		27072E071D40528B00045624 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C38A09BA1A4619A900D45436;
-			remoteInfo = "CorePlot-CocoaTouch";
-		};
-		27072E091D40528B00045624 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C38A09C41A4619A900D45436;
-			remoteInfo = "CorePlot-CocoaTouchTests";
-		};
 		27072E0B1D40528B00045624 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 27072DEF1D40528B00045624 /* CorePlot.xcodeproj */;
@@ -775,7 +761,7 @@
 		279E719C25758BC0002B4BB6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Interface.strings"; sourceTree = "<group>"; };
 		279E719D25758BC0002B4BB6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "../en-GB.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		279E719E25758BC0002B4BB6 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "../en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		279E719F25758D02002B4BB6 /* en-GB.lproj */ = {isa = PBXFileReference; lastKnownFileType = file; name = "en-GB.lproj"; path = "IOS/en-GB.lproj"; sourceTree = SOURCE_ROOT; };
+		279E719F25758D02002B4BB6 /* en-GB.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "en-GB.lproj"; path = "IOS/en-GB.lproj"; sourceTree = SOURCE_ROOT; };
 		279E71A925759154002B4BB6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		279E71AA25759159002B4BB6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		27A3624C19BFB0E200F5A17F /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1071,8 +1057,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2750B00A259979D60080F3D6 /* CorePlot.framework in Frameworks */,
 				27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */,
-				27072E1E1D40530100045624 /* libCorePlot-CocoaTouch.a in Frameworks */,
 				27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */,
 				27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */,
 				27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */,
@@ -1120,8 +1106,6 @@
 				27072E021D40528B00045624 /* UnitTests.xctest */,
 				27072E041D40528B00045624 /* CorePlot.framework */,
 				27072E061D40528B00045624 /* UnitTests iOS.xctest */,
-				27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */,
-				27072E0A1D40528B00045624 /* CorePlot-CocoaTouchTests.xctest */,
 				27072E0C1D40528B00045624 /* CorePlot.framework */,
 				27072E0E1D40528B00045624 /* UnitTests tvOS.xctest */,
 			);
@@ -1988,20 +1972,6 @@
 			remoteRef = 27072E051D40528B00045624 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		27072E081D40528B00045624 /* libCorePlot-CocoaTouch.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libCorePlot-CocoaTouch.a";
-			remoteRef = 27072E071D40528B00045624 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		27072E0A1D40528B00045624 /* CorePlot-CocoaTouchTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "CorePlot-CocoaTouchTests.xctest";
-			remoteRef = 27072E091D40528B00045624 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		27072E0C1D40528B00045624 /* CorePlot.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -2719,9 +2689,9 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"${SDKROOT}/usr/include/libxml2",
-					"core-plot/framework/iPhoneOnly",
 					"core-plot/framework/Source/**",
-					"core-plot/framework/",
+					"core-plot/framework/CocoaPods/**",
+					"core-plot/framework/PlatformSpecific/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2777,9 +2747,9 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"${SDKROOT}/usr/include/libxml2",
-					"core-plot/framework/iPhoneOnly",
 					"core-plot/framework/Source/**",
-					"core-plot/framework/",
+					"core-plot/framework/CocoaPods/**",
+					"core-plot/framework/PlatformSpecific/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = "-ObjC";

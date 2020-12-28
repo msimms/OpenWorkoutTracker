@@ -4,7 +4,7 @@
 #import <UIKit/UIKit.h>
 #import "CommonViewController.h"
 
-#import "CorePlot-CocoaTouch.h"
+#import "CorePlot.h"
 
 @interface WorkoutDetailsViewController : CommonViewController<CPTBarPlotDataSource, CPTBarPlotDelegate>
 {
