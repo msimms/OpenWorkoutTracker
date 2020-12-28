@@ -17,6 +17,9 @@
 		27055BF21A73227300417D94 /* GoPro.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF11A73227300417D94 /* GoPro.m */; };
 		27055BF91A7337EE00417D94 /* WiFiDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27055BF81A7337EE00417D94 /* WiFiDiscovery.m */; };
 		2705895225463E7F0032E43E /* WatchHealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2705894425463D6B0032E43E /* WatchHealthManager.m */; };
+		2707A2F9259A140000A942C0 /* BtleDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDE119BFD99B000383E3 /* BtleDiscovery.m */; };
+		2707A325259A539D00A942C0 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E041D40528B00045624 /* CorePlot.framework */; };
+		2707A326259A539D00A942C0 /* CorePlot.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E041D40528B00045624 /* CorePlot.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2709420F215ABD2200C3BCBE /* HealthKit.framework */; };
 		270CF40A2391BBF400584058 /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF4092391BBF400584058 /* Tests.m */; };
 		270CF40F2391BE0800584058 /* GpxImportTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 270CF3FA2391B63800584058 /* GpxImportTest.m */; };
@@ -149,7 +152,6 @@
 		27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* BtleScale.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
-		2750B00A259979D60080F3D6 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27072E041D40528B00045624 /* CorePlot.framework */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		27649BFD252910E700E24022 /* TrainingStressCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */; };
@@ -556,6 +558,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2707A327259A539D00A942C0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2707A326259A539D00A942C0 /* CorePlot.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2743EB301B19393700F04369 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1057,7 +1070,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2750B00A259979D60080F3D6 /* CorePlot.framework in Frameworks */,
+				2707A325259A539D00A942C0 /* CorePlot.framework in Frameworks */,
 				27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */,
 				27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */,
 				27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */,
@@ -1811,6 +1824,7 @@
 				27A3624A19BFB0E200F5A17F /* Resources */,
 				2743EB301B19393700F04369 /* Embed App Extensions */,
 				27DCF5F322B193B8009A23C2 /* Embed Watch Content */,
+				2707A327259A539D00A942C0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2404,6 +2418,7 @@
 				27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */,
 				27DCF65622B72EFA009A23C2 /* XmlFileReader.h in Sources */,
 				27DCF65722B72EFA009A23C2 /* XmlFileWriter.cpp in Sources */,
+				2707A2F9259A140000A942C0 /* BtleDiscovery.m in Sources */,
 				27DCF65822B72EFA009A23C2 /* XmlFileWriter.h in Sources */,
 				27DCF63A22B72EE0009A23C2 /* Distance.cpp in Sources */,
 				27DCF63B22B72EE0009A23C2 /* Distance.h in Sources */,
@@ -2771,6 +2786,10 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2792,6 +2811,10 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen";
 				PRODUCT_NAME = "$(TARGET_NAME)";
