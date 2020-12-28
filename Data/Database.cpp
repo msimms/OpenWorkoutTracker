@@ -53,6 +53,10 @@ Database::~Database()
 	{
 		sqlite3_finalize(m_footPodStatement);
 	}
+	if (m_selectActivitySummaryStatement)
+	{
+		sqlite3_finalize(m_selectActivitySummaryStatement);
+	}
 }
 
 bool Database::Open(const std::string& dbFileName)
@@ -257,6 +261,8 @@ bool Database::CreateStatements()
 	if (sqlite3_prepare_v2(m_pDb, "insert into power_meter values (NULL,?,?,?)", -1, &m_powerInsertStatement, 0) != SQLITE_OK)
 		return false;
 	if (sqlite3_prepare_v2(m_pDb, "insert into foot_pod values (NULL,?,?,?)", -1, &m_footPodStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "select * from activity_summary where activity_id = ?", -1, &m_selectActivitySummaryStatement, 0) != SQLITE_OK)
 		return false;
 	return true;
 }
@@ -1450,6 +1456,7 @@ bool Database::CreateSummaryData(const std::string& activityId, const std::strin
 
 		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, attribute.c_str(), -1, SQLITE_TRANSIENT);
+
 		switch (value.valueType)
 		{
 			case TYPE_DOUBLE:
@@ -1482,50 +1489,52 @@ bool Database::CreateSummaryData(const std::string& activityId, const std::strin
 bool Database::RetrieveSummaryData(const std::string& activityId, ActivityAttributeMap& values)
 {
 	bool result = false;
-	sqlite3_stmt* statement = NULL;
 	
 	values.clear();
-	
-	if (sqlite3_prepare_v2(m_pDb, "select * from activity_summary where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+
+	sqlite3_bind_text(m_selectActivitySummaryStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+
+	while (sqlite3_step(m_selectActivitySummaryStatement) == SQLITE_ROW)
 	{
-		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		std::string attributeName;
+		ActivityAttributeType value;
 
-		while (sqlite3_step(statement) == SQLITE_ROW)
+		attributeName.append((const char*)sqlite3_column_text(m_selectActivitySummaryStatement, 2));
+		if (attributeName.length() > 0)
 		{
-			std::string attributeName;
-			ActivityAttributeType value;
-
-			attributeName.append((const char*)sqlite3_column_text(statement, 2));
-			value.startTime = (u_int64_t)sqlite3_column_int64(statement, 4);
-			value.endTime = (u_int64_t)sqlite3_column_int64(statement, 5);
-			value.valueType = (ActivityAttributeValueType)sqlite3_column_int(statement, 6);
-			value.measureType = (ActivityAttributeMeasureType)sqlite3_column_int(statement, 7);
-			value.unitSystem = (UnitSystem)sqlite3_column_int(statement, 8);
+			value.startTime = (u_int64_t)sqlite3_column_int64(m_selectActivitySummaryStatement, 4);
+			value.endTime = (u_int64_t)sqlite3_column_int64(m_selectActivitySummaryStatement, 5);
+			value.valueType = (ActivityAttributeValueType)sqlite3_column_int(m_selectActivitySummaryStatement, 6);
+			value.measureType = (ActivityAttributeMeasureType)sqlite3_column_int(m_selectActivitySummaryStatement, 7);
+			value.unitSystem = (UnitSystem)sqlite3_column_int(m_selectActivitySummaryStatement, 8);
 			
 			switch (value.valueType)
 			{
 				case TYPE_DOUBLE:
-					value.value.doubleVal = sqlite3_column_double(statement, 3);
+					value.value.doubleVal = sqlite3_column_double(m_selectActivitySummaryStatement, 3);
 					value.valid = true;
 					break;
 				case TYPE_INTEGER:
-					value.value.intVal = sqlite3_column_double(statement, 3);
+					value.value.intVal = sqlite3_column_double(m_selectActivitySummaryStatement, 3);
 					value.valid = true;
 					break;
 				case TYPE_TIME:
-					value.value.timeVal = sqlite3_column_double(statement, 3);
+					value.value.timeVal = sqlite3_column_double(m_selectActivitySummaryStatement, 3);
 					value.valid = true;
 					break;
 				case TYPE_NOT_SET:
 					value.valid = false;
 					break;
 			}
-			values[attributeName] = value;
+
+			values.insert(std::make_pair(attributeName, value));
+			result = true;
 		}
-		
-		sqlite3_finalize(statement);
-		result = true;
 	}
+
+	sqlite3_clear_bindings(m_selectActivitySummaryStatement);
+	sqlite3_reset(m_selectActivitySummaryStatement);
+
 	return result;
 }
 
