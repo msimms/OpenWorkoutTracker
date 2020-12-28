@@ -442,6 +442,9 @@ bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 		{
 			m_biggestClimbM = currentClimbM;
 		}
+		
+		// Update current gradient.
+		m_currentGradient = distanceInfo.verticalDistanceM / distanceInfo.distanceM;
 
 		RecomputeRecordTimes();
 		UpdateSplitTimes();
