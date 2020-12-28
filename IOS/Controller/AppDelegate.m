@@ -563,18 +563,18 @@
 
 - (BOOL)hasLeBluetoothSensor:(SensorType)sensorType
 {
-	if (self->leSensorFinder)
+	if (self->btleSensorFinder)
 	{
-		return [self->leSensorFinder hasConnectedSensor:sensorType];
+		return [self->btleSensorFinder hasConnectedSensor:sensorType];
 	}
 	return FALSE;
 }
 
 - (NSMutableArray*)listDiscoveredBluetoothSensorsOfType:(BluetoothService)type
 {
-	if (self->leSensorFinder)
+	if (self->btleSensorFinder)
 	{
-		return [self->leSensorFinder discoveredSensorsOfType:type];
+		return [self->btleSensorFinder discoveredSensorsOfType:type];
 	}
 	return nil;
 }
@@ -587,37 +587,37 @@
 	{
 		if ([self hasLeBluetooth])
 		{
-			self->leSensorFinder = [LeDiscovery sharedInstance];
+			self->btleSensorFinder = [BtleDiscovery sharedInstance];
 		}
 		else
 		{
-			self->leSensorFinder = NULL;
+			self->btleSensorFinder = NULL;
 		}
 	}
 }
 
 - (void)stopSensorDiscovery
 {
-	if (self->leSensorFinder)
+	if (self->btleSensorFinder)
 	{
-		[self->leSensorFinder stopScanning];
-		self->leSensorFinder = NULL;
+		[self->btleSensorFinder stopScanning];
+		self->btleSensorFinder = NULL;
 	}
 }
 
 - (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
-	if (self->leSensorFinder)
+	if (self->btleSensorFinder)
 	{
-		[self->leSensorFinder addDelegate:delegate];
+		[self->btleSensorFinder addDelegate:delegate];
 	}
 }
 
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
-	if (self->leSensorFinder)
+	if (self->btleSensorFinder)
 	{
-		[self->leSensorFinder removeDelegate:delegate];
+		[self->btleSensorFinder removeDelegate:delegate];
 	}
 }
 

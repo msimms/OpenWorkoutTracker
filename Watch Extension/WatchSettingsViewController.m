@@ -22,6 +22,7 @@
 @synthesize broadcast;
 @synthesize metric;
 @synthesize heartRate;
+@synthesize connectBTSensors;
 @synthesize resetButton;
 
 - (instancetype)init
@@ -35,6 +36,7 @@
 	// Is broadcasting available? If not, no point in even showing the switch.
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	BOOL hasConnectivity = [extDelegate hasConnectivity];
+
 	[self->broadcast setEnabled:hasConnectivity];
 	[self->broadcast setHidden:!hasConnectivity];
 
@@ -55,6 +57,7 @@
 	[self->broadcast setOn:[Preferences shouldBroadcastToServer]];
 	[self->metric setOn:[Preferences preferredUnitSystem] == UNIT_SYSTEM_METRIC];
 	[self->heartRate setOn:[Preferences useWatchHeartRate]];
+	[self->connectBTSensors setOn:[Preferences shouldScanForSensors]];
 }
 
 #pragma mark switch methods
@@ -75,6 +78,17 @@
 - (IBAction)switchHeartRateAction:(BOOL)on
 {
 	[Preferences setUseWatchHeartRate:on];
+}
+
+- (IBAction)switchConnectBTSensorsAction:(BOOL)on
+{
+	[Preferences setScanForSensors:on];
+
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+	if (on)
+		[extDelegate startSensorDiscovery];
+	else
+		[extDelegate stopSensorDiscovery];
 }
 
 #pragma mark button handlers

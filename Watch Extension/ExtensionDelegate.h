@@ -9,6 +9,7 @@
 #import <WatchConnectivity/WatchConnectivity.h>
 #import <Network/Network.h>
 #import "ActivityPreferences.h"
+#import "BtleDiscovery.h"
 #import "BroadcastManager.h"
 #import "Feature.h"
 #import "WatchHealthManager.h"
@@ -17,7 +18,8 @@
 
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
 {
-	SensorMgr*           sensorMgr;
+	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
+	BtleDiscovery*       btleSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
 	ActivityPreferences* activityPrefs;
 	WatchSessionManager* watchSession; // Handles interactions between the watch and the phone
 #if !OMIT_BROADCAST
@@ -42,6 +44,10 @@
 
 // sensor management methods
 
+- (void)startSensorDiscovery;
+- (void)stopSensorDiscovery;
+- (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate;
+- (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate;
 - (void)stopSensors;
 - (void)startSensors;
 

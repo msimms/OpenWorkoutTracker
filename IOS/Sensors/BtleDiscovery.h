@@ -1,6 +1,6 @@
 /*
 
- File: LeDiscovery.h
+ File: BtleDiscovery.h
  
  Abstract: Scan for and discover nearby LE peripherals with the 
  matching service UUID.
@@ -59,7 +59,7 @@
 #import "BtleSensor.h"
 #import "BluetoothServices.h"
 
-@interface LeDiscovery : NSObject<CBCentralManagerDelegate, CBPeripheralDelegate, Discovery>
+@interface BtleDiscovery : NSObject<CBCentralManagerDelegate, CBPeripheralDelegate, Discovery>
 {
 	NSMutableArray*   discoveryDelegates;
 	NSMutableArray*   discoveredPeripherals;

@@ -28,7 +28,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 {
 	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
-	LeDiscovery*         leSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
+	BtleDiscovery*       btleSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
 	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
 #if !OMIT_BROADCAST

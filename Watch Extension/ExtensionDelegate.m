@@ -61,6 +61,7 @@
 	// was previously in the background, optionally refresh the user interface.
 	[self testNetworkConnectivity];
 	[self configureBroadcasting];
+	[self startSensorDiscovery];
 }
 
 - (void)applicationWillResignActive
@@ -209,6 +210,39 @@
 
 #pragma mark sensor methods
 
+- (void)startSensorDiscovery
+{
+	if ([Preferences shouldScanForSensors])
+	{
+		self->btleSensorFinder = [BtleDiscovery sharedInstance];
+	}
+}
+
+- (void)stopSensorDiscovery
+{
+	if (self->btleSensorFinder)
+	{
+		[self->btleSensorFinder stopScanning];
+		self->btleSensorFinder = NULL;
+	}
+}
+
+- (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
+{
+	if (self->btleSensorFinder)
+	{
+		[self->btleSensorFinder addDelegate:delegate];
+	}
+}
+
+- (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
+{
+	if (self->btleSensorFinder)
+	{
+		[self->btleSensorFinder removeDelegate:delegate];
+	}
+}
+
 - (void)stopSensors
 {
 	if (self->sensorMgr)
@@ -219,8 +253,11 @@
 
 void startSensorCallback(SensorType type, void* context)
 {
-	SensorMgr* mgr = (__bridge SensorMgr*)context;
-	[mgr startSensor:type];
+	if (context)
+	{
+		SensorMgr* mgr = (__bridge SensorMgr*)context;
+		[mgr startSensor:type];
+	}
 }
 
 - (void)startSensors

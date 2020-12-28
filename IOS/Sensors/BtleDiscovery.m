@@ -1,6 +1,6 @@
 /*
 
- File: LeDiscovery.m
+ File: BtleDiscovery.m
  
  Abstract: Scan for and discover nearby LE peripherals with the 
  matching service UUID.
@@ -61,17 +61,17 @@
 #import "Preferences.h"
 #import "SensorFactory.h"
 
-@implementation LeDiscovery
+@implementation BtleDiscovery
 
 #pragma mark init methods
 
 + (id)sharedInstance
 {
-	static LeDiscovery* this = nil;
+	static BtleDiscovery* this = nil;
 
 	if (!this)
 	{
-		this = [[LeDiscovery alloc] init];
+		this = [[BtleDiscovery alloc] init];
 	}
 	return this;
 }

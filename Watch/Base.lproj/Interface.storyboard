@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17506" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17701" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17500"/>
     </dependencies>
     <scenes>
@@ -12,7 +12,7 @@
             <objects>
                 <controller identifier="WatchAboutViewController" id="d9K-Wx-f3c" customClass="WatchAboutViewController">
                     <items>
-                        <label alignment="left" text="Copyright (c) 2020 by Michael J. Simms" textAlignment="left" numberOfLines="4" id="dJC-h1-7Wk"/>
+                        <label alignment="left" text="Copyright (c) 2020 by Michael J. Simms" textAlignment="center" numberOfLines="4" id="dJC-h1-7Wk"/>
                         <label alignment="left" text="Built on:" id="NTE-qx-o3z"/>
                     </items>
                     <connections>
@@ -55,13 +55,13 @@
         <!--WatchActivityViewController-->
         <scene sceneID="MN4-z0-cxi">
             <objects>
-                <controller identifier="WatchActivityViewController" id="Bpo-6v-NAv" customClass="WatchActivityViewController">
+                <controller identifier="WatchActivityViewController" fullScreen="YES" id="Bpo-6v-NAv" customClass="WatchActivityViewController">
                     <items>
-                        <group width="1" alignment="left" verticalAlignment="center" id="pJ5-uP-Shn">
+                        <group width="1" alignment="center" id="pJ5-uP-Shn">
                             <items>
-                                <label alignment="center" text="--" id="fm7-ZA-A65">
+                                <label alignment="center" verticalAlignment="center" text="--" id="fm7-ZA-A65">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
-                                    <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
+                                    <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
                                 </label>
                                 <label alignment="center" verticalAlignment="center" text=" Units" textAlignment="center" numberOfLines="2" id="eHx-Fy-G0d">
                                     <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
@@ -75,7 +75,7 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <group width="1" alignment="left" verticalAlignment="center" id="PPr-6M-NT3">
+                        <group width="1" alignment="center" id="PPr-6M-NT3">
                             <items>
                                 <label alignment="left" verticalAlignment="center" text="--" id="jW7-ae-vrm">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
@@ -93,7 +93,7 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <group width="1" alignment="left" verticalAlignment="center" id="8Du-RJ-V9w">
+                        <group width="1" alignment="center" id="8Du-RJ-V9w">
                             <items>
                                 <label alignment="left" verticalAlignment="center" text="--" id="pED-pN-z8m">
                                     <accessibilityTraits key="accessibilityTraits" staticText="YES" updatesFrequently="YES"/>
@@ -111,26 +111,33 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <button width="1" alignment="left" verticalAlignment="bottom" title="Start" id="75M-0x-o8w">
+                        <button width="1" alignment="center" verticalAlignment="center" title="Start" id="75M-0x-o8w">
                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" verticalAlignment="bottom" title="Intervals" id="Nbx-ph-zUl">
+                        <button width="1" alignment="center" verticalAlignment="center" title="Intervals" id="Nbx-ph-zUl">
                             <connections>
                                 <action selector="onIntervals" destination="Bpo-6v-NAv" id="les-54-tL4"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" verticalAlignment="bottom" title="Pace Plan" id="TJ5-Yl-Fdq">
+                        <button width="1" alignment="center" verticalAlignment="center" title="Pace Plan" id="TJ5-Yl-Fdq">
                             <connections>
                                 <action selector="onPacePlan" destination="Bpo-6v-NAv" id="8bn-S8-e81"/>
                             </connections>
                         </button>
-                        <imageView alignment="left" verticalAlignment="bottom" id="zvu-77-qb2"/>
+                        <button width="1" alignment="left" verticalAlignment="bottom" title="Cancel" id="NEd-Jy-FaU">
+                            <connections>
+                                <action selector="onCancel" destination="Bpo-6v-NAv" id="B0d-oQ-iP2"/>
+                            </connections>
+                        </button>
+                        <imageView alignment="center" verticalAlignment="bottom" id="zvu-77-qb2"/>
                     </items>
+                    <edgeInsets key="margins" left="1" right="1" top="22" bottom="0.0"/>
                     <connections>
                         <outlet property="broadcastImage" destination="zvu-77-qb2" id="HCM-57-YVb"/>
+                        <outlet property="cancelButton" destination="NEd-Jy-FaU" id="mzk-Fk-Id1"/>
                         <outlet property="group1" destination="pJ5-uP-Shn" id="7RW-cp-4g3"/>
                         <outlet property="group2" destination="PPr-6M-NT3" id="yeS-ya-6Di"/>
                         <outlet property="group3" destination="8Du-RJ-V9w" id="vBH-d0-Vsp"/>
@@ -146,7 +153,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="797" y="343"/>
+            <point key="canvasLocation" x="814" y="368"/>
         </scene>
         <!--WatchDetailsViewController-->
         <scene sceneID="smr-zi-axf">
@@ -263,6 +270,11 @@
                                 <action selector="switchHeartRateAction:" destination="hJl-mE-pcA" id="yty-tJ-Rwt"/>
                             </connections>
                         </switch>
+                        <switch width="1" alignment="left" value="YES" title="Bluetooth Sensors" id="Okn-gU-DsK">
+                            <connections>
+                                <action selector="switchConnectBTSensorsAction:" destination="hJl-mE-pcA" id="eM4-aQ-7Cy"/>
+                            </connections>
+                        </switch>
                         <button width="1" alignment="left" title="Reset" id="RLD-SD-HYq">
                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -273,6 +285,7 @@
                     </items>
                     <connections>
                         <outlet property="broadcast" destination="8A2-ad-Uee" id="W3g-zr-jsL"/>
+                        <outlet property="connectBTSensors" destination="Okn-gU-DsK" id="2uL-iZ-r4e"/>
                         <outlet property="heartRate" destination="q8D-TC-rC0" id="FVN-qr-3TL"/>
                         <outlet property="metric" destination="IQG-Gm-neq" id="dSF-Eh-GZE"/>
                         <outlet property="resetButton" destination="RLD-SD-HYq" id="eh9-SE-X1V"/>

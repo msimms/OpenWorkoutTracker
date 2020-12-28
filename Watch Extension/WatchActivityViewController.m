@@ -26,6 +26,7 @@
 @synthesize startStopButton;
 @synthesize intervalsButton;
 @synthesize pacePlanButton;
+@synthesize cancelButton;
 @synthesize value1;
 @synthesize value2;
 @synthesize value3;
@@ -139,12 +140,14 @@
 	// Hide these after starting the activity so we don't accidentally press them.
 	self.intervalsButton.hidden = TRUE;
 	self.pacePlanButton.hidden = TRUE;
+	self.cancelButton.hidden = TRUE;
 }
 
 - (void)setUIForStoppedActivity
 {
 	[self.startStopButton setTitle:STR_START];
 	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
+	self.cancelButton.hidden = FALSE;
 }
 
 - (void)setUIForPausedActivity
@@ -271,6 +274,12 @@
 
 	// Show the action sheet.
 	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_PACE_PLAN preferredStyle:WKAlertControllerStyleAlert actions:actions];
+}
+
+- (IBAction)onCancel
+{
+	[self popController];
+	self->isPopping = TRUE;
 }
 
 #pragma mark method for refreshing screen values
