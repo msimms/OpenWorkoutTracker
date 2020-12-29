@@ -258,6 +258,7 @@
 "TCX File" = "TCX File";
 "The data file is attached." = "The data file is attached.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "There are risks with exercise. Do not start an exercise program without consulting your doctor.";
+"There is no data to display." = "There is no data to display.";
 "There was an error contacting the web service." = "There was an error contacting the web service.";
 "There was an error creating the overlay." = "There was an error creating the overlay.";
 "This exercise should be performed with the phone positioned on the upper arm." = "This exercise should be performed with the phone positioned on the upper arm.";

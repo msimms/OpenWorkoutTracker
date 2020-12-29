@@ -14,6 +14,8 @@
 #define PLOT_ID_MAX  "Max Line"
 #define PLOT_ID_AVG  "Avg Line"
 
+#define STR_NOT_DATA NSLocalizedString(@"There is no data to display.", nil)
+
 @interface CorePlotViewController ()
 
 @end
@@ -80,6 +82,7 @@
 	NSUInteger numPoints = [self numPointsToDraw];
 	if (numPoints == 0)
 	{
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_NOT_DATA];
 		return;
 	}
 

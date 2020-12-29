@@ -6,10 +6,11 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 #import "CorePlot.h"
 #import "ChartLine.h"
 
-@interface CorePlotViewController : UIViewController<CPTPlotDataSource, CPTAxisDelegate>
+@interface CorePlotViewController : CommonViewController <CPTPlotDataSource, CPTAxisDelegate>
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIView* chartView;
