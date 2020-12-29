@@ -22,7 +22,7 @@
 
 @implementation LineFactory
 
-+ (NSMutableArray*)getLineNames:(bool)hasGpsData withBool:(bool)hasAccelerometerData withBool:(bool)hasHeartRateData withBool:(bool)hasCadenceData withBool:(bool)hasPowerData
++ (NSMutableArray*)getLineNames:(bool)hasLocationData hasAccelData:(bool)hasAccelerometerData hasHRData:(bool)hasHeartRateData hasCadenceData:(bool)hasCadenceData hasPowerData:(bool)hasPowerData willPreferPaceOverSpeed:(bool)preferPaceOverSpeed
 {
 	NSMutableArray* list = [[NSMutableArray alloc] init];
 	if (list)
@@ -33,9 +33,17 @@
 			[list addObject:@CHART_NAME_ACCELEROMETER_Y];
 			[list addObject:@CHART_NAME_ACCELEROMETER_Z];
 		}
-		if (hasGpsData)
+		if (hasLocationData)
 		{
-			[list addObject:@CHART_NAME_SPEED];
+			if (preferPaceOverSpeed)
+			{
+				[list addObject:@CHART_NAME_GRADE_ADJUSTED_PACE];
+				[list addObject:@CHART_NAME_PACE];
+			}
+			else
+			{
+				[list addObject:@CHART_NAME_SPEED];
+			}
 			[list addObject:@CHART_NAME_VERTICAL_SPEED];
 			[list addObject:@CHART_NAME_ELEVATION];
 		}
@@ -55,7 +63,7 @@
 	return list;
 }
 
-+ (NSMutableArray*)getLineActivityTypes:(bool)hasGpsData withBool:(bool)hasAccelerometerData withBool:(bool)hasHeartRateData withBool:(bool)hasCadenceData withBool:(bool)hasPowerData
++ (NSMutableArray*)getLineActivityTypes:(bool)hasLocationData hasAccelData:(bool)hasAccelerometerData hasHRData:(bool)hasHeartRateData hasCadenceData:(bool)hasCadenceData hasPowerData:(bool)hasPowerData willPreferPaceOverSpeed:(bool)preferPaceOverSpeed
 {
 	NSMutableArray* list = [[NSMutableArray alloc] init];
 	if (list)
@@ -66,9 +74,17 @@
 			[list addObject:@ACTIVITY_ATTRIBUTE_Y];
 			[list addObject:@ACTIVITY_ATTRIBUTE_Z];
 		}
-		if (hasGpsData)
+		if (hasLocationData)
 		{
-			[list addObject:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
+			if (preferPaceOverSpeed)
+			{
+				[list addObject:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
+			}
+			else
+			{
+				[list addObject:@ACTIVITY_ATTRIBUTE_CURRENT_PACE];
+				[list addObject:@ACTIVITY_ATTRIBUTE_GRADE_ADJUSTED_PACE];
+			}
 			[list addObject:@ACTIVITY_ATTRIBUTE_VERTICAL_SPEED];
 			[list addObject:@ACTIVITY_ATTRIBUTE_ALTITUDE];
 		}

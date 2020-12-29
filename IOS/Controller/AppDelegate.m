@@ -1586,6 +1586,20 @@ void startSensorCallback(SensorType type, void* context)
 	return QueryHistoricalActivityAttribute(activityIndex, attributeName);
 }
 
+- (BOOL)isHistoricalActivityFootBased:(NSString*)activityId
+{
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// If the activity is not in the database, try HealthKit.
+	if (activityIndex == ACTIVITY_INDEX_UNKNOWN)
+	{
+		return FALSE;
+	}
+
+	// Activity is in the database.
+	return IsHistoricalActivityFootBased((size_t)activityIndex);
+}
+
 - (void)setHistoricalActivityAttribute:(NSString*)activityId withAttributeName:(const char* const)attributeName withAttributeType:(ActivityAttributeType) attributeValue
 {
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);

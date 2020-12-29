@@ -13,8 +13,8 @@
 
 @interface LineFactory : NSObject
 
-+ (NSMutableArray*)getLineNames:(bool)hasGpsData withBool:(bool)hasAccelerometerData withBool:(bool)hasHeartRateData withBool:(bool)hasCadenceData withBool:(bool)hasPowerData;
-+ (NSMutableArray*)getLineActivityTypes:(bool)hasGpsData withBool:(bool)hasAccelerometerData withBool:(bool)hasHeartRateData withBool:(bool)hasCadenceData withBool:(bool)hasPowerData;
++ (NSMutableArray*)getLineNames:(bool)hasLocationData hasAccelData:(bool)hasAccelerometerData hasHRData:(bool)hasHeartRateData hasCadenceData:(bool)hasCadenceData hasPowerData:(bool)hasPowerData willPreferPaceOverSpeed:(bool)preferPaceOverSpeed;
++ (NSMutableArray*)getLineActivityTypes:(bool)hasLocationData hasAccelData:(bool)hasAccelerometerData hasHRData:(bool)hasHeartRateData hasCadenceData:(bool)hasCadenceData hasPowerData:(bool)hasPowerData willPreferPaceOverSpeed:(bool)preferPaceOverSpeed;
 + (ChartLine*)createLine:(NSString*)chartName withActivityId:(NSString*)activityId withView:(CorePlotViewController*)view;
 
 @end

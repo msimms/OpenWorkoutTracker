@@ -1937,6 +1937,21 @@ extern "C" {
 		}
 	}
 
+	bool IsHistoricalActivityFootBased(size_t activityIndex)
+	{
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
+			if (summary.pActivity)
+			{
+				Walk* pWalk = dynamic_cast<Walk*>(summary.pActivity);
+				return pWalk != NULL;
+			}
+		}
+		return false;
+	}
+
 	//
 	// Functions for accessing historical routes.
 	//

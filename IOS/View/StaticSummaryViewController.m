@@ -129,6 +129,7 @@ typedef enum ExportFileTypeButtons
 		self->hasHeartRateData = false;
 		self->hasCadenceData = false;
 		self->hasPowerData = false;
+		self->preferPaceOverSpeed = false;
 
 		self->mapMode = MAP_OVERVIEW_COMPLETE_ROUTE;
 	}
@@ -217,6 +218,7 @@ typedef enum ExportFileTypeButtons
 		self->hasHeartRateData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_HEART_RATE forActivityId:self->activityId].valid;
 		self->hasCadenceData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_CADENCE forActivityId:self->activityId].valid;
 		self->hasPowerData = [appDelegate queryHistoricalActivityAttribute:ACTIVITY_ATTRIBUTE_MAX_POWER forActivityId:self->activityId].valid;
+		self->preferPaceOverSpeed = [appDelegate isHistoricalActivityFootBased:self->activityId];
 
 		self->timeSection1RowNames = [[NSMutableArray alloc] init];
 		if (self->timeSection1RowNames)
@@ -234,7 +236,7 @@ typedef enum ExportFileTypeButtons
 
 		if (self->hasLocationData)
 		{
-			self->chartTitles = [LineFactory getLineNames:self->hasLocationData withBool:self->hasAccelerometerData withBool:self->hasHeartRateData withBool:self->hasCadenceData withBool:self->hasPowerData];
+			self->chartTitles = [LineFactory getLineNames:self->hasLocationData hasAccelData:self->hasAccelerometerData hasHRData:self->hasHeartRateData hasCadenceData:self->hasCadenceData hasPowerData:self->hasPowerData willPreferPaceOverSpeed:preferPaceOverSpeed];
 		}
 		else
 		{

@@ -53,6 +53,7 @@
 	bool hasHeartRateData;
 	bool hasCadenceData;
 	bool hasPowerData;
+	bool preferPaceOverSpeed;
 
 	MapOverviewMode mapMode;
 }

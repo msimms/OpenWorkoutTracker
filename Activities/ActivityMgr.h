@@ -146,6 +146,7 @@ extern "C" {
 	size_t GetNumHistoricalActivities(void);
 	size_t GetNumHistoricalActivitiesByType(const char* const activityType);
 	void SetHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName, ActivityAttributeType attributeValue);
+	bool IsHistoricalActivityFootBased(size_t activityIndex);
 
 	// Functions for accessing historical location data.
 	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context);
