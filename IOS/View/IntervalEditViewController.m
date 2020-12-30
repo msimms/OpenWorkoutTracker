@@ -131,7 +131,7 @@
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:DISTANCE_INTERVAL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 	{
 		UIAlertController* alertController2 = [UIAlertController alertControllerWithTitle:nil
@@ -139,7 +139,7 @@
 																		   preferredStyle:UIAlertControllerStyleActionSheet];
 
 		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {}]];
+		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 		[alertController2 addAction:[UIAlertAction actionWithTitle:STR_METERS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self promptForDistance:INTERVAL_UNIT_METERS withSegment:segment];
 		}]];
