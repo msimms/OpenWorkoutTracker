@@ -47,9 +47,7 @@
 	MKPolyline* route;
 
     CrumbPath* crumbs;
-    CrumbPathRenderer* crumbView;
-
-	bool autoScale;
+    CrumbPathRenderer* crumbRenderer;
 }
 
 - (void)setUIForStartedActivity;

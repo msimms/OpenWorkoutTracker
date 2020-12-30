@@ -11,6 +11,7 @@
 #import "LocationSensor.h"
 #import "Notifications.h"
 #import "Pin.h"
+#import "Preferences.h"
 #import "Segues.h"
 #import "StringUtils.h"
 
@@ -81,7 +82,6 @@ MapViewController* g_ptrToMapViewCtrl;
 	if (self)
 	{
 		self->lines = nil;
-		self->autoScale = true;
 	}
 	return self;
 }
@@ -94,7 +94,6 @@ MapViewController* g_ptrToMapViewCtrl;
 	[self.homeButton setTitle:BUTTON_TITLE_HOME];
 
 	self->lines = [[NSMutableArray alloc] init];
-	self->autoScale = true;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -294,7 +293,7 @@ void KmlPlacemarkEnd(const char* name, void* context)
 		}
 	}
 
-	if (self->autoScale)
+	if ([Preferences shouldAutoScaleMap])
 	{
 		// Zoom map to user location.
 		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 1500, 1500);
@@ -332,11 +331,11 @@ void KmlPlacemarkEnd(const char* name, void* context)
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->autoScale = true;
+		[Preferences setAutoScaleMap:true];
 		[[self mapView] setUserTrackingMode:MKUserTrackingModeFollow];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->autoScale = false;
+		[Preferences setAutoScaleMap:false];
 		[[self mapView] setUserTrackingMode:MKUserTrackingModeNone];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];

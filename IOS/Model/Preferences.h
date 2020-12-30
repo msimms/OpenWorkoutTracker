@@ -28,6 +28,7 @@
 
 + (NSString*)uuid;
 + (UnitSystem)preferredUnitSystem;
++ (BOOL)shouldAutoScaleMap;
 + (BOOL)shouldScanForSensors;
 + (BOOL)shouldBroadcastToServer;
 + (NSString*)broadcastUserName;
@@ -51,6 +52,7 @@
 
 + (void)setUuid:(NSString*)value;
 + (void)setPreferredUnitSystem:(UnitSystem)system;
++ (void)setAutoScaleMap:(BOOL)value;
 + (void)setScanForSensors:(BOOL)value;
 + (void)setBroadcastToServer:(BOOL)value;
 + (void)setBroadcastUserName:(NSString*)value;

@@ -19,9 +19,9 @@
 
     CrumbPath*         crumbs;
     CrumbPathRenderer* crumbRenderer;
+
 	NSMutableArray*    lines;
 	NSString*          overlayFileName;
-	bool               autoScale;
 }
 
 - (void)showOverlay;

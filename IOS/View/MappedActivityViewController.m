@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "LocationSensor.h"
+#import "Preferences.h"
 #import "StringUtils.h"
 
 #define ACTION_SHEET_TITLE_MAP_OPTIONS  NSLocalizedString(@"Map Options", nil)
@@ -56,7 +57,6 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->autoScale = true;
 	}
 	return self;
 }
@@ -313,7 +313,7 @@
 			updateRect = MKMapRectInset(updateRect, -lineWidth, -lineWidth);
 			
 			// Ask the overlay view to update just the changed area.
-			[self->crumbView setNeedsDisplayInMapRect:updateRect];
+			[self->crumbRenderer setNeedsDisplayInMapRect:updateRect];
 		}
 	}
 	else
@@ -326,7 +326,7 @@
 		}
 	}
 
-	if (self->autoScale)
+	if ([Preferences shouldAutoScaleMap])
 	{
 		// Zoom map to user location
 		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 1500, 1500);
@@ -356,6 +356,24 @@
 
 #pragma mark MkMapView methods
 
+- (MKOverlayRenderer*)mapView:(MKMapView*)mapView rendererForOverlay:(id<MKOverlay>)overlay
+{
+	if (overlay == self->crumbs)
+	{
+		if (!self->crumbRenderer)
+		{
+			self->crumbRenderer = [[CrumbPathRenderer alloc] initWithOverlay:overlay];
+			if (self->crumbRenderer)
+			{
+				[self->crumbRenderer setColor:[UIColor blueColor]];
+			}
+		}
+		return self->crumbRenderer;
+	}
+	
+	return nil;
+}
+
 - (void)mapView:(MKMapView*)mapView didUpdateUserLocation:(MKUserLocation*)userLocation
 {
 }
@@ -369,13 +387,13 @@
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->autoScale = true;
+		[Preferences setAutoScaleMap:true];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->autoScale = false;
+		[Preferences setAutoScaleMap:false];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->mapView.mapType = MKMapTypeStandard;
