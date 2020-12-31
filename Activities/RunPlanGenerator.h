@@ -23,8 +23,10 @@ public:
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 	
 private:
-	uint64_t m_easyDistanceTotalMeters;
-	uint64_t m_hardDistanceTotalMeters;
+	uint64_t m_easyDistanceTotalMeters; // Total weekly meters spent running easy
+	uint64_t m_hardDistanceTotalMeters; // Total weekly meters spent running hard
+	uint64_t m_totalEasySeconds; // Total weekly seconds spent running easy
+	uint64_t m_totalHardSeconds; // Total weekly seconds spent running hard
 
 	static bool ValidFloat(double num, double minValue);
 	static double RoundDistance(double distance);

@@ -87,6 +87,9 @@ Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance,
 
 		// Tally up the easy and hard distance so we can keep the weekly plan in check.
 		this->m_easyDistanceTotalMeters += intervalDistanceMeters;
+
+		// Tally up the easy and hard seconds.
+		this->m_totalEasySeconds += intervalDistanceMeters * pace;
 	}
 
 	return easyRunWorkout;
@@ -104,19 +107,26 @@ Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunP
 	if (intervalDistanceMeters < 1000)
 		intervalDistanceMeters = 1000;
 
-	uint64_t warmupDuration = 10 * 60;
-	uint64_t cooldownDuration = 10 * 60;
+	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
+	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
 	Workout* tempoRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RUN, ACTIVITY_TYPE_RUNNING);
-	tempoRunWorkout->AddWarmup(warmupDuration);
-	tempoRunWorkout->AddInterval(1, intervalDistanceMeters, tempoRunPace, 0, 0);
-	tempoRunWorkout->AddCooldown(cooldownDuration);
+	if (tempoRunWorkout)
+	{
+		tempoRunWorkout->AddWarmup(warmupDuration);
+		tempoRunWorkout->AddInterval(1, intervalDistanceMeters, tempoRunPace, 0, 0);
+		tempoRunWorkout->AddCooldown(cooldownDuration);
 
-	// Tally up the easy and hard distance so we can keep the weekly plan in check.
-	this->m_easyDistanceTotalMeters += (warmupDuration / easyRunPace);
-	this->m_easyDistanceTotalMeters += (cooldownDuration / easyRunPace);
-	this->m_hardDistanceTotalMeters += intervalDistanceMeters;
+		// Tally up the easy and hard distance so we can keep the weekly plan in check.
+		this->m_easyDistanceTotalMeters += (warmupDuration / easyRunPace);
+		this->m_easyDistanceTotalMeters += (cooldownDuration / easyRunPace);
+		this->m_hardDistanceTotalMeters += intervalDistanceMeters;
+
+		// Tally up the easy and hard seconds.
+		this->m_totalEasySeconds += warmupDuration + cooldownDuration;
+		this->m_totalHardSeconds += intervalDistanceMeters * tempoRunPace;
+	}
 
 	return tempoRunWorkout;
 }
@@ -131,10 +141,10 @@ Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double 
 	const uint8_t NUM_POSSIBLE_WORKOUTS = 7;
 
 	// Build a collection of possible run interval sessions, sorted by target distance. Order is { min reps, max reps, distance in meters }.
-	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][3] = { { 4, 8, 100 }, { 4, 8, 200 }, { 4, 8, 400 }, { 4, 8, 600 }, { 2, 8, 800 }, { 2, 4, 1000 }, { 2, 4, 1600 } };
+	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][3] = { { 4, 8, 100 }, { 4, 8, 200 }, { 4, 8, 400 }, { 4, 8, 600 }, { 2, 8, 800 }, { 2, 6, 1000 }, { 2, 4, 1600 } };
 
-	uint64_t warmupDuration = 10 * 60;
-	uint64_t cooldownDuration = 10 * 60;
+	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
+	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	std::default_random_engine generator;
 
@@ -165,15 +175,25 @@ Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double 
 
 	// Create the workout object.
 	Workout* intervalRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);
-	intervalRunWorkout->AddWarmup(warmupDuration);
-	intervalRunWorkout->AddInterval(selectedReps, intervalDistance, intervalPace, restIntervalDistance, easyRunPace);
-	intervalRunWorkout->AddCooldown(cooldownDuration);
+	if (intervalRunWorkout)
+	{
+		intervalRunWorkout->AddWarmup(warmupDuration);
+		intervalRunWorkout->AddInterval(selectedReps, intervalDistance, intervalPace, restIntervalDistance, easyRunPace);
+		intervalRunWorkout->AddCooldown(cooldownDuration);
 
-	// Tally up the easy and hard distance so we can keep the weekly plan in check.
-	this->m_easyDistanceTotalMeters += (warmupDuration / easyRunPace);
-	this->m_easyDistanceTotalMeters += (cooldownDuration / easyRunPace);
-	this->m_easyDistanceTotalMeters += ((selectedReps - 1) * restIntervalDistance);
-	this->m_hardDistanceTotalMeters += (selectedReps * intervalDistance);
+		// Tally up the easy and hard distance so we can keep the weekly plan in check.
+		double totalRestMeters = ((selectedReps - 1) * restIntervalDistance);
+		double totalHardMeters = (selectedReps * intervalDistance);
+		this->m_easyDistanceTotalMeters += (warmupDuration / easyRunPace);
+		this->m_easyDistanceTotalMeters += (cooldownDuration / easyRunPace);
+		this->m_easyDistanceTotalMeters += totalRestMeters;
+		this->m_hardDistanceTotalMeters += totalHardMeters;
+
+		// Tally up the easy and hard seconds.
+		this->m_totalEasySeconds += warmupDuration + cooldownDuration;
+		this->m_totalEasySeconds += totalRestMeters * easyRunPace;
+		this->m_totalHardSeconds += totalHardMeters * intervalPace;
+	}
 
 	return intervalRunWorkout;
 }
@@ -191,10 +211,16 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 
 	// Create the workout object.
 	Workout* longRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_LONG_RUN, ACTIVITY_TYPE_RUNNING);
-	longRunWorkout->AddInterval(1, intervalDistanceMeters, longRunPace, 0, 0);
+	if (longRunWorkout)
+	{
+		longRunWorkout->AddInterval(1, intervalDistanceMeters, longRunPace, 0, 0);
 
-	// Tally up the easy and hard distance so we can keep the weekly plan in check.
-	this->m_easyDistanceTotalMeters += intervalDistanceMeters;
+		// Tally up the easy and hard distance so we can keep the weekly plan in check.
+		this->m_easyDistanceTotalMeters += intervalDistanceMeters;
+
+		// Tally up the easy and hard seconds.
+		this->m_totalEasySeconds += intervalDistanceMeters + longRunPace;
+	}
 
 	return longRunWorkout;
 }
@@ -204,7 +230,10 @@ Workout* RunPlanGenerator::GenerateFreeRun(void)
 {
 	// Create the workout object.
 	Workout* freeRunWorkout = WorkoutFactory::Create(WORKOUT_TYPE_FREE_RUN, ACTIVITY_TYPE_RUNNING);
-	freeRunWorkout->AddInterval(1, 5000, 0, 0, 0);
+	if (freeRunWorkout)
+	{
+		freeRunWorkout->AddInterval(1, 5000, 0, 0, 0);
+	}
 
 	return freeRunWorkout;
 }
@@ -307,6 +336,8 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		// Keep track of the number of easy miles/kms and the number of hard miles/kms we're expecting the user to run so we can balance the two.
 		this->m_easyDistanceTotalMeters = 0.0;
 		this->m_hardDistanceTotalMeters = 0.0;
+		this->m_totalEasySeconds = 0.0;
+		this->m_totalHardSeconds = 0.0;
 
 		// Add a long run.
 		Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
