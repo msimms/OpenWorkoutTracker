@@ -67,6 +67,11 @@
 
 #pragma mark internal accessor methods
 
++ (BOOL)keyExists:(NSString*)key
+{
+	return [[NSUserDefaults standardUserDefaults] objectForKey:key] != nil;
+}
+
 + (BOOL)readBooleanValue:(NSString*)key
 {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:key];
@@ -128,7 +133,11 @@
 
 + (BOOL)shouldAutoScaleMap
 {
-	return [self readBooleanValue:@PREF_NAME_AUTOSCALE_MAP];
+	if ([self keyExists:@PREF_NAME_AUTOSCALE_MAP])
+	{
+		return [self readBooleanValue:@PREF_NAME_AUTOSCALE_MAP];
+	}
+	return TRUE;
 }
 
 + (BOOL)shouldScanForSensors

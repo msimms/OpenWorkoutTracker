@@ -15,6 +15,8 @@
 
 #pragma mark internal accessor methods
 
++ (BOOL)keyExists:(NSString*)key;
+
 + (BOOL)readBooleanValue:(NSString*)key;
 + (NSInteger)readNumericValue:(NSString*)key;
 + (NSString*)readStringValue:(NSString*)key;
