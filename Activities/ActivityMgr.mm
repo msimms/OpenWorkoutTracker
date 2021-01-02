@@ -2322,10 +2322,15 @@ extern "C" {
 		std::string tempFileName = pDirName;
 		DataExporter exporter;
 
+		g_dbLock.lock();
+
 		if (exporter.ExportWorkoutFromDatabase(FILE_ZWO, tempFileName, g_pDatabase, workoutId))
 		{
 			return strdup(tempFileName.c_str());
 		}
+
+		g_dbLock.unlock();
+
 		return NULL;
 	}
 

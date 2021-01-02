@@ -801,8 +801,11 @@ bool DataExporter::ExportWorkoutFromDatabase(FileFormat format, std::string& fil
 {
 	bool result = false;
 
+	std::string rootFileName = "Workout_";
+	rootFileName += workoutId;
+	
 	fileName.append("/");
-	fileName.append(GenerateFileName(format, "workout"));
+	fileName.append(GenerateFileName(format, rootFileName));
 
 	if (format == FILE_ZWO)
 	{
@@ -817,15 +820,22 @@ bool DataExporter::ExportWorkoutFromDatabase(FileFormat format, std::string& fil
 				std::vector<WorkoutInterval> intervals = workout.GetIntervals();
 
 				result  = writer.StartWorkout();
-				for (auto intervalIter = intervals.begin(); intervalIter != intervals.end(); ++intervalIter)
+				if (result)
 				{
-					const WorkoutInterval& interval = (*intervalIter);
+					for (auto intervalIter = intervals.begin(); intervalIter != intervals.end() && result; ++intervalIter)
+					{
+						const WorkoutInterval& interval = (*intervalIter);
 
-					result &= writer.StartIntervals(interval.m_repeat, 0.0, 0.0, interval.m_distance * interval.m_pace, interval.m_recoveryDistance * interval.m_recoveryPace, interval.m_pace);
+						result &= writer.StartIntervals(interval.m_repeat, 0.0, 0.0, interval.m_distance * interval.m_pace, interval.m_recoveryDistance * interval.m_recoveryPace, interval.m_pace);
+						result &= writer.EndIntervals();
+					}
+
+					result &= writer.EndWorkout();
+					result &= writer.CloseAllTags();
 				}
-				result &= writer.EndWorkout();
 			}
 		}
 	}
+
 	return result;
 }

@@ -18,6 +18,7 @@
 - (BOOL)isAvailable
 {
 	NSFileManager* fm = [NSFileManager defaultManager];
+
 	self->ubiquityContainer = [fm URLForUbiquityContainerIdentifier:nil];
 	if (self->ubiquityContainer)
 	{

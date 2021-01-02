@@ -383,7 +383,7 @@ typedef enum ExportFileTypeButtons
 {
 	if (self->exportedFileName)
 	{
-		if ([self->selectedExportLocation isEqualToString:@"Email"])
+		if ([self->selectedExportService isEqualToString:@"Email"])
 		{
 			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
 		}
@@ -391,7 +391,11 @@ typedef enum ExportFileTypeButtons
 		{
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-			if (![appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportLocation])
+			if ([appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportService])
+			{
+				[super showOneButtonAlert:STR_EXPORT withMsg:MSG_EXPORT_SUCCEEDED];
+			}
+			else
 			{
 				[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
 			}
@@ -465,7 +469,7 @@ typedef enum ExportFileTypeButtons
 	for (NSString* fileExportService in fileExportServices)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:fileExportService style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			self->selectedExportLocation = fileExportService;
+			self->selectedExportService = fileExportService;
 			[self showFileFormatSheet];
 		}]];
 	}
@@ -597,7 +601,7 @@ typedef enum ExportFileTypeButtons
 	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
 	if ([fileExportServices count] == 1)
 	{
-		self->selectedExportLocation = [fileExportServices objectAtIndex:0];
+		self->selectedExportService = [fileExportServices objectAtIndex:0];
 		[self showFileFormatSheet];
 	}
 	else

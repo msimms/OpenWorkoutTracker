@@ -81,3 +81,4 @@
 #define MSG_MAIL_DISABLED     NSLocalizedString(@"Sending mail is disabled.", nil)
 #define MSG_INTERNAL_ERROR    NSLocalizedString(@"Internal error.", nil)
 #define MSG_EXPORT_FAILED     NSLocalizedString(@"Export failed!", nil)
+#define MSG_EXPORT_SUCCEEDED  NSLocalizedString(@"Export succeeded!", nil)

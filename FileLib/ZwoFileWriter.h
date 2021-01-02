@@ -36,6 +36,10 @@ namespace FileLib
 
 		bool StartCooldown();
 		bool EndCooldown();
+		
+	private:
+		std::string FormatInt8(uint8_t x);
+		std::string FormatDouble(double x);
 	};
 }
 

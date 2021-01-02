@@ -241,6 +241,11 @@ bool Database::CreateTables()
 		sql = "create table activity_hash (id integer primary key, activity_id text, hash text)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("activity_sync"))
+	{
+		sql = "create table activity_sync (id integer primary key, activity_id text, destination text, direction integer)";
+		queries.push_back(sql);
+	}
 
 	int result = ExecuteQueries(queries);
 	return (result == SQLITE_OK || result == SQLITE_DONE);
@@ -313,6 +318,10 @@ bool Database::Reset()
 	sql = "delete from tag";
 	queries.push_back(sql);
 	sql = "delete from activity_summary";
+	queries.push_back(sql);
+	sql = "delete from activity_hash";
+	queries.push_back(sql);
+	sql = "delete from activity_sync";
 	queries.push_back(sql);
 	
 	int result = ExecuteQueries(queries);
@@ -746,15 +755,14 @@ bool Database::RetrieveWorkout(const std::string& workoutId, Workout& workout)
 			double estimatedStress = (double)sqlite3_column_double(statement, 2);
 			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 3);
 
-			Workout workoutObj;
-			workoutObj.SetId(workoutId);
-			workoutObj.SetSport(sport);
-			workoutObj.SetType(workoutType);
-			workoutObj.SetEstimatedStress(estimatedStress);
-			workoutObj.SetScheduledTime(scheduledTime);
+			workout.SetId(workoutId);
+			workout.SetSport(sport);
+			workout.SetType(workoutType);
+			workout.SetEstimatedStress(estimatedStress);
+			workout.SetScheduledTime(scheduledTime);
 
 			// Retrieve the intervals too.
-			result &= this->RetrieveWorkoutIntervals(workoutObj);
+			result &= this->RetrieveWorkoutIntervals(workout);
 		}
 		
 		sqlite3_finalize(statement);
@@ -1608,6 +1616,43 @@ bool Database::UpdateActivityHash(const std::string& activityId, const std::stri
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
+}
+
+bool Database::CreateActivitySync(const std::string& activityId, const std::string& destination)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "insert into activity_sync values (NULL,?,?,1)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, destination.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrieveSyncDestinationsForActivityId(const std::string& activityId, std::vector<std::string>& destinations)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select hash from activity_sync where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
+		{
+			if (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				std::string destination = (const char*)sqlite3_column_text(statement, 0);
+				destinations.push_back(destination);
+				result = true;
+			}
+		}
+
+		sqlite3_finalize(statement);
+	}
+	return result;
 }
 
 bool Database::CreateWeightMeasurement(time_t measurementTime, double weightKg)

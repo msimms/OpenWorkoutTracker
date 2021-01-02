@@ -86,6 +86,7 @@
 "Export" = "Exportar";
 "Export as" = "Exportar como";
 "Export failed!" = "No se pudo!";
+"Export succeeded!" = "Tuvo éxito!";
 "Export Summary" = "Exportar Sumario";
 "Export using" = "Exportar utilizando";
 "Extreme" = "Extremo";

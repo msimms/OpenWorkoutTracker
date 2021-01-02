@@ -169,7 +169,23 @@
 
 		if (self->exportedFileName)
 		{
-			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+			if ([self->selectedExportService isEqualToString:@"Email"])
+			{
+				[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+			}
+			else
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+				if ([appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportService])
+				{
+					[super showOneButtonAlert:STR_EXPORT withMsg:MSG_EXPORT_SUCCEEDED];
+				}
+				else
+				{
+					[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+				}
+			}
 		}
 		else
 		{
@@ -194,7 +210,7 @@
 	for (NSString* fileExportService in fileExportServices)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:fileExportService style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			self->selectedExportLocation = fileExportService;
+			self->selectedExportService = fileExportService;
 			[self showFileFormatSheet];
 		}]];
 	}
@@ -212,7 +228,7 @@
 
 	if ([fileExportServices count] == 1)
 	{
-		self->selectedExportLocation = [fileExportServices objectAtIndex:0];
+		self->selectedExportService = [fileExportServices objectAtIndex:0];
 		[self showFileFormatSheet];
 	}
 	else

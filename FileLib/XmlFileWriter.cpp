@@ -121,7 +121,7 @@ namespace FileLib
 		{
 			result &= CloseTag();
 		}
-		return true;
+		return result;
 	}
 
 	std::string XmlFileWriter::FormatIndent()

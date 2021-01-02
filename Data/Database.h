@@ -134,6 +134,11 @@ public:
 	bool RetrieveHashForActivityId(const std::string& activityId, std::string& hash);
 	bool UpdateActivityHash(const std::string& activityId, const std::string& hash);
 
+	// Methods for managing activity sync status.
+
+	bool CreateActivitySync(const std::string& activityId, const std::string& destination);
+	bool RetrieveSyncDestinationsForActivityId(const std::string& activityId, std::vector<std::string>& destinations);
+
 	// Methods for storing and retrieving the user's weight measurements.
 
 	bool CreateWeightMeasurement(time_t measurementTime, double weightKg);

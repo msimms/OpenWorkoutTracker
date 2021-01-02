@@ -79,23 +79,27 @@ namespace FileLib
 		XmlKeyValuePair attribute;
 
 		attribute.key = ZWO_ATTR_NAME_REPEAT;
-		attribute.value = "";
+		attribute.value = FormatInt8(repeat);
 		attributes.push_back(attribute);
 
 		attribute.key = ZWO_ATTR_NAME_ONDURATION;
-		attribute.value = "";
+		attribute.value = FormatDouble(onDuration);
 		attributes.push_back(attribute);
 
 		attribute.key = ZWO_ATTR_NAME_OFFDURATION;
-		attribute.value = "";
+		attribute.value = FormatDouble(offDuration);
 		attributes.push_back(attribute);
 
 		attribute.key = ZWO_ATTR_NAME_ONPOWER;
-		attribute.value = "";
+		attribute.value = FormatDouble(onPower);
 		attributes.push_back(attribute);
 
 		attribute.key = ZWO_ATTR_NAME_OFFPOWER;
-		attribute.value = "";
+		attribute.value = FormatDouble(offPower);
+		attributes.push_back(attribute);
+
+		attribute.key = ZWO_ATTR_NAME_PACE;
+		attribute.value = FormatDouble(pace);
 		attributes.push_back(attribute);
 
 		return OpenTag(ZWO_TAG_WORKOUT_INTERVALS, attributes, true);
@@ -117,5 +121,18 @@ namespace FileLib
 		if (CurrentTag().compare(ZWO_TAG_WORKOUT_COOLDOWN) == 0)
 			return CloseTag();
 		return false;
+	}
+
+	std::string ZwoFileWriter::FormatInt8(uint8_t x)
+	{
+		char buf[32];
+		snprintf(buf, sizeof(buf) - 1, "%d", x);
+		return buf;
+	}
+	std::string ZwoFileWriter::FormatDouble(double x)
+	{
+		char buf[32];
+		snprintf(buf, sizeof(buf) - 1, "%.2lf", x);
+		return buf;
 	}
 }
