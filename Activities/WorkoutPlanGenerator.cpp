@@ -9,7 +9,6 @@
 #include "ActivityAttribute.h"
 #include "BikePlanGenerator.h"
 #include "Cycling.h"
-#include "ExperienceLevel.h"
 #include "FtpCalculator.h"
 #include "GoalType.h"
 #include "Run.h"
@@ -143,7 +142,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_TYPE, GOAL_TYPE_COMPLETION));
 
 	// Need the user's experience level. This is meant to give us an idea as to how quickly we can ramp up the intensity.
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, EXPERIENCE_LEVEL_INTERMEDIATE));	
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, 5.0));	
 	
 	// Need cycling FTP.
 	FtpCalculator ftpCalc;

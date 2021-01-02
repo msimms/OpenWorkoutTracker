@@ -1033,7 +1033,6 @@
 		27E3021B24F0976D00EB5501 /* WorkoutFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutFactory.h; path = Activities/WorkoutFactory.h; sourceTree = SOURCE_ROOT; };
 		27E3021D24F0A0DF00EB5501 /* WorkoutType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutType.h; path = Activities/WorkoutType.h; sourceTree = SOURCE_ROOT; };
 		27E3022024F2FA7100EB5501 /* GoalType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoalType.h; path = Activities/GoalType.h; sourceTree = SOURCE_ROOT; };
-		27E3022124F2FB0B00EB5501 /* ExperienceLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExperienceLevel.h; path = Activities/ExperienceLevel.h; sourceTree = SOURCE_ROOT; };
 		27E3022224F593C100EB5501 /* WorkoutsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutsViewController.h; path = IOS/View/WorkoutsViewController.h; sourceTree = SOURCE_ROOT; };
 		27E3022324F593C100EB5501 /* WorkoutsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorkoutsViewController.m; path = IOS/View/WorkoutsViewController.m; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
@@ -1681,7 +1680,6 @@
 				27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */,
 				27C0842319BFD063007CE934 /* Cycling.cpp */,
 				27C0842419BFD063007CE934 /* Cycling.h */,
-				27E3022124F2FB0B00EB5501 /* ExperienceLevel.h */,
 				27CF010824D1E87A00263CEC /* FtpCalculator.cpp */,
 				27CF011724D1E87A00263CEC /* FtpCalculator.h */,
 				27E3022024F2FA7100EB5501 /* GoalType.h */,

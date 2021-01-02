@@ -8,7 +8,6 @@
 #include "RunPlanGenerator.h"
 #include "ActivityAttribute.h"
 #include "ActivitySummary.h"
-#include "ExperienceLevel.h"
 #include "GoalType.h"
 #include "WorkoutFactory.h"
 #include "WorkoutPlanInputs.h"
@@ -304,7 +303,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Distance ceilings for easy and tempo runs.
 	double maxEasyRunDistance;
 	double maxTempoRunDistance;
-	if (expLevel == EXPERIENCE_LEVEL_BEGINNER)
+	if (expLevel <= 5.0)
 	{
 		maxEasyRunDistance = longestRunInFourWeeks * 0.60;
 		maxTempoRunDistance = longestRunInFourWeeks * 0.40;
@@ -322,9 +321,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 
 	// We'll also set the percentage of easy miles/kms based on the experience level.
 	double minEasyDistancePercentage;
-	if (expLevel == EXPERIENCE_LEVEL_BEGINNER)
+	if (expLevel <= 5.0)
 		minEasyDistancePercentage = 0.90;
-	else if (expLevel == EXPERIENCE_LEVEL_INTERMEDIATE)
+	else if (expLevel <= 7.0)
 		minEasyDistancePercentage = 0.80;
 	else
 		minEasyDistancePercentage = 0.75;
