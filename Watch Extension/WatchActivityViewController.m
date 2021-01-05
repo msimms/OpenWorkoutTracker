@@ -138,16 +138,16 @@
 	[self.startStopButton setBackgroundColor:[UIColor redColor]];
 	
 	// Hide these after starting the activity so we don't accidentally press them.
-	self.intervalsButton.hidden = TRUE;
-	self.pacePlanButton.hidden = TRUE;
-	self.cancelButton.hidden = TRUE;
+	[self.intervalsButton setHidden:TRUE];
+	[self.pacePlanButton setHidden:TRUE];
+	[self.cancelButton setHidden:TRUE];
 }
 
 - (void)setUIForStoppedActivity
 {
 	[self.startStopButton setTitle:STR_START];
 	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
-	self.cancelButton.hidden = FALSE;
+	[self.cancelButton setHidden:FALSE];
 }
 
 - (void)setUIForPausedActivity
