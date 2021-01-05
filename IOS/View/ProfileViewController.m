@@ -17,7 +17,7 @@
 typedef enum ProfileSections
 {
 	SECTION_USER = 0,
-	SECTION_PERFORMANCE,
+	SECTION_FITNESS,
 	NUM_PROFILE_SECTIONS
 } ProfileSections;
 
@@ -36,11 +36,6 @@ typedef enum ProfilePerformanceRows
 	ROW_FTP,
 	NUM_PROFILE_PERFORMANCE_ROWS
 } ProfilePerformanceRows;
-
-#define TITLE                             NSLocalizedString(@"Profile", nil)
-
-#define TITLE_USER                        NSLocalizedString(@"Profile", nil)
-#define TITLE_PERFORMANCE                 NSLocalizedString(@"Activity Level", nil)
 
 #define ACTION_SHEET_TITLE_ACTIVITY_LEVEL NSLocalizedString(@"Activity Level", nil)
 #define ACTION_SHEET_TITLE_BIRTHDATE      NSLocalizedString(@"Enter your birthdate", nil)
@@ -69,7 +64,7 @@ typedef enum ProfilePerformanceRows
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_PROFILE;
 
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
@@ -234,9 +229,9 @@ typedef enum ProfilePerformanceRows
 	switch (section)
 	{
 		case SECTION_USER:
-			return TITLE_USER;
-		case SECTION_PERFORMANCE:
-			return TITLE_PERFORMANCE;
+			return STR_PROFILE;
+		case SECTION_FITNESS:
+			return STR_FITNESS;
 	}
 	return @"";
 }
@@ -247,7 +242,7 @@ typedef enum ProfilePerformanceRows
 	{
 		case SECTION_USER:
 			return NUM_PROFILE_USER_ROWS;
-		case SECTION_PERFORMANCE:
+		case SECTION_FITNESS:
 			return NUM_PROFILE_PERFORMANCE_ROWS;
 	}
 	return 0;
@@ -304,7 +299,7 @@ typedef enum ProfilePerformanceRows
 				}
 			}
 			break;
-		case SECTION_PERFORMANCE:
+		case SECTION_FITNESS:
 			{
 				switch (row)
 				{
@@ -354,7 +349,7 @@ typedef enum ProfilePerformanceRows
 		case SECTION_USER:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
-		case SECTION_PERFORMANCE:
+		case SECTION_FITNESS:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 	}
@@ -403,7 +398,7 @@ typedef enum ProfilePerformanceRows
 				break;
 		}
 	}
-	else if (section == SECTION_PERFORMANCE)
+	else if (section == SECTION_FITNESS)
 	{
 		NSInteger row = [indexPath row];
 

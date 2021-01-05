@@ -103,6 +103,7 @@
 "Female" = "Female";
 "Finish" = "Finish";
 "Finished" = "Finished";
+"Fitness" = "Fitness";
 "Fix Repetition Count" = "Fix Repetition Count";
 "ft" = "ft";
 "Gear" = "Gear";
@@ -144,8 +145,6 @@
 "Login" = "Login";
 "Low memory" = "Low memory";
 "Male" = "Male";
-"Manage People Following Me" = "Manage People Following Me";
-"Manage People I'm Following" = "Manage People I'm Following";
 "Map" = "Map";
 "Map Options" = "Map Options";
 "Map Overlays" = "Map Overlays";
@@ -188,6 +187,8 @@
 "Overview" = "Overview";
 "Pace Plans" = "Pace Plans";
 "Pause" = "Pause";
+"People Following Me" = "People Following Me";
+"People I'm Following" = "People I'm Following";
 "Please enter your FTP" = "Please enter your FTP";
 "Please enter your height" = "Please enter your height";
 "Please enter your weight" = "Please enter your weight";
@@ -233,6 +234,7 @@
 "Settings" = "Settings";
 "Set Interval" = "Set Interval";
 "Shoes" = "Shoes";
+"Show Broadcast Icon" = "Show Broadcast Icon";
 "Social" = "Social";
 "Sounds" = "Sounds";
 "Speed" = "Speed";

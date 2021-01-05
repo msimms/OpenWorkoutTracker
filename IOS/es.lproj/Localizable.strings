@@ -103,6 +103,7 @@
 "Female" = "Mujer";
 "Finish" = "Fin";
 "Finished" = "Terminado";
+"Fitness" = "Aptitud";
 "Fix Repetition Count" = "Fijar el Número de los Repetición";
 "ft" = "pies (de altura)";
 "Gear" = "Equipo";
@@ -144,8 +145,6 @@
 "Login" = "Iniciar Sesión";
 "Low memory" = "Poca memoria";
 "Male" = "Hombre";
-"Manage People Following Me" = "Administrar Personas Siguiéndome";
-"Manage People I'm Following" = "Gestionar Gente que Sigo";
 "Map" = "Mapa";
 "Map Options" = "Opciones de Mapa";
 "Map Overlays" = "Superposiciónes";
@@ -188,6 +187,8 @@
 "Overview" = "Visión de Conjunto";
 "Pace Plans" = "Planes de Ritmo";
 "Pause" = "Pausa";
+"People Following Me" = "Personas Siguiéndome";
+"People I'm Following" = "Gente que Sigo";
 "Please enter your FTP" = "Por favor ingrese su FTP";
 "Please enter your height" = "Por favor ingrese su altura";
 "Please enter your weight" = "Por favor ingrese su peso";
@@ -232,6 +233,7 @@
 "Sensors" = "Sensores";
 "Settings" = "Configuración";
 "Set Interval" = "Intervalo de los Sets";
+"Show Broadcast Icon" = "Mostrar Icono de Transmisión";
 "Shoes" = "Zappatos";
 "Social" = "Social";
 "Sounds" = "Sonidos";
