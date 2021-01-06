@@ -61,6 +61,7 @@
 + (void)setBroadcastRate:(NSInteger)value;
 + (void)setBroadcastProtocol:(NSString*)value;
 + (void)setBroadcastHostName:(NSString*)value;
++ (void)setBroadcastShowIcon:(BOOL)value;
 + (void)setWillIntegrateHealthKitActivities:(BOOL)value;
 + (void)setHideHealthKitDuplicates:(BOOL)value;
 + (void)setHashShownFirstTimeUseMessage:(BOOL)value;

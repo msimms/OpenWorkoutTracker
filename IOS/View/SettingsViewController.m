@@ -637,6 +637,9 @@ typedef enum SettingsRowsHealthKit
 			}
 			[self.settingsTableView reloadData];
 			break;
+		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_SHOW_ICON:
+			[Preferences setBroadcastShowIcon:switchControl.isOn];
+			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_PROTOCOL:
 			[Preferences setBroadcastProtocol:switchControl.isOn ? @"https" : @"http"];
 			break;

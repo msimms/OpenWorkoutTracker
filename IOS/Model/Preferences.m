@@ -305,6 +305,11 @@
 	[self writeStringValue:@PREF_NAME_BROADCAST_HOST_NAME withValue:value];
 }
 
++ (void)setBroadcastShowIcon:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_BROADCAST_SHOW_ICON withValue:value];
+}
+
 + (void)setWillIntegrateHealthKitActivities:(BOOL)value
 {
 	[self writeBoolValue:@PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES withValue:value];
