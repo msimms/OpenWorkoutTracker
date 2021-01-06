@@ -97,14 +97,6 @@
 		[self setUIForStoppedActivity];
 	}
 
-	// Don't show the interval workouts button if there are no interval workouts.
-	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNamesAndIds];
-	self.intervalsButton.hidden = ([intervalWorkoutNames count] == 0);
-
-	// Don't show the pace plans button if there are no pace plans.
-	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNamesAndIds];
-	self.pacePlanButton.hidden = ([pacePlanNames count] == 0);
-
 	// Cache the activity type so we don't have to keep looking it up.
 	self->activityType = [extDelegate getCurrentActivityType];
 
@@ -145,9 +137,19 @@
 
 - (void)setUIForStoppedActivity
 {
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
 	[self.startStopButton setTitle:STR_START];
 	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
 	[self.cancelButton setHidden:FALSE];
+
+	// Don't show the interval workouts button if there are no interval workouts.
+	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNamesAndIds];
+	[self.intervalsButton setHidden:[intervalWorkoutNames count] == 0];
+
+	// Don't show the pace plans button if there are no pace plans.
+	NSMutableArray* pacePlanNames = [extDelegate getPacePlanNamesAndIds];
+	[self.pacePlanButton setHidden:[pacePlanNames count] == 0];
 }
 
 - (void)setUIForPausedActivity
