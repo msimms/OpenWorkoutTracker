@@ -45,6 +45,7 @@
 #define STR_SCALE             NSLocalizedString(@"Scale", nil)
 #define STR_STARTED           NSLocalizedString(@"Started", nil)
 #define STR_SUMMARY           NSLocalizedString(@"Summary", nil)
+#define STR_SYNCED            NSLocalizedString(@"Synched", nil)
 #define STR_TIME              NSLocalizedString(@"Time", nil)
 #define STR_WEIGHT            NSLocalizedString(@"Weight", nil)
 #define STR_WORKOUT           NSLocalizedString(@"Workout", nil)

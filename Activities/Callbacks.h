@@ -26,6 +26,7 @@ extern "C" {
 	typedef void (*SensorTypeCallback)(SensorType type, void* context);
 	typedef bool (*NextCoordinateCallback)(const char* activityId, Coordinate* coordinate, void* context);
 	typedef void (*WeightCallback)(time_t timestamp, double value, void* context);
+	typedef void (*SyncCallback)(const char* destination, void* context);
 
 #ifdef __cplusplus
 }

@@ -17,6 +17,7 @@
 #include "Gender.h"
 #include "IntervalWorkoutSegment.h"
 #include "SensorType.h"
+#include "SyncDestination.h"
 #include "UnitSystem.h"
 #include "WorkoutType.h"
 
@@ -47,6 +48,10 @@ extern "C" {
 	bool StoreHash(const char* const activityId, const char* const hash);
 	char* GetActivityIdByHash(const char* const hash);
 	char* GetHashForActivityId(const char* const activityId);
+
+	// Methods for managing activity sync status.
+	bool CreateActivitySync(const char* const activityId, const char* const destination);
+	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context);
 
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);

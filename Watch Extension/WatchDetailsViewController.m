@@ -68,7 +68,7 @@
 	[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_DELETE preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
-#pragma mark location handling methods
+#pragma mark rendering methods
 
 - (void)redraw:(id)context
 {	
@@ -140,6 +140,14 @@
 				startCoordinateSet = true;
 			}
 		}
+	}
+	
+	// Append the sync status.
+	NSMutableArray* syncDests = [extDelegate retrieveSyncDestinationsForActivityId:self->activityId];
+	for (NSString* syncDest in syncDests)
+	{
+		[nameStrs addObject:NSLocalizedString(syncDest, nil)];
+		[valueStrs addObject:STR_SYNCED];
 	}
 
 	// Configure the table object and set the row controllers.

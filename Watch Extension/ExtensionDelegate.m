@@ -551,6 +551,38 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 #endif
 }
 
+#pragma mark sync status methods
+
+- (BOOL)markAsSynchedToPhone:(NSString*)activityId
+{
+	return CreateActivitySync([activityId UTF8String], SYNC_DEST_PHONE);
+}
+
+- (BOOL)markAsSynchedToWeb:(NSString*)activityId
+{
+	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
+}
+
+void syncStatusCallback(const char* const destination, void* context)
+{
+	if (context)
+	{
+		NSMutableArray* destList = (__bridge NSMutableArray*)context;
+		[destList addObject:[[NSString alloc] initWithFormat:@"%s", destination]];
+	}
+}
+
+- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId
+{
+	NSMutableArray* destinations = [[NSMutableArray alloc] init];
+	
+	if (destinations)
+	{
+		RetrieveSyncDestinationsForActivityId([activityId UTF8String], syncStatusCallback, (__bridge void*)destinations);
+	}
+	return destinations;
+}
+
 #pragma mark hash methods
 
 - (NSString*)hashActivityWithId:(NSString*)activityId

@@ -91,6 +91,12 @@
 
 - (NSString*)getDeviceId;
 
+// sync status methods
+
+- (BOOL)markAsSynchedToPhone:(NSString*)activityId;
+- (BOOL)markAsSynchedToWeb:(NSString*)activityId;
+- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId;
+
 // hash methods
 
 - (NSString*)hashActivityWithId:(NSString*)activityId;

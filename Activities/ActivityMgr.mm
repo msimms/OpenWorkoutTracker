@@ -420,6 +420,51 @@ extern "C" {
 	}
 
 	//
+	// Methods for managing activity sync status.
+	//
+
+	bool CreateActivitySync(const char* const activityId, const char* const destination)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->CreateActivitySync(activityId, destination);
+		}
+
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
+	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && context)
+		{
+			std::vector<std::string> destinations;
+
+			result = g_pDatabase->RetrieveSyncDestinationsForActivityId(activityId, destinations);
+			if (result)
+			{
+				for (auto iter = destinations.begin(); iter != destinations.end(); ++iter)
+				{
+					callback((*iter).c_str(), context);
+				}
+			}
+		}
+
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
+	//
 	// Functions for controlling preferences.
 	//
 
@@ -1573,7 +1618,7 @@ extern "C" {
 	{
 		bool result = true;
 
-		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 

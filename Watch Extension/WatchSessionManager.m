@@ -64,6 +64,7 @@
 	}
 }
 
+// Asks the watch to send interval workouts.
 - (void)requestIntervalWorkouts
 {
 	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
@@ -73,6 +74,7 @@
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
+// Asks the phone to send pace plans.
 - (void)requestPacePlans
 {
 	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
@@ -82,10 +84,12 @@
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
+// Called when the phone sends an interval workout to the watch.
 - (void)loadIntervalWorkout:(nonnull NSDictionary<NSString*,id> *)message
 {
 }
 
+// Called when the phone sends a pace plan to the watch.
 - (void)loadPacePlan:(nonnull NSDictionary<NSString*,id> *)message
 {
 	NSString* planId = [message objectForKey:@WATCH_MSG_PACE_PLAN_ID];
@@ -99,6 +103,7 @@
 	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceMinKm:[targetPaceMinKm floatValue] withTargetDistanceKms:[targetDistanceKms floatValue] withSplits:[splits floatValue] withRoute:route];
 }
 
+// Sends the activity to the phone.
 - (void)sendActivity:(NSString*)activityHash
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -114,7 +119,9 @@
 
 		time_t tempStartTime = 0;
 		time_t tempEndTime = 0;
+
 		[extDelegate getHistoricalActivityStartAndEndTime:activityIndex withStartTime:&tempStartTime withEndTime:&tempEndTime];
+
 		NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
 		NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
 
@@ -133,7 +140,10 @@
 			[msgData setObject:locationData forKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
 
 		[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
+			[extDelegate markAsSynchedToPhone:activityId];
+			NSLog(@"Sent %@ to the phone.", activityId);
 		} errorHandler:^(NSError* error) {
+			NSLog(@"Failed to send %@ to the phone.", activityId);
 		}];
 	}
 }

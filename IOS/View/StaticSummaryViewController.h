@@ -32,6 +32,7 @@
 	NSMutableArray* recordNames;
 	NSMutableArray* timeSection1RowNames;
 	NSMutableArray* timeSection2RowNames;
+	NSMutableArray* syncedServices; // Names of services to which the activity has been synced
 	NSArray* chartTitles;
 
 	NSInteger attributeIndex;

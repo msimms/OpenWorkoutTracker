@@ -660,6 +660,7 @@
 		2733EDC7250AC7880096D58B /* ZwoFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileWriter.h; path = FileLib/ZwoFileWriter.h; sourceTree = SOURCE_ROOT; };
 		27345D0819EDEE4600059FFF /* BtleScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleScale.h; path = IOS/Sensors/BtleScale.h; sourceTree = SOURCE_ROOT; };
 		27345D0919EDEE4600059FFF /* BtleScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleScale.m; path = IOS/Sensors/BtleScale.m; sourceTree = SOURCE_ROOT; };
+		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
 		275BA6D8234BC16B0086A50F /* ZwoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileReader.h; path = FileLib/ZwoFileReader.h; sourceTree = SOURCE_ROOT; };
@@ -1723,6 +1724,7 @@
 				27C0844719BFD063007CE934 /* StationaryCycling.h */,
 				27F4240623A44D4A00F59F50 /* Swim.cpp */,
 				27F4240723A44D4A00F59F50 /* Swim.h */,
+				273F732B25AF274000484A29 /* SyncDestination.h */,
 				2768E51823A0241200DD06E9 /* TrainingPaceType.h */,
 				2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */,
 				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,

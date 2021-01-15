@@ -1712,6 +1712,33 @@ void startSensorCallback(SensorType type, void* context)
 	return hashStr;
 }
 
+#pragma mark sync status methods
+
+- (BOOL)markAsSynchedToWeb:(NSString*)activityId
+{
+	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
+}
+
+void syncStatusCallback(const char* const destination, void* context)
+{
+	if (context)
+	{
+		NSMutableArray* destList = (__bridge NSMutableArray*)context;
+		[destList addObject:[[NSString alloc] initWithFormat:@"%s", destination]];
+	}
+}
+
+- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId
+{
+	NSMutableArray* destinations = [[NSMutableArray alloc] init];
+	
+	if (destinations)
+	{
+		RetrieveSyncDestinationsForActivityId([activityId UTF8String], syncStatusCallback, (__bridge void*)destinations);
+	}
+	return destinations;
+}
+
 #pragma mark methods for managing bike profiles
 
 - (BOOL)initializeBikeProfileList

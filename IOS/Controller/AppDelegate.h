@@ -172,6 +172,11 @@
 - (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
 
+// sync status methods
+
+- (BOOL)markAsSynchedToWeb:(NSString*)activityId;
+- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId;
+
 // methods for managing bike profiles
 
 - (BOOL)initializeBikeProfileList;

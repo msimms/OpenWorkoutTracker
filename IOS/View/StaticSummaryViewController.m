@@ -32,6 +32,7 @@
 #define SECTION_TITLE_CHARTS           NSLocalizedString(@"Charts", nil)
 #define SECTION_TITLE_ATTRIBUTES       NSLocalizedString(@"Summary", nil)
 #define SECTION_TITLE_SUPERLATIVES     NSLocalizedString(@"Superlatives", nil)
+#define SECTION_TITLE_SYNC             NSLocalizedString(@"Synchronization", nil)
 #define SECTION_TITLE_INTERNAL         NSLocalizedString(@"Internal", nil)
 
 #define ACTION_SHEET_BUTTON_GPX        NSLocalizedString(@"GPX File", nil)
@@ -81,6 +82,7 @@ typedef enum Sections
 	SECTION_CHARTS,
 	SECTION_ATTRIBUTES,
 	SECTION_SUPERLATIVES,
+	SECTION_SYNC,
 	SECTION_INTERNAL,
 	NUM_SECTIONS
 } Sections;
@@ -138,6 +140,8 @@ typedef enum ExportFileTypeButtons
 
 - (void)viewDidLoad
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	[super viewDidLoad];
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
@@ -153,7 +157,6 @@ typedef enum ExportFileTypeButtons
 	self->movingToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->movingToolbar)
 	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		NSString* activityType = [appDelegate getHistoricalActivityType:self->activityId];
 
 		if (!([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
@@ -174,6 +177,8 @@ typedef enum ExportFileTypeButtons
 		[self->liftingToolbar removeObjectIdenticalTo:self.mapButton];
 		[self->liftingToolbar removeObjectIdenticalTo:self.bikeButton];
 	}
+	
+	self->syncedServices = [appDelegate retrieveSyncDestinationsForActivityId:self->activityId];
 
 	[self redraw];
 }
@@ -302,11 +307,14 @@ typedef enum ExportFileTypeButtons
 				case SECTION_SUPERLATIVES:
 					count = [self->recordNames count];
 					break;
+				case SECTION_SYNC:
+					count = [self->syncedServices count];
+					break;
 				case SECTION_INTERNAL:
 #if SHOW_DEBUG_INFO
-				count = 1;
+					count = 1;
 #else
-				count = 0;
+					count = 0;
 #endif
 					break;
 			}
@@ -790,6 +798,7 @@ typedef enum ExportFileTypeButtons
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)visibleSection
 {
 	NSInteger actualSection = self->sectionIndexes[visibleSection];
+
 	switch (actualSection)
 	{
 		case SECTION_NAME:
@@ -804,6 +813,8 @@ typedef enum ExportFileTypeButtons
 			return SECTION_TITLE_ATTRIBUTES;
 		case SECTION_SUPERLATIVES:
 			return SECTION_TITLE_SUPERLATIVES;
+		case SECTION_SYNC:
+			return SECTION_TITLE_SYNC;
 		case SECTION_INTERNAL:
 			return SECTION_TITLE_INTERNAL;
 	}
@@ -813,6 +824,7 @@ typedef enum ExportFileTypeButtons
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)visibleSection
 {
 	NSInteger actualSection = self->sectionIndexes[visibleSection];
+
 	switch (actualSection)
 	{
 		case SECTION_NAME:
@@ -827,6 +839,8 @@ typedef enum ExportFileTypeButtons
 			return [self->attributeNames count];
 		case SECTION_SUPERLATIVES:
 			return [self->recordNames count];
+		case SECTION_SYNC:
+			return [self->syncedServices count];
 		case SECTION_INTERNAL:
 			return 1;
 	}
@@ -901,6 +915,7 @@ typedef enum ExportFileTypeButtons
 			{
 				NSString* attributeName = [self->attributeNames objectAtIndex:row];
 				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
 				if (attr.valid)
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
@@ -923,6 +938,7 @@ typedef enum ExportFileTypeButtons
 			{
 				NSString* attributeName = [self->recordNames objectAtIndex:row];
 				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
 				if (attr.valid)
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
@@ -939,6 +955,12 @@ typedef enum ExportFileTypeButtons
 					cell.textLabel.text = NSLocalizedString(attributeName, nil);
 					cell.detailTextLabel.text = @"";
 				}
+			}
+			break;
+		case SECTION_SYNC:
+			{
+				cell.textLabel.text = NSLocalizedString([self->syncedServices objectAtIndex:row], nil);
+				cell.detailTextLabel.text = @"";
 			}
 			break;
 		case SECTION_INTERNAL:
@@ -982,6 +1004,9 @@ typedef enum ExportFileTypeButtons
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 		case SECTION_SUPERLATIVES:
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			break;
+		case SECTION_SYNC:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 		case SECTION_INTERNAL:
