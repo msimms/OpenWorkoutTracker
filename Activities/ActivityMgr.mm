@@ -102,6 +102,7 @@ extern "C" {
 	Database*        g_pDatabase = NULL;
 	bool             g_autoStartEnabled = false;
 	std::mutex       g_dbLock;
+	std::mutex       g_historicalActivityLock;
 
 	ActivitySummaryList           g_historicalActivityList; // cache of completed activities
 	std::map<std::string, size_t> g_activityIdMap; // maps activity IDs to activity indexes
@@ -325,6 +326,7 @@ extern "C" {
 		FreeHistoricalActivityList();
 
 		g_dbLock.lock();
+		g_historicalActivityLock.lock();
 
 		if (g_pDatabase)
 		{
@@ -343,6 +345,7 @@ extern "C" {
 			}
 		}
 
+		g_historicalActivityLock.unlock();
 		g_dbLock.unlock();
 
 		return result;
@@ -627,6 +630,8 @@ extern "C" {
 
 				InitializeHistoricalActivityList();
 
+				g_historicalActivityLock.lock();
+
 				for (auto activityIter = g_historicalActivityList.begin(); activityIter != g_historicalActivityList.end(); ++activityIter)
 				{
 					const ActivitySummary& summary = (*activityIter);
@@ -650,6 +655,8 @@ extern "C" {
 						}
 					}
 				}
+
+				g_historicalActivityLock.unlock();
 
 				if (numSamples > 0)
 				{
@@ -1387,6 +1394,7 @@ extern "C" {
 	{
 		FreeHistoricalActivityList();
 
+		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
 		if (g_pDatabase)
@@ -1408,15 +1416,25 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+		g_historicalActivityLock.unlock();
 	}
 
 	bool HistoricalActivityListIsInitialized(void)
 	{
-		return g_historicalActivityList.size() > 0;
+		bool initialized = false;
+
+		g_historicalActivityLock.lock();
+		initialized = g_historicalActivityList.size() > 0;
+		g_historicalActivityLock.unlock();
+		return initialized;
 	}
 
 	bool CreateHistoricalActivityObject(size_t activityIndex)
 	{
+		bool result = false;
+
+		g_historicalActivityLock.lock();
+
 		if (g_pActivityFactory && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -1425,9 +1443,12 @@ extern "C" {
 			{
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
 			}
-			return true;
+			result = true;
 		}
-		return false;
+
+		g_historicalActivityLock.unlock();
+
+		return result;
 	}
 
 	bool CreateHistoricalActivityObjectById(const char* activityId)
@@ -1453,6 +1474,7 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_historicalActivityLock.lock();		
 		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
@@ -1474,6 +1496,7 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+		g_historicalActivityLock.unlock();
 
 		return result;
 	}
@@ -1482,6 +1505,7 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
@@ -1610,6 +1634,7 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+		g_historicalActivityLock.unlock();
 
 		return result;
 	}
@@ -1655,6 +1680,7 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
@@ -1679,6 +1705,7 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+		g_historicalActivityLock.unlock();
 
 		return result;
 	}
@@ -1698,6 +1725,7 @@ extern "C" {
 	{
 		bool result = false;
 
+		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
@@ -1726,6 +1754,7 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+		g_historicalActivityLock.unlock();
 
 		return result;
 	}
@@ -1736,6 +1765,8 @@ extern "C" {
 
 	void FreeHistoricalActivityList()
 	{
+		g_historicalActivityLock.lock();
+
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			ActivitySummary& summary = (*iter);
@@ -1756,6 +1787,8 @@ extern "C" {
 
 		g_historicalActivityList.clear();
 		g_activityIdMap.clear();
+
+		g_historicalActivityLock.unlock();
 	}
 
 	void FreeHistoricalActivityObject(size_t activityIndex)
