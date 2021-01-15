@@ -184,6 +184,8 @@ private:
 	sqlite3_stmt* m_powerInsertStatement = NULL;
 	sqlite3_stmt* m_footPodStatement = NULL;
 	sqlite3_stmt* m_selectActivitySummaryStatement = NULL;
+	sqlite3_stmt* m_selectActivityIdFromHashStatement = NULL;
+	sqlite3_stmt* m_selectActivityHashFromIdStatement = NULL;
 
 	bool DoesTableHaveColumn(const std::string& tableName, const std::string& columnName);
 	bool DoesTableExist(const std::string& tableName);

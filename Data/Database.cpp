@@ -57,6 +57,14 @@ Database::~Database()
 	{
 		sqlite3_finalize(m_selectActivitySummaryStatement);
 	}
+	if (m_selectActivityIdFromHashStatement)
+	{
+		sqlite3_finalize(m_selectActivityIdFromHashStatement);
+	}
+	if (m_selectActivityHashFromIdStatement)
+	{
+		sqlite3_finalize(m_selectActivityHashFromIdStatement);
+	}
 }
 
 bool Database::Open(const std::string& dbFileName)
@@ -268,6 +276,10 @@ bool Database::CreateStatements()
 	if (sqlite3_prepare_v2(m_pDb, "insert into foot_pod values (NULL,?,?,?)", -1, &m_footPodStatement, 0) != SQLITE_OK)
 		return false;
 	if (sqlite3_prepare_v2(m_pDb, "select * from activity_summary where activity_id = ?", -1, &m_selectActivitySummaryStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "select activity_id from activity_hash where hash = ? limit 1", -1, &m_selectActivityIdFromHashStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "select hash from activity_hash where activity_id = ? limit 1", -1, &m_selectActivityHashFromIdStatement, 0) != SQLITE_OK)
 		return false;
 	return true;
 }
@@ -1564,42 +1576,36 @@ bool Database::CreateActivityHash(const std::string& activityId, const std::stri
 bool Database::RetrieveActivityIdFromHash(const std::string& hash, std::string& activityId)
 {
 	bool result = false;
-	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select activity_id from activity_hash where hash = ? limit 1", -1, &statement, 0) == SQLITE_OK)
+	sqlite3_bind_text(m_selectActivityIdFromHashStatement, 1, hash.c_str(), -1, SQLITE_TRANSIENT);
+
+	if (sqlite3_step(m_selectActivityIdFromHashStatement) == SQLITE_ROW)
 	{
-		if (sqlite3_bind_text(statement, 1, hash.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
-		{
-			if (sqlite3_step(statement) == SQLITE_ROW)
-			{
-				activityId = (const char*)sqlite3_column_text(statement, 0);
-				result = true;
-			}
-		}
-
-		sqlite3_finalize(statement);
+		activityId = (const char*)sqlite3_column_text(m_selectActivityIdFromHashStatement, 0);
+		result = true;
 	}
+
+	sqlite3_clear_bindings(m_selectActivityIdFromHashStatement);
+	sqlite3_reset(m_selectActivityIdFromHashStatement);
+
 	return result;
 }
 
 bool Database::RetrieveHashForActivityId(const std::string& activityId, std::string& hash)
 {
 	bool result = false;
-	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select hash from activity_hash where activity_id = ? limit 1", -1, &statement, 0) == SQLITE_OK)
+	sqlite3_bind_text(m_selectActivityHashFromIdStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+
+	if (sqlite3_step(m_selectActivityHashFromIdStatement) == SQLITE_ROW)
 	{
-		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
-		{
-			if (sqlite3_step(statement) == SQLITE_ROW)
-			{
-				hash = (const char*)sqlite3_column_text(statement, 0);
-				result = true;
-			}
-		}
-
-		sqlite3_finalize(statement);
+		hash = (const char*)sqlite3_column_text(m_selectActivityHashFromIdStatement, 0);
+		result = true;
 	}
+
+	sqlite3_clear_bindings(m_selectActivityHashFromIdStatement);
+	sqlite3_reset(m_selectActivityHashFromIdStatement);
+
 	return result;
 }
 
