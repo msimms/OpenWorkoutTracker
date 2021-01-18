@@ -20,6 +20,6 @@
 + (BOOL)serverClaimDevice:(NSString*)deviceId;
 + (BOOL)serverSetUserWeight:(NSNumber*)weightKg;
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash;
-+ (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSString*)contents;
++ (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSData*)contents;
 
 @end

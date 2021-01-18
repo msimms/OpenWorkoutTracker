@@ -955,7 +955,6 @@ void startSensorCallback(SensorType type, void* context)
 	// Rate limit the server synchronizations. Let's not be spammy.
 	if (time(NULL) - self->lastServerSync > 60)
 	{
-		[self serverListFriends];
 		[self serverListGear];
 		[self serverListPlannedWorkouts];
 		[self sendMissingActivitiesToServer];
@@ -1784,12 +1783,17 @@ void syncStatusCallback(const char* const destination, void* context)
 	{
 		// Fetch the activity name.
 		NSString* activityName = [self getActivityName:activityId];
+		if ([activityName length] == 0)
+		{
+			activityName = [[NSString alloc] initWithFormat:@"Untitled.gpx"];
+		}
 
 		// Read the entire file.
 		NSString* fileContents = [FileUtils readEntireFile:exportedFileName];
 		
 		// Send to the server.
-		if (![ApiClient sendActivityToServer:activityId withName:activityName withContents:fileContents])
+		NSData* binaryFileContents = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
+		if (![ApiClient sendActivityToServer:activityId withName:activityName withContents:binaryFileContents])
 		{
 			NSLog(@"Failed to upload activity ID %@ to the server.", activityId);
 		}

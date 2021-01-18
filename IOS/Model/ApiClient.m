@@ -339,14 +339,15 @@
 #endif
 }
 
-+ (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSString*)contents
++ (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSData*)contents
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
+	NSString* base64Contents = [contents base64EncodedStringWithOptions:kNilOptions];
 	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
 									 activityName, @KEY_NAME_UPLOADED_FILE_NAME,
-									 contents, @KEY_NAME_UPLOADED_FILE_DATA,
+									 base64Contents, @KEY_NAME_UPLOADED_FILE_DATA,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
