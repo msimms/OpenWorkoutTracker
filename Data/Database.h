@@ -138,6 +138,7 @@ public:
 
 	bool CreateActivitySync(const std::string& activityId, const std::string& destination);
 	bool RetrieveSyncDestinationsForActivityId(const std::string& activityId, std::vector<std::string>& destinations);
+	bool RetrieveSyncDestinations(std::map<std::string, std::vector<std::string> >& syncHistory);
 
 	// Methods for storing and retrieving the user's weight measurements.
 

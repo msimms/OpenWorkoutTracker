@@ -148,6 +148,8 @@
 		2728FD2C19C1250E00CE2BAD /* Icon_120px.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2319C1248700CE2BAD /* Icon_120px.png */; };
 		2729853219C8F69900FE0077 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852919C8F69900FE0077 /* InfoPlist.strings */; };
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
+		272E30E925B4BEFC0038AD70 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 272E30E825B4BEFC0038AD70 /* FileUtils.m */; };
+		272E310525B4D32E0038AD70 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 272E30E825B4BEFC0038AD70 /* FileUtils.m */; };
 		2733EDC8250AC7880096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
 		2733EDC9250AEEE70096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
 		2733EDCA250AEEE80096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
@@ -252,7 +254,6 @@
 		27B7CD8C19BFD91C000383E3 /* CrumbPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4719BFD91C000383E3 /* CrumbPath.m */; };
 		27B7CD8D19BFD91C000383E3 /* CrumbPathRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */; };
 		27B7CD8E19BFD91C000383E3 /* DateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4B19BFD91C000383E3 /* DateViewController.m */; };
-		27B7CD9019BFD91C000383E3 /* FollowedByViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */; };
 		27B7CD9119BFD91C000383E3 /* FollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5119BFD91C000383E3 /* FollowingViewController.m */; };
 		27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5519BFD91C000383E3 /* HistoryViewController.m */; };
 		27B7CD9519BFD91C000383E3 /* IntervalEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5919BFD91C000383E3 /* IntervalEditViewController.m */; };
@@ -655,6 +656,8 @@
 		2729852C19C8F69900FE0077 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		2729852F19C8F69900FE0077 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = InfoPlist.strings; sourceTree = "<group>"; };
 		2729853119C8F69900FE0077 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Localizable.strings; sourceTree = "<group>"; };
+		272E30E825B4BEFC0038AD70 /* FileUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FileUtils.m; path = IOS/Utilities/FileUtils.m; sourceTree = SOURCE_ROOT; };
+		272E310125B4BF740038AD70 /* FileUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FileUtils.h; path = IOS/Utilities/FileUtils.h; sourceTree = SOURCE_ROOT; };
 		2733EDC5250AC6F40096D58B /* ZwoTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTypes.h; path = FileLib/ZwoTypes.h; sourceTree = SOURCE_ROOT; };
 		2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZwoFileWriter.cpp; path = FileLib/ZwoFileWriter.cpp; sourceTree = SOURCE_ROOT; };
 		2733EDC7250AC7880096D58B /* ZwoFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileWriter.h; path = FileLib/ZwoFileWriter.h; sourceTree = SOURCE_ROOT; };
@@ -834,8 +837,6 @@
 		27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrumbPathRenderer.m; path = IOS/View/CrumbPathRenderer.m; sourceTree = SOURCE_ROOT; };
 		27B7CD4A19BFD91C000383E3 /* DateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateViewController.h; path = IOS/View/DateViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD4B19BFD91C000383E3 /* DateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateViewController.m; path = IOS/View/DateViewController.m; sourceTree = SOURCE_ROOT; };
-		27B7CD4E19BFD91C000383E3 /* FollowedByViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FollowedByViewController.h; path = IOS/View/FollowedByViewController.h; sourceTree = SOURCE_ROOT; };
-		27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FollowedByViewController.m; path = IOS/View/FollowedByViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5019BFD91C000383E3 /* FollowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FollowingViewController.h; path = IOS/View/FollowingViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD5119BFD91C000383E3 /* FollowingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FollowingViewController.m; path = IOS/View/FollowingViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5419BFD91C000383E3 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryViewController.h; path = IOS/View/HistoryViewController.h; sourceTree = SOURCE_ROOT; };
@@ -1201,8 +1202,6 @@
 				27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */,
 				27B7CD4A19BFD91C000383E3 /* DateViewController.h */,
 				27B7CD4B19BFD91C000383E3 /* DateViewController.m */,
-				27B7CD4E19BFD91C000383E3 /* FollowedByViewController.h */,
-				27B7CD4F19BFD91C000383E3 /* FollowedByViewController.m */,
 				27B7CD5019BFD91C000383E3 /* FollowingViewController.h */,
 				27B7CD5119BFD91C000383E3 /* FollowingViewController.m */,
 				27EAAB30244A39C7000FBFA0 /* GearViewController.h */,
@@ -1267,10 +1266,12 @@
 		2797F13919BFE2B0008F8672 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				2797F13A19BFE2C1008F8672 /* StringUtils.h */,
-				2797F13B19BFE2C1008F8672 /* StringUtils.m */,
+				272E310125B4BF740038AD70 /* FileUtils.h */,
+				272E30E825B4BEFC0038AD70 /* FileUtils.m */,
 				27DCF67C22BD6BE6009A23C2 /* HashUtils.h */,
 				27DCF67922BD6B8F009A23C2 /* HashUtils.m */,
+				2797F13A19BFE2C1008F8672 /* StringUtils.h */,
+				2797F13B19BFE2C1008F8672 /* StringUtils.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -2262,7 +2263,6 @@
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
 				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
 				27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */,
-				27B7CD9019BFD91C000383E3 /* FollowedByViewController.m in Sources */,
 				2704717B216D997000EE47FF /* Peaks.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
 				27B7CDC319BFD953000383E3 /* AccelerometerLine.m in Sources */,
@@ -2280,6 +2280,7 @@
 				27B7CD8A19BFD91C000383E3 /* CorePlotViewController.m in Sources */,
 				27B7CDA319BFD91C000383E3 /* ProfileViewController.m in Sources */,
 				27B7CDC619BFD953000383E3 /* ChartPoint.m in Sources */,
+				272E30E925B4BEFC0038AD70 /* FileUtils.m in Sources */,
 				27B7CDF619BFD99B000383E3 /* BtleFootPod.m in Sources */,
 				27C0845019BFD063007CE934 /* ActivityMgr.mm in Sources */,
 				27C0846019BFD063007CE934 /* SquatAnalyzer.cpp in Sources */,
@@ -2425,6 +2426,7 @@
 				27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */,
 				27DCF65322B72EFA009A23C2 /* TextFileReader.cpp in Sources */,
 				27DCF65422B72EFA009A23C2 /* TextFileReader.h in Sources */,
+				272E310525B4D32E0038AD70 /* FileUtils.m in Sources */,
 				27E3021E24F0A6E000EB5501 /* WorkoutFactory.cpp in Sources */,
 				27AAB9DA2389EC7B00C0A91F /* WatchAboutViewController.m in Sources */,
 				27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */,

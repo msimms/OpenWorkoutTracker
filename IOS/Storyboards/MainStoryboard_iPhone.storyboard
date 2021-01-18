@@ -297,7 +297,6 @@
                         <outlet property="settingsTableView" destination="x1e-he-2zG" id="2f6-Z8-Hh4"/>
                         <outlet property="toolbar" destination="S4t-GJ-X6W" id="Elu-qq-gMk"/>
                         <segue destination="D1T-Mz-I8j" kind="push" identifier="SegueToManageFollowingView" id="ryL-ch-bGW"/>
-                        <segue destination="3D7-f0-elt" kind="push" identifier="SegueToManageFollowedByView" id="Pej-Nh-0Ob"/>
                         <segue destination="BmG-cT-RrP" kind="push" identifier="SegueToLoginView" id="S5h-w5-hLE"/>
                         <segue destination="fWI-Ns-4ZW" kind="push" identifier="SegueToCreateLoginView" id="b76-N6-C00"/>
                     </connections>
@@ -397,7 +396,7 @@
             </objects>
             <point key="canvasLocation" x="2904.8000000000002" y="3691.3043478260875"/>
         </scene>
-        <!--Following-->
+        <!--Friends-->
         <scene sceneID="uW7-nc-mOu">
             <objects>
                 <viewController id="D1T-Mz-I8j" customClass="FollowingViewController" sceneMemberID="viewController">
@@ -416,7 +415,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s8e-Qn-gby">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem title="Request to Follow" id="zsC-p8-eRR">
+                                    <barButtonItem title="Request to Friend" id="zsC-p8-eRR">
                                         <connections>
                                             <action selector="onRequestToFollow:" destination="D1T-Mz-I8j" id="M8v-4N-txl"/>
                                         </connections>
@@ -440,7 +439,7 @@
                             <constraint firstItem="s8e-Qn-gby" firstAttribute="leading" secondItem="XEw-a9-tgz" secondAttribute="leading" id="kz1-d3-81f"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Following" id="pjJ-W1-Kl2"/>
+                    <navigationItem key="navigationItem" title="Friends" id="pjJ-W1-Kl2"/>
                     <connections>
                         <outlet property="usersTableView" destination="cYA-ES-4As" id="WAQ-8d-xcG"/>
                     </connections>
@@ -2379,7 +2378,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="goP-S4-6Sr">
                                 <rect key="frame" x="0.0" y="34" width="414" height="828"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <mutableString key="text">Copyright (c) 2015-2021, by MJ Simms Software, LLC. All rights reserved.
+                                <string key="text">Copyright (c) 2015-2021, by MJ Simms Software, LLC. All rights reserved.
 
 Portions of this application are: Copyright (c) 2014, Drew McCormack, Brad Larson, Eric Skroch, Barry Wark, Dirkjan Krijnders, Rick Maddy, Vijay Kalusani, Caleb Cannon, Jeff Buck, Thomas Elstner, Jeroen Leenarts, Craig Hockenberry, Hartwig Wiesmann, Koen van der Drift, Nino Ag, Mike Lischke, Trevor Harmon, Travis Fischer, Graham Mueller, and Rafał Wójcik. All rights reserved.
 
@@ -2390,7 +2389,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
 1. THE SOFTWARE IS LICENSED, NOT SOLD. YOU ACKNOWLEDGE THAT NO TITLE TO THE INTELLECTUAL PROPERTY IN THE SOFTWARE IS TRANSFERRED TO YOU. YOU FURTHER ACKNOWLEDGE THAT TITLE AND FULL OWNERSHIP RIGHTS TO THE SOFTWARE WILL REMAIN THE EXCLUSIVE PROPERTY OF THE DEVELOPER(S), AND YOU WILL NOT ACQUIRE ANY RIGHTS TO THE SOFTWARE, EXCEPT AS EXPRESSLY SET FORTH ABOVE. THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATY PROVISIONS.
 
 2. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</mutableString>
+</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -2874,49 +2873,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mIL-jz-rh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3751" y="1217"/>
-        </scene>
-        <!--Followers-->
-        <scene sceneID="Kgu-41-app">
-            <objects>
-                <viewController id="3D7-f0-elt" customClass="FollowedByViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="EFz-Zn-Amf">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="XFk-Bf-VQc">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="3D7-f0-elt" id="y2V-Wc-Bzn"/>
-                                    <outlet property="delegate" destination="3D7-f0-elt" id="nUu-x4-Ni6"/>
-                                </connections>
-                            </tableView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ooe-7E-rDW">
-                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
-                                <items/>
-                            </toolbar>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="TCp-Yf-Nga"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="Ooe-7E-rDW" firstAttribute="top" secondItem="XFk-Bf-VQc" secondAttribute="bottom" id="07h-6X-tBI"/>
-                            <constraint firstItem="XFk-Bf-VQc" firstAttribute="leading" secondItem="TCp-Yf-Nga" secondAttribute="leading" id="AQV-JA-I9x"/>
-                            <constraint firstItem="XFk-Bf-VQc" firstAttribute="top" secondItem="TCp-Yf-Nga" secondAttribute="top" id="FIZ-6A-90m"/>
-                            <constraint firstItem="Ooe-7E-rDW" firstAttribute="leading" secondItem="TCp-Yf-Nga" secondAttribute="leading" id="eIc-8X-zv0"/>
-                            <constraint firstItem="Ooe-7E-rDW" firstAttribute="trailing" secondItem="TCp-Yf-Nga" secondAttribute="trailing" id="hbN-Hi-BVk"/>
-                            <constraint firstItem="Ooe-7E-rDW" firstAttribute="bottom" secondItem="TCp-Yf-Nga" secondAttribute="bottom" id="iam-Fw-zYs"/>
-                            <constraint firstItem="XFk-Bf-VQc" firstAttribute="centerX" secondItem="TCp-Yf-Nga" secondAttribute="centerX" id="nEL-dd-fgb"/>
-                            <constraint firstItem="XFk-Bf-VQc" firstAttribute="trailing" secondItem="TCp-Yf-Nga" secondAttribute="trailing" id="pEA-iQ-agu"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Followers" id="Iwr-fM-6fj"/>
-                    <connections>
-                        <outlet property="usersTableView" destination="XFk-Bf-VQc" id="as0-g3-0y0"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="T2o-kx-rzI" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3814.4000000000001" y="4420.3898050974512"/>
         </scene>
         <!--New Shoes-->
         <scene sceneID="P9g-Kw-aKh">

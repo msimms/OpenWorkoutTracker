@@ -71,16 +71,10 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOGGED_OUT object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FOLLOWING_URL].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FRIENDS_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_FOLLOWED_BY_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FOLLOWED_BY_LIST_UPDATED object:downloadedData];
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FRIENDS_LIST_UPDATED object:downloadedData];
 			} );
 		}
 		else if ([urlStr rangeOfString:@REMOTE_API_LIST_GEAR].location != NSNotFound)
@@ -122,6 +116,12 @@
 		else if ([urlStr rangeOfString:@REMOTE_API_UPDATE_PROFILE].location != NSNotFound)
 		{
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_HAS_ACTIVITY].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:downloadedData];
+			} );
+		}
 	}];
 
 	[dataTask resume];
@@ -130,157 +130,231 @@
 #endif
 }
 
-+ (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password
++ (BOOL)serverLogin:(NSString*)username withPassword:(NSString*)password
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
 	[Preferences setBroadcastUserName:username];
 
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-
-	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"password\": \"%@\",", password] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, KEY_NAME_USERNAME,
+									 password, KEY_NAME_PASSWORD,
+									 [Preferences uuid], KEY_NAME_DEVICE,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGIN_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
 #endif
 }
 
-+ (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
++ (BOOL)serverCreateLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
 	[Preferences setBroadcastUserName:username];
 
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-
-	[postData appendData:[[NSString stringWithFormat:@"\"username\": \"%@\",", username] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"password1\": \"%@\",", password1] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"password2\": \"%@\",", password2] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"realname\": \"%@\",", realname] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"device\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, KEY_NAME_USERNAME,
+									 password1, KEY_NAME_PASSWORD1,
+									 password2, KEY_NAME_PASSWORD2,
+									 realname, KEY_NAME_REALNAME,
+									 [Preferences uuid], KEY_NAME_DEVICE,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_LOGIN_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
 #endif
 }
 
-+ (BOOL)serverIsLoggedInAsync
++ (BOOL)serverIsLoggedIn
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_IS_LOGGED_IN_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
 }
 
-+ (BOOL)serverLogoutAsync
++ (BOOL)serverLogout
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LOGOUT_URL];
 	return [self makeRequest:str withMethod:@"POST" withPostData:nil];
+#endif
 }
 
-+ (BOOL)serverListFollowingAsync
++ (BOOL)serverListFriends
 {
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FOLLOWING_URL];
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FRIENDS_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
-}
-
-+ (BOOL)serverListFollowedByAsync
-{
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_FOLLOWED_BY_URL];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
 }
 
 + (BOOL)serverListGear
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_GEAR];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
 }
 
 + (BOOL)serverListPlannedWorkouts
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_WORKOUTS];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
 }
 
 + (BOOL)serverRequestWorkoutDetails:(NSString*)workoutId
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_WORKOUT_DETAILS];
 
-	str = [str stringByAppendingString:[NSString stringWithFormat:@"workout_id=%@&", workoutId]];
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", KEY_NAME_WORKOUT_ID, workoutId]];
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"format=json"]];
 
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
 }
 
-+ (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername
++ (BOOL)serverRequestToFollow:(NSString*)targetUsername
 {
-	NSString* params = [NSString stringWithFormat:@"target_email=%@", targetUsername];
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* params = [NSString stringWithFormat:@"%s=%@", KEY_NAME_TARGET_EMAIL, targetUsername];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_TO_FOLLOW_URL, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
 }
 
-+ (BOOL)serverDeleteActivityAsync:(NSString*)activityId
++ (BOOL)serverDeleteActivity:(NSString*)activityId
 {
-	NSString* params = [NSString stringWithFormat:@"activity_id=%@", activityId];
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* params = [NSString stringWithFormat:@"%s=%@", KEY_NAME_ACTIVITY_ID2, activityId];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_ACTIVITY_URL, escapedParams];
-	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+	return [self makeRequest:str withMethod:@"POST" withPostData:nil];
+#endif
 }
 
-+ (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId
++ (BOOL)serverCreateTag:(NSString*)tag forActivity:(NSString*)activityId
 {
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-
-	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
+									 tag, KEY_NAME_TAG2,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_TAG_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
 }
 
-+ (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId
++ (BOOL)serverDeleteTag:(NSString*)tag forActivity:(NSString*)activityId
 {
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-
-	[postData appendData:[[NSString stringWithFormat:@"\"tag\": \"%@\",", tag] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"\"activity_id\": \"%@\"", activityId] dataUsingEncoding:NSASCIIStringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
+									 tag, KEY_NAME_TAG2,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
 	
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_TAG_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
 }
 
-+ (BOOL)serverClaimDeviceAsync:(NSString*)deviceId
++ (BOOL)serverClaimDevice:(NSString*)deviceId
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 
-	[postData appendData:[[NSString stringWithFormat:@"\"device_id\": \"%@\"", [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", KEY_NAME_DEVICE_ID2, [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CLAIM_DEVICE_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+#endif
 }
 
 + (BOOL)serverSetUserWeight:(NSNumber*)weightKg
 {
+#if OMIT_BROADCAST
+	return FALSE;
+#else
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 
-	[postData appendData:[[NSString stringWithFormat:@"\"weight\": \"%@\"", weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", KEY_NAME_WEIGHT, weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPDATE_PROFILE];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+#endif
+}
+
++ (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_HAS_ACTIVITY];
+
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", KEY_NAME_ACTIVITY_ID2, activityId]];
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", KEY_NAME_ACTIVITY_HASH2, activityHash]];
+
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
+}
+
++ (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSString*)contents
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
+									 activityName, @KEY_NAME_UPLOADED_FILE_NAME,
+									 contents, @KEY_NAME_UPLOADED_FILE_DATA,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPLOAD_ACTIVITY_FILE];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
 }
 
 @end

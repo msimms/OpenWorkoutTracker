@@ -409,11 +409,11 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			std::string hash;
+			std::string tempHash;
 
-			if (g_pDatabase->RetrieveHashForActivityId(activityId, hash))
+			if (g_pDatabase->RetrieveHashForActivityId(activityId, tempHash))
 			{
-				hash = strdup(hash.c_str());
+				hash = strdup(tempHash.c_str());
 			}
 		}
 
@@ -445,25 +445,102 @@ extern "C" {
 	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context)
 	{
 		bool result = false;
+		std::vector<std::string> destinations;
 
 		g_dbLock.lock();
 
 		if (g_pDatabase && context)
 		{
-			std::vector<std::string> destinations;
-
 			result = g_pDatabase->RetrieveSyncDestinationsForActivityId(activityId, destinations);
-			if (result)
+		}
+
+		g_dbLock.unlock();
+
+		//
+		// Trigger the callback for each destination.
+		//
+
+		if (result)
+		{
+			for (auto iter = destinations.begin(); iter != destinations.end(); ++iter)
 			{
-				for (auto iter = destinations.begin(); iter != destinations.end(); ++iter)
+				callback((*iter).c_str(), context);
+			}
+		}
+
+		return result;
+	}
+
+	bool RetrieveActivityIdsNotSynchedToWeb(SyncCallback callback, void* context)
+	{
+		bool result = false;
+		std::vector<std::string> unsyncedIds;
+		std::map<std::string, std::vector<std::string> > syncHistory;
+
+		//
+		// Make sure the historical activity list is initialized.
+		//
+		
+		if (!HistoricalActivityListIsInitialized())
+		{
+			InitializeHistoricalActivityList();
+		}
+
+		//
+		// Build a list of activity IDs.
+		//
+
+		g_historicalActivityLock.lock();
+
+		for (auto activityIter = g_historicalActivityList.begin(); activityIter != g_historicalActivityList.end(); ++activityIter)
+		{
+			const ActivitySummary& summary = (*activityIter);
+			std::vector<std::string> dests;
+
+			syncHistory.insert(std::make_pair(summary.activityId, dests));
+		}
+
+		g_historicalActivityLock.unlock();
+
+		//
+		// Run the activity IDs against the database to get the sync history.
+		//
+		
+		g_dbLock.lock();
+
+		if (g_pDatabase && context)
+		{
+			if (g_pDatabase->RetrieveSyncDestinations(syncHistory))
+			{
+				for (auto iter = syncHistory.begin(); iter != syncHistory.end(); ++iter)
 				{
-					callback((*iter).c_str(), context);
+					const std::string& activityId = (*iter).first;
+					const std::vector<std::string>& activitySyncHistory = (*iter).second;
+					
+					if (std::find(activitySyncHistory.begin(), activitySyncHistory.end(), SYNC_DEST_WEB) == activitySyncHistory.end())
+					{
+						unsyncedIds.push_back(activityId);
+					}
 				}
+				
+				result = true;
 			}
 		}
 
 		g_dbLock.unlock();
+
+		//
+		// Trigger the callback for each unsyched activity ID.
+		//
 		
+		if (result)
+		{
+			for (auto iter = unsyncedIds.begin(); iter != unsyncedIds.end(); ++iter)
+			{
+				callback((*iter).c_str(), context);
+			}
+		}
+
 		return result;
 	}
 
@@ -2859,6 +2936,10 @@ extern "C" {
 
 			if (current.activityId.compare(activityId) == 0)
 			{
+				if (!current.pActivity)
+				{
+					CreateHistoricalActivityObjectById(activityId);
+				}
 				pActivity = current.pActivity;
 				break;
 			}

@@ -76,8 +76,7 @@
 "Enter the amount of weight being used" = "Introduzca la cantidad de peso que se utiliza";
 "Enter the correct number of repetitions" = "Introduce el número de repeticiones";
 "Enter the distance" = "Introduzca la distancia";
-"Enter the email address of the person you would like to follow" = "Introduzca la dirección de correo electrónico de la persona que le gustaría seguir";
-"Enter the email address of the person you would like to invite" = "Introduzca la dirección de correo electrónico de la persona que desea invitar";
+"Enter the email address of the person you would like to friend" = "Ingrese la dirección de correo electrónico de la persona que le gustaría ser amigo";
 "Enter the name you want to use" = "Introduzca el nombre que desea utilizar";
 "Enter the number of reps" = "Introduzca la cantidad de los repeticións";
 "Enter the number of sets" = "Introduzca la cantidad de los series";
@@ -105,6 +104,7 @@
 "Finished" = "Terminado";
 "Fitness" = "Aptitud";
 "Fix Repetition Count" = "Fijar el Número de los Repetición";
+"Friends" = "Amigos";
 "ft" = "pies (de altura)";
 "Gear" = "Equipo";
 "Gender" = "Sexo";
@@ -187,8 +187,6 @@
 "Overview" = "Visión de Conjunto";
 "Pace Plans" = "Planes de Ritmo";
 "Pause" = "Pausa";
-"People Following Me" = "Personas Siguiéndome";
-"People I'm Following" = "Gente que Sigo";
 "Please enter your FTP" = "Por favor ingrese su FTP";
 "Please enter your height" = "Por favor ingrese su altura";
 "Please enter your weight" = "Por favor ingrese su peso";

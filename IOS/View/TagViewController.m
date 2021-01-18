@@ -183,7 +183,7 @@
 		{
 			[self->tags removeObjectAtIndex:indexPath.row];
 			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-			[appDelegate serverDeleteTagAsync:tag forActivity:self->activityId];
+			[appDelegate serverDeleteTag:tag forActivity:self->activityId];
 		}
 	}
 }
@@ -222,7 +222,7 @@
 
 	if ([appDelegate storeTag:tag forActivityId:self->activityId])
 	{
-		[appDelegate serverCreateTagAsync:tag forActivity:self->activityId];
+		[appDelegate serverCreateTag:tag forActivity:self->activityId];
 	}
 }
 

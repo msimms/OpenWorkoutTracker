@@ -52,6 +52,7 @@ extern "C" {
 	// Methods for managing activity sync status.
 	bool CreateActivitySync(const char* const activityId, const char* const destination);
 	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context);
+	bool RetrieveActivityIdsNotSynchedToWeb(SyncCallback callback, void* context);
 
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);

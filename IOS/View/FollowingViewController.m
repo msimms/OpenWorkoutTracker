@@ -11,7 +11,7 @@
 #import "Notifications.h"
 
 #define ALERT_TITLE_REQUEST NSLocalizedString(@"Request", nil)
-#define ALERT_MSG_REQUEST   NSLocalizedString(@"Enter the email address of the person you would like to follow", nil)
+#define ALERT_MSG_REQUEST   NSLocalizedString(@"Enter the email address of the person you would like to friend", nil)
 
 @interface FollowingViewController ()
 
@@ -32,11 +32,11 @@
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userListUpdated:) name:@NOTIFICATION_NAME_FOLLOWING_LIST_UPDATED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestResult:) name:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userListUpdated:) name:@NOTIFICATION_NAME_FRIENDS_LIST_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestToFollowResult:) name:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:nil];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate serverListFollowingAsync];
+	[appDelegate serverListFriends];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -72,7 +72,7 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		UITextField* field = alertController.textFields.firstObject;
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate serverRequestToFollowAsync:[field text]];
+		[appDelegate serverRequestToFollow:[field text]];
 	}]];
 
 	// Show the action sheet.
@@ -85,9 +85,9 @@
 {
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
-	NSString* responseDataStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
 
-	if ([responseCode intValue] == 200)
+	if (responseCode && [responseCode intValue] == 200)
 	{
 		@synchronized(self->users)
 		{
@@ -97,22 +97,22 @@
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:responseDataStr];
+		[super showOneButtonAlert:STR_ERROR withMsg:responseStr];
 	}
 }
 
-- (void)requestResult:(NSNotification*)notification
+- (void)requestToFollowResult:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
-	NSString* responseDataStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
 
-	if ([responseCode intValue] == 200)
+	if (responseCode && [responseCode intValue] == 200)
 	{
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:responseDataStr];
+		[super showOneButtonAlert:STR_ERROR withMsg:responseStr];
 	}
 }
 

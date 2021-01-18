@@ -162,7 +162,7 @@
 		self->username = self.usernameTextField.text;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate serverCreateLoginAsync:self.usernameTextField.text withPassword:self.passwordTextField.text withConfirmation:self.confirmPasswordTextField.text withRealName:self.realNameTextField.text];
+		[appDelegate serverCreateLogin:self.usernameTextField.text withPassword:self.passwordTextField.text withConfirmation:self.confirmPasswordTextField.text withRealName:self.realNameTextField.text];
 	}
 }
 

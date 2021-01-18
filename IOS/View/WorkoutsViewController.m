@@ -164,7 +164,7 @@
 					cell.textLabel.text = @"Hill Repeats";
 					break;
 				case WORKOUT_TYPE_FARTLEK_RUN:
-					cell.textLabel.text = @"Fartklek Session";
+					cell.textLabel.text = @"Fartlek Session";
 					break;
 				case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
 					cell.textLabel.text = @"Middle Distance Run";

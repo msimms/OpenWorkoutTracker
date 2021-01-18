@@ -19,6 +19,7 @@
 #import "BtleHeartRateMonitor.h"
 #import "BtlePowerMeter.h"
 #import "BtleScale.h"
+#import "FileUtils.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
 #import "Preferences.h"
@@ -98,6 +99,7 @@
 	self->currentlyImporting = FALSE;
 	self->badGps = FALSE;
 	self->currentActivityIndex = 0;
+	self->lastServerSync = 0;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
@@ -110,11 +112,13 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryLevelUpdated:) name:@NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL object:nil];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginProcessed:) name:@NOTIFICATION_NAME_LOGIN_PROCESSED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(workoutUpdated:) name:@NOTIFICATION_NAME_WORKOUT_UPDATED object:nil];
- 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleHasActivityResponse:) name:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:nil];
+
 	[self startInteralTimer];
 
 	return YES;
@@ -138,7 +142,7 @@
 	// If logged in, query the server for pertinent information.
 	if ([self isFeaturePresent:FEATURE_BROADCAST])
 	{
-		[self serverIsLoggedInAsync];
+		[self serverIsLoggedIn];
 	}
 }
 
@@ -946,6 +950,38 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for handling responses from the server
 
+- (void)syncWithServer
+{
+	// Rate limit the server synchronizations. Let's not be spammy.
+	if (time(NULL) - self->lastServerSync > 60)
+	{
+		[self serverListFriends];
+		[self serverListGear];
+		[self serverListPlannedWorkouts];
+		[self sendMissingActivitiesToServer];
+
+		self->lastServerSync = time(NULL);
+	}
+}
+
+- (void)loginProcessed:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* loginData = [notification object];
+		NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
+
+		// The user is logged in, request the most recent gear list and planned workout list.
+		if (responseCode && [responseCode intValue] == 200)
+		{
+			[self syncWithServer];
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
 - (void)loginChecked:(NSNotification*)notification
 {
 	@try
@@ -956,8 +992,7 @@ void startSensorCallback(SensorType type, void* context)
 		// The user is logged in, request the most recent gear list and planned workout list.
 		if (responseCode && [responseCode intValue] == 200)
 		{
-			[self serverListGear];
-			[self serverListPlannedWorkouts];
+			[self syncWithServer];
 		}
 	}
 	@catch (...)
@@ -1676,7 +1711,6 @@ void startSensorCallback(SensorType type, void* context)
 - (NSString*)getActivityHash:(NSString*)activityId
 {
 	NSString* result = nil;
-
 	char* activityHash = GetHashForActivityId([activityId UTF8String]);
 
 	if (activityHash)
@@ -1719,11 +1753,13 @@ void startSensorCallback(SensorType type, void* context)
 	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
 }
 
+// Callback used by retrieveSyncDestinationsForActivityId
 void syncStatusCallback(const char* const destination, void* context)
 {
 	if (context)
 	{
 		NSMutableArray* destList = (__bridge NSMutableArray*)context;
+
 		[destList addObject:[[NSString alloc] initWithFormat:@"%s", destination]];
 	}
 }
@@ -1737,6 +1773,108 @@ void syncStatusCallback(const char* const destination, void* context)
 		RetrieveSyncDestinationsForActivityId([activityId UTF8String], syncStatusCallback, (__bridge void*)destinations);
 	}
 	return destinations;
+}
+
+- (void)sendActivityToServer:(NSString*)activityId
+{
+	// Export the activity to a temp file.
+	NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
+
+	if (exportedFileName)
+	{
+		// Fetch the activity name.
+		NSString* activityName = [self getActivityName:activityId];
+
+		// Read the entire file.
+		NSString* fileContents = [FileUtils readEntireFile:exportedFileName];
+		
+		// Send to the server.
+		if (![ApiClient sendActivityToServer:activityId withName:activityName withContents:fileContents])
+		{
+			NSLog(@"Failed to upload activity ID %@ to the server.", activityId);
+		}
+
+		// Remove the temp file.
+		BOOL tempFileDeleted = [FileUtils deleteFile:exportedFileName];
+		if (!tempFileDeleted)
+		{
+			NSLog(@"Failed to delete temp file %@.", exportedFileName);
+		}
+	}
+	else
+	{
+		NSLog(@"Error when exporting an activity to send to the server.");
+	}
+}
+
+- (void)handleHasActivityResponse:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* responseObj = [notification object];
+		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+
+		if (responseCode && [responseCode intValue] == 200)
+		{
+			NSError* error = nil;
+			NSDictionary* responseObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+			if (responseObjects)
+			{
+				NSNumber* code = [responseObjects objectForKey:@KEY_NAME_CODE];
+				NSString* activityId = [responseObjects objectForKey:@KEY_NAME_ACTIVITY_ID2];
+
+				if (code && activityId)
+				{
+					switch ([code intValue])
+					{
+					case 0: // Server does not have activity
+						[self sendActivityToServer:activityId];
+						break;
+					case 1: // Server has activity, but the hash does not match.
+						break;
+					case 2: // Server has the activity and the hash is the same.
+						break;
+					}
+				}
+			}
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+void unsynchedActivitiesCallback(const char* const activityId, void* context)
+{
+	if (context)
+	{
+		NSMutableArray* activityIdList = (__bridge NSMutableArray*)context;
+		[activityIdList addObject:[[NSString alloc] initWithFormat:@"%s", activityId]];
+	}
+}
+
+- (void)sendMissingActivitiesToServer
+{
+	NSMutableArray* activityIds = [[NSMutableArray alloc] init];
+
+	// List activities that haven't been synched to the server.
+	if (RetrieveActivityIdsNotSynchedToWeb(unsynchedActivitiesCallback, (__bridge void*)activityIds))
+	{
+		// For each activity that isn't listed as being synced to the web, offer it to the web server.
+		for (NSString* activityId in activityIds)
+		{
+			char* activityHash = GetHashForActivityId([activityId UTF8String]);
+
+			if (activityHash)
+			{
+				// Ask the server if it wants this activity. Response is handled by handleHasActivityResponse.
+				[ApiClient serverHasActivity:activityId withHash:[[NSString alloc] initWithUTF8String:activityHash]];
+				free((void*)activityHash);
+			}
+		}
+	}
 }
 
 #pragma mark methods for managing bike profiles
@@ -1826,6 +1964,7 @@ void syncStatusCallback(const char* const destination, void* context)
 	if (mySoundUrl)
 	{
 		SystemSoundID mySoundId;
+
 		AudioServicesCreateSystemSoundID((__bridge CFURLRef)mySoundUrl, &mySoundId);
 		AudioServicesPlaySystemSound(mySoundId);
 	}
@@ -2479,34 +2618,29 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark server api client methods
 
-- (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password
+- (BOOL)serverLogin:(NSString*)username withPassword:(NSString*)password
 {
-	return [ApiClient serverLoginAsync:username withPassword:password];
+	return [ApiClient serverLogin:username withPassword:password];
 }
 
-- (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
+- (BOOL)serverCreateLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
-	return [ApiClient serverCreateLoginAsync:username withPassword:password1 withConfirmation:password2 withRealName:realname];
+	return [ApiClient serverCreateLogin:username withPassword:password1 withConfirmation:password2 withRealName:realname];
 }
 
-- (BOOL)serverIsLoggedInAsync
+- (BOOL)serverIsLoggedIn
 {
-	return [ApiClient serverIsLoggedInAsync];
+	return [ApiClient serverIsLoggedIn];
 }
 
-- (BOOL)serverLogoutAsync
+- (BOOL)serverLogout
 {
-	return [ApiClient serverLogoutAsync];
+	return [ApiClient serverLogout];
 }
 
-- (BOOL)serverListFollowingAsync
+- (BOOL)serverListFriends
 {
-	return [ApiClient serverListFollowingAsync];
-}
-
-- (BOOL)serverListFollowedByAsync
-{
-	return [ApiClient serverListFollowedByAsync];
+	return [ApiClient serverListFriends];
 }
 
 - (BOOL)serverListGear
@@ -2524,29 +2658,29 @@ void attributeNameCallback(const char* name, void* context)
 	return [ApiClient serverRequestWorkoutDetails:workoutId];
 }
 
-- (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername
+- (BOOL)serverRequestToFollow:(NSString*)targetUsername
 {
-	return [ApiClient serverRequestToFollowAsync:targetUsername];
+	return [ApiClient serverRequestToFollow:targetUsername];
 }
 
-- (BOOL)serverDeleteActivityAsync:(NSString*)activityId
+- (BOOL)serverDeleteActivity:(NSString*)activityId
 {
-	return [ApiClient serverDeleteActivityAsync:activityId];
+	return [ApiClient serverDeleteActivity:activityId];
 }
 
-- (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId
+- (BOOL)serverCreateTag:(NSString*)tag forActivity:(NSString*)activityId
 {
-	return [ApiClient serverCreateTagAsync:tag forActivity:activityId];
+	return [ApiClient serverCreateTag:tag forActivity:activityId];
 }
 
-- (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId
+- (BOOL)serverDeleteTag:(NSString*)tag forActivity:(NSString*)activityId
 {
-	return [ApiClient serverDeleteTagAsync:tag forActivity:activityId];
+	return [ApiClient serverDeleteTag:tag forActivity:activityId];
 }
 
-- (BOOL)serverClaimDeviceAsync:(NSString*)deviceId
+- (BOOL)serverClaimDevice:(NSString*)deviceId
 {
-	return [ApiClient serverClaimDeviceAsync:deviceId];
+	return [ApiClient serverClaimDevice:deviceId];
 }
 
 #pragma mark reset methods
@@ -2565,7 +2699,7 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)registerWatch:(NSString*)deviceId
 {
-	[self serverClaimDeviceAsync:deviceId];
+	[self serverClaimDevice:deviceId];
 }
 
 // Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.

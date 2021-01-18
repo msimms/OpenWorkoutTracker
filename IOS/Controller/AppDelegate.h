@@ -40,6 +40,7 @@
 	BOOL                 badGps; // TRUE if we're getting location data that doesn't look good.
 	BOOL                 currentlyImporting; // TRUE if currently importing an activity (like from the watch, for example).
 	size_t               currentActivityIndex; // Used when iterating over historical activities.
+	time_t               lastServerSync; // Timestamp of the last time we synchronized with the server (if logged in, of course).
 }
 
 - (NSString*)getDeviceId;
@@ -273,16 +274,15 @@
 // These methods are used to interact with the server. The app should still function, in all but the obvious ways,
 // if server communications are disabled (which should be the default).
 
-- (BOOL)serverLoginAsync:(NSString*)username withPassword:(NSString*)password;
-- (BOOL)serverCreateLoginAsync:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
-- (BOOL)serverIsLoggedInAsync;
-- (BOOL)serverLogoutAsync;
-- (BOOL)serverListFollowingAsync;
-- (BOOL)serverListFollowedByAsync;
-- (BOOL)serverRequestToFollowAsync:(NSString*)targetUsername;
-- (BOOL)serverDeleteActivityAsync:(NSString*)activityId;
-- (BOOL)serverCreateTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
-- (BOOL)serverDeleteTagAsync:(NSString*)tag forActivity:(NSString*)activityId;
+- (BOOL)serverLogin:(NSString*)username withPassword:(NSString*)password;
+- (BOOL)serverCreateLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
+- (BOOL)serverIsLoggedIn;
+- (BOOL)serverLogout;
+- (BOOL)serverListFriends;
+- (BOOL)serverRequestToFollow:(NSString*)targetUsername;
+- (BOOL)serverDeleteActivity:(NSString*)activityId;
+- (BOOL)serverCreateTag:(NSString*)tag forActivity:(NSString*)activityId;
+- (BOOL)serverDeleteTag:(NSString*)tag forActivity:(NSString*)activityId;
 
 // reset methods
 

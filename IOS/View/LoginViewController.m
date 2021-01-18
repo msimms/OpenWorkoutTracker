@@ -128,7 +128,7 @@
 		self->username = self.usernameTextField.text;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		if (![appDelegate serverLoginAsync:self.usernameTextField.text withPassword:self.passwordTextField.text])
+		if (![appDelegate serverLogin:self.usernameTextField.text withPassword:self.passwordTextField.text])
 		{
 			[self.spinner stopAnimating];
 			[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOGIN_FAILED];

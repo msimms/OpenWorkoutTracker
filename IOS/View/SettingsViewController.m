@@ -44,8 +44,7 @@ typedef enum SettingsRowsBroadcast
 	SETTINGS_ROW_BROADCAST_PROTOCOL,
 	SETTINGS_ROW_BROADCAST_HOST,
 	SETTINGS_ROW_BROADCAST_SHOW_ICON,
-	SETTINGS_ROW_MANAGE_FOLLOWING,
-	SETTINGS_ROW_MANAGE_FOLLOWED_BY,
+	SETTINGS_ROW_FRIENDS,
 	SETTINGS_ROW_DEVICE_ID,
 	NUM_SETTINGS_ROWS_BROADCAST
 } SettingsRowsBroadcast;
@@ -71,8 +70,7 @@ typedef enum SettingsRowsHealthKit
 #define BROADCAST_HOST                 NSLocalizedString(@"Broadcast Server", nil)
 #define BROADCAST_SHOW_ICON            NSLocalizedString(@"Show Broadcast Icon", nil)
 #define BROADCAST_UNITS                NSLocalizedString(@"Seconds", nil)
-#define MANAGE_FOLLOWING               NSLocalizedString(@"People I'm Following", nil)
-#define MANAGE_FOLLOWED_BY             NSLocalizedString(@"People Following Me", nil)
+#define FRIENDS                        NSLocalizedString(@"Friends", nil)
 #define DEVICE_ID                      NSLocalizedString(@"Device ID", nil)
 #define BUTTON_TITLE_COPY              NSLocalizedString(@"Copy", nil)
 #define HEALTHKIT                      NSLocalizedString(@"HealthKit", nil)
@@ -133,7 +131,7 @@ typedef enum SettingsRowsHealthKit
 
 	if ([appDelegate isFeaturePresent:FEATURE_BROADCAST])
 	{
-		[appDelegate serverIsLoggedInAsync];
+		[appDelegate serverIsLoggedIn];
 	}
 }
 
@@ -459,8 +457,7 @@ typedef enum SettingsRowsHealthKit
 
 				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
 					(row != SETTINGS_ROW_BROADCAST_HOST) &&
-					(row != SETTINGS_ROW_MANAGE_FOLLOWING) &&
-					(row != SETTINGS_ROW_MANAGE_FOLLOWED_BY) &&
+					(row != SETTINGS_ROW_FRIENDS) &&
 					(row != SETTINGS_ROW_DEVICE_ID))	// these rows don't get toggle switches
 				{
 					cell.accessoryView = switchview;
@@ -496,12 +493,8 @@ typedef enum SettingsRowsHealthKit
 						[switchview setOn:[Preferences broadcastShowIcon]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
-					case SETTINGS_ROW_MANAGE_FOLLOWING:
-						cell.textLabel.text = MANAGE_FOLLOWING;
-						cell.detailTextLabel.text = @"";
-						break;
-					case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
-						cell.textLabel.text = MANAGE_FOLLOWED_BY;
+					case SETTINGS_ROW_FRIENDS:
+						cell.textLabel.text = FRIENDS;
 						cell.detailTextLabel.text = @"";
 						break;
 					case SETTINGS_ROW_DEVICE_ID:
@@ -539,8 +532,7 @@ typedef enum SettingsRowsHealthKit
 				case SETTINGS_ROW_BROADCAST_HOST:
 				case SETTINGS_ROW_BROADCAST_SHOW_ICON:
 					break;
-				case SETTINGS_ROW_MANAGE_FOLLOWING:
-				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
+				case SETTINGS_ROW_FRIENDS:
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					break;
 				case SETTINGS_ROW_DEVICE_ID:
@@ -581,11 +573,8 @@ typedef enum SettingsRowsHealthKit
 					break;
 				case SETTINGS_ROW_BROADCAST_SHOW_ICON:
 					break;
-				case SETTINGS_ROW_MANAGE_FOLLOWING:
-					[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWING_VIEW sender:self];
-					break;
-				case SETTINGS_ROW_MANAGE_FOLLOWED_BY:
-					[self performSegueWithIdentifier:@SEGUE_TO_MANAGE_FOLLOWED_BY_VIEW sender:self];
+				case SETTINGS_ROW_FRIENDS:
+					[self performSegueWithIdentifier:@SEGUE_TO_FRIENDS_VIEW sender:self];
 					break;
 				case SETTINGS_ROW_DEVICE_ID:
 					break;
@@ -653,7 +642,7 @@ typedef enum SettingsRowsHealthKit
 	if ([[self.loginButton title] caseInsensitiveCompare:STR_LOGOUT] == NSOrderedSame)
 	{
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate serverLogoutAsync];
+		[appDelegate serverLogout];
 	}
 	else
 	{

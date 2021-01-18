@@ -888,7 +888,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 		{
 			[self saveRunningWorkoutIntoHealthStore:[distance doubleValue] withStartDate:startDate withEndDate:endDate];
 		}
-		
+
 		[self saveCaloriesBurnedIntoHealthStore:[calories doubleValue] withStartDate:startDate withEndDate:endDate];
 	}
 }

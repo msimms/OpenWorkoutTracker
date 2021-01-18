@@ -1644,7 +1644,7 @@ bool Database::RetrieveSyncDestinationsForActivityId(const std::string& activity
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select hash from activity_sync where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select destination from activity_sync where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
@@ -1655,6 +1655,39 @@ bool Database::RetrieveSyncDestinationsForActivityId(const std::string& activity
 				result = true;
 			}
 		}
+
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveSyncDestinations(std::map<std::string, std::vector<std::string> >& syncHistory)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select activity_id, destination from activity_sync", -1, &statement, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			std::string activityId = (const char*)sqlite3_column_text(statement, 0);
+			std::string destination = (const char*)sqlite3_column_text(statement, 1);
+
+			if (syncHistory.find(activityId) == syncHistory.end())
+			{
+				std::vector<std::string> dests;
+
+				dests.push_back(destination);
+				syncHistory.insert(std::make_pair(activityId, dests));
+			}
+			else
+			{
+				std::vector<std::string>& dests = syncHistory.at(activityId);
+
+				dests.push_back(destination);
+			}
+		}
+		result = true;
 
 		sqlite3_finalize(statement);
 	}
