@@ -11,6 +11,7 @@
 @interface WatchSessionManager : NSObject<WCSessionDelegate>
 {
 	WCSession* watchSession; // Handles communication between the watch and the phone
+	time_t lastPhoneSync; // Timestamp of the last time we synchronized with the phone
 }
 
 - (void)startWatchSession;

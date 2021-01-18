@@ -23,6 +23,7 @@
 	self->watchSession = [WCSession defaultSession];
 	self->watchSession.delegate = self;
 	[self->watchSession activateSession];
+	self->lastPhoneSync = 0;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 }
@@ -171,10 +172,16 @@
 {
 	if (session.reachable)
 	{
-		[self sendRegisterDeviceMsg];
-		[self checkIfActivitiesAreUploaded];
-		[self requestIntervalWorkouts];
-		[self requestPacePlans];
+		// Rate limit the server synchronizations. Let's not be spammy.
+		if (time(NULL) - self->lastPhoneSync > 60)
+		{
+			[self sendRegisterDeviceMsg];
+			[self checkIfActivitiesAreUploaded];
+			[self requestIntervalWorkouts];
+			[self requestPacePlans];
+			
+			self->lastPhoneSync = time(NULL);
+		}
 	}
 }
 
