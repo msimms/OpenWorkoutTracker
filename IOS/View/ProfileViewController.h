@@ -7,17 +7,16 @@
 
 #import "CommonViewController.h"
 #import "BikeProfileViewController.h"
-#import "DateViewController.h"
 
 @interface ProfileViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UITableView* profileTableView;
-	IBOutlet UIToolbar*   toolbar;
-
-	DateViewController* dateVC;
+	IBOutlet UITableView*  profileTableView;
+	IBOutlet UIToolbar*    toolbar;
+	IBOutlet UIDatePicker* datePicker;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView* profileTableView;
 @property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
+@property (nonatomic, retain) IBOutlet UIDatePicker* datePicker;
 
 @end

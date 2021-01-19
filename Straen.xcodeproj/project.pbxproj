@@ -253,7 +253,6 @@
 		27B7CD8B19BFD91C000383E3 /* CreateLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4519BFD91C000383E3 /* CreateLoginViewController.m */; };
 		27B7CD8C19BFD91C000383E3 /* CrumbPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4719BFD91C000383E3 /* CrumbPath.m */; };
 		27B7CD8D19BFD91C000383E3 /* CrumbPathRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */; };
-		27B7CD8E19BFD91C000383E3 /* DateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD4B19BFD91C000383E3 /* DateViewController.m */; };
 		27B7CD9119BFD91C000383E3 /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5119BFD91C000383E3 /* FriendsViewController.m */; };
 		27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5519BFD91C000383E3 /* HistoryViewController.m */; };
 		27B7CD9519BFD91C000383E3 /* IntervalEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5919BFD91C000383E3 /* IntervalEditViewController.m */; };
@@ -835,8 +834,6 @@
 		27B7CD4719BFD91C000383E3 /* CrumbPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrumbPath.m; path = IOS/View/CrumbPath.m; sourceTree = SOURCE_ROOT; };
 		27B7CD4819BFD91C000383E3 /* CrumbPathRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CrumbPathRenderer.h; path = IOS/View/CrumbPathRenderer.h; sourceTree = SOURCE_ROOT; };
 		27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CrumbPathRenderer.m; path = IOS/View/CrumbPathRenderer.m; sourceTree = SOURCE_ROOT; };
-		27B7CD4A19BFD91C000383E3 /* DateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateViewController.h; path = IOS/View/DateViewController.h; sourceTree = SOURCE_ROOT; };
-		27B7CD4B19BFD91C000383E3 /* DateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateViewController.m; path = IOS/View/DateViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5019BFD91C000383E3 /* FriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendsViewController.h; path = IOS/View/FriendsViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD5119BFD91C000383E3 /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendsViewController.m; path = IOS/View/FriendsViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5419BFD91C000383E3 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryViewController.h; path = IOS/View/HistoryViewController.h; sourceTree = SOURCE_ROOT; };
@@ -1200,8 +1197,6 @@
 				27B7CD4719BFD91C000383E3 /* CrumbPath.m */,
 				27B7CD4819BFD91C000383E3 /* CrumbPathRenderer.h */,
 				27B7CD4919BFD91C000383E3 /* CrumbPathRenderer.m */,
-				27B7CD4A19BFD91C000383E3 /* DateViewController.h */,
-				27B7CD4B19BFD91C000383E3 /* DateViewController.m */,
 				27B7CD5019BFD91C000383E3 /* FriendsViewController.h */,
 				27B7CD5119BFD91C000383E3 /* FriendsViewController.m */,
 				27EAAB30244A39C7000FBFA0 /* GearViewController.h */,
@@ -2324,7 +2319,6 @@
 				27C0845319BFD063007CE934 /* Cycling.cpp in Sources */,
 				276D5B021AA16A7D008F55AF /* Strava.m in Sources */,
 				27B7CD9D19BFD91C000383E3 /* MapOverviewViewController.m in Sources */,
-				27B7CD8E19BFD91C000383E3 /* DateViewController.m in Sources */,
 				27B7CDF219BFD99B000383E3 /* Accelerometer.m in Sources */,
 				2772FEAC2503DFD300ED9F2A /* BikePlanGenerator.cpp in Sources */,
 				275214C119BFDBB8006D9877 /* main.m in Sources */,

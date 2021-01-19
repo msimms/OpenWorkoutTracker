@@ -14,7 +14,6 @@
 #define SEGUE_TO_CORE_PLOT_VIEW              "SegueToCorePlotView"
 #define SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE "SegueToCorePlotViewFromProfile"
 #define SEGUE_TO_CREATE_LOGIN_VIEW           "SegueToCreateLoginView"
-#define SEGUE_TO_DATE_VIEW                   "SegueToDatePickerViewController"
 #define SEGUE_TO_DROPBOX_VIEW                "SegueToDropboxView"
 #define SEGUE_TO_FRIENDS_VIEW                "SegueToManageFriendsView"
 #define SEQUE_TO_HISTORY_VIEW                "SegueToHistoryView"

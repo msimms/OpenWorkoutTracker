@@ -7,7 +7,6 @@
 
 #import "CommonViewController.h"
 #import "BikeProfileViewController.h"
-#import "DateViewController.h"
 #import "ShoeProfileViewController.h"
 
 @interface GearViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>

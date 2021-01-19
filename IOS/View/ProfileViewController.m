@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "CorePlotViewController.h"
-#import "DateViewController.h"
 #import "Segues.h"
 #import "StringUtils.h"
 #import "WeightLine.h"
@@ -55,6 +54,7 @@ typedef enum ProfilePerformanceRows
 
 @synthesize profileTableView;
 @synthesize toolbar;
+@synthesize datePicker;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -69,21 +69,10 @@ typedef enum ProfilePerformanceRows
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
-}
 
-- (void)viewWillAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-
-	if (self->dateVC)
-	{
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		NSDate* dateObj = [[self->dateVC datePicker] date];
-		[appDelegate setUserBirthDate:dateObj];
-		self->dateVC = NULL;
-	}
-
-	[super viewWillAppear:animated];
+	[self.datePicker setHidden:TRUE];
+	[self.datePicker setDatePickerMode:UIDatePickerModeDate];
+	[self.datePicker addTarget:self action:@selector(updateLabel:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -109,22 +98,12 @@ typedef enum ProfilePerformanceRows
 
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* segueId = [segue identifier];
 
-	if ([segueId isEqualToString:@SEGUE_TO_DATE_VIEW])
-	{
-		self->dateVC = (DateViewController*)[segue destinationViewController];
-		if (self->dateVC)
-		{
-			struct tm dateStruct = [appDelegate userBirthDate];
-			NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:mktime(&dateStruct)];
-			[self->dateVC setInitialValue:dateObj];
-		}
-	}
-	else if ([segueId isEqualToString:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE])
+	if ([segueId isEqualToString:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE])
 	{
 		CorePlotViewController* plotVC = (CorePlotViewController*)[segue destinationViewController];
+
 		if (plotVC)
 		{
 			WeightLine* line = [[WeightLine alloc] init];
@@ -134,6 +113,16 @@ typedef enum ProfilePerformanceRows
 			[plotVC setTitle:STR_WEIGHT];
 		}
 	}
+}
+
+#pragma mark methods for getting the result from the UIPickerView
+
+- (void)updateLabel:(id)sender
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSDate* newDate = [self.datePicker date];
+
+	[appDelegate setUserBirthDate:newDate];
 }
 
 #pragma mark 
@@ -156,6 +145,16 @@ typedef enum ProfilePerformanceRows
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
+- (void)showDatePicker
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	struct tm dateStruct = [appDelegate userBirthDate];
+	NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:mktime(&dateStruct)];
+	[self.datePicker setDate:dateObj];
+
+	[self.datePicker setHidden:FALSE];
+}
+
 - (void)showHeightDialog
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_HEIGHT
@@ -164,6 +163,7 @@ typedef enum ProfilePerformanceRows
 
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 		textField.placeholder = [[NSString alloc] initWithFormat:@"%0.1f", [appDelegate userHeight]];
 		textField.keyboardType = UIKeyboardTypeNumberPad;
 	}];
@@ -178,6 +178,7 @@ typedef enum ProfilePerformanceRows
 		if (height > (double)0.0)
 		{
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 			[appDelegate setUserHeight:height];
 			[self.profileTableView reloadData];
 		}
@@ -369,7 +370,7 @@ typedef enum ProfilePerformanceRows
 				[self showGenderDialog];
 				break;
 			case ROW_BIRTHDATE:
-				[self performSegueWithIdentifier:@SEGUE_TO_DATE_VIEW sender:self];
+				[self showDatePicker];
 				break;
 			case ROW_HEIGHT:
 				[self showHeightDialog];
