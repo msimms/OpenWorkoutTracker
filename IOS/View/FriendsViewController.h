@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "CommonViewController.h"
 
-@interface FollowingViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate>
+@interface FriendsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate>
 {
 	IBOutlet UITableView* usersTableView;
 	NSMutableArray*       users;

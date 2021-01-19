@@ -5,7 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "FollowingViewController.h"
+#import "FriendsViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "Notifications.h"
@@ -13,11 +13,11 @@
 #define ALERT_TITLE_REQUEST NSLocalizedString(@"Request", nil)
 #define ALERT_MSG_REQUEST   NSLocalizedString(@"Enter the email address of the person you would like to friend", nil)
 
-@interface FollowingViewController ()
+@interface FriendsViewController ()
 
 @end
 
-@implementation FollowingViewController
+@implementation FriendsViewController
 
 @synthesize usersTableView;
 

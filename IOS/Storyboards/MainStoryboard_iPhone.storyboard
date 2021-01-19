@@ -296,7 +296,7 @@
                         <outlet property="loginButton" destination="8Ex-Uv-xhw" id="YaU-Kb-Ue7"/>
                         <outlet property="settingsTableView" destination="x1e-he-2zG" id="2f6-Z8-Hh4"/>
                         <outlet property="toolbar" destination="S4t-GJ-X6W" id="Elu-qq-gMk"/>
-                        <segue destination="D1T-Mz-I8j" kind="push" identifier="SegueToManageFollowingView" id="ryL-ch-bGW"/>
+                        <segue destination="D1T-Mz-I8j" kind="push" identifier="SegueToManageFriendsView" id="ryL-ch-bGW"/>
                         <segue destination="BmG-cT-RrP" kind="push" identifier="SegueToLoginView" id="S5h-w5-hLE"/>
                         <segue destination="fWI-Ns-4ZW" kind="push" identifier="SegueToCreateLoginView" id="b76-N6-C00"/>
                     </connections>
@@ -399,7 +399,7 @@
         <!--Friends-->
         <scene sceneID="uW7-nc-mOu">
             <objects>
-                <viewController id="D1T-Mz-I8j" customClass="FollowingViewController" sceneMemberID="viewController">
+                <viewController id="D1T-Mz-I8j" customClass="FriendsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="03z-9H-kv1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
