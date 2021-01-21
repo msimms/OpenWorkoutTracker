@@ -12,6 +12,8 @@
 + (BOOL)serverListFriends;
 + (BOOL)serverListGear;
 + (BOOL)serverListPlannedWorkouts;
++ (BOOL)serverListIntervalWorkouts;
++ (BOOL)serverListPacePlans;
 + (BOOL)serverRequestWorkoutDetails:(NSString*)workoutId;
 + (BOOL)serverRequestToFollow:(NSString*)targetUsername;
 + (BOOL)serverDeleteActivity:(NSString*)activityId;

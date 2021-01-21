@@ -116,7 +116,9 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(workoutUpdated:) name:@NOTIFICATION_NAME_WORKOUT_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleHasActivityResponse:) name:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:nil];
 
 	[self startInteralTimer];
@@ -950,6 +952,8 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for handling responses from the server
 
+// Request the latest of everything from the server.
+// Also, send the server anything it is missing as well.
 - (void)syncWithServer
 {
 	// Rate limit the server synchronizations. Let's not be spammy.
@@ -957,12 +961,15 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		[self serverListGear];
 		[self serverListPlannedWorkouts];
+		[self serverListIntervalWorkouts];
+		[self serverListPacePlans];
 		[self sendMissingActivitiesToServer];
 
 		self->lastServerSync = time(NULL);
 	}
 }
 
+// Called when the server responds to the user attempting to log in.
 - (void)loginProcessed:(NSNotification*)notification
 {
 	@try
@@ -981,6 +988,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Called when the server responds to a login state check.
 - (void)loginChecked:(NSNotification*)notification
 {
 	@try
@@ -999,6 +1007,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Called when the server responds to a gear list request.
 - (void)gearListUpdated:(NSNotification*)notification
 {
 	@try
@@ -1055,6 +1064,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Called when the server responds to a request for the workouts planned for the user.
 - (void)plannedWorkoutsUpdated:(NSNotification*)notification
 {
 	@try
@@ -1085,7 +1095,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-- (void)workoutUpdated:(NSNotification*)notification
+- (void)plannedWorkoutUpdated:(NSNotification*)notification
 {
 	@try
 	{
@@ -1135,6 +1145,28 @@ void startSensorCallback(SensorType type, void* context)
 				}
 			}
 		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+// Called when the server responds to a request for the user's list of interval workouts.
+- (void)intervalWorkoutsUpdated:(NSNotification*)notification
+{
+	@try
+	{
+	}
+	@catch (...)
+	{
+	}
+}
+
+// Called when the server responds to a request for the user's list of pace plans.
+- (void)pacePlansUpdated:(NSNotification*)notification
+{
+	@try
+	{
 	}
 	@catch (...)
 	{
@@ -1826,8 +1858,8 @@ void syncStatusCallback(const char* const destination, void* context)
 
 			if (responseObjects)
 			{
-				NSNumber* code = [responseObjects objectForKey:@KEY_NAME_CODE];
-				NSString* activityId = [responseObjects objectForKey:@KEY_NAME_ACTIVITY_ID2];
+				NSNumber* code = [responseObjects objectForKey:@URL_KEY_NAME_CODE];
+				NSString* activityId = [responseObjects objectForKey:@URL_KEY_NAME_ACTIVITY_ID];
 
 				if (code && activityId)
 				{
@@ -2657,6 +2689,16 @@ void attributeNameCallback(const char* name, void* context)
 	return [ApiClient serverListPlannedWorkouts];
 }
 
+- (BOOL)serverListIntervalWorkouts
+{
+	return [ApiClient serverListIntervalWorkouts];
+}
+
+- (BOOL)serverListPacePlans
+{
+	return [ApiClient serverListPacePlans];
+}
+
 - (BOOL)serverRequestWorkoutDetails:(NSString*)workoutId
 {
 	return [ApiClient serverRequestWorkoutDetails:workoutId];
@@ -2726,7 +2768,7 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 // Sends interval workouts to the watch.
-- (void)sendIntervalWorkouts
+- (void)sendIntervalWorkoutsToWatch
 {
 	if (InitializeIntervalWorkoutList())
 	{
@@ -2750,7 +2792,7 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 // Sends pace plans to the watch.
-- (void)sendPacePlans
+- (void)sendPacePlansToWatch
 {
 	if (InitializePacePlanList())
 	{
@@ -2885,12 +2927,12 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
-		[self sendIntervalWorkouts];
+		[self sendIntervalWorkoutsToWatch];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
 		// The watch app wants to download pace plans.
-		[self sendPacePlans];
+		[self sendPacePlansToWatch];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{
@@ -2934,12 +2976,12 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
-		[self sendIntervalWorkouts];
+		[self sendIntervalWorkoutsToWatch];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
 		// The watch app wants to download pace plans.
-		[self sendPacePlans];
+		[self sendPacePlansToWatch];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{

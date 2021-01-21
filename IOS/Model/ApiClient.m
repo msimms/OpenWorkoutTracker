@@ -83,16 +83,22 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_WORKOUTS].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_PLANNED_WORKOUTS].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:downloadedData];
 			} );
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_INTERVAL_WORKOUTS].location != NSNotFound)
+		{
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_PACE_PLANS].location != NSNotFound)
+		{
+		}
 		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_WORKOUT_UPDATED object:downloadedData];
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:downloadedData];
 			} );
 		}
 		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
@@ -137,9 +143,9 @@
 #else
 	[Preferences setBroadcastUserName:username];
 
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, KEY_NAME_USERNAME,
-									 password, KEY_NAME_PASSWORD,
-									 [Preferences uuid], KEY_NAME_DEVICE,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, URL_KEY_NAME_USERNAME,
+									 password, URL_KEY_NAME_PASSWORD,
+									 [Preferences uuid], URL_KEY_NAME_DEVICE,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -157,11 +163,11 @@
 #else
 	[Preferences setBroadcastUserName:username];
 
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, KEY_NAME_USERNAME,
-									 password1, KEY_NAME_PASSWORD1,
-									 password2, KEY_NAME_PASSWORD2,
-									 realname, KEY_NAME_REALNAME,
-									 [Preferences uuid], KEY_NAME_DEVICE,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, URL_KEY_NAME_USERNAME,
+									 password1, URL_KEY_NAME_PASSWORD1,
+									 password2, URL_KEY_NAME_PASSWORD2,
+									 realname, URL_KEY_NAME_REALNAME,
+									 [Preferences uuid], URL_KEY_NAME_DEVICE,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -217,7 +223,27 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_WORKOUTS];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_PLANNED_WORKOUTS];
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
+}
+
++ (BOOL)serverListIntervalWorkouts
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_INTERVAL_WORKOUTS];
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
+}
+
++ (BOOL)serverListPacePlans
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_PACE_PLANS];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
 }
@@ -241,7 +267,7 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* params = [NSString stringWithFormat:@"%s=%@", KEY_NAME_TARGET_EMAIL, targetUsername];
+	NSString* params = [NSString stringWithFormat:@"%s=%@", URL_KEY_NAME_TARGET_EMAIL, targetUsername];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_TO_FOLLOW_URL, escapedParams];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
@@ -253,7 +279,7 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* params = [NSString stringWithFormat:@"%s=%@", KEY_NAME_ACTIVITY_ID2, activityId];
+	NSString* params = [NSString stringWithFormat:@"%s=%@", URL_KEY_NAME_ACTIVITY_ID, activityId];
 	NSString* escapedParams = [params stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_DELETE_ACTIVITY_URL, escapedParams];
 	return [self makeRequest:str withMethod:@"POST" withPostData:nil];
@@ -265,8 +291,8 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
-									 tag, KEY_NAME_TAG2,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @URL_KEY_NAME_ACTIVITY_ID,
+									 tag, URL_KEY_NAME_TAG,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -282,8 +308,8 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
-									 tag, KEY_NAME_TAG2,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @URL_KEY_NAME_ACTIVITY_ID,
+									 tag, URL_KEY_NAME_TAG,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -302,7 +328,7 @@
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 
-	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", KEY_NAME_DEVICE_ID2, [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", URL_KEY_NAME_DEVICE_ID2, [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CLAIM_DEVICE_URL];
@@ -318,7 +344,7 @@
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 
-	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", KEY_NAME_WEIGHT, weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", URL_KEY_NAME_WEIGHT, weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPDATE_PROFILE];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
@@ -332,8 +358,8 @@
 #else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_HAS_ACTIVITY];
 
-	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", KEY_NAME_ACTIVITY_ID2, activityId]];
-	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", KEY_NAME_ACTIVITY_HASH2, activityHash]];
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", URL_KEY_NAME_ACTIVITY_ID, activityId]];
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", URL_KEY_NAME_ACTIVITY_HASH, activityHash]];
 
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
@@ -345,9 +371,9 @@
 	return FALSE;
 #else
 	NSString* base64Contents = [contents base64EncodedStringWithOptions:kNilOptions];
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @KEY_NAME_ACTIVITY_ID2,
-									 activityName, @KEY_NAME_UPLOADED_FILE_NAME,
-									 base64Contents, @KEY_NAME_UPLOADED_FILE_DATA,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @URL_KEY_NAME_ACTIVITY_ID,
+									 activityName, @URL_KEY_NAME_UPLOADED_FILE_NAME,
+									 base64Contents, @URL_KEY_NAME_UPLOADED_FILE_DATA,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
