@@ -144,11 +144,15 @@
 	
 	// Append the sync status.
 	NSMutableArray* syncDests = [extDelegate retrieveSyncDestinationsForActivityId:self->activityId];
-	for (NSString* syncDest in syncDests)
-	{
-		[nameStrs addObject:NSLocalizedString(syncDest, nil)];
-		[valueStrs addObject:STR_SYNCED];
-	}
+	BOOL synchedToPhone = [syncDests indexOfObject:@SYNC_DEST_PHONE] != NSNotFound;
+	BOOL synchedToWeb = [syncDests indexOfObject:@SYNC_DEST_WEB] != NSNotFound;
+	BOOL synchedToICloudDrive = [syncDests indexOfObject:@SYNC_DEST_ICLOUD_DRIVE] != NSNotFound;
+	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_PHONE, nil)];
+	[valueStrs addObject:synchedToPhone ? STR_SYNCHED : STR_NOT_SYNCHED];
+	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_WEB, nil)];
+	[valueStrs addObject:synchedToWeb ? STR_SYNCHED : STR_NOT_SYNCHED];
+	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_ICLOUD_DRIVE, nil)];
+	[valueStrs addObject:synchedToICloudDrive ? STR_SYNCHED : STR_NOT_SYNCHED];
 
 	// Configure the table object and set the row controllers.
 	[self->detailsTable setNumberOfRows:[nameStrs count] withRowType:@"WatchDetailsRowType"];

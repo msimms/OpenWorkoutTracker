@@ -65,6 +65,9 @@
 - (IBAction)switchBroadcastAction:(BOOL)on
 {
 	[Preferences setBroadcastToServer:on];
+
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+	[extDelegate configureBroadcasting];
 }
 
 - (IBAction)switchMetricAction:(BOOL)on

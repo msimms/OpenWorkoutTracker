@@ -53,6 +53,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastMgrHasFinishedSendingActivity:) name:@NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY object:nil];
 }
 
 - (void)applicationDidBecomeActive
@@ -581,6 +582,18 @@ void syncStatusCallback(const char* const destination, void* context)
 		RetrieveSyncDestinationsForActivityId([activityId UTF8String], syncStatusCallback, (__bridge void*)destinations);
 	}
 	return destinations;
+}
+
+- (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
+{
+	@try
+	{
+		NSString* activityId = [notification object];
+		[self markAsSynchedToWeb:activityId];
+	}
+	@catch (...)
+	{
+	}
 }
 
 #pragma mark hash methods

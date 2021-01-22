@@ -434,7 +434,23 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->CreateActivitySync(activityId, destination);
+			std::vector<std::string> destinations;
+
+			result = g_pDatabase->RetrieveSyncDestinationsForActivityId(activityId, destinations);
+			if (result)
+			{
+				bool alreadyStored = false;
+
+				for (auto destIter = destinations.begin(); !alreadyStored && destIter != destinations.end(); ++destIter)
+				{
+					if ((*destIter).compare(destination) == 0)
+						alreadyStored = true;
+				}
+				if (!alreadyStored)
+				{
+					result = g_pDatabase->CreateActivitySync(activityId, destination);
+				}
+			}
 		}
 
 		g_dbLock.unlock();

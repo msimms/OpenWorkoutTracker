@@ -38,6 +38,10 @@
 
 - (BOOL)hasConnectivity;
 
+// broadcast methods
+
+- (void)configureBroadcasting;
+
 // watch sensor methods
 
 - (void)startWatchSession;

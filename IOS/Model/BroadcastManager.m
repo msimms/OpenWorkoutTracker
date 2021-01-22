@@ -40,7 +40,7 @@
 
 - (void)dealloc
 {
-	[self flushGlobalBroadcastCacheRest];
+	[self flushGlobalBroadcastCacheRest:FALSE];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -64,7 +64,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BROADCAST_STATUS object:msgData];
 }
 
-- (void)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data
+- (void)sendToServer:(NSString*)hostName withPath:(const char*)path withData:(NSMutableData*)data withActivityId:(NSString*)activityId withActivityState:(BOOL)activityStopped
 {
 	NSString* protocolStr = [Preferences broadcastProtocol];
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", protocolStr, hostName, path];
@@ -92,6 +92,13 @@
 			[self updateBroadcastStatus:TRUE];
 			self->dataBeingSent = nil;
 			self->errorSending = FALSE;
+
+			if (activityStopped)
+			{
+				dispatch_async(dispatch_get_main_queue(),^{
+					[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY object:activityId];
+				} );
+			}
 		}
 		else
 		{
@@ -103,7 +110,7 @@
 	[dataTask resume];
 }
 
-- (void)flushGlobalBroadcastCacheRest
+- (void)flushGlobalBroadcastCacheRest:(BOOL)activityStopped
 {
 	// No host name set, just return.
 	NSString* hostName = [Preferences broadcastHostName];
@@ -113,12 +120,15 @@
 		return;
 	}
 
+	// Get the activity ID.
+	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+
 	// Still waiting on last data to be sent.
 	if (self->dataBeingSent)
 	{
 		if (self->errorSending)
 		{
-			[self sendToServer:hostName withPath:REMOTE_API_UPDATE_STATUS_URL withData:self->dataBeingSent];
+			[self sendToServer:hostName withPath:REMOTE_API_UPDATE_STATUS_URL withData:self->dataBeingSent withActivityId:activityId withActivityState:activityStopped];
 			NSLog(@"Resending.");
 		}
 		else
@@ -175,7 +185,6 @@
 	}
 
 	// Add the activity ID to the JSON string.
-	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 	if (activityId)
 	{
 		[postData appendData:[[NSString stringWithFormat:@",\n\"%s\":\"%@\"", KEY_NAME_ACTIVITY_ID, activityId] dataUsingEncoding:NSASCIIStringEncoding]];
@@ -200,7 +209,7 @@
 
 	if ((numLocObjsBeingSent > 0) || (numAccelObjsBeingSent > 0))
 	{
-		[self sendToServer:hostName withPath:REMOTE_API_UPDATE_STATUS_URL withData:postData];
+		[self sendToServer:hostName withPath:REMOTE_API_UPDATE_STATUS_URL withData:postData withActivityId:activityId withActivityState:activityStopped];
 	}
 
 	self->lastCacheFlush = time(NULL);
@@ -212,7 +221,7 @@
 	NSInteger rate = [Preferences broadcastRate];
 	if (([self->locationCache count] > 0 || [self->accelerometerCache count] > 0) && (time(NULL) - self->lastCacheFlush > rate))
 	{
-		[self flushGlobalBroadcastCacheRest];
+		[self flushGlobalBroadcastCacheRest:FALSE];
 	}
 }
 
@@ -357,7 +366,7 @@
 
 - (void)activityStopped:(NSNotification*)notification
 {
-	[self flushGlobalBroadcastCacheRest];
+	[self flushGlobalBroadcastCacheRest:TRUE];
 }
 
 @end

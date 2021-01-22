@@ -120,7 +120,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleHasActivityResponse:) name:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:nil];
-
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastMgrHasFinishedSendingActivity:) name:@NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY object:nil];
+	
 	[self startInteralTimer];
 
 	return YES;
@@ -1825,7 +1826,11 @@ void syncStatusCallback(const char* const destination, void* context)
 		
 		// Send to the server.
 		NSData* binaryFileContents = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-		if (![ApiClient sendActivityToServer:activityId withName:activityName withContents:binaryFileContents])
+		if ([ApiClient sendActivityToServer:activityId withName:activityName withContents:binaryFileContents])
+		{
+			[self markAsSynchedToWeb:activityId];
+		}
+		else
 		{
 			NSLog(@"Failed to upload activity ID %@ to the server.", activityId);
 		}
@@ -1871,6 +1876,7 @@ void syncStatusCallback(const char* const destination, void* context)
 					case 1: // Server has activity, but the hash does not match.
 						break;
 					case 2: // Server has the activity and the hash is the same.
+						[self markAsSynchedToWeb:activityId];
 						break;
 					}
 				}
@@ -1910,6 +1916,18 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 				free((void*)activityHash);
 			}
 		}
+	}
+}
+
+- (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
+{
+	@try
+	{
+		NSString* activityId = [notification object];
+		[self markAsSynchedToWeb:activityId];
+	}
+	@catch (...)
+	{
 	}
 }
 

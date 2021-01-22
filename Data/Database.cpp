@@ -1648,12 +1648,12 @@ bool Database::RetrieveSyncDestinationsForActivityId(const std::string& activity
 	{
 		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
-			if (sqlite3_step(statement) == SQLITE_ROW)
+			while (sqlite3_step(statement) == SQLITE_ROW)
 			{
 				std::string destination = (const char*)sqlite3_column_text(statement, 0);
 				destinations.push_back(destination);
-				result = true;
 			}
+			result = true;
 		}
 
 		sqlite3_finalize(statement);

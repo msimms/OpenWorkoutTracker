@@ -179,6 +179,11 @@ typedef enum ExportFileTypeButtons
 	}
 	
 	self->syncedServices = [appDelegate retrieveSyncDestinationsForActivityId:self->activityId];
+	self->notSyncedServices = [[NSMutableArray alloc] init];
+	if ([self->syncedServices indexOfObject:@SYNC_DEST_WEB] == NSNotFound)
+		[self->notSyncedServices addObject:@SYNC_DEST_WEB];
+	if ([self->syncedServices indexOfObject:@SYNC_DEST_ICLOUD_DRIVE] == NSNotFound)
+		[self->notSyncedServices addObject:@SYNC_DEST_ICLOUD_DRIVE];
 
 	[self redraw];
 }
@@ -308,7 +313,7 @@ typedef enum ExportFileTypeButtons
 					count = [self->recordNames count];
 					break;
 				case SECTION_SYNC:
-					count = [self->syncedServices count];
+					count = [self->syncedServices count] + [self->notSyncedServices count];
 					break;
 				case SECTION_INTERNAL:
 #if SHOW_DEBUG_INFO
@@ -840,7 +845,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_SUPERLATIVES:
 			return [self->recordNames count];
 		case SECTION_SYNC:
-			return [self->syncedServices count];
+			return [self->syncedServices count] + [self->notSyncedServices count];
 		case SECTION_INTERNAL:
 			return 1;
 	}
@@ -959,8 +964,16 @@ typedef enum ExportFileTypeButtons
 			break;
 		case SECTION_SYNC:
 			{
-				cell.textLabel.text = NSLocalizedString([self->syncedServices objectAtIndex:row], nil);
-				cell.detailTextLabel.text = @"";
+				if (row < [self->syncedServices count])
+				{
+					cell.textLabel.text = NSLocalizedString([self->syncedServices objectAtIndex:row], nil);
+					cell.detailTextLabel.text = NSLocalizedString(STR_SYNCHED, nil);
+				}
+				else
+				{
+					cell.textLabel.text = NSLocalizedString([self->notSyncedServices objectAtIndex:row - [self->syncedServices count]], nil);
+					cell.detailTextLabel.text = NSLocalizedString(STR_NOT_SYNCHED, nil);
+				}
 			}
 			break;
 		case SECTION_INTERNAL:
