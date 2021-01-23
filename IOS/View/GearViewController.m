@@ -18,14 +18,6 @@ typedef enum GearSections
 	NUM_GEAR_SECTIONS
 } GearSections;
 
-#define TITLE                   NSLocalizedString(@"Gear", nil)
-
-#define TITLE_BIKES             NSLocalizedString(@"Bicycles", nil)
-#define TITLE_SHOES             NSLocalizedString(@"Shoes", nil)
-
-#define BUTTON_TITLE_EDIT_BIKE  NSLocalizedString(@"Bicycle", nil)
-#define BUTTON_TITLE_EDIT_SHOES NSLocalizedString(@"Shoes", nil)
-
 #define MSG_SELECT_GEAR_TYPE    NSLocalizedString(@"Which type of gear?", nil)
 
 @interface GearViewController ()
@@ -45,7 +37,7 @@ typedef enum GearSections
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_GEAR;
 
 	[super viewDidLoad];
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
@@ -140,9 +132,9 @@ typedef enum GearSections
 	switch (section)
 	{
 		case SECTION_BIKES:
-			return TITLE_BIKES;
+			return STR_BICYCLES;
 		case SECTION_SHOES:
-			return TITLE_SHOES;
+			return STR_SHOES;
 	}
 	return @"";
 }
@@ -263,11 +255,11 @@ typedef enum GearSections
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_BIKE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_BICYCLE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->bikeViewMode = BIKE_PROFILE_NEW;
 		[self performSegueWithIdentifier:@SEGUE_TO_BIKE_PROFILE sender:self];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_SHOES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_SHOES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->shoeViewMode = SHOE_PROFILE_NEW;
 		[self performSegueWithIdentifier:@SEQUE_TO_SHOE_PROFILE sender:self];
 	}]];

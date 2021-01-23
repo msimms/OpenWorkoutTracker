@@ -21,7 +21,6 @@
 
 #define BUTTON_TITLE_IMPORT          NSLocalizedString(@"Import", nil)
 #define BUTTON_TITLE_MAP_TYPE        NSLocalizedString(@"Map Type", nil)
-#define BUTTON_TITLE_HOME            NSLocalizedString(@"Home", nil)
 
 #define OPTION_STANDARD_VIEW         NSLocalizedString(@"Standard View", nil)
 #define OPTION_SATELLITE_VIEW        NSLocalizedString(@"Satellite View", nil)
@@ -91,7 +90,7 @@ MapViewController* g_ptrToMapViewCtrl;
 	[super viewDidLoad];
 
 	[self.mapTypeButton setTitle:BUTTON_TITLE_MAP_TYPE];
-	[self.homeButton setTitle:BUTTON_TITLE_HOME];
+	[self.homeButton setTitle:STR_HOME];
 
 	self->lines = [[NSMutableArray alloc] init];
 }

@@ -5,12 +5,15 @@
 
 #import <MessageUI/MFMailComposeViewController.h>
 
+/**
+* Base class for holding code common to many view controllers.
+*/
 @interface CommonViewController : UIViewController <UIActionSheetDelegate>
 {
 }
 
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg;
-
 - (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate;
+- (UIImage*)activityTypeToIcon:(NSString*)activityType;
 
 @end

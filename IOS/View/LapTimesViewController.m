@@ -12,7 +12,6 @@
 #import "StringUtils.h"
 
 #define TITLE    NSLocalizedString(@"Lap Times", nil)
-#define TEXT_LAP NSLocalizedString(@"Lap", nil)
 
 @interface LapTime : NSObject
 {
@@ -106,9 +105,10 @@
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%s%d", ACTIVITY_ATTRIBUTE_LAP_TIME, lapNum];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
 		if (value.valid)
 		{
-			NSString* label = [[NSString alloc] initWithFormat:@"%@ %d", TEXT_LAP, lapNum];
+			NSString* label = [[NSString alloc] initWithFormat:@"%@ %d", STR_LAP, lapNum];
 			NSString* detail = [StringUtils formatActivityViewType:value];
 
 			LapTime* arrayItem = [[LapTime alloc] initWithValues:label :detail];

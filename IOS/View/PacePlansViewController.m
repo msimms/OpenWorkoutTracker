@@ -115,7 +115,7 @@
 		}
 		else
 		{
-			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
 		}
 	}]];
 
@@ -219,7 +219,7 @@
 		}
 		else
 		{
-			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
 		}
 	}
 }

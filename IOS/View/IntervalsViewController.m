@@ -18,10 +18,6 @@
 #define ALERT_MSG_NEW_INTERVAL_SPORT NSLocalizedString(@"Create an interval for which sport?", nil)
 #define ALERT_MSG_NEW_INTERVAL       NSLocalizedString(@"Name this interval workout", nil)
 
-#define STR_RUNNING                  NSLocalizedString(@"Running", nil)
-#define STR_CYCLING                  NSLocalizedString(@"Cycling", nil)
-#define STR_LIFTING                  NSLocalizedString(@"Lifting", nil)
-
 @interface IntervalsViewController ()
 
 @end
@@ -121,7 +117,7 @@
 		}
 		else
 		{
-			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
 		}
 	}]];
 
@@ -250,7 +246,7 @@
 		}
 		else
 		{
-			[super showOneButtonAlert:STR_ERROR withMsg:MSG_INTERNAL_ERROR];
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
 		}
 	}
 }

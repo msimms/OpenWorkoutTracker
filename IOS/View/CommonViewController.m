@@ -3,6 +3,7 @@
 
 #import "CommonViewController.h"
 #import "AppStrings.h"
+#import "ActivityType.h"
 
 @interface CommonViewController ()
 
@@ -45,8 +46,49 @@
 	}
 	else
 	{
-		[self showOneButtonAlert:STR_ERROR withMsg:MSG_MAIL_DISABLED];
+		[self showOneButtonAlert:STR_ERROR withMsg:STR_MAIL_DISABLED];
 	}
+}
+
+- (UIImage*)activityTypeToIcon:(NSString*)activityType
+{
+	UIImage* img = nil;
+
+	if (([activityType compare:@ACTIVITY_TYPE_CHINUP] == NSOrderedSame) ||
+		([activityType compare:@ACTIVITY_TYPE_SQUAT] == NSOrderedSame) ||
+		([activityType compare:@ACTIVITY_TYPE_PULLUP] == NSOrderedSame) ||
+		([activityType compare:@ACTIVITY_TYPE_PUSHUP] == NSOrderedSame))
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Weights" ofType:@"png"]];
+	}
+	else if (([activityType compare:@ACTIVITY_TYPE_CYCLING] == NSOrderedSame) ||
+			 ([activityType compare:@ACTIVITY_TYPE_MOUNTAIN_BIKING] == NSOrderedSame) ||
+			 ([activityType compare:@ACTIVITY_TYPE_STATIONARY_BIKE] == NSOrderedSame))
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_HIKING] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Hiking" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_RUNNING] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Running" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_TREADMILL] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Treadmill" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_WALKING] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Walking" ofType:@"png"]];
+	}
+	else if (([activityType compare:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] == NSOrderedSame) ||
+			 ([activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame))
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Swimming" ofType:@"png"]];
+	}
+	return img;
 }
 
 @end

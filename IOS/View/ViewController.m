@@ -268,7 +268,7 @@
 		self->newActivityType = activityType;
 
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:TITLE_IN_PROGRESS
-																				 message:MSG_IN_PROGRESS
+																				 message:STR_IN_PROGRESS
 																		  preferredStyle:UIAlertControllerStyleAlert];
 
 		// Add the "re-connect to the orphaned activity" option.

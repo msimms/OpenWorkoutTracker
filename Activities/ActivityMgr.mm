@@ -2376,6 +2376,7 @@ extern "C" {
 			params.insert(std::make_pair("num intervals", FormatInt((uint64_t)workout.GetIntervals().size())));
 			params.insert(std::make_pair("duration", FormatDouble(workout.CalculateDuration())));
 			params.insert(std::make_pair("distance", FormatDouble(workout.CalculateDistance())));
+			params.insert(std::make_pair("start time", FormatInt((uint64_t)workout.GetScheduledTime())));
 			
 			for (auto interIter = intervals.begin(); interIter != intervals.end(); ++interIter)
 			{

@@ -179,17 +179,17 @@
 
 				if ([appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportService])
 				{
-					[super showOneButtonAlert:STR_EXPORT withMsg:MSG_EXPORT_SUCCEEDED];
+					[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
 				}
 				else
 				{
-					[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+					[super showOneButtonAlert:STR_ERROR withMsg:STR_EXPORT_FAILED];
 				}
 			}
 		}
 		else
 		{
-			[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_EXPORT_FAILED];
 		}
 	}]];
 

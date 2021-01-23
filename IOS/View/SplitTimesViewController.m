@@ -8,12 +8,8 @@
 #import "SplitTimesViewController.h"
 #import "ActivityAttribute.h"
 #import "AppDelegate.h"
+#import "AppStrings.h"
 #import "StringUtils.h"
-
-#define TITLE             NSLocalizedString(@"Split Times", nil)
-#define TITLE_KMS         NSLocalizedString(@"Kilometers", nil)
-#define TITLE_MILES       NSLocalizedString(@"Miles", nil)
-#define BUTTON_TITLE_HOME NSLocalizedString(@"Home", nil)
 
 typedef enum SectionType
 {
@@ -68,10 +64,10 @@ typedef enum SectionType
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_SPLIT_TIMES;
 
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.homeButton setTitle:BUTTON_TITLE_HOME];
+	[self.homeButton setTitle:STR_HOME];
 	[super viewDidLoad];
 }
 
@@ -148,6 +144,7 @@ typedef enum SectionType
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sMile %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, mile];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
 		if (value.valid)
 		{
 			NSString* label;
@@ -187,7 +184,6 @@ typedef enum SectionType
 
 	[self addKmSplits];
 	[self addMileSplits];
-
 	[self.splitTimesTableView reloadData];
 }
 
@@ -203,11 +199,9 @@ typedef enum SectionType
 	switch (section)
 	{
 		case SECTION_KMS:
-			return TITLE_KMS;
-			break;
+			return STR_KILOMETERS;
 		case SECTION_MILES:
-			return TITLE_MILES;
-			break;
+			return STR_MILES;
 	}
 	return @"";
 }
@@ -218,10 +212,8 @@ typedef enum SectionType
 	{
 	case SECTION_KMS:
 		return [self->splitTimesKm count];
-		break;
 	case SECTION_MILES:
 		return [self->splitTimesMile count];
-		break;
 	}
 	return 0;
 }

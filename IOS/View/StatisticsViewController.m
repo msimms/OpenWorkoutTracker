@@ -240,7 +240,7 @@ typedef enum Sections
 	else
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
-																				 message:MSG_NO_WORKOUTS
+																				 message:STR_NO_WORKOUTS
 																		  preferredStyle:UIAlertControllerStyleAlert];           
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self.navigationController popViewControllerAnimated:YES];

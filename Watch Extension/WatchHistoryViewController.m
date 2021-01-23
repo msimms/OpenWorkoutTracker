@@ -88,7 +88,7 @@
 
 		self->isPopping = TRUE;
 		[self presentAlertControllerWithTitle:STR_ERROR
-									  message:MSG_NO_WORKOUTS
+									  message:STR_NO_WORKOUTS
 							   preferredStyle:WKAlertControllerStyleAlert
 									  actions:@[ action ]];
 	}

@@ -15,7 +15,6 @@
 
 #define TITLE                       NSLocalizedString(@"History", nil)
 
-#define ACTION_SHEET_TITLE_ACTIVITY NSLocalizedString(@"Export", nil)
 #define ACTION_SHEET_TITLE_EXPORT   NSLocalizedString(@"Export using", nil)
 #define BUTTON_TITLE_EXPORT         NSLocalizedString(@"Export Summary", nil)
 #define EMAIL_TITLE                 NSLocalizedString(@"Workout Summary Data", nil)
@@ -192,7 +191,7 @@
 	else if (!self->searching)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
-																				 message:MSG_NO_WORKOUTS
+																				 message:STR_NO_WORKOUTS
 																		  preferredStyle:UIAlertControllerStyleAlert];           
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self.navigationController popViewControllerAnimated:YES];
@@ -335,46 +334,10 @@
 	cell.textLabel.text = NSLocalizedString(activityType, nil);
 
 	// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
-	UIImage* img = nil;
-	if (([activityType compare:@ACTIVITY_TYPE_CHINUP] == NSOrderedSame) ||
-		([activityType compare:@ACTIVITY_TYPE_SQUAT] == NSOrderedSame) ||
-		([activityType compare:@ACTIVITY_TYPE_PULLUP] == NSOrderedSame) ||
-		([activityType compare:@ACTIVITY_TYPE_PUSHUP] == NSOrderedSame))
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Weights" ofType:@"png"]];
-	}
-	else if (([activityType compare:@ACTIVITY_TYPE_CYCLING] == NSOrderedSame) ||
-			 ([activityType compare:@ACTIVITY_TYPE_MOUNTAIN_BIKING] == NSOrderedSame) ||
-			 ([activityType compare:@ACTIVITY_TYPE_STATIONARY_BIKE] == NSOrderedSame))
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
-	}
-	else if ([activityType compare:@ACTIVITY_TYPE_HIKING] == NSOrderedSame)
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Hiking" ofType:@"png"]];
-	}
-	else if ([activityType compare:@ACTIVITY_TYPE_RUNNING] == NSOrderedSame)
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Running" ofType:@"png"]];
-	}
-	else if ([activityType compare:@ACTIVITY_TYPE_TREADMILL] == NSOrderedSame)
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Treadmill" ofType:@"png"]];
-	}
-	else if ([activityType compare:@ACTIVITY_TYPE_WALKING] == NSOrderedSame)
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Walking" ofType:@"png"]];
-	}
-	else if (([activityType compare:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] == NSOrderedSame) ||
-			 ([activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame))
-	{
-		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Swimming" ofType:@"png"]];
-	}
 	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
-	imageView.image = img;
+	imageView.image = [self activityTypeToIcon:activityType];
 	[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[cell.contentView addSubview:imageView];
-	//	cell.imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
 
 	return cell;
 }
@@ -424,7 +387,7 @@
 	if ([activityTypes count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																				 message:ACTION_SHEET_TITLE_ACTIVITY
+																				 message:STR_EXPORT
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
 		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
@@ -483,7 +446,7 @@
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_EXPORT_FAILED];
 	}
 	return FALSE;
 }
@@ -501,7 +464,7 @@
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:MSG_EXPORT_FAILED];
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_EXPORT_FAILED];
 	}
 }
 
