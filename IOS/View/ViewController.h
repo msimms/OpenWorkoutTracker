@@ -7,6 +7,9 @@
 
 #import  "CommonViewController.h"
 
+/**
+* Main view for the phone app..
+*/
 @interface ViewController : CommonViewController <UIActionSheetDelegate>
 {
 	IBOutlet UIButton* startWorkoutButton;

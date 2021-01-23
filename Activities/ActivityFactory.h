@@ -17,6 +17,9 @@
 #include "UnitSystem.h"
 #include "User.h"
 
+/**
+* Factory class for activity objects
+*/
 class ActivityFactory
 {
 public:

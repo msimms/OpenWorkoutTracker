@@ -12,6 +12,9 @@
 #import "MapOverviewViewController.h"
 #import "MapViewController.h"
 
+/**
+* This is the view that is shown after an activity is stopped or when viewing a historical activity.
+*/
 @interface StaticSummaryViewController : MapViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 {
 	IBOutlet UINavigationItem* navItem;
@@ -25,8 +28,8 @@
 	IBOutlet UIBarButtonItem* tagsButton;
 	IBOutlet UIActivityIndicatorView* spinner;
 
-	NSMutableArray* movingToolbar;
-	NSMutableArray* liftingToolbar;
+	NSMutableArray* movingToolbar; // Contains toolbar elements that are shown for a moving activity
+	NSMutableArray* liftingToolbar; // Contains toolbar elements that are shown for a lifting activity
 
 	NSMutableArray* attributeNames;
 	NSMutableArray* recordNames;

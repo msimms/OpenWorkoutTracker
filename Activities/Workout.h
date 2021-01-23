@@ -20,6 +20,11 @@ typedef struct WorkoutInterval
 	double m_recoveryPace; // recovery pace (in meters/minute)
 } WorkoutInterval;
 
+/**
+* Base class for a planned workout
+*
+* Describes a workout that the user is expected to perform.
+*/
 class Workout
 {
 public:

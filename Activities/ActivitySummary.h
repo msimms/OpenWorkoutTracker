@@ -34,7 +34,7 @@ typedef struct ActivitySummary
 	SensorReadingList    cadenceReadings;          // List of all cadence sensor readings recorded as part of this activity
 	SensorReadingList    powerReadings;            // List of power meter readings recorded as part of this activity
 	ActivityAttributeMap summaryAttributes;
-	Activity*            pActivity;
+	Activity*            pActivity;                // Optional activity object
 } ActivitySummary;
 
 typedef std::vector<ActivitySummary> ActivitySummaryList;

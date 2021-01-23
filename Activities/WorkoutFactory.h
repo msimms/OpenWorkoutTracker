@@ -6,6 +6,9 @@
 
 #include "Workout.h"
 
+/**
+* Factory class for workout objects.
+*/
 class WorkoutFactory
 {
 public:

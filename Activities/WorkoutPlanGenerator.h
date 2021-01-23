@@ -15,6 +15,9 @@
 #include "ActivitySummary.h"
 #include "Workout.h"
 
+/**
+* Generates workouts for the next week.
+*/
 class WorkoutPlanGenerator
 {
 public:

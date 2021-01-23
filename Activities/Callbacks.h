@@ -11,6 +11,10 @@
 #include "Coordinate.h"
 #include "SensorType.h"
 
+/**
+* These callbacks are used to return lists of data from the backend..
+*/
+
 #ifdef __cplusplus
 extern "C" {
 #endif

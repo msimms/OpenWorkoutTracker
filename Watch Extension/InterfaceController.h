@@ -8,6 +8,9 @@
 #import <WatchKit/WatchKit.h>
 #import <Foundation/Foundation.h>
 
+/**
+* Main view for the watch app..
+*/
 @interface InterfaceController : WKInterfaceController
 
 @end
