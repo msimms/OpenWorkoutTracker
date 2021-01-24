@@ -12,16 +12,12 @@
 - (id)init
 {
 	self = [super init];
-	if (self != nil)
-	{
-	}
 	return self;
 }
 
 - (BOOL)isLinked
 {
-	BOOL result = FALSE;
-	return result;
+	return FALSE;
 }
 
 - (NSString*)name

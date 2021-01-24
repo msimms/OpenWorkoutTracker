@@ -12,7 +12,7 @@
 
 typedef enum CloudServiceType
 {
-	CLOUD_SERVICE_ICLOUD,
+	CLOUD_SERVICE_ICLOUD_DRIVE,
 	CLOUD_SERVICE_DROPBOX,
 	CLOUD_SERVICE_RUNKEEPER,
 	CLOUD_SERVICE_STRAVA,
@@ -23,9 +23,9 @@ typedef enum CloudServiceType
 	NSMutableArray* fileClouds; // cloud services that let us store raw files
 	NSMutableArray* dataClouds; // cloud services that have an API for importing activity data
 
-	iCloud*         iCloudController; // handles iCloud drive interactions
-	RunKeeper*      runKeeperController; // handles RunKeeper interactions
-	Strava*         stravaController; // handles Strava interactions
+	iCloud*         iCloudDrive; // handles iCloud drive interactions
+	RunKeeper*      runKeeper; // handles RunKeeper interactions
+	Strava*         strava; // handles Strava interactions
 }
 
 - (id)init;

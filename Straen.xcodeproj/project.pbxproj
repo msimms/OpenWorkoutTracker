@@ -478,6 +478,7 @@
 		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
 		27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
 		27EF2C582560AC6300F06796 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
+		27F3E7AC25BCFF41001D3CCE /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
 		27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */; };
 		27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
 		27F4240523A44C0E00F59F50 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240323A44C0E00F59F50 /* PoolSwim.cpp */; };
@@ -2492,6 +2493,7 @@
 				27DCF68522C29577009A23C2 /* Accelerometer.m in Sources */,
 				27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */,
 				27DCF60E22B71628009A23C2 /* GForceAnalyzerFactory.h in Sources */,
+				27F3E7AC25BCFF41001D3CCE /* CloudPreferences.m in Sources */,
 				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,
 				27DCF61022B71628009A23C2 /* Hike.h in Sources */,
 				27DCF61122B71628009A23C2 /* IntervalWorkout.h in Sources */,

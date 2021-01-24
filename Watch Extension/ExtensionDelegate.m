@@ -9,6 +9,7 @@
 #import "ActivityAttribute.h"
 #import "ActivityHash.h"
 #import "ActivityMgr.h"
+#import "CloudPreferences.h"
 #import "Notifications.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
@@ -342,12 +343,12 @@ void startSensorCallback(SensorType type, void* context)
 								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 								  nil];
 
-		// Start the activity in HealthKit.
+		// Stop the activity in HealthKit.
 		[self->healthMgr stopWorkout:[[NSDate alloc] initWithTimeIntervalSince1970:endTime.value.intVal]];
 
 		// Let the others know.
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
-		
+
 		self->activityType = nil;
 	}
 	return result;
@@ -355,14 +356,12 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)pauseActivity
 {
-	BOOL paused = PauseCurrentActivity();
-	return paused;
+	return PauseCurrentActivity();
 }
 
 - (BOOL)startNewLap
 {
-	BOOL started = StartNewLap();
-	return started;
+	return StartNewLap();
 }
 
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName
@@ -584,6 +583,7 @@ void syncStatusCallback(const char* const destination, void* context)
 	return destinations;
 }
 
+// Called when the broadcast manager has finished with an activity.
 - (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
 {
 	@try

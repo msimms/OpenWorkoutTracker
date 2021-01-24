@@ -205,7 +205,8 @@
 // methods for exporting activities
 
 - (BOOL)deleteFile:(NSString*)fileName;
-- (BOOL)exportFileToCloudService:(NSString*)fileName toService:(NSString*)serviceName;
+- (BOOL)exportFileToCloudService:(NSString*)fileName toServiceNamed:(NSString*)serviceName;
+- (BOOL)exportFileToCloudService:(NSString*)fileName toService:(CloudServiceType)service;
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
 - (NSString*)exportActivitySummary:(NSString*)activityType;
 - (void)clearExportDir;

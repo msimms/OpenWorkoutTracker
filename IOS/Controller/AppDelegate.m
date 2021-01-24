@@ -19,6 +19,8 @@
 #import "BtleHeartRateMonitor.h"
 #import "BtlePowerMeter.h"
 #import "BtleScale.h"
+#import "CloudMgr.h"
+#import "CloudPreferences.h"
 #import "FileUtils.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
@@ -1287,6 +1289,30 @@ void startSensorCallback(SensorType type, void* context)
 
 		// Stop requesting data from sensors.
 		[self stopSensors];
+		
+		// If we're supposed to export the activity to any services then do that.
+		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD_DRIVE] && [CloudPreferences usingiCloud])
+		{
+			// Export the activity to a temp file.
+			NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
+
+			// Activity exported?
+			if (exportedFileName)
+			{
+				// Export the activity as a file on the iCloud Drive.
+				if ([self exportFileToCloudService:exportedFileName toService:CLOUD_SERVICE_ICLOUD_DRIVE])
+				{
+					NSLog(@"Error when exporting an activity to send to iCloud Drive.");
+				}
+
+				// Remove the temp file.
+				BOOL tempFileDeleted = [FileUtils deleteFile:exportedFileName];
+				if (!tempFileDeleted)
+				{
+					NSLog(@"Failed to delete temp file %@.", exportedFileName);
+				}
+			}
+		}
 	}
 	return result;
 }
@@ -1812,6 +1838,7 @@ void syncStatusCallback(const char* const destination, void* context)
 	// Export the activity to a temp file.
 	NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
 
+	// Activity exported?
 	if (exportedFileName)
 	{
 		// Fetch the activity name.
@@ -1856,11 +1883,13 @@ void syncStatusCallback(const char* const destination, void* context)
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
 		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
 
+		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)
 		{
 			NSError* error = nil;
 			NSDictionary* responseObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
 
+			// Object was deserialized?
 			if (responseObjects)
 			{
 				NSNumber* code = [responseObjects objectForKey:@URL_KEY_NAME_CODE];
@@ -1919,6 +1948,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	}
 }
 
+// Called when the broadcast manager has finished with an activity.
 - (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
 {
 	@try
@@ -2054,7 +2084,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return [fileMgr removeItemAtPath:fileName error:&error] == YES;
 }
 
-- (BOOL)exportFileToCloudService:(NSString*)fileName toService:(NSString*)serviceName
+- (BOOL)exportFileToCloudService:(NSString*)fileName toServiceNamed:(NSString*)serviceName
 {
 	if (self->cloudMgr)
 	{
@@ -2063,11 +2093,20 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return FALSE;
 }
 
+- (BOOL)exportFileToCloudService:(NSString*)fileName toService:(CloudServiceType)service
+{
+	if (self->cloudMgr)
+	{
+		return [self->cloudMgr uploadFile:fileName toService:service];
+	}
+	return FALSE;
+}
+
 - (NSString*)createExportDir
 {
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString* exportDir = [[paths objectAtIndex: 0] stringByAppendingPathComponent:@"Export"];
-	
+
 	if (![[NSFileManager defaultManager] fileExistsAtPath:exportDir])
 	{
 		NSError* error = nil;
@@ -2180,9 +2219,9 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 		{
 			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_STRAVA]];
 		}
-		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD])
+		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD_DRIVE])
 		{
-			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_ICLOUD]];
+			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_ICLOUD_DRIVE]];
 		}
 	}
 	return services;
@@ -2204,7 +2243,6 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
-
 	char* activityName = GetActivityName([activityId UTF8String]);
 
 	if (activityName)

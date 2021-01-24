@@ -26,6 +26,7 @@
 - (NSMutableArray*)listFileClouds
 {
 	NSMutableArray* list = [[NSMutableArray alloc] init];
+
 	for (FileSharingWebsite* site in self->fileClouds)
 		[list addObject:[site name]];
 	return list;
@@ -34,6 +35,7 @@
 - (NSMutableArray*)listDataClouds
 {
 	NSMutableArray* list = [[NSMutableArray alloc] init];
+
 	for (DataCloud* site in self->dataClouds)
 		[list addObject:[site name]];
 	return list;
@@ -41,7 +43,7 @@
 
 - (void)createAll
 {
-	[self createCloudController:CLOUD_SERVICE_ICLOUD];
+	[self createCloudController:CLOUD_SERVICE_ICLOUD_DRIVE];
 	[self createCloudController:CLOUD_SERVICE_DROPBOX];
 	[self createCloudController:CLOUD_SERVICE_RUNKEEPER];
 	[self createCloudController:CLOUD_SERVICE_STRAVA];
@@ -51,28 +53,22 @@
 {
 	switch (service)
 	{
-		case CLOUD_SERVICE_ICLOUD:
-			self->iCloudController = [[iCloud alloc] init];
-			if (self->iCloudController)
-			{
-				[self->fileClouds addObject:self->iCloudController];
-			}
+		case CLOUD_SERVICE_ICLOUD_DRIVE:
+			self->iCloudDrive = [[iCloud alloc] init];
+			[self->fileClouds addObject:self->iCloudDrive];
 			break;
 		case CLOUD_SERVICE_DROPBOX:
 			break;
 		case CLOUD_SERVICE_RUNKEEPER:
-			self->runKeeperController = [[RunKeeper alloc] init];
-			if (self->runKeeperController)
+			self->runKeeper = [[RunKeeper alloc] init];
+			if (self->runKeeper)
 			{
-				[self->dataClouds addObject:runKeeperController];
+				[self->dataClouds addObject:runKeeper];
 			}
 			break;
 		case CLOUD_SERVICE_STRAVA:
-			self->stravaController = [[Strava alloc] init];
-			if (self->stravaController)
-			{
-				[self->dataClouds addObject:self->stravaController];
-			}
+			self->strava = [[Strava alloc] init];
+			[self->dataClouds addObject:self->strava];
 			break;
 	}
 }
@@ -81,24 +77,24 @@
 {
 	switch (service)
 	{
-		case CLOUD_SERVICE_ICLOUD:
-			if (self->iCloudController)
+		case CLOUD_SERVICE_ICLOUD_DRIVE:
+			if (self->iCloudDrive)
 			{
-				return [self->iCloudController isAvailable];
+				return [self->iCloudDrive isAvailable];
 			}
 			break;
 		case CLOUD_SERVICE_DROPBOX:
 			return FALSE;
 		case CLOUD_SERVICE_RUNKEEPER:
-			if (self->runKeeperController)
+			if (self->runKeeper)
 			{
-				return [self->runKeeperController isLinked];
+				return [self->runKeeper isLinked];
 			}
 			break;
 		case CLOUD_SERVICE_STRAVA:
-			if (self->stravaController)
+			if (self->strava)
 			{
-				return [self->stravaController isLinked];
+				return [self->strava isLinked];
 			}
 			break;
 	}
@@ -109,14 +105,14 @@
 {
 	switch (service)
 	{
-		case CLOUD_SERVICE_ICLOUD:
-			return [self->iCloudController name];
+		case CLOUD_SERVICE_ICLOUD_DRIVE:
+			return [self->iCloudDrive name];
 		case CLOUD_SERVICE_DROPBOX:
 			return nil;
 		case CLOUD_SERVICE_RUNKEEPER:
-			return [self->runKeeperController name];
+			return [self->runKeeper name];
 		case CLOUD_SERVICE_STRAVA:
-			return [self->stravaController name];
+			return [self->strava name];
 	}
 	return nil;
 }
@@ -125,7 +121,7 @@
 {
 	switch (service)
 	{
-		case CLOUD_SERVICE_ICLOUD:
+		case CLOUD_SERVICE_ICLOUD_DRIVE:
 		case CLOUD_SERVICE_DROPBOX:
 		case CLOUD_SERVICE_RUNKEEPER:
 		case CLOUD_SERVICE_STRAVA:
@@ -137,8 +133,8 @@
 {
 	switch (service)
 	{
-		case CLOUD_SERVICE_ICLOUD:
-			return [self->iCloudController uploadFile:fileName];
+		case CLOUD_SERVICE_ICLOUD_DRIVE:
+			return [self->iCloudDrive uploadFile:fileName];
 		case CLOUD_SERVICE_DROPBOX:
 		case CLOUD_SERVICE_RUNKEEPER:
 		case CLOUD_SERVICE_STRAVA:
@@ -151,32 +147,34 @@
 {
 	switch (service)
 	{
-		case CLOUD_SERVICE_ICLOUD:
+		case CLOUD_SERVICE_ICLOUD_DRIVE:
+			break;
 		case CLOUD_SERVICE_DROPBOX:
 			break;
 		case CLOUD_SERVICE_RUNKEEPER:
+			return [self->runKeeper uploadActivity:activityId];
 		case CLOUD_SERVICE_STRAVA:
-			break;
+			return [self->strava uploadActivity:activityId];
 	}
 	return FALSE;
 }
 
 - (BOOL)uploadFile:(NSString*)fileName toServiceNamed:(NSString*)serviceName
 {
-	if (self->iCloudController && [serviceName isEqualToString:[self->iCloudController name]])
+	if (self->iCloudDrive && [serviceName isEqualToString:[self->iCloudDrive name]])
 	{
-		return [self uploadFile:fileName toService:CLOUD_SERVICE_ICLOUD];
+		return [self uploadFile:fileName toService:CLOUD_SERVICE_ICLOUD_DRIVE];
 	}
 	return FALSE;
 }
 
 - (BOOL)uploadActivity:(NSString*)activityId toServiceNamed:(NSString*)serviceName
 {
-	if (self->runKeeperController && [serviceName isEqualToString:[self->runKeeperController name]])
+	if (self->runKeeper && [serviceName isEqualToString:[self->runKeeper name]])
 	{
 		return [self uploadActivity:activityId toService:CLOUD_SERVICE_RUNKEEPER];
 	}
-	else if (self->stravaController && [serviceName isEqualToString:[self->stravaController name]])
+	else if (self->strava && [serviceName isEqualToString:[self->strava name]])
 	{
 		return [self uploadActivity:activityId toService:CLOUD_SERVICE_STRAVA];
 	}

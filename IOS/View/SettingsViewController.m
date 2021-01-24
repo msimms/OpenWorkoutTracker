@@ -30,10 +30,10 @@ typedef enum SettingsRowsUnits
 
 typedef enum SettingsRowsServices
 {
-	SETTINGS_ROW_LINK_RUNKEEPER = 0,
-	SETTINGS_ROW_LINK_STRAVA,
-	SETTINGS_ROW_LINK_DROPBOX,
-	SETTINGS_ROW_ICLOUD_BACKUP,
+	SETTINGS_ROW_EXPORT_TO_RUNKEEPER = 0,
+	SETTINGS_ROW_EXPORT_TO_STRAVA,
+	SETTINGS_ROW_EXPORT_TO_DROPBOX,
+	SETTINGS_ROW_EXPORT_TO_ICLOUD,
 	NUM_SETTINGS_ROWS_SERVICES
 } SettingsRowsServices;
 
@@ -60,7 +60,7 @@ typedef enum SettingsRowsHealthKit
 #define UNIT_TITLE                     NSLocalizedString(@"Units", nil)
 #define UNIT_TITLE_US_CUSTOMARY        NSLocalizedString(@"US Customary Units", nil)
 #define UNIT_TITLE_METRIC              NSLocalizedString(@"Metric", nil)
-#define ICLOUD_BACKUP                  NSLocalizedString(@"Save Files to iCloud Drive", nil)
+#define AUTO_SAVE_TO_ICLOUD_DRIVE      NSLocalizedString(@"Auto Save Files to iCloud Drive", nil)
 #define CLOUD_SERVICES                 NSLocalizedString(@"Cloud Services", nil)
 #define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
 #define BROADCAST_ENABLED              NSLocalizedString(@"Enabled", nil)
@@ -72,7 +72,6 @@ typedef enum SettingsRowsHealthKit
 #define BROADCAST_UNITS                NSLocalizedString(@"Seconds", nil)
 #define FRIENDS                        NSLocalizedString(@"Friends", nil)
 #define DEVICE_ID                      NSLocalizedString(@"Device ID", nil)
-#define BUTTON_TITLE_COPY              NSLocalizedString(@"Copy", nil)
 #define HEALTHKIT                      NSLocalizedString(@"HealthKit", nil)
 #define READ_ACTIVITIES_FROM_HEALTHKIT NSLocalizedString(@"Read Activities From HealthKit", nil)
 #define HIDE_DUPLICATES                NSLocalizedString(@"Hide Duplicates", nil)
@@ -184,7 +183,7 @@ typedef enum SettingsRowsHealthKit
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:UNIT_TITLE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	
+
 	[alertController addAction:[UIAlertAction actionWithTitle:UNIT_TITLE_METRIC style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
 	}]];
@@ -199,7 +198,7 @@ typedef enum SettingsRowsHealthKit
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
 																			 message:ALERT_TITLE_BROADCAST_USER
 																	  preferredStyle:UIAlertControllerStyleAlert];
-	
+
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 	}];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
@@ -216,7 +215,7 @@ typedef enum SettingsRowsHealthKit
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
 																			 message:ALERT_TITLE_BROADCAST_RATE
 																	  preferredStyle:UIAlertControllerStyleAlert];
-	
+
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.placeholder = [[NSString alloc] initWithFormat:@"%ld", (long)[Preferences broadcastRate]];
 		textField.keyboardType = UIKeyboardTypeNumberPad;
@@ -236,7 +235,7 @@ typedef enum SettingsRowsHealthKit
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
 																			 message:ALERT_TITLE_BROADCAST_HOST
 																	  preferredStyle:UIAlertControllerStyleAlert];
-	
+
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.placeholder = [Preferences broadcastHostName];
 	}];
@@ -424,26 +423,26 @@ typedef enum SettingsRowsHealthKit
 
 				switch (row)
 				{
-					case SETTINGS_ROW_LINK_RUNKEEPER:
+					case SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
 						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER];
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[CloudPreferences usingRunKeeper]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
-					case SETTINGS_ROW_LINK_STRAVA:
+					case SETTINGS_ROW_EXPORT_TO_STRAVA:
 						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA];
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[CloudPreferences usingStrava]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
-					case SETTINGS_ROW_LINK_DROPBOX:
+					case SETTINGS_ROW_EXPORT_TO_DROPBOX:
 						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX];
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[CloudPreferences usingDropbox]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
-					case SETTINGS_ROW_ICLOUD_BACKUP:
-						cell.textLabel.text = ICLOUD_BACKUP;
+					case SETTINGS_ROW_EXPORT_TO_ICLOUD:
+						cell.textLabel.text = AUTO_SAVE_TO_ICLOUD_DRIVE;
 						cell.detailTextLabel.text = @"";
 						[switchview setOn:[CloudPreferences usingiCloud]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
@@ -598,24 +597,24 @@ typedef enum SettingsRowsHealthKit
 		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_HIDE_DUPLICATES:
 			[Preferences setHideHealthKitDuplicates:switchControl.isOn];
 			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_LINK_RUNKEEPER:
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
 			[CloudPreferences setUsingRunKeeper:switchControl.isOn];
 			if (switchControl.isOn)
 			{
 				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
 			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_LINK_STRAVA:
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_STRAVA:
 			[CloudPreferences setUsingStrava:switchControl.isOn];
 			if (switchControl.isOn)
 			{
 				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
 			}
 			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_LINK_DROPBOX:
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_DROPBOX:
 			[CloudPreferences setUsingDropbox:switchControl.isOn];
 			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_ICLOUD_BACKUP:
+		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_ICLOUD:
 			break;
 		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_ENABLED:
 			[Preferences setBroadcastToServer:switchControl.isOn];

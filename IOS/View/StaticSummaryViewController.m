@@ -404,7 +404,7 @@ typedef enum ExportFileTypeButtons
 		{
 			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-			if ([appDelegate exportFileToCloudService:self->exportedFileName toService:self->selectedExportService])
+			if ([appDelegate exportFileToCloudService:self->exportedFileName toServiceNamed:self->selectedExportService])
 			{
 				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
 			}

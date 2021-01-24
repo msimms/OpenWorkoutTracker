@@ -39,7 +39,7 @@
 
 - (NSString*)name
 {
-	return @"iCloud";
+	return @"iCloud Drive";
 }
 
 - (BOOL)uploadFile:(NSString*)filePath
