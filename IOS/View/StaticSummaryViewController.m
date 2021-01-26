@@ -87,6 +87,13 @@ typedef enum Sections
 	NUM_SECTIONS
 } Sections;
 
+typedef enum InternalSectionItems
+{
+	ROW_ACTIVITY_ID = 0,
+	ROW_ACTIVITY_HASH,
+	NUM_INTERNAL_SECTION_ROWS
+} InternalSectionItems;
+
 typedef enum ExportFileTypeButtons
 {
 	EXPORT_BUTTON_GPX = 0,
@@ -317,7 +324,7 @@ typedef enum ExportFileTypeButtons
 					break;
 				case SECTION_INTERNAL:
 #if SHOW_DEBUG_INFO
-					count = 1;
+					count = NUM_INTERNAL_SECTION_ROWS;
 #else
 					count = 0;
 #endif
@@ -847,7 +854,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_SYNC:
 			return [self->syncedServices count] + [self->notSyncedServices count];
 		case SECTION_INTERNAL:
-			return 1;
+			return NUM_INTERNAL_SECTION_ROWS;
 	}
 	return 0;
 }
@@ -978,12 +985,23 @@ typedef enum ExportFileTypeButtons
 			break;
 		case SECTION_INTERNAL:
 			{
-				NSString* hash = [appDelegate getActivityHash:self->activityId];
-				cell.textLabel.text = NSLocalizedString(@"Activity Hash", nil);
-				if ([hash length] > 0)
-					cell.detailTextLabel.text = hash;
-				else
-					cell.detailTextLabel.text = @"--";
+				switch (row)
+				{
+				case ROW_ACTIVITY_ID:
+					cell.textLabel.text = NSLocalizedString(@"Activity ID", nil);
+					cell.detailTextLabel.text = self->activityId;
+					break;
+				case ROW_ACTIVITY_HASH:
+					{
+						NSString* hash = [appDelegate getActivityHash:self->activityId];
+						cell.textLabel.text = NSLocalizedString(@"Activity Hash", nil);
+						if ([hash length] > 0)
+							cell.detailTextLabel.text = hash;
+						else
+							cell.detailTextLabel.text = @"--";
+					}
+					break;
+				}
 			}
 			break;
 		default:
