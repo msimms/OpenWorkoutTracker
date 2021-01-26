@@ -10,20 +10,14 @@
 @interface LoginViewController : CommonViewController <UITextFieldDelegate>
 {
 	IBOutlet UITextField* usernameTextField;
-	IBOutlet UITextField* passwordTextField;
-	
+	IBOutlet UITextField* passwordTextField;	
 	IBOutlet UIBarButtonItem* loginButton;
-
 	IBOutlet UIActivityIndicatorView* spinner;
-
-	NSString* username;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField* usernameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* passwordTextField;
-
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* loginButton;
-
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 
 - (IBAction)onLogin:(id)sender;

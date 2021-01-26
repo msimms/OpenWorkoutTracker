@@ -65,6 +65,7 @@
 
 #pragma mark login notification
 
+// Called when the server returns the login result.
 - (void)loginProcessed:(NSNotification*)notification
 {
 	NSDictionary* loginData = [notification object];
@@ -124,8 +125,6 @@
 	{
 		self.spinner.center = self.view.center;
 		[self.spinner startAnimating];
-
-		self->username = self.usernameTextField.text;
 
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		if (![appDelegate serverLogin:self.usernameTextField.text withPassword:self.passwordTextField.text])
