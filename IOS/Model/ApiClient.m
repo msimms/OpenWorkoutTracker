@@ -143,9 +143,10 @@
 #else
 	[Preferences setBroadcastUserName:username];
 
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, URL_KEY_NAME_USERNAME,
-									 password, URL_KEY_NAME_PASSWORD,
-									 [Preferences uuid], URL_KEY_NAME_DEVICE,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 username, @URL_KEY_NAME_USERNAME,
+									 password, @URL_KEY_NAME_PASSWORD,
+									 [Preferences uuid], @URL_KEY_NAME_DEVICE,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -163,11 +164,12 @@
 #else
 	[Preferences setBroadcastUserName:username];
 
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:username, URL_KEY_NAME_USERNAME,
-									 password1, URL_KEY_NAME_PASSWORD1,
-									 password2, URL_KEY_NAME_PASSWORD2,
-									 realname, URL_KEY_NAME_REALNAME,
-									 [Preferences uuid], URL_KEY_NAME_DEVICE,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 username, @URL_KEY_NAME_USERNAME,
+									 password1, @URL_KEY_NAME_PASSWORD1,
+									 password2, @URL_KEY_NAME_PASSWORD2,
+									 realname, @URL_KEY_NAME_REALNAME,
+									 [Preferences uuid], @URL_KEY_NAME_DEVICE,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -291,8 +293,9 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @URL_KEY_NAME_ACTIVITY_ID,
-									 tag, URL_KEY_NAME_TAG,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 activityId, @URL_KEY_NAME_ACTIVITY_ID,
+									 tag, @URL_KEY_NAME_TAG,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -308,8 +311,9 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @URL_KEY_NAME_ACTIVITY_ID,
-									 tag, URL_KEY_NAME_TAG,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 activityId, @URL_KEY_NAME_ACTIVITY_ID,
+									 tag, @URL_KEY_NAME_TAG,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
@@ -371,7 +375,8 @@
 	return FALSE;
 #else
 	NSString* base64Contents = [contents base64EncodedStringWithOptions:kNilOptions];
-	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:activityId, @URL_KEY_NAME_ACTIVITY_ID,
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 activityId, @URL_KEY_NAME_ACTIVITY_ID,
 									 activityName, @URL_KEY_NAME_UPLOADED_FILE_NAME,
 									 base64Contents, @URL_KEY_NAME_UPLOADED_FILE_DATA,
 									 nil];
