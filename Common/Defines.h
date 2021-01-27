@@ -9,5 +9,11 @@
 
 #define APP_NAME "Straen"
 
+// When set to TRUE, this removes all broadcast functionality.
 #define OMIT_BROADCAST FALSE
-#define SHOW_DEBUG_INFO FALSE
+
+// When set to TRUE, removes the workout plan generator.
+#define OMIT_WORKOUT_PLAN_GEN FALSE
+
+// When set to TRUE, this adds a section to the summary view that shows activity id, hash, etc.
+#define SHOW_DEBUG_INFO TRUE

@@ -261,7 +261,11 @@
 			return TRUE;
 #endif
 		case FEATURE_WORKOUT_PLAN_GENERATION:
+#if OMIT_WORKOUT_PLAN_GEN
+			return FALSE;
+#else
 			return TRUE;
+#endif
 		case FEATURE_DROPBOX:
 			return FALSE;
 		case FEATURE_STRAVA:
