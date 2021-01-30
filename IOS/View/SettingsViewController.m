@@ -58,8 +58,6 @@ typedef enum SettingsRowsHealthKit
 
 #define TITLE                          NSLocalizedString(@"Settings", nil)
 #define UNIT_TITLE                     NSLocalizedString(@"Units", nil)
-#define UNIT_TITLE_US_CUSTOMARY        NSLocalizedString(@"US Customary Units", nil)
-#define UNIT_TITLE_METRIC              NSLocalizedString(@"Metric", nil)
 #define AUTO_SAVE_TO_ICLOUD_DRIVE      NSLocalizedString(@"Auto Save Files to iCloud Drive", nil)
 #define CLOUD_SERVICES                 NSLocalizedString(@"Cloud Services", nil)
 #define BROADCAST                      NSLocalizedString(@"Broadcast", nil)
@@ -184,10 +182,10 @@ typedef enum SettingsRowsHealthKit
 																			 message:UNIT_TITLE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
-	[alertController addAction:[UIAlertAction actionWithTitle:UNIT_TITLE_METRIC style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_METRIC style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:UNIT_TITLE_US_CUSTOMARY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_US_CUSTOMARY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
@@ -368,10 +366,10 @@ typedef enum SettingsRowsHealthKit
 					switch ([Preferences preferredUnitSystem])
 					{
 						case UNIT_SYSTEM_METRIC:
-							cell.detailTextLabel.text = UNIT_TITLE_METRIC;
+							cell.detailTextLabel.text = STR_METRIC;
 							break;
 						case UNIT_SYSTEM_US_CUSTOMARY:
-							cell.detailTextLabel.text = UNIT_TITLE_US_CUSTOMARY;
+							cell.detailTextLabel.text = STR_US_CUSTOMARY;
 							break;
 					}
 					break;

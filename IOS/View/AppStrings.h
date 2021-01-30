@@ -71,6 +71,9 @@
 #define STR_CYCLING               NSLocalizedString(@"Cycling", nil)
 #define STR_LIFTING               NSLocalizedString(@"Lifting", nil)
 
+#define STR_US_CUSTOMARY          NSLocalizedString(@"US Customary Units", nil)
+#define STR_METRIC                NSLocalizedString(@"Metric", nil)
+
 #define STR_REST                  NSLocalizedString(@"Rest", nil)
 #define STR_EVENT                 NSLocalizedString(@"Event", nil)
 #define STR_SPEED_RUN             NSLocalizedString(@"Speed Run", nil)

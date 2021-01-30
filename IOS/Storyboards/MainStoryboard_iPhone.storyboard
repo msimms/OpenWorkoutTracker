@@ -1943,7 +1943,6 @@
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="centerY" secondItem="Acj-HM-0Y7" secondAttribute="centerY" id="jaj-Sd-poW"/>
                             <constraint firstItem="JGP-tQ-dfp" firstAttribute="top" secondItem="5zW-R0-NSW" secondAttribute="bottom" id="udB-BW-eMs"/>
                             <constraint firstItem="JGP-tQ-dfp" firstAttribute="bottom" secondItem="Bjb-f8-TuA" secondAttribute="bottom" id="vKE-bV-WPo"/>
-                            <constraint firstAttribute="bottom" secondItem="Acj-HM-0Y7" secondAttribute="bottom" constant="360.33333333333331" id="yhO-Er-c1N"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="History" id="QoA-rf-lPm"/>
@@ -2433,18 +2432,18 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tYE-vI-hIF">
-                                <rect key="frame" x="33" y="221" width="351" height="34"/>
+                                <rect key="frame" x="33" y="221" width="153" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YhW-NW-iB4">
-                                <rect key="frame" x="33" y="391" width="351" height="34"/>
+                                <rect key="frame" x="28" y="391" width="356" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Splits (mm:ss)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="280-6c-5gz">
                                 <rect key="frame" x="33" y="362" width="110" height="21"/>
@@ -2456,28 +2455,33 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Target Pace (mm:ss)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Son-pC-men">
-                                <rect key="frame" x="29" y="277" width="197" height="21"/>
+                                <rect key="frame" x="29" y="277" width="157" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NOx-tz-E9l">
-                                <rect key="frame" x="33" y="306" width="351" height="34"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NOx-tz-E9l">
+                                <rect key="frame" x="28" y="306" width="356" height="34"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="316" id="zmy-cb-NIs"/>
-                                </constraints>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                             </textField>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uYx-Vq-Lc8">
+                                <rect key="frame" x="167" y="157" width="227" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="EBx-yG-7i6" id="DaE-en-vYp"/>
+                                    <outlet property="delegate" destination="EBx-yG-7i6" id="ERO-ID-eIk"/>
+                                </connections>
+                            </pickerView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PbG-OE-X5E"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
                             <constraint firstItem="Son-pC-men" firstAttribute="leading" secondItem="PbG-OE-X5E" secondAttribute="leading" constant="29" id="2pz-Xw-WdS"/>
                             <constraint firstItem="vou-9j-DgJ" firstAttribute="centerY" secondItem="tYE-vI-hIF" secondAttribute="centerY" constant="-37" id="3wj-Bx-aWb"/>
-                            <constraint firstItem="qR6-mO-zhQ" firstAttribute="trailing" secondItem="tYE-vI-hIF" secondAttribute="trailing" id="5Rr-ug-qw7"/>
+                            <constraint firstItem="qR6-mO-zhQ" firstAttribute="trailing" secondItem="tYE-vI-hIF" secondAttribute="trailing" constant="198" id="5Rr-ug-qw7"/>
                             <constraint firstItem="tYE-vI-hIF" firstAttribute="leading" secondItem="vou-9j-DgJ" secondAttribute="trailing" constant="-67" id="93r-lo-f4V"/>
                             <constraint firstItem="vou-9j-DgJ" firstAttribute="top" secondItem="qR6-mO-zhQ" secondAttribute="bottom" constant="16" id="95B-wt-fmP"/>
                             <constraint firstItem="FBY-Dg-oe4" firstAttribute="leading" secondItem="vou-9j-DgJ" secondAttribute="leading" id="Csz-Z2-iIQ"/>
@@ -2499,8 +2503,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <constraint firstItem="FBY-Dg-oe4" firstAttribute="top" secondItem="PbG-OE-X5E" secondAttribute="top" constant="22" id="qXu-2d-O5V"/>
                             <constraint firstItem="20t-23-bx2" firstAttribute="leading" secondItem="PbG-OE-X5E" secondAttribute="leading" id="rYL-I9-YwX"/>
                             <constraint firstItem="FBY-Dg-oe4" firstAttribute="leading" secondItem="qNb-dT-Lkr" secondAttribute="leadingMargin" constant="13" id="sOV-KF-GQT"/>
-                            <constraint firstItem="YhW-NW-iB4" firstAttribute="leading" secondItem="280-6c-5gz" secondAttribute="trailing" constant="-110" id="smf-Jl-Uos"/>
-                            <constraint firstItem="tYE-vI-hIF" firstAttribute="trailing" secondItem="NOx-tz-E9l" secondAttribute="trailing" id="vex-aK-WNm"/>
+                            <constraint firstItem="YhW-NW-iB4" firstAttribute="leading" secondItem="280-6c-5gz" secondAttribute="trailing" constant="-115" id="smf-Jl-Uos"/>
+                            <constraint firstItem="tYE-vI-hIF" firstAttribute="trailing" secondItem="NOx-tz-E9l" secondAttribute="trailing" constant="-198" id="vex-aK-WNm"/>
                             <constraint firstItem="vou-9j-DgJ" firstAttribute="leading" secondItem="280-6c-5gz" secondAttribute="leading" id="yRk-wG-l4N"/>
                         </constraints>
                     </view>
@@ -2511,6 +2515,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <outlet property="splitsTextField" destination="YhW-NW-iB4" id="CyN-1T-NUk"/>
                         <outlet property="targetPaceTextField" destination="NOx-tz-E9l" id="QbO-eC-rkY"/>
                         <outlet property="toolbar" destination="20t-23-bx2" id="Ivh-K9-jT6"/>
+                        <outlet property="unitsPicker" destination="uYx-Vq-Lc8" id="BzL-l5-3th"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xPy-4Q-FQ8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -3003,7 +3008,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="gtm-yZ-0Yg"/>
-        <segue reference="Zfp-Rg-OxX"/>
+        <segue reference="YPO-0d-PeY"/>
         <segue reference="1Bm-YM-doO"/>
         <segue reference="8pE-cX-Fug"/>
         <segue reference="mpc-lI-yFA"/>

@@ -10,6 +10,13 @@
 #define MSG_INVALID_DISTANCE NSLocalizedString(@"Invalid distance value.", nil)
 #define MSG_INVALID_TIME NSLocalizedString(@"Invalid time value.", nil)
 
+typedef enum PickerRows
+{
+	ROW_METRIC = 0,
+	ROW_US_CUSTOMARY,
+	NUM_PICKER_ROWS
+} PickerRows;
+
 @interface PacePlanEditViewController ()
 
 @end
@@ -21,6 +28,7 @@
 @synthesize distanceTextField;
 @synthesize targetPaceTextField;
 @synthesize splitsTextField;
+@synthesize unitsPicker;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -87,9 +95,12 @@
 	uint16_t seconds = 0;
 
 	double targetDistance = [distanceTextField.text floatValue];
+	UnitSystem targetUnits = (UnitSystem)[self.unitsPicker selectedRowInComponent:0];
 	double targetPaceMin = 0.0;
 	double splitsMin = 0.0;
-	
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	// Validate the distance. The units will be converted later.
 	if (targetDistance <= 0.0)
 	{
@@ -107,6 +118,11 @@
 		[super showOneButtonAlert:STR_ERROR withMsg:MSG_INVALID_TIME];
 		return;
 	}
+	if (targetPaceMin <= 0.0)
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_INVALID_TIME];
+		return;
+	}
 
 	// Parse and validate the splits data.
 	if ([StringUtils parseHHMMSS:splitsTextField.text withHours:&hours withMinutes:&minutes withSeconds:&seconds])
@@ -120,8 +136,7 @@
 	}
 
 	// Update the data.
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withSplits:splitsMin])
+	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withTargetUnits:targetUnits withSplits:splitsMin])
 	{
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}
@@ -134,6 +149,28 @@
 - (void)setPlanId:(NSString*)planId
 {
 	self->selectedPlanId = planId;
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(nonnull UIPickerView*)pickerView
+{
+	return 1;
+}
+
+- (NSInteger)pickerView:(nonnull UIPickerView*)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+	return NUM_PICKER_ROWS;
+}
+
+- (NSString*)pickerView:(nonnull UIPickerView*)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+	switch (row)
+	{
+	case ROW_METRIC:
+		return STR_METRIC;
+	case ROW_US_CUSTOMARY:
+		return STR_US_CUSTOMARY;
+	}
+	return @"";
 }
 
 @end

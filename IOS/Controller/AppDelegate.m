@@ -2515,11 +2515,12 @@ void attributeNameCallback(const char* name, void* context)
 		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 
 		free((void*)tempName);
 	}
-	
+
 	// Convert units.
 	if (result && targetDistance)
 	{
 		ActivityAttributeType attr;
+
 		attr.value.doubleVal = (*targetDistance);
 		attr.valueType = TYPE_DOUBLE;
 		attr.measureType = MEASURE_DISTANCE;
@@ -2543,11 +2544,12 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
-- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits
+- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withTargetUnits:(UnitSystem)targetUnits withSplits:(double)splits
 {
-	// Convert units.
 	UnitSystem userUnits = [Preferences preferredUnitSystem];
 	ActivityAttributeType attr;
+
+	// Convert units.
 	attr.value.doubleVal = targetDistance;
 	attr.valueType = TYPE_DOUBLE;
 	attr.measureType = MEASURE_DISTANCE;

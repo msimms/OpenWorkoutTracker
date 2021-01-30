@@ -244,7 +244,7 @@
 
 - (BOOL)createNewPacePlan:(NSString*)planName withPlanId:(NSString*)planId;
 - (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits;
-- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits;
+- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withTargetUnits:(UnitSystem)targetUnits withSplits:(double)splits;
 - (BOOL)deletePacePlanWithId:(NSString*)planId;
 
 // methods for managing workouts
