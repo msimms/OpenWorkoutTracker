@@ -34,21 +34,19 @@
 
 - (void)viewDidLoad
 {
-	[self.homeButton setTitle:STR_HOME];
 	[super viewDidLoad];
+	[self.homeButton setTitle:STR_HOME];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(deviceOrientationDidChange:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
 
 	[self drawChart];
+	[super viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

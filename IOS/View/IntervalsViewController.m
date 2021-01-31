@@ -36,21 +36,16 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	self.title = TITLE;
+
 	[self.intervalButton setTitle:ADD_INTERVAL];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self updateWorkoutNames];
 	[self.intervalTableView reloadData];
 }
@@ -76,6 +71,7 @@
 	if ([segueId isEqualToString:@SEGUE_TO_INTERVAL_EDIT_VIEW])
 	{
 		IntervalEditViewController* editVC = (IntervalEditViewController*)[segue destinationViewController];
+
 		if (editVC)
 		{
 			[editVC setWorkoutId:self->selectedWorkoutId];

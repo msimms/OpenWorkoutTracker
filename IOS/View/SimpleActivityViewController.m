@@ -44,9 +44,6 @@
 {
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	self->valueLabels = [[NSMutableArray alloc] init];
 	if (self->valueLabels)
 	{
@@ -164,10 +161,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	[super initializeLabelText];
 	[super initializeLabelColor];
 }

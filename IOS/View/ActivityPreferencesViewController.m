@@ -101,8 +101,6 @@ typedef enum GpsSectionItems
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
 	self->enabledDisabledStrings = [NSArray arrayWithObjects:LABEL_ENABLED, LABEL_DISABLED, nil];
 	self->countdownStrings       = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
@@ -110,12 +108,6 @@ typedef enum GpsSectionItems
 	self->positionStrings        = [NSArray arrayWithObjects:@"1 (Top)", @"2 (Row 2 - Left)", @"3 (Row 2 - Right)", @"4 (Row 3 - Left)", @"5 (Row 3 - Right)", @"6 (Row 4 - Left)", @"7 (Row 4 - Right)", @"8 (Row 5 - Left)", @"9 (Row 5 - Right)", nil];
 	self->accuracySettings       = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, nil];
 	self->gpsFilterOptions       = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 }
 
 - (BOOL)shouldAutorotate
@@ -182,7 +174,6 @@ typedef enum GpsSectionItems
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	NSString* activityType = [appDelegate getCurrentActivityType];
-
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 

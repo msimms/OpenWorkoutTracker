@@ -19,18 +19,6 @@
 	return self;
 }
 
-- (void)viewDidLoad
-{
-	[super viewDidLoad];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-}
-
 - (BOOL)shouldAutorotate
 {
 	return NO;

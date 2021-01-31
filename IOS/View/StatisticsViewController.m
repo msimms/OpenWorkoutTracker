@@ -63,10 +63,10 @@ typedef enum Sections
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
 	self.title = STR_SUMMARY;
 
-	[super viewDidLoad];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.spinner stopAnimating];
 
 	InitializeHistoricalActivityList();
@@ -79,7 +79,6 @@ typedef enum Sections
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.spinner stopAnimating];
 }
 

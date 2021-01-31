@@ -102,13 +102,12 @@ typedef enum SettingsRowsHealthKit
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
 	self.title = TITLE;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedOut:) name:@NOTIFICATION_NAME_LOGGED_OUT object:nil];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[super viewDidLoad];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
@@ -120,9 +119,8 @@ typedef enum SettingsRowsHealthKit
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.settingsTableView reloadData];
 	[super viewDidAppear:animated];
+	[self.settingsTableView reloadData];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
@@ -157,13 +155,11 @@ typedef enum SettingsRowsHealthKit
 	{
 		[self.loginButton setTitle:STR_LOGOUT];
 		[self.createLoginButton setEnabled:NO];
-		[self.createLoginButton setTintColor: [UIColor clearColor]];
 	}
 	else
 	{
 		[self.loginButton setTitle:STR_LOGIN];
 		[self.createLoginButton setEnabled:YES];
-		[self.createLoginButton setTintColor:nil];
 	}
 }
 
@@ -171,7 +167,6 @@ typedef enum SettingsRowsHealthKit
 {
 	[self.loginButton setTitle:STR_LOGIN];
 	[self.createLoginButton setEnabled:YES];
-	[self.createLoginButton setTintColor:nil];
 }
 
 #pragma mark methods for showing popups

@@ -30,12 +30,9 @@
 
 - (void)viewDidLoad
 {
-	self.title = STR_MAP;
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	self.title = STR_MAP;
 
 	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
 	self.swipe.direction = UISwipeGestureRecognizerDirectionRight;
@@ -50,7 +47,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
 	[UIApplication sharedApplication].idleTimerDisabled = FALSE;
 

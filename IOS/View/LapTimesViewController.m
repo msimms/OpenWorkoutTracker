@@ -58,16 +58,11 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.homeButton setTitle:STR_HOME];
 	[super viewDidLoad];
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[super viewDidAppear:animated];
+	self.title = TITLE;
+
+	[self.homeButton setTitle:STR_HOME];
 }
 
 - (BOOL)shouldAutorotate

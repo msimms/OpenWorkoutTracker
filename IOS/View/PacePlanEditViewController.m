@@ -42,18 +42,10 @@ typedef enum PickerRows
 	self.title = TITLE;
 
 	[super viewDidLoad];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* planName = nil;
 	double targetDistance = (double)0.0;
@@ -70,6 +62,8 @@ typedef enum PickerRows
 		targetPaceTextField.text = [StringUtils formatSeconds:(uint64_t)(targetPaceMin * 60.0)];
 		splitsTextField.text = [StringUtils formatSeconds:(uint64_t)(splitsMin * 60.0)];
 	}
+
+	[super viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotate

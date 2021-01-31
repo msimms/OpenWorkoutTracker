@@ -41,12 +41,9 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	self.title = TITLE;
 
 	switch (self->mode)
 	{
@@ -80,13 +77,6 @@
 			[self showHeatMap];
 			break;
 	}
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
 - (BOOL)shouldAutorotate

@@ -151,9 +151,6 @@ typedef enum ExportFileTypeButtons
 
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-
 	[self.deleteButton setTitle:STR_DELETE];
 	[self.exportButton setTitle:STR_EXPORT];
 	[self.editButton setTitle:STR_EDIT];
@@ -193,13 +190,6 @@ typedef enum ExportFileTypeButtons
 		[self->notSyncedServices addObject:@SYNC_DEST_ICLOUD_DRIVE];
 
 	[self redraw];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
 - (BOOL)shouldAutorotate

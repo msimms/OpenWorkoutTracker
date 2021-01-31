@@ -93,15 +93,18 @@
 // Called when the phone sends a pace plan to the watch.
 - (void)loadPacePlan:(nonnull NSDictionary<NSString*,id> *)message
 {
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
 	NSString* planId = [message objectForKey:@WATCH_MSG_PACE_PLAN_ID];
 	NSString* planName = [message objectForKey:@WATCH_MSG_PACE_PLAN_NAME];
 	NSString* targetPaceInMinKm = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE];
 	NSString* targetDistanceInKms = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE];
 	NSString* splits = [message objectForKey:@WATCH_MSG_PACE_PLAN_SPLITS];
 	NSString* route = [message objectForKey:@WATCH_MSG_PACE_PLAN_ROUTE];
-	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+	NSString* targetPaceUnits = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE_UNITS];
+	NSString* targetDistanceUnits = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE_UNITS];
 
-	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withRoute:route];
+	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withTargetDistanceUnits:(UnitSystem)[targetDistanceUnits intValue] withTargetPaceUnits:(UnitSystem)[targetPaceUnits intValue] withRoute:route];
 }
 
 // Sends the activity to the phone.

@@ -66,10 +66,9 @@ typedef enum SettingsSections
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[super viewDidLoad];
+
+	self.title = TITLE;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	if (appDelegate && ![appDelegate hasLeBluetooth])
@@ -86,7 +85,6 @@ typedef enum SettingsSections
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self->peripheralTableView reloadData];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightUpdated:) name:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:nil];

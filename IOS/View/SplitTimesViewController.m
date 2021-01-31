@@ -64,17 +64,9 @@ typedef enum SectionType
 
 - (void)viewDidLoad
 {
-	self.title = STR_SPLIT_TIMES;
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.homeButton setTitle:STR_HOME];
 	[super viewDidLoad];
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[super viewDidAppear:animated];
+	self.title = STR_SPLIT_TIMES;
 }
 
 - (BOOL)shouldAutorotate

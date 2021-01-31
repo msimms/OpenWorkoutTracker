@@ -28,20 +28,14 @@
 
 - (void)viewDidLoad
 {
-	self.title = STR_WORKOUT;
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	self.title = STR_WORKOUT;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	[self drawChart];
 }

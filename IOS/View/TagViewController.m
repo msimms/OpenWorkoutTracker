@@ -31,12 +31,9 @@
 
 - (void)viewDidLoad
 {
-	self.title = STR_TAGS;
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	self.title = STR_TAGS;
 
 	[self.tagButton setTitle:STR_NEW_TAG];
 
@@ -50,9 +47,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 	
 	[self.tagTableView setEditing:YES animated: YES];
 }

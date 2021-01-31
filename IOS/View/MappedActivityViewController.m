@@ -55,18 +55,12 @@
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-	if (self)
-	{
-	}
 	return self;
 }
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	[self.mapView setDelegate:self];
 	[self.mapButton setTitle:STR_MAP];
@@ -201,9 +195,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 
 	[super initializeLabelText];
 	[super initializeLabelColor];

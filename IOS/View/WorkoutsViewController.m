@@ -32,22 +32,18 @@
 {
 	self.title = STR_WORKOUTS;
 
-	[super viewDidLoad];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.generateButton setTitle:STR_GENERATE];
 	[self updateWorkoutNames];
+
+	[super viewDidLoad];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self updateWorkoutNames];
 	[self.workoutsView reloadData];
+
+	[super viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotate

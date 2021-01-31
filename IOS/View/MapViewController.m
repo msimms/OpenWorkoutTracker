@@ -98,7 +98,6 @@ MapViewController* g_ptrToMapViewCtrl;
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
 #if !OMIT_BROADCAST
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendLocationUpdated:) name:@NOTIFICATION_NAME_FRIEND_LOCATION_UPDATED object:nil];
@@ -242,9 +241,11 @@ void KmlPlacemarkEnd(const char* name, void* context)
 - (void)showRoute:(CLLocationCoordinate2D*)points withPointCount:(size_t)pointCount withColor:(UIColor*)color withWidth:(CGFloat)width
 {
 	MKPolyline* routeLine = [MKPolyline polylineWithCoordinates:points count:pointCount];
+
 	if (routeLine)
 	{
 		LineAttributes* pair = [[LineAttributes alloc] initWithValues:routeLine withColor:color withWidth:width];
+
 		if (pair)
 		{
 			[self->lines addObject:pair];

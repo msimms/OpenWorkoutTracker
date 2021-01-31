@@ -40,12 +40,9 @@
 
 - (void)viewDidLoad
 {
-	[self displayValues];
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	[self displayValues];
 
 	[self.nameLabel setText:LABEL_NAME];
 	[self.descLabel setText:LABEL_DESCRIPTION];
@@ -54,18 +51,10 @@
 	[self->descTextField setDelegate:self];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[self save];
 	[super viewWillDisappear:animated];
+	[self save];
 }
 
 - (BOOL)shouldAutorotate

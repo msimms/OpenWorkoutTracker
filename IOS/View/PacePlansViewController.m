@@ -33,22 +33,18 @@
 {
 	self.title = TITLE;
 
-	[super viewDidLoad];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self.addPlanButton setTitle:ADD_PACE_PLAN];
 	[self updatePacePlanNames];
+
+	[super viewDidLoad];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 	[self updatePacePlanNames];
 	[self.planTableView reloadData];
+
+	[super viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotate

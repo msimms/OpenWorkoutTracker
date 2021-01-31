@@ -63,7 +63,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 
 	// Display the first time warning message.
 	if (![Preferences hasShownFirstTimeUseMessage])
@@ -76,6 +75,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+
 	self.navigationController.navigationBarHidden = TRUE;
 	
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

@@ -74,13 +74,10 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-	[self.searchBar setTintColor:[UIColor blackColor]];
+	self.title = TITLE;
+
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
 	[self.spinner stopAnimating];
 
@@ -92,9 +89,6 @@
 {
 	[super viewDidAppear:animated];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-	[self.searchBar setTintColor:[UIColor blackColor]];
 	[self.spinner stopAnimating];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

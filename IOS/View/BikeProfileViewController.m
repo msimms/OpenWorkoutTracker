@@ -66,12 +66,9 @@
 
 - (void)viewDidLoad
 {
-	[self displayValues];
-
 	[super viewDidLoad];
 
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+	[self displayValues];
 
 	[self.nameLabel setText:LABEL_NAME];
 	[self.weightLabel setText:LABEL_WEIGHT];
@@ -79,14 +76,6 @@
 
 	[self->nameTextField setDelegate:self];
 	[self->weightTextField setDelegate:self];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

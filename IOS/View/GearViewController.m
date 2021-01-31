@@ -37,12 +37,10 @@ typedef enum GearSections
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
 	self.title = STR_GEAR;
 
-	[super viewDidLoad];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
-	
 	self->bikeViewMode = BIKE_PROFILE_NEW;
 	self->shoeViewMode = SHOE_PROFILE_NEW;
 }
@@ -55,13 +53,6 @@ typedef enum GearSections
 	[self.gearTableView reloadData];
 
 	[super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
 - (BOOL)shouldAutorotate

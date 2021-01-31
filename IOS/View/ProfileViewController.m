@@ -64,22 +64,13 @@ typedef enum ProfilePerformanceRows
 
 - (void)viewDidLoad
 {
-	self.title = STR_PROFILE;
-
 	[super viewDidLoad];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
+
+	self.title = STR_PROFILE;
 
 	[self.datePicker setHidden:TRUE];
 	[self.datePicker setDatePickerMode:UIDatePickerModeDate];
 	[self.datePicker addTarget:self action:@selector(updateLabel:) forControlEvents:UIControlEventValueChanged];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
-	[self.toolbar setTintColor:[UIColor blackColor]];
 }
 
 - (BOOL)shouldAutorotate

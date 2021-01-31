@@ -87,6 +87,7 @@
 	self->screenHeight = screenBounds.size.height;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
 	self->messages = [[NSMutableArray alloc] init];
 	self->tappedButtonIndex = 0;
@@ -98,8 +99,6 @@
 	[self.bikeButton setTitle:STR_BIKE];
 	[self.intervalsButton setTitle:BUTTON_TITLE_INTERVALS];
 	[self.autoStartButton setTitle:BUTTON_TITLE_AUTOSTART];
-
-	[self->autoStartButton setTintColor:[UIColor blackColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -516,10 +515,6 @@
 	{
 		[self->autoStartButton setTintColor:[UIColor redColor]];
 	}
-	else
-	{
-		[self->autoStartButton setTintColor:[UIColor blackColor]];
-	}
 }
 
 - (IBAction)onStartStop:(id)sender
@@ -538,7 +533,8 @@
 		{
 			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_STOP
 																					 message:ALERT_MSG_STOP
-																			  preferredStyle:UIAlertControllerStyleAlert];           
+																			  preferredStyle:UIAlertControllerStyleAlert];
+
 			[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				[self doStop];
 			}]];
@@ -557,7 +553,8 @@
 		{
 			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																					 message:ALERT_MSG_NO_BIKE
-																			  preferredStyle:UIAlertControllerStyleAlert];           
+																			  preferredStyle:UIAlertControllerStyleAlert];
+
 			[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
 			[self presentViewController:alertController animated:YES completion:nil];
 		}
@@ -567,7 +564,8 @@
 		{
 			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																					 message:ALERT_MSG_NO_FOOT_POD
-																			  preferredStyle:UIAlertControllerStyleAlert];           
+																			  preferredStyle:UIAlertControllerStyleAlert];
+
 			[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
 			[self presentViewController:alertController animated:YES completion:nil];
 		}
@@ -741,8 +739,8 @@
 		@synchronized(self->messages)
 		{
 			bool found = false;
-
 			NSString* msg = [[NSString alloc] initWithString:MESSAGE_BAD_GPS];
+
 			for (NSString* tempMsg in self->messages)
 			{
 				if ([tempMsg isEqualToString:msg])
