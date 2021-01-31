@@ -1068,7 +1068,7 @@ SegmentType MovingActivity::GradeAdjustedPace() const
 time_t MovingActivity::GapToTargetPace() const
 {
 	// Make sure a pace plan is selected.
-	if (m_pacePlan.targetDistanceInKms > (double)0.01 && m_pacePlan.targetPaceMinKm > (double)0.0)
+	if (m_pacePlan.targetDistanceInKms > (double)0.01 && m_pacePlan.targetPaceInMinKm > (double)0.0)
 	{
 		double remainingDistanceInMeters = (m_pacePlan.targetDistanceInKms * 1000.0) - DistanceTraveledInMeters();
 
@@ -1081,7 +1081,7 @@ time_t MovingActivity::GapToTargetPace() const
 			if (currentPaceSegment.startTime > 0)
 			{
 				double elapsedMins = ElapsedTimeInSeconds() / (double)60.0;
-				double targetFinishTimeInMins = (m_pacePlan.targetDistanceInKms * m_pacePlan.targetPaceMinKm) - elapsedMins;
+				double targetFinishTimeInMins = (m_pacePlan.targetDistanceInKms * m_pacePlan.targetPaceInMinKm) - elapsedMins;
 
 				// Make sure we haven't already passed the original target finish time.
 				if (targetFinishTimeInMins > (double)0.01)

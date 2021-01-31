@@ -127,12 +127,22 @@ bool Database::CreateTables()
 
 	if (!DoesTableExist("bike"))
 	{
-		sql = "create table bike (id integer primary key, name text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int)";
+		sql = "create table bike (id integer primary key, name text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int, last_updated_time big int)";
+		queries.push_back(sql);
+	}
+	else if (!DoesTableHaveColumn("bike", "last_updated_time"))
+	{
+		sql = "alter table bike add column last_updated_time big int";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("shoe"))
 	{
-		sql = "create table shoe (id integer primary key, name text, description text, time_added unsigned big int, time_retired unsigned big int)";
+		sql = "create table shoe (id integer primary key, name text, description text, time_added unsigned big int, time_retired unsigned big int, last_updated_time big int)";
+		queries.push_back(sql);
+	}
+	else if (!DoesTableHaveColumn("shoe", "last_updated_time"))
+	{
+		sql = "alter table shoe add column last_updated_time big int";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("bike_activity"))
@@ -142,7 +152,7 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("interval_workout"))
 	{
-		sql = "create table interval_workout (id integer primary key, workout_id test, name text, sport text)";
+		sql = "create table interval_workout (id integer primary key, workout_id test, name text, sport text, last_updated_time big int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("interval_workout_segment"))
@@ -162,8 +172,26 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("pace_plan"))
 	{
-		sql = "create table pace_plan (id integer primary key, plan_id text, name text, target_pace double, target_distance double, splits double, route text)";
+		sql = "create table pace_plan (id integer primary key, plan_id text, name text, target_pace double, target_distance double, splits double, route text, display_units_distance integer, display_units_pace integer, last_updated_time big int)";
 		queries.push_back(sql);
+	}
+	else
+	{
+		if (!DoesTableHaveColumn("pace_plan", "display_units_distance"))
+		{
+			sql = "alter table pace_plan add column display_units_distance integer";
+			queries.push_back(sql);
+		}
+		if (!DoesTableHaveColumn("pace_plan", "display_units_pace"))
+		{
+			sql = "alter table pace_plan add column display_units_pace integer";
+			queries.push_back(sql);
+		}
+		if (!DoesTableHaveColumn("pace_plan", "last_updated_time"))
+		{
+			sql = "alter table pace_plan add column last_updated_time big int";
+			queries.push_back(sql);
+		}
 	}
 	if (!DoesTableExist("custom_activity"))
 	{
@@ -344,7 +372,7 @@ bool Database::CreateBike(const Bike& bike)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into bike values (NULL,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into bike values (NULL,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, bike.name.c_str(), -1, SQLITE_TRANSIENT);
@@ -352,6 +380,7 @@ bool Database::CreateBike(const Bike& bike)
 		sqlite3_bind_double(statement, 3, bike.computedWheelCircumferenceMm);
 		sqlite3_bind_int64(statement, 4, bike.timeAdded);
 		sqlite3_bind_int64(statement, 5, bike.timeRetired);
+		sqlite3_bind_int64(statement, 6, time(NULL));
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -446,13 +475,14 @@ bool Database::CreateShoe(Shoes& shoes)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into shoe values (NULL,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into shoe values (NULL,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, shoes.name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, shoes.description.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 3, shoes.timeAdded);
 		sqlite3_bind_int64(statement, 4, shoes.timeRetired);
+		sqlite3_bind_int64(statement, 5, time(NULL));
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -594,12 +624,13 @@ bool Database::CreateIntervalWorkout(const std::string& workoutId, const std::st
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_workout values (NULL,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_workout values (NULL,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 3, sport.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 4, time(NULL));
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}	
@@ -916,15 +947,22 @@ bool Database::DeleteWorkoutIntervals(const std::string& workoutId)
 	return result == SQLITE_DONE;
 }
 
-bool Database::CreatePacePlan(const std::string& name, const std::string& planId)
+bool Database::CreatePacePlan(const PacePlan& plan)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?,0.0,0.0,0.0,\"\")", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, planId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text(statement, 2, name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, plan.name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 3, plan.targetPaceInMinKm);
+		sqlite3_bind_double(statement, 4, plan.targetDistanceInKms);
+		sqlite3_bind_double(statement, 5, plan.splits);
+		sqlite3_bind_text(statement, 6, plan.route.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(statement, 7, plan.displayUnitsDistance);
+		sqlite3_bind_int(statement, 8, plan.displayUnitsPace);
+		sqlite3_bind_int64(statement, 9, plan.lastUpdatedTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}	
@@ -936,7 +974,7 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, target_pace, target_distance, splits, route from pace_plan", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, target_pace, target_distance, splits, route, display_units_distance, display_units_pace, last_updated_time from pace_plan", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -944,10 +982,13 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 
 			plan.planId.append((const char*)sqlite3_column_text(statement, 0));
 			plan.name.append((const char*)sqlite3_column_text(statement, 1));
-			plan.targetPaceMinKm = sqlite3_column_double(statement, 2);
+			plan.targetPaceInMinKm = sqlite3_column_double(statement, 2);
 			plan.targetDistanceInKms = sqlite3_column_double(statement, 3);
 			plan.splits = sqlite3_column_double(statement, 4);
 			plan.route.append((const char*)sqlite3_column_text(statement, 5));
+			plan.displayUnitsDistance = (UnitSystem)sqlite3_column_int(statement, 6);
+			plan.displayUnitsPace = (UnitSystem)sqlite3_column_int(statement, 7);
+			plan.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 8);
 
 			plans.push_back(plan);
 		}
@@ -962,14 +1003,17 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, target_pace = ?, target_distance = ?, splits = ? where plan_id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, target_pace = ?, target_distance = ?, splits = ?, display_units_distance = ?, display_units_pace = ?, last_updated_time = ? where plan_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, plan.name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 2, plan.targetPaceMinKm);
+		sqlite3_bind_double(statement, 2, plan.targetPaceInMinKm);
 		sqlite3_bind_double(statement, 3, plan.targetDistanceInKms);
 		sqlite3_bind_double(statement, 4, plan.splits);
 		sqlite3_bind_text(statement, 5, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(statement, 6, plan.displayUnitsDistance);
+		sqlite3_bind_int(statement, 7, plan.displayUnitsPace);
+		sqlite3_bind_int64(statement, 8, plan.lastUpdatedTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

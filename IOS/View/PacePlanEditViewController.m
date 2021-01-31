@@ -28,7 +28,8 @@ typedef enum PickerRows
 @synthesize distanceTextField;
 @synthesize targetPaceTextField;
 @synthesize splitsTextField;
-@synthesize unitsPicker;
+@synthesize unitsPickerDistance;
+@synthesize unitsPickerPace;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -53,13 +54,15 @@ typedef enum PickerRows
 	[self.navigationController.navigationBar setTintColor:[UIColor blackColor]];
 	[self.toolbar setTintColor:[UIColor blackColor]];
 
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* planName = nil;
 	double targetDistance = (double)0.0;
 	double targetPaceMin = (double)0.0;
 	double splitsMin = (double)0.0;
+	UnitSystem targetDistanceUnits = UNIT_SYSTEM_METRIC;
+	UnitSystem targetPaceUnits = UNIT_SYSTEM_METRIC;
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate getPacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin])
+	if ([appDelegate getPacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin withTargetDistanceUnits:&targetDistanceUnits withTargetPaceUnits:&targetPaceUnits])
 	{
 		if (planName != nil)
 			nameTextField.text = planName;
@@ -95,9 +98,11 @@ typedef enum PickerRows
 	uint16_t seconds = 0;
 
 	double targetDistance = [distanceTextField.text floatValue];
-	UnitSystem targetUnits = (UnitSystem)[self.unitsPicker selectedRowInComponent:0];
 	double targetPaceMin = 0.0;
 	double splitsMin = 0.0;
+
+	UnitSystem targetDistanceUnits = (UnitSystem)[self.unitsPickerDistance selectedRowInComponent:0];
+	UnitSystem targetPaceUnits = (UnitSystem)[self.unitsPickerPace selectedRowInComponent:0];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
@@ -136,7 +141,7 @@ typedef enum PickerRows
 	}
 
 	// Update the data.
-	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withTargetUnits:targetUnits withSplits:splitsMin])
+	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withSplits:splitsMin withTargetDistanceUnits:targetDistanceUnits withTargetPaceUnits:targetPaceUnits])
 	{
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}

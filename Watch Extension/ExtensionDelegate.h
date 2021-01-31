@@ -127,7 +127,7 @@
 
 // methods for managing pace plans
 
-- (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceMinKm:(double)targetPaceMinKm withTargetDistanceKms:(double)targetDistanceKms withSplits:(double)splits withRoute:(NSString*)route;
+- (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceInMinKm:(double)targetPaceInMinKm withTargetDistanceInKms:(double)targetDistanceInKms withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits withRoute:(NSString*)route;
 
 // reset methods
 

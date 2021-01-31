@@ -86,7 +86,7 @@ public:
 
 	// Methods for managing pace plans.
 
-	bool CreatePacePlan(const std::string& name, const std::string& planId);
+	bool CreatePacePlan(const PacePlan& plan);
 	bool RetrievePacePlans(std::vector<PacePlan>& plans);
 	bool UpdatePacePlan(const PacePlan& plan);
 	bool DeletePacePlan(const std::string& planId);

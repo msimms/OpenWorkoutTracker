@@ -2506,10 +2506,11 @@ void attributeNameCallback(const char* name, void* context)
 	return CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 }
 
-- (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits
+- (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits
 {
 	char* tempName = NULL;
-	BOOL result = GetPacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits);
+	BOOL result = GetPacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits);
+
 	if (tempName)
 	{
 		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 
@@ -2544,7 +2545,7 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
-- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withTargetUnits:(UnitSystem)targetUnits withSplits:(double)splits
+- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits
 {
 	UnitSystem userUnits = [Preferences preferredUnitSystem];
 	ActivityAttributeType attr;
@@ -2570,7 +2571,7 @@ void attributeNameCallback(const char* name, void* context)
 	ConvertToMetric(&attr);
 	splits = attr.value.doubleVal;
 
-	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits);
+	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits);
 }
 
 - (BOOL)deletePacePlanWithId:(NSString*)planId

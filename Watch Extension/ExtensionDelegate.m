@@ -912,15 +912,15 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark
 
-- (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceMinKm:(double)targetPaceMinKm withTargetDistanceKms:(double)targetDistanceKms withSplits:(double)splits withRoute:(NSString*)route
+- (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceInMinKm:(double)targetPaceInMinKm withTargetDistanceInKms:(double)targetDistanceInKms withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits withRoute:(NSString*)route
 {
 	if (InitializePacePlanList())
 	{
-		if (!GetPacePlanDetails([planId UTF8String], NULL, NULL, NULL, NULL))
+		if (!GetPacePlanDetails([planId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL))
 		{
 			CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 		}
-		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceMinKm, targetDistanceKms, splits);
+		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits);
 	}
 }
 

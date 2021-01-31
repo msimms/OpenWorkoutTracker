@@ -11,8 +11,9 @@
 	IBOutlet UITextField* distanceTextField;
 	IBOutlet UITextField* targetPaceTextField;
 	IBOutlet UITextField* splitsTextField;
-	IBOutlet UIPickerView* unitsPicker;
-	
+	IBOutlet UIPickerView* unitsPickerDistance;
+	IBOutlet UIPickerView* unitsPickerPace;
+
 	NSString* selectedPlanId;
 }
 
@@ -25,6 +26,7 @@
 @property (nonatomic, retain) IBOutlet UITextField* distanceTextField;
 @property (nonatomic, retain) IBOutlet UITextField* targetPaceTextField;
 @property (nonatomic, retain) IBOutlet UITextField* splitsTextField;
-@property (nonatomic, retain) IBOutlet UIPickerView* unitsPicker;
+@property (nonatomic, retain) IBOutlet UIPickerView* unitsPickerDistance;
+@property (nonatomic, retain) IBOutlet UIPickerView* unitsPickerPace;
 
 @end

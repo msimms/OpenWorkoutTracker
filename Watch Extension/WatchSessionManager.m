@@ -95,13 +95,13 @@
 {
 	NSString* planId = [message objectForKey:@WATCH_MSG_PACE_PLAN_ID];
 	NSString* planName = [message objectForKey:@WATCH_MSG_PACE_PLAN_NAME];
-	NSString* targetPaceMinKm = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE];
-	NSString* targetDistanceKms = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE];
+	NSString* targetPaceInMinKm = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE];
+	NSString* targetDistanceInKms = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE];
 	NSString* splits = [message objectForKey:@WATCH_MSG_PACE_PLAN_SPLITS];
 	NSString* route = [message objectForKey:@WATCH_MSG_PACE_PLAN_ROUTE];
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
-	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceMinKm:[targetPaceMinKm floatValue] withTargetDistanceKms:[targetDistanceKms floatValue] withSplits:[splits floatValue] withRoute:route];
+	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withRoute:route];
 }
 
 // Sends the activity to the phone.

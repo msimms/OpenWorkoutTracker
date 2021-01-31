@@ -1302,7 +1302,7 @@ extern "C" {
 
 			params.insert(std::make_pair("id", plan.planId));
 			params.insert(std::make_pair("name", plan.name));
-			params.insert(std::make_pair("targetPaceMinKm", FormatDouble(plan.targetPaceMinKm)));
+			params.insert(std::make_pair("targetPaceInMinKm", FormatDouble(plan.targetPaceInMinKm)));
 			params.insert(std::make_pair("targetDistanceInKms", FormatDouble(plan.targetDistanceInKms)));
 			params.insert(std::make_pair("splits", FormatDouble(plan.splits)));
 			params.insert(std::make_pair("route", plan.route));
@@ -1319,7 +1319,18 @@ extern "C" {
 
 		if (g_pDatabase && planName && planId)
 		{
-			result = g_pDatabase->CreatePacePlan(planName, planId);
+			PacePlan plan;
+
+			plan.planId = planId;
+			plan.name = planName;
+			plan.targetPaceInMinKm = (double)0.0;
+			plan.targetDistanceInKms = (double)0.0;
+			plan.splits = (double).0;
+			plan.route = "";
+			plan.displayUnitsDistance = UNIT_SYSTEM_METRIC;
+			plan.displayUnitsPace = UNIT_SYSTEM_METRIC;
+			plan.lastUpdatedTime = time(NULL);
+			result = g_pDatabase->CreatePacePlan(plan);
 		}
 
 		g_dbLock.unlock();
@@ -1327,7 +1338,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceMinKm, double* targetDistanceInKms, double* splits)
+	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits)
 	{
 		if (planId)
 		{
@@ -1339,12 +1350,16 @@ extern "C" {
 				{
 					if (name)
 						(*name) = strdup(pacePlan.name.c_str());
-					if (targetPaceMinKm)
-						(*targetPaceMinKm) = pacePlan.targetPaceMinKm;
+					if (targetPaceInMinKm)
+						(*targetPaceInMinKm) = pacePlan.targetPaceInMinKm;
 					if (targetDistanceInKms)
 						(*targetDistanceInKms) = pacePlan.targetDistanceInKms;
 					if (splits)
 						(*splits) = pacePlan.splits;
+					if (targetDistanceUnits)
+						(*targetDistanceUnits) = pacePlan.displayUnitsDistance;
+					if (targetPaceUnits)
+						(*targetPaceUnits) = pacePlan.displayUnitsPace;
 					return true;
 				}
 			}
@@ -1352,7 +1367,7 @@ extern "C" {
 		return false;
 	}
 
-	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceMinKm, double targetDistanceInKms, double splits)
+	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits)
 	{
 		bool result = false;
 
@@ -1367,7 +1382,7 @@ extern "C" {
 				if (pacePlan.planId.compare(planId) == 0)
 				{
 					pacePlan.name = name;
-					pacePlan.targetPaceMinKm = targetPaceMinKm;
+					pacePlan.targetPaceInMinKm = targetPaceInMinKm;
 					pacePlan.targetDistanceInKms = targetDistanceInKms;
 					pacePlan.splits = splits;
 					result = g_pDatabase->UpdatePacePlan(pacePlan);
