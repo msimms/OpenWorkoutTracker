@@ -130,7 +130,7 @@
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate setScreenLocking];
-	
+
 	if (![CLLocationManager locationServicesEnabled])
 	{
 		NSString* msg = [[NSString alloc] initWithString:MESSAGE_NO_LOCATION_SERVICES];
@@ -383,20 +383,39 @@
 
 - (void)initializeLabelColor
 {
-	UIColor* valueColor      = [self->activityPrefs getTextColor:self->activityType];
-	UIColor* titleColor      = [self->activityPrefs getLabelColor:self->activityType];
-	UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:self->activityType];
-
-	for (UILabel* label in self->valueLabels)
+	// Check for dark mode. Only use the user preferences in light mode.
+	switch (self.view.traitCollection.userInterfaceStyle)
 	{
-		[label setTextColor:valueColor];
-	}
-	for (UILabel* label in self->titleLabels)
-	{
-		[label setTextColor:titleColor];
-	}
+		case UIUserInterfaceStyleUnspecified:
+		case UIUserInterfaceStyleLight:
+			{
+				UIColor* valueColor      = [self->activityPrefs getTextColor:self->activityType];
+				UIColor* titleColor      = [self->activityPrefs getLabelColor:self->activityType];
+				UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:self->activityType];
 
-	self.view.backgroundColor = backgroundColor;
+				for (UILabel* label in self->valueLabels)
+				{
+					[label setTextColor:valueColor];
+				}
+				for (UILabel* label in self->titleLabels)
+				{
+					[label setTextColor:titleColor];
+				}
+				self.view.backgroundColor = backgroundColor;
+			}
+			break;
+		case UIUserInterfaceStyleDark:
+			for (UILabel* label in self->valueLabels)
+			{
+				[label setTextColor:[UIColor whiteColor]];
+			}
+			for (UILabel* label in self->titleLabels)
+			{
+				[label setTextColor:[UIColor whiteColor]];
+			}
+			self.view.backgroundColor = [UIColor blackColor];
+			break;
+	}
 }
 
 - (void)addTapGestureRecognizersToAllLabels

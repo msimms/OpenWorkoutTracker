@@ -16,7 +16,7 @@
 #define ACTIVITY_BUTTON_PAUSE     NSLocalizedString(@"Pause", nil)
 #define ACTIVITY_BUTTON_RESUME    NSLocalizedString(@"Resume", nil)
 
-@interface ActivityViewController : CommonViewController <UIActionSheetDelegate, UIGestureRecognizerDelegate>
+@interface ActivityViewController : CommonViewController <UIActionSheetDelegate, UIGestureRecognizerDelegate, UITraitEnvironment>
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar*        toolbar;
@@ -45,13 +45,13 @@
 	NSMutableArray*            unitsLabels;
 	NSMutableArray*            messages; // List of messages that need to be displayed
 	uint8_t                    messageDisplayCounter; // The number of seconds remaining before we remove the currently displayed message
-	uint8_t                    numAttributes;
+	uint8_t                    numAttributes; // The number of attributes being displayed
 	double                     lastHeartRateValue; // Most recent heart rate value
 	double                     lastCadenceValue; // Most recent cadence value
 	double                     lastPowerValue; // Most recent power meter value
 	ActivityPreferences*       activityPrefs; // Prefs object, cached here for performance reasons
 	NSString*                  activityType; // Current activity type, cached here for performance reasons
-	NSString*                  bikeName;
+	NSString*                  bikeName; // The name of the bicycle that ia associated with this activity, if any
 	bool                       autoStartCoordinateSet; // TRUE if we have a meaningful value in 'autoStartCoordinate'
 	Coordinate                 autoStartCoordinate; // Location reference for the autostart on move feature
 	NSInteger                  tappedButtonIndex; // Indicates which attribute was pressed
