@@ -54,6 +54,7 @@ typedef enum PickerRows
 	UnitSystem targetDistanceUnits = UNIT_SYSTEM_METRIC;
 	UnitSystem targetPaceUnits = UNIT_SYSTEM_METRIC;
 
+	// Retrieve the plan details from the database.
 	if ([appDelegate getPacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin withTargetDistanceUnits:&targetDistanceUnits withTargetPaceUnits:&targetPaceUnits])
 	{
 		if (planName != nil)
@@ -61,6 +62,8 @@ typedef enum PickerRows
 		distanceTextField.text = [NSString stringWithFormat:@"%0.2f", targetDistance];
 		targetPaceTextField.text = [StringUtils formatSeconds:(uint64_t)(targetPaceMin * 60.0)];
 		splitsTextField.text = [StringUtils formatSeconds:(uint64_t)(splitsMin * 60.0)];
+		[self.unitsPickerDistance selectRow:(NSInteger)targetDistanceUnits inComponent:0 animated:FALSE];
+		[self.unitsPickerPace selectRow:(NSInteger)targetPaceUnits inComponent:0 animated:FALSE];
 	}
 
 	[super viewDidAppear:animated];

@@ -1010,10 +1010,10 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 		sqlite3_bind_double(statement, 2, plan.targetPaceInMinKm);
 		sqlite3_bind_double(statement, 3, plan.targetDistanceInKms);
 		sqlite3_bind_double(statement, 4, plan.splits);
-		sqlite3_bind_text(statement, 5, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(statement, 6, plan.displayUnitsDistance);
-		sqlite3_bind_int(statement, 7, plan.displayUnitsPace);
-		sqlite3_bind_int64(statement, 8, plan.lastUpdatedTime);
+		sqlite3_bind_int(statement, 5, plan.displayUnitsDistance);
+		sqlite3_bind_int(statement, 6, plan.displayUnitsPace);
+		sqlite3_bind_int64(statement, 7, plan.lastUpdatedTime);
+		sqlite3_bind_text(statement, 8, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

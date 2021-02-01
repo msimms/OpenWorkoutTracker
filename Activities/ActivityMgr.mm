@@ -1385,12 +1385,20 @@ extern "C" {
 					pacePlan.targetPaceInMinKm = targetPaceInMinKm;
 					pacePlan.targetDistanceInKms = targetDistanceInKms;
 					pacePlan.splits = splits;
+					pacePlan.displayUnitsDistance = targetDistanceUnits;
+					pacePlan.displayUnitsPace = targetPaceUnits;
 					result = g_pDatabase->UpdatePacePlan(pacePlan);
 				}
 			}
 		}
 
 		g_dbLock.unlock();
+		
+		// Reload the pace plan cache.
+		if (result)
+		{
+			result = InitializePacePlanList();
+		}
 
 		return result;
 	}
