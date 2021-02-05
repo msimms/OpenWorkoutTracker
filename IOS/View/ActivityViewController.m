@@ -386,7 +386,7 @@
 {
 	UIColor* buttonColor = nil;
 
-	// Check for dark mode. Only use the user preferences in light mode.
+	// Check for dark mode.
 	switch (self.view.traitCollection.userInterfaceStyle)
 	{
 		case UIUserInterfaceStyleUnspecified:
@@ -1098,26 +1098,21 @@
 		{
 			if ((self->displayedBroadcastStatus == nil) || ([self->displayedBroadcastStatus boolValue] != [self->currentBroadcastStatus boolValue]))
 			{
-				const CGFloat IMAGE_SIZE = 40;
+				const CGFloat IMAGE_SIZE = 60;
 
 				CGFloat imageX = (self.view.bounds.size.width / 2) - (IMAGE_SIZE / 2);
 				CGFloat imageY = self.view.bounds.size.height - self.toolbar.bounds.size.height - (IMAGE_SIZE * 2);
-				NSString* imgPath;
+				NSString* imgPath = nil;
 
-				if ([self->currentBroadcastStatus boolValue])
-				{
-					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
-				}
-				else
-				{
-					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
-				}
-
+				// Remove the old image, if any.
 				if (self->broadcastImage)
-				{
 					[self->broadcastImage removeFromSuperview];
-				}
 
+				// Load the image.				
+				if ([self->currentBroadcastStatus boolValue])
+					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
+				else
+					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
 				self->broadcastImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
 				self->broadcastImage.frame = CGRectMake(imageX, imageY, IMAGE_SIZE, IMAGE_SIZE);
 
