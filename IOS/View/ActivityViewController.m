@@ -146,6 +146,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(printMessage:) name:@NOTIFICATION_NAME_PRINT_MESSAGE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
 
+	[self initializeToolbarButtonColor];
 	[self startTimer];
 	[self showHelp];
 
@@ -381,6 +382,40 @@
 	}
 }
 
+- (void)initializeToolbarButtonColor
+{
+	UIColor* buttonColor = nil;
+
+	// Check for dark mode. Only use the user preferences in light mode.
+	switch (self.view.traitCollection.userInterfaceStyle)
+	{
+		case UIUserInterfaceStyleUnspecified:
+		case UIUserInterfaceStyleLight:
+			buttonColor = [UIColor blackColor];
+			break;
+		case UIUserInterfaceStyleDark:
+			buttonColor = [UIColor whiteColor];
+			break;
+	}
+
+	if (buttonColor)
+	{
+		[self->moreButton setTintColor:buttonColor];
+		[self->customizeButton setTintColor:buttonColor];
+		[self->bikeButton setTintColor:buttonColor];
+		[self->intervalsButton setTintColor:buttonColor];
+		[self->paceButton setTintColor:buttonColor];
+		[self->lapButton setTintColor:buttonColor];
+		[self->startStopButton setTintColor:buttonColor];
+		[self->weightButton setTintColor:buttonColor];
+
+		if (IsAutoStartEnabled())
+			[self->autoStartButton setTintColor:[UIColor redColor]];
+		else
+			[self->autoStartButton setTintColor:buttonColor];
+	}
+}
+
 - (void)initializeLabelColor
 {
 	// Check for dark mode. Only use the user preferences in light mode.
@@ -529,11 +564,7 @@
 - (IBAction)onAutoStart:(id)sender
 {
 	SetAutoStart(!IsAutoStartEnabled());
-
-	if (IsAutoStartEnabled())
-	{
-		[self->autoStartButton setTintColor:[UIColor redColor]];
-	}
+	[self initializeToolbarButtonColor];
 }
 
 - (IBAction)onStartStop:(id)sender
