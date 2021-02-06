@@ -1550,6 +1550,7 @@ extern "C" {
 		bool result = false;
 
 		g_historicalActivityLock.lock();
+		g_dbLock.lock();
 
 		if (g_pActivityFactory && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -1562,6 +1563,7 @@ extern "C" {
 			result = true;
 		}
 
+		g_dbLock.unlock();
 		g_historicalActivityLock.unlock();
 
 		return result;
