@@ -24,7 +24,6 @@
 
 @implementation IntervalsViewController
 
-@synthesize toolbar;
 @synthesize intervalTableView;
 @synthesize intervalButton;
 

@@ -18,8 +18,6 @@
 
 @interface ActivityViewController : CommonViewController <UIActionSheetDelegate, UIGestureRecognizerDelegate, UITraitEnvironment>
 {
-	IBOutlet UINavigationItem* navItem;
-	IBOutlet UIToolbar*        toolbar;
 	IBOutlet UILabel*          messagesLabel;
 	IBOutlet UIBarButtonItem*  moreButton;
 	IBOutlet UIBarButtonItem*  customizeButton;
@@ -93,8 +91,6 @@
 
 - (void)locationUpdated:(NSNotification*)notification;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
-@property (nonatomic, retain) IBOutlet UIToolbar*        toolbar;
 @property (nonatomic, retain) IBOutlet UILabel*          messagesLabel;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  customizeButton;

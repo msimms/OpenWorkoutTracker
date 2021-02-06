@@ -27,7 +27,6 @@ typedef enum GearSections
 @implementation GearViewController
 
 @synthesize gearTableView;
-@synthesize toolbar;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {

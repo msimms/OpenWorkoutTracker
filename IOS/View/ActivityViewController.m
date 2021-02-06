@@ -55,8 +55,6 @@
 
 @implementation ActivityViewController
 
-@synthesize navItem;
-@synthesize toolbar;
 @synthesize messagesLabel;
 @synthesize moreButton;
 @synthesize customizeButton;
@@ -125,10 +123,11 @@
 	}
 	else
 	{
-		[self.navigationController popToRootViewControllerAnimated:TRUE];		
+		[self.navigationController popToRootViewControllerAnimated:TRUE];
 	}
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	[appDelegate setScreenLocking];
 
 	if (![CLLocationManager locationServicesEnabled])
@@ -384,72 +383,53 @@
 
 - (void)initializeToolbarButtonColor
 {
-	UIColor* buttonColor = nil;
+	UIColor* buttonColor = [self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor];
 
-	// Check for dark mode.
-	switch (self.view.traitCollection.userInterfaceStyle)
-	{
-		case UIUserInterfaceStyleUnspecified:
-		case UIUserInterfaceStyleLight:
-			buttonColor = [UIColor blackColor];
-			break;
-		case UIUserInterfaceStyleDark:
-			buttonColor = [UIColor whiteColor];
-			break;
-	}
+	[self->moreButton setTintColor:buttonColor];
+	[self->customizeButton setTintColor:buttonColor];
+	[self->bikeButton setTintColor:buttonColor];
+	[self->intervalsButton setTintColor:buttonColor];
+	[self->paceButton setTintColor:buttonColor];
+	[self->lapButton setTintColor:buttonColor];
+	[self->startStopButton setTintColor:buttonColor];
+	[self->weightButton setTintColor:buttonColor];
 
-	if (buttonColor)
-	{
-		[self->moreButton setTintColor:buttonColor];
-		[self->customizeButton setTintColor:buttonColor];
-		[self->bikeButton setTintColor:buttonColor];
-		[self->intervalsButton setTintColor:buttonColor];
-		[self->paceButton setTintColor:buttonColor];
-		[self->lapButton setTintColor:buttonColor];
-		[self->startStopButton setTintColor:buttonColor];
-		[self->weightButton setTintColor:buttonColor];
-
-		if (IsAutoStartEnabled())
-			[self->autoStartButton setTintColor:[UIColor redColor]];
-		else
-			[self->autoStartButton setTintColor:buttonColor];
-	}
+	if (IsAutoStartEnabled())
+		[self->autoStartButton setTintColor:[UIColor redColor]];
+	else
+		[self->autoStartButton setTintColor:buttonColor];
 }
 
 - (void)initializeLabelColor
 {
 	// Check for dark mode. Only use the user preferences in light mode.
-	switch (self.view.traitCollection.userInterfaceStyle)
+	if ([self isDarkModeEnabled])
 	{
-		case UIUserInterfaceStyleUnspecified:
-		case UIUserInterfaceStyleLight:
-			{
-				UIColor* valueColor      = [self->activityPrefs getTextColor:self->activityType];
-				UIColor* titleColor      = [self->activityPrefs getLabelColor:self->activityType];
-				UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:self->activityType];
+		for (UILabel* label in self->valueLabels)
+		{
+			[label setTextColor:[UIColor whiteColor]];
+		}
+		for (UILabel* label in self->titleLabels)
+		{
+			[label setTextColor:[UIColor whiteColor]];
+		}
+		self.view.backgroundColor = [UIColor blackColor];
+	}
+	else
+	{
+		UIColor* valueColor      = [self->activityPrefs getTextColor:self->activityType];
+		UIColor* titleColor      = [self->activityPrefs getLabelColor:self->activityType];
+		UIColor* backgroundColor = [self->activityPrefs getBackgroundColor:self->activityType];
 
-				for (UILabel* label in self->valueLabels)
-				{
-					[label setTextColor:valueColor];
-				}
-				for (UILabel* label in self->titleLabels)
-				{
-					[label setTextColor:titleColor];
-				}
-				self.view.backgroundColor = backgroundColor;
-			}
-			break;
-		case UIUserInterfaceStyleDark:
-			for (UILabel* label in self->valueLabels)
-			{
-				[label setTextColor:[UIColor whiteColor]];
-			}
-			for (UILabel* label in self->titleLabels)
-			{
-				[label setTextColor:[UIColor whiteColor]];
-			}
-			self.view.backgroundColor = [UIColor blackColor];
-			break;
+		for (UILabel* label in self->valueLabels)
+		{
+			[label setTextColor:valueColor];
+		}
+		for (UILabel* label in self->titleLabels)
+		{
+			[label setTextColor:titleColor];
+		}
+		self.view.backgroundColor = backgroundColor;
 	}
 }
 

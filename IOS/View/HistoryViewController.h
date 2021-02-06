@@ -13,8 +13,6 @@
 
 @interface HistoryViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 {
-	IBOutlet UINavigationItem* navItem;
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UISearchBar* searchBar;
 	IBOutlet UITableView* historyTableView;
 	IBOutlet UIActivityIndicatorView* spinner;
@@ -33,8 +31,6 @@
 
 - (IBAction)onExportSummary:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UISearchBar* searchBar;
 @property (nonatomic, retain) IBOutlet UITableView* historyTableView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;

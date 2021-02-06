@@ -46,7 +46,6 @@ typedef enum SectionType
 
 @implementation SplitTimesViewController
 
-@synthesize navItem;
 @synthesize splitTimesTableView;
 @synthesize homeButton;
 
@@ -65,6 +64,7 @@ typedef enum SectionType
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	[self.homeButton setTitle:STR_HOME];
 
 	self.title = STR_SPLIT_TIMES;
 }

@@ -17,7 +17,6 @@
 
 @implementation WorkoutDetailsViewController
 
-@synthesize toolbar;
 @synthesize chartView;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -60,7 +59,10 @@
 }
 
 - (void)drawChart
-{	
+{
+	// Check for dark mode.
+	bool darkModeEnabled = [self isDarkModeEnabled];
+
 	// Create the host view.
 	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.chartView.bounds];
 	[self->hostingView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
@@ -109,7 +111,7 @@
     
 	// Axis title style.
 	CPTMutableTextStyle* axisTitleStyle = [CPTMutableTextStyle textStyle];
-	axisTitleStyle.color                = [CPTColor blackColor];
+	axisTitleStyle.color                = darkModeEnabled ? [CPTColor whiteColor] : [CPTColor blackColor];
 	axisTitleStyle.fontName             = @"Helvetica-Bold";
 	axisTitleStyle.fontSize             = 12.0f;
 

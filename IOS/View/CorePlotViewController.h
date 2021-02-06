@@ -12,7 +12,6 @@
 
 @interface CorePlotViewController : CommonViewController <CPTPlotDataSource, CPTAxisDelegate>
 {
-	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIView* chartView;
 	IBOutlet UIBarButtonItem* homeButton;
 
@@ -43,7 +42,6 @@
 
 - (IBAction)onHome:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UIView* chartView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 

@@ -18,7 +18,6 @@
 
 @implementation WorkoutsViewController
 
-@synthesize toolbar;
 @synthesize workoutsView;
 @synthesize generateButton;
 

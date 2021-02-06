@@ -6,7 +6,6 @@
 
 @interface PacePlansViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* planTableView;
 	IBOutlet UIBarButtonItem* addPlanButton;
 	
@@ -16,7 +15,6 @@
 
 - (IBAction)onAddPacePlan:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* planTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* addPlanButton;
 

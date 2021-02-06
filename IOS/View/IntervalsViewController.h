@@ -10,8 +10,6 @@
 
 @interface IntervalsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
-	IBOutlet UITableView* intervalTableView;
 	IBOutlet UIBarButtonItem* intervalButton;
 	
 	NSString* selectedWorkoutId;
@@ -20,7 +18,6 @@
 
 - (IBAction)onAddInterval:(id)sender;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* intervalTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* intervalButton;
 

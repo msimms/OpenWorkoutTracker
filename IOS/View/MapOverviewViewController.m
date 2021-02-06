@@ -25,9 +25,6 @@
 
 @implementation MapOverviewViewController
 
-@synthesize navItem;
-@synthesize toolbar;
-
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

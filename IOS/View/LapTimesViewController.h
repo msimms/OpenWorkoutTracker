@@ -9,7 +9,6 @@
 
 @interface LapTimesViewController : UIViewController
 {
-	IBOutlet UINavigationItem* navItem;
 	IBOutlet UITableView*      lapTimesTableView;
 	IBOutlet UIBarButtonItem*  homeButton;
 
@@ -21,7 +20,6 @@
 
 - (void)setActivityId:(NSString*)newId;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UITableView* lapTimesTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 

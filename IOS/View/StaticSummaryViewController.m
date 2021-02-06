@@ -108,8 +108,6 @@ typedef enum ExportFileTypeButtons
 
 @implementation StaticSummaryViewController
 
-@synthesize navItem;
-@synthesize toolbar;
 @synthesize summaryTableView;
 @synthesize deleteButton;
 @synthesize exportButton;
@@ -870,6 +868,7 @@ typedef enum ExportFileTypeButtons
 		case SECTION_NAME:
 			{
 				NSString* name = [appDelegate getActivityName:self->activityId];
+
 				if ([name length] > 0)
 					cell.textLabel.text = name;
 				else

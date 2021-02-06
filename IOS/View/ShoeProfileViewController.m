@@ -24,7 +24,6 @@
 
 @implementation ShoeProfileViewController
 
-@synthesize toolbar;
 @synthesize saveButton;
 @synthesize deleteButton;
 @synthesize nameTextField;

@@ -23,7 +23,6 @@ typedef enum PickerRows
 
 @implementation PacePlanEditViewController
 
-@synthesize toolbar;
 @synthesize nameTextField;
 @synthesize distanceTextField;
 @synthesize targetPaceTextField;

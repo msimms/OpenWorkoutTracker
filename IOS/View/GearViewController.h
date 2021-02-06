@@ -11,9 +11,6 @@
 
 @interface GearViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UITableView* gearTableView;
-	IBOutlet UIToolbar*   toolbar;
-
 	NSMutableArray*     bikeNames;
 	NSMutableArray*     shoeNames;
 	BikeProfileViewMode bikeViewMode;
@@ -25,6 +22,5 @@
 - (IBAction)onAdd:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UITableView* gearTableView;
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 
 @end

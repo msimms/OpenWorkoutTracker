@@ -17,8 +17,6 @@
 */
 @interface StaticSummaryViewController : MapViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 {
-	IBOutlet UINavigationItem* navItem;
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* summaryTableView;
 	IBOutlet UIBarButtonItem* deleteButton;
 	IBOutlet UIBarButtonItem* exportButton;
@@ -73,8 +71,6 @@
 - (void)setActivityId:(NSString*)activityId;
 - (void)drawRoute;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* summaryTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* exportButton;

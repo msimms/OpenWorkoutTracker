@@ -6,7 +6,6 @@
 
 @interface PacePlanEditViewController : CommonViewController <UIPickerViewDelegate, UIPickerViewDataSource>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITextField* nameTextField;
 	IBOutlet UITextField* distanceTextField;
 	IBOutlet UITextField* targetPaceTextField;
@@ -21,7 +20,6 @@
 
 - (void)setPlanId:(NSString*)planId;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITextField* nameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* distanceTextField;
 @property (nonatomic, retain) IBOutlet UITextField* targetPaceTextField;

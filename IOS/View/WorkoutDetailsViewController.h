@@ -8,7 +8,6 @@
 
 @interface WorkoutDetailsViewController : CommonViewController<CPTBarPlotDataSource, CPTBarPlotDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UIView* chartView;
 
 	CPTGraphHostingView* hostingView;
@@ -28,7 +27,6 @@
 - (IBAction)onExport:(id)sender;
 - (void)setWorkoutDetails:(NSMutableDictionary*)details;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UIView* chartView;
 
 

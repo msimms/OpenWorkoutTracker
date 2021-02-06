@@ -139,6 +139,7 @@
                     <navigationItem key="navigationItem" title="Straen" id="EAK-eB-3IZ"/>
                     <connections>
                         <outlet property="editButton" destination="XGp-p1-MzY" id="YTG-tI-5Zr"/>
+                        <outlet property="navItem" destination="EAK-eB-3IZ" id="dva-VD-bp7"/>
                         <outlet property="resetButton" destination="EyH-bS-fuV" id="jME-iz-Vrx"/>
                         <outlet property="startWorkoutButton" destination="e7o-Hb-o9t" id="6N8-Tm-8SK"/>
                         <outlet property="viewButton" destination="H2K-iC-FnB" id="dzv-wL-PJv"/>
@@ -168,10 +169,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="TFu-Tc-0Aa">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="852"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="TFu-Tc-0Aa">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="2GL-V3-JX0" id="HXA-Kl-EYf"/>
                                     <outlet property="delegate" destination="2GL-V3-JX0" id="ZsM-Ua-3NF"/>
@@ -180,22 +180,27 @@
                             <datePicker hidden="YES" contentMode="scaleAspectFit" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" id="7kL-qg-Dsf">
                                 <rect key="frame" x="0.0" y="367" width="414" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </datePicker>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gfk-8M-Gq9"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="top" secondItem="gfk-8M-Gq9" secondAttribute="top" id="81x-We-wQe"/>
+                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="trailing" secondItem="7kL-qg-Dsf" secondAttribute="trailing" id="GAM-jr-DEG"/>
+                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="leading" secondItem="7kL-qg-Dsf" secondAttribute="leading" id="cyO-NR-M2W"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="TFu-Tc-0Aa" secondAttribute="bottom" constant="-34" id="vT1-69-Hmg"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="AKv-aO-jig"/>
                     <connections>
                         <outlet property="datePicker" destination="7kL-qg-Dsf" id="Gfg-h1-Jtg"/>
+                        <outlet property="navItem" destination="AKv-aO-jig" id="YLG-2v-fyd"/>
                         <outlet property="profileTableView" destination="TFu-Tc-0Aa" id="zpw-cK-Jza"/>
                         <segue destination="Hzl-Rw-NWa" kind="push" identifier="SegueToCorePlotViewFromProfile" id="gtm-yZ-0Yg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FvW-eZ-qzD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1990" y="2994"/>
+            <point key="canvasLocation" x="1989.8550724637682" y="2993.9732142857142"/>
         </scene>
         <!--Interval Workouts-->
         <scene sceneID="FfT-dC-glr">
@@ -207,7 +212,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="LIb-gB-AUm">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="c7D-r7-Xlg" id="BaI-70-4YB"/>
                                     <outlet property="delegate" destination="c7D-r7-Xlg" id="pZ6-0h-MoI"/>
@@ -226,7 +231,6 @@
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="q9A-sb-9gm"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="3ue-0c-OCk" firstAttribute="bottom" secondItem="q9A-sb-9gm" secondAttribute="bottom" id="0QW-ge-QR4"/>
                             <constraint firstItem="3ue-0c-OCk" firstAttribute="trailing" secondItem="q9A-sb-9gm" secondAttribute="trailing" id="JRp-PO-mJ7"/>
@@ -242,6 +246,7 @@
                     <connections>
                         <outlet property="intervalButton" destination="hwI-af-vtv" id="is8-Ef-X3Q"/>
                         <outlet property="intervalTableView" destination="LIb-gB-AUm" id="Uwc-5S-lD1"/>
+                        <outlet property="navItem" destination="bAg-ji-cWg" id="SKs-CI-gjH"/>
                         <outlet property="toolbar" destination="3ue-0c-OCk" id="xkf-1C-fYY"/>
                         <segue destination="7Er-a4-zwh" kind="push" identifier="SegueToIntervalEditViewController" id="hNC-79-LuD"/>
                     </connections>
@@ -276,7 +281,7 @@
                             </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="x1e-he-2zG">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="sJ4-y9-qRG" id="4dY-EN-Yx1"/>
                                     <outlet property="delegate" destination="sJ4-y9-qRG" id="dhE-SE-sDr"/>
@@ -284,7 +289,6 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="a3y-pn-s3n"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="S4t-GJ-X6W" firstAttribute="top" secondItem="x1e-he-2zG" secondAttribute="bottom" id="5Rk-CS-5mo"/>
                             <constraint firstItem="x1e-he-2zG" firstAttribute="leading" secondItem="a3y-pn-s3n" secondAttribute="leading" id="6aE-Ej-VWw"/>
@@ -299,6 +303,7 @@
                     <connections>
                         <outlet property="createLoginButton" destination="rfD-Dt-MaS" id="bqN-WC-F2u"/>
                         <outlet property="loginButton" destination="8Ex-Uv-xhw" id="YaU-Kb-Ue7"/>
+                        <outlet property="navItem" destination="zgq-NJ-cHF" id="zTQ-BM-7bl"/>
                         <outlet property="settingsTableView" destination="x1e-he-2zG" id="2f6-Z8-Hh4"/>
                         <outlet property="toolbar" destination="S4t-GJ-X6W" id="Elu-qq-gMk"/>
                         <segue destination="D1T-Mz-I8j" kind="push" identifier="SegueToManageFriendsView" id="ryL-ch-bGW"/>
@@ -392,6 +397,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Login" id="Q5S-NQ-pjv"/>
                     <connections>
+                        <outlet property="navItem" destination="Q5S-NQ-pjv" id="IyY-Ka-Yhk"/>
                         <outlet property="passwordTextField" destination="DYt-YB-u6W" id="CPr-yw-IGD"/>
                         <outlet property="spinner" destination="yB7-Ck-VdY" id="P0a-g5-m7I"/>
                         <outlet property="usernameTextField" destination="2dr-je-Xiw" id="UP5-oK-jA4"/>
@@ -411,7 +417,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="cYA-ES-4As">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="D1T-Mz-I8j" id="Lgd-Jp-o9A"/>
                                     <outlet property="delegate" destination="D1T-Mz-I8j" id="eDv-GR-uEF"/>
@@ -432,7 +438,6 @@
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="XEw-a9-tgz"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="s8e-Qn-gby" firstAttribute="trailing" secondItem="cYA-ES-4As" secondAttribute="trailing" id="6jJ-AK-ibL"/>
                             <constraint firstItem="cYA-ES-4As" firstAttribute="trailing" secondItem="XEw-a9-tgz" secondAttribute="trailing" id="8oY-fa-g19"/>
@@ -446,6 +451,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Friends" id="pjJ-W1-Kl2"/>
                     <connections>
+                        <outlet property="navItem" destination="pjJ-W1-Kl2" id="wu1-nx-1Ne"/>
                         <outlet property="usersTableView" destination="cYA-ES-4As" id="WAQ-8d-xcG"/>
                     </connections>
                 </viewController>
@@ -620,7 +626,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="WAb-Vo-Dwz">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="7Er-a4-zwh" id="YdK-h2-hLk"/>
                                     <outlet property="delegate" destination="7Er-a4-zwh" id="djW-Mr-DL9"/>
@@ -639,7 +645,6 @@
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Dxl-vD-DYJ"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="WAb-Vo-Dwz" firstAttribute="top" secondItem="Dxl-vD-DYJ" secondAttribute="top" id="7Hn-zW-Avz"/>
                             <constraint firstItem="KVM-am-ysX" firstAttribute="bottom" secondItem="Dxl-vD-DYJ" secondAttribute="bottom" id="98u-Bi-MFj"/>
@@ -788,6 +793,7 @@
                         <outlet property="deleteButton" destination="D6E-9d-cRX" id="AxF-sZ-ES7"/>
                         <outlet property="nameLabel" destination="p0P-kX-EM3" id="fgb-D4-ha4"/>
                         <outlet property="nameTextField" destination="Rac-m7-0mq" id="poW-th-0z4"/>
+                        <outlet property="navItem" destination="nXg-ca-QOe" id="bVa-Jt-0cb"/>
                         <outlet property="saveButton" destination="iac-ss-GGD" id="5cu-3m-vWU"/>
                         <outlet property="toolbar" destination="8eE-42-8Mw" id="DjL-KO-ZHq"/>
                         <outlet property="weightLabel" destination="Dro-in-ghc" id="0JG-Ei-8JL"/>
@@ -1185,7 +1191,7 @@
                         <outlet property="lapButton" destination="92T-xb-WOa" id="bO5-jg-xrz"/>
                         <outlet property="messagesLabel" destination="U2o-bG-CJ3" id="bpl-s2-09u"/>
                         <outlet property="moreButton" destination="PMl-gG-wNv" id="qwT-e9-qDx"/>
-                        <outlet property="navItem" destination="uwA-vG-wXj" id="Icj-gB-07r"/>
+                        <outlet property="navItem" destination="uwA-vG-wXj" id="O91-tw-Ax6"/>
                         <outlet property="paceButton" destination="f5k-h3-Ygl" id="0g7-YF-IJv"/>
                         <outlet property="startStopButton" destination="Zqe-eo-52i" id="5WQ-5A-2Rl"/>
                         <outlet property="swipe" destination="jST-vv-9A3" id="uUE-Jc-Mv2"/>
@@ -1236,7 +1242,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lDV-1D-8sm">
-                                <rect key="frame" x="0.0" y="66" width="199" height="368"/>
+                                <rect key="frame" x="0.0" y="88" width="199" height="368"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="ComplexScreen.png">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1249,22 +1255,8 @@
                                     <action selector="onComplexActivityView:" destination="Jmm-43-AyY" eventType="touchUpInside" id="Kku-q4-pEC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GLW-h8-5Ex">
-                                <rect key="frame" x="80" y="265" width="199" height="368"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" image="SimpleScreen.png">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="onSimpleActivityView:" destination="Jmm-43-AyY" eventType="touchUpInside" id="bco-sY-1AL"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wiP-wJ-S1H">
-                                <rect key="frame" x="160" y="528" width="199" height="368"/>
+                                <rect key="frame" x="195" y="494" width="199" height="368"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="MappedScreen.png">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1277,22 +1269,35 @@
                                     <action selector="onMappedActivityView:" destination="Jmm-43-AyY" eventType="touchUpInside" id="K2N-md-Ux2"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GLW-h8-5Ex">
+                                <rect key="frame" x="108" y="264" width="199" height="368"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" image="SimpleScreen.png">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onSimpleActivityView:" destination="Jmm-43-AyY" eventType="touchUpInside" id="bco-sY-1AL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Y0p-8f-j7K"/>
-                        <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
-                            <constraint firstItem="wiP-wJ-S1H" firstAttribute="top" secondItem="Y0p-8f-j7K" secondAttribute="top" constant="440" id="2VS-EB-gOg"/>
-                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="trailing" secondItem="GLW-h8-5Ex" secondAttribute="trailing" constant="135" id="Fqr-vk-Kje"/>
-                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="bottom" secondItem="lDV-1D-8sm" secondAttribute="bottom" constant="428" id="KbI-NG-Q6W"/>
-                            <constraint firstItem="wiP-wJ-S1H" firstAttribute="leading" secondItem="Y0p-8f-j7K" secondAttribute="leading" constant="160" id="Qun-dS-XsW"/>
+                            <constraint firstItem="wiP-wJ-S1H" firstAttribute="top" secondItem="Y0p-8f-j7K" secondAttribute="top" constant="406" id="2VS-EB-gOg"/>
+                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="trailing" secondItem="GLW-h8-5Ex" secondAttribute="trailing" constant="107" id="Fqr-vk-Kje"/>
+                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="bottom" secondItem="lDV-1D-8sm" secondAttribute="bottom" constant="406" id="KbI-NG-Q6W"/>
+                            <constraint firstItem="wiP-wJ-S1H" firstAttribute="leading" secondItem="Y0p-8f-j7K" secondAttribute="leading" constant="195" id="Qun-dS-XsW"/>
                             <constraint firstItem="lDV-1D-8sm" firstAttribute="leading" secondItem="Y0p-8f-j7K" secondAttribute="leading" id="SXm-wv-vdI"/>
                             <constraint firstItem="Y0p-8f-j7K" firstAttribute="trailing" secondItem="lDV-1D-8sm" secondAttribute="trailing" constant="215" id="b2Z-7t-gkO"/>
-                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="trailing" secondItem="wiP-wJ-S1H" secondAttribute="trailing" constant="55" id="cHF-gm-Ufl"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="wiP-wJ-S1H" secondAttribute="bottom" constant="-34" id="dt4-yU-nLS"/>
-                            <constraint firstItem="lDV-1D-8sm" firstAttribute="top" secondItem="NSu-ky-bGq" secondAttribute="topMargin" constant="-22" id="hJQ-V8-al1"/>
-                            <constraint firstItem="GLW-h8-5Ex" firstAttribute="leading" secondItem="Y0p-8f-j7K" secondAttribute="leading" constant="80" id="kk0-ak-dJJ"/>
-                            <constraint firstItem="GLW-h8-5Ex" firstAttribute="top" secondItem="Y0p-8f-j7K" secondAttribute="top" constant="177" id="qNh-S8-UsZ"/>
-                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="bottom" secondItem="GLW-h8-5Ex" secondAttribute="bottom" constant="229" id="rcy-v8-L9s"/>
+                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="trailing" secondItem="wiP-wJ-S1H" secondAttribute="trailing" constant="20" id="cHF-gm-Ufl"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="wiP-wJ-S1H" secondAttribute="bottom" id="dt4-yU-nLS"/>
+                            <constraint firstItem="lDV-1D-8sm" firstAttribute="top" secondItem="NSu-ky-bGq" secondAttribute="topMargin" id="hJQ-V8-al1"/>
+                            <constraint firstItem="GLW-h8-5Ex" firstAttribute="leading" secondItem="Y0p-8f-j7K" secondAttribute="leading" constant="108" id="kk0-ak-dJJ"/>
+                            <constraint firstItem="GLW-h8-5Ex" firstAttribute="top" secondItem="Y0p-8f-j7K" secondAttribute="top" constant="176" id="qNh-S8-UsZ"/>
+                            <constraint firstItem="Y0p-8f-j7K" firstAttribute="bottom" secondItem="GLW-h8-5Ex" secondAttribute="bottom" constant="230" id="rcy-v8-L9s"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Layout" id="ttM-LG-TdF"/>
@@ -1310,8 +1315,8 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AvI-td-8vi">
-                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="kob-qG-sz6" id="oWK-hJ-1DZ"/>
                                     <outlet property="delegate" destination="kob-qG-sz6" id="ZUb-Cb-QaI"/>
@@ -1319,9 +1324,8 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="40l-lE-1Eg"/>
-                        <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="AvI-td-8vi" firstAttribute="top" secondItem="8x9-gE-itg" secondAttribute="topMargin" constant="-44" id="AUU-kR-fpR"/>
+                            <constraint firstItem="AvI-td-8vi" firstAttribute="top" secondItem="8x9-gE-itg" secondAttribute="topMargin" id="AUU-kR-fpR"/>
                             <constraint firstItem="AvI-td-8vi" firstAttribute="leading" secondItem="40l-lE-1Eg" secondAttribute="leading" id="NSZ-Qw-vzP"/>
                             <constraint firstItem="AvI-td-8vi" firstAttribute="bottom" secondItem="40l-lE-1Eg" secondAttribute="bottom" constant="34" id="qD7-pv-3Nc"/>
                             <constraint firstItem="AvI-td-8vi" firstAttribute="centerX" secondItem="8x9-gE-itg" secondAttribute="centerX" id="s1A-bm-615"/>
@@ -1335,7 +1339,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rZj-QA-LSA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4587" y="-243"/>
+            <point key="canvasLocation" x="4586.9565217391309" y="-243.08035714285714"/>
         </scene>
         <!--Mapped Activity View Controller-->
         <scene sceneID="VHq-nH-8t5">
@@ -1921,7 +1925,7 @@
                             </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="5zW-R0-NSW">
                                 <rect key="frame" x="0.0" y="132" width="414" height="681"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="dJZ-L6-U8P" id="2nc-04-VCy"/>
                                     <outlet property="delegate" destination="dJZ-L6-U8P" id="INz-AC-E3A"/>
@@ -1929,7 +1933,6 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bjb-f8-TuA"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="top" secondItem="Ye8-WC-EvB" secondAttribute="bottom" id="3z2-hJ-lOk"/>
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="leading" secondItem="JGP-tQ-dfp" secondAttribute="leading" id="Agz-nb-DiH"/>
@@ -1949,7 +1952,7 @@
                     <connections>
                         <outlet property="exportButton" destination="UvD-Is-7zv" id="Uds-w0-yCg"/>
                         <outlet property="historyTableView" destination="5zW-R0-NSW" id="7Ce-lF-zNi"/>
-                        <outlet property="navItem" destination="QoA-rf-lPm" id="PAX-5f-66j"/>
+                        <outlet property="navItem" destination="QoA-rf-lPm" id="xSf-9x-O9c"/>
                         <outlet property="searchBar" destination="Ye8-WC-EvB" id="3Ob-jj-gr5"/>
                         <outlet property="spinner" destination="Acj-HM-0Y7" id="7qx-KN-bat"/>
                         <outlet property="toolbar" destination="JGP-tQ-dfp" id="L1c-Ip-ewo"/>
@@ -1980,7 +1983,7 @@
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="M6E-Tx-gxb">
                                 <rect key="frame" x="0.0" y="365" width="414" height="448"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="xf7-Mc-VJA" id="fTH-Ie-93v"/>
                                     <outlet property="delegate" destination="xf7-Mc-VJA" id="xQ6-ft-k8U"/>
@@ -2028,7 +2031,6 @@
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="saM-2L-dvE"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="jPf-SE-mfk" firstAttribute="centerX" secondItem="saM-2L-dvE" secondAttribute="centerX" id="7wH-ku-aac"/>
@@ -2110,7 +2112,6 @@
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5op-fl-A07"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="B9f-jE-b3M" firstAttribute="top" secondItem="5op-fl-A07" secondAttribute="top" id="GBz-8A-udH"/>
                             <constraint firstItem="B9f-jE-b3M" firstAttribute="centerX" secondItem="tg7-iG-T9o" secondAttribute="centerX" id="Lvj-GI-sed"/>
@@ -2162,7 +2163,7 @@
                             </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="quJ-1G-jU0">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="2uT-mo-S6M" id="9ep-q0-hiq"/>
                                     <outlet property="delegate" destination="2uT-mo-S6M" id="IhA-fg-5tT"/>
@@ -2170,7 +2171,6 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tpQ-lG-SA6"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="B6A-yM-QsV" firstAttribute="leading" secondItem="tpQ-lG-SA6" secondAttribute="leading" id="0CT-V2-Pkt"/>
@@ -2222,7 +2222,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="HQH-Wv-fmj">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="jJ2-SU-SfT" id="FZW-NZ-qd8"/>
                                     <outlet property="delegate" destination="jJ2-SU-SfT" id="QJk-OY-hJu"/>
@@ -2241,7 +2241,6 @@
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="IVx-Od-gnl"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="HQH-Wv-fmj" firstAttribute="centerX" secondItem="IVx-Od-gnl" secondAttribute="centerX" id="4RL-zx-sUi"/>
                             <constraint firstItem="HQH-Wv-fmj" firstAttribute="trailing" secondItem="IVx-Od-gnl" secondAttribute="trailing" id="DUh-06-N8B"/>
@@ -2273,9 +2272,9 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pAg-IZ-B4l">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="dpF-uY-DXe" id="Gfv-bB-JfR"/>
                                     <outlet property="delegate" destination="dpF-uY-DXe" id="Z0Z-bk-ZJs"/>
@@ -2283,7 +2282,6 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yhx-0X-OOC"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="Split Times" id="Cct-HV-smL">
                         <barButtonItem key="rightBarButtonItem" title="Home" id="GXh-HE-k1W">
@@ -2300,7 +2298,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PRN-n1-vNQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4606" y="1056"/>
+            <point key="canvasLocation" x="4605.7971014492759" y="1055.3571428571429"/>
         </scene>
         <!--Statistics View Controller-->
         <scene sceneID="cZz-9u-YAO">
@@ -2312,7 +2310,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="oxv-mt-mTJ">
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="ubg-tP-SOX" id="1Qa-Uq-Aar"/>
                                     <outlet property="delegate" destination="ubg-tP-SOX" id="gOI-Mh-eoo"/>
@@ -2324,7 +2322,6 @@
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DpB-ef-ZOm"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="oxv-mt-mTJ" firstAttribute="bottom" secondItem="DpB-ef-ZOm" secondAttribute="bottom" constant="34" id="d7O-z0-Bm6"/>
                             <constraint firstItem="oxv-mt-mTJ" firstAttribute="centerY" secondItem="DpB-ef-ZOm" secondAttribute="centerY" constant="17" id="dUx-kN-gLE"/>
@@ -2343,7 +2340,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HjS-b1-T6R" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1988" y="1056.6502463054187"/>
+            <point key="canvasLocation" x="1986.9565217391305" y="1056.0267857142858"/>
         </scene>
         <!--About-->
         <scene sceneID="GyZ-tt-XZu">
@@ -2373,7 +2370,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dwC-yl-i6B"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="goP-S4-6Sr" firstAttribute="leading" secondItem="dwC-yl-i6B" secondAttribute="leading" id="CwU-Xm-Kx7"/>
                             <constraint firstItem="goP-S4-6Sr" firstAttribute="bottom" secondItem="dwC-yl-i6B" secondAttribute="bottom" id="Pm4-VI-ZgV"/>
@@ -2521,6 +2517,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <connections>
                         <outlet property="distanceTextField" destination="tYE-vI-hIF" id="sIg-9p-4Hu"/>
                         <outlet property="nameTextField" destination="qR6-mO-zhQ" id="AyY-Ua-CnM"/>
+                        <outlet property="navItem" destination="2g5-8q-rgW" id="Aer-TN-L9a"/>
                         <outlet property="splitsTextField" destination="YhW-NW-iB4" id="CyN-1T-NUk"/>
                         <outlet property="targetPaceTextField" destination="NOx-tz-E9l" id="QbO-eC-rkY"/>
                         <outlet property="toolbar" destination="20t-23-bx2" id="Ivh-K9-jT6"/>
@@ -2559,7 +2556,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yfY-wB-EOx"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="nRf-kq-h8G" firstAttribute="top" secondItem="yfY-wB-EOx" secondAttribute="top" id="2LT-ud-SyO"/>
                             <constraint firstItem="crS-Zx-Fo1" firstAttribute="top" secondItem="nRf-kq-h8G" secondAttribute="bottom" id="3eW-0U-FXL"/>
@@ -2573,13 +2569,14 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <navigationItem key="navigationItem" id="c1N-ZX-eb0"/>
                     <connections>
                         <outlet property="chartView" destination="nRf-kq-h8G" id="423-Ze-F5M"/>
+                        <outlet property="navItem" destination="c1N-ZX-eb0" id="Wpx-We-Ozp"/>
                         <outlet property="toolbar" destination="crS-Zx-Fo1" id="K1b-Yc-6Gk"/>
                         <outlet property="view" destination="MsZ-fA-U3N" id="9qT-By-qdV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="02u-cb-wYc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="917.60000000000002" y="-1298.2758620689656"/>
+            <point key="canvasLocation" x="917.39130434782612" y="-1298.4375"/>
         </scene>
         <!--Workouts View Controller-->
         <scene sceneID="CPr-In-7nj">
@@ -2613,7 +2610,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ITH-Gr-Xar"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="bf3-gh-9hW" firstAttribute="leading" secondItem="ITH-Gr-Xar" secondAttribute="leading" id="69f-nQ-GJX"/>
                             <constraint firstItem="9P9-KK-ntB" firstAttribute="bottom" secondItem="ITH-Gr-Xar" secondAttribute="bottom" id="GaP-IG-8rI"/>
@@ -2627,6 +2623,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <navigationItem key="navigationItem" id="bEy-hg-a2T"/>
                     <connections>
                         <outlet property="generateButton" destination="dAT-Yg-1IA" id="em2-o6-Pi9"/>
+                        <outlet property="navItem" destination="bEy-hg-a2T" id="qJg-eq-Hlt"/>
                         <outlet property="toolbar" destination="9P9-KK-ntB" id="2oL-LD-93Q"/>
                         <outlet property="workoutsView" destination="bf3-gh-9hW" id="agC-Bu-gTU"/>
                         <segue destination="PIf-L5-EEn" kind="push" identifier="SegueToWorkoutDetailsView" id="IUw-Ek-UZs"/>
@@ -2634,7 +2631,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YDo-K2-6Te" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-122.40000000000001" y="-565.27093596059115"/>
+            <point key="canvasLocation" x="-123.18840579710145" y="-565.84821428571422"/>
         </scene>
         <!--Pace Plans View Controller-->
         <scene sceneID="zLl-Au-iUN">
@@ -2668,7 +2665,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="BmK-jm-Hlr"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="IzN-VU-DL2" firstAttribute="leading" secondItem="fUO-t0-pEF" secondAttribute="leading" id="9zw-c7-Ap4"/>
                             <constraint firstItem="IzN-VU-DL2" firstAttribute="trailing" secondItem="fUO-t0-pEF" secondAttribute="trailing" id="A5R-P2-e6L"/>
@@ -2683,6 +2679,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <navigationItem key="navigationItem" id="TBC-bU-eXL"/>
                     <connections>
                         <outlet property="addPlanButton" destination="Cl0-L9-uVv" id="NlD-YY-dqK"/>
+                        <outlet property="navItem" destination="TBC-bU-eXL" id="mjE-HK-2pJ"/>
                         <outlet property="planTableView" destination="fUO-t0-pEF" id="Vwd-O5-KFk"/>
                         <outlet property="toolbar" destination="IzN-VU-DL2" id="dNe-je-0e8"/>
                         <segue destination="EBx-yG-7i6" kind="push" identifier="SegueToPlanPlanEditView" id="uEg-Py-Xjv"/>
@@ -2690,7 +2687,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4ae-iv-OnM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="917.60000000000002" y="-565.27093596059115"/>
+            <point key="canvasLocation" x="917.39130434782612" y="-565.84821428571422"/>
         </scene>
         <!--Gear View Controller-->
         <scene sceneID="F6G-Jx-bxz">
@@ -2700,9 +2697,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Rzc-EK-lVg">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Rzc-EK-lVg">
                                 <rect key="frame" x="0.0" y="88" width="414" height="730"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="ObN-8C-jua" id="dC5-EQ-5t7"/>
@@ -2723,11 +2719,17 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="BAu-ty-PVf"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="VpR-Gs-pbB" firstAttribute="top" secondItem="Rzc-EK-lVg" secondAttribute="bottom" id="3Rl-Yw-Sr0"/>
+                            <constraint firstItem="Rzc-EK-lVg" firstAttribute="leading" secondItem="VpR-Gs-pbB" secondAttribute="leading" id="HBY-14-Fbi"/>
+                            <constraint firstItem="Rzc-EK-lVg" firstAttribute="top" secondItem="BAu-ty-PVf" secondAttribute="top" id="Zy8-S8-XsB"/>
+                            <constraint firstItem="Rzc-EK-lVg" firstAttribute="trailing" secondItem="VpR-Gs-pbB" secondAttribute="trailing" id="rXt-kR-4ri"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Kr3-kD-iEe"/>
                     <connections>
                         <outlet property="gearTableView" destination="Rzc-EK-lVg" id="UXL-WA-G5D"/>
+                        <outlet property="navItem" destination="Kr3-kD-iEe" id="qha-G1-FBo"/>
                         <outlet property="toolbar" destination="VpR-Gs-pbB" id="pr9-yx-k8j"/>
                         <segue destination="nMS-ks-hnh" kind="push" identifier="SegueToBikeProfileView" id="mam-Vc-Nc6"/>
                         <segue destination="Q0h-1D-Oup" kind="push" identifier="SegueToShoesProfileView" id="9ex-6Z-tDj"/>
@@ -2746,8 +2748,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="iMA-5M-Gi5">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <sections/>
                                 <connections>
                                     <outlet property="dataSource" destination="SKa-jK-Ipr" id="X97-ce-n2y"/>
@@ -2756,22 +2758,22 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6g5-bR-80n"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="iMA-5M-Gi5" firstAttribute="top" secondItem="EtM-6w-u95" secondAttribute="topMargin" constant="-88" id="GRA-Yw-yS5"/>
+                            <constraint firstItem="iMA-5M-Gi5" firstAttribute="top" secondItem="EtM-6w-u95" secondAttribute="topMargin" id="GRA-Yw-yS5"/>
                             <constraint firstItem="iMA-5M-Gi5" firstAttribute="leading" secondItem="6g5-bR-80n" secondAttribute="leading" id="N5P-15-NbJ"/>
                             <constraint firstItem="iMA-5M-Gi5" firstAttribute="centerX" secondItem="EtM-6w-u95" secondAttribute="centerX" id="dzM-MY-hud"/>
-                            <constraint firstItem="iMA-5M-Gi5" firstAttribute="centerY" secondItem="EtM-6w-u95" secondAttribute="centerY" id="fQy-ZQ-zSD"/>
+                            <constraint firstItem="iMA-5M-Gi5" firstAttribute="centerY" secondItem="EtM-6w-u95" secondAttribute="centerY" constant="44" id="fQy-ZQ-zSD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Sensors" id="dhO-zg-Xwm"/>
                     <connections>
+                        <outlet property="navItem" destination="dhO-zg-Xwm" id="cRF-Gw-pLC"/>
                         <outlet property="peripheralTableView" destination="iMA-5M-Gi5" id="4Np-ZG-09a"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hFT-JM-Jxn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1942" y="1519"/>
+            <point key="canvasLocation" x="-1942.0289855072465" y="1518.75"/>
         </scene>
         <!--Core Plot View Controller-->
         <scene sceneID="nIB-Ie-bzJ">
@@ -2782,17 +2784,16 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7MD-Cu-cOa">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="khU-og-qjx"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="7MD-Cu-cOa" firstAttribute="leading" secondItem="khU-og-qjx" secondAttribute="leading" id="G1T-r9-Lj9"/>
                             <constraint firstItem="7MD-Cu-cOa" firstAttribute="top" secondItem="khU-og-qjx" secondAttribute="top" id="KXf-25-krH"/>
                             <constraint firstItem="7MD-Cu-cOa" firstAttribute="centerX" secondItem="XSu-9B-5NA" secondAttribute="centerX" id="UYN-RS-a4c"/>
-                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="bottom" secondItem="khU-og-qjx" secondAttribute="bottom" id="dMc-W0-Fhq"/>
+                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="bottom" secondItem="khU-og-qjx" secondAttribute="bottom" constant="34" id="dMc-W0-Fhq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Fae-2l-XhH">
@@ -2805,12 +2806,12 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <connections>
                         <outlet property="chartView" destination="7MD-Cu-cOa" id="1XN-ea-boa"/>
                         <outlet property="homeButton" destination="vor-L1-ec4" id="Nxd-63-MQy"/>
-                        <outlet property="navItem" destination="Fae-2l-XhH" id="kYH-Tg-C7k"/>
+                        <outlet property="navItem" destination="Fae-2l-XhH" id="mgA-AT-6iF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gpV-rz-xaS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2920.8000000000002" y="1056.6502463054187"/>
+            <point key="canvasLocation" x="2920.289855072464" y="1056.0267857142858"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hBI-zy-UCy">
@@ -2839,9 +2840,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Est-rx-Zfn">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="nlb-r6-Zc5" id="9no-kz-CKC"/>
                                     <outlet property="delegate" destination="nlb-r6-Zc5" id="DYU-XS-mqi"/>
@@ -2849,7 +2850,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="TKn-k5-3uq"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="Lap Times" id="heS-L1-j4j">
                         <barButtonItem key="rightBarButtonItem" title="Home" id="Efg-nu-1Yp">
@@ -2861,12 +2861,11 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <connections>
                         <outlet property="homeButton" destination="Efg-nu-1Yp" id="H9N-ci-d0O"/>
                         <outlet property="lapTimesTableView" destination="Est-rx-Zfn" id="ujl-Of-j47"/>
-                        <outlet property="navItem" destination="heS-L1-j4j" id="RQK-VS-8He"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mIL-jz-rh3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3751" y="1217"/>
+            <point key="canvasLocation" x="3750.7246376811595" y="1055.3571428571429"/>
         </scene>
         <!--New Shoes-->
         <scene sceneID="P9g-Kw-aKh">
@@ -2949,6 +2948,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <outlet property="descTextField" destination="c6d-yt-GNs" id="V6s-2J-e5m"/>
                         <outlet property="nameLabel" destination="5hL-aM-lJh" id="lbX-F1-AD4"/>
                         <outlet property="nameTextField" destination="1Uf-ao-Gb0" id="2gv-00-v1G"/>
+                        <outlet property="navItem" destination="1Sr-Ad-0gj" id="p6d-tL-ubh"/>
                         <outlet property="saveButton" destination="6aa-cT-lXN" id="Wce-df-Rkk"/>
                         <outlet property="toolbar" destination="o9I-wr-kdf" id="SaX-Hq-RsG"/>
                     </connections>
@@ -2987,7 +2987,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="I4k-ad-TeL"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="m0D-Cj-0r7" firstAttribute="top" secondItem="I4k-ad-TeL" secondAttribute="top" id="C8P-WH-fGO"/>
                             <constraint firstItem="m0D-Cj-0r7" firstAttribute="leading" secondItem="ULA-Fd-HPk" secondAttribute="leading" id="FKK-Vf-ndI"/>
@@ -3018,12 +3017,11 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="gtm-yZ-0Yg"/>
-        <segue reference="zxl-cL-SNo"/>
+        <segue reference="Zfp-Rg-OxX"/>
         <segue reference="fz0-Br-1wA"/>
-        <segue reference="kzb-01-qIL"/>
+        <segue reference="8pE-cX-Fug"/>
         <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="Background1.png" width="640" height="1136"/>
         <image name="ComplexScreen.png" width="640" height="1136"/>

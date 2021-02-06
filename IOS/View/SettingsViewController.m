@@ -89,7 +89,6 @@ typedef enum SettingsRowsHealthKit
 
 @implementation SettingsViewController
 
-@synthesize toolbar;
 @synthesize settingsTableView;
 @synthesize loginButton;
 @synthesize createLoginButton;

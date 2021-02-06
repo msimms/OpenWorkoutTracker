@@ -15,7 +15,6 @@ typedef enum ShoeProfileViewMode
 
 @interface ShoeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UIBarButtonItem* saveButton;
 	IBOutlet UIBarButtonItem* deleteButton;
 	IBOutlet UITextField* nameTextField;
@@ -33,7 +32,6 @@ typedef enum ShoeProfileViewMode
 - (void)setShoeId:(uint64_t)newShoeId;
 - (void)setMode:(ShoeProfileViewMode)newMode;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* saveButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
 @property (nonatomic, retain) IBOutlet UITextField* nameTextField;

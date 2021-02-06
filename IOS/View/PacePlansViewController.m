@@ -19,7 +19,6 @@
 
 @implementation PacePlansViewController
 
-@synthesize toolbar;
 @synthesize planTableView;
 @synthesize addPlanButton;
 

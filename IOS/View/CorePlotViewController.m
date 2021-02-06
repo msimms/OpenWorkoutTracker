@@ -22,7 +22,6 @@
 
 @implementation CorePlotViewController
 
-@synthesize navItem;
 @synthesize chartView;
 @synthesize homeButton;
 
@@ -46,6 +45,7 @@
                                                object:nil];
 
 	[self drawChart];
+	[super initializeNavButtonColor];
 	[super viewDidAppear:animated];
 }
 
@@ -138,6 +138,9 @@
 	}
 	self->avgY /= [self->dataForPlot->points count];
 
+	// Check for dark mode.
+	bool darkModeEnabled = [self isDarkModeEnabled];
+
 	// Setup plot space.
 	CPTXYPlotSpace* plotSpace       = (CPTXYPlotSpace*)self->graph.defaultPlotSpace;
 	plotSpace.allowsUserInteraction = NO;
@@ -146,7 +149,7 @@
 
 	// Axis title style.
 	CPTMutableTextStyle* axisTitleStyle = [CPTMutableTextStyle textStyle];
-	axisTitleStyle.color                = [CPTColor blackColor];
+	axisTitleStyle.color                = darkModeEnabled ? [CPTColor whiteColor] : [CPTColor blackColor];
 	axisTitleStyle.fontName             = @"Helvetica-Bold";
 	axisTitleStyle.fontSize             = 12.0f;
 
@@ -168,7 +171,7 @@
 	if (self->lineColor)
 		lineStyle.lineColor         = self->lineColor;
 	else
-		lineStyle.lineColor         = [CPTColor blackColor];
+		lineStyle.lineColor         = darkModeEnabled ? [CPTColor whiteColor] : [CPTColor blackColor];
 
 	NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
 	[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -205,7 +208,7 @@
 	y.minorTickLength               = 3.0f;
 	y.labelFormatter                = numberFormatter;
 	CPTMutableTextStyle* newStyle   = [y.labelTextStyle mutableCopy];
-	newStyle.color                  = [CPTColor blackColor];
+	newStyle.color                  = darkModeEnabled ? [CPTColor whiteColor] : [CPTColor blackColor];;
 	y.labelTextStyle                = newStyle;
     NSArray* exclusionRanges        = @[[CPTPlotRange plotRangeWithLocation:@(1.99) length:@(0.02)],
                                         [CPTPlotRange plotRangeWithLocation:@(0.99) length:@(0.02)],

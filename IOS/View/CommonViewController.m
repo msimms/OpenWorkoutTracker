@@ -11,11 +11,49 @@
 
 @implementation CommonViewController
 
+@synthesize navItem;
+@synthesize toolbar;
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+
+	[self initializeNavButtonColor];
+	[self initializeToolbarButtonColor];
+}
+
+- (void)initializeNavButtonColor
+{
+	bool isDarkModeEnabled = [self isDarkModeEnabled];
+	UIColor* buttonColor = isDarkModeEnabled ? [UIColor whiteColor] : [UIColor blackColor];
+	UIColor* toolbarColor = isDarkModeEnabled ? [UIColor blackColor] : [UIColor whiteColor];
+
+	for (UIBarButtonItem* item in self->navItem.leftBarButtonItems)
+		[item setTintColor:buttonColor];
+	for (UIBarButtonItem* item in self->navItem.rightBarButtonItems)
+		[item setTintColor:buttonColor];
+
+	self.navigationController.navigationBar.barTintColor = toolbarColor;
+	self.navigationController.navigationBar.translucent = NO;
+}
+
+- (void)initializeToolbarButtonColor
+{
+	bool isDarkModeEnabled = [self isDarkModeEnabled];
+	UIColor* buttonColor = isDarkModeEnabled ? [UIColor whiteColor] : [UIColor blackColor];
+	UIColor* toolbarColor = isDarkModeEnabled ? [UIColor blackColor] : [UIColor whiteColor];
+
+	for (UIBarButtonItem* item in self->toolbar.items)
+		[item setTintColor:buttonColor];
+	self.toolbar.barTintColor = toolbarColor;
+}
+
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:title
 																			 message:msg
-																	  preferredStyle:UIAlertControllerStyleAlert];           
+																	  preferredStyle:UIAlertControllerStyleAlert];
+
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:nil]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
@@ -32,7 +70,7 @@
 			[mailController setSubject:subjectStr];
 			[mailController setMessageBody:bodyStr isHTML:NO];
 			[mailController setMailComposeDelegate:delegate];
-			
+
 			if (fileName)
 			{
 				NSString* justTheFileName = [[[NSFileManager defaultManager] displayNameAtPath:fileName] lastPathComponent];
@@ -40,7 +78,7 @@
 
 				[mailController addAttachmentData:myData mimeType:mimeType fileName:justTheFileName];
 			}
-			
+
 			[self presentViewController:mailController animated:YES completion:nil];
 		}
 	}
@@ -89,6 +127,19 @@
 		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Swimming" ofType:@"png"]];
 	}
 	return img;
+}
+
+- (BOOL)isDarkModeEnabled
+{
+	switch (self.view.traitCollection.userInterfaceStyle)
+	{
+		case UIUserInterfaceStyleUnspecified:
+		case UIUserInterfaceStyleLight:
+			return false;
+		case UIUserInterfaceStyleDark:
+			return true;
+	}
+	return false;
 }
 
 @end

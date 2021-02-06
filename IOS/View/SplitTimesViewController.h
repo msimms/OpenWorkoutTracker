@@ -9,7 +9,6 @@
 
 @interface SplitTimesViewController : UIViewController
 {
-	IBOutlet UINavigationItem* navItem;
 	IBOutlet UITableView*      splitTimesTableView;
 	IBOutlet UIBarButtonItem*  homeButton;
 
@@ -23,7 +22,6 @@
 
 - (void)setActivityId:(NSString*)newId;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
 @property (nonatomic, retain) IBOutlet UITableView* splitTimesTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* homeButton;
 

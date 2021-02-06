@@ -27,9 +27,6 @@ typedef enum MapOverviewMode
 
 @interface MapOverviewViewController : MapViewController
 {
-	IBOutlet UINavigationItem* navItem;
-	IBOutlet UIToolbar*        toolbar;
-
 	NSString*             activityId;
 	ActivityAttributeType segmentToHighlight;
 	NSString*             segmentName;
@@ -45,8 +42,5 @@ typedef enum MapOverviewMode
 - (void)showSegments;
 
 - (IBAction)onHome:(id)sender;
-
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 
 @end

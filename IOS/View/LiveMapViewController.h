@@ -11,8 +11,6 @@
 
 @interface LiveMapViewController : MapViewController
 {
-	IBOutlet UINavigationItem* navItem;
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UISwipeGestureRecognizer* swipe;
 	IBOutlet UIBarButtonItem* autoScaleButton;
 }
@@ -20,8 +18,6 @@
 - (void)drawExistingRoute;
 - (void)locationUpdated:(NSNotification*)notification;
 
-@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* swipe;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* autoScaleButton;
 

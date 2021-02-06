@@ -57,13 +57,9 @@
 
 @implementation HistoryViewController
 
-@synthesize navItem;
-@synthesize toolbar;
-
 @synthesize searchBar;
 @synthesize historyTableView;
 @synthesize spinner;
-
 @synthesize exportButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil

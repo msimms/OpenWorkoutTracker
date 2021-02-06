@@ -15,7 +15,6 @@ typedef enum BikeProfileViewMode
 
 @interface BikeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UIBarButtonItem* wheelSizeButton;
 	IBOutlet UIBarButtonItem* saveButton;
 	IBOutlet UIBarButtonItem* deleteButton;
@@ -39,7 +38,6 @@ typedef enum BikeProfileViewMode
 - (void)setBikeId:(uint64_t)newBikeId;
 - (void)setMode:(BikeProfileViewMode)newMode;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* wheelSizeButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* saveButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;

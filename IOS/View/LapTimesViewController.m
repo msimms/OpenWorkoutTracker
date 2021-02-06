@@ -41,7 +41,6 @@
 
 @implementation LapTimesViewController
 
-@synthesize navItem;
 @synthesize lapTimesTableView;
 @synthesize homeButton;
 

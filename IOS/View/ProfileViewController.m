@@ -53,7 +53,6 @@ typedef enum ProfilePerformanceRows
 @implementation ProfileViewController
 
 @synthesize profileTableView;
-@synthesize toolbar;
 @synthesize datePicker;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil

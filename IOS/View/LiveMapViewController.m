@@ -17,8 +17,6 @@
 
 @implementation LiveMapViewController
 
-@synthesize navItem;
-@synthesize toolbar;
 @synthesize swipe;
 @synthesize autoScaleButton;
 

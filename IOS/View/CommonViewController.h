@@ -10,10 +10,17 @@
 */
 @interface CommonViewController : UIViewController <UIActionSheetDelegate>
 {
+	IBOutlet UINavigationItem* navItem;
+	IBOutlet UIToolbar*        toolbar;
 }
 
+- (void)initializeNavButtonColor;
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg;
 - (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate;
 - (UIImage*)activityTypeToIcon:(NSString*)activityType;
+- (BOOL)isDarkModeEnabled;
+
+@property (nonatomic, retain) IBOutlet UINavigationItem* navItem;
+@property (nonatomic, retain) IBOutlet UIToolbar*        toolbar;
 
 @end
