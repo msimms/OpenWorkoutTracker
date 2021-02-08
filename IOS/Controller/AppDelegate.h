@@ -265,6 +265,12 @@
 - (void)setScreenLocking;
 - (BOOL)hasBadGps;
 
+// unit conversion methods
+
+- (double)convertMilesToKms:(double)value;
+- (double)convertMinutesPerMileToMinutesPerKm:(double)value;
+- (double)convertPoundsToKgs:(double)value;
+
 // cloud methods
 
 - (NSMutableArray*)listFileClouds;

@@ -916,11 +916,11 @@ void attributeNameCallback(const char* name, void* context)
 {
 	if (InitializePacePlanList())
 	{
-		if (!GetPacePlanDetails([planId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL))
+		if (!GetPacePlanDetails([planId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL, NULL))
 		{
 			CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 		}
-		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits);
+		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits, time(NULL));
 	}
 }
 

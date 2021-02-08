@@ -37,6 +37,13 @@
 
 #define MESSAGE_LOW_BATTERY NSLocalizedString(@"Low accessory battery for ", nil)
 
+// Handy enum for distinguishing between watch and web.
+typedef enum MsgDestinationType
+{
+	MSG_DESTINATION_WEB = 0,
+	MSG_DESTINATION_WATCH
+} MsgDestinationType;
+
 @implementation UINavigationController (Rotation_IOS6)
 
 - (BOOL)shouldAutorotate
@@ -971,6 +978,7 @@ void startSensorCallback(SensorType type, void* context)
 		[self serverListIntervalWorkouts];
 		[self serverListPacePlans];
 		[self sendMissingActivitiesToServer];
+		[self sendPacePlans:MSG_DESTINATION_WEB];
 
 		self->lastServerSync = time(NULL);
 	}
@@ -2509,7 +2517,8 @@ void attributeNameCallback(const char* name, void* context)
 - (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits
 {
 	char* tempName = NULL;
-	BOOL result = GetPacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits);
+	time_t lastUpdatedTime = 0;
+	BOOL result = GetPacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, &lastUpdatedTime);
 
 	if (tempName)
 	{
@@ -2522,56 +2531,38 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		ActivityAttributeType attr;
 
-		attr.value.doubleVal = (*targetDistance);
-		attr.valueType = TYPE_DOUBLE;
-		attr.measureType = MEASURE_DISTANCE;
-		attr.unitSystem = UNIT_SYSTEM_METRIC;
-		attr.valid = true;
-		ConvertToPreferredUntis(&attr);
-		(*targetDistance) = attr.value.doubleVal;
+		if ((*targetDistanceUnits) == UNIT_SYSTEM_US_CUSTOMARY)
+		{
+			attr.value.doubleVal = (*targetDistance);
+			attr.valueType = TYPE_DOUBLE;
+			attr.measureType = MEASURE_DISTANCE;
+			attr.unitSystem = UNIT_SYSTEM_METRIC;
+			attr.valid = true;
+			ConvertToCustomaryUnits(&attr);
+			(*targetDistance) = attr.value.doubleVal;
+		}
 
-		attr.value.doubleVal = (*targetPace);
-		attr.measureType = MEASURE_PACE;
-		attr.unitSystem = UNIT_SYSTEM_METRIC;
-		ConvertToPreferredUntis(&attr);
-		(*targetPace) = attr.value.doubleVal;
+		if ((*targetPaceUnits) == UNIT_SYSTEM_US_CUSTOMARY)
+		{
+			attr.value.doubleVal = (*targetPace);
+			attr.measureType = MEASURE_PACE;
+			attr.unitSystem = UNIT_SYSTEM_METRIC;
+			ConvertToCustomaryUnits(&attr);
+			(*targetPace) = attr.value.doubleVal;
 
-		attr.value.doubleVal = (*splits);
-		attr.measureType = MEASURE_PACE;
-		attr.unitSystem = UNIT_SYSTEM_METRIC;
-		ConvertToPreferredUntis(&attr);
-		(*splits) = attr.value.doubleVal;
+			attr.value.doubleVal = (*splits);
+			attr.measureType = MEASURE_PACE;
+			attr.unitSystem = UNIT_SYSTEM_METRIC;
+			ConvertToCustomaryUnits(&attr);
+			(*splits) = attr.value.doubleVal;
+		}
 	}
 	return result;
 }
 
 - (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits
 {
-	UnitSystem userUnits = [Preferences preferredUnitSystem];
-	ActivityAttributeType attr;
-
-	// Convert units.
-	attr.value.doubleVal = targetDistance;
-	attr.valueType = TYPE_DOUBLE;
-	attr.measureType = MEASURE_DISTANCE;
-	attr.unitSystem = userUnits;
-	attr.valid = true;
-	ConvertToMetric(&attr);
-	targetDistance = attr.value.doubleVal;
-
-	attr.value.doubleVal = targetPace;
-	attr.measureType = MEASURE_PACE;
-	attr.unitSystem = userUnits;
-	ConvertToMetric(&attr);
-	targetPace = attr.value.doubleVal;
-
-	attr.value.doubleVal = splits;
-	attr.measureType = MEASURE_PACE;
-	attr.unitSystem = userUnits;
-	ConvertToMetric(&attr);
-	splits = attr.value.doubleVal;
-
-	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits);
+	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, time(NULL));
 }
 
 - (BOOL)deletePacePlanWithId:(NSString*)planId
@@ -2691,6 +2682,47 @@ void attributeNameCallback(const char* name, void* context)
 - (BOOL)hasBadGps
 {
 	return self->badGps;
+}
+
+#pragma mark unit conversion methods
+
+- (double)convertMilesToKms:(double)value
+{
+	ActivityAttributeType attr;
+
+	attr.value.doubleVal = value;
+	attr.valueType = TYPE_DOUBLE;
+	attr.measureType = MEASURE_DISTANCE;
+	attr.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+	attr.valid = true;
+	ConvertToMetric(&attr);
+	return attr.value.doubleVal;
+}
+
+- (double)convertMinutesPerMileToMinutesPerKm:(double)value
+{
+	ActivityAttributeType attr;
+
+	attr.value.doubleVal = value;
+	attr.valueType = TYPE_DOUBLE;
+	attr.measureType = MEASURE_PACE;
+	attr.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+	attr.valid = true;
+	ConvertToMetric(&attr);
+	return attr.value.doubleVal;
+}
+
+- (double)convertPoundsToKgs:(double)value
+{
+	ActivityAttributeType attr;
+
+	attr.value.doubleVal = value;
+	attr.valueType = TYPE_DOUBLE;
+	attr.measureType = MEASURE_WEIGHT;
+	attr.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+	attr.valid = true;
+	ConvertToMetric(&attr);
+	return attr.value.doubleVal;
 }
 
 #pragma mark cloud methods
@@ -2822,7 +2854,7 @@ void attributeNameCallback(const char* name, void* context)
 		{
 			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 											@WATCH_MSG_REQUEST_ACTIVITY, @WATCH_MSG_TYPE,
-											activityHash, @WATCH_MSG_ACTIVITY_HASH,
+											activityHash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
 											nil];
 
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
@@ -2831,7 +2863,7 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 // Sends interval workouts to the watch.
-- (void)sendIntervalWorkoutsToWatch
+- (void)sendIntervalWorkouts:(MsgDestinationType)dest
 {
 	if (InitializeIntervalWorkoutList())
 	{
@@ -2846,8 +2878,16 @@ void attributeNameCallback(const char* name, void* context)
 
 			if (msgData)
 			{
-				[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
-				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+				switch (dest)
+				{
+					case MSG_DESTINATION_WEB:
+						[ApiClient sendIntervalWorkoutToServer:msgData];
+						break;
+					case MSG_DESTINATION_WATCH:
+						[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
+						[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+						break;
+				}
 			}
 			free((void*)workoutJson);
 		}
@@ -2855,7 +2895,7 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 // Sends pace plans to the watch.
-- (void)sendPacePlansToWatch
+- (void)sendPacePlans:(MsgDestinationType)dest
 {
 	if (InitializePacePlanList())
 	{
@@ -2870,9 +2910,18 @@ void attributeNameCallback(const char* name, void* context)
 
 			if (msgData)
 			{
-				[msgData setObject:@WATCH_MSG_PACE_PLAN forKey:@WATCH_MSG_TYPE];
-				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+				switch (dest)
+				{
+					case MSG_DESTINATION_WEB:
+						[ApiClient sendPacePlanToServer:msgData];
+						break;
+					case MSG_DESTINATION_WATCH:
+						[msgData setObject:@WATCH_MSG_PACE_PLAN forKey:@WATCH_MSG_TYPE];
+						[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+						break;
+				}
 			}
+
 			free((void*)pacePlanJson);
 		}
 	}
@@ -2881,10 +2930,10 @@ void attributeNameCallback(const char* name, void* context)
 // Import an activity that was sent from the watch.
 - (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
 {
-	NSString* activityId = [message objectForKey:@WATCH_MSG_ACTIVITY_ID];
-	NSString* activityType = [message objectForKey:@WATCH_MSG_ACTIVITY_TYPE];
-	NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
-	NSNumber* startTime = [message objectForKey:@WATCH_MSG_ACTIVITY_START_TIME];
+	NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
+	NSString* activityType = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
+	NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
+	NSNumber* startTime = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_START_TIME];
 
 	if (activityId && activityType && activityHash && startTime)
 	{
@@ -2902,7 +2951,7 @@ void attributeNameCallback(const char* name, void* context)
 		if (StartActivityWithTimestamp([activityId UTF8String], [startTime longLongValue]))
 		{
 			// Add all the locations.
-			NSArray* locationData = [message objectForKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+			NSArray* locationData = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
 			if (locationData)
 			{
 				for (NSArray* locationPoints in locationData)
@@ -2938,6 +2987,7 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark watch session methods
 
+// Watch connection changed.
 - (void)session:(WCSession*)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError*)error
 {
 	switch (activationState)
@@ -2973,6 +3023,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 }
 
+// Received a message from the watch.
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
@@ -2984,18 +3035,18 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
 	{
 		// The watch app wants to register itself.
-		NSString* deviceId = [message objectForKey:@WATCH_MSG_DEVICE_ID];
+		NSString* deviceId = [message objectForKey:@WATCH_MSG_PARAM_DEVICE_ID];
 		[self registerWatch:deviceId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
-		[self sendIntervalWorkoutsToWatch];
+		[self sendIntervalWorkouts:MSG_DESTINATION_WATCH];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
 		// The watch app wants to download pace plans.
-		[self sendPacePlansToWatch];
+		[self sendPacePlans:MSG_DESTINATION_WATCH];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{
@@ -3008,7 +3059,7 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
 		// The watch app wants to know if we have an activity.
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
 		[self checkForActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
@@ -3022,6 +3073,7 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
+// Received a message from the watch.
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
@@ -3033,18 +3085,18 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
 	{
 		// The watch app wants to register itself.
-		NSString* deviceId = [message objectForKey:@WATCH_MSG_DEVICE_ID];
+		NSString* deviceId = [message objectForKey:@WATCH_MSG_PARAM_DEVICE_ID];
 		[self registerWatch:deviceId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
-		[self sendIntervalWorkoutsToWatch];
+		[self sendIntervalWorkouts:MSG_DESTINATION_WATCH];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
 		// The watch app wants to download pace plans.
-		[self sendPacePlansToWatch];
+		[self sendPacePlans:MSG_DESTINATION_WATCH];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{
@@ -3057,7 +3109,7 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
 		// The watch app wants to know if we have an activity.
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
 		[self checkForActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])

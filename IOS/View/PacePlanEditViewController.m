@@ -136,6 +136,21 @@ typedef enum PickerRows
 		return;
 	}
 
+	// Convert the distance to metric.
+	if (targetDistanceUnits == UNIT_SYSTEM_US_CUSTOMARY)
+	{
+		targetDistance = [appDelegate convertMilesToKms:targetDistance];
+	}
+
+	if (targetPaceUnits == UNIT_SYSTEM_US_CUSTOMARY)
+	{
+		// Convert the pace to metric.
+		targetPaceMin = [appDelegate convertMinutesPerMileToMinutesPerKm:targetPaceMin];
+
+		// Convert the splits to metric.
+		splitsMin = [appDelegate convertMinutesPerMileToMinutesPerKm:splitsMin];
+	}
+
 	// Update the data.
 	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withSplits:splitsMin withTargetDistanceUnits:targetDistanceUnits withTargetPaceUnits:targetPaceUnits])
 	{

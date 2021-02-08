@@ -8,6 +8,7 @@
 
 @implementation ApiClient
 
+// Sends a request to the server, also includes the asynchronous response handler.
 + (BOOL)makeRequest:(NSString*)urlStr withMethod:(NSString*)method withPostData:(NSMutableData*)postData
 {
 #if OMIT_BROADCAST
@@ -77,25 +78,31 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_FRIENDS_LIST_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_GEAR].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_GEAR_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_PLANNED_WORKOUTS].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_PLANNED_WORKOUTS_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_INTERVAL_WORKOUTS].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_INTERVAL_WORKOUTS_URL].location != NSNotFound)
 		{
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_LIST_PACE_PLANS].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_PACE_PLANS_URL].location != NSNotFound)
 		{
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_HAS_ACTIVITY_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:downloadedData];
+			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:downloadedData];
@@ -119,14 +126,17 @@
 		else if ([urlStr rangeOfString:@REMOTE_API_CLAIM_DEVICE_URL].location != NSNotFound)
 		{
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_UPDATE_PROFILE].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_UPDATE_PROFILE_URL].location != NSNotFound)
 		{
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_HAS_ACTIVITY].location != NSNotFound)
+		else if ([urlStr rangeOfString:@REMOTE_API_UPLOAD_ACTIVITY_FILE_URL].location != NSNotFound)
 		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:downloadedData];
-			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_CREATE_INTERVAL_WORKOUT_URL].location != NSNotFound)
+		{
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_CREATE_PACE_PLAN_URL].location != NSNotFound)
+		{
 		}
 	}];
 
@@ -136,6 +146,7 @@
 #endif
 }
 
+// Login.
 + (BOOL)serverLogin:(NSString*)username withPassword:(NSString*)password
 {
 #if OMIT_BROADCAST
@@ -157,6 +168,7 @@
 #endif
 }
 
+// Create a new logon identity.
 + (BOOL)serverCreateLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname
 {
 #if OMIT_BROADCAST
@@ -180,6 +192,7 @@
 #endif
 }
 
+// Determine if we have a valid session or not.
 + (BOOL)serverIsLoggedIn
 {
 #if OMIT_BROADCAST
@@ -190,6 +203,7 @@
 #endif
 }
 
+// End our session.
 + (BOOL)serverLogout
 {
 #if OMIT_BROADCAST
@@ -200,6 +214,7 @@
 #endif
 }
 
+// Ask the server for a list of our friends.
 + (BOOL)serverListFriends
 {
 #if OMIT_BROADCAST
@@ -210,52 +225,57 @@
 #endif
 }
 
+// Ask the server for all the gear (for this user) that it knows about.
 + (BOOL)serverListGear
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_GEAR];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_GEAR_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
 }
 
+// Ask the server for all the planned workouts (for this user) that it knows about.
 + (BOOL)serverListPlannedWorkouts
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_PLANNED_WORKOUTS];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_PLANNED_WORKOUTS_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
 }
 
+// Ask the server for all the interval workouts (for this user) that it knows about.
 + (BOOL)serverListIntervalWorkouts
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_INTERVAL_WORKOUTS];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_INTERVAL_WORKOUTS_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
 }
 
+// Ask the server for all the pace plans (for this user) that it knows about.
 + (BOOL)serverListPacePlans
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_PACE_PLANS];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_PACE_PLANS_URL];
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
 }
 
+// Request details for a given workout from the server.
 + (BOOL)serverRequestWorkoutDetails:(NSString*)workoutId
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_WORKOUT_DETAILS];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_WORKOUT_DETAILS_URL];
 
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", KEY_NAME_WORKOUT_ID, workoutId]];
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"format=json"]];
@@ -264,6 +284,7 @@
 #endif
 }
 
+// Tell the server that we wish to friend someone.
 + (BOOL)serverRequestToFollow:(NSString*)targetUsername
 {
 #if OMIT_BROADCAST
@@ -276,6 +297,7 @@
 #endif
 }
 
+// Ask the server to delete an activity.
 + (BOOL)serverDeleteActivity:(NSString*)activityId
 {
 #if OMIT_BROADCAST
@@ -288,6 +310,7 @@
 #endif
 }
 
+// Tell the server that we wish to add a tag to an activity.
 + (BOOL)serverCreateTag:(NSString*)tag forActivity:(NSString*)activityId
 {
 #if OMIT_BROADCAST
@@ -306,6 +329,7 @@
 #endif
 }
 
+// Tell the server that we wish to delete a tag from an activity.
 + (BOOL)serverDeleteTag:(NSString*)tag forActivity:(NSString*)activityId
 {
 #if OMIT_BROADCAST
@@ -324,6 +348,7 @@
 #endif
 }
 
+// Associate this device with a user.
 + (BOOL)serverClaimDevice:(NSString*)deviceId
 {
 #if OMIT_BROADCAST
@@ -340,6 +365,7 @@
 #endif
 }
 
+// Send the user's weight to the server.
 + (BOOL)serverSetUserWeight:(NSNumber*)weightKg
 {
 #if OMIT_BROADCAST
@@ -350,17 +376,18 @@
 
 	[postData appendData:[[NSString stringWithFormat:@"\"%s\": \"%@\"", URL_KEY_NAME_WEIGHT, weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPDATE_PROFILE];
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPDATE_PROFILE_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
 #endif
 }
 
+// Ask the server if it has the activity with the given ID and hash.
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_HAS_ACTIVITY];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_HAS_ACTIVITY_URL];
 
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", URL_KEY_NAME_ACTIVITY_ID, activityId]];
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"%s=%@&", URL_KEY_NAME_ACTIVITY_HASH, activityHash]];
@@ -369,6 +396,7 @@
 #endif
 }
 
+// Send an activity to the server.
 + (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSData*)contents
 {
 #if OMIT_BROADCAST
@@ -384,7 +412,37 @@
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
 	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
 
-	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPLOAD_ACTIVITY_FILE];
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_UPLOAD_ACTIVITY_FILE_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
+}
+
+// Send all our interval workouts to the serve.r
++ (BOOL)sendIntervalWorkoutToServer:(NSMutableDictionary*)description
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:description options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_INTERVAL_WORKOUT_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
+}
+
+// Send all our pace plans to the server.
++ (BOOL)sendPacePlanToServer:(NSMutableDictionary*)description
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:description options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%s", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_CREATE_PACE_PLAN_URL];
 	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
 #endif
 }

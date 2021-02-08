@@ -23,5 +23,7 @@
 + (BOOL)serverSetUserWeight:(NSNumber*)weightKg;
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash;
 + (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSData*)contents;
++ (BOOL)sendIntervalWorkoutToServer:(NSMutableDictionary*)description;
++ (BOOL)sendPacePlanToServer:(NSMutableDictionary*)description;
 
 @end

@@ -39,7 +39,7 @@
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_REGISTER_DEVICE, @WATCH_MSG_TYPE,
-							 [extDelegate getDeviceId], @WATCH_MSG_DEVICE_ID,
+							 [extDelegate getDeviceId], @WATCH_MSG_PARAM_DEVICE_ID,
 							 nil];
 
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
@@ -57,7 +57,7 @@
 		if (hash)
 		{
 			NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
-									 hash, @WATCH_MSG_ACTIVITY_HASH,
+									 hash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
 									 nil];
 
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
@@ -95,14 +95,14 @@
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
-	NSString* planId = [message objectForKey:@WATCH_MSG_PACE_PLAN_ID];
-	NSString* planName = [message objectForKey:@WATCH_MSG_PACE_PLAN_NAME];
-	NSString* targetPaceInMinKm = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE];
-	NSString* targetDistanceInKms = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE];
-	NSString* splits = [message objectForKey:@WATCH_MSG_PACE_PLAN_SPLITS];
-	NSString* route = [message objectForKey:@WATCH_MSG_PACE_PLAN_ROUTE];
-	NSString* targetPaceUnits = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_PACE_UNITS];
-	NSString* targetDistanceUnits = [message objectForKey:@WATCH_MSG_PACE_PLAN_TARGET_DISTANCE_UNITS];
+	NSString* planId = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_ID];
+	NSString* planName = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_NAME];
+	NSString* targetPaceInMinKm = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_PACE];
+	NSString* targetDistanceInKms = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_DISTANCE];
+	NSString* splits = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_SPLITS];
+	NSString* route = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_ROUTE];
+	NSString* targetPaceUnits = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_PACE_UNITS];
+	NSString* targetDistanceUnits = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS];
 
 	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withTargetDistanceUnits:(UnitSystem)[targetDistanceUnits intValue] withTargetPaceUnits:(UnitSystem)[targetPaceUnits intValue] withRoute:route];
 }
@@ -131,17 +131,17 @@
 
 		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 										@WATCH_MSG_ACTIVITY, @WATCH_MSG_TYPE,
-										activityId, @WATCH_MSG_ACTIVITY_ID,
-										activityType, @WATCH_MSG_ACTIVITY_TYPE,
-										activityHash, @WATCH_MSG_ACTIVITY_HASH,
-										startTime, @WATCH_MSG_ACTIVITY_START_TIME,
-										endTime, @WATCH_MSG_ACTIVITY_END_TIME,
+										activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+										activityType, @WATCH_MSG_PARAM_ACTIVITY_TYPE,
+										activityHash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
+										startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
+										endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
 										nil];
 
 		if ([activityName length] > 0)
-			[msgData setObject:activityName forKey:@WATCH_MSG_ACTIVITY_NAME];
+			[msgData setObject:activityName forKey:@WATCH_MSG_PARAM_ACTIVITY_NAME];
 		if (locationData)
-			[msgData setObject:locationData forKey:@WATCH_MSG_ACTIVITY_LOCATIONS];
+			[msgData setObject:locationData forKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
 
 		[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
 			[extDelegate markAsSynchedToPhone:activityId];
@@ -233,7 +233,7 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The phone app is requesting an activity.
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
 		[self sendActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
@@ -287,7 +287,7 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The phone app is requesting an activity.
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_ACTIVITY_HASH];
+		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
 		[self sendActivity:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])

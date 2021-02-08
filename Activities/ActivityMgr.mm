@@ -1302,10 +1302,13 @@ extern "C" {
 
 			params.insert(std::make_pair("id", plan.planId));
 			params.insert(std::make_pair("name", plan.name));
-			params.insert(std::make_pair("targetPaceInMinKm", FormatDouble(plan.targetPaceInMinKm)));
-			params.insert(std::make_pair("targetDistanceInKms", FormatDouble(plan.targetDistanceInKms)));
+			params.insert(std::make_pair("target pace", FormatDouble(plan.targetPaceInMinKm)));
+			params.insert(std::make_pair("target distance", FormatDouble(plan.targetDistanceInKms)));
+			params.insert(std::make_pair("display units pace", FormatDouble(plan.displayUnitsPace)));
+			params.insert(std::make_pair("display units distance", FormatDouble(plan.displayUnitsDistance)));
 			params.insert(std::make_pair("splits", FormatDouble(plan.splits)));
 			params.insert(std::make_pair("route", plan.route));
+			params.insert(std::make_pair("last updated", FormatInt(plan.lastUpdatedTime)));
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;
@@ -1338,7 +1341,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits)
+	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime)
 	{
 		if (planId)
 		{
@@ -1360,6 +1363,8 @@ extern "C" {
 						(*targetDistanceUnits) = pacePlan.displayUnitsDistance;
 					if (targetPaceUnits)
 						(*targetPaceUnits) = pacePlan.displayUnitsPace;
+					if (lastUpdatedTime)
+						(*lastUpdatedTime) = pacePlan.lastUpdatedTime;
 					return true;
 				}
 			}
@@ -1367,7 +1372,7 @@ extern "C" {
 		return false;
 	}
 
-	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits)
+	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime)
 	{
 		bool result = false;
 
@@ -1387,6 +1392,7 @@ extern "C" {
 					pacePlan.splits = splits;
 					pacePlan.displayUnitsDistance = targetDistanceUnits;
 					pacePlan.displayUnitsPace = targetPaceUnits;
+					pacePlan.lastUpdatedTime = lastUpdatedTime;
 					result = g_pDatabase->UpdatePacePlan(pacePlan);
 				}
 			}
