@@ -2,7 +2,7 @@
 // Copyright (c) 2020 Michael J. Simms. All rights reserved.
 
 #include "Workout.h"
-#include "TrainingStressCalculator.h"
+#include "StrainCalculator.h"
 
 Workout::Workout()
 {
@@ -87,7 +87,7 @@ double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMi
 {
 	double workoutDurationSecs = 0.0;
 	double avgWorkoutPaceMetersPerSec = 0.0;
-	TrainingStressCalculator calc;
+	StrainCalculator calc;
 
 	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
 	{
@@ -111,7 +111,7 @@ double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMi
 		avgWorkoutPaceMetersPerSec = avgWorkoutPaceMetersPerSec / workoutDurationSecs;
 	}
 
-	m_estimatedTrainingStress = calc.EstimateTrainingStress(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
+	m_estimatedTrainingStress = calc.EstimateStressScore(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
 	return m_estimatedTrainingStress;
 }
 

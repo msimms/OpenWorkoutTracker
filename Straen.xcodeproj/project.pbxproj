@@ -156,11 +156,11 @@
 		27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* BtleScale.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
+		2741B53125D22D2A00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
+		2741B53525D22D2B00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
+		2741B53625D22D2C00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
-		27649BFD252910E700E24022 /* TrainingStressCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */; };
-		27649C02252910E800E24022 /* TrainingStressCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */; };
-		27649C03252910E900E24022 /* TrainingStressCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */; };
 		276526CE25B8DA32003AA2D5 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */; };
 		276526E325BB9345003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
 		276526E725BB9353003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
@@ -668,14 +668,14 @@
 		27345D0819EDEE4600059FFF /* BtleScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleScale.h; path = IOS/Sensors/BtleScale.h; sourceTree = SOURCE_ROOT; };
 		27345D0919EDEE4600059FFF /* BtleScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleScale.m; path = IOS/Sensors/BtleScale.m; sourceTree = SOURCE_ROOT; };
 		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
+		2741B52C25D22C6E00A43A63 /* StrainCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StrainCalculator.h; path = Activities/StrainCalculator.h; sourceTree = SOURCE_ROOT; };
+		2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StrainCalculator.cpp; path = Activities/StrainCalculator.cpp; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
 		275BA6D8234BC16B0086A50F /* ZwoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileReader.h; path = FileLib/ZwoFileReader.h; sourceTree = SOURCE_ROOT; };
 		275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZwoFileReader.cpp; path = FileLib/ZwoFileReader.cpp; sourceTree = SOURCE_ROOT; };
 		275BA6E8234BC21A0086A50F /* ZwoTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTags.h; path = FileLib/ZwoTags.h; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
-		27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TrainingStressCalculator.cpp; path = Activities/TrainingStressCalculator.cpp; sourceTree = SOURCE_ROOT; };
-		27649BF825266F7900E24022 /* TrainingStressCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingStressCalculator.h; path = Activities/TrainingStressCalculator.h; sourceTree = SOURCE_ROOT; };
 		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
 		276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutScheduler.cpp; path = Activities/WorkoutScheduler.cpp; sourceTree = SOURCE_ROOT; };
 		276526CD25B8DA32003AA2D5 /* WorkoutScheduler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutScheduler.h; path = Activities/WorkoutScheduler.h; sourceTree = SOURCE_ROOT; };
@@ -1729,14 +1729,14 @@
 				27C0844519BFD063007CE934 /* SquatAnalyzer.h */,
 				27C0844619BFD063007CE934 /* StationaryCycling.cpp */,
 				27C0844719BFD063007CE934 /* StationaryCycling.h */,
+				2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */,
+				2741B52C25D22C6E00A43A63 /* StrainCalculator.h */,
 				27F4240623A44D4A00F59F50 /* Swim.cpp */,
 				27F4240723A44D4A00F59F50 /* Swim.h */,
 				273F732B25AF274000484A29 /* SyncDestination.h */,
 				2768E51823A0241200DD06E9 /* TrainingPaceType.h */,
 				2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */,
 				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,
-				27649BE925266F7900E24022 /* TrainingStressCalculator.cpp */,
-				27649BF825266F7900E24022 /* TrainingStressCalculator.h */,
 				27C0844819BFD063007CE934 /* Treadmill.cpp */,
 				27C0844919BFD063007CE934 /* Treadmill.h */,
 				27C0844A19BFD063007CE934 /* UnitMgr.cpp */,
@@ -2104,6 +2104,7 @@
 				270CF49D2391F1B800584058 /* Double.h in Sources */,
 				270CF49E2391F1B800584058 /* KMeans.cpp in Sources */,
 				270CF49F2391F1B800584058 /* KMeans.h in Sources */,
+				2741B53625D22D2C00A43A63 /* StrainCalculator.cpp in Sources */,
 				270CF4A02391F1B800584058 /* Peaks.cpp in Sources */,
 				270CF4A12391F1B800584058 /* Peaks.h in Sources */,
 				270CF4A22391F1B800584058 /* Statistics.cpp in Sources */,
@@ -2213,7 +2214,6 @@
 				270CF44F2391F05200584058 /* SegmentType.h in Sources */,
 				270CF4502391F05200584058 /* Squat.cpp in Sources */,
 				270CF4512391F05200584058 /* Squat.h in Sources */,
-				27649BFD252910E700E24022 /* TrainingStressCalculator.cpp in Sources */,
 				270CF4522391F05200584058 /* SquatAnalyzer.cpp in Sources */,
 				270CF4532391F05200584058 /* SquatAnalyzer.h in Sources */,
 				270CF4542391F05200584058 /* StationaryCycling.cpp in Sources */,
@@ -2256,6 +2256,7 @@
 				27AAB9D62389E76C00C0A91F /* Version.m in Sources */,
 				27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */,
 				27C0845C19BFD063007CE934 /* PushUp.cpp in Sources */,
+				2741B53125D22D2A00A43A63 /* StrainCalculator.cpp in Sources */,
 				27B7CD3219BFD8AC000383E3 /* AppDelegate.m in Sources */,
 				27CF013224DAF68700263CEC /* BtleLight.m in Sources */,
 				2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */,
@@ -2381,7 +2382,6 @@
 				27B7CDA719BFD91C000383E3 /* SimpleActivityViewController.m in Sources */,
 				27C0846119BFD063007CE934 /* StationaryCycling.cpp in Sources */,
 				2797F18B19BFE48E008F8672 /* CsvFileWriter.cpp in Sources */,
-				27649C03252910E900E24022 /* TrainingStressCalculator.cpp in Sources */,
 				276D5AF01AA169AF008F55AF /* CloudService.m in Sources */,
 				276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */,
 				27B7CDF819BFD99B000383E3 /* BtlePowerMeter.m in Sources */,
@@ -2403,6 +2403,7 @@
 				27DCF66022B72F50009A23C2 /* Gender.h in Sources */,
 				27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */,
 				27DCF66122B72F50009A23C2 /* User.cpp in Sources */,
+				2741B53525D22D2B00A43A63 /* StrainCalculator.cpp in Sources */,
 				27DCF66222B72F50009A23C2 /* User.h in Sources */,
 				27DCF65922B72F24009A23C2 /* Coordinate.h in Sources */,
 				27DCF65A22B72F24009A23C2 /* UnitConversionFactors.h in Sources */,
@@ -2456,7 +2457,6 @@
 				27DCF63022B716CB009A23C2 /* Database.cpp in Sources */,
 				27DCF63122B716CB009A23C2 /* Database.h in Sources */,
 				27DCF63222B716CB009A23C2 /* DataExporter.cpp in Sources */,
-				27649C02252910E800E24022 /* TrainingStressCalculator.cpp in Sources */,
 				27DCF63322B716CB009A23C2 /* DataExporter.h in Sources */,
 				27DCF63422B716CB009A23C2 /* DataImporter.cpp in Sources */,
 				276526E725BB9353003AA2D5 /* Signals.cpp in Sources */,
