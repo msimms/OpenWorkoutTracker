@@ -9,6 +9,7 @@
 #import "WatchMessages.h"
 #import "ExtensionDelegate.h"
 #import "Notifications.h"
+#import "Params.h"
 #import "Preferences.h"
 
 @interface WatchSessionManager ()
@@ -95,14 +96,14 @@
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
-	NSString* planId = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_ID];
-	NSString* planName = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_NAME];
-	NSString* targetPaceInMinKm = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_PACE];
-	NSString* targetDistanceInKms = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_DISTANCE];
-	NSString* splits = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_SPLITS];
-	NSString* route = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_ROUTE];
-	NSString* targetPaceUnits = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_PACE_UNITS];
-	NSString* targetDistanceUnits = [message objectForKey:@WATCH_MSG_PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS];
+	NSString* planId = [message objectForKey:@PARAM_PACE_PLAN_ID];
+	NSString* planName = [message objectForKey:@PARAM_PACE_PLAN_NAME];
+	NSString* targetPaceInMinKm = [message objectForKey:@PARAM_PACE_PLAN_TARGET_PACE];
+	NSString* targetDistanceInKms = [message objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE];
+	NSString* splits = [message objectForKey:@PARAM_PACE_PLAN_SPLITS];
+	NSString* route = [message objectForKey:@PARAM_PACE_PLAN_ROUTE];
+	NSString* targetPaceUnits = [message objectForKey:@PARAM_PACE_PLAN_TARGET_PACE_UNITS];
+	NSString* targetDistanceUnits = [message objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS];
 
 	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withTargetDistanceUnits:(UnitSystem)[targetDistanceUnits intValue] withTargetPaceUnits:(UnitSystem)[targetPaceUnits intValue] withRoute:route];
 }

@@ -775,6 +775,7 @@
 		2797F1BD19BFE7A4008F8672 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MainStoryboard_iPhone.storyboard; path = IOS/Storyboards/MainStoryboard_iPhone.storyboard; sourceTree = SOURCE_ROOT; };
 		2797F1D319BFEAFA008F8672 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		2798425B25D41418006CA3DB /* Params.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Params.h; path = Common/Params.h; sourceTree = SOURCE_ROOT; };
 		279E70D425740FD7002B4BB6 /* Running.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Running.png; path = Images/Running.png; sourceTree = SOURCE_ROOT; };
 		279E70EE25743463002B4BB6 /* Hiking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Hiking.png; path = Images/Hiking.png; sourceTree = SOURCE_ROOT; };
 		279E70EF25743463002B4BB6 /* Walking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Walking.png; path = Images/Walking.png; sourceTree = SOURCE_ROOT; };
@@ -1179,6 +1180,7 @@
 			children = (
 				2762BC781ECB72FE0052A26E /* Defines.h */,
 				27DCF68E22CD483A009A23C2 /* Notifications.h */,
+				2798425B25D41418006CA3DB /* Params.h */,
 				271C5E3820D59C2700DE759C /* Urls.h */,
 			);
 			name = Common;

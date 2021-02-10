@@ -32,24 +32,3 @@
 #define REMOTE_API_UPLOAD_ACTIVITY_FILE_URL    "api/1.0/upload_activity_file"
 #define REMOTE_API_CREATE_INTERVAL_WORKOUT_URL "api/1.0/create_interval_workout"
 #define REMOTE_API_CREATE_PACE_PLAN_URL        "api/1.0/create_pace_plan"
-
-//
-// URL parameters (for HTTP GET) and JSON params (for HTTP POST).
-//
-
-#define URL_KEY_NAME_TARGET_EMAIL              "target_email"
-#define URL_KEY_NAME_USERNAME                  "username"
-#define URL_KEY_NAME_PASSWORD                  "password"
-#define URL_KEY_NAME_PASSWORD1                 "password1"
-#define URL_KEY_NAME_PASSWORD2                 "password2"
-#define URL_KEY_NAME_REALNAME                  "realname"
-#define URL_KEY_NAME_DEVICE                    "device"
-
-#define URL_KEY_NAME_ACTIVITY_ID               "activity_id"
-#define URL_KEY_NAME_ACTIVITY_HASH             "activity_hash"
-#define URL_KEY_NAME_DEVICE_ID2                "device_id"
-#define URL_KEY_NAME_TAG                       "tag"
-#define URL_KEY_NAME_CODE                      "code"
-#define URL_KEY_NAME_WEIGHT                    "weight"
-#define URL_KEY_NAME_UPLOADED_FILE_NAME        "uploaded_file_name"
-#define URL_KEY_NAME_UPLOADED_FILE_DATA        "uploaded_file_data"

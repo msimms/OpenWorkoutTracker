@@ -24,6 +24,7 @@
 #import "FileUtils.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
+#import "Params.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
 #import "Urls.h"
@@ -1035,15 +1036,16 @@ void startSensorCallback(SensorType type, void* context)
 		[self initializeBikeProfileList];
 		[self initializeShoeList];
 
+		// Valid JSON?
 		if (gearObjects)
 		{
 			for (NSDictionary* gearDict in gearObjects)
 			{
-				NSString* gearType = [gearDict objectForKey:@KEY_NAME_GEAR_TYPE];
-				NSString* gearName = [gearDict objectForKey:@KEY_NAME_GEAR_NAME];
-				NSString* gearDescription = [gearDict objectForKey:@KEY_NAME_GEAR_DESCRIPTION];
-				NSNumber* addTime = [gearDict objectForKey:@KEY_NAME_ADD_TIME];
-				NSNumber* retireTime = [gearDict objectForKey:@KEY_NAME_RETIRE_TIME];
+				NSString* gearType = [gearDict objectForKey:@PARAM_GEAR_TYPE];
+				NSString* gearName = [gearDict objectForKey:@PARAM_GEAR_NAME];
+				NSString* gearDescription = [gearDict objectForKey:@PARAM_GEAR_DESCRIPTION];
+				NSNumber* addTime = [gearDict objectForKey:@PARAM_ADD_TIME];
+				NSNumber* retireTime = [gearDict objectForKey:@PARAM_RETIRE_TIME];
 
 				// Don't bother listing items that have been retired.
 				if ([retireTime intValue] == 0)
@@ -1073,6 +1075,10 @@ void startSensorCallback(SensorType type, void* context)
 				}
 			}
 		}
+		else
+		{
+			NSLog(@"Invalid JSON received.");
+		}
 	}
 	@catch (...)
 	{
@@ -1089,13 +1095,14 @@ void startSensorCallback(SensorType type, void* context)
 		NSError* error = nil;
 		NSArray* workoutObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
 
+		// Valid JSON?
 		if (workoutObjects)
 		{
 			InitializeWorkoutList();
 
 			for (NSDictionary* workoutDict in workoutObjects)
 			{
-				NSString* workoutId = [workoutDict objectForKey:@KEY_NAME_WORKOUT_ID];
+				NSString* workoutId = [workoutDict objectForKey:@PARAM_WORKOUT_ID];
 
 				// If the workout is not in the database then request the details.
 				if (ConvertWorkoutIdToIndex([workoutId UTF8String]) == WORKOUT_INDEX_UNKNOWN)
@@ -1104,12 +1111,17 @@ void startSensorCallback(SensorType type, void* context)
 				}
 			}
 		}
+		else
+		{
+			NSLog(@"Invalid JSON received.");
+		}
 	}
 	@catch (...)
 	{
 	}
 }
 
+// Called when the server sends a planned workout for the user.
 - (void)plannedWorkoutUpdated:(NSNotification*)notification
 {
 	@try
@@ -1119,15 +1131,16 @@ void startSensorCallback(SensorType type, void* context)
 		NSError* error = nil;
 		NSDictionary* details = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
 
+		// Valid JSON?
 		if (details)
 		{
-			NSString* workoutId = [details objectForKey:@KEY_NAME_WORKOUT_ID];
-			NSString* workoutTypeStr = [details objectForKey:@KEY_NAME_WORKOUT_WORKOUT_TYPE];
-			NSString* sportType = [details objectForKey:@KEY_NAME_WORKOUT_SPORT_TYPE];
-			NSNumber* estimatedStress = [details objectForKey:@KEY_NAME_WORKOUT_ESTIMATED_STRESS];
-			NSNumber* scheduledTime = [details objectForKey:@KEY_NAME_WORKOUT_SCHEDULED_TIME];
-			NSDictionary* warmup = [details objectForKey:@KEY_NAME_WORKOUT_WARMUP];
-			NSDictionary* cooldown = [details objectForKey:@KEY_NAME_WORKOUT_COOLDOWN];
+			NSString* workoutId = [details objectForKey:@PARAM_WORKOUT_ID];
+			NSString* workoutTypeStr = [details objectForKey:@PARAM_WORKOUT_WORKOUT_TYPE];
+			NSString* sportType = [details objectForKey:@PARAM_WORKOUT_SPORT_TYPE];
+			NSNumber* estimatedStress = [details objectForKey:@PARAM_WORKOUT_ESTIMATED_STRESS];
+			NSNumber* scheduledTime = [details objectForKey:@PARAM_WORKOUT_SCHEDULED_TIME];
+			NSDictionary* warmup = [details objectForKey:@PARAM_WORKOUT_WARMUP];
+			NSDictionary* cooldown = [details objectForKey:@PARAM_WORKOUT_COOLDOWN];
 
 			// Convert the workout type string to an enum.
 			WorkoutType workoutType = WorkoutTypeStrToEnum([workoutTypeStr UTF8String]);
@@ -1135,7 +1148,7 @@ void startSensorCallback(SensorType type, void* context)
 			// Create the workout.
 			if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedStress doubleValue], [scheduledTime intValue]))
 			{
-				NSArray* intervals = [details objectForKey:@KEY_NAME_WORKOUT_INTERVALS];
+				NSArray* intervals = [details objectForKey:@PARAM_WORKOUT_INTERVALS];
 
 				// Add the warmup.
 				if (warmup)
@@ -1150,15 +1163,19 @@ void startSensorCallback(SensorType type, void* context)
 				// Add the intervals.
 				for (NSDictionary* interval in intervals)
 				{
-					NSNumber* repeat = [interval objectForKey:@KEY_NAME_WORKOUT_INTERVAL_REPEAT];
-					NSNumber* pace = [interval objectForKey:@KEY_NAME_WORKOUT_PACE];
-					NSNumber* distance = [interval objectForKey:@KEY_NAME_WORKOUT_DISTANCE];
-					NSNumber* recoveryPace = [interval objectForKey:@KEY_NAME_WORKOUT_RECOVERY_PACE];
-					NSNumber* recoveryDistance = [interval objectForKey:@KEY_NAME_WORKOUT_RECOVERY_DISTANCE];
+					NSNumber* repeat = [interval objectForKey:@PARAM_WORKOUT_INTERVAL_REPEAT];
+					NSNumber* pace = [interval objectForKey:@PARAM_WORKOUT_PACE];
+					NSNumber* distance = [interval objectForKey:@PARAM_WORKOUT_DISTANCE];
+					NSNumber* recoveryPace = [interval objectForKey:@PARAM_WORKOUT_RECOVERY_PACE];
+					NSNumber* recoveryDistance = [interval objectForKey:@PARAM_WORKOUT_RECOVERY_DISTANCE];
 
 					AddWorkoutInterval([workoutId UTF8String], [repeat intValue], [pace doubleValue], [distance doubleValue], [recoveryPace doubleValue], [recoveryDistance doubleValue]);
 				}
 			}
+		}
+		else
+		{
+			NSLog(@"Invalid JSON received.");
 		}
 	}
 	@catch (...)
@@ -1182,6 +1199,57 @@ void startSensorCallback(SensorType type, void* context)
 {
 	@try
 	{
+		NSDictionary* workoutData = [notification object];
+		NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSError* error = nil;
+		NSDictionary* pacePlans = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+		// Valid JSON?
+		if (pacePlans)
+		{
+			for (NSDictionary* pacePlan in pacePlans)
+			{
+				NSString* newPlanName = [pacePlan objectForKey:@PARAM_PACE_PLAN_NAME];
+				NSString* newPlanId = [pacePlan objectForKey:@PARAM_PACE_PLAN_ID];
+				NSNumber* newTargetPaceInMinKm = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_PACE];
+				NSNumber* newTargetDistanceInKms = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE];
+				NSNumber* newSplits = [pacePlan objectForKey:@PARAM_PACE_PLAN_SPLITS];
+				NSNumber* newTargetDistanceUnits = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS];
+				NSNumber* newTargetPaceUnits = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_PACE_UNITS];
+				NSNumber* newLastUpdatedTime = [pacePlan objectForKey:@PARAM_PACE_PLAN_LAST_UPDATED_TIME];
+
+				time_t existingLastUpdatedTime = 0;
+
+				if (GetPacePlanDetails([newPlanId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL, &existingLastUpdatedTime))
+				{
+					if ([newLastUpdatedTime intValue] > existingLastUpdatedTime)
+					{
+						if (!UpdatePacePlanDetails([newPlanId UTF8String], [newPlanName UTF8String], [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
+						{
+							NSLog(@"Failed to update a pace plan.");
+						}
+					}
+				}
+				else
+				{
+					if (CreateNewPacePlan([newPlanName UTF8String], [newPlanId UTF8String]))
+					{
+						if (!UpdatePacePlanDetails([newPlanId UTF8String], [newPlanName UTF8String], [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
+						{
+							NSLog(@"Failed to update a pace plan.");
+						}
+					}
+					else
+					{
+						NSLog(@"Failed to create a pace plan.");
+					}
+				}
+			}
+		}
+		else
+		{
+			NSLog(@"Invalid JSON received.");
+		}
 	}
 	@catch (...)
 	{
@@ -1904,8 +1972,8 @@ void syncStatusCallback(const char* const destination, void* context)
 			// Object was deserialized?
 			if (responseObjects)
 			{
-				NSNumber* code = [responseObjects objectForKey:@URL_KEY_NAME_CODE];
-				NSString* activityId = [responseObjects objectForKey:@URL_KEY_NAME_ACTIVITY_ID];
+				NSNumber* code = [responseObjects objectForKey:@PARAM_CODE];
+				NSString* activityId = [responseObjects objectForKey:@PARAM_ACTIVITY_ID];
 
 				if (code && activityId)
 				{
