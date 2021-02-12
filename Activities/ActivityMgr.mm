@@ -2547,6 +2547,8 @@ extern "C" {
 			return WORKOUT_TYPE_EVENT;
 		if (temp.compare("Speed Run") == 0)
 			return WORKOUT_TYPE_SPEED_RUN;
+		if (temp.compare("Threshold Run") == 0)
+			return WORKOUT_TYPE_THRESHOLD_RUN;
 		if (temp.compare("Tempo Run") == 0)
 			return WORKOUT_TYPE_TEMPO_RUN;
 		if (temp.compare("Easy Run") == 0)
@@ -2585,6 +2587,7 @@ extern "C" {
 	{
 		// Convert to the units the server expects to see.
 		UnitMgr::ConvertActivityAttributeToMetric(*value);
+
 		if (value->measureType == MEASURE_SPEED)
 		{
 			value->value.doubleVal *= (1000.0 / 60.0 / 60.0); // Convert from kph to meters per second

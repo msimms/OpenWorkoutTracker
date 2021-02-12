@@ -242,36 +242,44 @@
 
 #pragma mark 
 
-- (NSNumber*)paceAtDistance:(double)distanceKm
+- (NSNumber*)paceAtDistance:(double)distanceInMeters
 {
 	NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
-	double currentDistanceKm = (double)0.0;
+	double currentDistanceInMeters = (double)0.0;
 
+	// Which interval are we in when at the given distance?
 	for (NSDictionary* interval in intervals)
 	{
 		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
 		double intervalDistance = [interval[@"distance"] doubleValue];
 		double recoveryDistance = [interval[@"recoveryDistance"] doubleValue];
 
+		// For each time this interval is repeated.
 		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)
 		{
-			currentDistanceKm += intervalDistance;
-			if (currentDistanceKm > distanceKm)
+			// Main interval.
+			currentDistanceInMeters += intervalDistance;
+			if (currentDistanceInMeters >= distanceInMeters)
 			{
 				NSNumber* pace = interval[@"pace"];
-				double tempPace = [pace doubleValue];
 
-				if (tempPace < (double)0.1)
+				if ([pace doubleValue] < (double)0.1)
 				{
 					return [[NSNumber alloc] initWithDouble:self->maxY * 0.25];
 				}
+				return pace;
 			}
 
-			currentDistanceKm += recoveryDistance;
-			if (currentDistanceKm > distanceKm)
+			// Recovery interval.
+			currentDistanceInMeters += recoveryDistance;
+			if (currentDistanceInMeters >= distanceInMeters)
+			{
 				return interval[@"recovery pace"];
+			}
 		}
 	}
+	
+	// Nothing found, return zero.
 	return [[NSNumber alloc] initWithDouble:0.0];
 }
 
@@ -290,8 +298,8 @@
 			return [[NSNumber alloc] initWithInt:(int)index];
 		case CPTScatterPlotFieldY:
 			{
-				double distanceKm = (double)index * 100.0;
-				return [self paceAtDistance:distanceKm];
+				double distanceInMeters = (double)index * 100.0; // convert back to meters
+				return [self paceAtDistance:distanceInMeters];
 			}
 		default:
 			break;

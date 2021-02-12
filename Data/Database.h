@@ -83,6 +83,7 @@ public:
 	bool CreateWorkoutInterval(const Workout& workout, const WorkoutInterval& interval);
 	bool RetrieveWorkoutIntervals(Workout& workout);
 	bool DeleteWorkoutIntervals(const std::string& workoutId);
+	bool DeleteAllWorkoutIntervals(void);
 
 	// Methods for managing pace plans.
 

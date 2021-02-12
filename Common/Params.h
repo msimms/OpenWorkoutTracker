@@ -39,7 +39,7 @@
 #define PARAM_WORKOUT_WARMUP                  "warmup"
 #define PARAM_WORKOUT_COOLDOWN                "cooldown"
 #define PARAM_WORKOUT_INTERVALS               "intervals"
-#define PARAM_WORKOUT_INTERVAL_REPEAT         "repeat"
+#define PARAM_WORKOUT_INTERVAL_REPEAT         "Repeat"
 #define PARAM_WORKOUT_PACE                    "Pace"
 #define PARAM_WORKOUT_DISTANCE                "Distance"
 #define PARAM_WORKOUT_RECOVERY_PACE           "Recovery Pace"

@@ -870,15 +870,18 @@ bool Database::DeleteWorkout(const std::string& workoutId)
 
 bool Database::DeleteAllWorkouts(void)
 {
+	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "delete from workout", -1, &statement, 0);
-	if (result == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "delete from workout", -1, &statement, 0) == SQLITE_OK)
 	{
-		result = sqlite3_step(statement);
+		result = (sqlite3_step(statement) == SQLITE_DONE);
 		sqlite3_finalize(statement);
+		
+		// Delete the intervals too.
+		result &= this->DeleteAllWorkoutIntervals();
 	}
-	return result == SQLITE_DONE;
+	return result;
 }
 
 bool Database::CreateWorkoutInterval(const Workout& workout, const WorkoutInterval& interval)
@@ -941,6 +944,19 @@ bool Database::DeleteWorkoutIntervals(const std::string& workoutId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::DeleteAllWorkoutIntervals(void)
+{
+	sqlite3_stmt* statement = NULL;
+
+	int result = sqlite3_prepare_v2(m_pDb, "delete from workout_interval", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

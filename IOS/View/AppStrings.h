@@ -77,6 +77,7 @@
 #define STR_REST                  NSLocalizedString(@"Rest", nil)
 #define STR_EVENT                 NSLocalizedString(@"Event", nil)
 #define STR_SPEED_RUN             NSLocalizedString(@"Speed Run", nil)
+#define STR_THRESHOLD_RUN         NSLocalizedString(@"Threshold Run", nil)
 #define STR_TEMPO_RUN             NSLocalizedString(@"Tempo Run", nil)
 #define STR_EASY_RUN              NSLocalizedString(@"Easy Run", nil)
 #define STR_LONG_RUN              NSLocalizedString(@"Long Run", nil)

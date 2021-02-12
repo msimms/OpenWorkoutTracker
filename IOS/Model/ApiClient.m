@@ -19,6 +19,7 @@
 	[request setURL:[NSURL URLWithString:urlStr]];
 	[request setHTTPMethod:method];
 
+	// Attach the post data, if any.
 	if (postData)
 	{
 		NSString* postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
@@ -27,6 +28,7 @@
 		[request setHTTPBody:postData];
 	}
 
+	// Make the request.
 	NSURLSession* session = [NSURLSession sharedSession];
 	NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:request
 												completionHandler:^(NSData* data, NSURLResponse* response, NSError* error)
@@ -91,6 +93,12 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:downloadedData];
 			} );
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:downloadedData];
+			} );
+		}
 		else if ([urlStr rangeOfString:@REMOTE_API_LIST_INTERVAL_WORKOUTS_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
@@ -107,12 +115,6 @@
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:downloadedData];
-			} );
-		}
-		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:downloadedData];
 			} );
 		}
 		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
@@ -282,7 +284,7 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%s?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_REQUEST_WORKOUT_DETAILS_URL];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%@?", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_REQUEST_WORKOUT_DETAILS_URL];
 
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", @PARAM_WORKOUT_ID, workoutId]];
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"format=json"]];

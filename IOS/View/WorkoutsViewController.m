@@ -149,6 +149,9 @@
 				case WORKOUT_TYPE_SPEED_RUN:
 					cell.textLabel.text = STR_SPEED_RUN;
 					break;
+				case WORKOUT_TYPE_THRESHOLD_RUN:
+					cell.textLabel.text = STR_THRESHOLD_RUN;
+					break;
 				case WORKOUT_TYPE_TEMPO_RUN:
 					cell.textLabel.text = STR_TEMPO_RUN;
 					break;
