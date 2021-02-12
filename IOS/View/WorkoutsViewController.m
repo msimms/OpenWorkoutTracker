@@ -203,7 +203,10 @@
 
 				// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
 				UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 6, 32, 32)];
-				imageView.image = [self activityTypeToIcon:workoutSport];
+				if (workoutType == WORKOUT_TYPE_REST)
+					imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Rest" ofType:@"png"]];
+				else
+					imageView.image = [self activityTypeToIcon:workoutSport];
 				[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 				[cell.contentView addSubview:imageView];
 			}

@@ -213,6 +213,7 @@
 		2797F19419BFE48E008F8672 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18719BFE48E008F8672 /* XmlFileReader.cpp */; };
 		2797F19519BFE48E008F8672 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F18919BFE48E008F8672 /* XmlFileWriter.cpp */; };
 		2797F1C519BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */; };
+		2798426F25D6ABED006CA3DB /* Rest.png in Resources */ = {isa = PBXBuildFile; fileRef = 2798426E25D6ABEC006CA3DB /* Rest.png */; };
 		279E70E425740FD8002B4BB6 /* Running.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70D425740FD7002B4BB6 /* Running.png */; };
 		279E70F125743463002B4BB6 /* Hiking.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70EE25743463002B4BB6 /* Hiking.png */; };
 		279E70F225743463002B4BB6 /* Walking.png in Resources */ = {isa = PBXBuildFile; fileRef = 279E70EF25743463002B4BB6 /* Walking.png */; };
@@ -776,6 +777,7 @@
 		2797F1C419BFE9F0008F8672 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MainStoryboard_iPhone.storyboard; path = IOS/Storyboards/MainStoryboard_iPhone.storyboard; sourceTree = SOURCE_ROOT; };
 		2797F1D319BFEAFA008F8672 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		2798425B25D41418006CA3DB /* Params.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Params.h; path = Common/Params.h; sourceTree = SOURCE_ROOT; };
+		2798426E25D6ABEC006CA3DB /* Rest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Rest.png; path = Images/Rest.png; sourceTree = SOURCE_ROOT; };
 		279E70D425740FD7002B4BB6 /* Running.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Running.png; path = Images/Running.png; sourceTree = SOURCE_ROOT; };
 		279E70EE25743463002B4BB6 /* Hiking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Hiking.png; path = Images/Hiking.png; sourceTree = SOURCE_ROOT; };
 		279E70EF25743463002B4BB6 /* Walking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Walking.png; path = Images/Walking.png; sourceTree = SOURCE_ROOT; };
@@ -1484,6 +1486,7 @@
 				279E70EE25743463002B4BB6 /* Hiking.png */,
 				279E717925746FF3002B4BB6 /* HikingOnWatch.png */,
 				27B44D0C19BFF01A0058FE00 /* MappedScreen.png */,
+				2798426E25D6ABEC006CA3DB /* Rest.png */,
 				279E70D425740FD7002B4BB6 /* Running.png */,
 				279E716C25746EC1002B4BB6 /* RunningOnWatch.png */,
 				27B44D0E19BFF01A0058FE00 /* SimpleScreen.png */,
@@ -2042,6 +2045,7 @@
 				279E70E425740FD8002B4BB6 /* Running.png in Resources */,
 				2728FD2A19C1250E00CE2BAD /* Icon_58px.png in Resources */,
 				27EF2C582560AC6300F06796 /* Assets.xcassets in Resources */,
+				2798426F25D6ABED006CA3DB /* Rest.png in Resources */,
 				279E70F225743463002B4BB6 /* Walking.png in Resources */,
 				2728FD2B19C1250E00CE2BAD /* Icon_80px.png in Resources */,
 				2728FD2C19C1250E00CE2BAD /* Icon_120px.png in Resources */,
