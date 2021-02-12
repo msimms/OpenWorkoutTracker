@@ -9,6 +9,7 @@
 #import "WorkoutDetailsViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "ImageUtils.h"
 #import "Segues.h"
 #import "StringUtils.h"
 
@@ -201,12 +202,20 @@
 					cell.detailTextLabel.text = STR_WORKOUT_NOT_SCHEDULED;
 				}
 
-				// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
+				// Load the image.
 				UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 6, 32, 32)];
 				if (workoutType == WORKOUT_TYPE_REST)
 					imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Rest" ofType:@"png"]];
 				else
 					imageView.image = [self activityTypeToIcon:workoutSport];
+
+				// If dark mode is enabled, invert the image.
+				if ([self isDarkModeEnabled])
+				{
+					imageView.image = [ImageUtils invertImage2:imageView.image];
+				}
+
+				// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
 				[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 				[cell.contentView addSubview:imageView];
 			}

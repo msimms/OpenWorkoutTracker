@@ -1,5 +1,5 @@
-// Created by Michael Simms on 6/21/19.
-// Copyright © 2019 Michael J Simms Software. All rights reserved.
+// Created by Michael Simms on 2/12/21.
+// Copyright (c) 2021 Michael J. Simms. All rights reserved.
 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface HashUtils : NSObject
+@interface ImageUtils : NSObject
 
-+ (NSString*)createSHA512:(NSString*)source;
++ (UIImage*)invertImage:(UIImage*)img;
++ (UIImage*)invertImage2:(UIImage*)img;
 
 @end

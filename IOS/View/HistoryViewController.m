@@ -9,6 +9,7 @@
 #import "ActivityType.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "ImageUtils.h"
 #import "Segues.h"
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
@@ -134,6 +135,7 @@
 	if (numHistoricalActivities > 0)
 	{
 		self->historyDictionary = [[NSMutableDictionary alloc] init];
+
 		if (self->historyDictionary)
 		{
 			NSString* activityId;
@@ -323,9 +325,17 @@
 	NSString* activityType = [appDelegate getHistoricalActivityType:activityId];
 	cell.textLabel.text = NSLocalizedString(activityType, nil);
 
-	// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
+	// Load the image that goes with the activity.
 	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
 	imageView.image = [self activityTypeToIcon:activityType];
+
+	// If dark mode is enabled, invert the image.
+	if ([self isDarkModeEnabled])
+	{
+		imageView.image = [ImageUtils invertImage2:imageView.image];
+	}
+
+	// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
 	[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[cell.contentView addSubview:imageView];
 
