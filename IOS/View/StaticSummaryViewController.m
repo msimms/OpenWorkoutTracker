@@ -919,6 +919,10 @@ typedef enum ExportFileTypeButtons
 
 				if (attr.valid)
 				{
+					// Convert the units to the unit system the user prefers to use.
+					[appDelegate convertToPreferredUnits:&attr];
+
+					// Format the display strings.
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
 					NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
 
