@@ -62,6 +62,7 @@
 
 - (void)initializeLabelText;
 - (void)initializeLabelColor;
+- (void)initializeToolbarButtonColor;
 
 - (void)addTapGestureRecognizersToAllLabels;
 

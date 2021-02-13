@@ -381,25 +381,6 @@
 	}
 }
 
-- (void)initializeToolbarButtonColor
-{
-	UIColor* buttonColor = [self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor];
-
-	[self->moreButton setTintColor:buttonColor];
-	[self->customizeButton setTintColor:buttonColor];
-	[self->bikeButton setTintColor:buttonColor];
-	[self->intervalsButton setTintColor:buttonColor];
-	[self->paceButton setTintColor:buttonColor];
-	[self->lapButton setTintColor:buttonColor];
-	[self->startStopButton setTintColor:buttonColor];
-	[self->weightButton setTintColor:buttonColor];
-
-	if (IsAutoStartEnabled())
-		[self->autoStartButton setTintColor:[UIColor redColor]];
-	else
-		[self->autoStartButton setTintColor:buttonColor];
-}
-
 - (void)initializeLabelColor
 {
 	// Check for dark mode. Only use the user preferences in light mode.
@@ -431,6 +412,25 @@
 		}
 		self.view.backgroundColor = backgroundColor;
 	}
+}
+
+- (void)initializeToolbarButtonColor
+{
+	UIColor* buttonColor = [self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor];
+
+	[self->moreButton setTintColor:buttonColor];
+	[self->customizeButton setTintColor:buttonColor];
+	[self->bikeButton setTintColor:buttonColor];
+	[self->intervalsButton setTintColor:buttonColor];
+	[self->paceButton setTintColor:buttonColor];
+	[self->lapButton setTintColor:buttonColor];
+	[self->startStopButton setTintColor:buttonColor];
+	[self->weightButton setTintColor:buttonColor];
+
+	if (IsAutoStartEnabled())
+		[self->autoStartButton setTintColor:[UIColor redColor]];
+	else
+		[self->autoStartButton setTintColor:buttonColor];
 }
 
 - (void)addTapGestureRecognizersToAllLabels

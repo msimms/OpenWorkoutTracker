@@ -227,6 +227,17 @@
 	[super prepareForSegue:segue sender:sender];
 }
 
+
+#pragma mark overriden methods from the parent class
+
+- (void)initializeToolbarButtonColor
+{
+	UIColor* buttonColor = [self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor];
+
+	[self->mapButton setTintColor:buttonColor];
+	[super initializeToolbarButtonColor];
+}
+
 #pragma mark methods for resetting the UI based on activity state
 
 - (void)setUIForStartedActivity

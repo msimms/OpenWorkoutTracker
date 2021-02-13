@@ -416,6 +416,8 @@
 	}
 }
 
+#pragma mark heat map functionality
+
 void HeapMapPointReceived(Coordinate coordinate, uint32_t count, void* context)
 {
 //	MapOverviewViewController* ptrToViewController = (__bridge MapOverviewViewController*)context;
