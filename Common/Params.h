@@ -35,15 +35,18 @@
 #define PARAM_WORKOUT_SPORT_TYPE              "sport type"
 #define PARAM_WORKOUT_URL                     "url"
 #define PARAM_WORKOUT_SCHEDULED_TIME          "scheduled time"
-#define PARAM_WORKOUT_ESTIMATED_STRESS        "estimated stress score"
+#define PARAM_WORKOUT_ESTIMATED_STRAIN        "estimated strain score"
 #define PARAM_WORKOUT_WARMUP                  "warmup"
 #define PARAM_WORKOUT_COOLDOWN                "cooldown"
 #define PARAM_WORKOUT_INTERVALS               "intervals"
-#define PARAM_WORKOUT_INTERVAL_REPEAT         "Repeat"
-#define PARAM_WORKOUT_PACE                    "Pace"
-#define PARAM_WORKOUT_DISTANCE                "Distance"
-#define PARAM_WORKOUT_RECOVERY_PACE           "Recovery Pace"
-#define PARAM_WORKOUT_RECOVERY_DISTANCE       "Recovery Distance"
+
+// Intervals
+#define PARAM_INTERVAL_REPEAT                 "Repeat"
+#define PARAM_INTERVAL_PACE                   "Pace"
+#define PARAM_INTERVAL_DURATION               "Duration"
+#define PARAM_INTERVAL_DISTANCE               "Distance"
+#define PARAM_INTERVAL_RECOVERY_PACE          "Recovery Pace"
+#define PARAM_INTERVAL_RECOVERY_DISTANCE      "Recovery Distance"
 
 // Pace plans
 #define PARAM_PACE_PLAN_ID                    "id"

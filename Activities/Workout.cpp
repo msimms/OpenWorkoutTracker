@@ -6,7 +6,7 @@
 
 Workout::Workout()
 {
-	this->m_estimatedTrainingStress = 0.0;
+	this->m_estimatedStrainScore = 0.0;
 	this->m_scheduledTime = 0;
 }
 
@@ -15,7 +15,7 @@ Workout::Workout(const std::string& workoutId, WorkoutType type, const std::stri
 	this->m_id = workoutId;
 	this->m_type = type;
 	this->m_sport = sport;
-	this->m_estimatedTrainingStress = 0.0;
+	this->m_estimatedStrainScore = 0.0;
 	this->m_scheduledTime = 0;
 }
 
@@ -86,7 +86,7 @@ double Workout::CalculateIntervalDuration(double intervalMeters, double interval
 
 // Computes the estimated training stress for this workout.
 // May be overridden by child classes, depending on the type of workout.
-double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMinute)
+double Workout::CalculateEstimatedStrainScore(double thresholdPaceMetersPerMinute)
 {
 	double workoutDurationSecs = 0.0;
 	double avgWorkoutPaceMetersPerSec = 0.0;
@@ -114,8 +114,8 @@ double Workout::CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMi
 		avgWorkoutPaceMetersPerSec = avgWorkoutPaceMetersPerSec / workoutDurationSecs;
 	}
 
-	m_estimatedTrainingStress = calc.EstimateStressScore(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
-	return m_estimatedTrainingStress;
+	m_estimatedStrainScore = calc.EstimateStressScore(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
+	return m_estimatedStrainScore;
 }
 
 double Workout::CalculateDuration() const

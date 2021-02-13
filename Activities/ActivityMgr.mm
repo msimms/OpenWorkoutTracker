@@ -2397,36 +2397,43 @@ extern "C" {
 			const std::vector<WorkoutInterval> intervals = workout.GetIntervals();
 
 			std::map<std::string, std::string> params;
-			std::map<std::string, std::string> intervalsParam;
-			std::string intervalsJsonStr = "[";
 			std::string workoutJson;
 
 			params.insert(std::make_pair("id", workout.GetId()));
-			params.insert(std::make_pair("sport", workout.GetSport()));
+			params.insert(std::make_pair("sport type", workout.GetSport()));
 			params.insert(std::make_pair("type", FormatInt((uint64_t)workout.GetType())));
 			params.insert(std::make_pair("num intervals", FormatInt((uint64_t)workout.GetIntervals().size())));
 			params.insert(std::make_pair("duration", FormatDouble(workout.CalculateDuration())));
 			params.insert(std::make_pair("distance", FormatDouble(workout.CalculateDistance())));
-			params.insert(std::make_pair("start time", FormatInt((uint64_t)workout.GetScheduledTime())));
-			
-			for (auto interIter = intervals.begin(); interIter != intervals.end(); ++interIter)
-			{
-				const WorkoutInterval& interval = (*interIter);
-
-				intervalsParam.insert(std::make_pair("repeat", FormatInt((uint64_t)interval.m_repeat)));
-				intervalsParam.insert(std::make_pair("duration", FormatDouble(interval.m_duration)));
-				intervalsParam.insert(std::make_pair("distance", FormatDouble(interval.m_distance)));
-				intervalsParam.insert(std::make_pair("pace", FormatDouble(interval.m_pace)));
-				intervalsParam.insert(std::make_pair("recovery distance", FormatDouble(interval.m_recoveryDistance)));
-				intervalsParam.insert(std::make_pair("recovery pace", FormatDouble(interval.m_recoveryPace)));
-			}
-			
-			intervalsJsonStr += MapToJsonStr(intervalsParam);
-			intervalsJsonStr += "]";
+			params.insert(std::make_pair("scheduled time", FormatInt((uint64_t)workout.GetScheduledTime())));
 
 			workoutJson = MapToJsonStr(params);
-			workoutJson.insert(workoutJson.size() - 1, ", \"intervals\": ");
-			workoutJson.insert(workoutJson.size() - 1, intervalsJsonStr);
+			workoutJson.insert(workoutJson.size() - 1, ", \"intervals\": [");
+
+			for (auto interIter = intervals.begin(); interIter != intervals.end(); )
+			{
+				const WorkoutInterval& interval = (*interIter);
+				std::map<std::string, std::string> tempParams;
+
+				tempParams.insert(std::make_pair("repeat", FormatInt((uint64_t)interval.m_repeat)));
+				tempParams.insert(std::make_pair("duration", FormatDouble(interval.m_duration)));
+				tempParams.insert(std::make_pair("distance", FormatDouble(interval.m_distance)));
+				tempParams.insert(std::make_pair("pace", FormatDouble(interval.m_pace)));
+				tempParams.insert(std::make_pair("recovery distance", FormatDouble(interval.m_recoveryDistance)));
+				tempParams.insert(std::make_pair("recovery pace", FormatDouble(interval.m_recoveryPace)));
+
+				std::string tempStr = MapToJsonStr(tempParams);
+				workoutJson.insert(workoutJson.size() - 1, tempStr);
+
+				++interIter;
+
+				if (interIter != intervals.end())
+				{
+					workoutJson.insert(workoutJson.size() - 1, ",");
+				}
+			}
+
+			workoutJson.insert(workoutJson.size() - 1, "]");
 
 			result = strdup(workoutJson.c_str());
 		}
@@ -2449,7 +2456,7 @@ extern "C" {
 		return WORKOUT_INDEX_UNKNOWN;
 	}
 
-	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStress, time_t scheduledTime)
+	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStrainScore, time_t scheduledTime)
 	{
 		bool result = false;
 
@@ -2462,7 +2469,7 @@ extern "C" {
 			workout.SetId(workoutId);
 			workout.SetType(type);
 			workout.SetSport(sport);
-			workout.SetEstimatedStress(estimatedStress);
+			workout.SetEstimatedStrainScore(estimatedStrainScore);
 			workout.SetScheduledTime(scheduledTime);
 
 			result = g_pDatabase->CreateWorkout(workout);
@@ -2520,6 +2527,26 @@ extern "C" {
 		return result;
 	}
 
+	bool DeleteAllWorkouts(void)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->DeleteAllWorkouts();
+			if (result)
+			{
+				g_workouts.clear();
+			}
+		}
+
+		g_dbLock.unlock();
+
+		return result;
+	}
+
 	char* ExportWorkout(const char* const workoutId, const char* pDirName)
 	{
 		std::string tempFileName = pDirName;
@@ -2559,7 +2586,7 @@ extern "C" {
 			return WORKOUT_TYPE_FREE_RUN;
 		if (temp.compare("Hill Repeats") == 0)
 			return WORKOUT_TYPE_HILL_REPEATS;
-		if (temp.compare("WORKOUT_TYPE_FARTLEK_RUN") == 0)
+		if (temp.compare("Fartlek Run") == 0)
 			return WORKOUT_TYPE_FARTLEK_RUN;
 		if (temp.compare("Middle Distance Run") == 0)
 			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN;

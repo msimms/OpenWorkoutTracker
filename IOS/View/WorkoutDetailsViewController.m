@@ -118,7 +118,7 @@
 	// Axis line style.
 	CPTMutableLineStyle* axisLineStyle = [CPTMutableLineStyle lineStyle];
 	axisLineStyle.lineWidth            = 1.0f;
-	axisLineStyle.lineColor            = [[CPTColor blackColor] colorWithAlphaComponent:1];
+	axisLineStyle.lineColor            = darkModeEnabled ? [[CPTColor whiteColor] colorWithAlphaComponent:1] : [[CPTColor blackColor] colorWithAlphaComponent:1];
 
 	// Axis configuration.
 	double spreadX          = self->maxX - self->minX;

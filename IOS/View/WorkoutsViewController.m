@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "ImageUtils.h"
+#import "Params.h"
 #import "Segues.h"
 #import "StringUtils.h"
 
@@ -124,82 +125,83 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
+	
+	bool displayDisclosureIndicator = true;
 
 	switch (section)
 	{
 		case 0:
 			{
 				NSDictionary* workoutDetails = [self->plannedWorkouts objectAtIndex:row];
-				WorkoutType workoutType = (WorkoutType)([workoutDetails[@"type"] integerValue]);
-				time_t scheduledTime = (time_t)([workoutDetails[@"scheduled time"] integerValue]);
-				NSString* workoutSport = workoutDetails[@"sport"];
+				WorkoutType workoutType = (WorkoutType)([workoutDetails[@PARAM_WORKOUT_WORKOUT_TYPE] integerValue]);
+				time_t scheduledTime = (time_t)([workoutDetails[@PARAM_WORKOUT_SCHEDULED_TIME] integerValue]);
+				NSString* workoutSport = workoutDetails[@PARAM_WORKOUT_SPORT_TYPE];
 
 				// Convert the workout type to a string.
 				switch (workoutType)
 				{
 				case WORKOUT_TYPE_REST:
-					cell.textLabel.text = STR_REST;
+					cell.detailTextLabel.text = STR_REST;
+					displayDisclosureIndicator = false;
 					break;
 				case WORKOUT_TYPE_EVENT:
-					cell.textLabel.text = STR_EVENT;
+					cell.detailTextLabel.text = STR_EVENT;
 					break;
 				case WORKOUT_TYPE_SPEED_RUN:
-					cell.textLabel.text = STR_SPEED_RUN;
+					cell.detailTextLabel.text = STR_SPEED_RUN;
 					break;
 				case WORKOUT_TYPE_THRESHOLD_RUN:
-					cell.textLabel.text = STR_THRESHOLD_RUN;
+					cell.detailTextLabel.text = STR_THRESHOLD_RUN;
 					break;
 				case WORKOUT_TYPE_TEMPO_RUN:
-					cell.textLabel.text = STR_TEMPO_RUN;
+					cell.detailTextLabel.text = STR_TEMPO_RUN;
 					break;
 				case WORKOUT_TYPE_EASY_RUN:
-					cell.textLabel.text = STR_EASY_RUN;
+					cell.detailTextLabel.text = STR_EASY_RUN;
 					break;
 				case WORKOUT_TYPE_LONG_RUN:
-					cell.textLabel.text = STR_LONG_RUN;
+					cell.detailTextLabel.text = STR_LONG_RUN;
 					break;
 				case WORKOUT_TYPE_FREE_RUN:
-					cell.textLabel.text = STR_FREE_RUN;
+					cell.detailTextLabel.text = STR_FREE_RUN;
 					break;
 				case WORKOUT_TYPE_HILL_REPEATS:
-					cell.textLabel.text = STR_HILL_REPEATS;
+					cell.detailTextLabel.text = STR_HILL_REPEATS;
 					break;
 				case WORKOUT_TYPE_FARTLEK_RUN:
-					cell.textLabel.text = STR_FARTLEK_SESSION;
+					cell.detailTextLabel.text = STR_FARTLEK_SESSION;
 					break;
 				case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
-					cell.textLabel.text = STR_MIDDLE_DISTANCE_RUN;
+					cell.detailTextLabel.text = STR_MIDDLE_DISTANCE_RUN;
 					break;
 				case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
-					cell.textLabel.text = STR_INTERVAL_RIDE;
+					cell.detailTextLabel.text = STR_INTERVAL_RIDE;
 					break;
 				case WORKOUT_TYPE_TEMPO_RIDE:
-					cell.textLabel.text = STR_TEMPO_RIDE;
+					cell.detailTextLabel.text = STR_TEMPO_RIDE;
 					break;
 				case WORKOUT_TYPE_EASY_RIDE:
-					cell.textLabel.text = STR_EASY_RIDE;
+					cell.detailTextLabel.text = STR_EASY_RIDE;
 					break;
 				case WORKOUT_TYPE_OPEN_WATER_SWIM:
-					cell.textLabel.text = STR_OPEN_WATER_SWIM;
+					cell.detailTextLabel.text = STR_OPEN_WATER_SWIM;
 					break;
 				case WORKOUT_TYPE_POOL_WATER_SWIM:
-					cell.textLabel.text = STR_POOL_SWIM;
+					cell.detailTextLabel.text = STR_POOL_SWIM;
 					break;
 				}
 
 				// Append the scheduled time, if it is set.
 				if (scheduledTime > 0)
 				{
-					NSString* scheduledTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
-					cell.detailTextLabel.text = scheduledTimeStr;
+					NSString* scheduledTimeStr = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
+					cell.textLabel.text = scheduledTimeStr;
 				}
 				else
 				{
-					cell.detailTextLabel.text = STR_WORKOUT_NOT_SCHEDULED;
+					cell.textLabel.text = STR_WORKOUT_NOT_SCHEDULED;
 				}
 
 				// Load the image.
@@ -225,12 +227,13 @@
 	}
 
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	if (displayDisclosureIndicator)
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	return cell;
 }
 
 - (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath

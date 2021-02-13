@@ -126,7 +126,6 @@ typedef enum MsgDestinationType
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleHasActivityResponse:) name:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:nil];
@@ -1098,78 +1097,60 @@ void startSensorCallback(SensorType type, void* context)
 		// Valid JSON?
 		if (workoutObjects)
 		{
+			// Clear out the old workouts.
+			DeleteAllWorkouts();
 			InitializeWorkoutList();
 
+			// Add the new workouts.
 			for (NSDictionary* workoutDict in workoutObjects)
 			{
 				NSString* workoutId = [workoutDict objectForKey:@PARAM_WORKOUT_ID];
+				NSString* workoutTypeStr = [workoutDict objectForKey:@PARAM_WORKOUT_WORKOUT_TYPE];
+				NSString* sportType = [workoutDict objectForKey:@PARAM_WORKOUT_SPORT_TYPE];
+				NSNumber* estimatedStrainScore = [workoutDict objectForKey:@PARAM_WORKOUT_ESTIMATED_STRAIN];
+				NSNumber* scheduledTime = [workoutDict objectForKey:@PARAM_WORKOUT_SCHEDULED_TIME];
+				NSDictionary* warmup = [workoutDict objectForKey:@PARAM_WORKOUT_WARMUP];
+				NSDictionary* cooldown = [workoutDict objectForKey:@PARAM_WORKOUT_COOLDOWN];
 
-				// If the workout is not in the database then request the details.
-				if (ConvertWorkoutIdToIndex([workoutId UTF8String]) == WORKOUT_INDEX_UNKNOWN)
+				// Convert the workout type string to an enum.
+				WorkoutType workoutType = WorkoutTypeStrToEnum([workoutTypeStr UTF8String]);
+
+				// Create the workout.
+				if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedStrainScore doubleValue], [scheduledTime intValue]))
 				{
-					[self serverRequestWorkoutDetails:workoutId];
-				}
-			}
-		}
-		else
-		{
-			NSLog(@"Invalid JSON received.");
-		}
-	}
-	@catch (...)
-	{
-	}
-}
+					NSArray* intervals = [workoutDict objectForKey:@PARAM_WORKOUT_INTERVALS];
 
-// Called when the server sends a planned workout for the user.
-- (void)plannedWorkoutUpdated:(NSNotification*)notification
-{
-	@try
-	{
-		NSDictionary* workoutData = [notification object];
-		NSString* responseStr = [workoutData objectForKey:@KEY_NAME_RESPONSE_STR];
-		NSError* error = nil;
-		NSDictionary* details = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+					// Add the warmup.
+					if (warmup && [warmup count] > 0)
+					{
+						NSNumber* pace = [warmup objectForKey:@PARAM_INTERVAL_PACE];
+						NSNumber* duration = [warmup objectForKey:@PARAM_INTERVAL_DURATION];
+						double distance = [pace doubleValue] * [duration doubleValue];
 
-		// Valid JSON?
-		if (details)
-		{
-			NSString* workoutId = [details objectForKey:@PARAM_WORKOUT_ID];
-			NSString* workoutTypeStr = [details objectForKey:@PARAM_WORKOUT_WORKOUT_TYPE];
-			NSString* sportType = [details objectForKey:@PARAM_WORKOUT_SPORT_TYPE];
-			NSNumber* estimatedStress = [details objectForKey:@PARAM_WORKOUT_ESTIMATED_STRESS];
-			NSNumber* scheduledTime = [details objectForKey:@PARAM_WORKOUT_SCHEDULED_TIME];
-			NSDictionary* warmup = [details objectForKey:@PARAM_WORKOUT_WARMUP];
-			NSDictionary* cooldown = [details objectForKey:@PARAM_WORKOUT_COOLDOWN];
+						AddWorkoutInterval([workoutId UTF8String], 1, [pace doubleValue], distance, 0.0, 0.0);
+					}
 
-			// Convert the workout type string to an enum.
-			WorkoutType workoutType = WorkoutTypeStrToEnum([workoutTypeStr UTF8String]);
+					// Add the intervals.
+					for (NSDictionary* interval in intervals)
+					{
+						NSNumber* repeat = [interval objectForKey:@PARAM_INTERVAL_REPEAT];
+						NSNumber* pace = [interval objectForKey:@PARAM_INTERVAL_PACE];
+						NSNumber* distance = [interval objectForKey:@PARAM_INTERVAL_DISTANCE];
+						NSNumber* recoveryPace = [interval objectForKey:@PARAM_INTERVAL_RECOVERY_PACE];
+						NSNumber* recoveryDistance = [interval objectForKey:@PARAM_INTERVAL_RECOVERY_DISTANCE];
 
-			// Create the workout.
-			if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedStress doubleValue], [scheduledTime intValue]))
-			{
-				NSArray* intervals = [details objectForKey:@PARAM_WORKOUT_INTERVALS];
+						AddWorkoutInterval([workoutId UTF8String], [repeat intValue], [pace doubleValue], [distance doubleValue], [recoveryPace doubleValue], [recoveryDistance doubleValue]);
+					}
 
-				// Add the warmup.
-				if (warmup)
-				{
-				}
+					// Add the cooldown.
+					if (cooldown && [cooldown count] > 0)
+					{
+						NSNumber* pace = [warmup objectForKey:@PARAM_INTERVAL_PACE];
+						NSNumber* duration = [warmup objectForKey:@PARAM_INTERVAL_DURATION];
+						double distance = [pace doubleValue] * [duration doubleValue];
 
-				// Add the cooldown.
-				if (cooldown)
-				{
-				}
-
-				// Add the intervals.
-				for (NSDictionary* interval in intervals)
-				{
-					NSNumber* repeat = [interval objectForKey:@PARAM_WORKOUT_INTERVAL_REPEAT];
-					NSNumber* pace = [interval objectForKey:@PARAM_WORKOUT_PACE];
-					NSNumber* distance = [interval objectForKey:@PARAM_WORKOUT_DISTANCE];
-					NSNumber* recoveryPace = [interval objectForKey:@PARAM_WORKOUT_RECOVERY_PACE];
-					NSNumber* recoveryDistance = [interval objectForKey:@PARAM_WORKOUT_RECOVERY_DISTANCE];
-
-					AddWorkoutInterval([workoutId UTF8String], [repeat intValue], [pace doubleValue], [distance doubleValue], [recoveryPace doubleValue], [recoveryDistance doubleValue]);
+						AddWorkoutInterval([workoutId UTF8String], 1, [pace doubleValue], distance, 0.0, 0.0);
+					}
 				}
 			}
 		}

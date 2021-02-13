@@ -37,30 +37,30 @@ public:
 	WorkoutType GetType() const { return m_type; };
 	std::vector<WorkoutInterval> GetIntervals() const { return m_intervals; };
 	time_t GetScheduledTime() const { return m_scheduledTime; };
-	double GetEstimatedTrainingStress() const { return m_estimatedTrainingStress; };
+	double GetEstimatedStrainScore() const { return m_estimatedStrainScore; };
 
 	void SetId(const std::string& workoutId) { m_id = workoutId; };
 	void SetSport(const std::string& sport) { m_sport = sport; };
 	void SetType(WorkoutType type) { m_type = type; };
 	void SetScheduledTime(time_t scheduledTime) { m_scheduledTime = scheduledTime; };
-	void SetEstimatedStress(double estimatedStress) { m_estimatedTrainingStress = estimatedStress; };
+	void SetEstimatedStrainScore(double estimatedStrainScore) { m_estimatedStrainScore = estimatedStrainScore; };
 
 	void AddWarmup(uint64_t seconds);
 	void AddCooldown(uint64_t seconds);
 	void AddInterval(uint8_t repeat, double distance, double pace, double recoveryDistance, double recoveryPace);
 	void AddInterval(const WorkoutInterval& interval);
 
-	double CalculateEstimatedTrainingStress(double thresholdPaceMetersPerMinute);
+	double CalculateEstimatedStrainScore(double thresholdPaceMetersPerMinute);
 	double CalculateDuration() const;
 	double CalculateDistance() const;
 
 private:
-	std::string m_id;
-	std::string m_sport;
-	WorkoutType m_type;
+	std::string m_id; // Unique identifier for the workout
+	std::string m_sport; // Sport being performed in the workout
+	WorkoutType m_type; // Type of workout (easy run, long run, etc.)
 	std::vector<WorkoutInterval> m_intervals;
-	time_t m_scheduledTime;
-	double m_estimatedTrainingStress;
+	time_t m_scheduledTime; // Time at which the workout is scheduled to be performed.
+	double m_estimatedStrainScore; // Estimated amount of stress this workout will place on the athlete (higher is more stressful)
 
 	double CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const;
 };
