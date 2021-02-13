@@ -178,9 +178,11 @@ typedef enum SettingsRowsHealthKit
 
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_METRIC style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
+		[self.settingsTableView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_US_CUSTOMARY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
+		[self.settingsTableView reloadData];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
 }
