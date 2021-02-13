@@ -38,6 +38,7 @@
 		self->speeds = [[NSMutableDictionary alloc] init];
 		self->queryGroup = dispatch_group_create();
 
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 	}
 	return self;
@@ -628,6 +629,7 @@
 	@synchronized(self->workouts)
 	{
 		HKWorkout* workout = [self->workouts objectForKey:activityId];
+
 		if (workout)
 		{
 			if (strncmp(attributeName, ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, strlen(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)) == 0)
@@ -741,6 +743,7 @@
 
 - (void)saveHeartRateIntoHealthStore:(double)beats
 {
+	// First element or not the first element in the array?
 	if (self->firstHeartRateSample)
 	{
 		self->lastHeartRateSample = [NSDate date];
@@ -750,12 +753,15 @@
 		self->firstHeartRateSample = self->lastHeartRateSample = [NSDate date];
 	}
 
+	// Add the new sample to the array.
 	[self->heartRates addObject:[[NSNumber alloc] initWithDouble:beats]];
 
+	// Is it time to compute the average of the values in the array?
 	if ([self->lastHeartRateSample timeIntervalSinceDate:self->firstHeartRateSample] > 60)
 	{
 		double averageRate = (double)0.0;
 
+		// Compute the average.
 		if ([self->heartRates count] > 0)
 		{
 			for (NSNumber* sample in self->heartRates)
@@ -772,29 +778,28 @@
 																	  startDate:self->firstHeartRateSample
 																		endDate:self->lastHeartRateSample];
 
+		// Clear all our variables.
 		[self->heartRates removeAllObjects];
-
 		self->firstHeartRateSample = NULL;
 		self->lastHeartRateSample = NULL;
 
+		// Store the average value.
 		[self->healthStore saveObject:rateSample withCompletion:^(BOOL success, NSError *error) {}];
 	}
 }
 
-- (void)saveRunningWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
+- (void)saveRunningWorkoutIntoHealthStore:(double)distance withUnits:(HKUnit*)units withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
 {
-	HKUnit* mileUnit = [HKUnit mileUnit];
-	HKQuantity* distanceQuantity = [HKQuantity quantityWithUnit:mileUnit doubleValue:miles];
+	HKQuantity* distanceQuantity = [HKQuantity quantityWithUnit:units doubleValue:distance];
 	HKQuantityType* distanceType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning];
 	HKQuantitySample* distanceSample = [HKQuantitySample quantitySampleWithType:distanceType quantity:distanceQuantity startDate:startDate endDate:endDate];
 
 	[self->healthStore saveObject:distanceSample withCompletion:^(BOOL success, NSError *error) {}];
 }
 
-- (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
+- (void)saveCyclingWorkoutIntoHealthStore:(double)distance withUnits:(HKUnit*)units withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate
 {
-	HKUnit* mileUnit = [HKUnit mileUnit];
-	HKQuantity* distanceQuantity = [HKQuantity quantityWithUnit:mileUnit doubleValue:miles];
+	HKQuantity* distanceQuantity = [HKQuantity quantityWithUnit:units doubleValue:distance];
 	HKQuantityType* distanceType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceCycling];
 	HKQuantitySample* distanceSample = [HKQuantitySample quantitySampleWithType:distanceType quantity:distanceQuantity startDate:startDate endDate:endDate];
 
@@ -864,36 +869,80 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 
 #pragma mark notification handlers
 
+- (void)heartRateUpdated:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* heartRateData = [notification object];
+		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if ([Preferences shouldUsePeripheral:idStr])
+		{
+			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
+
+			if (timestampMs && rate)
+			{
+				[self saveHeartRateIntoHealthStore:[rate doubleValue]];
+			}
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
 - (void)activityStopped:(NSNotification*)notification
 {
-	NSDictionary* activityData = [notification object];
-
-	if (activityData)
+	@try
 	{
-		NSString* activityType = [activityData objectForKey:@KEY_NAME_ACTIVITY_TYPE];
-		NSNumber* startTime = [activityData objectForKey:@KEY_NAME_START_TIME];
-		NSNumber* endTime = [activityData objectForKey:@KEY_NAME_END_TIME];
-		NSNumber* distance = [activityData objectForKey:@KEY_NAME_DISTANCE];
-		NSNumber* calories = [activityData objectForKey:@KEY_NAME_CALORIES];
-		NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:[startTime longLongValue]];
-		NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:[endTime longLongValue]];
+		NSDictionary* activityData = [notification object];
 
-		if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
-			[activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+		if (activityData)
 		{
-			[self saveCyclingWorkoutIntoHealthStore:[distance doubleValue] withStartDate:startDate withEndDate:endDate];
-		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING] ||
-				 [activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
-		{
-			[self saveRunningWorkoutIntoHealthStore:[distance doubleValue] withStartDate:startDate withEndDate:endDate];
-		}
+			NSString* activityType = [activityData objectForKey:@KEY_NAME_ACTIVITY_TYPE];
+			NSNumber* startTime = [activityData objectForKey:@KEY_NAME_START_TIME];
+			NSNumber* endTime = [activityData objectForKey:@KEY_NAME_END_TIME];
+			NSNumber* distance = [activityData objectForKey:@KEY_NAME_DISTANCE];
+			NSNumber* distanceUnits = [activityData objectForKey:@KEY_NAME_UNITS];
+			NSNumber* calories = [activityData objectForKey:@KEY_NAME_CALORIES];
+			NSDate* startDate = [NSDate dateWithTimeIntervalSince1970:[startTime longLongValue]];
+			NSDate* endDate = [NSDate dateWithTimeIntervalSince1970:[endTime longLongValue]];
+			HKUnit* distanceUnitsHk = [self unitSystemToHKDistanceUnit:[distanceUnits intValue]];
 
-		[self saveCaloriesBurnedIntoHealthStore:[calories doubleValue] withStartDate:startDate withEndDate:endDate];
+			if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+				[activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+			{
+				[self saveCyclingWorkoutIntoHealthStore:[distance doubleValue] withUnits:distanceUnitsHk withStartDate:startDate withEndDate:endDate];
+			}
+			else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING] ||
+					 [activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
+			{
+				[self saveRunningWorkoutIntoHealthStore:[distance doubleValue] withUnits:distanceUnitsHk withStartDate:startDate withEndDate:endDate];
+			}
+
+			[self saveCaloriesBurnedIntoHealthStore:[calories doubleValue] withStartDate:startDate withEndDate:endDate];
+		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 #pragma mark methods for converting between our activity type strings and HealthKit's workout enum
+
+- (HKUnit*)unitSystemToHKDistanceUnit:(UnitSystem)units
+{
+	switch (units)
+	{
+		case UNIT_SYSTEM_METRIC:
+			return [HKUnit meterUnitWithMetricPrefix:HKMetricPrefixKilo];
+		case UNIT_SYSTEM_US_CUSTOMARY:
+			return [HKUnit mileUnit];
+	}
+	return [HKUnit mileUnit];
+}
 
 - (HKWorkoutActivityType)activityTypeToHKWorkoutType:(NSString*)activityType
 {

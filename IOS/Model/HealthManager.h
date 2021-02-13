@@ -27,8 +27,8 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 	NSMutableDictionary* distances;            // arrays of distances computed from the locations array, key is the activity ID
 	NSMutableDictionary* speeds;               // arrays of speeds computed from the distances array, key is the activity ID
 	NSMutableArray*      heartRates;           // we write average heart rates to the health store; this stores the intermediate values
-	NSDate*              firstHeartRateSample; // timestamp associated with the above array
-	NSDate*              lastHeartRateSample;  // timestamp associated with the above array
+	NSDate*              firstHeartRateSample; // timestamp associated with the first element in heart rates array
+	NSDate*              lastHeartRateSample;  // timestamp associated with the last element in the heart rates array
 	dispatch_group_t     queryGroup;           // tracks queries until they are completed
 	NSInteger            tempPointIndex;
 }
@@ -78,8 +78,8 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 - (void)saveHeightIntoHealthStore:(double)heightInInches;
 - (void)saveWeightIntoHealthStore:(double)weightInPounds;
 - (void)saveHeartRateIntoHealthStore:(double)beats;
-- (void)saveRunningWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
-- (void)saveCyclingWorkoutIntoHealthStore:(double)miles withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
+- (void)saveRunningWorkoutIntoHealthStore:(double)distance withUnits:(HKUnit*)units withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
+- (void)saveCyclingWorkoutIntoHealthStore:(double)distance withUnits:(HKUnit*)units withStartDate:(NSDate*)startDate withEndDate:(NSDate*)endDate;
 
 // methods for exporting HealthKit data.
 
@@ -87,6 +87,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 // methods for converting between our activity type strings and HealthKit's workout enum
 
+- (HKUnit*)unitSystemToHKDistanceUnit:(UnitSystem)units;
 - (HKWorkoutActivityType)activityTypeToHKWorkoutType:(NSString*)activityType;
 - (HKWorkoutSessionLocationType)activityTypeToHKWorkoutSessionLocationType:(NSString*)activityType;
 

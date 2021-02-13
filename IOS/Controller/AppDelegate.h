@@ -270,6 +270,7 @@
 - (double)convertMilesToKms:(double)value;
 - (double)convertMinutesPerMileToMinutesPerKm:(double)value;
 - (double)convertPoundsToKgs:(double)value;
+- (void)convertToPreferredUnits:(ActivityAttributeType*)attr;
 
 // cloud methods
 

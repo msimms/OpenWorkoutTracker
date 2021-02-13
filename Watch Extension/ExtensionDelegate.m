@@ -340,6 +340,7 @@ void startSensorCallback(SensorType type, void* context)
 								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
 								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
 								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
+								  [NSNumber numberWithInt:(UnitSystem)distance.unitSystem], @KEY_NAME_UNITS,
 								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 								  nil];
 
