@@ -529,16 +529,6 @@ typedef enum MsgDestinationType
 		// Request authorization.
 		[self->healthMgr requestAuthorization];
 
-		// Read activities from HealthKit.
-		if ([Preferences willIntegrateHealthKitActivities])
-		{
-			[self->healthMgr clearWorkoutsList];
-			[self->healthMgr readRunningWorkoutsFromHealthStore];
-			[self->healthMgr readWalkingWorkoutsFromHealthStore];
-			[self->healthMgr readCyclingWorkoutsFromHealthStore];
-			[self->healthMgr waitForHealthKitQueries];
-		}
-
 		// Read weight history from HealthKit.
 		if (![self isActivityInProgress])
 		{
@@ -1453,23 +1443,40 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for loading and editing historical activities
 
+-(void)removeDuplicateHealthKitActivities
+{
+	// Remove duplicate activities from within the HealthKit list.
+	[self->healthMgr removeDuplicateActivities];
+
+	// Remove activities that overlap with ones in our database.
+	size_t numDbActivities = GetNumHistoricalActivities();
+	for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+	{
+		time_t startTime = 0;
+		time_t endTime = 0;
+
+		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
+		[self->healthMgr removeActivitiesThatOverlapWithStartTime:startTime withEndTime:endTime];
+	}
+}
+
 - (NSInteger)initializeHistoricalActivityList
 {
 	// Read activities from our database.
 	InitializeHistoricalActivityList();
 
-	// Remove duplicate items from the HealthKit list.
-	if (self->healthMgr && [Preferences hideHealthKitDuplicates])
+	if (self->healthMgr)
 	{
-		size_t numDbActivities = GetNumHistoricalActivities();
-
-		for (size_t activityIndex = 0; activityIndex < numDbActivities; ++activityIndex)
+		// Read activities from HealthKit.
+		if ([Preferences willIntegrateHealthKitActivities])
 		{
-			time_t startTime = 0;
-			time_t endTime = 0;
+			[self->healthMgr readAllActivitiesFromHealthStore];
+		}
 
-			GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
-			[self->healthMgr removeOverlappingActivityWithStartTime:startTime withEndTime:endTime];
+		// Remove duplicate items from the HealthKit list.
+		if ([Preferences hideHealthKitDuplicates])
+		{
+			[self removeDuplicateHealthKitActivities];
 		}
 	}
 

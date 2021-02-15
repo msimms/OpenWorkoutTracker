@@ -364,6 +364,15 @@
 	[self readWorkoutsFromHealthStoreOfType:HKWorkoutActivityTypeCycling];
 }
 
+- (void)readAllActivitiesFromHealthStore
+{
+	[self clearWorkoutsList];
+	[self readRunningWorkoutsFromHealthStore];
+	[self readWalkingWorkoutsFromHealthStore];
+	[self readCyclingWorkoutsFromHealthStore];
+	[self waitForHealthKitQueries];
+}
+
 - (void)calculateSpeedsFromDistances:(NSMutableArray<NSNumber*>*)activityDistances withActivityId:(NSString*)activityId
 {
 	@synchronized(self->speeds)
@@ -494,8 +503,61 @@
 	dispatch_group_wait(self->queryGroup, DISPATCH_TIME_FOREVER);
 }
 
+// Searches the HealthKit activity list for duplicates and removes them, keeping the first in the list.
+- (void)removeDuplicateActivities
+{
+	@synchronized(self->workouts)
+	{
+		NSMutableArray* itemsToRemove = [NSMutableArray array];
+
+		NSEnumerator* e1 = [self->workouts keyEnumerator];
+		NSString* activityId1;
+
+		while (activityId1 = [e1 nextObject])
+		{
+			HKWorkout* workout1 = [self->workouts objectForKey:activityId1];
+			time_t workoutStartTime1 = [workout1.startDate timeIntervalSince1970];
+			time_t workoutEndTime1 = [workout1.endDate timeIntervalSince1970];
+
+			NSEnumerator* e2 = [self->workouts keyEnumerator];
+			NSString* activityId2;
+			
+			// Need to find a way of doing a deep copy on an enumerator.
+			bool found = false;
+			while (activityId2 = [e2 nextObject])
+			{
+				if ([activityId1 compare:activityId2 options:NSCaseInsensitiveSearch] == NSOrderedSame)
+				{
+					found = true;
+					break;
+				}
+			}
+
+			// Remove any duplicates appearing from this point forward.
+			if (found)
+			{
+				while (activityId2 = [e2 nextObject])
+				{
+					HKWorkout* workout2 = [self->workouts objectForKey:activityId2];
+					time_t workoutStartTime2 = [workout2.startDate timeIntervalSince1970];
+					time_t workoutEndTime2 = [workout2.endDate timeIntervalSince1970];
+
+					// Is either the start time or the end time of the first activity within the bounds of the second activity?
+					if ((workoutStartTime1 >= workoutStartTime2 && workoutStartTime1 < workoutEndTime2) ||
+						(workoutEndTime1 > workoutStartTime2 && workoutEndTime1 <= workoutEndTime2))
+					{
+						[itemsToRemove addObject:activityId2];
+					}
+				}
+			}
+		}
+
+		[self->workouts removeObjectsForKeys:itemsToRemove];
+	}
+}
+
 // Used for de-duplicating the HealthKit activity list, so we don't see activities recorded with this app twice.
-- (void)removeOverlappingActivityWithStartTime:(time_t)startTime withEndTime:(time_t)endTime
+- (void)removeActivitiesThatOverlapWithStartTime:(time_t)startTime withEndTime:(time_t)endTime
 {
 	@synchronized(self->workouts)
 	{
@@ -508,8 +570,9 @@
 			time_t workoutStartTime = [workout.startDate timeIntervalSince1970];
 			time_t workoutEndTime = [workout.endDate timeIntervalSince1970];
 
+			// Is either the start time or the end time of the first activity within the bounds of the second activity?
 			if ((startTime >= workoutStartTime && startTime < workoutEndTime) ||
-				(endTime < workoutEndTime && endTime >= workoutStartTime))
+				(endTime > workoutStartTime && endTime <= workoutEndTime))
 			{
 				[itemsToRemove addObject:activityId];
 			}

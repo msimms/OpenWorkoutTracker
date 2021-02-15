@@ -59,9 +59,11 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 - (void)readRunningWorkoutsFromHealthStore;
 - (void)readWalkingWorkoutsFromHealthStore;
 - (void)readCyclingWorkoutsFromHealthStore;
+- (void)readAllActivitiesFromHealthStore;
 - (void)readLocationPointsFromHealthStoreForActivityId:(NSString*)activityId;
 - (void)waitForHealthKitQueries;
-- (void)removeOverlappingActivityWithStartTime:(time_t)startTime withEndTime:(time_t)endTime;
+- (void)removeDuplicateActivities;
+- (void)removeActivitiesThatOverlapWithStartTime:(time_t)startTime withEndTime:(time_t)endTime;
 
 // methods for querying workout data.
 
