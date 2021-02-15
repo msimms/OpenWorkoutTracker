@@ -1870,7 +1870,6 @@ extern "C" {
 
 					if (value.valid)
 					{
-						UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
 						result = g_pDatabase->CreateSummaryData(summary.activityId, attribute, value);
 					}
 				}
