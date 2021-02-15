@@ -349,11 +349,11 @@
 			{
 				if ([self->currentBroadcastStatus boolValue])
 				{
-					[self->broadcastImage setImageNamed:@"BroadcastingOnWatch"];
+					[self->broadcastImage setImageNamed:@"Broadcasting"];
 				}
 				else
 				{
-					[self->broadcastImage setImageNamed:@"BroadcastingFailedOnWatch"];
+					[self->broadcastImage setImageNamed:@"BroadcastingFailed"];
 				}
 
 				[self->broadcastImage setHeight:56.0];

@@ -160,6 +160,8 @@
 		2741B53525D22D2B00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
 		2741B53625D22D2C00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
+		2757C2D125DA051000B84BE9 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
+		2757C2E425DA051D00B84BE9 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		276526CE25B8DA32003AA2D5 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */; };
 		276526E325BB9345003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
@@ -307,8 +309,6 @@
 		27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7CDFC19BFD9AD000383E3 /* MapKit.framework */; };
 		27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
 		27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
-		27B8D04A254A03050014B257 /* BroadcastingOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */; };
-		27B8D065254A03FA0014B257 /* BroadcastingFailedOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8D05B254A03F10014B257 /* BroadcastingFailedOnWatch.png */; };
 		27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C044FC19F8622B00E32E96 /* ComplexScreen.png */; };
 		27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C081FC2383780700BEB105 /* CloudKit.framework */; };
 		27C0844E19BFD063007CE934 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
@@ -950,8 +950,6 @@
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		27B8CFEE25476A210014B257 /* Broadcasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Broadcasting.png; path = Images/Broadcasting.png; sourceTree = SOURCE_ROOT; };
 		27B8CFFD25476A220014B257 /* BroadcastingFailed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingFailed.png; path = Images/BroadcastingFailed.png; sourceTree = SOURCE_ROOT; };
-		27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingOnWatch.png; path = Images/BroadcastingOnWatch.png; sourceTree = SOURCE_ROOT; };
-		27B8D05B254A03F10014B257 /* BroadcastingFailedOnWatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingFailedOnWatch.png; path = Images/BroadcastingFailedOnWatch.png; sourceTree = SOURCE_ROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
 		27C081FC2383780700BEB105 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		27C0841219BFD063007CE934 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = SOURCE_ROOT; };
@@ -1479,9 +1477,7 @@
 			children = (
 				27B44D0419BFF01A0058FE00 /* Background1.png */,
 				27B8CFEE25476A210014B257 /* Broadcasting.png */,
-				27B8D037254A029B0014B257 /* BroadcastingOnWatch.png */,
 				27B8CFFD25476A220014B257 /* BroadcastingFailed.png */,
-				27B8D05B254A03F10014B257 /* BroadcastingFailedOnWatch.png */,
 				27C044FC19F8622B00E32E96 /* ComplexScreen.png */,
 				27B44D0519BFF01A0058FE00 /* Countdown1.png */,
 				27B44D0619BFF01A0058FE00 /* Countdown2.png */,
@@ -2080,14 +2076,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */,
+				2757C2E425DA051D00B84BE9 /* BroadcastingFailed.png in Resources */,
 				279E717025746EC2002B4BB6 /* TreadmillOnWatch.png in Resources */,
 				279E717C25746FF4002B4BB6 /* WalkingOnWatch.png in Resources */,
+				2757C2D125DA051000B84BE9 /* Broadcasting.png in Resources */,
 				27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */,
-				27B8D065254A03FA0014B257 /* BroadcastingFailedOnWatch.png in Resources */,
 				279E71A025758D02002B4BB6 /* en-GB.lproj in Resources */,
 				279E717B25746FF4002B4BB6 /* HikingOnWatch.png in Resources */,
 				279E718A25747281002B4BB6 /* SwimmingOnWatch.png in Resources */,
-				27B8D04A254A03050014B257 /* BroadcastingOnWatch.png in Resources */,
 				279E716E25746EC2002B4BB6 /* WheelOnWatch.png in Resources */,
 				279E716F25746EC2002B4BB6 /* RunningOnWatch.png in Resources */,
 				279E715E2574699D002B4BB6 /* WeightsOnWatch.png in Resources */,
