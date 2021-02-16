@@ -243,34 +243,30 @@
 		return false;
 	}
 
-    const char* bikeName = [[self.nameTextField text] UTF8String];
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     double weight = [[self.weightTextField text] doubleValue];
-    double wheelSize = [[self.wheelSizeTextField text] doubleValue];
-    wheelSize *= 3.14159;
-    
-    switch ([Preferences preferredUnitSystem])
+    double wheelSize = [[self.wheelSizeTextField text] doubleValue] * 3.14159;
+	bool saved = false;
+
+	// Everything is stored in metric.
+	switch ([Preferences preferredUnitSystem])
     {
         case UNIT_SYSTEM_METRIC:
             break;
         case UNIT_SYSTEM_US_CUSTOMARY:
             wheelSize *= CENTIMETERS_PER_INCH;
             wheelSize *= 10;
+			weight /= POUNDS_PER_KILOGRAM;
             break;
     }
-    
-    ActivityAttributeType weightKg = InitializeActivityAttribute(TYPE_DOUBLE, MEASURE_WEIGHT, [Preferences preferredUnitSystem]);
-    weightKg.value.doubleVal = weight;
-    ConvertToMetric(&weightKg);
-    
-    bool saved = false;
-    
-    switch (self->mode)
+
+	switch (self->mode)
     {
         case BIKE_PROFILE_NEW:
-            saved = AddBikeProfile(bikeName, weightKg.value.doubleVal, wheelSize);
+            saved = [appDelegate addBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
             break;
         case BIKE_PROFILE_UPDATE:
-            saved = UpdateBikeProfile(bikeId, bikeName, weightKg.value.doubleVal, wheelSize);
+            saved = [appDelegate updateBikeProfile:bikeId withName:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
             break;
         default:
             break;

@@ -2042,6 +2042,11 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm);
 }
 
+- (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm
+{
+	return UpdateBikeProfile(bikeId, [name UTF8String], weightKg, wheelCircumferenceMm);
+}
+
 - (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId
 {
 	return GetActivityBikeProfile([activityId UTF8String], bikeId);
@@ -2050,6 +2055,28 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm
 {
 	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm);
+}
+
+- (NSString*)getBikeNameForActivity:(NSString*)activityId
+{
+	NSString* bikeName = nil;
+	uint64_t bikeId = 0;
+
+	InitializeBikeProfileList();
+	GetActivityBikeProfile([activityId UTF8String], &bikeId);
+
+	if (bikeId > 0)
+	{
+		char* tempBikeName = NULL;
+
+		GetBikeProfileById(bikeId, &tempBikeName, NULL, NULL);
+		if (tempBikeName)
+		{
+			bikeName = [[NSString alloc] initWithFormat:@"%s", tempBikeName];
+			free((void*)tempBikeName);
+		}
+	}
+	return bikeName;
 }
 
 - (void)setBikeForCurrentActivity:(NSString*)bikeName

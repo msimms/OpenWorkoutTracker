@@ -264,24 +264,13 @@
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 
 	NSString* activityId = [self getActivityId:indexPath];
+	NSString* bikeName = [appDelegate getBikeNameForActivity:activityId];
 	NSString* allTagsStr = @"";
-	uint64_t bikeId = 0;
 
 	// If a bike was specified then add that tag to the list of tags.
-	[appDelegate initializeBikeProfileList];
-	[appDelegate getBikeProfileForActivity:activityId withBikeId:&bikeId];
-	if (bikeId > 0)
+	if (bikeName)
 	{
-		char* bikeName = NULL;
-		double bikeWeight = (double)0.0;
-		double bikeWheel = (double)0.0;
-
-		[appDelegate getBikeProfileById:bikeId withName:&bikeName withWeightKg:&bikeWeight withWheelCircumferenceMm:&bikeWheel];
-		if (bikeName)
-		{
-			allTagsStr = [allTagsStr stringByAppendingFormat:@"%s", bikeName];
-			free((void*)bikeName);
-		}
+		allTagsStr = [allTagsStr stringByAppendingFormat:@"%@", bikeName];
 	}
 
 	// Append any other tags that were associated with this activity.

@@ -15,11 +15,12 @@
 
 typedef struct Shoes
 {
-	uint64_t    id;
-	std::string name;
+	uint64_t    id; // database identifier
+	std::string name; // human readable name
 	std::string description;
-	time_t      timeAdded;
-	time_t      timeRetired;
+	time_t      timeAdded; // timestamp of when the gear was added; the gear should not be available for activities before this date
+	time_t      timeRetired; // timestamp of when the gear was retired; the gear should not be available for activities after this date
+	time_t      lastUpdatedTime; // timestamp of when the gear was last updated
 } Shoes;
 
 #endif

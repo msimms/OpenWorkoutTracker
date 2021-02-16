@@ -681,6 +681,7 @@
 		for (NSString* name in bikeNames)
 		{
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->bikeName = name;
 				[self->bikeButton setTitle:self->bikeName];
 				[appDelegate setBikeForCurrentActivity:self->bikeName];
 			}]];

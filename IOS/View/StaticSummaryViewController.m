@@ -248,19 +248,10 @@ typedef enum ExportFileTypeButtons
 			self->chartTitles = [[NSMutableArray alloc] init];
 		}
 
-		uint64_t bikeId;
-		if ([appDelegate getBikeProfileForActivity:self->activityId withBikeId:&bikeId])
+		NSString* bikeName = [appDelegate getBikeNameForActivity:activityId];
+		if (bikeName)
 		{
-			char* name = NULL;
-			double weightKg = (double)0.0;
-			double wheelSize = (double)0.0;
-			
-			if ([appDelegate getBikeProfileById:bikeId withName:&name withWeightKg:&weightKg withWheelCircumferenceMm:&wheelSize])
-			{
-				NSString* tempName = [[NSString alloc] initWithUTF8String:name];
-				[self.bikeButton setTitle:tempName];
-				free((void*)name);
-			}
+			[self.bikeButton setTitle:bikeName];
 		}
 
 		NSArray* tempAttrNames = [appDelegate getHistoricalActivityAttributes:self->activityId];

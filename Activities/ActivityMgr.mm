@@ -645,6 +645,9 @@ extern "C" {
 				bike.name = name;
 				bike.weightKg = weightKg;
 				bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
+				bike.timeAdded = time(NULL);
+				bike.timeRetired = 0;
+				bike.lastUpdatedTime = time(NULL);
 
 				g_dbLock.lock();
 				result = g_pDatabase->CreateBike(bike);
@@ -777,9 +780,12 @@ extern "C" {
 
 			if (bike.id == bikeId)
 			{
-				(*name) = strdup(bike.name.c_str());
-				(*weightKg) = bike.weightKg;
-				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+				if (name)
+					(*name) = strdup(bike.name.c_str());
+				if (weightKg)
+					(*weightKg) = bike.weightKg;
+				if (wheelCircumferenceMm)
+					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
 				return true;
 			}
 		}
@@ -793,9 +799,12 @@ extern "C" {
 			const Bike& bike = g_bikes.at(bikeIndex);
 
 			(*bikeId) = bike.id;
-			(*name) = strdup(bike.name.c_str());
-			(*weightKg) = bike.weightKg;
-			(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+			if (name)
+				(*name) = strdup(bike.name.c_str());
+			if (weightKg)
+				(*weightKg) = bike.weightKg;
+			if (wheelCircumferenceMm)
+				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
 			return true;
 		}
 		return false;
@@ -809,9 +818,12 @@ extern "C" {
 
 			if (bike.name.compare(name) == 0)
 			{
-				(*bikeId) = bike.id;
-				(*weightKg) = bike.weightKg;
-				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+				if (bikeId)
+					(*bikeId) = bike.id;
+				if (weightKg)
+					(*weightKg) = bike.weightKg;
+				if (wheelCircumferenceMm)
+					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
 				return true;
 			}
 		}

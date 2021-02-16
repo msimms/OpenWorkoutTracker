@@ -181,9 +181,11 @@
 // methods for managing bike profiles
 
 - (BOOL)initializeBikeProfileList;
-- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm;
+- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm;
+- (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm;
 - (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId;
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm;
+- (NSString*)getBikeNameForActivity:(NSString*)activityId;
 - (void)setBikeForCurrentActivity:(NSString*)bikeName;
 - (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId;
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName;
