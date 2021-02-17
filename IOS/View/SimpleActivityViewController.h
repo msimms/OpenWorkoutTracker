@@ -28,9 +28,6 @@
 	IBOutlet UILabel* value4;
 	IBOutlet UILabel* title4;
 	IBOutlet UILabel* units4;
-
-	NSMutableArray* startedToolbar;
-	NSMutableArray* stoppedToolbar;
 }
 
 - (void)setUIForStartedActivity;

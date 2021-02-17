@@ -127,52 +127,9 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityType], nil);
 
-	// Organize the stopped toolbar.
-	BOOL isCyclingActivity = [appDelegate isCyclingActivity];
-	BOOL isMovingActivity = [appDelegate isMovingActivity];
-	size_t numBikes = [[appDelegate getBikeNames] count];
-	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
-	if (self->stoppedToolbar)
-	{
-		if ([[appDelegate getIntervalWorkoutNamesAndIds] count] == 0)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		}
-		if ([[appDelegate getPacePlanNamesAndIds] count] == 0)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.paceButton];
-		}
+	// Organize the toolbars.
+	[super organizeToolbars];
 
-		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
-
-		if (!isCyclingActivity || (numBikes == 0))
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
-		}
-		if (!isMovingActivity)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.autoStartButton];
-		}
-	}
-
-	// Organize the started toolbar.
-	self->startedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
-	if (self->startedToolbar)
-	{
-		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
-
-		if (!isMovingActivity)
-		{
-			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
-		}
-		if (!isCyclingActivity || (numBikes == 0))
-		{
-			[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
-		}
-	}
-	
 	// Create the swipe gesture recognizer.
 	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
 	self.swipe.direction = UISwipeGestureRecognizerDirectionLeft;

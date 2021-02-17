@@ -71,6 +71,7 @@
 		[self->unitsLabels addObject:self.units4];
 	}
 
+	// Handle very old screens.
 	if (self->screenHeight >= 568)
 	{
 		// Code for 4-inch screen
@@ -91,51 +92,8 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self.navItem.title = NSLocalizedString([appDelegate getCurrentActivityType], nil);
 
-	// Organize the stopped toolbar.
-	BOOL isCyclingActivity = [appDelegate isCyclingActivity];
-	BOOL isMovingActivity = [appDelegate isMovingActivity];
-	size_t numBikes = [[appDelegate getBikeNames] count];
-	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
-	if (self->stoppedToolbar)
-	{
-		if ([[appDelegate getIntervalWorkoutNamesAndIds] count] == 0)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		}
-		if ([[appDelegate getPacePlanNamesAndIds] count] == 0)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.paceButton];
-		}
-
-		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
-
-		if (!isCyclingActivity || (numBikes == 0))
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
-		}
-		if (!isMovingActivity)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.autoStartButton];
-		}
-	}
-
-	// Organize the started toolbar.
-	self->startedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
-	if (self->startedToolbar)
-	{
-		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
-
-		if (!isMovingActivity)
-		{
-			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
-		}
-		if (!isCyclingActivity || (numBikes == 0))
-		{
-			[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
-		}
-	}
+	// Organize the toolbars.
+	[super organizeToolbars];
 
 	// Create the swipe gesture recognizer.
 	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];

@@ -463,6 +463,65 @@
 
 #pragma mark methods for resetting the UI based on activity state
 
+- (void)organizeToolbars
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	// Organize the stopped toolbar.
+	BOOL isCyclingActivity = [appDelegate isCyclingActivity];
+	BOOL isMovingActivity = [appDelegate isMovingActivity];
+	size_t numBikes = [[appDelegate getBikeNames] count];
+	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
+	if (self->stoppedToolbar)
+	{
+		if ([[appDelegate getIntervalWorkoutNamesAndIds] count] == 0)
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.intervalsButton];
+		}
+		if ([[appDelegate getPacePlanNamesAndIds] count] == 0)
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.paceButton];
+		}
+
+		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
+
+		if (!isCyclingActivity || (numBikes == 0))
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
+		}
+		if (isMovingActivity)
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.weightButton];
+		}
+		else
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.autoStartButton];
+		}
+	}
+
+	// Organize the started toolbar.
+	self->startedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
+	if (self->startedToolbar)
+	{
+		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
+
+		if (isMovingActivity)
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.weightButton];
+		}
+		else
+		{
+			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
+		}
+		if (!isCyclingActivity || (numBikes == 0))
+		{
+			[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
+		}
+	}
+}
+
 - (void)setUIForStartedActivity
 {
 	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];

@@ -54,6 +54,8 @@
 	Coordinate                 autoStartCoordinate; // Location reference for the autostart on move feature
 	NSInteger                  tappedButtonIndex; // Indicates which attribute was pressed
 	bool                       showBroadcastIcon; // TRUE if we should show an icon that represents the broadcast status
+	NSMutableArray*            startedToolbar; // List of buttons for an activity that is in progress
+	NSMutableArray*            stoppedToolbar; // List of buttons for an activity that is stopped
 }
 
 - (void)onRefreshTimer:(NSTimer*)timer;
@@ -69,6 +71,7 @@
 - (void)playBeepSound;
 - (void)playPingSound;
 
+- (void)organizeToolbars;
 - (void)setUIForStartedActivity;
 - (void)setUIForStoppedActivity;
 - (void)setUIForPausedActivity;

@@ -40,9 +40,6 @@
 	IBOutlet UILabel* title4;
 	IBOutlet UILabel* units4;
 
-	NSMutableArray* startedToolbar;
-	NSMutableArray* stoppedToolbar;
-
 	NSMutableArray* routePoints;
 	MKPolyline* route;
 
