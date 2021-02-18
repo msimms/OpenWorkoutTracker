@@ -176,7 +176,10 @@
 // sync status methods
 
 - (BOOL)markAsSynchedToWeb:(NSString*)activityId;
+- (BOOL)markAsSynchedToICloudDrive:(NSString*)activityId;
 - (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId;
+- (BOOL)sendActivityFileToServer:(NSString*)activityId withFileName:(NSString*)fileName;
+- (BOOL)sendActivityToServer:(NSString*)activityId;
 
 // methods for managing bike profiles
 

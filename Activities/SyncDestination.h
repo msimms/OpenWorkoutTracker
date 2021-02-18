@@ -6,6 +6,7 @@
 
 // Sync destinations used by the database.
 
+#define SYNC_DEST_EMAIL "Email"
 #define SYNC_DEST_WATCH "Watch"
 #define SYNC_DEST_PHONE "Phone"
 #define SYNC_DEST_WEB "Web"

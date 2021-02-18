@@ -58,6 +58,7 @@
 
 #define MSG_DELETE_QUESTION            NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
+#define MSG_EXPORT_QUESTION            NSLocalizedString(@"Do you want to export the actvity?", nil)
 
 #define EMAIL_TITLE                    NSLocalizedString(@"Workout Data", nil)
 #define EMAIL_CONTENTS                 NSLocalizedString(@"The data file is attached.", nil)
@@ -380,19 +381,37 @@ typedef enum ExportFileTypeButtons
 
 - (void)handleFileDestinationSelection
 {
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	if (self->exportedFileName)
 	{
-		if ([self->selectedExportService isEqualToString:@"Email"])
+		// Email
+		if ([self->selectedExportService isEqualToString:@SYNC_DEST_EMAIL])
 		{
 			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
 		}
+
+		// Web
+		else if ([self->selectedExportService isEqualToString:@SYNC_DEST_WEB])
+		{
+			if ([appDelegate sendActivityFileToServer:self->activityId withFileName:self->exportedFileName])
+			{
+				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
+				[appDelegate markAsSynchedToWeb:self->activityId];
+			}
+			else
+			{
+				[super showOneButtonAlert:STR_ERROR withMsg:STR_EXPORT_FAILED];
+			}
+		}
+
+		// iCloud Drive
 		else
 		{
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 			if ([appDelegate exportFileToCloudService:self->exportedFileName toServiceNamed:self->selectedExportService])
 			{
 				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
+				[appDelegate markAsSynchedToICloudDrive:self->activityId];
 			}
 			else
 			{
@@ -596,8 +615,8 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onExport:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
+
 	if ([fileExportServices count] == 1)
 	{
 		self->selectedExportService = [fileExportServices objectAtIndex:0];
@@ -695,8 +714,8 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onBike:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	NSMutableArray* fileSites = [appDelegate getBikeNames];
+
 	if ([fileSites count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
@@ -726,6 +745,25 @@ typedef enum ExportFileTypeButtons
 }
 
 #pragma mark called when the user selects a row
+
+- (void)handleSyncRequest:(NSString*)service
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_EXPORT
+																			 message:MSG_EXPORT_QUESTION
+																	  preferredStyle:UIAlertControllerStyleAlert];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->selectedExportService = service;
+
+		// We always use GPX when exporting to the web. Otherwise, let the user choose their preferred file format.
+		if ([self->selectedExportService isEqualToString:@SYNC_DEST_WEB])
+			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_GPX];
+		else
+			[self showFileFormatSheet];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
 
 - (void)handleSelectedRow:(NSIndexPath*)indexPath onTable:(UITableView*)tableView
 {
@@ -758,9 +796,11 @@ typedef enum ExportFileTypeButtons
 			}
 			break;
 		case SECTION_CHARTS:
-			self.spinner.hidden = FALSE;
-			[self.spinner startAnimating];
-			[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
+			{
+				self.spinner.hidden = FALSE;
+				[self.spinner startAnimating];
+				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
+			}
 			break;
 		case SECTION_ATTRIBUTES:
 			break;
@@ -768,6 +808,20 @@ typedef enum ExportFileTypeButtons
 			if ([self superlativeHasSegue:cell])
 			{
 			}
+			break;
+		case SECTION_SYNC:
+			if (row < [self->syncedServices count])
+			{
+				NSString* serviceName = [self->syncedServices objectAtIndex:row];
+				[self handleSyncRequest:serviceName];
+			}
+			else
+			{
+				NSString* serviceName = [self->notSyncedServices objectAtIndex:(row - [self->syncedServices count])];
+				[self handleSyncRequest:serviceName];
+			}
+			break;
+		case SECTION_INTERNAL:
 			break;
 	}
 
@@ -843,8 +897,8 @@ typedef enum ExportFileTypeButtons
 	static NSString* CellIdentifier = @"Cell";
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
@@ -900,8 +954,10 @@ typedef enum ExportFileTypeButtons
 			}
 			break;
 		case SECTION_CHARTS:
-			cell.textLabel.text = NSLocalizedString([self->chartTitles objectAtIndex:row], nil);
-			cell.detailTextLabel.text = @"";
+			{
+				cell.textLabel.text = NSLocalizedString([self->chartTitles objectAtIndex:row], nil);
+				cell.detailTextLabel.text = @"";
+			}
 			break;
 		case SECTION_ATTRIBUTES:
 			{
@@ -939,7 +995,7 @@ typedef enum ExportFileTypeButtons
 				{
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
 					NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
-					
+
 					cell.textLabel.text = NSLocalizedString(attributeName, nil);
 					if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
 						cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", valueStr, unitsStr];
@@ -978,6 +1034,7 @@ typedef enum ExportFileTypeButtons
 				case ROW_ACTIVITY_HASH:
 					{
 						NSString* hash = [appDelegate getActivityHash:self->activityId];
+
 						cell.textLabel.text = NSLocalizedString(@"Activity Hash", nil);
 						if ([hash length] > 0)
 							cell.detailTextLabel.text = hash;

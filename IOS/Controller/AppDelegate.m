@@ -1880,6 +1880,11 @@ void startSensorCallback(SensorType type, void* context)
 	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
 }
 
+- (BOOL)markAsSynchedToICloudDrive:(NSString*)activityId
+{
+	return CreateActivitySync([activityId UTF8String], SYNC_DEST_ICLOUD_DRIVE);
+}
+
 // Callback used by retrieveSyncDestinationsForActivityId
 void syncStatusCallback(const char* const destination, void* context)
 {
@@ -1902,46 +1907,59 @@ void syncStatusCallback(const char* const destination, void* context)
 	return destinations;
 }
 
-- (void)sendActivityToServer:(NSString*)activityId
+- (BOOL)sendActivityFileToServer:(NSString*)activityId withFileName:(NSString*)fileName
 {
+	BOOL result = FALSE;
+
+	// Fetch the activity name.
+	NSString* activityName = [self getActivityName:activityId];
+	if ([activityName length] == 0)
+	{
+		activityName = [[NSString alloc] initWithFormat:@"Untitled.gpx"];
+	}
+
+	// Read the entire file.
+	NSString* fileContents = [FileUtils readEntireFile:fileName];
+	
+	// Send to the server.
+	NSData* binaryFileContents = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
+	if ([ApiClient sendActivityToServer:activityId withName:activityName withContents:binaryFileContents])
+	{
+		result = [self markAsSynchedToWeb:activityId];
+	}
+	else
+	{
+		NSLog(@"Failed to upload activity ID %@ to the server.", activityId);
+	}
+
+	// Remove the temp file.
+	BOOL tempFileDeleted = [FileUtils deleteFile:fileName];
+	if (!tempFileDeleted)
+	{
+		NSLog(@"Failed to delete temp file %@.", fileName);
+	}
+
+	return result;
+}
+
+- (BOOL)sendActivityToServer:(NSString*)activityId
+{
+	BOOL result = FALSE;
+
 	// Export the activity to a temp file.
 	NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
 
 	// Activity exported?
 	if (exportedFileName)
 	{
-		// Fetch the activity name.
-		NSString* activityName = [self getActivityName:activityId];
-		if ([activityName length] == 0)
-		{
-			activityName = [[NSString alloc] initWithFormat:@"Untitled.gpx"];
-		}
-
-		// Read the entire file.
-		NSString* fileContents = [FileUtils readEntireFile:exportedFileName];
-		
-		// Send to the server.
-		NSData* binaryFileContents = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-		if ([ApiClient sendActivityToServer:activityId withName:activityName withContents:binaryFileContents])
-		{
-			[self markAsSynchedToWeb:activityId];
-		}
-		else
-		{
-			NSLog(@"Failed to upload activity ID %@ to the server.", activityId);
-		}
-
-		// Remove the temp file.
-		BOOL tempFileDeleted = [FileUtils deleteFile:exportedFileName];
-		if (!tempFileDeleted)
-		{
-			NSLog(@"Failed to delete temp file %@.", exportedFileName);
-		}
+		result = [self sendActivityFileToServer:activityId withFileName:exportedFileName];
 	}
 	else
 	{
 		NSLog(@"Error when exporting an activity to send to the server.");
 	}
+
+	return result;
 }
 
 - (void)handleHasActivityResponse:(NSNotification*)notification
