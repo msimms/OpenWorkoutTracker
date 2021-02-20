@@ -1525,7 +1525,7 @@ bool Database::SearchForTags(const std::string& searchStr, std::vector<std::stri
 bool Database::CreateSummaryData(const std::string& activityId, const std::string& attribute, ActivityAttributeType value)
 {
 	sqlite3_stmt* statement = NULL;
-	
+
 	if (attribute.length() == 0)
 	{
 		return false;
@@ -1534,7 +1534,7 @@ bool Database::CreateSummaryData(const std::string& activityId, const std::strin
 	{
 		return false;
 	}
-	
+
 	int result = sqlite3_prepare_v2(m_pDb, "insert into activity_summary values (NULL,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
@@ -1575,10 +1575,10 @@ bool Database::CreateSummaryData(const std::string& activityId, const std::strin
 bool Database::RetrieveSummaryData(const std::string& activityId, ActivityAttributeMap& values)
 {
 	bool result = false;
-	
+
 	values.clear();
 
-	sqlite3_bind_text(m_selectActivitySummaryStatement, 0, activityId.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_text(m_selectActivitySummaryStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 	while (sqlite3_step(m_selectActivitySummaryStatement) == SQLITE_ROW)
 	{
