@@ -88,6 +88,7 @@
 #define STR_INTERVAL_RIDE         NSLocalizedString(@"Interval Ride", nil)
 #define STR_TEMPO_RIDE            NSLocalizedString(@"Tempo Ride", nil)
 #define STR_EASY_RIDE             NSLocalizedString(@"Easy Ride", nil)
+#define STR_SWEET_SPOT_RIDE       NSLocalizedString(@"Sweet Spot Ride", nil)
 #define STR_OPEN_WATER_SWIM       NSLocalizedString(@"Open Water Swim", nil)
 #define STR_POOL_SWIM             NSLocalizedString(@"Pool Swim", nil)
 

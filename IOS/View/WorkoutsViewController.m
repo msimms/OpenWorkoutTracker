@@ -185,6 +185,9 @@
 				case WORKOUT_TYPE_EASY_RIDE:
 					cell.detailTextLabel.text = STR_EASY_RIDE;
 					break;
+				case WORKOUT_TYPE_SWEET_SPOT_RIDE:
+					cell.detailTextLabel.text = STR_SWEET_SPOT_RIDE;
+					break;
 				case WORKOUT_TYPE_OPEN_WATER_SWIM:
 					cell.detailTextLabel.text = STR_OPEN_WATER_SWIM;
 					break;
