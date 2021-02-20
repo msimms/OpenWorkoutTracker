@@ -42,12 +42,17 @@
 	return @"iCloud Drive";
 }
 
-- (BOOL)uploadFile:(NSString*)filePath
+- (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName
 {
-	NSString* filePathWithScheme = [NSString stringWithFormat:@"file://%@", filePath];
+	return [self uploadFile:fileName];
+}
+
+- (BOOL)uploadFile:(NSString*)fileName
+{
+	NSString* filePathWithScheme = [NSString stringWithFormat:@"file://%@", fileName];
 	NSURL* localDocumentUrl = [NSURL URLWithString:filePathWithScheme];
-	NSString* fileName = [localDocumentUrl lastPathComponent];
-	NSURL* iCloudDocumentsUrl = [self->documentsUrl URLByAppendingPathComponent:fileName];
+	NSString* fileNameOnly = [localDocumentUrl lastPathComponent];
+	NSURL* iCloudDocumentsUrl = [self->documentsUrl URLByAppendingPathComponent:fileNameOnly];
 	NSError* error = nil;
 
 	return [[NSFileManager defaultManager] setUbiquitous:TRUE itemAtURL:localDocumentUrl destinationURL:iCloudDocumentsUrl error:&error];

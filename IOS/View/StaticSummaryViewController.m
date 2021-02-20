@@ -394,7 +394,7 @@ typedef enum ExportFileTypeButtons
 		// Web
 		else if ([self->selectedExportService isEqualToString:@SYNC_DEST_WEB])
 		{
-			if ([appDelegate sendActivityFileToServer:self->activityId withFileName:self->exportedFileName])
+			if ([appDelegate exportActivityFileToCloudService:self->exportedFileName forActivityId:self->activityId toService:CLOUD_SERVICE_STRAEN_WEB])
 			{
 				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
 				[appDelegate markAsSynchedToWeb:self->activityId];
@@ -408,7 +408,7 @@ typedef enum ExportFileTypeButtons
 		// iCloud Drive
 		else
 		{
-			if ([appDelegate exportFileToCloudService:self->exportedFileName toServiceNamed:self->selectedExportService])
+			if ([appDelegate exportActivityFileToCloudService:self->exportedFileName forActivityId:self->activityId toServiceNamed:self->selectedExportService])
 			{
 				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
 				[appDelegate markAsSynchedToICloudDrive:self->activityId];

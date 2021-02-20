@@ -25,7 +25,12 @@
 	return @"Strava";
 }
 
-- (BOOL)uploadActivity:(NSString*)activityId
+- (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName
+{
+	return FALSE;
+}
+
+- (BOOL)uploadFile:(NSString*)fileName
 {
 	return FALSE;
 }

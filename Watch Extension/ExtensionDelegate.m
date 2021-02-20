@@ -9,7 +9,10 @@
 #import "ActivityAttribute.h"
 #import "ActivityHash.h"
 #import "ActivityMgr.h"
+#import "ApiClient.h"
 #import "CloudPreferences.h"
+#import "ExportUtils.h"
+#import "FileUtils.h"
 #import "Notifications.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
@@ -38,12 +41,14 @@
 	LocationSensor* locationController = [sensorFactory createLocationSensor];
 
 	self->sensorMgr = [SensorMgr sharedInstance];
+
 	[self->sensorMgr addSensor:accelerometerController];
 	[self->sensorMgr addSensor:locationController];
 
 	[self startHealthMgr];
 	[self startWatchSession]; // handles watch to phone interactions
 
+	self->cloudMgr = [[CloudMgr alloc] init];
 	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
@@ -360,6 +365,11 @@ void startSensorCallback(SensorType type, void* context)
 	return PauseCurrentActivity();
 }
 
+- (BOOL)deleteActivity:(NSString*)activityId
+{
+	return DeleteActivity([activityId UTF8String]);
+}
+
 - (BOOL)startNewLap
 {
 	return StartNewLap();
@@ -483,8 +493,18 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 
 - (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId
 {
-	NSInteger index = ConvertActivityIdToActivityIndex([activityId UTF8String]);
-	return index;
+	return ConvertActivityIdToActivityIndex([activityId UTF8String]);
+}
+
+- (NSString*)getActivityIdFromActivityIndex:(NSInteger)activityIndex
+{
+	const char* const activityId = ConvertActivityIndexToActivityId(activityIndex);
+
+	if (activityId)
+	{
+		return [[NSString alloc] initWithFormat:@"%s", activityId];
+	}
+	return NULL;
 }
 
 #pragma mark retrieves or creates and retrieves the applications unique identifier
@@ -564,6 +584,12 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
 }
 
+- (BOOL)isSyncedToPhone:(NSString*)activityId
+{
+	NSMutableArray* syncDests = [self retrieveSyncDestinationsForActivityId:activityId];
+	return [syncDests indexOfObject:@SYNC_DEST_PHONE] != NSNotFound;
+}
+
 void syncStatusCallback(const char* const destination, void* context)
 {
 	if (context)
@@ -638,18 +664,6 @@ void syncStatusCallback(const char* const destination, void* context)
 	return result;
 }
 
-- (NSString*)retrieveHashForActivityIndex:(NSInteger)activityIndex
-{
-	const char* const activityId = ConvertActivityIndexToActivityId(activityIndex);
-
-	if (activityId)
-	{
-		NSString* tempActivityId = [[NSString alloc] initWithFormat:@"%s", activityId];
-		return [self retrieveHashForActivityId:tempActivityId];
-	}
-	return NULL;
-}
-
 - (NSString*)retrieveActivityIdByHash:(NSString*)activityHash
 {
 	NSString* result = nil;
@@ -660,7 +674,6 @@ void syncStatusCallback(const char* const destination, void* context)
 		result = [NSString stringWithFormat:@"%s", activityId];
 		free((void*)activityId);
 	}
-
 	return result;
 }
 
@@ -676,7 +689,6 @@ void syncStatusCallback(const char* const destination, void* context)
 		result = [NSString stringWithFormat:@"%s", activityName];
 		free((void*)activityName);
 	}
-
 	return result;
 }
 
@@ -923,6 +935,73 @@ void attributeNameCallback(const char* name, void* context)
 		}
 		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits, time(NULL));
 	}
+}
+
+#pragma mark methods for exporting activities
+
+- (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format
+{
+	NSString* exportFileName = nil;
+	NSString* exportDir = [ExportUtils createExportDir];
+
+	if (exportDir)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+		// Make sure we have a valid activity from the database.
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+		{
+			char* tempExportFileName = ExportActivityFromDatabase([activityId UTF8String], format, [exportDir UTF8String]);
+
+			if (tempExportFileName)
+			{
+				exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
+				free((void*)tempExportFileName);
+			}
+		}
+	}
+	return exportFileName;
+}
+
+- (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service
+{
+	if (self->cloudMgr)
+	{
+		NSString* activityName = [self getActivityName:activityId];
+		return [self->cloudMgr uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName toService:service];
+	}
+	return FALSE;
+}
+
+- (BOOL)exportActivityToCloudService:(NSString*)activityId toService:(CloudServiceType)service
+{
+	BOOL result = FALSE;
+
+	// Can we even do this?
+	if (self->cloudMgr && [self->cloudMgr isLinked:service])
+	{
+		// Export the activity to a temp file.
+		NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
+
+		// Activity exported?
+		if (exportedFileName)
+		{
+			result = [self exportActivityFileToCloudService:exportedFileName forActivityId:activityId toService:service];
+		}
+		else
+		{
+			NSLog(@"Error when exporting an activity to send to a cloud service.");
+		}
+
+		// Remove the temp file.
+		BOOL tempFileDeleted = [FileUtils deleteFile:exportedFileName];
+		if (!tempFileDeleted)
+		{
+			NSLog(@"Failed to delete temp file %@.", exportedFileName);
+		}
+	}
+
+	return result;
 }
 
 #pragma mark reset methods

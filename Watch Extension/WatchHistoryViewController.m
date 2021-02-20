@@ -73,6 +73,8 @@
 	[self pushControllerWithName:@"WatchDetailsViewController" context:dictionary];
 }
 
+#pragma mark rendering methods
+
 - (void)redraw
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;

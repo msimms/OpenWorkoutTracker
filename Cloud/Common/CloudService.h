@@ -13,5 +13,7 @@
 - (BOOL)link;
 - (BOOL)unlink;
 - (BOOL)isAvailable;
+- (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName;
+- (BOOL)uploadFile:(NSString*)fileName;
 
 @end

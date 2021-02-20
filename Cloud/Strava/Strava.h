@@ -6,9 +6,9 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <Foundation/Foundation.h>
-#import "DataCloud.h"
+#import "CloudService.h"
 
-@interface Strava : DataCloud
+@interface Strava : CloudService
 {
 }
 
@@ -16,6 +16,7 @@
 
 - (id)init;
 - (BOOL)isLinked;
-- (BOOL)uploadActivity:(NSString*)activityId;
+- (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName;
+- (BOOL)uploadFile:(NSString*)fileName;
 
 @end

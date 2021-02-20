@@ -163,6 +163,16 @@
 		2757C2D125DA051000B84BE9 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
 		2757C2E425DA051D00B84BE9 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
+		275CAC7425DF2B48000727AE /* ExportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC7325DF2B48000727AE /* ExportUtils.m */; };
+		275CAC7825DF2D3D000727AE /* ExportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC7325DF2B48000727AE /* ExportUtils.m */; };
+		275CAC7C25DF3A65000727AE /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
+		275CAC9125E03915000727AE /* StraenWeb.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC9025E03915000727AE /* StraenWeb.m */; };
+		275CAC9C25E0392E000727AE /* StraenWeb.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC9025E03915000727AE /* StraenWeb.m */; };
+		275CACA425E039B0000727AE /* CloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE81AA169AF008F55AF /* CloudService.m */; };
+		275CACAE25E05F43000727AE /* CloudMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14719BFE3B7008F8672 /* CloudMgr.m */; };
+		275CACB225E05F56000727AE /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
+		275CACB625E05F59000727AE /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
+		275CACBA25E05F5D000727AE /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFB1AA16A41008F55AF /* iCloud.m */; };
 		276526CE25B8DA32003AA2D5 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */; };
 		276526E325BB9345003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
 		276526E725BB9353003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
@@ -179,8 +189,6 @@
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
 		276D5AF01AA169AF008F55AF /* CloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE81AA169AF008F55AF /* CloudService.m */; };
-		276D5AF11AA169AF008F55AF /* DataCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AEA1AA169AF008F55AF /* DataCloud.m */; };
-		276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AEC1AA169AF008F55AF /* FileSharingWebsite.m */; };
 		276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFB1AA16A41008F55AF /* iCloud.m */; };
 		276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
 		276D5B021AA16A7D008F55AF /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
@@ -677,6 +685,10 @@
 		275BA6D8234BC16B0086A50F /* ZwoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileReader.h; path = FileLib/ZwoFileReader.h; sourceTree = SOURCE_ROOT; };
 		275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZwoFileReader.cpp; path = FileLib/ZwoFileReader.cpp; sourceTree = SOURCE_ROOT; };
 		275BA6E8234BC21A0086A50F /* ZwoTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTags.h; path = FileLib/ZwoTags.h; sourceTree = SOURCE_ROOT; };
+		275CAC6625DF2B48000727AE /* ExportUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportUtils.h; path = IOS/Utilities/ExportUtils.h; sourceTree = SOURCE_ROOT; };
+		275CAC7325DF2B48000727AE /* ExportUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportUtils.m; path = IOS/Utilities/ExportUtils.m; sourceTree = SOURCE_ROOT; };
+		275CAC8F25E03915000727AE /* StraenWeb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StraenWeb.h; path = Cloud/StraenWeb/StraenWeb.h; sourceTree = SOURCE_ROOT; };
+		275CAC9025E03915000727AE /* StraenWeb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StraenWeb.m; path = Cloud/StraenWeb/StraenWeb.m; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
 		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
 		276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutScheduler.cpp; path = Activities/WorkoutScheduler.cpp; sourceTree = SOURCE_ROOT; };
@@ -702,10 +714,6 @@
 		276D5AE61AA169AF008F55AF /* CloudPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloudPreferences.m; path = Cloud/Common/CloudPreferences.m; sourceTree = SOURCE_ROOT; };
 		276D5AE71AA169AF008F55AF /* CloudService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CloudService.h; path = Cloud/Common/CloudService.h; sourceTree = SOURCE_ROOT; };
 		276D5AE81AA169AF008F55AF /* CloudService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CloudService.m; path = Cloud/Common/CloudService.m; sourceTree = SOURCE_ROOT; };
-		276D5AE91AA169AF008F55AF /* DataCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataCloud.h; path = Cloud/Common/DataCloud.h; sourceTree = SOURCE_ROOT; };
-		276D5AEA1AA169AF008F55AF /* DataCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DataCloud.m; path = Cloud/Common/DataCloud.m; sourceTree = SOURCE_ROOT; };
-		276D5AEB1AA169AF008F55AF /* FileSharingWebsite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSharingWebsite.h; path = Cloud/Common/FileSharingWebsite.h; sourceTree = SOURCE_ROOT; };
-		276D5AEC1AA169AF008F55AF /* FileSharingWebsite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FileSharingWebsite.m; path = Cloud/Common/FileSharingWebsite.m; sourceTree = SOURCE_ROOT; };
 		276D5AFA1AA16A41008F55AF /* iCloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCloud.h; path = Cloud/iCloud/iCloud.h; sourceTree = SOURCE_ROOT; };
 		276D5AFB1AA16A41008F55AF /* iCloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCloud.m; path = Cloud/iCloud/iCloud.m; sourceTree = SOURCE_ROOT; };
 		276D5AFD1AA16A67008F55AF /* RunKeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunKeeper.h; path = Cloud/RunKeeper/RunKeeper.h; sourceTree = SOURCE_ROOT; };
@@ -1277,6 +1285,8 @@
 		2797F13919BFE2B0008F8672 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				275CAC6625DF2B48000727AE /* ExportUtils.h */,
+				275CAC7325DF2B48000727AE /* ExportUtils.m */,
 				272E310125B4BF740038AD70 /* FileUtils.h */,
 				272E30E825B4BEFC0038AD70 /* FileUtils.m */,
 				27DCF67C22BD6BE6009A23C2 /* HashUtils.h */,
@@ -1512,16 +1522,14 @@
 				276D5AE61AA169AF008F55AF /* CloudPreferences.m */,
 				276D5AE71AA169AF008F55AF /* CloudService.h */,
 				276D5AE81AA169AF008F55AF /* CloudService.m */,
-				276D5AE91AA169AF008F55AF /* DataCloud.h */,
-				276D5AEA1AA169AF008F55AF /* DataCloud.m */,
-				276D5AEB1AA169AF008F55AF /* FileSharingWebsite.h */,
-				276D5AEC1AA169AF008F55AF /* FileSharingWebsite.m */,
 				276D5AFA1AA16A41008F55AF /* iCloud.h */,
 				276D5AFB1AA16A41008F55AF /* iCloud.m */,
 				276D5AFD1AA16A67008F55AF /* RunKeeper.h */,
 				276D5AFE1AA16A67008F55AF /* RunKeeper.m */,
 				276D5B001AA16A7D008F55AF /* Strava.h */,
 				276D5B011AA16A7D008F55AF /* Strava.m */,
+				275CAC8F25E03915000727AE /* StraenWeb.h */,
+				275CAC9025E03915000727AE /* StraenWeb.m */,
 			);
 			name = Cloud;
 			sourceTree = "<group>";
@@ -2256,7 +2264,6 @@
 				27B7CDA519BFD91C000383E3 /* SettingsViewController.m in Sources */,
 				27055BF21A73227300417D94 /* GoPro.m in Sources */,
 				27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */,
-				276D5AF11AA169AF008F55AF /* DataCloud.m in Sources */,
 				27B7CD9B19BFD91C000383E3 /* LiveSummaryViewController.m in Sources */,
 				27B7CDF319BFD99B000383E3 /* BtleBikeSpeedAndCadence.m in Sources */,
 				27B7CD2019BFD807000383E3 /* DataExporter.cpp in Sources */,
@@ -2286,7 +2293,6 @@
 				27E3021C24F0976D00EB5501 /* WorkoutFactory.cpp in Sources */,
 				27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */,
 				27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */,
-				276D5AF21AA169AF008F55AF /* FileSharingWebsite.m in Sources */,
 				2704717A216D997000EE47FF /* Statistics.cpp in Sources */,
 				27B7CDAA19BFD91C000383E3 /* StatisticsViewController.m in Sources */,
 				277C7E89251686E800117766 /* WeightLine.m in Sources */,
@@ -2337,8 +2343,10 @@
 				27C0845E19BFD063007CE934 /* Run.cpp in Sources */,
 				27B7CD3D19BFD903000383E3 /* ActivityPreferencesViewController.m in Sources */,
 				27B7CDA219BFD91C000383E3 /* Pin.m in Sources */,
+				275CAC9125E03915000727AE /* StraenWeb.m in Sources */,
 				27B7CDC419BFD953000383E3 /* CadenceLine.m in Sources */,
 				27B7CDC519BFD953000383E3 /* ChartLine.m in Sources */,
+				275CAC7425DF2B48000727AE /* ExportUtils.m in Sources */,
 				27B7CD9A19BFD91C000383E3 /* LiveMapViewController.m in Sources */,
 				27C0845319BFD063007CE934 /* Cycling.cpp in Sources */,
 				276D5B021AA16A7D008F55AF /* Strava.m in Sources */,
@@ -2428,6 +2436,7 @@
 				27DCF64722B72EFA009A23C2 /* GpxFileReader.cpp in Sources */,
 				27DCF64822B72EFA009A23C2 /* GpxFileReader.h in Sources */,
 				27CF012B24D8DDE900263CEC /* VO2MaxCalculator.cpp in Sources */,
+				275CACA425E039B0000727AE /* CloudService.m in Sources */,
 				27DCF64922B72EFA009A23C2 /* GpxFileWriter.cpp in Sources */,
 				27DCF64A22B72EFA009A23C2 /* GpxFileWriter.h in Sources */,
 				27DCF64B22B72EFA009A23C2 /* GpxTags.h in Sources */,
@@ -2473,6 +2482,7 @@
 				27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */,
 				27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */,
 				27DCF5FC22B71628009A23C2 /* Activity.h in Sources */,
+				275CAC9C25E0392E000727AE /* StraenWeb.m in Sources */,
 				27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */,
 				27DCF5FD22B71628009A23C2 /* ActivityAttribute.h in Sources */,
 				27DCF5FE22B71628009A23C2 /* ActivityAttributeType.h in Sources */,
@@ -2497,6 +2507,7 @@
 				27417B452355EC84000DFE00 /* UserProfile.m in Sources */,
 				270547A222EE3B930071F3C2 /* WatchSessionManager.m in Sources */,
 				27DCF60B22B71628009A23C2 /* GForceAnalyzer.cpp in Sources */,
+				275CAC7825DF2D3D000727AE /* ExportUtils.m in Sources */,
 				27DCF60C22B71628009A23C2 /* GForceAnalyzer.h in Sources */,
 				27DCF68522C29577009A23C2 /* Accelerometer.m in Sources */,
 				27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */,
@@ -2505,22 +2516,26 @@
 				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,
 				27DCF61022B71628009A23C2 /* Hike.h in Sources */,
 				27DCF61122B71628009A23C2 /* IntervalWorkout.h in Sources */,
+				275CACBA25E05F5D000727AE /* iCloud.m in Sources */,
 				271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */,
 				27DCF68722C2B577009A23C2 /* StringUtils.m in Sources */,
 				27DCF61222B71628009A23C2 /* IntervalWorkoutSegment.h in Sources */,
 				27F4240C23A461A900F59F50 /* Walk.cpp in Sources */,
 				27DCF61322B71628009A23C2 /* LiftingActivity.cpp in Sources */,
 				27DCF61422B71628009A23C2 /* LiftingActivity.h in Sources */,
+				275CAC7C25DF3A65000727AE /* ApiClient.m in Sources */,
 				27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */,
 				27CF012224D7A68300263CEC /* WorkoutPlanGenerator.cpp in Sources */,
 				27DCF61622B71628009A23C2 /* MountainBiking.h in Sources */,
 				2705895225463E7F0032E43E /* WatchHealthManager.m in Sources */,
 				27DCF68422C294D4009A23C2 /* SensorFactory.m in Sources */,
 				27DCF61722B71628009A23C2 /* MovingActivity.cpp in Sources */,
+				275CACB225E05F56000727AE /* Strava.m in Sources */,
 				27DCF61822B71628009A23C2 /* MovingActivity.h in Sources */,
 				27DCF61922B71628009A23C2 /* PullUp.cpp in Sources */,
 				27DCF61A22B71628009A23C2 /* PullUp.h in Sources */,
 				27DCF61B22B71628009A23C2 /* PullUpAnalyzer.cpp in Sources */,
+				275CACB625E05F59000727AE /* RunKeeper.m in Sources */,
 				27417B372355EC24000DFE00 /* HealthManager.m in Sources */,
 				27DCF61C22B71628009A23C2 /* PullUpAnalyzer.h in Sources */,
 				27DCF61D22B71628009A23C2 /* PushUp.cpp in Sources */,
@@ -2536,6 +2551,7 @@
 				27DCF62322B71628009A23C2 /* SegmentType.h in Sources */,
 				27754B20233DA8A2003F2C53 /* BroadcastManager.m in Sources */,
 				27DCF62422B71628009A23C2 /* Squat.cpp in Sources */,
+				275CACAE25E05F43000727AE /* CloudMgr.m in Sources */,
 				27DCF62522B71628009A23C2 /* Squat.h in Sources */,
 				27DCF62622B71628009A23C2 /* SquatAnalyzer.cpp in Sources */,
 				27DCF62722B71628009A23C2 /* SquatAnalyzer.h in Sources */,

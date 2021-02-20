@@ -25,6 +25,9 @@
 	IBOutlet __strong WKInterfaceTable* detailsTable;
 
 	NSString* activityId;
+	NSInteger syncDestPhoneRowIndex;
+	NSInteger syncDestWebRowIndex;
+	NSInteger syncDestICloudDriveRowIndex;
 }
 
 @property (weak, nonatomic) IBOutlet WKInterfaceMap* map;

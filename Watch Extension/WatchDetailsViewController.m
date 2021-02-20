@@ -9,9 +9,11 @@
 #import "ExtensionDelegate.h"
 #import "ActivityAttribute.h"
 #import "AppStrings.h"
+#import "ExportUtils.h"
 #import "StringUtils.h"
 
 #define ALERT_MSG_DELETE NSLocalizedString(@"Are you sure you want to delete this activity?", nil)
+#define ALERT_MSG_EXPORT NSLocalizedString(@"Do you want to export this activity?", nil)
 
 @implementation WatchDetailsRowController
 
@@ -57,15 +59,65 @@
 
 - (IBAction)onDelete
 {
-	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void){
-		DeleteActivity([self->activityId UTF8String]);
+	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void) {
+		ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+		[extDelegate deleteActivity:self->activityId];
 		[self popController];
 	}];
-	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void){
+	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void) {
 	}];
 
 	NSArray* actions = @[yesAction, noAction];
 	[self presentAlertControllerWithTitle:STR_STOP message:ALERT_MSG_DELETE preferredStyle:WKAlertControllerStyleAlert actions:actions];
+}
+
+#pragma mark export methods
+
+- (void)export:(NSString*)dest
+{
+	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void) {
+		ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
+		if ([dest isEqualToString:@SYNC_DEST_PHONE])
+		{
+		}
+		else if ([dest isEqualToString:@SYNC_DEST_WEB])
+		{
+			[extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_STRAEN_WEB];
+		}
+		else if ([dest isEqualToString:@SYNC_DEST_ICLOUD_DRIVE])
+		{
+			[extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_ICLOUD_DRIVE];
+		}
+	}];
+	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void) {
+	}];
+
+	NSArray* actions = @[yesAction, noAction];
+	[self presentAlertControllerWithTitle:STR_EXPORT message:ALERT_MSG_EXPORT preferredStyle:WKAlertControllerStyleAlert actions:actions];
+}
+
+#pragma mark table handling methods
+
+- (void)table:(WKInterfaceTable*)table didSelectRowAtIndex:(NSInteger)rowIndex
+{
+	if (rowIndex == 0)
+	{
+		return;
+	}
+
+	if (rowIndex == self->syncDestPhoneRowIndex)
+	{
+		[self export:@SYNC_DEST_PHONE];
+	}
+	else if (rowIndex == self->syncDestWebRowIndex)
+	{
+		[self export:@SYNC_DEST_WEB];
+	}
+	else if (rowIndex == self->syncDestICloudDriveRowIndex)
+	{
+		[self export:@SYNC_DEST_ICLOUD_DRIVE];
+	}
 }
 
 #pragma mark rendering methods
@@ -88,9 +140,11 @@
 
 	time_t startTime = 0;
 	time_t endTime = 0;
+
 	Coordinate startCoordinate;
 	bool startCoordinateSet = false;
 
+	// Get the start and end time for the activity.
 	self->activityId = [[NSString alloc] initWithFormat:@"%s", ConvertActivityIndexToActivityId(activityIndex)];
 	[extDelegate getHistoricalActivityStartAndEndTime:activityIndex withStartTime:&startTime withEndTime:&endTime];
 
@@ -116,6 +170,7 @@
 	for (NSString* attributeName in attributeNames)
 	{
 		ActivityAttributeType attr = [extDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
 		if (attr.valid)
 		{
 			NSString* valueStr = [StringUtils formatActivityViewType:attr];
@@ -141,16 +196,31 @@
 			}
 		}
 	}
-	
-	// Append the sync status.
+
+	//
+	// Append the sync statuses.
+	//
+
 	NSMutableArray* syncDests = [extDelegate retrieveSyncDestinationsForActivityId:self->activityId];
+
+	// Phone status.
+	self->syncDestPhoneRowIndex = [nameStrs count];
 	BOOL synchedToPhone = [syncDests indexOfObject:@SYNC_DEST_PHONE] != NSNotFound;
-	BOOL synchedToWeb = [syncDests indexOfObject:@SYNC_DEST_WEB] != NSNotFound;
-	BOOL synchedToICloudDrive = [syncDests indexOfObject:@SYNC_DEST_ICLOUD_DRIVE] != NSNotFound;
 	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_PHONE, nil)];
 	[valueStrs addObject:synchedToPhone ? STR_SYNCHED : STR_NOT_SYNCHED];
-	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_WEB, nil)];
-	[valueStrs addObject:synchedToWeb ? STR_SYNCHED : STR_NOT_SYNCHED];
+
+	// Web status.
+	if ([extDelegate isFeaturePresent:FEATURE_BROADCAST])
+	{
+		self->syncDestWebRowIndex = [nameStrs count];
+		BOOL synchedToWeb = [syncDests indexOfObject:@SYNC_DEST_WEB] != NSNotFound;
+		[nameStrs addObject:NSLocalizedString(@SYNC_DEST_WEB, nil)];
+		[valueStrs addObject:synchedToWeb ? STR_SYNCHED : STR_NOT_SYNCHED];
+	}
+	
+	// iCloud Drive status.
+	self->syncDestICloudDriveRowIndex = [nameStrs count];
+	BOOL synchedToICloudDrive = [syncDests indexOfObject:@SYNC_DEST_ICLOUD_DRIVE] != NSNotFound;
 	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_ICLOUD_DRIVE, nil)];
 	[valueStrs addObject:synchedToICloudDrive ? STR_SYNCHED : STR_NOT_SYNCHED];
 

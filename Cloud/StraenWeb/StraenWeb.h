@@ -1,5 +1,5 @@
-// Created by Michael Simms on 1/1/13.
-// Copyright (c) 2013 Michael J. Simms. All rights reserved.
+// Created by Michael Simms on 2/19/21.
+// Copyright (c) 2021 Michael J. Simms. All rights reserved.
 
 // This Source Code Form is subject to the terms of the Mozilla Public
 // License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,16 +8,14 @@
 #import <Foundation/Foundation.h>
 #import "CloudService.h"
 
-@interface iCloud : CloudService
+@interface StraenWeb : CloudService
 {
-	NSURL* ubiquityContainer;
-	NSURL* documentsUrl;
 }
 
 - (NSString*)name;
 
 - (id)init;
-- (BOOL)isAvailable;
+- (BOOL)isLinked;
 - (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName;
 - (BOOL)uploadFile:(NSString*)fileName;
 

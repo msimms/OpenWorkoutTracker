@@ -173,14 +173,6 @@
 - (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
 
-// sync status methods
-
-- (BOOL)markAsSynchedToWeb:(NSString*)activityId;
-- (BOOL)markAsSynchedToICloudDrive:(NSString*)activityId;
-- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId;
-- (BOOL)sendActivityFileToServer:(NSString*)activityId withFileName:(NSString*)fileName;
-- (BOOL)sendActivityToServer:(NSString*)activityId;
-
 // methods for managing bike profiles
 
 - (BOOL)initializeBikeProfileList;
@@ -207,11 +199,20 @@
 - (void)playBeepSound;
 - (void)playPingSound;
 
+// sync status methods
+
+- (BOOL)markAsSynchedToWeb:(NSString*)activityId;
+- (BOOL)markAsSynchedToICloudDrive:(NSString*)activityId;
+- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId;
+
 // methods for exporting activities
 
 - (BOOL)deleteFile:(NSString*)fileName;
 - (BOOL)exportFileToCloudService:(NSString*)fileName toServiceNamed:(NSString*)serviceName;
 - (BOOL)exportFileToCloudService:(NSString*)fileName toService:(CloudServiceType)service;
+- (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toServiceNamed:(NSString*)serviceName;
+- (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service;
+- (BOOL)exportActivityToCloudService:(NSString*)activityId toService:(CloudServiceType)service;
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
 - (NSString*)exportActivitySummary:(NSString*)activityType;
 - (void)clearExportDir;
@@ -279,8 +280,7 @@
 
 // cloud methods
 
-- (NSMutableArray*)listFileClouds;
-- (NSMutableArray*)listDataClouds;
+- (NSMutableArray*)listCloudServices;
 - (NSString*)nameOfCloudService:(CloudServiceType)service;
 - (void)requestCloudServiceAcctNames:(CloudServiceType)service;
 

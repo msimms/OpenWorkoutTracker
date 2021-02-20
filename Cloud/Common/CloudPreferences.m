@@ -7,10 +7,10 @@
 
 #import "CloudPreferences.h"
 
-#define CLOUD_PREF_DROPBOX        "using_dropbox"
-#define CLOUD_PREF_ICLOUD         "using_icloud"
-#define CLOUD_PREF_RUNKEEPER      "using_runkeeper"
-#define CLOUD_PREF_STRAVA         "using_strava"
+#define CLOUD_PREF_DROPBOX   "using_dropbox"
+#define CLOUD_PREF_ICLOUD    "using_icloud"
+#define CLOUD_PREF_RUNKEEPER "using_runkeeper"
+#define CLOUD_PREF_STRAVA    "using_strava"
 
 @implementation CloudPreferences
 

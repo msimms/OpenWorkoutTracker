@@ -21,6 +21,7 @@
 #import "BtleScale.h"
 #import "CloudMgr.h"
 #import "CloudPreferences.h"
+#import "ExportUtils.h"
 #import "FileUtils.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
@@ -1341,29 +1342,11 @@ void startSensorCallback(SensorType type, void* context)
 
 		// Stop requesting data from sensors.
 		[self stopSensors];
-		
+
 		// If we're supposed to export the activity to any services then do that.
 		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD_DRIVE] && [CloudPreferences usingiCloud])
 		{
-			// Export the activity to a temp file.
-			NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
-
-			// Activity exported?
-			if (exportedFileName)
-			{
-				// Export the activity as a file on the iCloud Drive.
-				if ([self exportFileToCloudService:exportedFileName toService:CLOUD_SERVICE_ICLOUD_DRIVE])
-				{
-					NSLog(@"Error when exporting an activity to send to iCloud Drive.");
-				}
-
-				// Remove the temp file.
-				BOOL tempFileDeleted = [FileUtils deleteFile:exportedFileName];
-				if (!tempFileDeleted)
-				{
-					NSLog(@"Failed to delete temp file %@.", exportedFileName);
-				}
-			}
+			[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_STRAEN_WEB];
 		}
 	}
 	return result;
@@ -1873,181 +1856,6 @@ void startSensorCallback(SensorType type, void* context)
 	return hashStr;
 }
 
-#pragma mark sync status methods
-
-- (BOOL)markAsSynchedToWeb:(NSString*)activityId
-{
-	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
-}
-
-- (BOOL)markAsSynchedToICloudDrive:(NSString*)activityId
-{
-	return CreateActivitySync([activityId UTF8String], SYNC_DEST_ICLOUD_DRIVE);
-}
-
-// Callback used by retrieveSyncDestinationsForActivityId
-void syncStatusCallback(const char* const destination, void* context)
-{
-	if (context)
-	{
-		NSMutableArray* destList = (__bridge NSMutableArray*)context;
-
-		[destList addObject:[[NSString alloc] initWithFormat:@"%s", destination]];
-	}
-}
-
-- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId
-{
-	NSMutableArray* destinations = [[NSMutableArray alloc] init];
-	
-	if (destinations)
-	{
-		RetrieveSyncDestinationsForActivityId([activityId UTF8String], syncStatusCallback, (__bridge void*)destinations);
-	}
-	return destinations;
-}
-
-- (BOOL)sendActivityFileToServer:(NSString*)activityId withFileName:(NSString*)fileName
-{
-	BOOL result = FALSE;
-
-	// Fetch the activity name.
-	NSString* activityName = [self getActivityName:activityId];
-	if ([activityName length] == 0)
-	{
-		activityName = [[NSString alloc] initWithFormat:@"Untitled.gpx"];
-	}
-
-	// Read the entire file.
-	NSString* fileContents = [FileUtils readEntireFile:fileName];
-	
-	// Send to the server.
-	NSData* binaryFileContents = [fileContents dataUsingEncoding:NSUTF8StringEncoding];
-	if ([ApiClient sendActivityToServer:activityId withName:activityName withContents:binaryFileContents])
-	{
-		result = [self markAsSynchedToWeb:activityId];
-	}
-	else
-	{
-		NSLog(@"Failed to upload activity ID %@ to the server.", activityId);
-	}
-
-	// Remove the temp file.
-	BOOL tempFileDeleted = [FileUtils deleteFile:fileName];
-	if (!tempFileDeleted)
-	{
-		NSLog(@"Failed to delete temp file %@.", fileName);
-	}
-
-	return result;
-}
-
-- (BOOL)sendActivityToServer:(NSString*)activityId
-{
-	BOOL result = FALSE;
-
-	// Export the activity to a temp file.
-	NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
-
-	// Activity exported?
-	if (exportedFileName)
-	{
-		result = [self sendActivityFileToServer:activityId withFileName:exportedFileName];
-	}
-	else
-	{
-		NSLog(@"Error when exporting an activity to send to the server.");
-	}
-
-	return result;
-}
-
-- (void)handleHasActivityResponse:(NSNotification*)notification
-{
-	@try
-	{
-		NSDictionary* responseObj = [notification object];
-		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
-
-		// Valid response was received?
-		if (responseCode && [responseCode intValue] == 200)
-		{
-			NSError* error = nil;
-			NSDictionary* responseObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-
-			// Object was deserialized?
-			if (responseObjects)
-			{
-				NSNumber* code = [responseObjects objectForKey:@PARAM_CODE];
-				NSString* activityId = [responseObjects objectForKey:@PARAM_ACTIVITY_ID];
-
-				if (code && activityId)
-				{
-					switch ([code intValue])
-					{
-					case 0: // Server does not have activity
-						[self sendActivityToServer:activityId];
-						break;
-					case 1: // Server has activity, but the hash does not match.
-						break;
-					case 2: // Server has the activity and the hash is the same.
-						[self markAsSynchedToWeb:activityId];
-						break;
-					}
-				}
-			}
-		}
-	}
-	@catch (...)
-	{
-	}
-}
-
-void unsynchedActivitiesCallback(const char* const activityId, void* context)
-{
-	if (context)
-	{
-		NSMutableArray* activityIdList = (__bridge NSMutableArray*)context;
-		[activityIdList addObject:[[NSString alloc] initWithFormat:@"%s", activityId]];
-	}
-}
-
-- (void)sendMissingActivitiesToServer
-{
-	NSMutableArray* activityIds = [[NSMutableArray alloc] init];
-
-	// List activities that haven't been synched to the server.
-	if (RetrieveActivityIdsNotSynchedToWeb(unsynchedActivitiesCallback, (__bridge void*)activityIds))
-	{
-		// For each activity that isn't listed as being synced to the web, offer it to the web server.
-		for (NSString* activityId in activityIds)
-		{
-			char* activityHash = GetHashForActivityId([activityId UTF8String]);
-
-			if (activityHash)
-			{
-				// Ask the server if it wants this activity. Response is handled by handleHasActivityResponse.
-				[ApiClient serverHasActivity:activityId withHash:[[NSString alloc] initWithUTF8String:activityHash]];
-				free((void*)activityHash);
-			}
-		}
-	}
-}
-
-// Called when the broadcast manager has finished with an activity.
-- (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
-{
-	@try
-	{
-		NSString* activityId = [notification object];
-		[self markAsSynchedToWeb:activityId];
-	}
-	@catch (...)
-	{
-	}
-}
-
 #pragma mark methods for managing bike profiles
 
 - (BOOL)initializeBikeProfileList
@@ -2188,6 +1996,126 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	}
 }
 
+#pragma mark sync status methods
+
+- (BOOL)markAsSynchedToWeb:(NSString*)activityId
+{
+	return CreateActivitySync([activityId UTF8String], SYNC_DEST_WEB);
+}
+
+- (BOOL)markAsSynchedToICloudDrive:(NSString*)activityId
+{
+	return CreateActivitySync([activityId UTF8String], SYNC_DEST_ICLOUD_DRIVE);
+}
+
+// Callback used by retrieveSyncDestinationsForActivityId
+void syncStatusCallback(const char* const destination, void* context)
+{
+	if (context)
+	{
+		NSMutableArray* destList = (__bridge NSMutableArray*)context;
+
+		[destList addObject:[[NSString alloc] initWithFormat:@"%s", destination]];
+	}
+}
+
+- (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId
+{
+	NSMutableArray* destinations = [[NSMutableArray alloc] init];
+	
+	if (destinations)
+	{
+		RetrieveSyncDestinationsForActivityId([activityId UTF8String], syncStatusCallback, (__bridge void*)destinations);
+	}
+	return destinations;
+}
+
+- (void)handleHasActivityResponse:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* responseObj = [notification object];
+		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+
+		// Valid response was received?
+		if (responseCode && [responseCode intValue] == 200)
+		{
+			NSError* error = nil;
+			NSDictionary* responseObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+			// Object was deserialized?
+			if (responseObjects)
+			{
+				NSNumber* code = [responseObjects objectForKey:@PARAM_CODE];
+				NSString* activityId = [responseObjects objectForKey:@PARAM_ACTIVITY_ID];
+
+				if (code && activityId)
+				{
+					switch ([code intValue])
+					{
+					case 0: // Server does not have activity
+						[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_STRAEN_WEB];
+						break;
+					case 1: // Server has activity, but the hash does not match.
+						break;
+					case 2: // Server has the activity and the hash is the same.
+						[self markAsSynchedToWeb:activityId];
+						break;
+					}
+				}
+			}
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+void unsynchedActivitiesCallback(const char* const activityId, void* context)
+{
+	if (context)
+	{
+		NSMutableArray* activityIdList = (__bridge NSMutableArray*)context;
+		[activityIdList addObject:[[NSString alloc] initWithFormat:@"%s", activityId]];
+	}
+}
+
+- (void)sendMissingActivitiesToServer
+{
+	NSMutableArray* activityIds = [[NSMutableArray alloc] init];
+
+	// List activities that haven't been synched to the server.
+	if (RetrieveActivityIdsNotSynchedToWeb(unsynchedActivitiesCallback, (__bridge void*)activityIds))
+	{
+		// For each activity that isn't listed as being synced to the web, offer it to the web server.
+		for (NSString* activityId in activityIds)
+		{
+			char* activityHash = GetHashForActivityId([activityId UTF8String]);
+
+			if (activityHash)
+			{
+				// Ask the server if it wants this activity. Response is handled by handleHasActivityResponse.
+				[ApiClient serverHasActivity:activityId withHash:[[NSString alloc] initWithUTF8String:activityHash]];
+				free((void*)activityHash);
+			}
+		}
+	}
+}
+
+// Called when the broadcast manager has finished with an activity.
+- (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
+{
+	@try
+	{
+		NSString* activityId = [notification object];
+		[self markAsSynchedToWeb:activityId];
+	}
+	@catch (...)
+	{
+	}
+}
+
 #pragma mark methods for exporting activities
 
 - (BOOL)deleteFile:(NSString*)fileName
@@ -2216,27 +2144,57 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return FALSE;
 }
 
-- (NSString*)createExportDir
+- (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toServiceNamed:(NSString*)serviceName
 {
-	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString* exportDir = [[paths objectAtIndex: 0] stringByAppendingPathComponent:@"Export"];
-
-	if (![[NSFileManager defaultManager] fileExistsAtPath:exportDir])
+	if (self->cloudMgr)
 	{
-		NSError* error = nil;
-
-		if (![[NSFileManager defaultManager] createDirectoryAtPath:exportDir withIntermediateDirectories:NO attributes:nil error:&error])
-		{
-			return nil;
-		}
+		NSString* activityName = [self getActivityName:activityId];
+		return [self->cloudMgr uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName toServiceNamed:serviceName];
 	}
-	return exportDir;
+	return FALSE;
+}
+
+- (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service
+{
+	if (self->cloudMgr)
+	{
+		NSString* activityName = [self getActivityName:activityId];
+		return [self->cloudMgr uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName toService:service];
+	}
+	return FALSE;
+}
+
+- (BOOL)exportActivityToCloudService:(NSString*)activityId toService:(CloudServiceType)service
+{
+	BOOL result = FALSE;
+
+	// Export the activity to a temp file.
+	NSString* exportedFileName = [self exportActivityToTempFile:activityId withFileFormat:FILE_GPX];
+
+	// Activity exported?
+	if (exportedFileName)
+	{
+		result = [self exportActivityFileToCloudService:exportedFileName forActivityId:activityId toService:service];
+	}
+	else
+	{
+		NSLog(@"Error when exporting an activity to send to a cloud service.");
+	}
+
+	// Remove the temp file.
+	BOOL tempFileDeleted = [FileUtils deleteFile:exportedFileName];
+	if (!tempFileDeleted)
+	{
+		NSLog(@"Failed to delete temp file %@.", exportedFileName);
+	}
+
+	return result;
 }
 
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format
 {
 	NSString* exportFileName = nil;
-	NSString* exportDir = [self createExportDir];
+	NSString* exportDir = [ExportUtils createExportDir];
 
 	if (exportDir)
 	{
@@ -2269,7 +2227,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 - (NSString*)exportActivitySummary:(NSString*)activityType
 {	
 	NSString* exportFileName = nil;
-	NSString* exportDir = [self createExportDir];
+	NSString* exportDir = [ExportUtils createExportDir];
 
 	if (exportDir)
 	{
@@ -2286,7 +2244,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 - (void)clearExportDir
 {
-	NSString* exportDir = [self createExportDir];
+	NSString* exportDir = [ExportUtils createExportDir];
 
 	if (exportDir)
 	{
@@ -2388,6 +2346,7 @@ void tagCallback(const char* name, void* context)
 - (NSMutableArray*)getBikeNames
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
+
 	if (names)
 	{
 		if (InitializeBikeProfileList())
@@ -2411,6 +2370,7 @@ void tagCallback(const char* name, void* context)
 - (NSMutableArray*)getShoeNames
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
+
 	if (names)
 	{
 		if (InitializeShoeList())
@@ -2434,6 +2394,7 @@ void tagCallback(const char* name, void* context)
 - (NSMutableArray*)getIntervalWorkoutNamesAndIds
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
+
 	if (namesAndIds)
 	{
 		if (InitializeIntervalWorkoutList())
@@ -2459,6 +2420,7 @@ void tagCallback(const char* name, void* context)
 - (NSMutableArray*)getPacePlanNamesAndIds
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
+
 	if (namesAndIds)
 	{
 		if (InitializePacePlanList())
@@ -2490,6 +2452,7 @@ void activityTypeCallback(const char* type, void* context)
 - (NSMutableArray*)getActivityTypes
 {
 	NSMutableArray* types = [[NSMutableArray alloc] init];
+
 	if (types)
 	{
 		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
@@ -2506,6 +2469,7 @@ void attributeNameCallback(const char* name, void* context)
 - (NSMutableArray*)getCurrentActivityAttributes
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
+
 	if (names)
 	{
 		GetActivityAttributeNames(attributeNameCallback, (__bridge void*)names);
@@ -2739,7 +2703,7 @@ void attributeNameCallback(const char* name, void* context)
 - (NSString*)exportWorkoutWithId:(NSString*)workoutId
 {
 	NSString* exportFileName = nil;
-	NSString* exportDir = [self createExportDir];
+	NSString* exportDir = [ExportUtils createExportDir];
 
 	if (exportDir)
 	{
@@ -2834,14 +2798,9 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark cloud methods
 
-- (NSMutableArray*)listFileClouds
+- (NSMutableArray*)listCloudServices
 {
-	return [self->cloudMgr listFileClouds];
-}
-
-- (NSMutableArray*)listDataClouds
-{
-	return [self->cloudMgr listDataClouds];
+	return [self->cloudMgr listCloudServices];
 }
 
 - (NSString*)nameOfCloudService:(CloudServiceType)service

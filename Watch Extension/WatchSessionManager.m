@@ -49,20 +49,34 @@
 - (void)checkIfActivitiesAreUploaded
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-	size_t numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
+	size_t numHistoricalActivities = [extDelegate getNumHistoricalActivities];
 
+	// Only reload the historical activities list if we really have to as it's rather computationally expensive for something running on a watch.
+	if (numHistoricalActivities == 0)
+	{
+		numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
+	}
+
+	// Check each activity.
 	for (size_t i = 0; i < numHistoricalActivities; ++i)
 	{
-		NSString* hash = [extDelegate retrieveHashForActivityIndex:i];
+		NSString* activityId = [extDelegate getActivityIdFromActivityIndex:i];
 
-		if (hash)
+		// If it's already been synched then skip it. Otherwise, offer up the activity.
+		if (![extDelegate isSyncedToPhone:activityId])
 		{
-			NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
-									 hash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
-									 nil];
+			NSString* hash = [extDelegate retrieveHashForActivityId:activityId];
 
-			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
-		}
+			if (hash)
+			{
+				NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
+										 hash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
+										 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+										 nil];
+
+				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			}
+		} 
 	}
 }
 

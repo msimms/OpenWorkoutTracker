@@ -6,7 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <Foundation/Foundation.h>
-#import "DataCloud.h"
+#import "CloudService.h"
 
 typedef enum RunKeeperActivityType
 {
@@ -26,7 +26,7 @@ typedef enum RunKeeperActivityType
     RUNKEEPER_OTHER
 } RunKeeperActivityType;
 
-@interface RunKeeper : DataCloud
+@interface RunKeeper : CloudService
 {
 }
 
@@ -34,6 +34,7 @@ typedef enum RunKeeperActivityType
 
 - (id)init;
 - (BOOL)isLinked;
-- (BOOL)uploadActivity:(NSString*)activityId;
+- (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName;
+- (BOOL)uploadFile:(NSString*)fileName;
 
 @end

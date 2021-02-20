@@ -11,6 +11,7 @@
 #import "ActivityPreferences.h"
 #import "BtleDiscovery.h"
 #import "BroadcastManager.h"
+#import "CloudMgr.h"
 #import "Feature.h"
 #import "WatchHealthManager.h"
 #import "SensorMgr.h"
@@ -20,6 +21,7 @@
 {
 	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
 	BtleDiscovery*       btleSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
+	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs;
 	WatchSessionManager* watchSession; // Handles interactions between the watch and the phone
 #if !OMIT_BROADCAST
@@ -37,6 +39,10 @@
 // network monitoring methods
 
 - (BOOL)hasConnectivity;
+
+// controller methods for this application
+
+- (BOOL)isFeaturePresent:(Feature)feature;
 
 // broadcast methods
 
@@ -61,6 +67,7 @@
 - (BOOL)startActivityWithBikeName:(NSString*)bikeName;
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
+- (BOOL)deleteActivity:(NSString*)activityId;
 - (BOOL)startNewLap;
 - (ActivityAttributeType)queryLiveActivityAttribute:(NSString*)attributeName;
 
@@ -90,6 +97,7 @@
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
 - (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId;
 - (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId;
+- (NSString*)getActivityIdFromActivityIndex:(NSInteger)activityIndex;
 
 // retrieves or creates and retrieves the applications unique identifier
 
@@ -99,6 +107,7 @@
 
 - (BOOL)markAsSynchedToPhone:(NSString*)activityId;
 - (BOOL)markAsSynchedToWeb:(NSString*)activityId;
+- (BOOL)isSyncedToPhone:(NSString*)activityId;
 - (NSMutableArray*)retrieveSyncDestinationsForActivityId:(NSString*)activityId;
 
 // hash methods
@@ -106,7 +115,6 @@
 - (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
 - (NSString*)retrieveHashForActivityId:(NSString*)activityId;
-- (NSString*)retrieveHashForActivityIndex:(NSInteger)activityIndex;
 - (NSString*)retrieveActivityIdByHash:(NSString*)activityHash;
 
 // methods for managing the activity name
@@ -128,6 +136,12 @@
 // methods for managing pace plans
 
 - (void)createPacePlan:(NSString*)planId withPlanName:(NSString*)planName withTargetPaceInMinKm:(double)targetPaceInMinKm withTargetDistanceInKms:(double)targetDistanceInKms withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits withRoute:(NSString*)route;
+
+// methods for exporting activities
+
+- (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
+- (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service;
+- (BOOL)exportActivityToCloudService:(NSString*)activityId toService:(CloudServiceType)service;
 
 // reset methods
 
