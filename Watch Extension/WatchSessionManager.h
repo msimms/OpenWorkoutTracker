@@ -15,5 +15,6 @@
 }
 
 - (void)startWatchSession;
+- (void)sendActivity:(NSString*)activityId withHash:(NSString*)activityHash;
 
 @end

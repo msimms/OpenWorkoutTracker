@@ -142,6 +142,7 @@
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
 - (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service;
 - (BOOL)exportActivityToCloudService:(NSString*)activityId toService:(CloudServiceType)service;
+- (BOOL)exportActivityToPhone:(NSString*)activityId;
 
 // reset methods
 

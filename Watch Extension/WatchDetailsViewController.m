@@ -77,17 +77,27 @@
 {
 	WKAlertAction* yesAction = [WKAlertAction actionWithTitle:STR_YES style:WKAlertActionStyleDefault handler:^(void) {
 		ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+		BOOL success = FALSE;
 
 		if ([dest isEqualToString:@SYNC_DEST_PHONE])
 		{
+			success = [extDelegate exportActivityToPhone:self->activityId];
 		}
 		else if ([dest isEqualToString:@SYNC_DEST_WEB])
 		{
-			[extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_STRAEN_WEB];
+			success = [extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_STRAEN_WEB];
 		}
 		else if ([dest isEqualToString:@SYNC_DEST_ICLOUD_DRIVE])
 		{
-			[extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_ICLOUD_DRIVE];
+			success = [extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_ICLOUD_DRIVE];
+		}
+
+		if (!success)
+		{
+			WKAlertAction* okAction = [WKAlertAction actionWithTitle:STR_OK style:WKAlertActionStyleDefault handler:^(void) {
+			}];
+			NSArray* actions = @[okAction];
+			[self presentAlertControllerWithTitle:STR_ERROR message:STR_EXPORT_FAILED preferredStyle:WKAlertControllerStyleAlert actions:actions];
 		}
 	}];
 	WKAlertAction* noAction = [WKAlertAction actionWithTitle:STR_NO style:WKAlertActionStyleDefault handler:^(void) {

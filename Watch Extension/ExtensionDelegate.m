@@ -1004,6 +1004,18 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
+- (BOOL)exportActivityToPhone:(NSString*)activityId
+{
+	BOOL result = FALSE;
+
+	if (self->watchSession)
+	{
+		NSString* activityHash = [self retrieveHashForActivityId:activityId];
+		[self->watchSession sendActivity:activityId withHash:activityHash];
+	}
+	return result;
+}
+
 #pragma mark reset methods
 
 - (void)resetDatabase

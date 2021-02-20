@@ -2910,17 +2910,18 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 // Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
-- (void)checkForActivity:(NSString*)activityHash
+- (void)checkForActivity:(NSString*)activityId withHash:(NSString*)activityHash
 {
 	if (activityHash)
 	{
-		const char* activityId = GetActivityIdByHash([activityHash UTF8String]);
+		const char* ourActivityId = GetActivityIdByHash([activityHash UTF8String]);
 
-		if (activityId == NULL)
+		if (ourActivityId == NULL)
 		{
 			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 											@WATCH_MSG_REQUEST_ACTIVITY, @WATCH_MSG_TYPE,
 											activityHash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
+											activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
 											nil];
 
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
@@ -3126,7 +3127,8 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch app wants to know if we have an activity.
 		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-		[self checkForActivity:activityHash];
+		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
+		[self checkForActivity:activityId withHash:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
@@ -3176,7 +3178,8 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch app wants to know if we have an activity.
 		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-		[self checkForActivity:activityHash];
+		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
+		[self checkForActivity:activityId withHash:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{

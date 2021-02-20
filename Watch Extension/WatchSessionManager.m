@@ -123,11 +123,10 @@
 }
 
 // Sends the activity to the phone.
-- (void)sendActivity:(NSString*)activityHash
+- (void)sendActivity:(NSString*)activityId withHash:(NSString*)activityHash
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
-	NSString* activityId = [extDelegate retrieveActivityIdByHash:activityHash];
 	NSInteger activityIndex = [extDelegate getActivityIndexFromActivityId:activityId];
 	NSString* activityType = [extDelegate getHistoricalActivityType:activityIndex];
 
@@ -248,8 +247,9 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The phone app is requesting an activity.
+		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
 		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-		[self sendActivity:activityHash];
+		[self sendActivity:activityId withHash:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
@@ -302,8 +302,9 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The phone app is requesting an activity.
+		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
 		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-		[self sendActivity:activityHash];
+		[self sendActivity:activityId withHash:activityHash];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
