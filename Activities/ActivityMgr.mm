@@ -2886,7 +2886,6 @@ extern "C" {
 
 				if (value.valid)
 				{
-					UnitMgr::ConvertActivityAttributeToCustomaryUnits(value);
 					result = g_pDatabase->CreateSummaryData(g_pCurrentActivity->GetId(), attribute, value);
 				}
 			}
@@ -2933,10 +2932,14 @@ extern "C" {
 	bool IsActivityOrphaned(size_t* activityIndex)
 	{
 		bool result = false;
-
-		InitializeHistoricalActivityList();
-
 		size_t numActivities = GetNumHistoricalActivities();
+
+		if (numActivities == 0)
+		{
+			InitializeHistoricalActivityList();
+			numActivities = GetNumHistoricalActivities();
+		}
+
 		if (numActivities > 0)
 		{
 			time_t startTime = 0;
@@ -3039,10 +3042,14 @@ extern "C" {
 			std::string tempFileName = pDirName;
 			DataExporter exporter;
 
+			g_dbLock.lock();
+
 			if (exporter.ExportActivityFromDatabase(format, tempFileName, g_pDatabase, pActivity))
 			{
 				result = strdup(tempFileName.c_str());
 			}
+
+			g_dbLock.unlock();
 		}
 		return result;
 	}
