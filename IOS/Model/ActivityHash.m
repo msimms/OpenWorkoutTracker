@@ -54,67 +54,6 @@ void GpsDataHashCallback(const char* activityId, void* context)
 	}
 }
 
-void AccelDataHashCallback(const char* activityId, void* context)
-{
-	ActivityAttributeType xAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_X);
-	ActivityAttributeType yAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Y);
-	ActivityAttributeType zAxisValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_Z);
-
-	if (xAxisValue.valid && yAxisValue.valid && zAxisValue.valid)
-	{
-		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;
-
-		NSNumber* time = [NSNumber numberWithLongLong:xAxisValue.startTime];
-		NSNumber* xAxisValueNum = [NSNumber numberWithDouble:xAxisValue.value.doubleVal];
-		NSNumber* yAxisValueNum = [NSNumber numberWithDouble:yAxisValue.value.doubleVal];
-		NSNumber* zAxisValueNum = [NSNumber numberWithDouble:zAxisValue.value.doubleVal];
-
-		NSString* timeStr = [time stringValue];
-		NSString* xAxisValueStr = NumToFloatStringForHashing(xAxisValueNum);
-		NSString* yAxisValueStr = NumToFloatStringForHashing(yAxisValueNum);
-		NSString* zAxisValueStr = NumToFloatStringForHashing(zAxisValueNum);
-
-		CC_SHA512_Update(ctx, [timeStr UTF8String], (CC_LONG)[timeStr length]);
-		CC_SHA512_Update(ctx, [xAxisValueStr UTF8String], (CC_LONG)[xAxisValueStr length]);
-		CC_SHA512_Update(ctx, [yAxisValueStr UTF8String], (CC_LONG)[yAxisValueStr length]);
-		CC_SHA512_Update(ctx, [zAxisValueStr UTF8String], (CC_LONG)[zAxisValueStr length]);
-	}
-}
-
-void SensorDataHashCallback(const char* activityId, void* context, const char* attributeName)
-{
-	ActivityAttributeType sensorValue = QueryHistoricalActivityAttributeById(activityId, attributeName);
-
-	if (sensorValue.valid)
-	{
-		CC_SHA512_CTX* ctx = (CC_SHA512_CTX*)context;
-
-		NSNumber* time = [NSNumber numberWithLongLong:sensorValue.startTime];
-		NSNumber* sensorValueNum = [NSNumber numberWithDouble:sensorValue.value.doubleVal];
-
-		NSString* timeStr = [time stringValue];
-		NSString* sensorValueStr = [sensorValueNum stringValue];
-
-		CC_SHA512_Update(ctx, [timeStr UTF8String], (CC_LONG)[timeStr length]);
-		CC_SHA512_Update(ctx, [sensorValueStr UTF8String], (CC_LONG)[sensorValueStr length]);
-	}
-}
-
-void CadenceDataHashCallback(const char* activityId, void* context)
-{
-	SensorDataHashCallback(activityId, context, ACTIVITY_ATTRIBUTE_CADENCE);
-}
-
-void HeartRateDataHashCallback(const char* activityId, void* context)
-{
-	SensorDataHashCallback(activityId, context, ACTIVITY_ATTRIBUTE_HEART_RATE);
-}
-
-void PowerDataHashCallback(const char* activityId, void* context)
-{
-	SensorDataHashCallback(activityId, context, ACTIVITY_ATTRIBUTE_POWER);
-}
-
 - (NSString*)calculateWithActivityId:(NSString*)activityId
 {
 	CC_SHA512_CTX ctx;
@@ -131,15 +70,6 @@ void PowerDataHashCallback(const char* activityId, void* context)
 	// Hash the locations.
 	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, GpsDataHashCallback, (void*)&ctx);
 
-	// Hash the sensor data - accelerometer.
-	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_ACCELEROMETER, AccelDataHashCallback, (void*)&ctx);
-
-	// Hash the sensor data - heart rate.
-	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_HEART_RATE, HeartRateDataHashCallback, (void*)&ctx);
-	
-	// Hash the sensor data - power.
-	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_POWER, PowerDataHashCallback, (void*)&ctx);
-	
 	// Compute the hash.
 	uint8_t digest[CC_SHA512_DIGEST_LENGTH] = {0};
 	CC_SHA512_Final(digest, &ctx);

@@ -2057,9 +2057,9 @@ void syncStatusCallback(const char* const destination, void* context)
 					case 0: // Server does not have activity
 						[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_STRAEN_WEB];
 						break;
-					case 1: // Server has activity, but the hash does not match.
-						break;
-					case 2: // Server has the activity and the hash is the same.
+					case 1: // Server has the activity, but the hash has not been computed.
+					case 2: // Server has the activity, but the hash does not match.
+					case 3: // Server has the activity and the hash is the same.
 						[self markAsSynchedToWeb:activityId];
 						break;
 					}
