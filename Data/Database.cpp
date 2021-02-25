@@ -271,6 +271,8 @@ bool Database::CreateTables()
 	{
 		sql = "create table activity_summary (id integer primary key, activity_id text, attribute text, value double, start_time unsigned big int, end_time unsigned big int, value_type integer, measure_type integer, units integer, unique(activity_id, attribute) on conflict replace)";
 		queries.push_back(sql);
+		sql = "create index activity_summary_index on activity_summary (activity_id)";
+		queries.push_back(sql);
 	}
 	if (!DoesTableExist("activity_hash"))
 	{
