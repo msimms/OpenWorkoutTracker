@@ -10,7 +10,7 @@
 
 #import "ActivityPreferences.h"
 
-@interface WatchActivityViewController : WKInterfaceController
+@interface WatchActivityViewController : WKInterfaceController <WKCrownDelegate>
 {
 	IBOutlet __strong WKInterfaceButton* startStopButton;
 	IBOutlet __strong WKInterfaceButton* intervalsButton;
@@ -37,6 +37,7 @@
 	BOOL            isPopping; // Prevents us from redrawing if we're about to pop
 	NSString*       activityType; // Current activity type, cached here for performance reasons
 	BOOL            showBroadcastIcon; // TRUE if we should show an icon that represents the broadcast status
+	double          totalCrownDelta; // Aggregate movements of the watch crown, for starting and stopping activities without using the screen
 	ActivityPreferences* prefs; // Prefs object, cached here for performance reasons
 }
 

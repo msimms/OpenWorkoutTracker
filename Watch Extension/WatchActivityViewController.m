@@ -106,6 +106,11 @@
 	// Cache the preferences.
 	self->prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
 
+	// Setup to receive crown events.
+	self.crownSequencer.delegate = self;
+	[self.crownSequencer focus];
+	self->totalCrownDelta = (double)0.0;
+	
 	// Notification subscriptions.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
 
@@ -475,6 +480,24 @@
 			self->currentBroadcastStatus = status;
 		}
 	}
+}
+
+#pragma mark WKCrownSequencerDelegate methods
+
+- (void)crownDidRotate:(WKCrownSequencer*)crownSequencer 
+	   rotationalDelta:(double)rotationalDelta
+{
+	self->totalCrownDelta += rotationalDelta;
+
+	if ((self->totalCrownDelta > 0.9) || (self->totalCrownDelta < -0.9))
+	{
+		[self onStartStop];
+		self->totalCrownDelta = (double)0.0;
+	}
+}
+
+- (void)crownDidBecomeIdle:(WKCrownSequencer*)crownSequencer
+{
 }
 
 @end
