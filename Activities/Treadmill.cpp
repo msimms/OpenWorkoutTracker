@@ -74,3 +74,18 @@ bool Treadmill::ProcessFootPodReading(const SensorReading& reading)
 
 	return Activity::ProcessFootPodReading(reading);
 }
+
+void Treadmill::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
+{
+	Walk::ListUsableSensors(sensorTypes);
+	
+	// If the location sensor is in the list then remove it.
+	for (auto iter = sensorTypes.begin(); iter != sensorTypes.end(); ++iter)
+	{
+		if ((*iter) == SENSOR_TYPE_LOCATION)
+		{
+			sensorTypes.erase(iter);
+			break;
+		}
+	}
+}

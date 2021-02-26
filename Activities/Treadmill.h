@@ -19,6 +19,8 @@ public:
 	static std::string Type() { return ACTIVITY_TYPE_TREADMILL; };
 	virtual std::string GetType() const { return Treadmill::Type(); };
 
+	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
+
 protected:
 	virtual bool ProcessLocationReading(const SensorReading& reading);
 	virtual bool ProcessFootPodReading(const SensorReading& reading);
