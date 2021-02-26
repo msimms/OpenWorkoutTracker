@@ -12,7 +12,7 @@
             <objects>
                 <controller identifier="WatchAboutViewController" id="d9K-Wx-f3c" customClass="WatchAboutViewController">
                     <items>
-                        <label alignment="left" text="Copyright (c) 2020 by Michael J. Simms" textAlignment="center" numberOfLines="4" id="dJC-h1-7Wk"/>
+                        <label alignment="left" text="Copyright (c) 2021 by MJ Simms Software, LLC" textAlignment="center" numberOfLines="4" id="dJC-h1-7Wk"/>
                         <label alignment="left" text="Built on:" id="NTE-qx-o3z"/>
                     </items>
                     <connections>
