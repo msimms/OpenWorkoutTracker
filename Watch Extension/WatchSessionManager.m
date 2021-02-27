@@ -24,7 +24,7 @@
 	self->watchSession = [WCSession defaultSession];
 	self->watchSession.delegate = self;
 	[self->watchSession activateSession];
-	self->lastPhoneSync = 0;
+	self->timeOfLastPhoneMsg = 0;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 }
@@ -160,6 +160,7 @@
 		[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
 			[extDelegate markAsSynchedToPhone:activityId];
 			NSLog(@"Sent %@ to the phone.", activityId);
+			self->timeOfLastPhoneMsg = time(NULL); // Update the time that we last successfully talked to the phone.
 		} errorHandler:^(NSError* error) {
 			NSLog(@"Failed to send %@ to the phone.", activityId);
 		}];
@@ -190,14 +191,14 @@
 	if (session.reachable)
 	{
 		// Rate limit the server synchronizations. Let's not be spammy.
-		if (time(NULL) - self->lastPhoneSync > 60)
+		if (time(NULL) - self->timeOfLastPhoneMsg > 60)
 		{
 			[self sendRegisterDeviceMsg];
 			[self checkIfActivitiesAreUploaded];
 			[self requestIntervalWorkouts];
 			[self requestPacePlans];
 			
-			self->lastPhoneSync = time(NULL);
+			self->timeOfLastPhoneMsg = time(NULL);
 		}
 	}
 }
@@ -255,6 +256,8 @@
 	{
 		// The phone app is sending an activity.
 	}
+
+	self->timeOfLastPhoneMsg = time(NULL);
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
@@ -310,6 +313,8 @@
 	{
 		// The phone app is sending an activity.
 	}
+
+	self->timeOfLastPhoneMsg = time(NULL);
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveMessageData:(NSData*)messageData
