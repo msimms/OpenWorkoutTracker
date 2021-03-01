@@ -201,7 +201,9 @@ typedef enum SettingsSections
 
 - (void)discoveryDidRefresh
 {
-	[self->peripheralTableView reloadData];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self->peripheralTableView reloadData];
+	});
 }
 
 - (void)discoveryStatePoweredOff
@@ -384,6 +386,7 @@ typedef enum SettingsSections
 - (void)weightUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_SCALE_PERIPHERAL_OBJ];
@@ -404,6 +407,7 @@ typedef enum SettingsSections
 - (void)heartRateUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
@@ -424,6 +428,7 @@ typedef enum SettingsSections
 - (void)cadenceUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
@@ -444,9 +449,11 @@ typedef enum SettingsSections
 - (void)wheelSpeedUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		NSString* peripheral = [data objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+
 		if (peripheral)
 		{
 		}
@@ -456,6 +463,7 @@ typedef enum SettingsSections
 - (void)powerUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
@@ -476,6 +484,7 @@ typedef enum SettingsSections
 - (void)strideLengthUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
@@ -489,6 +498,7 @@ typedef enum SettingsSections
 - (void)runDistanceUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
+
 	if (data)
 	{
 		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
