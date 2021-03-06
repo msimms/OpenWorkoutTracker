@@ -163,7 +163,7 @@ extern "C" {
 	bool TrimActivityData(const char* const activityId, uint64_t newTime, bool fromStart);
 
 	// Functions for listing activity types.
-	void GetActivityTypes(ActivityTypeCallback callback, void* context);
+	void GetActivityTypes(ActivityTypeCallback callback, void* context, bool includeStrengthActivities, bool includeSwimActivities);
 
 	// Functions for listing attributes of the current activity.
 	void GetActivityAttributeNames(AttributeNameCallback callback, void* context);

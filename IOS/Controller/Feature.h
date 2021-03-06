@@ -15,6 +15,8 @@ typedef enum Feature
 	FEATURE_DROPBOX, // Exporting activities to Dropbox
 	FEATURE_STRAVA, // Exporting activities to Strava
 	FEATURE_RUNKEEPER, // Exporting activities to RunKeeper
+	FEATURE_STRENGTH_ACTIVITIES, // Enables strength-based activities
+	FEATURE_SWIM_ACTIVITIES, // Enables swimming activities
 } Feature;
 
 #endif

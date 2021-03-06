@@ -2269,7 +2269,29 @@ extern "C" {
 	// Functions for listing activity types.
 	//
 
-	void GetActivityTypes(ActivityTypeCallback callback, void* context)
+	bool IsNameOfStrengthActivity(const std::string& name)
+	{
+		if (name.compare(ACTIVITY_TYPE_CHINUP) == 0)
+			return true;
+		if (name.compare(ACTIVITY_TYPE_SQUAT) == 0)
+			return true;
+		if (name.compare(ACTIVITY_TYPE_PULLUP) == 0)
+			return true;
+		if (name.compare(ACTIVITY_TYPE_PUSHUP) == 0)
+			return true;
+		return false;
+	}
+
+	bool IsNameOfSwimActivity(const std::string& name)
+	{
+		if (name.compare(ACTIVITY_TYPE_OPEN_WATER_SWIMMING) == 0)
+			return true;
+		if (name.compare(ACTIVITY_TYPE_POOL_SWIMMING) == 0)
+			return true;
+		return false;
+	}
+
+	void GetActivityTypes(ActivityTypeCallback callback, void* context, bool includeStrengthActivities, bool includeSwimActivities)
 	{
 		if (g_pActivityFactory)
 		{
@@ -2277,7 +2299,23 @@ extern "C" {
 
 			for (auto iter = activityTypes.begin(); iter != activityTypes.end(); ++iter)
 			{
-				callback((*iter).c_str(), context);
+				const std::string& activityType = (*iter);
+
+				bool isStrength = IsNameOfStrengthActivity(activityType);
+				bool isSwim = IsNameOfSwimActivity(activityType);
+
+				if (isStrength && includeStrengthActivities)
+				{
+					callback(activityType.c_str(), context);
+				}
+				else if (isSwim && includeSwimActivities)
+				{
+					callback(activityType.c_str(), context);
+				}
+				else if (!(isStrength || isSwim))
+				{
+					callback(activityType.c_str(), context);
+				}
 			}
 		}
 	}

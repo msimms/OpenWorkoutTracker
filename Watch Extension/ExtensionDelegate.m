@@ -541,6 +541,18 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 			return FALSE;
 		case FEATURE_RUNKEEPER:
 			return FALSE;
+		case FEATURE_STRENGTH_ACTIVITIES:
+#if OMIT_STRENGTH_ACTIVITIES
+			return FALSE;
+#else
+			return TRUE;
+#endif
+		case FEATURE_SWIM_ACTIVITIES:
+#if OMIT_SWIM_ACTIVITIES
+			return FALSE;
+#else
+			return TRUE;
+#endif
 	}
 	return TRUE;
 }
@@ -795,7 +807,7 @@ void activityTypeCallback(const char* type, void* context)
 - (NSMutableArray*)getActivityTypes
 {
 	NSMutableArray* types = [[NSMutableArray alloc] init];
-	GetActivityTypes(activityTypeCallback, (__bridge void*)types);
+	GetActivityTypes(activityTypeCallback, (__bridge void*)types, [self isFeaturePresent:FEATURE_STRENGTH_ACTIVITIES], [self isFeaturePresent:FEATURE_SWIM_ACTIVITIES]);
 	return types;
 }
 

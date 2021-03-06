@@ -280,6 +280,18 @@ typedef enum MsgDestinationType
 			return FALSE;
 		case FEATURE_RUNKEEPER:
 			return FALSE;
+		case FEATURE_STRENGTH_ACTIVITIES:
+#if OMIT_STRENGTH_ACTIVITIES
+			return FALSE;
+#else
+			return TRUE;
+#endif
+		case FEATURE_SWIM_ACTIVITIES:
+#if OMIT_SWIM_ACTIVITIES
+			return FALSE;
+#else
+			return TRUE;
+#endif
 	}
 	return TRUE;
 }
@@ -298,6 +310,10 @@ typedef enum MsgDestinationType
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_STRAVA];
 		case FEATURE_RUNKEEPER:
 			return [self isFeaturePresent:feature] && [self->cloudMgr isLinked:CLOUD_SERVICE_RUNKEEPER];
+		case FEATURE_STRENGTH_ACTIVITIES:
+			return [self isFeaturePresent:feature];
+		case FEATURE_SWIM_ACTIVITIES:
+			return [self isFeaturePresent:feature];
 	}
 	return TRUE;
 }
@@ -2455,7 +2471,7 @@ void activityTypeCallback(const char* type, void* context)
 
 	if (types)
 	{
-		GetActivityTypes(activityTypeCallback, (__bridge void*)types);
+		GetActivityTypes(activityTypeCallback, (__bridge void*)types, [self isFeatureEnabled:FEATURE_STRENGTH_ACTIVITIES], [self isFeatureEnabled:FEATURE_SWIM_ACTIVITIES]);
 	}
 	return types;
 }

@@ -17,3 +17,9 @@
 
 // When set to TRUE, this adds a section to the summary view that shows activity id, hash, etc.
 #define SHOW_DEBUG_INFO TRUE
+
+// When set to TRUE, this removes the ability to do strength-based activities.
+#define OMIT_STRENGTH_ACTIVITIES FALSE
+
+// When set to TRUE, this removes the ability to do track swimming activities.
+#define OMIT_SWIM_ACTIVITIES TRUE
