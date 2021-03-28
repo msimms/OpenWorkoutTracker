@@ -1832,6 +1832,21 @@ void startSensorCallback(SensorType type, void* context)
 	FreeHistoricalActivityList();
 }
 
+#pragma mark methods for listing locations from the current activity.
+
+- (BOOL)getCurrentActivityPoint:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude
+{
+	Coordinate coordinate;
+
+	if (GetCurrentActivityPoint(pointIndex, &coordinate))
+	{
+		(*latitude) = coordinate.latitude;
+		(*longitude) = coordinate.longitude;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 #pragma mark hash methods
 
 - (NSString*)getActivityHash:(NSString*)activityId

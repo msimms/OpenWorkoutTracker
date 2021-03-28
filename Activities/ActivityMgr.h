@@ -146,7 +146,6 @@ extern "C" {
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex);
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
 	ActivityAttributeType QueryHistoricalActivityAttributeById(const char* activityId, const char* const attributeName);
-	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
 	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex);
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex);
 	size_t GetNumHistoricalActivities(void);
@@ -155,9 +154,12 @@ extern "C" {
 	bool IsHistoricalActivityFootBased(size_t activityIndex);
 
 	// Functions for accessing historical location data.
+	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
 	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context);
 	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate);
-	bool GetActivityPoint(size_t pointIndex, Coordinate* const coordinate);
+
+	// Functions for listing locations from the current activity.
+	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate);
 
 	// Functions for modifying historical activity.
 	bool TrimActivityData(const char* const activityId, uint64_t newTime, bool fromStart);

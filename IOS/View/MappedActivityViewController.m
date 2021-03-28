@@ -156,6 +156,8 @@
 	[super initializeLabelText];
 	[super initializeLabelColor];
 
+	[self drawExistingRoute];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 }
 
@@ -183,7 +185,6 @@
 {
 	[super prepareForSegue:segue sender:sender];
 }
-
 
 #pragma mark overriden methods from the parent class
 
@@ -222,6 +223,44 @@
 }
 
 #pragma mark location handling methods
+
+- (void)drawExistingRoute
+{	
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	size_t pointIndex = 0;
+	double latitude = (double)0.0;
+	double longitude = (double)0.0;
+
+	while ([appDelegate getCurrentActivityPoint:pointIndex++ withLatitude:&latitude withLongitude:&longitude])
+	{
+		CLLocation* location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+		[self addNewLocation:location];
+	}
+}
+
+- (void)addLocationsAlreadyRecorded
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSString* activityId = [appDelegate getCurrentActivityId];
+
+	size_t numExistingPoints = [appDelegate getNumHistoricalActivityLocationPoints:activityId];
+	if (numExistingPoints > 0)
+	{
+		for (size_t pointIndex = 0; pointIndex < numExistingPoints; ++pointIndex)
+		{
+			double latitude = (double)0.0;
+			double longitude = (double)0.0;
+			double altitude = (double)0.0;
+			time_t timestamp = 0;
+
+			[appDelegate getHistoricalActivityLocationPoint:activityId withPointIndex:pointIndex withLatitude:&latitude withLongitude:&longitude withAltitude:&altitude withTimestamp:&timestamp];
+
+			CLLocation* newLocation = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+			[self addNewLocation:newLocation];
+		}
+	}
+}
 
 - (void)locationUpdated:(NSNotification*)notification
 {

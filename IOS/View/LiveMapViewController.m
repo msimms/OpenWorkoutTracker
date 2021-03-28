@@ -79,14 +79,16 @@
 
 - (void)drawExistingRoute
 {	
-	size_t pointIndex = 0;
-	Coordinate coordinate;
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	while (GetActivityPoint(pointIndex, &coordinate))
+	size_t pointIndex = 0;
+	double latitude = (double)0.0;
+	double longitude = (double)0.0;
+
+	while ([appDelegate getCurrentActivityPoint:pointIndex++ withLatitude:&latitude withLongitude:&longitude])
 	{
-		CLLocation* location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+		CLLocation* location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
 		[self addNewLocation:location];
-		++pointIndex;
 	}
 }
 

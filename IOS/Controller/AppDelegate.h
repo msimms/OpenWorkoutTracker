@@ -167,6 +167,10 @@
 - (void)deleteActivity:(NSString*)activityId;
 - (void)freeHistoricalActivityList;
 
+// methods for listing locations from the current activity.
+
+- (BOOL)getCurrentActivityPoint:(size_t)pointIndex withLatitude:(double*)latitude withLongitude:(double*)longitude;
+
 // hash methods
 
 - (NSString*)getActivityHash:(NSString*)activityId;

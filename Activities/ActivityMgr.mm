@@ -2073,18 +2073,6 @@ extern "C" {
 		return QueryHistoricalActivityAttribute(activityIndex, pAttributeName);
 	}
 
-	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex)
-	{
-		size_t result = 0;
-
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
-		{
-			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
-			result = summary.locationPoints.size();
-		}
-		return result;
-	}
-
 	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex)
 	{
 		size_t result = 0;
@@ -2169,6 +2157,18 @@ extern "C" {
 	// Functions for accessing historical routes.
 	//
 
+	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex)
+	{
+		size_t result = 0;
+
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+			result = summary.locationPoints.size();
+		}
+		return result;
+	}
+
 	// Added this function as a performance optimization for when you just need the location data and don't need
 	// to recreate the entire Activity object, etc. Useful on the Apple Watch since it isn't very powerful.
 	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context)
@@ -2200,6 +2200,7 @@ extern "C" {
 				if (pointIndex < summary.locationPoints.size())
 				{
 					SensorReading& reading = summary.locationPoints.at(pointIndex);
+
 					coordinate->latitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE);
 					coordinate->longitude  = reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE);
 					coordinate->altitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE);
@@ -2211,7 +2212,11 @@ extern "C" {
 		return result;
 	}
 
-	bool GetActivityPoint(size_t pointIndex, Coordinate* const coordinate)
+	//
+	// Functions for listing locations from the current activity.
+	//
+
+	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate)
 	{
 		bool result = false;
 		
