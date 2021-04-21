@@ -5,6 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#import <TargetConditionals.h>
+
 #include "ActivityFactory.h"
 #include "GForceAnalyzerFactory.h"
 
@@ -41,11 +43,17 @@ std::vector<std::string> ActivityFactory::ListActivityTypes()
 	types.push_back(OpenWaterSwim::Type());
 //	types.push_back(PoolSwim::Type());
 	types.push_back(PullUp::Type());
+	// We're not getting good enough accelerometer data from the wrist for pushups detection to work.
+#if !TARGET_OS_WATCH
 	types.push_back(PushUp::Type());
+#endif
 	types.push_back(Run::Type());
 	types.push_back(Squat::Type());
+	// Need external sensors for these to work on the watch.
+#if !TARGET_OS_WATCH
 	types.push_back(StationaryCycling::Type());
 	types.push_back(Treadmill::Type());
+#endif
 	types.push_back(Walk::Type());
 	std::sort(types.begin(), types.end());
 	return types;
