@@ -171,6 +171,7 @@
 		275CACB225E05F56000727AE /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
 		275CACB625E05F59000727AE /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
 		275CACBA25E05F5D000727AE /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFB1AA16A41008F55AF /* iCloud.m */; };
+		27621C9B2641BC6C00F1C86F /* FitFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27621C8D2641BC6C00F1C86F /* FitFileWriter.cpp */; };
 		276526CE25B8DA32003AA2D5 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */; };
 		276526E325BB9345003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
 		276526E725BB9353003AA2D5 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276526E125BB9345003AA2D5 /* Signals.cpp */; };
@@ -618,6 +619,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2702470A2612B4F300558380 /* TrainingIntensityDistType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingIntensityDistType.h; path = Activities/TrainingIntensityDistType.h; sourceTree = SOURCE_ROOT; };
 		27047174216D996F00EE47FF /* Distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Distance.h; path = LibMath/cpp/Distance.h; sourceTree = SOURCE_ROOT; };
 		27047175216D997000EE47FF /* Statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Statistics.cpp; path = LibMath/cpp/Statistics.cpp; sourceTree = SOURCE_ROOT; };
 		27047176216D997000EE47FF /* Peaks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Peaks.h; path = LibMath/cpp/Peaks.h; sourceTree = SOURCE_ROOT; };
@@ -682,6 +684,8 @@
 		275CAC7325DF2B48000727AE /* ExportUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportUtils.m; path = IOS/Utilities/ExportUtils.m; sourceTree = SOURCE_ROOT; };
 		275CAC8F25E03915000727AE /* StraenWeb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StraenWeb.h; path = Cloud/StraenWeb/StraenWeb.h; sourceTree = SOURCE_ROOT; };
 		275CAC9025E03915000727AE /* StraenWeb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StraenWeb.m; path = Cloud/StraenWeb/StraenWeb.m; sourceTree = SOURCE_ROOT; };
+		27621C8D2641BC6C00F1C86F /* FitFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FitFileWriter.cpp; path = FileLib/FitFileWriter.cpp; sourceTree = SOURCE_ROOT; };
+		27621C9A2641BC6C00F1C86F /* FitFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FitFileWriter.h; path = FileLib/FitFileWriter.h; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
 		2764E28D2158736B007A1419 /* CommonViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonViewController.h; path = IOS/View/CommonViewController.h; sourceTree = SOURCE_ROOT; };
 		276526CC25B8DA32003AA2D5 /* WorkoutScheduler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutScheduler.cpp; path = Activities/WorkoutScheduler.cpp; sourceTree = SOURCE_ROOT; };
@@ -1341,6 +1345,8 @@
 				2797F17519BFE48E008F8672 /* File.cpp */,
 				2797F17619BFE48E008F8672 /* File.h */,
 				2797F17719BFE48E008F8672 /* FileFormat.h */,
+				27621C8D2641BC6C00F1C86F /* FitFileWriter.cpp */,
+				27621C9A2641BC6C00F1C86F /* FitFileWriter.h */,
 				2797F17819BFE48E008F8672 /* GpxFileReader.cpp */,
 				2797F17919BFE48E008F8672 /* GpxFileReader.h */,
 				2797F17A19BFE48E008F8672 /* GpxFileWriter.cpp */,
@@ -1733,6 +1739,7 @@
 				27F4240623A44D4A00F59F50 /* Swim.cpp */,
 				27F4240723A44D4A00F59F50 /* Swim.h */,
 				273F732B25AF274000484A29 /* SyncDestination.h */,
+				2702470A2612B4F300558380 /* TrainingIntensityDistType.h */,
 				2768E51823A0241200DD06E9 /* TrainingPaceType.h */,
 				2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */,
 				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,
@@ -2255,6 +2262,7 @@
 				27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */,
 				27C0845C19BFD063007CE934 /* PushUp.cpp in Sources */,
 				2741B53125D22D2A00A43A63 /* StrainCalculator.cpp in Sources */,
+				27621C9B2641BC6C00F1C86F /* FitFileWriter.cpp in Sources */,
 				27B7CD3219BFD8AC000383E3 /* AppDelegate.m in Sources */,
 				27CF013224DAF68700263CEC /* BtleLight.m in Sources */,
 				2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */,

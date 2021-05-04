@@ -198,6 +198,11 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 
 				if (writer.StartLap(lapStartTimeMs))
 				{
+					// The TCX requires TotalTimeSeconds, DistanceMeters, and Calories for each lap.
+					writer.StoreLapSeconds(0);					
+					writer.StoreLapDistance(0);					
+					writer.StoreLapCalories(0);					
+					
 					if (writer.StartTrack())
 					{
 						while ((coordinateIter != coordinateList.end()) && (distanceIter != distanceList.end()))
@@ -321,9 +326,26 @@ bool DataExporter::ExportActivityFromDatabaseToGpx(const std::string& fileName, 
 
 		if (writer.StartTrack())
 		{
-			std::string activityName = "Untitled";
-			pDatabase->RetrieveActivityName(activityId, activityName);
-			writer.WriteName(activityName);
+			ActivitySummary summary;
+
+			if (pDatabase->RetrieveActivity(activityId, summary))
+			{
+				// Write the activity name or Untitled if it isn't set.
+				if (summary.name.size() == 0)
+				{
+					writer.WriteName("Untitled");				
+				}
+				else
+				{
+					writer.WriteName(summary.name);
+				}
+
+				// Write the activity type.
+				if (summary.type.size() > 0)
+				{
+					writer.WriteName(summary.type);
+				}
+			}
 
 			do
 			{
@@ -617,6 +639,9 @@ std::string DataExporter::GenerateFileName(FileFormat format, const std::string&
 		case FILE_ZWO:
 			fileName.append(".zwo");
 			break;
+		case FILE_FIT:
+			fileName.append(".fit");
+			break;
 		default:
 			break;
 	}
@@ -654,6 +679,9 @@ std::string DataExporter::GenerateFileName(FileFormat format, time_t startTime, 
 		case FILE_ZWO:
 			fileName.append(".zwo");
 			break;
+		case FILE_FIT:
+			fileName.append(".fit");
+			break;
 		default:
 			break;
 	}
@@ -681,6 +709,9 @@ bool DataExporter::ExportActivityFromDatabase(FileFormat format, std::string& fi
 			case FILE_CSV:
 				return ExportActivityFromDatabaseToCsv(fileName, pDatabase, pActivity);
 			case FILE_ZWO:
+				return false;
+			case FILE_FIT:
+				return false;
 			default:
 				return false;
 		}
@@ -706,6 +737,9 @@ bool DataExporter::ExportActivityUsingCallbackData(FileFormat format, std::strin
 		case FILE_CSV:
 			return false;
 		case FILE_ZWO:
+			return false;
+		case FILE_FIT:
+			return false;
 		default:
 			return false;
 	}
