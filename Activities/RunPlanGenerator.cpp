@@ -307,7 +307,7 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 	return workout;
 }
 
-std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
+std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingIntensityDistType trainingIntensityDist)
 {
 	std::vector<Workout*> workouts;
 

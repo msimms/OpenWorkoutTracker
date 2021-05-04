@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "TrainingIntensityDistType.h"
 #include "Workout.h"
 
 class RunPlanGenerator
@@ -20,7 +21,7 @@ public:
 	RunPlanGenerator();
 	virtual ~RunPlanGenerator();
 
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
+	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingIntensityDistType trainingIntensityDist);
 	
 private:
 	uint64_t m_easyDistanceTotalMeters; // Total weekly meters spent running easy

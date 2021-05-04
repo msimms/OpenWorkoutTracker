@@ -13,6 +13,7 @@
 #include "GoalType.h"
 #include "Run.h"
 #include "RunPlanGenerator.h"
+#include "TrainingIntensityDistType.h"
 #include "TrainingPaceCalculator.h"
 #include "UnitMgr.h"
 #include "WorkoutPlanInputs.h"
@@ -187,8 +188,9 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 {
 	RunPlanGenerator runGen;
 	BikePlanGenerator bikeGen;
+	TrainingIntensityDistType trainingIntensityDist = TRAINING_INTENSITY_DIST_TYPE_POLARIZED;
 
-	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs);
 	std::vector<Workout*> workouts;
 
