@@ -1114,7 +1114,7 @@ void startSensorCallback(SensorType type, void* context)
 				NSString* workoutId = [workoutDict objectForKey:@PARAM_WORKOUT_ID];
 				NSString* workoutTypeStr = [workoutDict objectForKey:@PARAM_WORKOUT_WORKOUT_TYPE];
 				NSString* sportType = [workoutDict objectForKey:@PARAM_WORKOUT_SPORT_TYPE];
-				NSNumber* estimatedStrainScore = [workoutDict objectForKey:@PARAM_WORKOUT_ESTIMATED_STRAIN];
+				NSNumber* estimatedIntensityScore = [workoutDict objectForKey:@PARAM_WORKOUT_ESTIMATED_STRAIN];
 				NSNumber* scheduledTime = [workoutDict objectForKey:@PARAM_WORKOUT_SCHEDULED_TIME];
 				NSDictionary* warmup = [workoutDict objectForKey:@PARAM_WORKOUT_WARMUP];
 				NSDictionary* cooldown = [workoutDict objectForKey:@PARAM_WORKOUT_COOLDOWN];
@@ -1123,7 +1123,7 @@ void startSensorCallback(SensorType type, void* context)
 				WorkoutType workoutType = WorkoutTypeStrToEnum([workoutTypeStr UTF8String]);
 
 				// Create the workout.
-				if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedStrainScore doubleValue], [scheduledTime intValue]))
+				if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedIntensityScore doubleValue], [scheduledTime intValue]))
 				{
 					NSArray* intervals = [workoutDict objectForKey:@PARAM_WORKOUT_INTERVALS];
 

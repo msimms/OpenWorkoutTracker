@@ -771,7 +771,7 @@ bool Database::CreateWorkout(const Workout& workout)
 		sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 2, workout.GetType());
 		sqlite3_bind_text(statement, 3, workout.GetSport().c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 4, workout.GetEstimatedStrainScore());
+		sqlite3_bind_double(statement, 4, workout.GetEstimatedIntensityScore());
 		sqlite3_bind_int64(statement, 5, workout.GetScheduledTime());
 		result = sqlite3_step(statement) == SQLITE_DONE;
 		sqlite3_finalize(statement);
@@ -809,7 +809,7 @@ bool Database::RetrieveWorkout(const std::string& workoutId, Workout& workout)
 			workout.SetId(workoutId);
 			workout.SetSport(sport);
 			workout.SetType(workoutType);
-			workout.SetEstimatedStrainScore(estimatedStress);
+			workout.SetEstimatedIntensityScore(estimatedStress);
 			workout.SetScheduledTime(scheduledTime);
 
 			// Retrieve the intervals too.
@@ -838,14 +838,14 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 			workoutId.append((const char*)sqlite3_column_text(statement, 0));
 			WorkoutType workoutType = (WorkoutType)sqlite3_column_int64(statement, 1);
 			sport.append((const char*)sqlite3_column_text(statement, 2));
-			double estimatedStress = (double)sqlite3_column_double(statement, 3);
+			double estimatedIntensity = (double)sqlite3_column_double(statement, 3);
 			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 4);
 
 			Workout workoutObj;
 			workoutObj.SetId(workoutId);
 			workoutObj.SetSport(sport);
 			workoutObj.SetType(workoutType);
-			workoutObj.SetEstimatedStrainScore(estimatedStress);
+			workoutObj.SetEstimatedIntensityScore(estimatedIntensity);
 			workoutObj.SetScheduledTime(scheduledTime);
 
 			// Retrieve the intervals too.

@@ -449,7 +449,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Calculate the total stress for each workout.
 	for (auto workoutIter = workouts.begin(); workoutIter != workouts.end(); ++workoutIter)
 	{
-		(*workoutIter)->CalculateEstimatedStrainScore(functionalThresholdPace);
+		(*workoutIter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
 	}
 
 	return workouts;

@@ -2510,7 +2510,7 @@ extern "C" {
 		return WORKOUT_INDEX_UNKNOWN;
 	}
 
-	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedStrainScore, time_t scheduledTime)
+	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime)
 	{
 		bool result = false;
 
@@ -2523,7 +2523,7 @@ extern "C" {
 			workout.SetId(workoutId);
 			workout.SetType(type);
 			workout.SetSport(sport);
-			workout.SetEstimatedStrainScore(estimatedStrainScore);
+			workout.SetEstimatedIntensityScore(estimatedIntensityScore);
 			workout.SetScheduledTime(scheduledTime);
 
 			result = g_pDatabase->CreateWorkout(workout);

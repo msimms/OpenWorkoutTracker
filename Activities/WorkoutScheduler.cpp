@@ -35,7 +35,7 @@ double WorkoutScheduler::ScoreSchedule(Workout* week[7])
 
 		if (day)
 		{
-			dailyStressScores[dayIndex] = day->GetEstimatedStrainScore();
+			dailyStressScores[dayIndex] = day->GetEstimatedIntensityScore();
 		}
 	}
 
