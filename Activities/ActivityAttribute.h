@@ -87,6 +87,8 @@
 #define ACTIVITY_ATTRIBUTE_CALORIES_BURNED            "Calories"                // total calories burned
 #define ACTIVITY_ATTRIBUTE_SPLIT_TIME                 "Split Time "             // "Split Time KM 1", "Split Time Mile 1", etc.
 #define ACTIVITY_ATTRIBUTE_LAP_TIME                   "Lap Time "               // "Lap Time 1", etc.
+#define ACTIVITY_ATTRIBUTE_LAP_DISTANCE               "Lap Distance "           // "Lap Distance 1", etc.
+#define ACTIVITY_ATTRIBUTE_LAP_CALORIES               "Lap Calories "           // "Lap Calories 1", etc.
 #define ACTIVITY_ATTRIBUTE_GRAPH_PEAK                 "Graph Peak "             // "Graph Peak 1", etc.
 #define ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME           "Current Lap Time"        //
 #define ACTIVITY_ATTRIBUTE_CURRENT_LAP_NUMBER         "Current Lap Num"         //

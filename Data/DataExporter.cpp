@@ -181,6 +181,7 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 			uint64_t lapEndTimeMs = 0;
 
 			bool done = false;
+			uint16_t lapNum = 1;
 
 			writer.WriteId((time_t)(lapStartTimeMs / 1000));
 
@@ -199,9 +200,15 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 				if (writer.StartLap(lapStartTimeMs))
 				{
 					// The TCX requires TotalTimeSeconds, DistanceMeters, and Calories for each lap.
-					writer.StoreLapSeconds(0);					
-					writer.StoreLapDistance(0);					
-					writer.StoreLapCalories(0);					
+					std::string attributeName = ACTIVITY_ATTRIBUTE_LAP_TIME + std::to_string(lapNum);
+					ActivityAttributeType attr = pActivity->QueryActivityAttribute(attributeName);
+					writer.StoreLapSeconds((uint64_t)attr.value.timeVal);
+					attributeName = ACTIVITY_ATTRIBUTE_LAP_DISTANCE + std::to_string(lapNum);
+					attr = pActivity->QueryActivityAttribute(attributeName);
+					writer.StoreLapDistance(attr.value.doubleVal);
+					attributeName = ACTIVITY_ATTRIBUTE_LAP_CALORIES + std::to_string(lapNum);
+					attr = pActivity->QueryActivityAttribute(attributeName);
+					writer.StoreLapCalories(attr.value.doubleVal);					
 					
 					if (writer.StartTrack())
 					{
@@ -269,6 +276,7 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 				if (lapIter != lapList.end())
 				{
 					lapIter++;
+					lapNum++;
 				}
 
 			} while (!done);

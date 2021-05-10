@@ -23,7 +23,9 @@ typedef struct TimeDistancePair
 
 typedef struct LapSummary
 {
-	uint64_t startTimeMs;
+	uint64_t startTimeMs; // Start time for the lap
+	double   startingDistanceMeters; // Starting distance for the lap
+	double   startingCalorieCount; // Starting calorie count for the lap
 } LapSummary;
 
 typedef std::vector<Coordinate>       CoordinateList;
@@ -44,7 +46,6 @@ public:
 
 	virtual void StartNewLap();
 	virtual void SetLaps(const LapSummaryList& laps) { m_laps = laps; };
-	virtual uint64_t GetCurrentLapStartTime();
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 

@@ -2899,10 +2899,18 @@ extern "C" {
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
 
+			// Laps are only meaningful for moving activities.
 			if (pMovingActivity)
 			{
 				pMovingActivity->StartNewLap();
-				result = g_pDatabase->CreateNewLap(g_pCurrentActivity->GetId(), pMovingActivity->GetCurrentLapStartTime());
+
+				// Write it to the database so we can recall it easily.
+				const LapSummaryList& laps = pMovingActivity->GetLaps();
+				if (laps.size() > 0)
+				{
+					const LapSummary& lap = laps.at(laps.size() - 1);
+					result = g_pDatabase->CreateLap(g_pCurrentActivity->GetId(), lap);
+				}
 			}
 		}
 

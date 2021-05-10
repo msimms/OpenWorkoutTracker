@@ -79,18 +79,11 @@ MovingActivity::~MovingActivity()
 
 void MovingActivity::StartNewLap()
 {
-	uint64_t currentTimeMs = CurrentTimeInMs();
-
 	LapSummary summary;
-	summary.startTimeMs = currentTimeMs;
+	summary.startTimeMs = CurrentTimeInMs(); // Start time for the new lap
+	summary.startingDistanceMeters = DistanceTraveledInMeters(); // Starting distance for the new lap
+	summary.startingCalorieCount = CaloriesBurned(); // Starting calorie count for the new lap
 	m_laps.push_back(summary);
-}
-
-uint64_t MovingActivity::GetCurrentLapStartTime()
-{
-	if (m_laps.size() > 0)
-		return m_laps.at(m_laps.size() - 1).startTimeMs;
-	return 0;
 }
 
 void MovingActivity::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
@@ -887,21 +880,55 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		size_t lapNum = (size_t)strtoull(attributeName.c_str() + strlen(ACTIVITY_ATTRIBUTE_LAP_TIME), NULL, 0);
 		result.valueType = TYPE_TIME;
 		result.measureType = MEASURE_TIME;
-		if (lapNum == 1)
+		result.valid = false;
+		if (lapNum > 0) // Lap numbers start from one
 		{
-			if (m_laps.size() >= 1)
-				result.value.timeVal = (time_t)((m_laps.at(0).startTimeMs / 1000) - GetStartTimeSecs());
-			else
-				result.value.timeVal = GetEndTimeSecs() - GetStartTimeSecs();
-			result.valid = true;
-		}
-		else if (m_laps.size() >= (lapNum - 1))
-		{
-			if (lapNum > m_laps.size())
-				result.value.timeVal = (time_t)(GetEndTimeSecs() - (m_laps.at(m_laps.size() - 1).startTimeMs / 1000));
-			else
+			if (lapNum == 1)
+			{
+				if (m_laps.size() == 0)
+					result.value.timeVal = GetEndTimeSecs() - GetStartTimeSecs();
+				else
+					result.value.timeVal = (time_t)((m_laps.at(0).startTimeMs - GetStartTimeMs()) / 1000);
+				result.valid = true;
+			}
+			else if (lapNum <= m_laps.size())
+			{
 				result.value.timeVal = (time_t)((m_laps.at(lapNum - 1).startTimeMs - m_laps.at(lapNum - 2).startTimeMs) / 1000);
-			result.valid = true;
+				result.valid = true;
+			}
+			else if (lapNum == m_laps.size() + 1)
+			{
+				result.value.timeVal = (time_t)(GetEndTimeSecs() - (m_laps.at(m_laps.size() - 1).startTimeMs / 1000));
+				result.valid = true;
+			}
+		}
+	}
+	else if (attributeName.find(ACTIVITY_ATTRIBUTE_LAP_CALORIES) == 0)
+	{
+		size_t lapNum = (size_t)strtoull(attributeName.c_str() + strlen(ACTIVITY_ATTRIBUTE_LAP_CALORIES), NULL, 0);
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_CALORIES;
+		result.valid = false;
+		if (lapNum > 0) // Lap numbers start from one
+		{
+			if (lapNum == 1)
+			{
+				if (m_laps.size() == 0)
+					result.value.doubleVal = CaloriesBurned();
+				else
+					result.value.doubleVal = CaloriesBurned() - m_laps.at(0).startingCalorieCount;
+				result.valid = true;
+			}
+			else if (lapNum <= m_laps.size())
+			{
+				result.value.doubleVal = m_laps.at(lapNum - 1).startingCalorieCount - m_laps.at(lapNum - 2).startingCalorieCount;
+				result.valid = true;
+			}
+			else if (lapNum == m_laps.size() + 1)
+			{
+				result.value.doubleVal = CaloriesBurned() - m_laps.at(m_laps.size() - 1).startingCalorieCount;
+				result.valid = true;
+			}
 		}
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME) == 0)

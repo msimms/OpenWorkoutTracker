@@ -97,6 +97,7 @@ typedef enum SectionType
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sKM %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, km];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
 		if (value.valid)
 		{
 			NSString* label;

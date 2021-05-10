@@ -205,8 +205,21 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("lap"))
 	{
-		sql = "create table lap (id integer primary key, activity_id text, start_time unsigned big int)";
+		sql = "create table lap (id integer primary key, activity_id text, start_time unsigned big int, calories_burned double)";
 		queries.push_back(sql);
+	}
+	else
+	{
+		if (!DoesTableHaveColumn("lap", "calories_burned"))
+		{
+			sql = "alter table lap add column calories_burned double";
+			queries.push_back(sql);
+		}
+		if (!DoesTableHaveColumn("lap", "distance"))
+		{
+			sql = "alter table lap add column distance double";
+			queries.push_back(sql);
+		}
 	}
 	if (!DoesTableExist("gps"))
 	{
@@ -1403,15 +1416,17 @@ bool Database::UpdateActivityName(const std::string& activityId, const std::stri
 	return result;
 }
 
-bool Database::CreateNewLap(const std::string& activityId, uint64_t startTimeMs)
+bool Database::CreateLap(const std::string& activityId, const LapSummary& lap)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into lap values (NULL,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into lap values (NULL,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 2, startTimeMs);
+		sqlite3_bind_int64(statement, 2, lap.startTimeMs);
+		sqlite3_bind_double(statement, 3, lap.startingCalorieCount);
+		sqlite3_bind_double(statement, 4, lap.startingDistanceMeters);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -1423,17 +1438,20 @@ bool Database::RetrieveLaps(const std::string& activityId, LapSummaryList& laps)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select start_time from lap where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select start_time, calories_burned, distance from lap where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
 
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			LapSummary lap;
-			lap.startTimeMs = (u_int64_t)sqlite3_column_int64(statement, 0);
+
+			lap.startTimeMs = (uint64_t)sqlite3_column_int64(statement, 0);
+			lap.startingCalorieCount = (double)sqlite3_column_int64(statement, 1);
+			lap.startingDistanceMeters = (double)sqlite3_column_int64(statement, 2);
 			laps.push_back(lap);
 		}
-		
+
 		sqlite3_finalize(statement);
 		result = true;
 	}
@@ -1448,7 +1466,7 @@ bool Database::CreateTag(const std::string& activityId, const std::string& tag)
 	{
 		return false;
 	}
-	
+
 	int result = sqlite3_prepare_v2(m_pDb, "insert into tag values (NULL,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{

@@ -113,7 +113,7 @@ public:
 	bool RetrieveActivityName(const std::string& activityId, std::string& name);
 	bool UpdateActivityName(const std::string& activityId, const std::string& name);
 
-	bool CreateNewLap(const std::string& activityId, uint64_t startTimeMs);
+	bool CreateLap(const std::string& activityId, const LapSummary& lap);
 	bool RetrieveLaps(const std::string& activityId, LapSummaryList& laps);
 
 	// Methods for managing tags.
