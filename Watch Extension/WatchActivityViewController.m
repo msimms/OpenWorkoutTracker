@@ -304,7 +304,7 @@
 - (void)onRefreshTimer:(NSTimer*)timer
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
+	NSArray* attributeNames = [self->prefs getAttributeNames:self->activityType];
 
 	// Refresh the activity attributes.
 	for (uint8_t i = 0; i < [self->valueLabels count]; i++)
@@ -312,34 +312,36 @@
 		WKInterfaceLabel* valueLabel = [self->valueLabels objectAtIndex:i];
 		if (valueLabel)
 		{
-			NSString* attribute = [self->prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
-
-			// Display the value.
-			ActivityAttributeType value = [extDelegate queryLiveActivityAttribute:attribute];
-			[valueLabel setText:[StringUtils formatActivityViewType:value]];
-
-			// Display the units.
-			WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
-			if (unitsLabel)
+			NSString* attributeName = [attributeNames objectAtIndex:i];
+			if (attributeName)
 			{
-				NSString* unitsValueStr = [StringUtils formatActivityMeasureType:value.measureType];
-				if (unitsValueStr)
-				{
-					NSString* unitsStr = [[NSString alloc] initWithFormat:@"%@\n%@", attribute, unitsValueStr];
-					[unitsLabel setText:unitsStr];
-				}
+				// Display the value.
+				ActivityAttributeType value = [extDelegate queryLiveActivityAttribute:attributeName];
+				[valueLabel setText:[StringUtils formatActivityViewType:value]];
 
-				// For items that don't have units (like sets and reps), display the title instead.
-				// If the main, i.e. first, item does not have units then just skip it so we don't clutter the display.
-				else if (i > 0)
+				// Display the units.
+				WKInterfaceLabel* unitsLabel = [self->unitsLabels objectAtIndex:i];
+				if (unitsLabel)
 				{
-					[unitsLabel setText:attribute];
-				}
+					NSString* unitsValueStr = [StringUtils formatActivityMeasureType:value.measureType];
+					if (unitsValueStr)
+					{
+						NSString* unitsStr = [[NSString alloc] initWithFormat:@"%@\n%@", attributeName, unitsValueStr];
+						[unitsLabel setText:unitsStr];
+					}
 
-				// Just clear the units display.
-				else
-				{
-					[unitsLabel setText:@""];
+					// For items that don't have units (like sets and reps), display the title instead.
+					// If the main, i.e. first, item does not have units then just skip it so we don't clutter the display.
+					else if (i > 0)
+					{
+						[unitsLabel setText:attributeName];
+					}
+
+					// Just clear the units display.
+					else
+					{
+						[unitsLabel setText:@""];
+					}
 				}
 			}
 		}
@@ -397,11 +399,12 @@
 
 #pragma mark method for showing the attributes menu
 
+// This allows the user to select a new attribute to display on the user interface.
 - (void)showAttributesMenu
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
-	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
+	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes]; // All possible attributes for this activity type
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
 	[attributeNames sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
@@ -410,14 +413,16 @@
 	[actions addObject:[WKAlertAction actionWithTitle:STR_CANCEL style:WKAlertActionStyleCancel handler:^(void) {}]];
 
 	// Add an option for each possible attribute.
-	for (NSString* attribute in attributeNames)
+	for (NSString* attributeName in attributeNames)
 	{
-		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void)
+		WKAlertAction* action = [WKAlertAction actionWithTitle:attributeName style:WKAlertActionStyleDefault handler:^(void)
 		{
-			// Save the new setting, removing the old setting.
-			NSString* oldAttributeName = [self->prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:self->attributePosToReplace];
-			[self->prefs setViewAttributePosition:self->activityType withAttributeName:attribute withPos:self->attributePosToReplace];
-			[self->prefs setViewAttributePosition:self->activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			NSArray* oldAttributeNames = [self->prefs getAttributeNames:self->activityType];
+			NSMutableArray* newAttributeNames = [[NSMutableArray alloc] initWithArray:oldAttributeNames];
+
+			// Update the preferences database.
+			[newAttributeNames replaceObjectAtIndex:self->attributePosToReplace withObject:attributeName];
+			[self->prefs setAttributeNames:self->activityType withAttributeNames:newAttributeNames];
 		}];	
 		[actions addObject:action];
 	}
@@ -426,11 +431,10 @@
 	[self presentAlertControllerWithTitle:nil message:STR_ATTRIBUTES preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
+// This allows the user to select which item on the user interface they want to replace.
 - (void)showReplacementMenu
 {
-	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-
-	NSMutableArray* attributeNames = [extDelegate getCurrentActivityAttributes];
+	NSArray* attributeNames = [self->prefs getAttributeNames:self->activityType]; // Currently displayed attributes
 	NSMutableArray* actions = [[NSMutableArray alloc] init];
 
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
@@ -438,7 +442,7 @@
 
 	for (uint8_t i = 0; i < 3; i++)
 	{
-		NSString* attribute = [self->prefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:i];
+		NSString* attribute = [attributeNames objectAtIndex:i];
 
 		WKAlertAction* action = [WKAlertAction actionWithTitle:attribute style:WKAlertActionStyleDefault handler:^(void){
 			self->attributePosToReplace = i;

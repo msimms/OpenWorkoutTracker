@@ -169,14 +169,14 @@
 		case 0:
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				NSString* attrName = [self->attributeNames objectAtIndex:row];
-				ActivityAttributeType attr = [appDelegate queryLiveActivityAttribute:attrName];
+				NSString* attributeName = [self->attributeNames objectAtIndex:row];
+				ActivityAttributeType attr = [appDelegate queryLiveActivityAttribute:attributeName];
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
 
 				if (unitsStr != nil)
-					mainStr = [NSString stringWithFormat:@"%@ (%@)", attrName, unitsStr];
+					mainStr = [NSString stringWithFormat:@"%@ (%@)", attributeName, unitsStr];
 				else
-					mainStr = [NSString stringWithFormat:@"%@", attrName];
+					mainStr = [NSString stringWithFormat:@"%@", attributeName];
 				detailsStr = [StringUtils formatActivityViewType:attr];
 
 				cell.textLabel.text = mainStr;

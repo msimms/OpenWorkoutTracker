@@ -149,17 +149,69 @@
 	return [[NSString alloc] initWithFormat:@"%@ %@", activityType, attributeName];
 }
 
-- (NSString*)getValueAsString:(NSString*)activityType withAttributeName:(NSString*)attributeName
+- (NSArray*)getDefaultActivityLayout:(NSString*)activityType
+{
+	NSArray* defaults = nil;
+
+	if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
+		[activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
+	{
+		defaults = self->defaultCyclingLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
+	{
+		defaults = self->defaultStationaryBikeLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
+	{
+		defaults = self->defaultTreadmillLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_HIKING] ||
+			 [activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
+	{
+		defaults = self->defaultHikingLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
+	{
+		defaults = self->defaultRunningLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] ||
+			 [activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+	{
+		defaults = self->defaultSwimmingLayout;
+	}
+	else
+	{
+		defaults = self->defaultLiftingLayout;
+	}
+	return defaults;
+}
+
+- (NSArray*)readStringArrayValue:(NSString*)activityType withAttributeName:(NSString*)attributeName
 {
 	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
+	if ([defaults objectForKey:key] != nil)
+	{
+		return [defaults stringArrayForKey:key];
+	}
+	return [self getDefaultActivityLayout:activityType];
+}
+
+- (NSString*)readStringValue:(NSString*)activityType withAttributeName:(NSString*)attributeName
+{
+	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
 	return [defaults objectForKey:key];
 }
 
-- (NSInteger)getValueAsInteger:(NSString*)activityType withAttributeName:(NSString*)attributeName
+- (NSInteger)readIntegerValue:(NSString*)activityType withAttributeName:(NSString*)attributeName
 {
 	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
 	if ([defaults objectForKey:key] != nil)
 	{
 		return [defaults integerForKey:key];
@@ -167,10 +219,11 @@
 	return -1;
 }
 
-- (BOOL)getValueAsBool:(NSString*)activityType withAttributeName:(NSString*)attributeName
+- (BOOL)readBoolValue:(NSString*)activityType withAttributeName:(NSString*)attributeName
 {
 	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
 	if ([defaults objectForKey:key] != nil)
 	{
 		return [defaults boolForKey:key];
@@ -178,33 +231,46 @@
 	return FALSE;
 }
 
-- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withString:(NSString*)value
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withStringArray:(NSArray*)value
 {
 	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
 	[defaults setObject:value forKey:key];
 	[defaults synchronize];
 }
 
-- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withString:(NSString*)value
 {
 	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
+	[defaults setObject:value forKey:key];
+	[defaults synchronize];
+}
+
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value
+{
+	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
+	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
 	[defaults setInteger:value forKey:key];
 	[defaults synchronize];
 }
 
-- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withBool:(BOOL)value
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withBool:(BOOL)value
 {
 	NSString* key = [self buildKeyStr:activityType withAttributeName:attributeName];
 	NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+
 	[defaults setBool:value forKey:key];
 	[defaults synchronize];
 }
 
 - (ActivityViewType)getViewType:(NSString*)activityType
 {
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE];
+
 	if (value == -1)
 	{
 		if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
@@ -229,14 +295,15 @@
 
 - (void)setViewType:(NSString*)activityType withViewType:(ActivityViewType)viewType
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE withInteger:(NSInteger)viewType];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE withInteger:(NSInteger)viewType];
 }
 
 #if !TARGET_OS_WATCH
 
 - (NSString*)getBackgroundColorName:(NSString*)activityType
 {
-	NSString* colorName = [self getValueAsString:activityType withAttributeName:@ACTIVITY_PREF_BACKGROUND_COLOR];
+	NSString* colorName = [self readStringValue:activityType withAttributeName:@ACTIVITY_PREF_BACKGROUND_COLOR];
+
 	if (colorName == nil)
 	{
 		colorName = @"White";
@@ -246,7 +313,8 @@
 
 - (NSString*)getLabelColorName:(NSString*)activityType
 {
-	NSString* colorName = [self getValueAsString:activityType withAttributeName:@ACTIVITY_PREF_LABEL_COLOR];
+	NSString* colorName = [self readStringValue:activityType withAttributeName:@ACTIVITY_PREF_LABEL_COLOR];
+
 	if (colorName == nil)
 	{
 		colorName = @"Gray";
@@ -256,7 +324,8 @@
 
 - (NSString*)getTextColorName:(NSString*)activityType
 {
-	NSString* colorName = [self getValueAsString:activityType withAttributeName:@ACTIVITY_PREF_TEXT_COLOR];
+	NSString* colorName = [self readStringValue:activityType withAttributeName:@ACTIVITY_PREF_TEXT_COLOR];
+
 	if (colorName == nil)
 	{
 		colorName = @"Black";
@@ -288,6 +357,7 @@
 	NSString* pSelectorStr = [pLowerCaseColorName stringByAppendingString:@"Color"];
 	SEL selector = NSSelectorFromString(pSelectorStr);
 	UIColor* color = [UIColor blackColor];
+
 	if ([UIColor respondsToSelector:selector])
 	{
 		color = [UIColor performSelector:selector];
@@ -297,137 +367,75 @@
 
 - (void)setBackgroundColor:(NSString*)activityType withColorName:(NSString*)colorName
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_BACKGROUND_COLOR withString:colorName];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_BACKGROUND_COLOR withString:colorName];
 }
 
 - (void)setLabelColor:(NSString*)activityType withColorName:(NSString*)colorName
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_LABEL_COLOR withString:colorName];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_LABEL_COLOR withString:colorName];
 }
 
 - (void)setTextColor:(NSString*)activityType withColorName:(NSString*)colorName
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_TEXT_COLOR withString:colorName];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_TEXT_COLOR withString:colorName];
 }
 
 #endif
 
 - (BOOL)getShowHeartRatePercent:(NSString*)activityType
 {
-	return [self getValueAsBool:activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT];
+	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT];
 }
 
 - (void)setShowHeartRatePercent:(NSString*)activityType withBool:(BOOL)value
 {
-	[self setValue: activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT withBool:value];
+	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT withBool:value];
 }
 
 - (BOOL)getStartStopBeepEnabled:(NSString*)activityType
 {
-	return [self getValueAsBool:activityType withAttributeName:@ACTIVITY_PREF_START_STOP_BEEP];
+	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_START_STOP_BEEP];
 }
 
 - (void)setStartStopBeepEnabled:(NSString*)activityType withBool:(BOOL)value
 {
-	[self setValue: activityType withAttributeName:@ACTIVITY_PREF_START_STOP_BEEP withBool:value];
+	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_START_STOP_BEEP withBool:value];
 }
 
 - (BOOL)getSplitBeepEnabled:(NSString*)activityType
 {
-	return [self getValueAsBool:activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP];
+	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP];
 }
 
 - (void)setSplitBeepEnabled:(NSString*)activityType withBool:(BOOL)value
 {
-	[self setValue: activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP withBool:value];
+	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP withBool:value];
 }
 
-- (NSString*)getAttributeName:(NSString*)activityType withAttributeList:(NSMutableArray*)attributeList withPos:(uint8_t)viewPos
+- (NSArray*)getAttributeNames:(NSString*)activityType
 {
-	for (NSString* attributeName in attributeList)
-	{
-		uint8_t viewPos2 = [self getAttributePos:activityType withAttributeName:attributeName];
-		if (viewPos2 == viewPos)
-		{
-			return attributeName;
-		}
-	}
-	return nil;
+	return [self readStringArrayValue:activityType withAttributeName:@ACTIVITY_PREF_ATTRIBUTES];
 }
 
-- (uint8_t)getAttributePos:(NSString*)activityType withAttributeName:(NSString*)attributeName
+- (void)setAttributeNames:(NSString*)activityType withAttributeNames:(NSMutableArray*)attributeNames
 {
-	NSString* tempAttrName = [[NSString alloc] initWithFormat:@"%@ Pos", attributeName];
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:tempAttrName];
-
-	if (value == -1)
-	{
-		uint8_t index = 0;
-		NSArray* array = nil;
-
-		if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
-			[activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING])
-		{
-			array = self->defaultCyclingLayout;
-		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
-		{
-			array = self->defaultStationaryBikeLayout;
-		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL])
-		{
-			array = self->defaultTreadmillLayout;
-		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_HIKING] ||
-				 [activityType isEqualToString:@ACTIVITY_TYPE_WALKING])
-		{
-			array = self->defaultHikingLayout;
-		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING])
-		{
-			array = self->defaultRunningLayout;
-		}
-		else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] ||
-				 [activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
-		{
-			array = self->defaultSwimmingLayout;
-		}
-		else
-		{
-			array = self->defaultLiftingLayout;
-		}
-
-		for (NSString* attrName in array)
-		{
-			if ([attrName isEqualToString:attributeName])
-				return index;
-			++index;
-		}
-
-		return ERROR_ATTRIBUTE_NOT_FOUND;
-	}
-	return (uint8_t)value;
-}
-
-- (void)setViewAttributePosition:(NSString*)activityType withAttributeName:(NSString*)attributeName withPos:(uint8_t)pos
-{
-	NSString* tempAttrName = [[NSString alloc] initWithFormat:@"%@ Pos", attributeName];
-	[self setValue:activityType withAttributeName:tempAttrName withInteger:pos];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_ATTRIBUTES withStringArray:attributeNames];
 }
 
 - (BOOL)getScreenAutoLocking:(NSString*)activityType
 {
-	return [self getValueAsBool:activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK];
+	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK];
 }
 
 - (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value
 {
-	[self setValue: activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK withBool:value];
+	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK withBool:value];
 }
 
 - (uint8_t)getCountdown:(NSString*)activityType
 {
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN];
+
 	if (value == -1)
 	{
 		if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
@@ -447,12 +455,13 @@
 
 - (void)setCountdown:(NSString*)activityType withSeconds:(uint8_t)seconds
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN withInteger:seconds];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN withInteger:seconds];
 }
 
 - (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityType
 {
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY];
+
 	if (value == -1)
 		value = 0;
 	return value;	
@@ -460,12 +469,13 @@
 
 - (void)setMinGpsHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY withInteger:seconds];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY withInteger:seconds];
 }
 
 - (uint8_t)getMinGpsVerticalAccuracy:(NSString*)activityType
 {
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY];
+
 	if (value == -1)
 		value = 0;
 	return value;
@@ -473,12 +483,13 @@
 
 - (void)setMinGpsVerticalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY withInteger:seconds];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY withInteger:seconds];
 }
 
 - (GpsFilterOption)getGpsFilterOption:(NSString*)activityType
 {
-	NSInteger value = [self getValueAsInteger:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION];
+
 	if (value == -1)
 		return GPS_FILTER_WARN;
 	return (GpsFilterOption)value;
@@ -486,7 +497,7 @@
 
 - (void)setGpsFilterOption:(NSString*)activityType withOption:(GpsFilterOption)option
 {
-	[self setValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION withInteger:(int)option];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION withInteger:(int)option];
 }
 
 - (BOOL)hasShownHelp:(NSString*)activityType

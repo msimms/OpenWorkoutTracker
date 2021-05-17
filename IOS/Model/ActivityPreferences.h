@@ -23,10 +23,7 @@
 #define ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY "GPS Horizontal Accuracy"
 #define ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY   "GPS Vertical Accuracy"
 #define ACTIVITY_PREF_GPS_FILTER_OPTION           "GPS Filter"
-#define ACTIVITY_PREF_HEART_RATE_SAMPLE_FREQ      "Heart Rate Sample Frequency"
-#define ACTIVITY_PREF_CADENCE_SAMPLE_FREQ         "Cadence Sample Frequency"
-#define ACTIVITY_PREF_WHEEL_SPEED_SAMPLE_FREQ     "Wheel Speed Sample Frequency"
-#define ACTIVITY_PREF_POWER_SAMPLE_FREQ           "Power Sample Frequency"
+#define ACTIVITY_PREF_ATTRIBUTES                  "Attributes"
 
 #define ERROR_ATTRIBUTE_NOT_FOUND 255
 
@@ -50,13 +47,15 @@ typedef enum GpsFilterOption
 - (id)init;
 - (id)initWithBT:(BOOL)hasBT;
 
-- (NSString*)getValueAsString:(NSString*)activityType withAttributeName:(NSString*)attributeName;
-- (NSInteger)getValueAsInteger:(NSString*)activityType withAttributeName:(NSString*)attributeName;
-- (BOOL)getValueAsBool:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (NSArray*)readStringArrayValue:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (NSString*)readStringValue:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (NSInteger)readIntegerValue:(NSString*)activityType withAttributeName:(NSString*)attributeName;
+- (BOOL)readBoolValue:(NSString*)activityType withAttributeName:(NSString*)attributeName;
 
-- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withString:(NSString*)value;
-- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value;
-- (void)setValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withBool:(BOOL)value;
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withStringArray:(NSArray*)value;
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withString:(NSString*)value;
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value;
+- (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withBool:(BOOL)value;
 
 - (ActivityViewType)getViewType:(NSString*)activityType;
 - (void)setViewType:(NSString*)activityType withViewType:(ActivityViewType)viewType;
@@ -85,9 +84,8 @@ typedef enum GpsFilterOption
 - (BOOL)getSplitBeepEnabled:(NSString*)activityType;
 - (void)setSplitBeepEnabled:(NSString*)activityType withBool:(BOOL)value;
 
-- (NSString*)getAttributeName:(NSString*)activityType withAttributeList:(NSMutableArray*)attributeList withPos:(uint8_t)viewPos;
-- (uint8_t)getAttributePos:(NSString*)activityType withAttributeName:(NSString*)attributeName;
-- (void)setViewAttributePosition:(NSString*)activityType withAttributeName:(NSString*)attributeName withPos:(uint8_t)pos;
+- (NSArray*)getAttributeNames:(NSString*)activityType;
+- (void)setAttributeNames:(NSString*)activityType withAttributeNames:(NSMutableArray*)attributeNames;
 
 - (BOOL)getScreenAutoLocking:(NSString*)activityType;
 - (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value;

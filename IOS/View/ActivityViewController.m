@@ -195,7 +195,7 @@
 - (void)showAttributesMenu
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
+	NSMutableArray* allAttributeNames = [appDelegate getCurrentActivityAttributes];  // All possible attributes for this activity type
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_ATTRIBUTES
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -204,18 +204,20 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
 
 	// Add an option for each possible attribute.
-	for (NSString* attribute in attributeNames)
+	for (NSString* attributeName in allAttributeNames)
 	{
-		[alertController addAction:[UIAlertAction actionWithTitle:attribute style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+		[alertController addAction:[UIAlertAction actionWithTitle:attributeName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 		{
-			// Save the new setting, removing the old setting.
-			NSString* oldAttributeName = [self->activityPrefs getAttributeName:self->activityType withAttributeList:attributeNames withPos:self->tappedButtonIndex];
-			[self->activityPrefs setViewAttributePosition:self->activityType withAttributeName:attribute withPos:self->tappedButtonIndex];
-			[self->activityPrefs setViewAttributePosition:self->activityType withAttributeName:oldAttributeName withPos:ERROR_ATTRIBUTE_NOT_FOUND];
+			NSArray* oldAttributeNames = [self->activityPrefs getAttributeNames:self->activityType];
+			NSMutableArray* newAttributeNames = [[NSMutableArray alloc] initWithArray:oldAttributeNames];
+
+			// Update the preferences database.
+			[newAttributeNames replaceObjectAtIndex:self->tappedButtonIndex withObject:attributeName];
+			[self->activityPrefs setAttributeNames:self->activityType withAttributeNames:newAttributeNames];
 
 			// Update the label.
 			UILabel* titleLabel = [self->titleLabels objectAtIndex:self->tappedButtonIndex];
-			titleLabel.text = attribute;
+			titleLabel.text = attributeName;
 		}]];
 	}
 
@@ -361,22 +363,24 @@
 
 - (void)initializeLabelText
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* attributeNames = [appDelegate getCurrentActivityAttributes];
+	NSArray* attributeNames = [self->activityPrefs getAttributeNames:self->activityType];
 
 	for (UILabel* label in self->valueLabels)
 	{
 		label.text = @"--";
 	}
 
-	for (NSString* attributeName in attributeNames)
+	// Refresh the activity attributes.
+	for (uint8_t i = 0; i < [self->titleLabels count]; i++)
 	{
-		uint8_t viewPos = [self->activityPrefs getAttributePos:self->activityType withAttributeName:attributeName];
-
-		if ((viewPos != ERROR_ATTRIBUTE_NOT_FOUND) && (viewPos < self->titleLabels.count))
+		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
+		if (titleLabel)
 		{
-			UILabel* titleLabel = [self->titleLabels objectAtIndex:viewPos];
-			titleLabel.text = attributeName;
+			NSString* attributeName = [attributeNames objectAtIndex:i];
+			if (attributeName)
+			{
+				titleLabel.text = attributeName;
+			}
 		}
 	}
 }
