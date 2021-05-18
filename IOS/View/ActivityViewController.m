@@ -1041,7 +1041,7 @@
 - (void)displayValue:(UILabel*)valueLabel withValue:(double)value
 {
 	if (value < (double)0.1)
-		[valueLabel setText:[[NSString alloc] initWithFormat:@"0.0"]];
+		[valueLabel setText:[[NSString alloc] initWithFormat:@"0"]];
 	else
 		[valueLabel setText:[[NSString alloc] initWithFormat:@"%0.0f", value]];
 }
