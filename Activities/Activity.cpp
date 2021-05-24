@@ -540,6 +540,14 @@ uint64_t Activity::ElapsedTimeInMs() const
 	uint64_t startTimeMs = GetStartTimeSecs();
 	startTimeMs = startTimeMs * 1000;
 
+	// Sanity check.
+	if (startTimeMs > endTimeMs)
+	{
+		uint64_t temp = startTimeMs;
+		startTimeMs = endTimeMs;
+		endTimeMs = temp;
+	}
+
 	if (endTimeMs == 0)
 	{
 		uint64_t currentTimeMs = CurrentTimeInMs();
