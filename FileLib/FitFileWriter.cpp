@@ -6,7 +6,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "FitFileWriter.h"
-#include <stdlib.h>
 
 namespace FileLib
 {	
@@ -16,5 +15,55 @@ namespace FileLib
 	
 	FitFileWriter::~FitFileWriter()
 	{
+	}
+
+	bool FitFileWriter::WriteHeader()
+	{
+		FitHeader header;
+
+		header.headerSize = sizeof(FitHeader);
+		header.protocolVersion = 0;
+		header.profileVersion = 0;
+		header.dataSize = 0;
+		header.dataType[0] = '.';
+		header.dataType[1] = 'F';
+		header.dataType[2] = 'I';
+		header.dataType[3] = 'T';
+		header.crc = 0;
+
+		return WriteBinaryData((uint8_t*)&header, sizeof(FitHeader));
+	}
+
+	bool FitFileWriter::CreateFile(const std::string& fileName)
+	{
+		if (File::CreateFile(fileName))
+		{
+		}
+		return false;
+	}
+
+	bool FitFileWriter::CloseFile()
+	{
+		return false;
+	}
+
+	bool FitFileWriter::StartActivity()
+	{
+		return false;
+	}
+
+	bool FitFileWriter::EndActivity()
+	{
+		return false;
+	}
+
+	bool FitFileWriter::StartLap(uint64_t timeMS)
+	{
+		return false;
+	}
+
+	bool FitFileWriter::EndLap()
+	{
+		return false;
 	}
 }

@@ -148,6 +148,8 @@
 		2729853319C8F69900FE0077 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2729852B19C8F69900FE0077 /* Localizable.strings */; };
 		272E30E925B4BEFC0038AD70 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 272E30E825B4BEFC0038AD70 /* FileUtils.m */; };
 		272E310525B4D32E0038AD70 /* FileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 272E30E825B4BEFC0038AD70 /* FileUtils.m */; };
+		273326AC2648E2290062545A /* FitFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27621C8D2641BC6C00F1C86F /* FitFileWriter.cpp */; };
+		273326BC2648E2290062545A /* FitFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27621C8D2641BC6C00F1C86F /* FitFileWriter.cpp */; };
 		2733EDC8250AC7880096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
 		2733EDC9250AEEE70096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
 		2733EDCA250AEEE80096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
@@ -2218,6 +2220,7 @@
 				270CF44D2391F05200584058 /* Run.cpp in Sources */,
 				27F4241323A46A6400F59F50 /* Swim.cpp in Sources */,
 				270CF44E2391F05200584058 /* Run.h in Sources */,
+				273326AC2648E2290062545A /* FitFileWriter.cpp in Sources */,
 				270CF44F2391F05200584058 /* SegmentType.h in Sources */,
 				270CF4502391F05200584058 /* Squat.cpp in Sources */,
 				270CF4512391F05200584058 /* Squat.h in Sources */,
@@ -2478,6 +2481,7 @@
 				27DCF5FE22B71628009A23C2 /* ActivityAttributeType.h in Sources */,
 				27DCF5FF22B71628009A23C2 /* ActivityFactory.cpp in Sources */,
 				27DCF60022B71628009A23C2 /* ActivityFactory.h in Sources */,
+				273326BC2648E2290062545A /* FitFileWriter.cpp in Sources */,
 				27DCF60122B71628009A23C2 /* ActivitySummary.h in Sources */,
 				27F6D0792300166500A248BE /* Double.cpp in Sources */,
 				27754B1E233DA24D003F2C53 /* WatchSettingsViewController.m in Sources */,

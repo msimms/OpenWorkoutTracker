@@ -37,6 +37,7 @@
 
 #define ACTION_SHEET_BUTTON_GPX        NSLocalizedString(@"GPX File", nil)
 #define ACTION_SHEET_BUTTON_TCX        NSLocalizedString(@"TCX File", nil)
+#define ACTION_SHEET_BUTTON_FIT        NSLocalizedString(@"FIT File", nil)
 #define ACTION_SHEET_BUTTON_CSV        NSLocalizedString(@"CSV File", nil)
 
 #define ACTION_SHEET_TRIM_FIRST_1      NSLocalizedString(@"Delete 1st Second", nil)
@@ -461,6 +462,9 @@ typedef enum ExportFileTypeButtons
 		}]];
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_TCX style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_TCX];
+		}]];
+		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_BUTTON_FIT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self exportActivityToTempFile:self->activityId withFileFormat:FILE_FIT];
 		}]];
 	}
 	if ([appDelegate getNumHistoricalActivityAccelerometerReadings:self->activityId] > 0)

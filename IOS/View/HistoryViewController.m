@@ -389,6 +389,7 @@
 				self->selectedExportActivity = type;
 				
 				NSMutableArray* exportServices = [appDelegate getEnabledFileExportServices];
+
 				if ([exportServices count] == 1)
 				{
 					self->selectedExportService = [exportServices objectAtIndex:0];
@@ -449,7 +450,24 @@
 	self->exportedFileName = [appDelegate exportActivitySummary:self->selectedExportActivity];
 	if (self->exportedFileName)
 	{
-		[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+		// Email
+		if ([self->selectedExportService isEqualToString:@SYNC_DEST_EMAIL])
+		{
+			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+		}
+
+		// iCloud Drive
+		else
+		{
+			if ([appDelegate exportFileToCloudService:self->exportedFileName toServiceNamed:self->selectedExportService])
+			{
+				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
+			}
+			else
+			{
+				[super showOneButtonAlert:STR_ERROR withMsg:STR_EXPORT_FAILED];
+			}
+		}
 	}
 	else
 	{
@@ -462,6 +480,7 @@
 - (void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)searchText
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	self->searching = true;
 
 	if ([searchText length] == 0)

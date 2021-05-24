@@ -9,6 +9,7 @@
 #include "ActivityAttribute.h"
 #include "AxisName.h"
 #include "Defines.h"
+#include "FitFileWriter.h"
 #include "GpxFileWriter.h"
 #include "TcxFileWriter.h"
 #include "CsvFileWriter.h"
@@ -140,6 +141,114 @@ bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t
 	return result;
 }
 
+bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
+{
+	const MovingActivity* const pMovingActivity = dynamic_cast<const MovingActivity* const>(pActivity);
+	if (!pMovingActivity)
+	{
+		return false;
+	}
+
+	bool result = false;
+	FileLib::FitFileWriter writer;
+
+	if (writer.CreateFile(fileName))
+	{
+		if (writer.StartActivity())
+		{
+			std::string activityId = pActivity->GetId();
+
+			const CoordinateList& coordinateList = pMovingActivity->GetCoordinates();
+
+			LapSummaryList lapList;
+			SensorReadingList hrList;
+			SensorReadingList cadenceList;
+			SensorReadingList powerList;
+
+			pDatabase->RetrieveLaps(pActivity->GetId(), lapList);
+			pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE, hrList);
+			pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_CADENCE, cadenceList);
+			pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_POWER, powerList);
+
+			CoordinateList::const_iterator coordinateIter = coordinateList.begin();
+			LapSummaryList::const_iterator lapIter = lapList.begin();
+			SensorReadingList::const_iterator hrIter = hrList.begin();
+			SensorReadingList::const_iterator cadenceIter = cadenceList.begin();
+			SensorReadingList::const_iterator powerIter = powerList.begin();
+
+			uint64_t lapStartTimeMs = pActivity->GetStartTimeMs();
+			uint64_t lapEndTimeMs = 0;
+			uint16_t lapNum = 1;
+
+			bool done = false;
+
+			do
+			{
+				if (lapIter == lapList.end())
+				{
+					lapEndTimeMs = pActivity->GetEndTimeMs();
+					done = true;
+				}
+				else
+				{
+					lapEndTimeMs = (*lapIter).startTimeMs;
+				}
+
+				if (writer.StartLap(lapStartTimeMs))
+				{
+					while (coordinateIter != coordinateList.end())
+					{
+						const Coordinate& coordinate = (*coordinateIter);
+						
+						if ((coordinate.time > lapEndTimeMs) && (lapEndTimeMs != 0))
+						{
+							break;
+						}
+
+						bool moreHrData = NearestSensorReading(coordinate.time, hrList, hrIter);
+						bool moreCadenceData = NearestSensorReading(coordinate.time, cadenceList, cadenceIter);
+						bool morePowerData = NearestSensorReading(coordinate.time, powerList, powerIter);
+						
+						if (moreHrData)
+						{
+							//double rate = (*hrIter).reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
+						}							
+						if (moreCadenceData)
+						{
+							//double cadence = (*cadenceIter).reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
+						}							
+						if (morePowerData)
+						{
+							//double power = (*powerIter).reading.at(ACTIVITY_ATTRIBUTE_POWER);
+						}
+						
+						coordinateIter++;
+					}
+
+					writer.EndLap();
+				}
+
+				lapStartTimeMs = lapEndTimeMs;
+
+				if (lapIter != lapList.end())
+				{
+					lapIter++;
+					lapNum++;
+				}
+
+			} while (!done);
+
+			lapList.clear();
+			hrList.clear();
+			cadenceList.clear();
+		}
+
+		writer.CloseFile();
+	}
+
+	return result;
+}
+
 bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, Database* const pDatabase, const Activity* const pActivity)
 {
 	const MovingActivity* const pMovingActivity = dynamic_cast<const MovingActivity* const>(pActivity);
@@ -179,9 +288,9 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 
 			uint64_t lapStartTimeMs = pActivity->GetStartTimeMs();
 			uint64_t lapEndTimeMs = 0;
+			uint16_t lapNum = 1;
 
 			bool done = false;
-			uint16_t lapNum = 1;
 
 			writer.WriteId((time_t)(lapStartTimeMs / 1000));
 
@@ -719,7 +828,7 @@ bool DataExporter::ExportActivityFromDatabase(FileFormat format, std::string& fi
 			case FILE_ZWO:
 				return false;
 			case FILE_FIT:
-				return false;
+				return ExportActivityFromDatabaseToFit(fileName, pDatabase, pActivity);
 			default:
 				return false;
 		}

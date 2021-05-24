@@ -66,4 +66,14 @@ namespace FileLib
 		}
 		return false;
 	}
+
+	bool File::WriteBinaryData(const uint8_t* data, size_t len)
+	{
+		if (m_file.is_open())
+		{
+			m_file.write((const char*)data, len);
+			return true;
+		}
+		return false;
+	}
 }

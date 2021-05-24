@@ -27,7 +27,8 @@ namespace FileLib
 		bool IsOpen() const;
 
 		bool WriteString(const std::string& str);
-		
+		bool WriteBinaryData(const uint8_t* data, size_t len);
+
 	protected:
 		std::string  m_fileName;
 		std::fstream m_file;

@@ -68,9 +68,7 @@ namespace FileLib
 
 	bool TcxFileWriter::WriteId(time_t startTime)
 	{
-		char buf[32];
-		strftime(buf, sizeof(buf) - 1, "%Y-%m-%dT%H:%M:%SZ", gmtime(&startTime));
-		return WriteTagAndValue(TCX_TAG_NAME_ID, buf);
+		return WriteTagAndValue(TCX_TAG_NAME_ID, FormatTimeMS(startTime));
 	}
 
 	bool TcxFileWriter::StartActivity(const std::string& description)
@@ -276,7 +274,7 @@ namespace FileLib
 		strftime(buf1, sizeof(buf1) - 1, "%Y-%m-%dT%H:%M:%S", gmtime(&sec));
 
 		char buf2[32];
-		snprintf(buf2, sizeof(buf2) - 1, "%s.%04uZ", buf1, ms);
+		snprintf(buf2, sizeof(buf2) - 1, "%s.%03uZ", buf1, ms);
 
 		return buf2;
 	}
