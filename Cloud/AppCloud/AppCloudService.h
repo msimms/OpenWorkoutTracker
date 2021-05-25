@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "CloudService.h"
 
-@interface StraenWeb : CloudService
+@interface AppCloudService : CloudService
 {
 }
 

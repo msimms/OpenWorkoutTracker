@@ -9,7 +9,7 @@
 #import "iCloud.h"
 #import "RunKeeper.h"
 #import "Strava.h"
-#import "StraenWeb.h"
+#import "AppCloudService.h"
 
 typedef enum CloudServiceType
 {
@@ -24,10 +24,10 @@ typedef enum CloudServiceType
 {
 	NSMutableArray* cloudServices; // pointers to all the instantiated cloud services
 
-	iCloud*         iCloudDrive; // handles iCloud drive interactions
-	RunKeeper*      runKeeper; // handles RunKeeper interactions
-	Strava*         strava; // handles Strava interactions
-	StraenWeb*      straenWeb; // handles interactions with the optional web companion
+	iCloud*          iCloudDrive; // handles iCloud drive interactions
+	RunKeeper*       runKeeper; // handles RunKeeper interactions
+	Strava*          strava; // handles Strava interactions
+	AppCloudService* appCloudService; // handles interactions with the optional web companion
 }
 
 - (id)init;

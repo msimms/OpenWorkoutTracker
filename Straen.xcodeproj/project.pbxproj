@@ -166,8 +166,6 @@
 		275CAC7425DF2B48000727AE /* ExportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC7325DF2B48000727AE /* ExportUtils.m */; };
 		275CAC7825DF2D3D000727AE /* ExportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC7325DF2B48000727AE /* ExportUtils.m */; };
 		275CAC7C25DF3A65000727AE /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
-		275CAC9125E03915000727AE /* StraenWeb.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC9025E03915000727AE /* StraenWeb.m */; };
-		275CAC9C25E0392E000727AE /* StraenWeb.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC9025E03915000727AE /* StraenWeb.m */; };
 		275CACA425E039B0000727AE /* CloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE81AA169AF008F55AF /* CloudService.m */; };
 		275CACAE25E05F43000727AE /* CloudMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14719BFE3B7008F8672 /* CloudMgr.m */; };
 		275CACB225E05F56000727AE /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
@@ -506,6 +504,8 @@
 		27F6D0792300166500A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
+		27FE9887265D92D7004BE31E /* AppCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE9886265D92D7004BE31E /* AppCloudService.m */; };
+		27FE988E265D9345004BE31E /* AppCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE9886265D92D7004BE31E /* AppCloudService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -684,8 +684,6 @@
 		275BA6E8234BC21A0086A50F /* ZwoTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTags.h; path = FileLib/ZwoTags.h; sourceTree = SOURCE_ROOT; };
 		275CAC6625DF2B48000727AE /* ExportUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExportUtils.h; path = IOS/Utilities/ExportUtils.h; sourceTree = SOURCE_ROOT; };
 		275CAC7325DF2B48000727AE /* ExportUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExportUtils.m; path = IOS/Utilities/ExportUtils.m; sourceTree = SOURCE_ROOT; };
-		275CAC8F25E03915000727AE /* StraenWeb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StraenWeb.h; path = Cloud/StraenWeb/StraenWeb.h; sourceTree = SOURCE_ROOT; };
-		275CAC9025E03915000727AE /* StraenWeb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StraenWeb.m; path = Cloud/StraenWeb/StraenWeb.m; sourceTree = SOURCE_ROOT; };
 		27621C8D2641BC6C00F1C86F /* FitFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FitFileWriter.cpp; path = FileLib/FitFileWriter.cpp; sourceTree = SOURCE_ROOT; };
 		27621C9A2641BC6C00F1C86F /* FitFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FitFileWriter.h; path = FileLib/FitFileWriter.h; sourceTree = SOURCE_ROOT; };
 		2762BC781ECB72FE0052A26E /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = SOURCE_ROOT; };
@@ -1076,6 +1074,8 @@
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		27F9C33E232C08380077BE2A /* WatchMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchMessages.h; path = Common/WatchMessages.h; sourceTree = SOURCE_ROOT; };
+		27FE9879265D92D7004BE31E /* AppCloudService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppCloudService.h; path = Cloud/AppCloud/AppCloudService.h; sourceTree = SOURCE_ROOT; };
+		27FE9886265D92D7004BE31E /* AppCloudService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppCloudService.m; path = Cloud/AppCloud/AppCloudService.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1517,6 +1517,8 @@
 		27B7CD1519BFD7DF000383E3 /* Cloud */ = {
 			isa = PBXGroup;
 			children = (
+				27FE9879265D92D7004BE31E /* AppCloudService.h */,
+				27FE9886265D92D7004BE31E /* AppCloudService.m */,
 				276D5AE51AA169AF008F55AF /* CloudPreferences.h */,
 				276D5AE61AA169AF008F55AF /* CloudPreferences.m */,
 				276D5AE71AA169AF008F55AF /* CloudService.h */,
@@ -1527,8 +1529,6 @@
 				276D5AFE1AA16A67008F55AF /* RunKeeper.m */,
 				276D5B001AA16A7D008F55AF /* Strava.h */,
 				276D5B011AA16A7D008F55AF /* Strava.m */,
-				275CAC8F25E03915000727AE /* StraenWeb.h */,
-				275CAC9025E03915000727AE /* StraenWeb.m */,
 			);
 			name = Cloud;
 			sourceTree = "<group>";
@@ -2278,6 +2278,7 @@
 				27B7CD1F19BFD807000383E3 /* Database.cpp in Sources */,
 				2797F15219BFE3B7008F8672 /* CloudMgr.m in Sources */,
 				2768E51623A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */,
+				27FE9887265D92D7004BE31E /* AppCloudService.m in Sources */,
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
 				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
 				27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */,
@@ -2337,7 +2338,6 @@
 				27C0845E19BFD063007CE934 /* Run.cpp in Sources */,
 				27B7CD3D19BFD903000383E3 /* ActivityPreferencesViewController.m in Sources */,
 				27B7CDA219BFD91C000383E3 /* Pin.m in Sources */,
-				275CAC9125E03915000727AE /* StraenWeb.m in Sources */,
 				27B7CDC419BFD953000383E3 /* CadenceLine.m in Sources */,
 				27B7CDC519BFD953000383E3 /* ChartLine.m in Sources */,
 				275CAC7425DF2B48000727AE /* ExportUtils.m in Sources */,
@@ -2439,6 +2439,7 @@
 				27DCF64E22B72EFA009A23C2 /* TcxFileReader.cpp in Sources */,
 				27F4240E23A46A5900F59F50 /* OpenWaterSwim.cpp in Sources */,
 				27DCF64F22B72EFA009A23C2 /* TcxFileReader.h in Sources */,
+				27FE988E265D9345004BE31E /* AppCloudService.m in Sources */,
 				27DCF65022B72EFA009A23C2 /* TcxFileWriter.cpp in Sources */,
 				27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */,
 				2772FEAD2503EE7C00ED9F2A /* BikePlanGenerator.cpp in Sources */,
@@ -2475,7 +2476,6 @@
 				27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */,
 				27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */,
 				27DCF5FC22B71628009A23C2 /* Activity.h in Sources */,
-				275CAC9C25E0392E000727AE /* StraenWeb.m in Sources */,
 				27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */,
 				27DCF5FD22B71628009A23C2 /* ActivityAttribute.h in Sources */,
 				27DCF5FE22B71628009A23C2 /* ActivityAttributeType.h in Sources */,

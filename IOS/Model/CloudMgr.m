@@ -61,8 +61,8 @@
 			[self->cloudServices addObject:self->strava];
 			break;
 		case CLOUD_SERVICE_WEB:
-			self->straenWeb = [[StraenWeb alloc] init];
-			[self->cloudServices addObject:self->straenWeb];
+			self->appCloudService = [[AppCloudService alloc] init];
+			[self->cloudServices addObject:self->appCloudService];
 			break;
 	}
 }
@@ -92,9 +92,9 @@
 			}
 			break;
 		case CLOUD_SERVICE_WEB:
-			if (self->straenWeb)
+			if (self->appCloudService)
 			{
-				return [self->straenWeb isLinked];
+				return [self->appCloudService isLinked];
 			}
 			break;
 	}
@@ -114,7 +114,7 @@
 		case CLOUD_SERVICE_STRAVA:
 			return [self->strava name];
 		case CLOUD_SERVICE_WEB:
-			return [self->straenWeb name];
+			return [self->appCloudService name];
 	}
 	return nil;
 }
@@ -145,7 +145,7 @@
 		case CLOUD_SERVICE_STRAVA:
 			return [self->strava uploadFile:fileName];
 		case CLOUD_SERVICE_WEB:
-			return [self->straenWeb uploadFile:fileName];
+			return [self->appCloudService uploadFile:fileName];
 	}
 	return FALSE;
 }
@@ -172,7 +172,7 @@
 		case CLOUD_SERVICE_STRAVA:
 			return [self->strava uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName];
 		case CLOUD_SERVICE_WEB:
-			return [self->straenWeb uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName];
+			return [self->appCloudService uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName];
 	}
 	return FALSE;
 }
