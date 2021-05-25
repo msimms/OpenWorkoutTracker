@@ -17,7 +17,7 @@ typedef enum CloudServiceType
 	CLOUD_SERVICE_DROPBOX, // Export the activity as a file in the user's Dropbox account
 	CLOUD_SERVICE_RUNKEEPER, // Sync the activity to RunKeeper
 	CLOUD_SERVICE_STRAVA, // Sync the activity to Strava
-	CLOUD_SERVICE_STRAEN_WEB // Sync the activity to the optional web companion
+	CLOUD_SERVICE_WEB // Sync the activity to the optional web companion
 } CloudServiceType;
 
 @interface CloudMgr : NSObject

@@ -24,7 +24,8 @@
 
 #pragma mark methods for starting and stopping workouts
 
-- (void)startWorkout:(NSString*)activityType withStartTime:(NSDate*)startTime
+- (void)startWorkout:(NSString*)activityType
+	   withStartTime:(NSDate*)startTime
 {
 	HKWorkoutConfiguration* workoutConfig = [[HKWorkoutConfiguration alloc] init];
 
@@ -53,14 +54,31 @@
 
 #pragma mark workout session delegate methods
 
-- (void)workoutSession:(HKWorkoutSession*)workoutSession didChangeToState:(HKWorkoutSessionState)toState fromState:(HKWorkoutSessionState)fromState date:(NSDate*)date
+- (void)workoutSession:(HKWorkoutSession*)workoutSession
+	  didChangeToState:(HKWorkoutSessionState)toState
+			 fromState:(HKWorkoutSessionState)fromState
+				  date:(NSDate*)date
 {
 	NSLog(@"Workout Session changed state.");
+
+	if ((fromState == HKWorkoutSessionStateNotStarted) && (toState == HKWorkoutSessionStateRunning))
+	{
+	}
+	else if ((fromState == HKWorkoutSessionStateRunning) && (toState == HKWorkoutSessionStateEnded))
+	{
+	}
 }
 
-- (void)workoutSession:(HKWorkoutSession*)workoutSession didFailWithError:(NSError*)error
+- (void)workoutSession:(HKWorkoutSession*)workoutSession
+	  didFailWithError:(NSError*)error
 {
 	NSLog(@"Workout Session failed.");
+}
+
+- (void)workoutSession:(HKWorkoutSession*)workoutSession
+	  didGenerateEvent:(HKWorkoutEvent*)event
+{
+	NSLog(@"Workout Session event.");
 }
 
 #pragma mark methods for getting heart rate updates from the watch

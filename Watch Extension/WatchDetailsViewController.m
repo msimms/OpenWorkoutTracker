@@ -85,7 +85,7 @@
 		}
 		else if ([dest isEqualToString:@SYNC_DEST_WEB])
 		{
-			success = [extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_STRAEN_WEB];
+			success = [extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_WEB];
 		}
 		else if ([dest isEqualToString:@SYNC_DEST_ICLOUD_DRIVE])
 		{

@@ -39,7 +39,7 @@
 	[self createCloudController:CLOUD_SERVICE_DROPBOX];
 	[self createCloudController:CLOUD_SERVICE_RUNKEEPER];
 	[self createCloudController:CLOUD_SERVICE_STRAVA];
-	[self createCloudController:CLOUD_SERVICE_STRAEN_WEB];
+	[self createCloudController:CLOUD_SERVICE_WEB];
 }
 
 - (void)createCloudController:(CloudServiceType)service
@@ -60,7 +60,7 @@
 			self->strava = [[Strava alloc] init];
 			[self->cloudServices addObject:self->strava];
 			break;
-		case CLOUD_SERVICE_STRAEN_WEB:
+		case CLOUD_SERVICE_WEB:
 			self->straenWeb = [[StraenWeb alloc] init];
 			[self->cloudServices addObject:self->straenWeb];
 			break;
@@ -91,7 +91,7 @@
 				return [self->strava isLinked];
 			}
 			break;
-		case CLOUD_SERVICE_STRAEN_WEB:
+		case CLOUD_SERVICE_WEB:
 			if (self->straenWeb)
 			{
 				return [self->straenWeb isLinked];
@@ -113,7 +113,7 @@
 			return [self->runKeeper name];
 		case CLOUD_SERVICE_STRAVA:
 			return [self->strava name];
-		case CLOUD_SERVICE_STRAEN_WEB:
+		case CLOUD_SERVICE_WEB:
 			return [self->straenWeb name];
 	}
 	return nil;
@@ -127,7 +127,7 @@
 		case CLOUD_SERVICE_DROPBOX:
 		case CLOUD_SERVICE_RUNKEEPER:
 		case CLOUD_SERVICE_STRAVA:
-		case CLOUD_SERVICE_STRAEN_WEB:
+		case CLOUD_SERVICE_WEB:
 			break;
 	}
 }
@@ -144,7 +144,7 @@
 			return [self->runKeeper uploadFile:fileName];
 		case CLOUD_SERVICE_STRAVA:
 			return [self->strava uploadFile:fileName];
-		case CLOUD_SERVICE_STRAEN_WEB:
+		case CLOUD_SERVICE_WEB:
 			return [self->straenWeb uploadFile:fileName];
 	}
 	return FALSE;
@@ -171,7 +171,7 @@
 			return [self->runKeeper uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName];
 		case CLOUD_SERVICE_STRAVA:
 			return [self->strava uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName];
-		case CLOUD_SERVICE_STRAEN_WEB:
+		case CLOUD_SERVICE_WEB:
 			return [self->straenWeb uploadActivityFile:fileName forActivityId:activityId forActivityName:activityName];
 	}
 	return FALSE;

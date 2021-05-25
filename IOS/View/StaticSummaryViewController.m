@@ -395,7 +395,7 @@ typedef enum ExportFileTypeButtons
 		// Web
 		else if ([self->selectedExportService isEqualToString:@SYNC_DEST_WEB])
 		{
-			if ([appDelegate exportActivityFileToCloudService:self->exportedFileName forActivityId:self->activityId toService:CLOUD_SERVICE_STRAEN_WEB])
+			if ([appDelegate exportActivityFileToCloudService:self->exportedFileName forActivityId:self->activityId toService:CLOUD_SERVICE_WEB])
 			{
 				[super showOneButtonAlert:STR_EXPORT withMsg:STR_EXPORT_SUCCEEDED];
 				[appDelegate markAsSynchedToWeb:self->activityId];

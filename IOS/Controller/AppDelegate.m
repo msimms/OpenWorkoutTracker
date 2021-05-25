@@ -1362,7 +1362,7 @@ void startSensorCallback(SensorType type, void* context)
 		// If we're supposed to export the activity to any services then do that.
 		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD_DRIVE] && [CloudPreferences usingiCloud])
 		{
-			[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_STRAEN_WEB];
+			[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_WEB];
 		}
 	}
 	return result;
@@ -2086,7 +2086,7 @@ void syncStatusCallback(const char* const destination, void* context)
 					switch ([code intValue])
 					{
 					case 0: // Server does not have activity
-						[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_STRAEN_WEB];
+						[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_WEB];
 						break;
 					case 1: // Server has the activity, but the hash has not been computed.
 					case 2: // Server has the activity, but the hash does not match.
