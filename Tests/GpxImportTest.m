@@ -34,7 +34,7 @@
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
-	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/StraenTest/master/gpx/";
+	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/TestFilesForFitnessApps/master/gpx/";
 	NSURL* tempUrl = [fm temporaryDirectory];
 
 	NSMutableArray* testFileNames = [[NSMutableArray alloc] init];

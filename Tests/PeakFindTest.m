@@ -32,7 +32,7 @@
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
-	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/StraenTest/master/accelerometer/";
+	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/TestFilesForFitnessApps/master/accelerometer/";
 	NSURL* tempUrl = [fm temporaryDirectory];
 
 	NSURL* dbFileUrl = [tempUrl URLByAppendingPathComponent:@"test.db"];
