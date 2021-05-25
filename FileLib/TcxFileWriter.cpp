@@ -128,11 +128,11 @@ namespace FileLib
 		return WriteTagAndValue(TCX_TAG_NAME_MAX_SPEED, maxSpeed);
 	}
 
-	bool TcxFileWriter::StoreLapCalories(double calories)
+	bool TcxFileWriter::StoreLapCalories(uint16_t calories)
 	{
 		if (CurrentTag().compare(TCX_TAG_NAME_LAP) != 0)
 			return false;
-		return WriteTagAndValue(TCX_TAG_NAME_CALORIES, calories);
+		return WriteTagAndValue(TCX_TAG_NAME_CALORIES, (uint32_t)calories);
 	}
 
 	bool TcxFileWriter::EndLap()

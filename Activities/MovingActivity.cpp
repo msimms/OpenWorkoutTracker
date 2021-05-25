@@ -908,6 +908,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		size_t lapNum = (size_t)strtoull(attributeName.c_str() + strlen(ACTIVITY_ATTRIBUTE_LAP_CALORIES), NULL, 0);
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_CALORIES;
+		result.value.doubleVal = (double)0.0;
 		result.valid = false;
 		if (lapNum > 0) // Lap numbers start from one
 		{

@@ -317,7 +317,7 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 					writer.StoreLapDistance(attr.value.doubleVal);
 					attributeName = ACTIVITY_ATTRIBUTE_LAP_CALORIES + std::to_string(lapNum);
 					attr = pActivity->QueryActivityAttribute(attributeName);
-					writer.StoreLapCalories(attr.value.doubleVal);					
+					writer.StoreLapCalories((uint16_t)attr.value.doubleVal);					
 					
 					if (writer.StartTrack())
 					{

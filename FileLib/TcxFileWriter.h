@@ -35,7 +35,7 @@ namespace FileLib
 		bool StoreLapSeconds(uint64_t timeMS);
 		bool StoreLapDistance(double distanceMeters);
 		bool StoreLapMaxSpeed(double maxSpeed);
-		bool StoreLapCalories(double calories);
+		bool StoreLapCalories(uint16_t calories);
 		bool EndLap();
 
 		bool StartTrack();
