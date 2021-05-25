@@ -541,7 +541,7 @@ uint64_t Activity::ElapsedTimeInMs() const
 	startTimeMs = startTimeMs * 1000;
 
 	// Sanity check.
-	if (startTimeMs > endTimeMs)
+	if (endTimeMs != 0 && startTimeMs > endTimeMs)
 	{
 		uint64_t temp = startTimeMs;
 		startTimeMs = endTimeMs;
