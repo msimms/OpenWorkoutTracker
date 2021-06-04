@@ -39,7 +39,7 @@ The software architecture uses a model-view-controller philosophy. Keeping the v
 
 As much as possible, the view layer is written in C/C++. This is because it can be compiled for any hardware platform and can also be called from almost any other programming language. For example, the iOS and watchOS apps utilize Objective-C for their view and controller layers and call into C for model functionality. In the future, the iOS and watch OS view and controller classes could be re-written in Swift. Likewise, an Android app could be written in Java, all while retaining the same backend (i.e. model) code.
 
-![Architecture Diagram](https://github.com/msimms/OpenWorkoutTracker/blob/master/Docs/Architecture.png?raw=true)
+![Architecture Diagram](https://github.com/msimms/OpenWorkoutTracker/blob/master/Docs/Architecture/Architecture.png?raw=true)
 
 ## Building
 This app is built using Apple XCode. Every attempt is made to stay up-to-date with the latest version of XCode and the latest version of iOS. In theory, if you have cloned the source code and initialized the submodules, then you should be able to open the project in XCode, build, and deploy.
