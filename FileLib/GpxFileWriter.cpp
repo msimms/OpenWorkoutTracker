@@ -69,14 +69,14 @@ namespace FileLib
 		return CloseAllTags();
 	}
 
-	bool GpxFileWriter::WriteMetadata(time_t startTime)
+	bool GpxFileWriter::WriteMetadata(time_t startTimeMs)
 	{
 		bool result = false;
 
 		if (OpenTag(GPX_TAG_NAME_METADATA))
 		{
 			char buf[32];
-			strftime(buf, sizeof(buf) - 1, "%Y-%m-%dT%H:%M:%SZ", gmtime(&startTime));
+			strftime(buf, sizeof(buf) - 1, "%Y-%m-%dT%H:%M:%SZ", gmtime(&startTimeMs));
 
 			WriteTagAndValue(GPX_TAG_NAME_TIME, buf);
 			CloseTag();
@@ -113,7 +113,7 @@ namespace FileLib
 		return false;
 	}
 
-	bool GpxFileWriter::StartTrackPoint(double lat, double lon, double alt, uint64_t timeMS)
+	bool GpxFileWriter::StartTrackPoint(double lat, double lon, double alt, uint64_t timeMs)
 	{
 		if (CurrentTag().compare(GPX_TAG_NAME_TRACKSEGMENT) != 0)
 			return false;
@@ -129,7 +129,7 @@ namespace FileLib
 		attribute.value = FormatDouble(lat);
 		attributes.push_back(attribute);
 		
-		std::string timeStr = FormatTimeMS(timeMS);
+		std::string timeStr = FormatTimeMS(timeMs);
 		if (OpenTag(GPX_TAG_NAME_TRACKPOINT, attributes, false))
 		{
 			WriteTagAndValue(GPX_TAG_NAME_ELEVATION, FormatDouble(alt));

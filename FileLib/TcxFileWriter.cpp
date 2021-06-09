@@ -56,7 +56,7 @@ namespace FileLib
 			attributes.push_back(attribute);
 			
 			result  = OpenTag("TrainingCenterDatabase", attributes, true);
-			result &= OpenTag(TCX_TAG_NAME_ACTIVITIES);
+			result &= StartActivities();
 		}
 		return result;
 	}
@@ -66,18 +66,30 @@ namespace FileLib
 		return CloseAllTags();
 	}
 
-	bool TcxFileWriter::WriteId(time_t startTime)
+	bool TcxFileWriter::WriteId(time_t startTimeMs)
 	{
-		return WriteTagAndValue(TCX_TAG_NAME_ID, FormatTimeMS(startTime));
+		return WriteTagAndValue(TCX_TAG_NAME_ID, FormatTimeMS(startTimeMs));
 	}
 
-	bool TcxFileWriter::StartActivity(const std::string& description)
+	bool TcxFileWriter::StartActivities()
+	{
+		return OpenTag(TCX_TAG_NAME_ACTIVITIES);
+	}
+
+	bool TcxFileWriter::EndActivities()
+	{
+		if (CurrentTag().compare(TCX_TAG_NAME_ACTIVITIES) == 0)
+			return CloseTag();
+		return false;
+	}
+
+	bool TcxFileWriter::StartActivity(const std::string& sportType)
 	{
 		XmlKeyValueList attributes;
 		XmlKeyValuePair attribute;
 
 		attribute.key = "Sport";
-		attribute.value = description;
+		attribute.value = sportType;
 		attributes.push_back(attribute);
 
 		return OpenTag(TCX_TAG_NAME_ACTIVITY, attributes);
@@ -95,23 +107,23 @@ namespace FileLib
 		return XmlFileWriter::OpenTag(TCX_TAG_NAME_LAP);
 	}
 
-	bool TcxFileWriter::StartLap(uint64_t timeMS)
+	bool TcxFileWriter::StartLap(uint64_t timeMs)
 	{
 		XmlKeyValueList attributes;
 		XmlKeyValuePair attribute;
 
 		attribute.key = "StartTime";
-		attribute.value = FormatTimeMS(timeMS);
+		attribute.value = FormatTimeMS(timeMs);
 		attributes.push_back(attribute);
 
 		return OpenTag(TCX_TAG_NAME_LAP, attributes);
 	}
 
-	bool TcxFileWriter::StoreLapSeconds(uint64_t timeMS)
+	bool TcxFileWriter::StoreLapSeconds(uint64_t timeMs)
 	{
 		if (CurrentTag().compare(TCX_TAG_NAME_LAP) != 0)
 			return false;
-		return WriteTagAndValue(TCX_TAG_NAME_TOTAL_TIME_SECONDS, (double)(timeMS / 1000));
+		return WriteTagAndValue(TCX_TAG_NAME_TOTAL_TIME_SECONDS, (double)(timeMs / 1000));
 	}
 
 	bool TcxFileWriter::StoreLapDistance(double distanceMeters)

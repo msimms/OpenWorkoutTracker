@@ -25,7 +25,7 @@ namespace FileLib
 		bool CreateFile(const std::string& fileName, const std::string& creator);
 		bool CloseFile();
 
-		bool WriteMetadata(time_t startTime);
+		bool WriteMetadata(time_t startTimeMs);
 		bool WriteName(const std::string& name);
 		
 		bool StartTrack();
@@ -34,7 +34,7 @@ namespace FileLib
 		bool StartTrackSegment();
 		bool EndTrackSegment();
 
-		bool StartTrackPoint(double lat, double lon, double alt, uint64_t timeMS);
+		bool StartTrackPoint(double lat, double lon, double alt, uint64_t timeMs);
 		bool EndTrackPoint();
 
 		bool StartExtensions();

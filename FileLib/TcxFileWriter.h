@@ -25,14 +25,17 @@ namespace FileLib
 		bool CreateFile(const std::string& fileName);
 		bool CloseFile();
 
-		bool WriteId(time_t startTime);
+		bool WriteId(time_t startTimeMs);
+
+		bool StartActivities();
+		bool EndActivities();
 
 		bool StartActivity(const std::string& description);
 		bool EndActivity();
 
 		bool StartLap();
-		bool StartLap(uint64_t timeMS);
-		bool StoreLapSeconds(uint64_t timeMS);
+		bool StartLap(uint64_t timeMs);
+		bool StoreLapSeconds(uint64_t timeMs);
 		bool StoreLapDistance(double distanceMeters);
 		bool StoreLapMaxSpeed(double maxSpeed);
 		bool StoreLapCalories(uint16_t calories);
