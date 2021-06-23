@@ -9,7 +9,8 @@ Why develop a workout tracker when there are so many closed-source options avail
 * Lack of support for strength-based exercises.
 * Other applications require you to create an account to use the application at all.
 * Users should have control over their own data and this is only possible with an open source application.
-* The network should be optional. It should be possible to use the app without sending any data to the cloud.
+* A belief that the "cloud" should be optional.
+* As a platform for future ideas and experiments.
 
 ## Major Features
 * Support for cycling, running, hiking, walking, pull-ups, push-ups (press-ups), etc.
