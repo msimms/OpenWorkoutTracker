@@ -357,12 +357,12 @@
 		27CF013324DAF68700263CEC /* BtleRadar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CF013024DAF68600263CEC /* BtleRadar.m */; };
 		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
 		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
-		27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		27DCF5CB22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		27DCF5D122B193B7009A23C2 /* InterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D022B193B7009A23C2 /* InterfaceController.m */; };
 		27DCF5D422B193B7009A23C2 /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D322B193B7009A23C2 /* ExtensionDelegate.m */; };
 		27DCF5D722B193B7009A23C2 /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF5D622B193B7009A23C2 /* NotificationController.m */; };
 		27DCF5D922B193B8009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5D822B193B8009A23C2 /* Assets.xcassets */; };
-		27DCF5DE22B193B8009A23C2 /* Straen.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* Straen.app */; };
+		27DCF5DE22B193B8009A23C2 /* OpenWorkoutTracker.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */; };
 		27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841819BFD063007CE934 /* ActivityMgr.h */; };
 		27DCF5FA22B7160C009A23C2 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841919BFD063007CE934 /* ActivityMgr.mm */; };
 		27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
@@ -602,7 +602,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				27DCF5CB22B193B7009A23C2 /* StraenWatch Extension.appex in Embed App Extensions */,
+				27DCF5CB22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -613,7 +613,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				27DCF5DE22B193B8009A23C2 /* Straen.app in Embed Watch Content */,
+				27DCF5DE22B193B8009A23C2 /* OpenWorkoutTracker.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -657,7 +657,7 @@
 		271C5E3820D59C2700DE759C /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = SOURCE_ROOT; };
 		271D8B0419D0E76C00857109 /* CadenceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CadenceCalculator.h; path = IOS/Sensors/CadenceCalculator.h; sourceTree = SOURCE_ROOT; };
 		271D8B0519D0E76C00857109 /* CadenceCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CadenceCalculator.m; path = IOS/Sensors/CadenceCalculator.m; sourceTree = SOURCE_ROOT; };
-		27214EC81ECB6B96007EE338 /* Straen.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Straen.entitlements; sourceTree = SOURCE_ROOT; };
+		27214EC81ECB6B96007EE338 /* App.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = SOURCE_ROOT; };
 		2728FD2319C1248700CE2BAD /* Icon_120px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_120px.png; path = Images/Icon_120px.png; sourceTree = "<group>"; };
 		2728FD2419C124B000CE2BAD /* Icon_80px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_80px.png; path = Images/Icon_80px.png; sourceTree = "<group>"; };
 		2728FD2519C124BE00CE2BAD /* Icon_58px.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon_58px.png; path = Images/Icon_58px.png; sourceTree = "<group>"; };
@@ -804,7 +804,7 @@
 		279E719F25758D02002B4BB6 /* en-GB.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "en-GB.lproj"; path = "IOS/en-GB.lproj"; sourceTree = SOURCE_ROOT; };
 		279E71A925759154002B4BB6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		279E71AA25759159002B4BB6 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ../es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		27A3624C19BFB0E200F5A17F /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A3624C19BFB0E200F5A17F /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27A3624F19BFB0E200F5A17F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		27A3625119BFB0E200F5A17F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		27A3625319BFB0E200F5A17F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1019,11 +1019,11 @@
 		27CF012F24DAF68600263CEC /* BtleLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleLight.m; path = IOS/Sensors/BtleLight.m; sourceTree = SOURCE_ROOT; };
 		27CF013024DAF68600263CEC /* BtleRadar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleRadar.m; path = IOS/Sensors/BtleRadar.m; sourceTree = SOURCE_ROOT; };
 		27CF013124DAF68700263CEC /* BtleRadar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleRadar.h; path = IOS/Sensors/BtleRadar.h; sourceTree = SOURCE_ROOT; };
-		27DCF5BE22B193B5009A23C2 /* Straen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Straen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27DCF5C522B193B7009A23C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "StraenWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27DCF5CA22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OpenWorkoutTrackerWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5CF22B193B7009A23C2 /* InterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterfaceController.h; sourceTree = "<group>"; };
 		27DCF5D022B193B7009A23C2 /* InterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterfaceController.m; sourceTree = "<group>"; };
 		27DCF5D222B193B7009A23C2 /* ExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
@@ -1033,8 +1033,8 @@
 		27DCF5D822B193B8009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27DCF5DA22B193B8009A23C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
-		27DCF5F522B70AED009A23C2 /* StraenWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StraenWatch.entitlements; sourceTree = "<group>"; };
-		27DCF5F622B70CAE009A23C2 /* StraenWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "StraenWatch Extension.entitlements"; sourceTree = "<group>"; };
+		27DCF5F522B70AED009A23C2 /* Watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Watch.entitlements; sourceTree = "<group>"; };
+		27DCF5F622B70CAE009A23C2 /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
 		27DCF5F722B70CAE009A23C2 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		27DCF63822B717FE009A23C2 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		27DCF66322B72FBF009A23C2 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
@@ -1389,8 +1389,8 @@
 		27A3624319BFB0E200F5A17F = {
 			isa = PBXGroup;
 			children = (
-				27DCF5F622B70CAE009A23C2 /* StraenWatch Extension.entitlements */,
-				27DCF5F522B70AED009A23C2 /* StraenWatch.entitlements */,
+				27DCF5F622B70CAE009A23C2 /* Watch Extension.entitlements */,
+				27DCF5F522B70AED009A23C2 /* Watch.entitlements */,
 				27DCF5C322B193B7009A23C2 /* Assets.xcassets */,
 				27072DEF1D40528B00045624 /* CorePlot.xcodeproj */,
 				2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */,
@@ -1410,9 +1410,9 @@
 		27A3624D19BFB0E200F5A17F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				27A3624C19BFB0E200F5A17F /* Straen.app */,
-				27DCF5BE22B193B5009A23C2 /* Straen.app */,
-				27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */,
+				27A3624C19BFB0E200F5A17F /* OpenWorkoutTracker.app */,
+				27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */,
+				27DCF5CA22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex */,
 				270CF4072391BBF400584058 /* Tests.xctest */,
 			);
 			name = Products;
@@ -1444,7 +1444,7 @@
 		27A3625519BFB0E200F5A17F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				27214EC81ECB6B96007EE338 /* Straen.entitlements */,
+				27214EC81ECB6B96007EE338 /* App.entitlements */,
 				27C0841119BFD051007CE934 /* Activities */,
 				27C0846519BFD06C007CE934 /* Bike */,
 				27B7CD1519BFD7DF000383E3 /* Cloud */,
@@ -1842,9 +1842,9 @@
 			productReference = 270CF4072391BBF400584058 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		27A3624B19BFB0E200F5A17F /* Straen */ = {
+		27A3624B19BFB0E200F5A17F /* OpenWorkoutTracker */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Straen" */;
+			buildConfigurationList = 27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker" */;
 			buildPhases = (
 				27A3624819BFB0E200F5A17F /* Sources */,
 				27A3624919BFB0E200F5A17F /* Frameworks */,
@@ -1858,14 +1858,14 @@
 			dependencies = (
 				27DCF5DD22B193B8009A23C2 /* PBXTargetDependency */,
 			);
-			name = Straen;
+			name = OpenWorkoutTracker;
 			productName = Straen;
-			productReference = 27A3624C19BFB0E200F5A17F /* Straen.app */;
+			productReference = 27A3624C19BFB0E200F5A17F /* OpenWorkoutTracker.app */;
 			productType = "com.apple.product-type.application";
 		};
-		27DCF5BD22B193B5009A23C2 /* StraenWatch */ = {
+		27DCF5BD22B193B5009A23C2 /* OpenWorkoutTrackerWatch */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27DCF5F222B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch" */;
+			buildConfigurationList = 27DCF5F222B193B8009A23C2 /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerWatch" */;
 			buildPhases = (
 				27DCF5BC22B193B5009A23C2 /* Resources */,
 				27DCF5F122B193B8009A23C2 /* Embed App Extensions */,
@@ -1875,14 +1875,14 @@
 			dependencies = (
 				27DCF5CD22B193B7009A23C2 /* PBXTargetDependency */,
 			);
-			name = StraenWatch;
+			name = OpenWorkoutTrackerWatch;
 			productName = StraenWatch;
-			productReference = 27DCF5BE22B193B5009A23C2 /* Straen.app */;
+			productReference = 27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */;
 			productType = "com.apple.product-type.application.watchapp2";
 		};
-		27DCF5C922B193B7009A23C2 /* StraenWatch Extension */ = {
+		27DCF5C922B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 27DCF5F022B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch Extension" */;
+			buildConfigurationList = 27DCF5F022B193B8009A23C2 /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerWatch Extension" */;
 			buildPhases = (
 				27DCF5C622B193B7009A23C2 /* Sources */,
 				27DCF5C722B193B7009A23C2 /* Frameworks */,
@@ -1892,9 +1892,9 @@
 			);
 			dependencies = (
 			);
-			name = "StraenWatch Extension";
+			name = "OpenWorkoutTrackerWatch Extension";
 			productName = "StraenWatch Extension";
-			productReference = 27DCF5CA22B193B7009A23C2 /* StraenWatch Extension.appex */;
+			productReference = 27DCF5CA22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
@@ -1955,7 +1955,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Straen" */;
+			buildConfigurationList = 27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "OpenWorkoutTracker" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1976,9 +1976,9 @@
 			);
 			projectRoot = "";
 			targets = (
-				27A3624B19BFB0E200F5A17F /* Straen */,
-				27DCF5BD22B193B5009A23C2 /* StraenWatch */,
-				27DCF5C922B193B7009A23C2 /* StraenWatch Extension */,
+				27A3624B19BFB0E200F5A17F /* OpenWorkoutTracker */,
+				27DCF5BD22B193B5009A23C2 /* OpenWorkoutTrackerWatch */,
+				27DCF5C922B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension */,
 				270CF4062391BBF400584058 /* Tests */,
 			);
 		};
@@ -2569,17 +2569,17 @@
 /* Begin PBXTargetDependency section */
 		270CF4232391C49F00584058 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 27A3624B19BFB0E200F5A17F /* Straen */;
+			target = 27A3624B19BFB0E200F5A17F /* OpenWorkoutTracker */;
 			targetProxy = 270CF4222391C49F00584058 /* PBXContainerItemProxy */;
 		};
 		27DCF5CD22B193B7009A23C2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 27DCF5C922B193B7009A23C2 /* StraenWatch Extension */;
+			target = 27DCF5C922B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension */;
 			targetProxy = 27DCF5CC22B193B7009A23C2 /* PBXContainerItemProxy */;
 		};
 		27DCF5DD22B193B8009A23C2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 27DCF5BD22B193B5009A23C2 /* StraenWatch */;
+			target = 27DCF5BD22B193B5009A23C2 /* OpenWorkoutTrackerWatch */;
 			targetProxy = 27DCF5DC22B193B8009A23C2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -2659,7 +2659,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Straen.app/Straen";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker.app/OpenWorkoutTracker";
 			};
 			name = Debug;
 		};
@@ -2690,7 +2690,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjssoftware.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Straen.app/Straen";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker.app/OpenWorkoutTracker";
 			};
 			name = Release;
 		};
@@ -2835,7 +2835,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -2860,7 +2860,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -2890,8 +2890,8 @@
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp";
-				PRODUCT_NAME = Straen;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp";
+				PRODUCT_NAME = OpenWorkoutTracker;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -2923,8 +2923,8 @@
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp";
-				PRODUCT_NAME = Straen;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp";
+				PRODUCT_NAME = OpenWorkoutTracker;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -2957,8 +2957,8 @@
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "StraenWatch Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "OpenWorkoutTrackerWatch Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -2992,8 +2992,8 @@
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.Straen.watchkitapp.watchkitextension";
-				PRODUCT_NAME = "StraenWatch Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp.watchkitextension";
+				PRODUCT_NAME = "OpenWorkoutTrackerWatch Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
@@ -3013,7 +3013,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "Straen" */ = {
+		27A3624719BFB0E200F5A17F /* Build configuration list for PBXProject "OpenWorkoutTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27A3627619BFB0E200F5A17F /* Debug */,
@@ -3022,7 +3022,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "Straen" */ = {
+		27A3627819BFB0E200F5A17F /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27A3627919BFB0E200F5A17F /* Debug */,
@@ -3031,7 +3031,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27DCF5F022B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch Extension" */ = {
+		27DCF5F022B193B8009A23C2 /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerWatch Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27DCF5E122B193B8009A23C2 /* Debug */,
@@ -3040,7 +3040,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		27DCF5F222B193B8009A23C2 /* Build configuration list for PBXNativeTarget "StraenWatch" */ = {
+		27DCF5F222B193B8009A23C2 /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerWatch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				27DCF5DF22B193B8009A23C2 /* Debug */,

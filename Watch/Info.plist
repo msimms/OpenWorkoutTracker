@@ -26,7 +26,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.mjs-software.Straen</string>
+	<string>com.mjs-software.OpenWorkoutTracker</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 </dict>

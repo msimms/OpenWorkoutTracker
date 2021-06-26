@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "27A3624B19BFB0E200F5A17F"
-               BuildableName = "Straen.app"
-               BlueprintName = "Straen"
-               ReferencedContainer = "container:Straen.xcodeproj">
+               BuildableName = "OpenWorkoutTracker.app"
+               BlueprintName = "OpenWorkoutTracker"
+               ReferencedContainer = "container:OpenWorkoutTracker.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,15 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "27A3624B19BFB0E200F5A17F"
-            BuildableName = "Straen.app"
-            BlueprintName = "Straen"
-            ReferencedContainer = "container:Straen.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -44,7 +35,7 @@
                BlueprintIdentifier = "270CF4062391BBF400584058"
                BuildableName = "Tests.xctest"
                BlueprintName = "Tests"
-               ReferencedContainer = "container:Straen.xcodeproj">
+               ReferencedContainer = "container:OpenWorkoutTracker.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,13 +44,10 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      enableASanStackUseAfterReturn = "YES"
-      disableMainThreadChecker = "YES"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
-      migratedStopOnEveryIssue = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable
@@ -67,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "27A3624B19BFB0E200F5A17F"
-            BuildableName = "Straen.app"
-            BlueprintName = "Straen"
-            ReferencedContainer = "container:Straen.xcodeproj">
+            BuildableName = "OpenWorkoutTracker.app"
+            BlueprintName = "OpenWorkoutTracker"
+            ReferencedContainer = "container:OpenWorkoutTracker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -84,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "27A3624B19BFB0E200F5A17F"
-            BuildableName = "Straen.app"
-            BlueprintName = "Straen"
-            ReferencedContainer = "container:Straen.xcodeproj">
+            BuildableName = "OpenWorkoutTracker.app"
+            BlueprintName = "OpenWorkoutTracker"
+            ReferencedContainer = "container:OpenWorkoutTracker.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
