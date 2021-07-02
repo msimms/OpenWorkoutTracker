@@ -24,7 +24,7 @@
 
 - (NSString*)name
 {
-	return @"Straen Web";
+	return @"OpenWorkoutTracker Web";
 }
 
 - (BOOL)uploadActivityFile:(NSString*)fileName forActivityId:(NSString*)activityId forActivityName:(NSString*)activityName

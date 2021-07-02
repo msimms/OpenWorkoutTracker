@@ -37,7 +37,7 @@
 #define MAX_BROADCAST_RATE     5
 #define DEFAULT_BROADCAST_RATE 30
 #define DEFAULT_PROTOCOL       "https"
-#define DEFAULT_HOST_NAME      "straen-app.com"
+#define DEFAULT_HOST_NAME      "openworkout.cloud"
 
 @implementation Preferences
 

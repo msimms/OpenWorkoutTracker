@@ -7,7 +7,7 @@
 
 #pragma once
 
-#define APP_NAME "Straen"
+#define APP_NAME "OpenWorkoutTracker"
 
 // When set to TRUE, this removes all broadcast functionality.
 #define OMIT_BROADCAST FALSE
