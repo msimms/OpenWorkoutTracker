@@ -10,20 +10,21 @@
 
 #import "ActivityViewType.h"
 
-#define ACTIVITY_PREF_VIEW_TYPE                   "View Type"
-#define ACTIVITY_PREF_BACKGROUND_COLOR            "Background Color"
-#define ACTIVITY_PREF_LABEL_COLOR                 "Label Color"
-#define ACTIVITY_PREF_TEXT_COLOR                  "Text Color"
-#define ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT     "Show Heart Rate Percent"
-#define ACTIVITY_PREF_START_STOP_BEEP             "Start/Stop Beep"
-#define ACTIVITY_PREF_SPLIT_BEEP                  "Split Beep"
-#define ACTIVITY_PREF_SCREEN_AUTO_LOCK            "Screen Auto-Locking"
-#define ACTIVITY_PREF_COUNTDOWN                   "Countdown Timer"
-#define ACTIVITY_PREF_GPS_SAMPLE_FREQ             "GPS Sample Frequency"
-#define ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY "GPS Horizontal Accuracy"
-#define ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY   "GPS Vertical Accuracy"
-#define ACTIVITY_PREF_GPS_FILTER_OPTION           "GPS Filter"
-#define ACTIVITY_PREF_ATTRIBUTES                  "Attributes"
+#define ACTIVITY_PREF_VIEW_TYPE                            "View Type"
+#define ACTIVITY_PREF_BACKGROUND_COLOR                     "Background Color"
+#define ACTIVITY_PREF_LABEL_COLOR                          "Label Color"
+#define ACTIVITY_PREF_TEXT_COLOR                           "Text Color"
+#define ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT              "Show Heart Rate Percent"
+#define ACTIVITY_PREF_START_STOP_BEEP                      "Start/Stop Beep"
+#define ACTIVITY_PREF_SPLIT_BEEP                           "Split Beep"
+#define ACTIVITY_PREF_SCREEN_AUTO_LOCK                     "Screen Auto-Locking"
+#define ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY "Allow Screen Presses During Activity"
+#define ACTIVITY_PREF_COUNTDOWN                            "Countdown Timer"
+#define ACTIVITY_PREF_GPS_SAMPLE_FREQ                      "GPS Sample Frequency"
+#define ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY          "GPS Horizontal Accuracy"
+#define ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY            "GPS Vertical Accuracy"
+#define ACTIVITY_PREF_GPS_FILTER_OPTION                    "GPS Filter"
+#define ACTIVITY_PREF_ATTRIBUTES                           "Attributes"
 
 #define ERROR_ATTRIBUTE_NOT_FOUND 255
 
@@ -45,7 +46,6 @@ typedef enum GpsFilterOption
 }
 
 - (id)init;
-- (id)initWithBT:(BOOL)hasBT;
 
 - (NSArray*)readStringArrayValue:(NSString*)activityType withAttributeName:(NSString*)attributeName;
 - (NSString*)readStringValue:(NSString*)activityType withAttributeName:(NSString*)attributeName;
@@ -57,8 +57,8 @@ typedef enum GpsFilterOption
 - (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withInteger:(NSInteger)value;
 - (void)writeValue:(NSString*)activityType withAttributeName:(NSString*)attributeName withBool:(BOOL)value;
 
-- (ActivityViewType)getViewType:(NSString*)activityType;
-- (void)setViewType:(NSString*)activityType withViewType:(ActivityViewType)viewType;
+- (ActivityViewType)getDefaultViewForActivityType:(NSString*)activityType;
+- (void)setDefaultViewForActivityType:(NSString*)activityType withViewType:(ActivityViewType)viewType;
 
 #if !TARGET_OS_WATCH
 - (NSString*)getBackgroundColorName:(NSString*)activityType;
@@ -89,6 +89,9 @@ typedef enum GpsFilterOption
 
 - (BOOL)getScreenAutoLocking:(NSString*)activityType;
 - (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value;
+
+- (BOOL)getAllowScreenPressesDuringActivity:(NSString*)activityType;
+- (void)setAllowScreenPressesDuringActivity:(NSString*)activityType withBool:(BOOL)value;
 
 - (uint8_t)getCountdown:(NSString*)activityType;
 - (void)setCountdown:(NSString*)activityType withSeconds:(uint8_t)seconds;

@@ -20,7 +20,6 @@
 #define SEGUE_TO_INTERVAL_EDIT_VIEW          "SegueToIntervalEditViewController"
 #define SEQUE_TO_INTERVALS_VIEW              "SegueToIntervalsView"
 #define SEGUE_TO_LAP_TIMES_VIEW              "SegueToLapTimesView"
-#define SEGUE_TO_LAYOUT_VIEW                 "SegueToLayoutView"
 #define SEGUE_TO_LIVE_MAP_VIEW               "SegueToLiveMapView"
 #define SEGUE_TO_LIVE_SUMMARY_VIEW           "SegueToLiveSummaryView"
 #define SEGUE_TO_LOGIN_VIEW                  "SegueToLoginView"

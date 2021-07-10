@@ -7,6 +7,7 @@
 
 #import "ComplexActivityViewController.h"
 #import "ActivityAttribute.h"
+#import "ActivityPreferences.h"
 #import "AppDelegate.h"
 #import "StringUtils.h"
 
@@ -16,7 +17,8 @@
 
 @implementation ComplexActivityViewController
 
-@synthesize swipe;
+@synthesize leftSwipe;
+@synthesize rightSwipe;
 
 @synthesize value_Large;
 @synthesize title_Large;
@@ -130,11 +132,15 @@
 	// Organize the toolbars.
 	[super organizeToolbars];
 
-	// Create the swipe gesture recognizer.
-	self.swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-	self.swipe.direction = UISwipeGestureRecognizerDirectionLeft;
-	self.swipe.delegate = self;
-	[self.view addGestureRecognizer:self.swipe];
+	// Create the swipe gesture recognizers.
+	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
+	self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+	self.leftSwipe.delegate = self;
+	self.rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
+	self.rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+	self.rightSwipe.delegate = self;
+	[self.view addGestureRecognizer:self.leftSwipe];
+	[self.view addGestureRecognizer:self.rightSwipe];
 
 	if ([appDelegate isActivityInProgress])
 	{

@@ -29,6 +29,7 @@
 @synthesize mapButton;
 
 @synthesize leftSwipe;
+@synthesize rightSwipe;
 
 @synthesize mapView;
 
@@ -128,11 +129,15 @@
 	// Organize the toolbars.
 	[super organizeToolbars];
 
-	// Create the swipe gesture recognizer.
+	// Create the swipe gesture recognizers.
 	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
 	self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
 	self.leftSwipe.delegate = self;
+	self.rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
+	self.rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+	self.rightSwipe.delegate = self;
 	[self.view addGestureRecognizer:self.leftSwipe];
+	[self.view addGestureRecognizer:self.rightSwipe];
 
 	if ([appDelegate isActivityInProgress])
 	{

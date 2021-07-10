@@ -49,7 +49,7 @@
 	[self startWatchSession]; // handles watch to phone interactions
 
 	self->cloudMgr = [[CloudMgr alloc] init];
-	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:TRUE];
+	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->badGps = FALSE;
 	self->receivingLocations = FALSE;
 	self->hasConnectivity = FALSE;

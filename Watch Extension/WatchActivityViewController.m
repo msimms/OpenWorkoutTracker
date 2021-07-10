@@ -104,13 +104,13 @@
 	self->showBroadcastIcon = [Preferences broadcastShowIcon];
 
 	// Cache the preferences.
-	self->prefs = [[ActivityPreferences alloc] initWithBT:TRUE];
+	self->prefs = [[ActivityPreferences alloc] init];
 
 	// Setup to receive crown events.
 	self.crownSequencer.delegate = self;
 	[self.crownSequencer focus];
 	self->totalCrownDelta = (double)0.0;
-	
+
 	// Notification subscriptions.
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
 
@@ -459,7 +459,10 @@
 
 - (IBAction)handleGesture:(WKTapGestureRecognizer*)gestureRecognizer
 {
-	[self showReplacementMenu];
+	if ([self->prefs getAllowScreenPressesDuringActivity:self->activityType] || !IsActivityInProgress())
+	{
+		[self showReplacementMenu];
+	}
 }
 
 #pragma mark notification handlers

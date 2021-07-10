@@ -10,11 +10,10 @@
 @interface ActivityPreferencesViewController : UIViewController <UIActionSheetDelegate>
 {
 	IBOutlet UITableView* optionsTableView;
-	
-	NSArray* enabledDisabledStrings;
+
+	NSArray* layoutStrings;
 	NSArray* countdownStrings;
 	NSArray* colorMenuStrings;
-	NSArray* positionStrings;
 	NSArray* accuracySettings;
 	NSArray* gpsFilterOptions;
 	

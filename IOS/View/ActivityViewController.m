@@ -84,9 +84,7 @@
 	CGRect screenBounds = [[UIScreen mainScreen] bounds];
 	self->screenHeight = screenBounds.size.height;
 
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->messages = [[NSMutableArray alloc] init];
 	self->tappedButtonIndex = 0;
 
@@ -1194,8 +1192,11 @@
 
 - (void)handleTapFrom:(UITapGestureRecognizer*)recognizer
 {
-	self->tappedButtonIndex = recognizer.view.tag;
-	[self showAttributesMenu];
+	if ([self->activityPrefs getAllowScreenPressesDuringActivity:self->activityType] || !IsActivityInProgress())
+	{
+		self->tappedButtonIndex = recognizer.view.tag;
+		[self showAttributesMenu];
+	}
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer

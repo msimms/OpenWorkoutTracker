@@ -20,6 +20,10 @@
 #define TITLE_GPS_ACCURACY    NSLocalizedString(@"Minimum GPS Accuracy", nil)
 #define TITLE_GPS_FILTER      NSLocalizedString(@"GPS Filter Options", nil)
 
+#define LABEL_COMPLEX         NSLocalizedString(@"Complex", nil)
+#define LABEL_MAPPED          NSLocalizedString(@"Mapped", nil)
+#define LABEL_SIMPLE          NSLocalizedString(@"Simple", nil)
+
 #define LABEL_ENABLED         NSLocalizedString(@"Enabled", nil)
 #define LABEL_DISABLED        NSLocalizedString(@"Disabled", nil)
 
@@ -56,6 +60,7 @@ typedef enum ScreenSectionItems
 {
 	SCREEN_ITEM_LAYOUT = 0,
 	SCREEN_ITEM_AUTOLOCK,
+	SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY,
 	SCREEN_ITEM_COUNTDOWN_TIMER,
 	SCREEN_ITEM_SHOW_HR_PERCENT,
 	NUM_SCREEN_ITEMS
@@ -102,12 +107,11 @@ typedef enum GpsSectionItems
 {
 	[super viewDidLoad];
 
-	self->enabledDisabledStrings = [NSArray arrayWithObjects:LABEL_ENABLED, LABEL_DISABLED, nil];
-	self->countdownStrings       = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
-	self->colorMenuStrings       = [NSArray arrayWithObjects:@"White", @"Gray", @"Black", @"Red", @"Green", @"Blue", @"Yellow", nil];
-	self->positionStrings        = [NSArray arrayWithObjects:@"1 (Top)", @"2 (Row 2 - Left)", @"3 (Row 2 - Right)", @"4 (Row 3 - Left)", @"5 (Row 3 - Right)", @"6 (Row 4 - Left)", @"7 (Row 4 - Right)", @"8 (Row 5 - Left)", @"9 (Row 5 - Right)", nil];
-	self->accuracySettings       = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, nil];
-	self->gpsFilterOptions       = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
+	self->layoutStrings    = [NSArray arrayWithObjects:LABEL_COMPLEX, LABEL_MAPPED, LABEL_SIMPLE, nil];
+	self->countdownStrings = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
+	self->colorMenuStrings = [NSArray arrayWithObjects:@"White", @"Gray", @"Black", @"Red", @"Green", @"Blue", @"Yellow", nil];
+	self->accuracySettings = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, nil];
+	self->gpsFilterOptions = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
 }
 
 - (BOOL)shouldAutorotate
@@ -177,7 +181,7 @@ typedef enum GpsSectionItems
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 	if (prefs)
 	{
 		switch (section)
@@ -187,10 +191,25 @@ typedef enum GpsSectionItems
 				{
 					case SCREEN_ITEM_LAYOUT:
 						cell.textLabel.text = LABEL_LAYOUT;
-						cell.detailTextLabel.text = @"";
+						switch ([prefs getDefaultViewForActivityType:activityType])
+						{
+							case ACTIVITY_VIEW_COMPLEX:
+								cell.detailTextLabel.text = LABEL_COMPLEX;
+								break;
+							case ACTIVITY_VIEW_MAPPED:
+								cell.detailTextLabel.text = LABEL_MAPPED;
+								break;
+							case ACTIVITY_VIEW_SIMPLE:
+								cell.detailTextLabel.text = LABEL_SIMPLE;
+								break;
+						}
 						break;
 					case SCREEN_ITEM_AUTOLOCK:
 						cell.textLabel.text = @ACTIVITY_PREF_SCREEN_AUTO_LOCK;
+						cell.detailTextLabel.text = @"";
+						break;
+					case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
+						cell.textLabel.text = @ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY;
 						cell.detailTextLabel.text = @"";
 						break;
 					case SCREEN_ITEM_COUNTDOWN_TIMER:
@@ -307,11 +326,10 @@ typedef enum GpsSectionItems
 		case SECTION_SCREEN:
 			if (row == SCREEN_ITEM_LAYOUT)
 			{
-				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			}
 			else if (row == SCREEN_ITEM_AUTOLOCK)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -319,9 +337,19 @@ typedef enum GpsSectionItems
 				[switchview setOn:[prefs getScreenAutoLocking:activityType]];
 				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 			}
+			else if (row == SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY)
+			{
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+				NSString* activityType = [appDelegate getCurrentActivityType];
+				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+				cell.accessoryView = switchview;
+				[switchview setTag:(section * 100) + row];
+				[switchview setOn:[prefs getAllowScreenPressesDuringActivity:activityType]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+			}
 			else if (row == SCREEN_ITEM_SHOW_HR_PERCENT)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -342,7 +370,7 @@ typedef enum GpsSectionItems
 		case SECTION_SOUNDS:
 			if (row == SOUND_ITEM_START_STOP_BEEP)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -352,7 +380,7 @@ typedef enum GpsSectionItems
 			}
 			else if (row == SOUND_ITEM_SPLIT_BEEP)
 			{
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 				NSString* activityType = [appDelegate getCurrentActivityType];
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 				cell.accessoryView = switchview;
@@ -387,11 +415,12 @@ typedef enum GpsSectionItems
 			switch (self->selectedRow)
 			{
 				case SCREEN_ITEM_LAYOUT:
-					[self performSegueWithIdentifier:@SEGUE_TO_LAYOUT_VIEW sender:self];
+					title = LABEL_LAYOUT;
+					buttonNames = self->layoutStrings;
 					break;
 				case SCREEN_ITEM_AUTOLOCK:
-					title = TITLE_SCREEN;
-					buttonNames = self->enabledDisabledStrings;
+					break;
+				case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
 					break;
 				case SCREEN_ITEM_COUNTDOWN_TIMER:
 					title = TITLE_COUNTDOWN;
@@ -408,8 +437,6 @@ typedef enum GpsSectionItems
 			buttonNames = self->colorMenuStrings;
 			break;
 		case SECTION_SOUNDS:
-			title = TITLE_SOUNDS;
-			buttonNames = self->enabledDisabledStrings;
 			break;
 		case SECTION_GPS:
 			switch (self->selectedRow)
@@ -446,13 +473,28 @@ typedef enum GpsSectionItems
 			[alertController addAction:[UIAlertAction actionWithTitle:buttonName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 			{
 				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+				ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 
 				if (prefs)
 				{
 					NSString* activityType = [appDelegate getCurrentActivityType];
-					
-					if ([title isEqualToString:TITLE_COLOR])
+
+					if ([title isEqualToString:LABEL_LAYOUT])
+					{
+						switch (self->selectedRow)
+						{
+							case ACTIVITY_VIEW_COMPLEX:
+								[prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_COMPLEX];
+								break;
+							case ACTIVITY_VIEW_MAPPED:
+								[prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_MAPPED];
+								break;
+							case ACTIVITY_VIEW_SIMPLE:
+								[prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_SIMPLE];
+								break;
+						}
+					}
+					else if ([title isEqualToString:TITLE_COLOR])
 					{
 						switch (self->selectedRow)
 						{
@@ -537,11 +579,6 @@ typedef enum GpsSectionItems
 	}
 }
 
-- (void)tableView:(UITableView*)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
-{
-	[self performSegueWithIdentifier:@SEGUE_TO_LAYOUT_VIEW sender:self];
-}
-
 #pragma mark UISwitch methods
 
 - (void)switchToggled:(id)sender
@@ -549,13 +586,18 @@ typedef enum GpsSectionItems
 	UISwitch* switchControl = sender;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	ActivityPreferences* prefs = [[ActivityPreferences alloc] initWithBT:[appDelegate hasLeBluetooth]];
+	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
 	NSString* activityType = [appDelegate getCurrentActivityType];
 
 	switch (switchControl.tag)
 	{
+		case (SECTION_SCREEN * 100) + SCREEN_ITEM_LAYOUT:
+			break;
 		case (SECTION_SCREEN * 100) + SCREEN_ITEM_AUTOLOCK:
 			[prefs setScreenAutoLocking:activityType withBool:switchControl.isOn];
+			break;
+		case (SECTION_SCREEN * 100) + SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
+			[prefs setAllowScreenPressesDuringActivity:activityType withBool:switchControl.isOn];
 			break;
 		case (SECTION_SCREEN * 100) + SCREEN_ITEM_SHOW_HR_PERCENT:
 			[prefs setShowHeartRatePercent:activityType withBool:switchControl.isOn];

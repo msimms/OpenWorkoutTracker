@@ -11,7 +11,8 @@
 
 @interface ComplexActivityViewController : ActivityViewController
 {
-	IBOutlet UISwipeGestureRecognizer* swipe;
+	IBOutlet UISwipeGestureRecognizer* leftSwipe;
+	IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
 	IBOutlet UILabel* value_Large;
 	IBOutlet UILabel* title_Large;
@@ -52,7 +53,8 @@
 
 - (void)onRefreshTimer:(NSTimer*)timer;
 
-@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* swipe;
+@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* leftSwipe;
+@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
 @property (nonatomic, retain) IBOutlet UILabel* value_Large;
 @property (nonatomic, retain) IBOutlet UILabel* title_Large;

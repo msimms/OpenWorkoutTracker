@@ -7,6 +7,7 @@
 
 #import "SimpleActivityViewController.h"
 #import "ActivityAttribute.h"
+#import "ActivityPreferences.h"
 #import "AppDelegate.h"
 #import "StringUtils.h"
 
@@ -17,6 +18,7 @@
 @implementation SimpleActivityViewController
 
 @synthesize leftSwipe;
+@synthesize rightSwipe;
 
 @synthesize value1;
 @synthesize title1;
@@ -99,7 +101,11 @@
 	self.leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
 	self.leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
 	self.leftSwipe.delegate = self;
+	self.rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightSwipe:)];
+	self.rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+	self.rightSwipe.delegate = self;
 	[self.view addGestureRecognizer:self.leftSwipe];
+	[self.view addGestureRecognizer:self.rightSwipe];
 
 	if ([appDelegate isActivityInProgress])
 	{
@@ -172,6 +178,11 @@
 
 - (void)handleLeftSwipe:(UISwipeGestureRecognizer*)recognizer
 {
+	// Set this as the new default view style for the activity type.
+	//AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	//ActivityPreferences* activityPrefs = [[ActivityPreferences alloc] init];
+	//[activityPrefs setDefaultViewForActivityType:[appDelegate getCurrentActivityType] withViewType:ACTIVITY_VIEW_MAPPED];
+
 	[self performSegueWithIdentifier:@SEQUE_TO_MAPPED_VIEW sender:self];
 }
 

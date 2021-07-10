@@ -106,7 +106,7 @@ typedef enum MsgDestinationType
 	[self->sensorMgr addSensor:accelerometerController];
 	[self->sensorMgr addSensor:locationController];
 
-	self->activityPrefs = [[ActivityPreferences alloc] initWithBT:[self hasLeBluetooth]];
+	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->currentlyImporting = FALSE;
 	self->badGps = FALSE;
 	self->currentActivityIndex = 0;

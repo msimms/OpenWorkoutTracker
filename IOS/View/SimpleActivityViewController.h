@@ -10,8 +10,9 @@
 #import "ActivityViewController.h"
 
 @interface SimpleActivityViewController : ActivityViewController
-{	
+{
 	IBOutlet UISwipeGestureRecognizer* leftSwipe;
+	IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
 	IBOutlet UILabel* value1;
 	IBOutlet UILabel* title1;
@@ -38,6 +39,7 @@
 - (void)onRefreshTimer:(NSTimer*)timer;
 
 @property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* leftSwipe;
+@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
 @property (nonatomic, retain) IBOutlet UILabel* value1;
 @property (nonatomic, retain) IBOutlet UILabel* title1;

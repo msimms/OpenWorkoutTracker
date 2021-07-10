@@ -110,7 +110,7 @@
 
 - (void)showActivityView:(NSString*)activityType
 {
-	ActivityViewType viewType = [[[ActivityPreferences alloc] init] getViewType:activityType];
+	ActivityViewType viewType = [[[ActivityPreferences alloc] init] getDefaultViewForActivityType:activityType];
 
 	switch (viewType)
 	{

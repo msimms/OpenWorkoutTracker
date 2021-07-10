@@ -17,6 +17,7 @@
 	IBOutlet UIBarButtonItem* mapButton;
 
 	IBOutlet UISwipeGestureRecognizer* leftSwipe;
+	IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
 	IBOutlet MKMapView* mapView;
 	
@@ -62,6 +63,7 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* mapButton;
 
 @property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* leftSwipe;
+@property (nonatomic, retain) IBOutlet UISwipeGestureRecognizer* rightSwipe;
 
 @property (nonatomic, retain) IBOutlet MKMapView* mapView;
 

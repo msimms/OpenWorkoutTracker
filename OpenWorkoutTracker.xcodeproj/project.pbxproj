@@ -272,7 +272,6 @@
 		27B7CD9519BFD91C000383E3 /* IntervalEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5919BFD91C000383E3 /* IntervalEditViewController.m */; };
 		27B7CD9619BFD91C000383E3 /* IntervalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5B19BFD91C000383E3 /* IntervalsViewController.m */; };
 		27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5D19BFD91C000383E3 /* LapTimesViewController.m */; };
-		27B7CD9819BFD91C000383E3 /* LayoutStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD5F19BFD91C000383E3 /* LayoutStyleViewController.m */; };
 		27B7CD9A19BFD91C000383E3 /* LiveMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD6319BFD91C000383E3 /* LiveMapViewController.m */; };
 		27B7CD9B19BFD91C000383E3 /* LiveSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD6519BFD91C000383E3 /* LiveSummaryViewController.m */; };
 		27B7CD9C19BFD91C000383E3 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD6719BFD91C000383E3 /* LoginViewController.m */; };
@@ -862,8 +861,6 @@
 		27B7CD5B19BFD91C000383E3 /* IntervalsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IntervalsViewController.m; path = IOS/View/IntervalsViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD5C19BFD91C000383E3 /* LapTimesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LapTimesViewController.h; path = IOS/View/LapTimesViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD5D19BFD91C000383E3 /* LapTimesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LapTimesViewController.m; path = IOS/View/LapTimesViewController.m; sourceTree = SOURCE_ROOT; };
-		27B7CD5E19BFD91C000383E3 /* LayoutStyleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayoutStyleViewController.h; path = IOS/View/LayoutStyleViewController.h; sourceTree = SOURCE_ROOT; };
-		27B7CD5F19BFD91C000383E3 /* LayoutStyleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LayoutStyleViewController.m; path = IOS/View/LayoutStyleViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD6219BFD91C000383E3 /* LiveMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveMapViewController.h; path = IOS/View/LiveMapViewController.h; sourceTree = SOURCE_ROOT; };
 		27B7CD6319BFD91C000383E3 /* LiveMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveMapViewController.m; path = IOS/View/LiveMapViewController.m; sourceTree = SOURCE_ROOT; };
 		27B7CD6419BFD91C000383E3 /* LiveSummaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveSummaryViewController.h; path = IOS/View/LiveSummaryViewController.h; sourceTree = SOURCE_ROOT; };
@@ -1230,8 +1227,6 @@
 				27B7CD5B19BFD91C000383E3 /* IntervalsViewController.m */,
 				27B7CD5C19BFD91C000383E3 /* LapTimesViewController.h */,
 				27B7CD5D19BFD91C000383E3 /* LapTimesViewController.m */,
-				27B7CD5E19BFD91C000383E3 /* LayoutStyleViewController.h */,
-				27B7CD5F19BFD91C000383E3 /* LayoutStyleViewController.m */,
 				27B7CD6219BFD91C000383E3 /* LiveMapViewController.h */,
 				27B7CD6319BFD91C000383E3 /* LiveMapViewController.m */,
 				27B7CD6419BFD91C000383E3 /* LiveSummaryViewController.h */,
@@ -2362,7 +2357,6 @@
 				2704717F216E253B00EE47FF /* KMeans.cpp in Sources */,
 				27C0845619BFD063007CE934 /* Hike.cpp in Sources */,
 				27B7CD8D19BFD91C000383E3 /* CrumbPathRenderer.m in Sources */,
-				27B7CD9819BFD91C000383E3 /* LayoutStyleViewController.m in Sources */,
 				2797F13C19BFE2C1008F8672 /* StringUtils.m in Sources */,
 				27C0845B19BFD063007CE934 /* PullUpAnalyzer.cpp in Sources */,
 				27B7CDAB19BFD91C000383E3 /* TagViewController.m in Sources */,

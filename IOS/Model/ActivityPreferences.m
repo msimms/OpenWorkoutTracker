@@ -12,73 +12,36 @@
 #import "ActivityType.h"
 #import "Preferences.h"
 
-#define DEFAULT_SAMPLE_FREQUENCY 2
-
 @implementation ActivityPreferences
 
 - (id)init
 {
 	self = [super init];
-	return self;
-}
-
-- (id)initWithBT:(BOOL)hasBT
-{
-	self = [super init];
 	if (self != nil)
 	{
-		if (hasBT)
-		{
 #if TARGET_OS_WATCH
-			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
-										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
-										  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
-										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
-										  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
-										  @ACTIVITY_ATTRIBUTE_CADENCE,
-										  @ACTIVITY_ATTRIBUTE_HEART_RATE,
-										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
-										  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
-										  nil];
+		self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
+									  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+									  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
+									  @ACTIVITY_ATTRIBUTE_CADENCE,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+									  nil];
 #else
-			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
-										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
-										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
-										  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
-										  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
-										  @ACTIVITY_ATTRIBUTE_CADENCE,
-										  @ACTIVITY_ATTRIBUTE_HEART_RATE,
-										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
-										  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
-										  nil];
+		self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
+									  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
+									  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
+									  @ACTIVITY_ATTRIBUTE_CADENCE,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+									  nil];
 #endif
-		}
-		else
-		{
-#if TARGET_OS_WATCH
-			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
-										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
-										  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
-										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
-										  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
-										  @ACTIVITY_ATTRIBUTE_FASTEST_SPEED,
-										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
-										  @ACTIVITY_ATTRIBUTE_CURRENT_CLIMB,
-										  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
-										  nil];
-#else
-			self->defaultCyclingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
-										  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
-										  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
-										  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
-										  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
-										  @ACTIVITY_ATTRIBUTE_FASTEST_SPEED,
-										  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
-										  @ACTIVITY_ATTRIBUTE_CURRENT_CLIMB,
-										  @ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB,
-										  nil];
-#endif
-		}
 
 		self->defaultStationaryBikeLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
 											 @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
@@ -267,7 +230,7 @@
 	[defaults synchronize];
 }
 
-- (ActivityViewType)getViewType:(NSString*)activityType
+- (ActivityViewType)getDefaultViewForActivityType:(NSString*)activityType
 {
 	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE];
 
@@ -293,7 +256,7 @@
 	return (ActivityViewType)value;
 }
 
-- (void)setViewType:(NSString*)activityType withViewType:(ActivityViewType)viewType
+- (void)setDefaultViewForActivityType:(NSString*)activityType withViewType:(ActivityViewType)viewType
 {
 	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE withInteger:(NSInteger)viewType];
 }
@@ -430,6 +393,16 @@
 - (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value
 {
 	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK withBool:value];
+}
+
+- (BOOL)getAllowScreenPressesDuringActivity:(NSString*)activityType
+{
+	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY];
+}
+
+- (void)setAllowScreenPressesDuringActivity:(NSString*)activityType withBool:(BOOL)value
+{
+	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY withBool:value];
 }
 
 - (uint8_t)getCountdown:(NSString*)activityType
