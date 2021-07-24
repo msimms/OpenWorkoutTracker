@@ -271,6 +271,28 @@
 	}
 }
 
+#pragma mark methods that support the countdown timer
+
+- (void)blurBackground
+{
+	if (!UIAccessibilityIsReduceTransparencyEnabled())
+	{
+		self.view.backgroundColor = [UIColor clearColor];
+
+		UIBlurEffect* blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemUltraThinMaterial];
+		self->blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+
+		blurEffectView.frame = self.view.bounds;
+		blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+		[self.view addSubview:blurEffectView];
+	}
+	else
+	{
+		self.view.backgroundColor = [UIColor blackColor];
+	}
+}
+
 #pragma mark NSTimer methods
 
 - (void)onCountdownTimer:(NSTimer*)timer
@@ -300,11 +322,15 @@
 	// Timer has expired, start the activity, destroy the timer, and delete the image.
 	else
 	{
+		[self initializeLabelColor];
 		[self doStart];
 
 		[self->countdownTimer invalidate];
+		[self->blurEffectView removeFromSuperview];
+
 		self->countdownTimer = nil;
 		self->lastCountdownImage = nil;
+		self->blurEffectView = nil;
 	}
 }
 
@@ -668,6 +694,8 @@
 
 			if (self->countdownSecs > 0)
 			{
+				[self blurBackground];
+
 				self->countdownTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]
 																interval:1
 																  target:self

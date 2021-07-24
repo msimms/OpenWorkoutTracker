@@ -35,6 +35,7 @@
 	NSInteger                  screenHeight; // Screen height, in pixels
 	NSNumber*                  currentBroadcastStatus; // Last broadcast status message regarding broadcast, or nil if not set
 	NSNumber*                  displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set
+	UIVisualEffectView*        blurEffectView; // Used when the countdown timer is displayed
 	UIImageView*               lastCountdownImage; // Last countdown image that was displayed, or nil if no image is displayed
 	UIImageView*               broadcastImage; // Currently displayed broadcast status image, or nil if no image is displayed
 	NSMutableArray*            attributesToDisplay; // Names of the things to display
