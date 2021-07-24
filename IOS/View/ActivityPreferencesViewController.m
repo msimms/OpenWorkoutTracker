@@ -36,6 +36,10 @@
 #define LABEL_5_METERS        NSLocalizedString(@"5 Meters", nil)
 #define LABEL_10_METERS       NSLocalizedString(@"10 Meters", nil)
 #define LABEL_20_METERS       NSLocalizedString(@"20 Meters", nil)
+#define LABEL_50_METERS       NSLocalizedString(@"50 Meters", nil)
+
+#define LABEL_SECONDS         NSLocalizedString(@"Seconds", nil)
+#define LABEL_METERS          NSLocalizedString(@"Meters", nil)
 
 #define LABEL_WARN            NSLocalizedString(@"Warn", nil)
 #define LABEL_DISCARD         NSLocalizedString(@"Discard", nil)
@@ -110,7 +114,7 @@ typedef enum GpsSectionItems
 	self->layoutStrings    = [NSArray arrayWithObjects:LABEL_COMPLEX, LABEL_MAPPED, LABEL_SIMPLE, nil];
 	self->countdownStrings = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
 	self->colorMenuStrings = [NSArray arrayWithObjects:@"White", @"Gray", @"Black", @"Red", @"Green", @"Blue", @"Yellow", nil];
-	self->accuracySettings = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, nil];
+	self->accuracySettings = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, LABEL_50_METERS, nil];
 	self->gpsFilterOptions = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
 }
 
@@ -217,7 +221,7 @@ typedef enum GpsSectionItems
 							uint8_t value = [prefs getCountdown:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_COUNTDOWN;
 							if (value > 0)
-								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
+								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_SECONDS];
 							else
 								cell.detailTextLabel.text = LABEL_OFF;
 						}
@@ -270,7 +274,7 @@ typedef enum GpsSectionItems
 							uint8_t value = [prefs getMinGpsHorizontalAccuracy:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY;
 							if (value > 0)
-								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
+								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_METERS];
 							else
 								cell.detailTextLabel.text = LABEL_NO_FILTERING;
 						}
@@ -280,7 +284,7 @@ typedef enum GpsSectionItems
 							uint8_t value = [prefs getMinGpsVerticalAccuracy:activityType];
 							cell.textLabel.text = @ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY;
 							if (value > 0)
-								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", value];
+								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_METERS];
 							else
 								cell.detailTextLabel.text = LABEL_NO_FILTERING;
 						}
@@ -534,6 +538,8 @@ typedef enum GpsSectionItems
 									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:10];
 								else if ([buttonName isEqualToString:LABEL_20_METERS])
 									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:20];
+								else if ([buttonName isEqualToString:LABEL_50_METERS])
+									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:50];
 								break;
 							case GPS_ITEM_VERTICAL_ACCURACY:
 								if ([buttonName isEqualToString:LABEL_NO_FILTERING])
@@ -544,6 +550,8 @@ typedef enum GpsSectionItems
 									[prefs setMinGpsVerticalAccuracy:activityType withMeters:10];
 								else if ([buttonName isEqualToString:LABEL_20_METERS])
 									[prefs setMinGpsVerticalAccuracy:activityType withMeters:20];
+								else if ([buttonName isEqualToString:LABEL_50_METERS])
+									[prefs setMinGpsVerticalAccuracy:activityType withMeters:50];
 						}
 					}
 					else if ([title isEqualToString:TITLE_GPS_FILTER])
