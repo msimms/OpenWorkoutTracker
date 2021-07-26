@@ -553,6 +553,12 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 #else
 			return TRUE;
 #endif
+		case FEATURE_TRIATHLON:
+#if OMIT_SWIM_ACTIVITIES
+			return FALSE;
+#else
+			return TRUE;
+#endif
 	}
 	return TRUE;
 }
@@ -807,7 +813,7 @@ void activityTypeCallback(const char* type, void* context)
 - (NSMutableArray*)getActivityTypes
 {
 	NSMutableArray* types = [[NSMutableArray alloc] init];
-	GetActivityTypes(activityTypeCallback, (__bridge void*)types, [self isFeaturePresent:FEATURE_STRENGTH_ACTIVITIES], [self isFeaturePresent:FEATURE_SWIM_ACTIVITIES]);
+	GetActivityTypes(activityTypeCallback, (__bridge void*)types, [self isFeaturePresent:FEATURE_STRENGTH_ACTIVITIES], [self isFeaturePresent:FEATURE_SWIM_ACTIVITIES], [self isFeaturePresent:FEATURE_TRIATHLON]);
 	return types;
 }
 

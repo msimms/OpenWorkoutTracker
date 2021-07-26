@@ -21,5 +21,6 @@
 #define ACTIVITY_TYPE_WALKING             "Walking"
 #define ACTIVITY_TYPE_OPEN_WATER_SWIMMING "Open Water Swimming"
 #define ACTIVITY_TYPE_POOL_SWIMMING       "Pool Swimming"
+#define ACTIVITY_TYPE_TRIATHLON           "Triathlon"
 
 #endif

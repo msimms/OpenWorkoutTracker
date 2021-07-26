@@ -191,6 +191,9 @@
 		276D5AFC1AA16A41008F55AF /* iCloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFB1AA16A41008F55AF /* iCloud.m */; };
 		276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AFE1AA16A67008F55AF /* RunKeeper.m */; };
 		276D5B021AA16A7D008F55AF /* Strava.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5B011AA16A7D008F55AF /* Strava.m */; };
+		276E367126ADFDB1004D2DC5 /* Triathlon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276E366026ADFB2E004D2DC5 /* Triathlon.cpp */; };
+		276E367526ADFDB2004D2DC5 /* Triathlon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276E366026ADFB2E004D2DC5 /* Triathlon.cpp */; };
+		276E367626ADFDB3004D2DC5 /* Triathlon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276E366026ADFB2E004D2DC5 /* Triathlon.cpp */; };
 		276E3BA223B83ADA00EAC341 /* PacePlansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 276E3BA123B83ADA00EAC341 /* PacePlansViewController.m */; };
 		276E3BA523BC042100EAC341 /* PacePlanEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 276E3BA423BC042000EAC341 /* PacePlanEditViewController.m */; };
 		2772FEAC2503DFD300ED9F2A /* BikePlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2772FEAB2503DFD300ED9F2A /* BikePlanGenerator.cpp */; };
@@ -716,6 +719,8 @@
 		276D5AFE1AA16A67008F55AF /* RunKeeper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RunKeeper.m; path = Cloud/RunKeeper/RunKeeper.m; sourceTree = SOURCE_ROOT; };
 		276D5B001AA16A7D008F55AF /* Strava.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Strava.h; path = Cloud/Strava/Strava.h; sourceTree = SOURCE_ROOT; };
 		276D5B011AA16A7D008F55AF /* Strava.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Strava.m; path = Cloud/Strava/Strava.m; sourceTree = SOURCE_ROOT; };
+		276E366026ADFB2E004D2DC5 /* Triathlon.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Triathlon.cpp; path = Activities/Triathlon.cpp; sourceTree = SOURCE_ROOT; };
+		276E366D26ADFB2E004D2DC5 /* Triathlon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Triathlon.h; path = Activities/Triathlon.h; sourceTree = SOURCE_ROOT; };
 		276E3B8F23B0FC3B00EAC341 /* PacePlan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PacePlan.h; path = Activities/PacePlan.h; sourceTree = SOURCE_ROOT; };
 		276E3BA023B83ADA00EAC341 /* PacePlansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacePlansViewController.h; path = IOS/View/PacePlansViewController.h; sourceTree = SOURCE_ROOT; };
 		276E3BA123B83ADA00EAC341 /* PacePlansViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PacePlansViewController.m; path = IOS/View/PacePlansViewController.m; sourceTree = SOURCE_ROOT; };
@@ -1742,6 +1747,8 @@
 				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,
 				27C0844819BFD063007CE934 /* Treadmill.cpp */,
 				27C0844919BFD063007CE934 /* Treadmill.h */,
+				276E366026ADFB2E004D2DC5 /* Triathlon.cpp */,
+				276E366D26ADFB2E004D2DC5 /* Triathlon.h */,
 				27C0844A19BFD063007CE934 /* UnitMgr.cpp */,
 				27C0844B19BFD063007CE934 /* UnitMgr.h */,
 				27F4240A23A45FAC00F59F50 /* Walk.cpp */,
@@ -2133,6 +2140,7 @@
 				270CF4792391F0BA00584058 /* GpxFileWriter.cpp in Sources */,
 				270CF47A2391F0BA00584058 /* GpxFileWriter.h in Sources */,
 				270CF47B2391F0BB00584058 /* GpxTags.h in Sources */,
+				276E367626ADFDB3004D2DC5 /* Triathlon.cpp in Sources */,
 				270CF47C2391F0BB00584058 /* KmlFileReader.cpp in Sources */,
 				270CF47D2391F0BB00584058 /* KmlFileReader.h in Sources */,
 				270CF47E2391F0BB00584058 /* TcxFileReader.cpp in Sources */,
@@ -2249,6 +2257,7 @@
 				27B7CDFA19BFD99B000383E3 /* SensorFactory.m in Sources */,
 				276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */,
 				270547B422EF9AA20071F3C2 /* ActivityHash.m in Sources */,
+				276E367126ADFDB1004D2DC5 /* Triathlon.cpp in Sources */,
 				27C0845919BFD063007CE934 /* MovingActivity.cpp in Sources */,
 				2797F14F19BFE3B7008F8672 /* BroadcastManager.m in Sources */,
 				27B7CDA519BFD91C000383E3 /* SettingsViewController.m in Sources */,
@@ -2515,6 +2524,7 @@
 				27DCF61522B71628009A23C2 /* MountainBiking.cpp in Sources */,
 				27CF012224D7A68300263CEC /* WorkoutPlanGenerator.cpp in Sources */,
 				27DCF61622B71628009A23C2 /* MountainBiking.h in Sources */,
+				276E367526ADFDB2004D2DC5 /* Triathlon.cpp in Sources */,
 				2705895225463E7F0032E43E /* WatchHealthManager.m in Sources */,
 				27DCF68422C294D4009A23C2 /* SensorFactory.m in Sources */,
 				27DCF61722B71628009A23C2 /* MovingActivity.cpp in Sources */,

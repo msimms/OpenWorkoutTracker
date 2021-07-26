@@ -2296,7 +2296,7 @@ extern "C" {
 		return false;
 	}
 
-	void GetActivityTypes(ActivityTypeCallback callback, void* context, bool includeStrengthActivities, bool includeSwimActivities)
+	void GetActivityTypes(ActivityTypeCallback callback, void* context, bool includeStrengthActivities, bool includeSwimActivities, bool includeTriathlonMode)
 	{
 		if (g_pActivityFactory)
 		{
