@@ -2965,6 +2965,10 @@ void attributeNameCallback(const char* name, void* context)
 
 			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 		}
+		else
+		{
+			free((void*)ourActivityId);
+		}
 	}
 }
 
