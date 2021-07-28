@@ -9,6 +9,7 @@
 
 Triathlon::Triathlon() : MovingActivity()
 {
+	m_currentSport = TRI_SWIM;
 }
 
 Triathlon::~Triathlon()
@@ -34,8 +35,44 @@ void Triathlon::Pause()
 	m_run.Pause();
 }
 
+bool Triathlon::ProcessSensorReading(const SensorReading& reading)
+{
+	switch (m_currentSport)
+	{
+		case TRI_SWIM:
+			return m_swim.ProcessSensorReading(reading);
+		case TRI_T1:
+			break;
+		case TRI_BIKE:
+			return m_bike.ProcessSensorReading(reading);
+		case TRI_T2:
+			break;
+		case TRI_RUN:
+			return m_run.ProcessSensorReading(reading);
+		default:
+			break;
+	}
+	return false;
+}
+
 ActivityAttributeType Triathlon::QueryActivityAttribute(const std::string& attributeName) const
 {
+	switch (m_currentSport)
+	{
+		case TRI_SWIM:
+			return m_swim.QueryActivityAttribute(attributeName);
+		case TRI_T1:
+			break;
+		case TRI_BIKE:
+			return m_bike.QueryActivityAttribute(attributeName);
+		case TRI_T2:
+			break;
+		case TRI_RUN:
+			return m_run.QueryActivityAttribute(attributeName);
+		default:
+			break;
+	}
+
 	ActivityAttributeType attr;
 	attr.valid = false;
 	return attr;
@@ -46,5 +83,19 @@ double Triathlon::CaloriesBurned() const
 	double calories = m_swim.CaloriesBurned();
 	calories += m_bike.CaloriesBurned();
 	calories += m_run.CaloriesBurned();
-	return 0.0;
+	return calories;
+}
+
+void Triathlon::BuildAttributeList(std::vector<std::string>& attributes) const
+{
+	m_swim.BuildAttributeList(attributes);
+	m_bike.BuildAttributeList(attributes);
+	m_run.BuildAttributeList(attributes);
+}
+
+void Triathlon::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
+{
+	m_swim.BuildSummaryAttributeList(attributes);
+	m_bike.BuildSummaryAttributeList(attributes);
+	m_run.BuildSummaryAttributeList(attributes);
 }

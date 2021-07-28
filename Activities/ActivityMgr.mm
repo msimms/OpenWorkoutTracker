@@ -112,6 +112,7 @@ extern "C" {
 	std::vector<PacePlan>         g_pacePlans; // cache of pace plans
 	std::vector<Workout>          g_workouts; // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;
+	std::vector<SensorReading>    g_accelerometerCache; // accelerometer readings that need to be written to the db, but have otherwise been processed
 
 	//
 	// Functions for managing the database.
@@ -333,14 +334,16 @@ extern "C" {
 			std::vector<std::string> matchingActivities;
 
 			result = g_pDatabase->SearchForTags(searchStr, matchingActivities);
-
-			for (auto iter = matchingActivities.begin(); iter != matchingActivities.end(); ++iter)
+			if (result)
 			{
-				ActivitySummary summary;
-
-				if (g_pDatabase->RetrieveActivity((*iter), summary))
+				for (auto iter = matchingActivities.begin(); iter != matchingActivities.end(); ++iter)
 				{
-					g_historicalActivityList.push_back(summary);
+					ActivitySummary summary;
+
+					if (g_pDatabase->RetrieveActivity((*iter), summary))
+					{
+						g_historicalActivityList.push_back(summary);
+					}
 				}
 			}
 		}
@@ -388,11 +391,11 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			std::string activityId;
+			std::string activityIdStr;
 
-			if (g_pDatabase->RetrieveActivityIdFromHash(hash, activityId))
+			if (g_pDatabase->RetrieveActivityIdFromHash(hash, activityIdStr))
 			{
-				activityId = strdup(activityId.c_str());
+				activityId = strdup(activityIdStr.c_str());
 			}
 		}
 
@@ -2292,6 +2295,8 @@ extern "C" {
 		if (name.compare(ACTIVITY_TYPE_OPEN_WATER_SWIMMING) == 0)
 			return true;
 		if (name.compare(ACTIVITY_TYPE_POOL_SWIMMING) == 0)
+			return true;
+		if (name.compare(ACTIVITY_TYPE_TRIATHLON) == 0)
 			return true;
 		return false;
 	}

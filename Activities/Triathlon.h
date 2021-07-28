@@ -13,6 +13,15 @@
 #include "Cycling.h"
 #include "Run.h"
 
+typedef enum TriSport
+{
+	TRI_SWIM = 0,
+	TRI_T1,
+	TRI_BIKE,
+	TRI_T2,
+	TRI_RUN
+} TriSport;
+
 class Triathlon : public MovingActivity
 {
 public:
@@ -27,14 +36,20 @@ public:
 	virtual bool Stop();
 	virtual void Pause();
 
+	virtual bool ProcessSensorReading(const SensorReading& reading);
+
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
 	virtual double CaloriesBurned() const;
+
+	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
+	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
 
 private:
 	OpenWaterSwim m_swim;
 	Cycling       m_bike;
 	Run           m_run;
+	TriSport      m_currentSport;
 };
 
 #endif

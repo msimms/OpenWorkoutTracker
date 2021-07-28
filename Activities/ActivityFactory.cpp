@@ -55,6 +55,7 @@ std::vector<std::string> ActivityFactory::ListActivityTypes()
 	types.push_back(StationaryCycling::Type());
 	types.push_back(Treadmill::Type());
 #endif
+	types.push_back(Triathlon::Type());
 	types.push_back(Walk::Type());
 	std::sort(types.begin(), types.end());
 	return types;

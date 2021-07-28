@@ -1903,7 +1903,7 @@ bool Database::CreateAccelerometerReading(const std::string& activityId, const S
 	try
 	{
 		sqlite3_bind_text(m_accelerometerInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(m_accelerometerInsertStatement,  2, reading.time);
+		sqlite3_bind_int64(m_accelerometerInsertStatement, 2, reading.time);
 		sqlite3_bind_double(m_accelerometerInsertStatement, 3, reading.reading.at(AXIS_NAME_X));
 		sqlite3_bind_double(m_accelerometerInsertStatement, 4, reading.reading.at(AXIS_NAME_Y));
 		sqlite3_bind_double(m_accelerometerInsertStatement, 5, reading.reading.at(AXIS_NAME_Z));
@@ -1926,7 +1926,7 @@ bool Database::CreateLocationReading(const std::string& activityId, const Sensor
 	try
 	{
 		sqlite3_bind_text(m_locationInsertStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(m_locationInsertStatement,  2, reading.time);
+		sqlite3_bind_int64(m_locationInsertStatement, 2, reading.time);
 		sqlite3_bind_double(m_locationInsertStatement, 3, reading.reading.at(ACTIVITY_ATTRIBUTE_LATITUDE));
 		sqlite3_bind_double(m_locationInsertStatement, 4, reading.reading.at(ACTIVITY_ATTRIBUTE_LONGITUDE));
 		sqlite3_bind_double(m_locationInsertStatement, 5, reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE));

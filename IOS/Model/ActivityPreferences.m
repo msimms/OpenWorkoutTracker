@@ -103,6 +103,27 @@
 									  @ACTIVITY_ATTRIBUTE_SETS,
 									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
 									  nil];
+#if TARGET_OS_WATCH
+		self->defaultTriathlonLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
+									  @ACTIVITY_ATTRIBUTE_MOVING_TIME,
+									  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
+									  @ACTIVITY_ATTRIBUTE_CADENCE,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+									  nil];
+#else
+		self->defaultTriathlonLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_MOVING_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_AVG_SPEED,
+									  @ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
+									  @ACTIVITY_ATTRIBUTE_CADENCE,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+									  nil];
+#endif
 	}
 	return self;
 }
@@ -142,6 +163,10 @@
 			 [activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
 	{
 		defaults = self->defaultSwimmingLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_TRIATHLON])
+	{
+		defaults = self->defaultTriathlonLayout;
 	}
 	else
 	{
