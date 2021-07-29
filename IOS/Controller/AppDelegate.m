@@ -1010,6 +1010,7 @@ void startSensorCallback(SensorType type, void* context)
 		// The user is logged in, request the most recent gear list and planned workout list.
 		if (responseCode && [responseCode intValue] == 200)
 		{
+			[self serverClaimDevice:[Preferences uuid]];
 			[self syncWithServer];
 		}
 	}

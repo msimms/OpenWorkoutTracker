@@ -366,7 +366,7 @@
 	NSString* post = [NSString stringWithFormat:@"{"];
 	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
 
-	[postData appendData:[[NSString stringWithFormat:@"\"%@\": \"%@\"", @PARAM_DEVICE_ID2, [Preferences uuid]] dataUsingEncoding:NSASCIIStringEncoding]];
+	[postData appendData:[[NSString stringWithFormat:@"\"%@\": \"%@\"", @PARAM_DEVICE_ID2, deviceId] dataUsingEncoding:NSASCIIStringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"}"] dataUsingEncoding:NSASCIIStringEncoding]];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_CLAIM_DEVICE_URL];
