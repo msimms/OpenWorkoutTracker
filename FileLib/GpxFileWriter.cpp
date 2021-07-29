@@ -89,6 +89,11 @@ namespace FileLib
 		return WriteTagAndValue(GPX_TAG_NAME_NAME, name);
 	}
 
+	bool GpxFileWriter::WriteType(const std::string& type)
+	{
+		return WriteTagAndValue(GPX_TAG_NAME_TYPE, type);
+	}
+
 	bool GpxFileWriter::StartTrack()
 	{
 		return OpenTag(GPX_TAG_NAME_TRACK);

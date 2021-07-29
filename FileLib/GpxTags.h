@@ -14,6 +14,7 @@ const std::string GPX_TAG_NAME              = "gpx";
 
 const std::string GPX_TAG_NAME_METADATA     = "metadata";
 const std::string GPX_TAG_NAME_NAME         = "name";
+const std::string GPX_TAG_NAME_TYPE         = "type";
 
 const std::string GPX_TAG_NAME_TRACK        = "trk";
 const std::string GPX_TAG_NAME_TRACKSEGMENT = "trkseg";

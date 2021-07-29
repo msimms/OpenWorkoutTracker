@@ -27,6 +27,7 @@ namespace FileLib
 
 		bool WriteMetadata(time_t startTimeMs);
 		bool WriteName(const std::string& name);
+		bool WriteType(const std::string& type);
 		
 		bool StartTrack();
 		bool EndTrack();

@@ -460,7 +460,7 @@ bool DataExporter::ExportActivityFromDatabaseToGpx(const std::string& fileName, 
 				// Write the activity type.
 				if (summary.type.size() > 0)
 				{
-					writer.WriteName(summary.type);
+					writer.WriteType(summary.type);
 				}
 			}
 
