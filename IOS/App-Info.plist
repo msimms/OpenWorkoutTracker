@@ -47,7 +47,7 @@
 	<string>This is required to monitor location-based activities.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
-		<key>iCloud.com.mjs-software.Straen</key>
+		<key>iCloud.com.mjs-software.OpenWorkoutTracker</key>
 		<dict>
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<true/>

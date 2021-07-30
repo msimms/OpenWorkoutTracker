@@ -558,21 +558,21 @@
 			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 27A3624B19BFB0E200F5A17F;
-			remoteInfo = Straen;
+			remoteInfo = OpenWorkoutTracker;
 		};
 		27DCF5CC22B193B7009A23C2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 27DCF5C922B193B7009A23C2;
-			remoteInfo = "StraenWatch Extension";
+			remoteInfo = "OpenWorkoutTrackerWatch Extension";
 		};
 		27DCF5DC22B193B8009A23C2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 27A3624419BFB0E200F5A17F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 27DCF5BD22B193B5009A23C2;
-			remoteInfo = StraenWatch;
+			remoteInfo = OpenWorkoutTrackerWatch;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1465,7 +1465,7 @@
 				27A3625619BFB0E200F5A17F /* Supporting Files */,
 			);
 			name = App;
-			path = Straen;
+			path = OpenWorkoutTracker;
 			sourceTree = "<group>";
 		};
 		27A3625619BFB0E200F5A17F /* Supporting Files */ = {
@@ -1861,7 +1861,7 @@
 				27DCF5DD22B193B8009A23C2 /* PBXTargetDependency */,
 			);
 			name = OpenWorkoutTracker;
-			productName = Straen;
+			productName = OpenWorkoutTracker;
 			productReference = 27A3624C19BFB0E200F5A17F /* OpenWorkoutTracker.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -1878,7 +1878,7 @@
 				27DCF5CD22B193B7009A23C2 /* PBXTargetDependency */,
 			);
 			name = OpenWorkoutTrackerWatch;
-			productName = StraenWatch;
+			productName = OpenWorkoutTrackerWatch;
 			productReference = 27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */;
 			productType = "com.apple.product-type.application.watchapp2";
 		};
@@ -1895,7 +1895,7 @@
 			dependencies = (
 			);
 			name = "OpenWorkoutTrackerWatch Extension";
-			productName = "StraenWatch Extension";
+			productName = "OpenWorkoutTrackerWatch Extension";
 			productReference = 27DCF5CA22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
@@ -2889,7 +2889,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = F42C985T48;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				IBSC_MODULE = StraenWatch_Extension;
+				IBSC_MODULE = OpenWorkoutTrackerWatch_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/Watch/Info.plist";
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -2922,7 +2922,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = F42C985T48;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				IBSC_MODULE = StraenWatch_Extension;
+				IBSC_MODULE = OpenWorkoutTrackerWatch_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/Watch/Info.plist";
 				MARKETING_VERSION = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

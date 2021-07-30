@@ -20,7 +20,7 @@
         "Tests"
       ],
       "target" : {
-        "containerPath" : "container:Straen.xcodeproj",
+        "containerPath" : "container:OpenWorkoutTracker.xcodeproj",
         "identifier" : "270CF4062391BBF400584058",
         "name" : "Tests"
       }
