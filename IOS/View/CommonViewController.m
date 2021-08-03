@@ -105,6 +105,10 @@
 	{
 		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Wheel" ofType:@"png"]];
 	}
+	else if ([activityType compare:@ACTIVITY_TYPE_DUATHLON] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Duathlon" ofType:@"png"]];
+	}
 	else if ([activityType compare:@ACTIVITY_TYPE_HIKING] == NSOrderedSame)
 	{
 		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Hiking" ofType:@"png"]];
@@ -116,6 +120,10 @@
 	else if ([activityType compare:@ACTIVITY_TYPE_TREADMILL] == NSOrderedSame)
 	{
 		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Treadmill" ofType:@"png"]];
+	}
+	else if ([activityType compare:@ACTIVITY_TYPE_TRIATHLON] == NSOrderedSame)
+	{
+		img = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Triathlon" ofType:@"png"]];
 	}
 	else if ([activityType compare:@ACTIVITY_TYPE_WALKING] == NSOrderedSame)
 	{

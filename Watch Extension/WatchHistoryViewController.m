@@ -128,6 +128,10 @@
 			{
 				[row.itemImage setImageNamed:@"WheelOnWatch"];
 			}
+			else if ([activityType compare:@ACTIVITY_TYPE_DUATHLON] == NSOrderedSame)
+			{
+				[row.itemImage setImageNamed:@"DuathlonOnWatch"];
+			}
 			else if ([activityType compare:@ACTIVITY_TYPE_HIKING] == NSOrderedSame)
 			{
 				[row.itemImage setImageNamed:@"HikingOnWatch"];
@@ -139,6 +143,10 @@
 			else if ([activityType compare:@ACTIVITY_TYPE_TREADMILL] == NSOrderedSame)
 			{
 				[row.itemImage setImageNamed:@"TreadmillOnWatch"];
+			}
+			else if ([activityType compare:@ACTIVITY_TYPE_TRIATHLON] == NSOrderedSame)
+			{
+				[row.itemImage setImageNamed:@"TriathlonOnWatch"];
 			}
 			else if ([activityType compare:@ACTIVITY_TYPE_WALKING] == NSOrderedSame)
 			{
