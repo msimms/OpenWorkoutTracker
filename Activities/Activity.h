@@ -95,7 +95,7 @@ public:
 	virtual uint64_t ElapsedTimeInMs() const;
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
-	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
+	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const; // Returns the attributes that are still valid after the activity has ended.
 
 	SensorReading GetMostRecentSensorReading() const { return m_mostRecentSensorReading; };
 

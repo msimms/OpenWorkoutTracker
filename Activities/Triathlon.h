@@ -33,6 +33,7 @@ public:
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
+	virtual bool Start();
 	virtual bool Stop();
 	virtual void Pause();
 
@@ -44,6 +45,9 @@ public:
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
+
+protected:
+	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 
 private:
 	OpenWaterSwim m_swim;
