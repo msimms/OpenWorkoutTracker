@@ -326,10 +326,17 @@ typedef enum SettingsRowsHealthKit
 			numRows = [self numberOfServicesRows];
 			break;
 		case SECTION_BROADCAST:
-			numRows = NUM_SETTINGS_ROWS_BROADCAST;
-#if !SHOW_DEBUG_INFO
-			numRows--;
-#endif
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+				numRows = NUM_SETTINGS_ROWS_BROADCAST;
+				
+				// Hide the device ID line if debug is disabled.
+				if (![appDelegate isFeaturePresent:FEATURE_DEBUG])
+				{
+					numRows--;
+				}
+			}
 			break;
 	}
 	return numRows;

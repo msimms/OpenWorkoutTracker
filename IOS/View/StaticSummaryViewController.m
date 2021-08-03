@@ -301,14 +301,16 @@ typedef enum ExportFileTypeButtons
 					count = [self->recordNames count];
 					break;
 				case SECTION_SYNC:
-					count = [self->syncedServices count] + [self->notSyncedServices count];
+					if ([appDelegate isFeatureEnabled:FEATURE_BROADCAST])
+						count = [self->syncedServices count] + [self->notSyncedServices count];
+					else
+						count = 0;
 					break;
 				case SECTION_INTERNAL:
-#if SHOW_DEBUG_INFO
-					count = NUM_INTERNAL_SECTION_ROWS;
-#else
-					count = 0;
-#endif
+					if ([appDelegate isFeatureEnabled:FEATURE_DEBUG])
+						count = NUM_INTERNAL_SECTION_ROWS;
+					else
+						count = 0;
 					break;
 			}
 

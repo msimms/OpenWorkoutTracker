@@ -16,7 +16,7 @@
 #define OMIT_WORKOUT_PLAN_GEN FALSE
 
 // When set to TRUE, this adds a section to the summary view that shows activity id, hash, etc.
-#define SHOW_DEBUG_INFO TRUE
+#define OMIT_DEBUG TRUE
 
 // When set to TRUE, this removes the ability to do strength-based activities.
 #define OMIT_STRENGTH_ACTIVITIES FALSE

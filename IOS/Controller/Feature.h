@@ -17,7 +17,8 @@ typedef enum Feature
 	FEATURE_RUNKEEPER, // Exporting activities to RunKeeper
 	FEATURE_STRENGTH_ACTIVITIES, // Enables strength-based activities
 	FEATURE_SWIM_ACTIVITIES, // Enables swimming activities
-	FEATURE_TRIATHLON, // Enables triathlon mode
+	FEATURE_MULTISPORT, // Enables triathlon and duathlon modes
+	FEATURE_DEBUG, // Enables debug information
 } Feature;
 
 #endif

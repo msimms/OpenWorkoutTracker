@@ -292,8 +292,14 @@ typedef enum MsgDestinationType
 #else
 			return TRUE;
 #endif
-		case FEATURE_TRIATHLON:
+		case FEATURE_MULTISPORT:
 #if OMIT_SWIM_ACTIVITIES
+			return FALSE;
+#else
+			return TRUE;
+#endif
+		case FEATURE_DEBUG:
+#if OMIT_DEBUG
 			return FALSE;
 #else
 			return TRUE;
@@ -320,7 +326,9 @@ typedef enum MsgDestinationType
 			return [self isFeaturePresent:feature];
 		case FEATURE_SWIM_ACTIVITIES:
 			return [self isFeaturePresent:feature];
-		case FEATURE_TRIATHLON:
+		case FEATURE_MULTISPORT:
+			return [self isFeaturePresent:feature];
+		case FEATURE_DEBUG:
 			return [self isFeaturePresent:feature];
 	}
 	return TRUE;
@@ -2495,7 +2503,7 @@ void activityTypeCallback(const char* type, void* context)
 
 	if (types)
 	{
-		GetActivityTypes(activityTypeCallback, (__bridge void*)types, [self isFeatureEnabled:FEATURE_STRENGTH_ACTIVITIES], [self isFeatureEnabled:FEATURE_SWIM_ACTIVITIES], [self isFeatureEnabled:FEATURE_TRIATHLON]);
+		GetActivityTypes(activityTypeCallback, (__bridge void*)types, [self isFeatureEnabled:FEATURE_STRENGTH_ACTIVITIES], [self isFeatureEnabled:FEATURE_SWIM_ACTIVITIES], [self isFeatureEnabled:FEATURE_MULTISPORT]);
 	}
 	return types;
 }
