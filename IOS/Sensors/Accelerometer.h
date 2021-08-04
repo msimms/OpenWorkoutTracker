@@ -10,8 +10,10 @@
 #import "AxisName.h"
 #import "Sensor.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_ACCELEROMETER "ALAccelerometerUpdated"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_ACCEL_X                    AXIS_NAME_X
 #define KEY_NAME_ACCEL_Y                    AXIS_NAME_Y
 #define KEY_NAME_ACCEL_Z                    AXIS_NAME_Z

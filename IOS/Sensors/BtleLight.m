@@ -61,15 +61,19 @@
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
+	// Light service.
+	if ([self serviceEquals:service withCustomService:@CUSTOM_BT_SERVICE_LIGHT])
+	{
+		for (CBCharacteristic* aChar in service.characteristics)
+		{
+			[self->peripheral readValueForCharacteristic:aChar];
+		}
+	}
 }
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
 {
 	if (characteristic == nil)
-	{
-		return;
-	}
-	if (!characteristic.value)
 	{
 		return;
 	}

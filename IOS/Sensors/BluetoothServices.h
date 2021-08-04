@@ -8,7 +8,7 @@
 #ifndef __BLUETOOTH_SERVICES__
 #define __BLUETOOTH_SERVICES__
 
-typedef enum BluetoothService
+typedef enum BluetoothServiceId
 {
 	BT_SERVICE_GENERIC_ACCESS =                0x1800,
 	BT_SERVICE_ALERT_NOTIFICATION =            0X1811,
@@ -50,8 +50,9 @@ typedef enum BluetoothService
 	BT_SERVICE_USER_DATA =                     0x181C,
 	BT_SERVICE_WEIGHT_SCALE =                  0x181D,
 	BT_SERVICE_WEIGHT =                        0x1901
-} BluetoothService;
+} BluetoothServiceId;
 
-#define CUSTOM_BT_SERVICE_LIGHT "f000dd03-0451-4000-b000-000000000000"
+#define CUSTOM_BT_SERVICE_LIGHT "f000dd03-0451-4000-b000-000000000000" // Fly6 Light
+#define CUSTOM_BT_SERVICE_RADAR "6a4e3200-667b-11e3-949a-0800200c9a66" // Garmin Varia
 
 #endif

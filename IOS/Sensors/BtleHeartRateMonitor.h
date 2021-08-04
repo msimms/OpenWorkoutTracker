@@ -10,8 +10,10 @@
 #import "BluetoothServices.h"
 #import "BtleSensor.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_HRM       "HeartRateUpdated"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_HEART_RATE         "HeartRate"
 #define KEY_NAME_HRM_TIMESTAMP_MS   "Time"
 #define KEY_NAME_HRM_PERIPHERAL_OBJ "Peripheral"

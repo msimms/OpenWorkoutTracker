@@ -254,31 +254,31 @@ typedef enum SettingsSections
 		case SECTION_ALWAYS_SCAN:
 			return 1;
 		case SECTION_HRM:
-			self->connectedHRMs = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_HEART_RATE];
+			self->connectedHRMs = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_HEART_RATE];
 			numRows = [self->connectedHRMs count];
 			break;
 		case SECTION_CADENCE_WHEEL_SPEED:
-			self->connectedCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
+			self->connectedCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
 			numRows = [self->connectedCadenceWheelSpeedSensors count];
 			break;
 		case SECTION_POWER_METER:
-			self->connectedPowerMeters = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_CYCLING_POWER];
+			self->connectedPowerMeters = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_CYCLING_POWER];
 			numRows = [self->connectedPowerMeters count];
 			break;
 		case SECTION_FOOT_POD:
-			self->connectedFootPods = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
+			self->connectedFootPods = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
 			numRows = [self->connectedFootPods count];
 			break;
 		case SECTION_SCALE:
-			self->connectedScales = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_WEIGHT];
+			self->connectedScales = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_WEIGHT];
 			numRows = [self->connectedScales count];
 			break;
 		case SECTION_LIGHT:
-			//self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_LIGHT];
+			self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_LIGHT];
 			numRows = [self->connectedLights count];
 			break;
 		case SECTION_RADAR:
-			//self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsOfType:BT_SERVICE_RADAR];
+			self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_RADAR];
 			numRows = [self->connectedRadarUnits count];
 			break;
 	}

@@ -147,7 +147,7 @@
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
 	// Cycling power service.
-	if ([self serviceEquals:service withBTService:BT_SERVICE_CYCLING_POWER])
+	if ([self serviceEquals:service withServiceId:BT_SERVICE_CYCLING_POWER])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
@@ -163,7 +163,7 @@
 	}
 
 	// Battery level service.
-	else if ([self serviceEquals:service withBTService:BT_SERVICE_BATTERY_SERVICE])
+	else if ([self serviceEquals:service withServiceId:BT_SERVICE_BATTERY_SERVICE])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{

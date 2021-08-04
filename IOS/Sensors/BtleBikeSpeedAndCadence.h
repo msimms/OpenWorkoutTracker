@@ -11,8 +11,10 @@
 #import "BtleSensor.h"
 #import "CadenceCalculator.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_BIKE_WHEEL_SPEED "WheelSpeedUdpated"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_WHEEL_SPEED               "Wheel Speed"
 #define KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS  "Time"
 #define KEY_NAME_WSC_PERIPHERAL_OBJ        "Peripheral"

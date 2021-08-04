@@ -11,8 +11,10 @@
 #import "BtleSensor.h"
 #import "CadenceCalculator.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_POWER       "PowerUpdated"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_POWER                "Power"
 #define KEY_NAME_POWER_TIMESTAMP_MS   "Time"
 #define KEY_NAME_POWER_PERIPHERAL_OBJ "Peripheral"

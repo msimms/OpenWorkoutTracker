@@ -93,7 +93,8 @@
 
 - (BOOL)hasLeBluetooth;
 - (BOOL)hasLeBluetoothSensor:(SensorType)sensorType;
-- (NSMutableArray*)listDiscoveredBluetoothSensorsOfType:(BluetoothService)type;
+- (NSMutableArray*)listDiscoveredBluetoothSensorsWithServiceId:(BluetoothServiceId)serviceId;
+- (NSMutableArray*)listDiscoveredBluetoothSensorsWithCustomServiceId:(NSString*)serviceId;
 
 // sensor management methods
 

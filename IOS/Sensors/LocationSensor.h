@@ -9,15 +9,15 @@
 #import <CoreLocation/CoreLocation.h>
 #import "Sensor.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_LOCATION   "ALLocationUpdated"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_LATITUDE            "Latitude"
 #define KEY_NAME_LONGITUDE           "Longitude"
 #define KEY_NAME_ALTITUDE            "Altitude"
-
 #define KEY_NAME_HORIZONTAL_ACCURACY "Horizontal Accuracy"
 #define KEY_NAME_VERTICAL_ACCURACY   "Vertical Accuracy"
-
 #define KEY_NAME_GPS_TIMESTAMP_MS    "Time"
 
 @interface LocationSensor : NSObject <CLLocationManagerDelegate, Sensor>

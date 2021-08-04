@@ -375,33 +375,37 @@
 			{
 				BtleSensor* sensor = nil;
 				
-				if ([self serviceEquals:service withBTService:BT_SERVICE_HEART_RATE])
+				if ([self serviceEquals:service withServiceId:BT_SERVICE_HEART_RATE])
 				{
 					sensor = [[[SensorFactory alloc] init] createHeartRateMonitor:peripheral];
 				}
-				else if ([self serviceEquals:service withBTService:BT_SERVICE_CYCLING_SPEED_AND_CADENCE])
+				else if ([self serviceEquals:service withServiceId:BT_SERVICE_CYCLING_SPEED_AND_CADENCE])
 				{
 					sensor = [[[SensorFactory alloc] init] createBikeSpeedAndCadenceSensor:peripheral];
 				}
-				else if ([self serviceEquals:service withBTService:BT_SERVICE_CYCLING_POWER])
+				else if ([self serviceEquals:service withServiceId:BT_SERVICE_CYCLING_POWER])
 				{
 					sensor = [[[SensorFactory alloc] init] createPowerMeter:peripheral];
 				}
-				else if ([self serviceEquals:service withBTService:BT_SERVICE_RUNNING_SPEED_AND_CADENCE])
+				else if ([self serviceEquals:service withServiceId:BT_SERVICE_RUNNING_SPEED_AND_CADENCE])
 				{
 					sensor = [[[SensorFactory alloc] init] createFootPodSensor:peripheral];
 				}
-				else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT])
+				else if ([self serviceEquals:service withServiceId:BT_SERVICE_WEIGHT])
 				{
 					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
 				}
-				else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT_SCALE])
+				else if ([self serviceEquals:service withServiceId:BT_SERVICE_WEIGHT_SCALE])
 				{
 					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
 				}
 				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_LIGHT]])
 				{
 					sensor = [[[SensorFactory alloc] init] createLightSensor:peripheral];
+				}
+				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_RADAR]])
+				{
+					sensor = [[[SensorFactory alloc] init] createRadarSensor:peripheral];
 				}
 
 				if (sensor)
@@ -451,9 +455,10 @@
 
 #pragma mark accessor methods
 
-- (NSMutableArray*)discoveredSensorsOfType:(BluetoothService)serviceType
+- (NSMutableArray*)discoveredSensorsWithServiceId:(BluetoothServiceId)serviceId
 {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
+
 	if (result)
 	{
 		@synchronized(self->discoveredPeripherals)
@@ -462,7 +467,30 @@
 			{
 				for (CBService* service in peripheral.services)
 				{
-					if ([self serviceEquals:service withBTService:serviceType])
+					if ([self serviceEquals:service withServiceId:serviceId])
+					{
+						[result addObject:peripheral];
+					}
+				}
+			}
+		}
+	}
+	return result;
+}
+
+- (NSMutableArray*)discoveredSensorsWithCustomServiceId:(NSString*)serviceId
+{
+	NSMutableArray* result = [[NSMutableArray alloc] init];
+	
+	if (result)
+	{
+		@synchronized(self->discoveredPeripherals)
+		{
+			for (CBPeripheral* peripheral in self->discoveredPeripherals)
+			{
+				for (CBService* service in peripheral.services)
+				{
+					if ([self serviceEquals:service withCustomServiceId:serviceId])
 					{
 						[result addObject:peripheral];
 					}
@@ -476,6 +504,7 @@
 - (NSMutableArray*)sensorsForPeripheral:(CBPeripheral*)peripheral
 {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
+
 	if (result)
 	{
 		@synchronized(self->discoveredSensors)
@@ -494,12 +523,19 @@
 
 #pragma mark utility methods
 
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)serviceType
+- (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2
 {
-	NSString* serviceTypeStr = [[NSString alloc] initWithFormat:@"%x", serviceType];
+	NSString* serviceIdStr = [[NSString alloc] initWithFormat:@"%x", service2];
 	CBUUID* serviceUuid = service1.UUID;
 
-	return ([serviceUuid isEqual:[CBUUID UUIDWithString:serviceTypeStr]]);
+	return ([serviceUuid isEqual:[CBUUID UUIDWithString:serviceIdStr]]);
+}
+
+- (BOOL)serviceEquals:(CBService*)service1 withCustomServiceId:(NSString*)service2
+{
+	CBUUID* serviceUuid = service1.UUID;
+
+	return ([serviceUuid isEqual:[CBUUID UUIDWithString:service2]]);
 }
 
 @end

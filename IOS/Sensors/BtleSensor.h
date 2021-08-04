@@ -12,8 +12,10 @@
 #import "BluetoothServices.h"
 #import "Sensor.h"
 
+// Subscribe to the notification to receive battery level updates.
 #define NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL "PeripheralBatteryLevel"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_BATTERY_LEVEL "BatteryLevel"
 #define KEY_NAME_BATTERY_PERIPHERAL_OBJ "Peripheral"
 
@@ -48,8 +50,10 @@
 
 - (void)handleCharacteristicForService:(CBService*)service;
 
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)service2;
+- (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2;
+- (BOOL)serviceEquals:(CBService*)service1 withCustomService:(NSString*)service2;
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withBTChar:(BluetoothCharacteristic)char2;
+- (BOOL)characteristicEquals:(CBCharacteristic*)char1 withCustomChar:(NSString*)char2;
 
 - (uint64_t)currentTimeInMs;
 

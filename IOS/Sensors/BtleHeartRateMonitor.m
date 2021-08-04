@@ -68,6 +68,7 @@ typedef struct HeartRateMeasurement
 	if (data)
 	{
 		const HeartRateMeasurement* reportData = [data bytes];
+
 		if (reportData)
 		{
 			if ((reportData->flags & FLAGS_HEART_RATE_VALUE) == 0)
@@ -98,7 +99,7 @@ typedef struct HeartRateMeasurement
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
-	if ([self serviceEquals:service withBTService:BT_SERVICE_HEART_RATE])
+	if ([self serviceEquals:service withServiceId:BT_SERVICE_HEART_RATE])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{

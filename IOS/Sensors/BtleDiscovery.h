@@ -100,9 +100,11 @@
 - (void)peripheral:(CBPeripheral*)peripheral didWriteValueForDescriptor:(CBDescriptor*)descriptor error:(NSError*)error;
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error;
 
-- (NSMutableArray*)discoveredSensorsOfType:(BluetoothService)serviceType;
+- (NSMutableArray*)discoveredSensorsWithServiceId:(BluetoothServiceId)serviceId;
+- (NSMutableArray*)discoveredSensorsWithCustomServiceId:(NSString*)serviceId;
 - (NSMutableArray*)sensorsForPeripheral:(CBPeripheral*)peripheral;
 
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)serviceType;
+- (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2;
+- (BOOL)serviceEquals:(CBService*)service1 withCustomServiceId:(NSString*)service2;
 
 @end

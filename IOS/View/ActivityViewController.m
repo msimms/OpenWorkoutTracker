@@ -16,6 +16,7 @@
 #import "BtleBikeSpeedAndCadence.h"
 #import "BtleHeartRateMonitor.h"
 #import "BtlePowerMeter.h"
+#import "BtleRadar.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
 #import "Preferences.h"
@@ -138,6 +139,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cadenceUpdated:) name:@NOTIFICATION_NAME_BIKE_CADENCE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(radarUpdated:) name:@NOTIFICATION_NAME_RADAR object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalSegmentUpdated:) name:@NOTIFICATION_NAME_INTERVAL_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutComplete:) name:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(printMessage:) name:@NOTIFICATION_NAME_PRINT_MESSAGE object:nil];
@@ -971,6 +973,10 @@
 			}
 		}
 	}
+}
+
+- (void)radarUpdated:(NSNotification*)notification
+{
 }
 
 - (void)intervalSegmentUpdated:(NSNotification*)notification

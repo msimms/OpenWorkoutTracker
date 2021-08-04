@@ -128,7 +128,7 @@ typedef struct WeightScaleFeature
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
-	if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT_SCALE])
+	if ([self serviceEquals:service withServiceId:BT_SERVICE_WEIGHT_SCALE])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
@@ -143,7 +143,7 @@ typedef struct WeightScaleFeature
 		}
 		[super handleCharacteristicForService:service];
 	}
-	else if ([self serviceEquals:service withBTService:BT_SERVICE_WEIGHT])
+	else if ([self serviceEquals:service withServiceId:BT_SERVICE_WEIGHT])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{

@@ -34,5 +34,6 @@
 - (BtleFootPod*)createFootPodSensor:(CBPeripheral*)peripheral;
 - (BtleScale*)createWeightSensor:(CBPeripheral*)peripheral;
 - (BtleLight*)createLightSensor:(CBPeripheral*)peripheral;
+- (BtleRadar*)createRadarSensor:(CBPeripheral*)peripheral;
 
 @end

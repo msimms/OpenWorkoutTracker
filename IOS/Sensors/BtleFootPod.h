@@ -10,11 +10,13 @@
 #import "BluetoothServices.h"
 #import "BtleSensor.h"
 
+// Subscribe to the notification with these names to receive updates.
 #define NOTIFICATION_NAME_FOOTSTEPS         "FootstepsUpdated"
 #define NOTIFICATION_NAME_RUN_CADENCE       "RunCadenceUpdated"
 #define NOTIFICATION_NAME_RUN_STRIDE_LENGTH "RunStrideLengthUpdated"
 #define NOTIFICATION_NAME_RUN_DISTANCE      "RunDistanceUpdated"
 
+// Keys for the dictionary associated with the notifications.
 #define KEY_NAME_FOOT_STEPS                 "Footsteps"
 #define KEY_NAME_CADENCE                    "Cadence"
 #define KEY_NAME_STRIDE_LENGTH              "Stride Length"

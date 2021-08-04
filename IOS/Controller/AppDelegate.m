@@ -18,6 +18,7 @@
 #import "BtleFootPod.h"
 #import "BtleHeartRateMonitor.h"
 #import "BtlePowerMeter.h"
+#import "BtleRadar.h"
 #import "BtleScale.h"
 #import "CloudMgr.h"
 #import "CloudPreferences.h"
@@ -122,6 +123,7 @@ typedef enum MsgDestinationType
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strideLengthUpdated:) name:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryLevelUpdated:) name:@NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(radarUpdated:) name:@NOTIFICATION_NAME_RADAR object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginProcessed:) name:@NOTIFICATION_NAME_LOGIN_PROCESSED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
@@ -613,11 +615,20 @@ typedef enum MsgDestinationType
 	return FALSE;
 }
 
-- (NSMutableArray*)listDiscoveredBluetoothSensorsOfType:(BluetoothService)type
+- (NSMutableArray*)listDiscoveredBluetoothSensorsWithServiceId:(BluetoothServiceId)serviceId
 {
 	if (self->btleSensorFinder)
 	{
-		return [self->btleSensorFinder discoveredSensorsOfType:type];
+		return [self->btleSensorFinder discoveredSensorsWithServiceId:serviceId];
+	}
+	return nil;
+}
+
+- (NSMutableArray*)listDiscoveredBluetoothSensorsWithCustomServiceId:(NSString*)serviceId
+{
+	if (self->btleSensorFinder)
+	{
+		return [self->btleSensorFinder discoveredSensorsWithCustomServiceId:serviceId];
 	}
 	return nil;
 }
@@ -980,6 +991,23 @@ void startSensorCallback(SensorType type, void* context)
 
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PRINT_MESSAGE object:msgData];
 			}
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+- (void)radarUpdated:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* radarData = [notification object];
+		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_RADAR_PERIPHERAL_OBJ];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if ([Preferences shouldUsePeripheral:idStr])
+		{
 		}
 	}
 	@catch (...)

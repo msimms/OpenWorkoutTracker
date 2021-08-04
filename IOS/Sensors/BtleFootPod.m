@@ -69,6 +69,7 @@ typedef struct rsc_measurement
 	if (data)
 	{
 		const rsc_measurement* measurement = [data bytes];
+
 		if (measurement)
 		{
 			uint64_t timeMs = [self currentTimeInMs];
@@ -122,7 +123,7 @@ typedef struct rsc_measurement
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
-	if ([self serviceEquals:service withBTService:BT_SERVICE_RUNNING_SPEED_AND_CADENCE])
+	if ([self serviceEquals:service withServiceId:BT_SERVICE_RUNNING_SPEED_AND_CADENCE])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{

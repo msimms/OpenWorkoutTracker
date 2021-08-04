@@ -170,16 +170,26 @@
 
 #pragma mark utility methods
 
-- (BOOL)serviceEquals:(CBService*)service1 withBTService:(BluetoothService)serviceType
+- (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2
 {
-	NSString* str = [[NSString alloc] initWithFormat:@"%x", serviceType];
+	NSString* str = [[NSString alloc] initWithFormat:@"%x", service2];
 	return ([service1.UUID isEqual:[CBUUID UUIDWithString:str]]);
+}
+
+- (BOOL)serviceEquals:(CBService*)service1 withCustomService:(NSString*)service2
+{
+	return ([service1.UUID isEqual:[CBUUID UUIDWithString:service2]]);
 }
 
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withBTChar:(BluetoothCharacteristic)char2
 {
 	NSString* str = [[NSString alloc] initWithFormat:@"%x", char2];
 	return ([char1.UUID isEqual:[CBUUID UUIDWithString:str]]);
+}
+
+- (BOOL)characteristicEquals:(CBCharacteristic*)char1 withCustomChar:(NSString*)char2
+{
+	return ([char1.UUID isEqual:[CBUUID UUIDWithString:char2]]);
 }
 
 - (uint64_t)currentTimeInMs

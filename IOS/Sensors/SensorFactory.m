@@ -108,4 +108,14 @@
 #endif
 }
 
+- (BtleRadar*)createRadarSensor:(CBPeripheral*)peripheral
+{
+#if TARGET_OS_WATCH
+	return nil;
+#else
+	BtleRadar* sensor = [[BtleRadar alloc] initWithPeripheral:peripheral];
+	return sensor;
+#endif
+}
+
 @end

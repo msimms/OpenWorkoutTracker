@@ -6,8 +6,10 @@
 #import "BluetoothServices.h"
 #import "BtleSensor.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_LIGHT_ON    "LightTurnedOn"
 
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_LIGHT                "Light"
 #define KEY_NAME_LIGHT_PERIPHERAL_OBJ "Peripheral"
 

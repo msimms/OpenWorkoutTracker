@@ -6,9 +6,10 @@
 #import "BluetoothServices.h"
 #import "BtleSensor.h"
 
+// Subscribe to the notification with this name to receive updates.
 #define NOTIFICATION_NAME_RADAR       "RadarUpdated"
 
-#define KEY_NAME_RADAR                "Power"
+// Keys for the dictionary associated with the notification.
 #define KEY_NAME_RADAR_TIMESTAMP_MS   "Time"
 #define KEY_NAME_RADAR_PERIPHERAL_OBJ "Peripheral"
 

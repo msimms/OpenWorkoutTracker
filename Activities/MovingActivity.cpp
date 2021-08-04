@@ -961,6 +961,13 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.measureType = MEASURE_ALTITUDE;
 		result.valid = true;
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_THREAT_COUNT) == 0)
+	{
+		result.value.intVal = 0;
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_COUNT;
+		result.valid = true;
+	}
 	else
 	{
 		result = Activity::QueryActivityAttribute(attributeName);
@@ -1348,6 +1355,7 @@ void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_LAP_NUMBER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_TOTAL_ASCENT);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_THREAT_COUNT);
 	Activity::BuildAttributeList(attributes);
 }
 

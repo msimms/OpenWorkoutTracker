@@ -97,5 +97,6 @@
 #define ACTIVITY_ATTRIBUTE_RUN_DISTANCE               "Run Distance"            // distance from a foot pod
 #define ACTIVITY_ATTRIBUTE_TOTAL_ASCENT               "Total Ascent"            // 
 #define ACTIVITY_ATTRIBUTE_SWIM_STROKES               "Swim Strokes"            // the number of swim strokes taken
+#define ACTIVITY_ATTRIBUTE_THREAT_COUNT               "Threat Count"            // threat count (as from a rear-facing radar unit)
 
 #endif

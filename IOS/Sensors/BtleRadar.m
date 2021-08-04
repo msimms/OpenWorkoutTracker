@@ -76,6 +76,14 @@
 
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
+	// Radar service.
+	if ([self serviceEquals:service withCustomService:@CUSTOM_BT_SERVICE_RADAR])
+	{
+		for (CBCharacteristic* aChar in service.characteristics)
+		{
+			[self->peripheral readValueForCharacteristic:aChar];
+		}
+	}
 }
 
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
@@ -84,16 +92,12 @@
 	{
 		return;
 	}
-	if (!characteristic.value)
-	{
-		return;
-	}
 	if (error)
 	{
 		return;
 	}
 
-	if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_CYCLING_POWER_MEASUREMENT])
+	if ([super characteristicEquals:characteristic withCustomChar:@CUSTOM_BT_SERVICE_RADAR])
 	{
 		[self updateWithRadarData:characteristic.value];
 	}
