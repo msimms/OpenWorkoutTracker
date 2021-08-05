@@ -246,6 +246,7 @@ extern "C" {
 	bool ProcessPowerMeterReading(double watts, uint64_t timestampMs);
 	bool ProcessRunStrideLengthReading(double decimeters, uint64_t timestampMs);
 	bool ProcessRunDistanceReading(double decimeters, uint64_t timestampMs);
+	bool ProcessRadarReading(unsigned long threatCount, uint64_t timestampMs);
 
 	// Accessor functions for the most recent value of a particular attribute.
 	ActivityAttributeType QueryLiveActivityAttribute(const char* const attributeName);

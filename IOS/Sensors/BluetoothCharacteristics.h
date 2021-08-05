@@ -92,5 +92,6 @@ typedef enum BluetoothCharacteristic
 	
 } BluetoothCharacteristic;
 
-#endif
+#define CUSTOM_BT_CHARATERISTIC_RADAR_UPDATED "6A4E3203-667B-11E3-949A-0800200C9A66" // Garmin Varia
 
+#endif

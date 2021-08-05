@@ -48,6 +48,7 @@
 	double                     lastHeartRateValue; // Most recent heart rate value
 	double                     lastCadenceValue; // Most recent cadence value
 	double                     lastPowerValue; // Most recent power meter value
+	uint8_t                    lastThreatCount; // Most recent threat count (as from a radar)
 	ActivityPreferences*       activityPrefs; // Prefs object, cached here for performance reasons
 	NSString*                  activityType; // Current activity type, cached here for performance reasons
 	NSString*                  bikeName; // The name of the bicycle that ia associated with this activity, if any

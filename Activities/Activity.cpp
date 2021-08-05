@@ -41,6 +41,7 @@ Activity::Activity()
 	m_lastAccelReading.type = SENSOR_TYPE_UNKNOWN;
 	m_mostRecentSensorReading.time = 0;
 	m_mostRecentSensorReading.type = SENSOR_TYPE_UNKNOWN;
+	m_threatCount = (uint64_t)-1;
 }
 
 Activity::~Activity()
@@ -165,6 +166,7 @@ bool Activity::ProcessSensorReading(const SensorReading& reading)
 		case SENSOR_TYPE_LIGHT:
 			break;
 		case SENSOR_TYPE_RADAR:
+			processed = ProcessRadarReading(reading);
 			break;
 		case SENSOR_TYPE_GOPRO:
 			break;
@@ -236,6 +238,21 @@ bool Activity::ProcessPowerMeterReading(const SensorReading& reading)
 
 bool Activity::ProcessFootPodReading(const SensorReading& reading)
 {
+	return true;
+}
+
+bool Activity::ProcessRadarReading(const SensorReading& reading)
+{
+	try
+	{
+		if (reading.reading.count(ACTIVITY_ATTRIBUTE_THREAT_COUNT) > 0)
+		{
+			m_threatCount = reading.reading.at(ACTIVITY_ATTRIBUTE_THREAT_COUNT);
+		}
+	}
+	catch (...)
+	{
+	}
 	return true;
 }
 
@@ -402,6 +419,13 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_WEIGHT;
 		result.valid = true;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_THREAT_COUNT) == 0)
+	{
+		result.value.intVal = m_threatCount;
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_COUNT;
+		result.valid = m_threatCount != (uint64_t)-1;
 	}
 	else
 	{

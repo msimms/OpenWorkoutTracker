@@ -74,6 +74,11 @@
 	{
 		self->countdownTimer = nil;
 		self->refreshTimer = nil;
+
+		self->lastHeartRateValue = 0.0;
+		self->lastCadenceValue = 0.0;
+		self->lastPowerValue = 0.0;
+		self->lastThreatCount = 0;
 	}
 	return self;
 }
@@ -977,6 +982,23 @@
 
 - (void)radarUpdated:(NSNotification*)notification
 {
+	NSDictionary* radarData = [notification object];
+
+	if (radarData)
+	{
+		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if ([Preferences shouldUsePeripheral:idStr])
+		{
+			NSNumber* threatCount = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
+
+			if (threatCount)
+			{
+				self->lastThreatCount = [threatCount longValue];
+			}
+		}
+	}
 }
 
 - (void)intervalSegmentUpdated:(NSNotification*)notification
@@ -1111,6 +1133,10 @@
 			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_POWER])
 			{
 				[self displayValue:valueLabel withValue:self->lastPowerValue];
+			}
+			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_THREAT_COUNT])
+			{
+				[self displayValue:valueLabel withValue:self->lastThreatCount];
 			}
 			else if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE])
 			{

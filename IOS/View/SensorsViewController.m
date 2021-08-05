@@ -12,6 +12,7 @@
 #import "BtleFootPod.h"
 #import "BtleHeartRateMonitor.h"
 #import "BtlePowerMeter.h"
+#import "BtleRadar.h"
 #import "BtleScale.h"
 #import "Preferences.h"
 #import "Segues.h"
@@ -36,6 +37,8 @@
 #define NAME_SCALE                  NSLocalizedString(@"Scale", nil)
 #define NAME_LIGHT                  NSLocalizedString(@"Light", nil)
 #define NAME_RADAR                  NSLocalizedString(@"Radar", nil)
+
+#define UNIT_THREATS                NSLocalizedString(@"Threat(s)", nil)
 
 typedef enum SettingsSections
 {
@@ -94,6 +97,7 @@ typedef enum SettingsSections
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strideLengthUpdated:) name:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(radarUpdated:) name:@NOTIFICATION_NAME_RADAR object:nil];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate addSensorDiscoveryDelegate:self];
@@ -505,6 +509,27 @@ typedef enum SettingsSections
 
 		if (peripheral)
 		{
+		}
+	}
+}
+
+- (void)radarUpdated:(NSNotification*)notification
+{
+	NSDictionary* data = [notification object];
+
+	if (data)
+	{
+		CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_RADAR_PERIPHERAL_OBJ];
+		NSNumber* value = [data objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
+
+		if (peripheral && value)
+		{
+			NSInteger row = [self->connectedRadarUnits indexOfObject:peripheral];
+			NSUInteger newIndex[] = { SECTION_RADAR, row };
+			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
+			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+
+			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], UNIT_THREATS];
 		}
 	}
 }

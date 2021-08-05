@@ -112,7 +112,8 @@ protected:
 	virtual bool ProcessWheelSpeedReading(const SensorReading& reading);
 	virtual bool ProcessPowerMeterReading(const SensorReading& reading);
 	virtual bool ProcessFootPodReading(const SensorReading& reading);
-	
+	virtual bool ProcessRadarReading(const SensorReading& reading);
+
 	virtual bool CheckTimeInterval();
 	virtual bool CheckPositionInterval() { return false; };
 	virtual bool CheckSetsInterval() { return false; };
@@ -147,6 +148,7 @@ private:
 	time_t               m_secsPreviouslySpentPaused; // number of seconds spent paused
 	SensorReading        m_lastAccelReading;          // the oldest accelerometer reading received
 	SensorReading        m_mostRecentSensorReading;   // the youngest sensor reading received
+	uint64_t             m_threatCount;               // threat count, from a radar unit, -1 for not set
 };
 
 #endif

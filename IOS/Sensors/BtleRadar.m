@@ -4,6 +4,13 @@
 #import "BtleRadar.h"
 #import "BtleDiscovery.h"
 
+typedef struct RadarMeasurement
+{
+	uint8_t val1;
+	uint8_t val2;
+	uint8_t val3;
+} __attribute__((packed)) RadarMeasurement;
+
 @implementation BtleRadar
 
 #pragma mark init methods
@@ -61,12 +68,35 @@
 	{
 		return;
 	}
-	
+
+	//
+	// Not sure what the first byte is for, but threats appear to follow in 3 byte chunks.
+	//
+
 	const uint8_t* reportBytes = [data bytes];
 	NSUInteger reportLen = [data length];
+	NSUInteger threatCount = 0;
 
-	if (reportBytes && (reportLen > 4))
+	if (reportBytes && reportLen > 0)
 	{
+		NSUInteger offset = 1;
+
+		while (offset < reportLen)
+		{
+			//const RadarMeasurement* reportData = [data bytes] + offset;
+			offset += sizeof(RadarMeasurement);
+			++threatCount;
+		}
+
+		NSDictionary* radarData = [[NSDictionary alloc] initWithObjectsAndKeys:
+								   [NSNumber numberWithUnsignedLong:threatCount], @KEY_NAME_RADAR_THREAT_COUNT,
+								   [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_RADAR_TIMESTAMP_MS,
+									self->peripheral, @KEY_NAME_RADAR_PERIPHERAL_OBJ,
+									nil];
+		if (radarData)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RADAR object:radarData];
+		}
 	}
 }
 
@@ -81,7 +111,7 @@
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{
-			[self->peripheral readValueForCharacteristic:aChar];
+			[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 		}
 	}
 }
@@ -97,7 +127,7 @@
 		return;
 	}
 
-	if ([super characteristicEquals:characteristic withCustomChar:@CUSTOM_BT_SERVICE_RADAR])
+	if ([super characteristicEquals:characteristic withCustomChar:@CUSTOM_BT_CHARATERISTIC_RADAR_UPDATED])
 	{
 		[self updateWithRadarData:characteristic.value];
 	}

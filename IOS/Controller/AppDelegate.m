@@ -122,8 +122,8 @@ typedef enum MsgDestinationType
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerUpdated:) name:@NOTIFICATION_NAME_POWER object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strideLengthUpdated:) name:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(runDistanceUpdated:) name:@NOTIFICATION_NAME_RUN_DISTANCE object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryLevelUpdated:) name:@NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(radarUpdated:) name:@NOTIFICATION_NAME_RADAR object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryLevelUpdated:) name:@NOTIFICATION_NAME_PERIPHERAL_BATTERY_LEVEL object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginProcessed:) name:@NOTIFICATION_NAME_LOGIN_PROCESSED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
@@ -971,6 +971,30 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+- (void)radarUpdated:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* radarData = [notification object];
+		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_RADAR_PERIPHERAL_OBJ];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if ([Preferences shouldUsePeripheral:idStr])
+		{
+			NSNumber* timestampMs = [radarData objectForKey:@KEY_NAME_RADAR_TIMESTAMP_MS];
+			NSNumber* value = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
+
+			if (timestampMs && value)
+			{
+				ProcessRadarReading([value doubleValue], [timestampMs longLongValue]);
+			}
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
 - (void)batteryLevelUpdated:(NSNotification*)notification
 {
 	@try
@@ -991,23 +1015,6 @@ void startSensorCallback(SensorType type, void* context)
 
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PRINT_MESSAGE object:msgData];
 			}
-		}
-	}
-	@catch (...)
-	{
-	}
-}
-
-- (void)radarUpdated:(NSNotification*)notification
-{
-	@try
-	{
-		NSDictionary* radarData = [notification object];
-		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_RADAR_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
-		{
 		}
 	}
 	@catch (...)

@@ -90,6 +90,7 @@ void MovingActivity::ListUsableSensors(std::vector<SensorType>& sensorTypes) con
 {
 	sensorTypes.push_back(SENSOR_TYPE_LOCATION);
 	sensorTypes.push_back(SENSOR_TYPE_HEART_RATE);
+	sensorTypes.push_back(SENSOR_TYPE_RADAR);
 }
 
 void MovingActivity::RecomputeRecordTimes()
@@ -959,13 +960,6 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.value.doubleVal = m_totalAscentM;
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_ALTITUDE;
-		result.valid = true;
-	}
-	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_THREAT_COUNT) == 0)
-	{
-		result.value.intVal = 0;
-		result.valueType = TYPE_INTEGER;
-		result.measureType = MEASURE_COUNT;
 		result.valid = true;
 	}
 	else

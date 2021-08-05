@@ -3289,6 +3289,15 @@ extern "C" {
 		return ProcessSensorReading(reading);
 	}
 
+	bool ProcessRadarReading(unsigned long threatCount, uint64_t timestampMs)
+	{
+		SensorReading reading;
+		reading.type = SENSOR_TYPE_RADAR;
+		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_THREAT_COUNT, threatCount));
+		reading.time = timestampMs;
+		return ProcessSensorReading(reading);
+	}
+
 	//
 	// Accessor functions for the most recent value of a particular attribute.
 	//

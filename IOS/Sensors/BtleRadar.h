@@ -10,6 +10,7 @@
 #define NOTIFICATION_NAME_RADAR       "RadarUpdated"
 
 // Keys for the dictionary associated with the notification.
+#define KEY_NAME_RADAR_THREAT_COUNT   "Threat Count"
 #define KEY_NAME_RADAR_TIMESTAMP_MS   "Time"
 #define KEY_NAME_RADAR_PERIPHERAL_OBJ "Peripheral"
 
