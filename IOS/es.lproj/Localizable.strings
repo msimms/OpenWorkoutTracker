@@ -91,6 +91,7 @@
 "Export using" = "Exportar utilizando";
 "Extreme" = "Extremo";
 "Failed to create the account." = "Error al crear la cuenta.";
+"Failed to load the activity." = "Error al cargar la actividad.";
 "Failed to login to the account." = "Error al iniciar sesión en la cuenta.";
 "Fastest" = "Más Rápido";
 "Fastest 400M" = "400M Más Rápido";

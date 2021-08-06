@@ -60,6 +60,7 @@
 #define MSG_DELETE_QUESTION            NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
 #define MSG_EXPORT_QUESTION            NSLocalizedString(@"Do you want to export the actvity?", nil)
+#define MSG_LOAD_FAILED                NSLocalizedString(@"Failed to load the activity.", nil)
 
 #define EMAIL_TITLE                    NSLocalizedString(@"Workout Data", nil)
 #define EMAIL_CONTENTS                 NSLocalizedString(@"The data file is attached.", nil)
@@ -323,6 +324,10 @@ typedef enum ExportFileTypeButtons
 		self.navItem.title = NSLocalizedString([appDelegate getHistoricalActivityType:self->activityId], nil);
 		
 		[self drawRoute];
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOAD_FAILED];
 	}
 }
 
