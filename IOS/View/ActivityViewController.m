@@ -74,11 +74,6 @@
 	{
 		self->countdownTimer = nil;
 		self->refreshTimer = nil;
-
-		self->lastHeartRateValue = 0.0;
-		self->lastCadenceValue = 0.0;
-		self->lastPowerValue = 0.0;
-		self->lastThreatCount = 0;
 	}
 	return self;
 }
@@ -87,11 +82,31 @@
 {
 	[super viewDidLoad];
 
-	CGRect screenBounds = [[UIScreen mainScreen] bounds];
-	self->screenHeight = screenBounds.size.height;
+	self->countdownSecs = 0;
+
+	NSString* imgPath = [[NSBundle mainBundle] pathForResource:@"Threat" ofType:@"png"];
+	self->threatImage = [UIImage imageNamed:imgPath];
+
+	if ([self isDarkModeEnabled])
+	{
+		CIImage* tempImage = [CIImage imageWithCGImage:self->threatImage.CGImage];
+		CIFilter* filter = [CIFilter filterWithName:@"CIColorInvert"];
+		[filter setDefaults];
+		[filter setValue:tempImage forKey:kCIInputImageKey];
+		self->threatImage = [[UIImage alloc] initWithCIImage:filter.outputImage];
+	}
+
+	self->lastThreatUpdateTime = 0;
+	self->threatImageViews = [[NSMutableArray alloc] init];
+
+	self->lastHeartRateValue = 0.0;
+	self->lastCadenceValue = 0.0;
+	self->lastPowerValue = 0.0;
+	self->lastThreatCount = 0;
 
 	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->messages = [[NSMutableArray alloc] init];
+	self->messageDisplayCounter = 0;
 	self->tappedButtonIndex = 0;
 
 	[self.moreButton setTitle:STR_NEXT];
@@ -305,9 +320,9 @@
 - (void)onCountdownTimer:(NSTimer*)timer
 {
 	// Remove the previous image, if any.
-	if (self->lastCountdownImage)
+	if (self->lastCountdownImageView)
 	{
-		[self->lastCountdownImage removeFromSuperview];
+		[self->lastCountdownImageView removeFromSuperview];
 	}
 
 	// If we're supposed to display a countdown image.
@@ -316,11 +331,12 @@
 		NSString* fileName = [[NSString alloc] initWithFormat:@"Countdown%d", self->countdownSecs];
 		NSString* imgPath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"png"];
 		CGFloat imageY = (self.view.bounds.size.height - self.view.bounds.size.width) / 2;
+		CGRect imageRect = CGRectMake(0, imageY, self.view.bounds.size.width, self.view.bounds.size.width);
 
-		self->lastCountdownImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
-		self->lastCountdownImage.frame = CGRectMake(0, imageY, self.view.bounds.size.width, self.view.bounds.size.width);
+		self->lastCountdownImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
+		self->lastCountdownImageView.frame = imageRect;
 
-		[self.view addSubview:self->lastCountdownImage];
+		[self.view addSubview:self->lastCountdownImageView];
 		[self playPingSound];
 
 		self->countdownSecs--;
@@ -336,7 +352,7 @@
 		[self->blurEffectView removeFromSuperview];
 
 		self->countdownTimer = nil;
-		self->lastCountdownImage = nil;
+		self->lastCountdownImageView = nil;
 		self->blurEffectView = nil;
 	}
 }
@@ -982,6 +998,14 @@
 
 - (void)radarUpdated:(NSNotification*)notification
 {
+	// There can be a lot of these messages, so throttle them to something reasonable.
+	time_t now = time(NULL);
+	if (now - self->lastThreatUpdateTime <= 1)
+	{
+		return;
+	}
+	self->lastThreatUpdateTime = now;
+
 	NSDictionary* radarData = [notification object];
 
 	if (radarData)
@@ -995,7 +1019,38 @@
 
 			if (threatCount)
 			{
+				const CGFloat IMAGE_SIZE = 25;
+				const CGFloat IMAGE_LEFT = 4;
+				const CGFloat MAX_THREAT_DISTANCE_METERS = 160.0;
+
+				// How many threats were reported?
 				self->lastThreatCount = [threatCount longValue];
+
+				// Remove any old images.
+				[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
+				// Add new threat images.
+				for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
+				{
+					NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
+
+					// If we have distance information for this threat then draw it on the left side of the screen.
+					if ([radarData objectForKey:keyName] != nil)
+					{
+						NSNumber* threatDistance = [radarData objectForKey:keyName];
+						CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
+						UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
+
+						// This defines the image's position on the screen.
+						threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
+
+						// Add to the view.
+						[self.view addSubview:threatImageView];
+
+						// Remember it so we can remove it later.
+						[self->threatImageViews addObject:threatImageView];
+					}
+				}
 			}
 		}
 	}
@@ -1198,27 +1253,31 @@
 	{
 		@synchronized(self->currentBroadcastStatus)
 		{
-			if ((self->displayedBroadcastStatus == nil) || ([self->displayedBroadcastStatus boolValue] != [self->currentBroadcastStatus boolValue]))
+			if ((self->displayedBroadcastStatus == nil) ||
+				([self->displayedBroadcastStatus boolValue] != [self->currentBroadcastStatus boolValue]))
 			{
 				const CGFloat IMAGE_SIZE = 60;
 
 				CGFloat imageX = (self.view.bounds.size.width / 2) - (IMAGE_SIZE / 2);
-				CGFloat imageY = self.view.bounds.size.height - self.toolbar.bounds.size.height - (IMAGE_SIZE * 2);
+				CGFloat imageY = (self.view.bounds.size.height - self.toolbar.bounds.size.height) - (IMAGE_SIZE * 2);
 				NSString* imgPath = nil;
 
 				// Remove the old image, if any.
-				if (self->broadcastImage)
-					[self->broadcastImage removeFromSuperview];
+				if (self->broadcastImageView)
+					[self->broadcastImageView removeFromSuperview];
 
 				// Load the image.				
 				if ([self->currentBroadcastStatus boolValue])
 					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
 				else
 					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
-				self->broadcastImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
-				self->broadcastImage.frame = CGRectMake(imageX, imageY, IMAGE_SIZE, IMAGE_SIZE);
+				self->broadcastImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
 
-				[self.view addSubview:self->broadcastImage];
+				// This defines the image's position on the screen.
+				self->broadcastImageView.frame = CGRectMake(imageX, imageY, IMAGE_SIZE, IMAGE_SIZE);
+
+				// Add the image to the view.
+				[self.view addSubview:self->broadcastImageView];
 			}
 			self->displayedBroadcastStatus = self->currentBroadcastStatus;
 		}

@@ -74,7 +74,7 @@
 	}
 
 	// Handle very old screens.
-	if (self->screenHeight >= 568)
+	if (self.view.bounds.size.height >= 568)
 	{
 		// Code for 4-inch screen
 		self.value4.hidden = FALSE;

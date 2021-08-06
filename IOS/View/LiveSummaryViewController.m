@@ -190,4 +190,10 @@
 	return cell;
 }
 
+#pragma mark sensor update methods
+
+- (void)radarUpdated:(NSNotification*)notification
+{
+}
+
 @end

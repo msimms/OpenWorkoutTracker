@@ -6,9 +6,9 @@
 
 typedef struct RadarMeasurement
 {
-	uint8_t val1;
-	uint8_t val2;
-	uint8_t val3;
+	uint8_t unknown;
+	uint8_t threatSpeedMeters;
+	uint8_t threatLevel;
 } __attribute__((packed)) RadarMeasurement;
 
 @implementation BtleRadar
@@ -75,24 +75,27 @@ typedef struct RadarMeasurement
 
 	const uint8_t* reportBytes = [data bytes];
 	NSUInteger reportLen = [data length];
-	NSUInteger threatCount = 0;
 
 	if (reportBytes && reportLen > 0)
 	{
 		NSUInteger offset = 1;
+		NSUInteger threatCount = (reportLen - 1) / sizeof(RadarMeasurement);		
+		NSUInteger currentThreat = 1;
+		NSMutableDictionary* radarData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+										  [NSNumber numberWithUnsignedLong:threatCount], @KEY_NAME_RADAR_THREAT_COUNT,
+										  [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_RADAR_TIMESTAMP_MS,
+										  self->peripheral, @KEY_NAME_RADAR_PERIPHERAL_OBJ,
+										  nil];
 
 		while (offset < reportLen)
 		{
-			//const RadarMeasurement* reportData = [data bytes] + offset;
+			const RadarMeasurement* reportData = [data bytes] + offset;
+			NSString* keyName = [[NSString alloc] initWithFormat:@"%@%lu", @KEY_NAME_RADAR_THREAT_DISTANCE, currentThreat++];
+
+			[radarData setObject:[NSNumber numberWithUnsignedInt:reportData->threatSpeedMeters] forKey:keyName];
 			offset += sizeof(RadarMeasurement);
-			++threatCount;
 		}
 
-		NSDictionary* radarData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								   [NSNumber numberWithUnsignedLong:threatCount], @KEY_NAME_RADAR_THREAT_COUNT,
-								   [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_RADAR_TIMESTAMP_MS,
-									self->peripheral, @KEY_NAME_RADAR_PERIPHERAL_OBJ,
-									nil];
 		if (radarData)
 		{
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RADAR object:radarData];

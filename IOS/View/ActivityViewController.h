@@ -32,12 +32,14 @@
 	uint8_t                    countdownSecs; // Number of seconds left in the countdown
 	NSTimer*                   countdownTimer; // Timer object for the countdown
 	NSTimer*                   refreshTimer; // Timer object that controls refreshing the screen
-	NSInteger                  screenHeight; // Screen height, in pixels
 	NSNumber*                  currentBroadcastStatus; // Last broadcast status message regarding broadcast, or nil if not set
 	NSNumber*                  displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set
 	UIVisualEffectView*        blurEffectView; // Used when the countdown timer is displayed
-	UIImageView*               lastCountdownImage; // Last countdown image that was displayed, or nil if no image is displayed
-	UIImageView*               broadcastImage; // Currently displayed broadcast status image, or nil if no image is displayed
+	UIImageView*               lastCountdownImageView; // Last countdown image that was displayed, or nil if no image is displayed
+	UIImageView*               broadcastImageView; // Currently displayed broadcast status image, or nil if no image is displayed
+	uint64_t                   lastThreatUpdateTime; // Timestamp of the last radar threat update.
+	UIImage*                   threatImage; // Radar threat image, cached for performance
+	NSMutableArray*            threatImageViews; // Images of threats that were detected by a radar unit, such as a Garmin Varia
 	NSMutableArray*            attributesToDisplay; // Names of the things to display
 	NSMutableArray*            valueLabels;
 	NSMutableArray*            titleLabels;
@@ -96,6 +98,10 @@
 - (IBAction)onSummary:(id)sender;
 
 - (void)locationUpdated:(NSNotification*)notification;
+- (void)heartRateUpdated:(NSNotification*)notification;
+- (void)cadenceUpdated:(NSNotification*)notification;
+- (void)powerUpdated:(NSNotification*)notification;
+- (void)radarUpdated:(NSNotification*)notification;
 
 @property (nonatomic, retain) IBOutlet UILabel*          messagesLabel;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;

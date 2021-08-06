@@ -96,7 +96,7 @@
 		[self->unitsLabels addObject:self.units4];
 	}
 
-	if (self->screenHeight >= 568)
+	if (self.view.bounds.size.height >= 568)
 	{
 		// Code for 4-inch screen
 		self.value3.hidden = FALSE;
