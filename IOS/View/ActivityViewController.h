@@ -37,7 +37,6 @@
 	UIVisualEffectView*        blurEffectView; // Used when the countdown timer is displayed
 	UIImageView*               lastCountdownImageView; // Last countdown image that was displayed, or nil if no image is displayed
 	UIImageView*               broadcastImageView; // Currently displayed broadcast status image, or nil if no image is displayed
-	uint64_t                   lastThreatUpdateTime; // Timestamp of the last radar threat update.
 	UIImage*                   threatImage; // Radar threat image, cached for performance
 	NSMutableArray*            threatImageViews; // Images of threats that were detected by a radar unit, such as a Garmin Varia
 	NSMutableArray*            attributesToDisplay; // Names of the things to display

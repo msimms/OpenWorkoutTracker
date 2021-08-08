@@ -20,6 +20,7 @@ typedef struct RadarMeasurement
 	self = [super init];
 	if (self)
 	{
+		self->lastRadarTime = 0;
 	}
 	return self;
 }
@@ -29,6 +30,7 @@ typedef struct RadarMeasurement
 	self = [super initWithPeripheral:newPeripheral];
 	if (self)
 	{
+		self->lastRadarTime = 0;
 	}
 	return self;
 }
@@ -68,6 +70,17 @@ typedef struct RadarMeasurement
 	{
 		return;
 	}
+
+	//
+	// There can be a lot of these messages, so throttle them to something reasonable.
+	//
+
+	time_t now = time(NULL);
+	if (now - self->lastRadarTime <= 1)
+	{
+		return;
+	}
+	self->lastRadarTime = now;
 
 	//
 	// Not sure what the first byte is for, but threats appear to follow in 3 byte chunks.

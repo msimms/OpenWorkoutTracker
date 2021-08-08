@@ -17,6 +17,7 @@
 
 @interface BtleRadar : BtleSensor
 {
+	uint64_t lastRadarTime; // Timestamp of the last radar threat update.
 }
 
 - (SensorType)sensorType;

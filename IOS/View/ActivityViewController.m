@@ -96,7 +96,6 @@
 		self->threatImage = [[UIImage alloc] initWithCIImage:filter.outputImage];
 	}
 
-	self->lastThreatUpdateTime = 0;
 	self->threatImageViews = [[NSMutableArray alloc] init];
 
 	self->lastHeartRateValue = 0.0;
@@ -998,57 +997,52 @@
 
 - (void)radarUpdated:(NSNotification*)notification
 {
-	// There can be a lot of these messages, so throttle them to something reasonable.
-	time_t now = time(NULL);
-	if (now - self->lastThreatUpdateTime <= 1)
-	{
-		return;
-	}
-	self->lastThreatUpdateTime = now;
-
 	NSDictionary* radarData = [notification object];
 
-	if (radarData)
+	@synchronized(self->threatImageViews)
 	{
-		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if ([Preferences shouldUsePeripheral:idStr])
+		if (radarData)
 		{
-			NSNumber* threatCount = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
+			CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+			NSString* idStr = [[peripheral identifier] UUIDString];
 
-			if (threatCount)
+			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				const CGFloat IMAGE_SIZE = 25;
-				const CGFloat IMAGE_LEFT = 4;
-				const CGFloat MAX_THREAT_DISTANCE_METERS = 160.0;
+				NSNumber* threatCount = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
 
-				// How many threats were reported?
-				self->lastThreatCount = [threatCount longValue];
-
-				// Remove any old images.
-				[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
-				// Add new threat images.
-				for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
+				if (threatCount)
 				{
-					NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
+					const CGFloat IMAGE_SIZE = 24;
+					const CGFloat IMAGE_LEFT = 3;
+					const CGFloat MAX_THREAT_DISTANCE_METERS = 160.0;
 
-					// If we have distance information for this threat then draw it on the left side of the screen.
-					if ([radarData objectForKey:keyName] != nil)
+					// How many threats were reported?
+					self->lastThreatCount = [threatCount longValue];
+
+					// Remove any old images.
+					[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
+					// Add new threat images.
+					for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
 					{
-						NSNumber* threatDistance = [radarData objectForKey:keyName];
-						CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
-						UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
+						NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
 
-						// This defines the image's position on the screen.
-						threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
+						// If we have distance information for this threat then draw it on the left side of the screen.
+						if ([radarData objectForKey:keyName] != nil)
+						{
+							NSNumber* threatDistance = [radarData objectForKey:keyName];
+							CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
+							UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
 
-						// Add to the view.
-						[self.view addSubview:threatImageView];
+							// This defines the image's position on the screen.
+							threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
 
-						// Remember it so we can remove it later.
-						[self->threatImageViews addObject:threatImageView];
+							// Add to the view.
+							[self.view addSubview:threatImageView];
+
+							// Remember it so we can remove it later.
+							[self->threatImageViews addObject:threatImageView];
+						}
 					}
 				}
 			}
