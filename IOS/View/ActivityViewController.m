@@ -999,9 +999,9 @@
 {
 	NSDictionary* radarData = [notification object];
 
-	@synchronized(self->threatImageViews)
+	if (radarData)
 	{
-		if (radarData)
+		@synchronized(self->threatImageViews)
 		{
 			CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
@@ -1021,6 +1021,7 @@
 
 					// Remove any old images.
 					[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+					[self->threatImageViews removeAllObjects];
 
 					// Add new threat images.
 					for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
