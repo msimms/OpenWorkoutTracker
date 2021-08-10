@@ -24,6 +24,7 @@
 {
 	CLLocationManager* locationManager;
 	CLLocation* currentLocation;
+	bool shouldUpdateLocation;
 }
 
 - (id)init;

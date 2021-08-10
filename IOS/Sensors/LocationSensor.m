@@ -27,6 +27,11 @@
 		self->locationManager.showsBackgroundLocationIndicator = TRUE;
 #endif
 		self->locationManager.allowsBackgroundLocationUpdates = TRUE;
+
+		// Seems to start up with location updates on. I want to control this
+		// myself, so let's start with location updates off.
+		self->shouldUpdateLocation = false;
+		[self->locationManager stopUpdatingLocation];
 	}
 	return self;
 }
@@ -62,7 +67,10 @@
 			break;
 		case kCLAuthorizationStatusAuthorizedAlways:
 		case kCLAuthorizationStatusAuthorizedWhenInUse:
-			[self->locationManager startUpdatingLocation];
+			if (self->shouldUpdateLocation)
+			{
+				[self->locationManager startUpdatingLocation];
+			}
 			break;
 		default:
 			break;
@@ -73,6 +81,7 @@
 {
 	if (error.code == kCLErrorDenied)
 	{
+		self->shouldUpdateLocation = false;
 		[self->locationManager stopUpdatingLocation];
 	}
 }
@@ -95,7 +104,10 @@
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager*)manager
 {
 #if TARGET_OS_WATCH
-	[self->locationManager startUpdatingLocation];
+	if (self->shouldUpdateLocation)
+	{
+		[self->locationManager startUpdatingLocation];
+	}
 #endif
 	NSLog(@"Location updates paused.");
 }
@@ -131,6 +143,8 @@
 {
 	if ([CLLocationManager locationServicesEnabled])
 	{
+		self->shouldUpdateLocation = true;
+
 		switch ([CLLocationManager authorizationStatus])
 		{
 		case kCLAuthorizationStatusDenied:
@@ -156,6 +170,7 @@
 
 - (void)stopUpdates
 {
+	self->shouldUpdateLocation = false;
 	[self->locationManager stopUpdatingLocation];
 
 	NSLog(@"Location updates stopped.");
