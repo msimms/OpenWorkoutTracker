@@ -438,7 +438,14 @@ bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 		}
 		
 		// Update current gradient.
-		m_currentGradient = distanceInfo.verticalDistanceM / distanceInfo.distanceM;
+		if (distanceInfo.distanceM > 0.00001)
+		{
+			m_currentGradient = distanceInfo.verticalDistanceM / distanceInfo.distanceM;
+		}
+		else
+		{
+			m_currentGradient = (double)0.0;
+		}
 
 		RecomputeRecordTimes();
 		UpdateSplitTimes();
