@@ -32,18 +32,20 @@
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
+	// Test files are stored here.
 	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/TestFilesForFitnessApps/master/accelerometer/";
 	NSURL* tempUrl = [fm temporaryDirectory];
 
+	// Create a test database.
 	NSURL* dbFileUrl = [tempUrl URLByAppendingPathComponent:@"test.db"];
 	NSString* dbFileStr = [dbFileUrl resourceSpecifier];
-	Initialize([dbFileStr UTF8String]);
+	XCTAssert(Initialize([dbFileStr UTF8String]));
 
+	// Test files to download.
 	NSMutableArray* testFileNames = [[NSMutableArray alloc] init];
 	[testFileNames addObject:@"10_pullups_accelerometer_iphone_4s_01.csv"];
 	[testFileNames addObject:@"10_pullups_accelerometer_iphone_4s_02.csv"];
 	[testFileNames addObject:@"50_pushups_accelerometer_iphone_6.csv"];
-	[testFileNames addObject:@"50_pushups_apple_watch_4.csv"];
 
 	dispatch_group_t queryGroup = dispatch_group_create();
 
@@ -67,10 +69,17 @@
 
 					NSString* activityId = [[NSUUID UUID] UUIDString];
 					XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_PUSHUP, [activityId UTF8String]));
+
 					InitializeHistoricalActivityList();
-					CreateHistoricalActivityObjectById([activityId UTF8String]);
+					XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
+					XCTAssert(SaveHistoricalActivitySummaryDataById([activityId UTF8String]));
+					XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
+
 					ActivityAttributeType numPushups = QueryHistoricalActivityAttributeById([activityId UTF8String], ACTIVITY_ATTRIBUTE_REPS);
-					DeleteActivity([activityId UTF8String]);
+					XCTAssert(numPushups.value.intVal > 0);
+					XCTAssert(DeleteActivity([activityId UTF8String]));
+
+					[fm removeItemAtPath:sourceFileName error:nil];
 				}
 
 				dispatch_group_leave(queryGroup);

@@ -124,13 +124,15 @@ extern "C" {
 	bool HistoricalActivityListIsInitialized(void);
 	bool CreateHistoricalActivityObject(size_t activityIndex);
 	bool CreateHistoricalActivityObjectById(const char* activityId);
-	void CreateAllHistoricalActivityObjects(void);
+	bool CreateAllHistoricalActivityObjects(void);
 	bool LoadHistoricalActivityLapData(size_t activityIndex);
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context);
 	bool LoadAllHistoricalActivitySensorData(size_t activityIndex);
+	bool LoadAllHistoricalActivitySensorDataById(const char* activityId);
 	bool LoadAllHistoricalActivitySummaryData(void);
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex);
 	bool SaveHistoricalActivitySummaryData(size_t activityIndex);
+	bool SaveHistoricalActivitySummaryDataById(const char* activityId);
 
 	// Functions for unloading history.
 	void FreeHistoricalActivityList(void);

@@ -30,6 +30,7 @@ namespace FileLib
 		virtual void PopState() { m_state.pop_back(); };
 
 		virtual const std::string& CurrentState() const { return m_state.at(m_state.size() - 1); };
+		virtual const std::string PrevState() const { if (m_state.size() <= 1) return ""; return m_state.at(m_state.size() - 2); };
 
 	protected:
 		std::vector<std::string> m_state;

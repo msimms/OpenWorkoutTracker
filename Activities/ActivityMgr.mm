@@ -1601,12 +1601,15 @@ extern "C" {
 		return false;
 	}
 
-	void CreateAllHistoricalActivityObjects()
+	bool CreateAllHistoricalActivityObjects()
 	{
+		bool result = true;
+
 		for (size_t i = 0; i < g_historicalActivityList.size(); ++i)
 		{
-			CreateHistoricalActivityObject(i);
+			result &= CreateHistoricalActivityObject(i);
 		}
+		return result;
 	}
 
 	bool LoadHistoricalActivityLapData(size_t activityIndex)
@@ -1815,6 +1818,17 @@ extern "C" {
 		return result;
 	}
 
+	bool LoadAllHistoricalActivitySensorDataById(const char* activityId)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+		{
+			return LoadAllHistoricalActivitySensorData(activityIndex);
+		}
+		return false;
+	}
+
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex)
 	{
 		bool result = false;
@@ -1895,6 +1909,17 @@ extern "C" {
 		g_historicalActivityLock.unlock();
 
 		return result;
+	}
+
+	bool SaveHistoricalActivitySummaryDataById(const char* activityId)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+		{
+			return SaveHistoricalActivitySummaryData(activityIndex);
+		}
+		return false;
 	}
 
 	//
@@ -3064,6 +3089,10 @@ extern "C" {
 			else if (fileExtension.compare("tcx") == 0)
 			{
 				result = importer.ImportFromTcx(pFileName, pActivityType, activityId, g_pDatabase);
+			}
+			else if (fileExtension.compare("fit") == 0)
+			{
+				result = importer.ImportFromFit(pFileName, pActivityType, activityId, g_pDatabase);
 			}
 			else if (fileExtension.compare("csv") == 0)
 			{

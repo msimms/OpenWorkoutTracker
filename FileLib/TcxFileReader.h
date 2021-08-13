@@ -14,6 +14,8 @@
 
 #include "XmlFileReader.h"
 
+#define TCX_VALUE_NOT_SET -1.0
+
 namespace FileLib
 {
 	class TcxFileReader : public XmlFileReader
@@ -25,13 +27,26 @@ namespace FileLib
 		virtual void ProcessNode(xmlNode* node);
 		virtual void ProcessProperties(xmlAttr* attr);
 
+		virtual void PushState(std::string newState);
+		virtual void PopState();
+
 		// Registers the callback that is triggered when a new location is read.
-		typedef bool (*NewLocationFunc)(double lat, double lon, double ele, uint64_t time, void* context);
+		typedef bool (*NewLocationFunc)(double lat, double lon, double ele, uint64_t time, double hr, double power, double cadence, void* context);
 		virtual void SetNewLocationCallback(NewLocationFunc func, void* context) { m_newLocCallback = func; m_newLocContext = context; };
 
 	protected:
+		double          m_curLat;
+		double          m_curLon;
+		double          m_curEle;
+		double          m_curHeartRate;
+		double          m_curPower;
+		double          m_curCadence;
+		uint64_t        m_curTime;
 		NewLocationFunc m_newLocCallback;
 		void*           m_newLocContext;
+
+	private:
+		void Clear();
 	};
 }
 

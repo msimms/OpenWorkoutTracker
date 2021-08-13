@@ -493,6 +493,7 @@
 		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
 		27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
 		27EF2C582560AC6300F06796 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
+		27EFE60626C58D520025B9F4 /* FitExportTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EFE5F926C58D520025B9F4 /* FitExportTest.m */; };
 		27F3E7AC25BCFF41001D3CCE /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
 		27F423F023A430F300F59F50 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */; };
 		27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */; };
@@ -1070,6 +1071,7 @@
 		27EAAB44244E0BAC000FBFA0 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Shoes/Shoes.h; sourceTree = SOURCE_ROOT; };
 		27EAAB46244F786B000FBFA0 /* ApiClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApiClient.m; path = IOS/Model/ApiClient.m; sourceTree = SOURCE_ROOT; };
 		27EAAB47244F786B000FBFA0 /* ApiClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiClient.h; path = IOS/Model/ApiClient.h; sourceTree = SOURCE_ROOT; };
+		27EFE5F926C58D520025B9F4 /* FitExportTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FitExportTest.m; sourceTree = "<group>"; };
 		27F423EE23A430F300F59F50 /* WorkoutPlanGenerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutPlanGenerator.cpp; path = Activities/WorkoutPlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
 		27F423EF23A430F300F59F50 /* WorkoutPlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanGenerator.h; path = Activities/WorkoutPlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenWaterSwim.cpp; path = Activities/OpenWaterSwim.cpp; sourceTree = SOURCE_ROOT; };
@@ -1164,12 +1166,13 @@
 		270CF3F82391B5D600584058 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				27EFE5F926C58D520025B9F4 /* FitExportTest.m */,
 				270CF3FA2391B63800584058 /* GpxImportTest.m */,
 				270CF3FC2391B63800584058 /* PeakFindTest.m */,
 				270CF4092391BBF400584058 /* Tests.m */,
 				270CF3FB2391B63800584058 /* TcxImportTest.m */,
-				270CF40B2391BBF400584058 /* Info.plist */,
 				270CF3F92391B63700584058 /* ZwoImportTest.m */,
+				270CF40B2391BBF400584058 /* Info.plist */,
 				270CF4142391C34900584058 /* TestPlan.xctestplan */,
 			);
 			path = Tests;
@@ -2221,6 +2224,7 @@
 				276526EB25BB9353003AA2D5 /* Signals.cpp in Sources */,
 				270CF43C2391F05200584058 /* Hike.h in Sources */,
 				270CF43D2391F05200584058 /* IntervalWorkout.h in Sources */,
+				27EFE60626C58D520025B9F4 /* FitExportTest.m in Sources */,
 				270CF43E2391F05200584058 /* IntervalWorkoutSegment.h in Sources */,
 				270CF43F2391F05200584058 /* LiftingActivity.cpp in Sources */,
 				270CF4402391F05200584058 /* LiftingActivity.h in Sources */,

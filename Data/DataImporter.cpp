@@ -25,18 +25,33 @@ DataImporter::~DataImporter()
 	
 }
 
-bool OnNewLocation(double lat, double lon, double ele, uint64_t time, void* context)
+bool OnNewTcxLocation(double lat, double lon, double ele, uint64_t time, double hr, double power, double cadence, void* context)
 {
 	if (context)
 	{
-		return ((DataImporter*)context)->NewLocation(lat, lon, ele, time);
+		return ((DataImporter*)context)->NewLocation(lat, lon, ele, hr, power, cadence, time);
 	}
+	return false;
+}
+
+bool OnNewGpxLocation(double lat, double lon, double ele, uint64_t time, void* context)
+{
+	if (context)
+	{
+		return ((DataImporter*)context)->NewLocation(lat, lon, ele, TCX_VALUE_NOT_SET, TCX_VALUE_NOT_SET, TCX_VALUE_NOT_SET, time);
+	}
+	return false;
+}
+
+bool DataImporter::ImportFromFit(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
+{
 	return false;
 }
 
 bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
 {
 	bool result = false;
+	FileLib::TcxFileReader reader;
 	
 	m_pDb = pDatabase;
 	m_activityType = activityType;
@@ -44,9 +59,9 @@ bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string&
 	m_started = false;
 	m_lastTime = 0;
 
-	FileLib::TcxFileReader reader;
-	reader.SetNewLocationCallback(OnNewLocation, this);
+	reader.SetNewLocationCallback(OnNewTcxLocation, this);
 	result = reader.ParseFile(fileName);
+
 	if (result && m_pDb && (m_lastTime > 0))
 	{
 		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
@@ -58,6 +73,7 @@ bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string&
 bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
 {
 	bool result = false;
+	FileLib::GpxFileReader reader;
 
 	m_pDb = pDatabase;
 	m_activityType = activityType;
@@ -65,9 +81,9 @@ bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string&
 	m_started = false;
 	m_lastTime = 0;
 
-	FileLib::GpxFileReader reader;
-	reader.SetNewLocationCallback(OnNewLocation, this);
+	reader.SetNewLocationCallback(OnNewGpxLocation, this);
 	result = reader.ParseFile(fileName);
+
 	if (result && m_pDb && (m_lastTime > 0))
 	{
 		time_t endTimeSecs = (time_t)(m_lastTime / 1000);
@@ -125,6 +141,7 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 			if (m_pDb)
 			{
 				SensorReading reading;
+
 				reading.time = ts;
 				reading.type = SENSOR_TYPE_ACCELEROMETER;
 				reading.reading.insert(SensorNameValuePair(AXIS_NAME_X, x));
@@ -157,15 +174,16 @@ bool DataImporter::ImportFromKml(const std::string& fileName, std::vector<FileLi
 	return false;
 }
 
-bool DataImporter::NewLocation(double lat, double lon, double ele, uint64_t time)
+bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, double power, double cadence, uint64_t time)
 {
 	bool result = false;
 
 	if (!m_started)
 	{
-		time_t startTimeSecs = (time_t)(time / 1000);
 		if (m_pDb)
 		{
+			time_t startTimeSecs = (time_t)(time / 1000);
+
 			result = m_pDb->StartActivity(m_activityId, "", m_activityType, startTimeSecs);
 		}
 		m_started = true;
@@ -173,15 +191,41 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, uint64_t time
 
 	if (m_pDb)
 	{
-		SensorReading reading;
-		reading.time = time;
-		reading.type = SENSOR_TYPE_LOCATION;
-		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LATITUDE, lat));
-		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LONGITUDE, lon));
-		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, ele));
+		SensorReading locationReading;
 
-		result = m_pDb->CreateSensorReading(m_activityId, reading);
+		locationReading.time = time;
+		locationReading.type = SENSOR_TYPE_LOCATION;
+		locationReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LATITUDE, lat));
+		locationReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_LONGITUDE, lon));
+		locationReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, ele));
+		result = m_pDb->CreateSensorReading(m_activityId, locationReading);
+
+		if (hr >= (double)0.0)
+		{
+			SensorReading hrReading;
+
+			hrReading.type = SENSOR_TYPE_HEART_RATE;
+			hrReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_HEART_RATE, hr));
+			result = m_pDb->CreateSensorReading(m_activityId, hrReading);
+		}
+		if (power >= (double)0.0)
+		{
+			SensorReading powerReading;
+
+			powerReading.type = SENSOR_TYPE_HEART_RATE;
+			powerReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_POWER, power));
+			result = m_pDb->CreateSensorReading(m_activityId, powerReading);
+		}
+		if (cadence >= (double)0.0)
+		{
+			SensorReading cadenceReading;
+
+			cadenceReading.type = SENSOR_TYPE_HEART_RATE;
+			cadenceReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_CADENCE, cadence));
+			result = m_pDb->CreateSensorReading(m_activityId, cadenceReading);
+		}
 	}
+
 	m_lastTime = time;
 	return result;
 }

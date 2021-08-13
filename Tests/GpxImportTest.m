@@ -28,19 +28,23 @@
 
 - (void)testGpxImport
 {
-	// This is an example of a functional test case.
-	// Use XCTAssert and related functions to verify your tests produce the correct results.
-	
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
+	// Test files are stored here.
 	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/TestFilesForFitnessApps/master/gpx/";
 	NSURL* tempUrl = [fm temporaryDirectory];
 
+	// Create a test database.
+	NSURL* dbFileUrl = [tempUrl URLByAppendingPathComponent:@"test.db"];
+	NSString* dbFileStr = [dbFileUrl resourceSpecifier];
+	XCTAssert(Initialize([dbFileStr UTF8String]));
+
+	// Test files to download.
 	NSMutableArray* testFileNames = [[NSMutableArray alloc] init];
 	[testFileNames addObject:@"20170308_intra_run_club.gpx"];
 	[testFileNames addObject:@"20180831_beach_run_runkeeper.gpx"];
-	
+
 	dispatch_group_t queryGroup = dispatch_group_create();
 
 	for (NSString* testFileName in testFileNames)
@@ -61,7 +65,9 @@
 
 				NSString* activityId = [[NSUUID UUID] UUIDString];
 				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_RUNNING, [activityId UTF8String]));
-				DeleteActivity([activityId UTF8String]);
+				XCTAssert(DeleteActivity([activityId UTF8String]));
+
+				[fm removeItemAtPath:sourceFileName error:nil];
 			}
 
 			dispatch_group_leave(queryGroup);

@@ -19,12 +19,13 @@ public:
 	DataImporter();
 	virtual ~DataImporter();
 
+	bool ImportFromFit(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
 	bool ImportFromTcx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
 	bool ImportFromGpx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
 	bool ImportFromCsv(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
 	bool ImportFromKml(const std::string& fileName, std::vector<FileLib::KmlPlacemark>& placemarks);
 
-	bool NewLocation(double lat, double lon, double ele, uint64_t time);
+	bool NewLocation(double lat, double lon, double ele, double hr, double power, double cadence, uint64_t time);
 	
 protected:
 	Database*   m_pDb;

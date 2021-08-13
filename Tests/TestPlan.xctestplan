@@ -14,9 +14,6 @@
   "testTargets" : [
     {
       "skippedTests" : [
-        "GpxImportTest",
-        "PeakFindTest",
-        "TcxImportTest",
         "Tests"
       ],
       "target" : {

@@ -28,15 +28,19 @@
 
 - (void)testZwoImport
 {
-	// This is an example of a functional test case.
-	// Use XCTAssert and related functions to verify your tests produce the correct results.
-
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
+	// Test files are stored here.
 	NSString* sourcePath = @"https://raw.githubusercontent.com/msimms/TestFilesForFitnessApps/master/zwo/";
 	NSURL* tempUrl = [fm temporaryDirectory];
 
+	// Create a test database.
+	NSURL* dbFileUrl = [tempUrl URLByAppendingPathComponent:@"test.db"];
+	NSString* dbFileStr = [dbFileUrl resourceSpecifier];
+	XCTAssert(Initialize([dbFileStr UTF8String]));
+
+	// Test files to download.
 	NSMutableArray* testFileNames = [[NSMutableArray alloc] init];
 	[testFileNames addObject:@"20_40_Intervals.zwo"];
 	
@@ -62,6 +66,8 @@
 
 				XCTAssert(ImportZwoFile([destFileName UTF8String], [intervalId UTF8String], "Test Workout"));
 				XCTAssert(DeleteIntervalWorkout([intervalId UTF8String]));
+
+				[fm removeItemAtPath:sourceFileName error:nil];
 			}
 
 			dispatch_group_leave(queryGroup);

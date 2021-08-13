@@ -27,14 +27,13 @@ namespace FileLib
 		{
 			return;
 		}
-
 		if (!node)
 		{
 			return;
 		}
 
 		const std::string& state = CurrentState();
-		
+
 		switch (node->type)
 		{
 			case XML_ELEMENT_NODE:

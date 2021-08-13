@@ -88,9 +88,7 @@ bool DataExporter::ExportToTcxUsingCallbacks(const std::string& fileName, time_t
 							writer.EndTrackpoint();
 						}
 
-						writer.EndTrack();
-						
-						result = true;
+						result = writer.EndTrack();
 					}
 					writer.EndLap();
 				}
@@ -131,9 +129,7 @@ bool DataExporter::ExportToGpxUsingCallbacks(const std::string& fileName, time_t
 				writer.EndTrackSegment();
 			}
 
-			writer.EndTrack();
-
-			result = true;
+			result = writer.EndTrack();
 		}
 
 		writer.CloseFile();
@@ -182,8 +178,16 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 
 			bool done = false;
 
+			//
+			// Write the definition message that describes what the records will look like.
+			//
+			
 			do
 			{
+				//
+				// Compute the lap end time.
+				//
+
 				if (lapIter == lapList.end())
 				{
 					lapEndTimeMs = pActivity->GetEndTimeMs();
@@ -193,6 +197,10 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 				{
 					lapEndTimeMs = (*lapIter).startTimeMs;
 				}
+
+				//
+				// Write the lap message.
+				//
 
 				if (writer.StartLap(lapStartTimeMs))
 				{
@@ -204,28 +212,53 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 						{
 							break;
 						}
+						
+						FileLib::FitRecord rec;
+
+						rec.positionLong = FileLib::FitFileWriter::DegreesToSemicircles(coordinate.longitude);
+						rec.positionLat = FileLib::FitFileWriter::DegreesToSemicircles(coordinate.latitude);
+						rec.altitude = (coordinate.altitude + 500) * 5.0;
 
 						bool moreHrData = NearestSensorReading(coordinate.time, hrList, hrIter);
 						bool moreCadenceData = NearestSensorReading(coordinate.time, cadenceList, cadenceIter);
 						bool morePowerData = NearestSensorReading(coordinate.time, powerList, powerIter);
-						
+
 						if (moreHrData)
 						{
-							//double rate = (*hrIter).reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
-						}							
+							double rate = (*hrIter).reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
+							rec.heartRate = (uint8_t)rate;
+						}
+						else
+						{
+							rec.heartRate = FIT_INVALID_UINT8;
+						}
 						if (moreCadenceData)
 						{
-							//double cadence = (*cadenceIter).reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
-						}							
+							double cadence = (*cadenceIter).reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
+							rec.cadence256 = (uint16_t)cadence;
+						}
+						else
+						{
+							rec.cadence256 = FIT_INVALID_UINT16;
+						}
 						if (morePowerData)
 						{
-							//double power = (*powerIter).reading.at(ACTIVITY_ATTRIBUTE_POWER);
+							double power = (*powerIter).reading.at(ACTIVITY_ATTRIBUTE_POWER);
+							rec.power = (uint16_t)power;
 						}
-						
+						else
+						{
+							rec.cadence256 = FIT_INVALID_UINT16;
+						}
+
+						result = writer.WriteRecord(rec);
+						if (!result)
+						{
+							break;
+						}
+
 						coordinateIter++;
 					}
-
-					writer.EndLap();
 				}
 
 				lapStartTimeMs = lapEndTimeMs;
@@ -242,6 +275,10 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 			hrList.clear();
 			cadenceList.clear();
 		}
+
+		//
+		// Update the header with the number of bytes written.
+		//
 
 		writer.CloseFile();
 	}
@@ -296,6 +333,7 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 
 			do
 			{
+				// Compute the lap end time.
 				if (lapIter == lapList.end())
 				{
 					lapEndTimeMs = pActivity->GetEndTimeMs();
@@ -354,12 +392,12 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 							{
 								double rate = (*hrIter).reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
 								writer.StoreHeartRateBpm((uint8_t)rate);
-							}							
+							}
 							if (moreCadenceData)
 							{
 								double cadence = (*cadenceIter).reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
 								writer.StoreCadenceRpm((uint8_t)cadence);
-							}							
+							}
 							if (morePowerData)
 							{
 								double power = (*powerIter).reading.at(ACTIVITY_ATTRIBUTE_POWER);
@@ -373,9 +411,7 @@ bool DataExporter::ExportActivityFromDatabaseToTcx(const std::string& fileName, 
 							coordinateIter++;
 						}
 
-						writer.EndTrack();
-						
-						result = true;
+						result = writer.EndTrack();
 					}
 					writer.EndLap();
 				}
@@ -466,6 +502,7 @@ bool DataExporter::ExportActivityFromDatabaseToGpx(const std::string& fileName, 
 
 			do
 			{
+				// Compute the lap end time.
 				if (lapIter == lapList.end())
 				{
 					lapEndTimeMs = (uint64_t)activityEndTimeSec * 1000;
@@ -535,9 +572,7 @@ bool DataExporter::ExportActivityFromDatabaseToGpx(const std::string& fileName, 
 
 			} while (!done);
 
-			writer.EndTrack();
-
-			result = true;
+			result = writer.EndTrack();
 		}
 
 		coordinateList.clear();
