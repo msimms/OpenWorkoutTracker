@@ -699,7 +699,7 @@
 		}
 
 		// If using a treadmill, make sure a footpod sensor has been found.
-		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] && ![appDelegate hasLeBluetoothSensor:SENSOR_TYPE_FOOT_POD])
+		else if ([self->activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] && ![appDelegate hasBluetoothSensorOfType:SENSOR_TYPE_FOOT_POD])
 		{
 			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																					 message:ALERT_MSG_NO_FOOT_POD

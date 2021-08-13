@@ -20,7 +20,7 @@
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
 {
 	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
-	BtleDiscovery*       btleSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
+	BtleDiscovery*       bluetoothDeviceFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
 	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs;
 	WatchSessionManager* watchSession; // Handles interactions between the watch and the phone

@@ -74,7 +74,7 @@ typedef enum SettingsSections
 	self.title = TITLE;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	if (appDelegate && ![appDelegate hasLeBluetooth])
+	if (appDelegate && ![appDelegate hasBluetoothSupport])
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_ERROR
 																				 message:MESSAGE_NO_BT_SMART
@@ -101,6 +101,7 @@ typedef enum SettingsSections
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate addSensorDiscoveryDelegate:self];
+	[appDelegate allowConnectionsFromUnknownBluetoothDevices:TRUE];
 
 	[super viewDidAppear:animated];
 }
@@ -113,6 +114,7 @@ typedef enum SettingsSections
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate removeSensorDiscoveryDelegate:self];
+	[appDelegate allowConnectionsFromUnknownBluetoothDevices:FALSE];
 }
 
 - (BOOL)shouldAutorotate

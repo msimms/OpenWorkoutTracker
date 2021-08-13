@@ -583,7 +583,7 @@ typedef enum MsgDestinationType
 
 #pragma mark bluetooth methods
 
-- (BOOL)hasLeBluetooth
+- (BOOL)hasBluetoothSupport
 {
 	NSString* platform = [self getPlatformString];
 
@@ -606,72 +606,84 @@ typedef enum MsgDestinationType
 	return TRUE;
 }
 
-- (BOOL)hasLeBluetoothSensor:(SensorType)sensorType
+- (BOOL)hasBluetoothSensorOfType:(SensorType)sensorType
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		return [self->btleSensorFinder hasConnectedSensor:sensorType];
+		return [self->bluetoothDeviceFinder hasConnectedSensorOfType:sensorType];
 	}
 	return FALSE;
 }
 
 - (NSMutableArray*)listDiscoveredBluetoothSensorsWithServiceId:(BluetoothServiceId)serviceId
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		return [self->btleSensorFinder discoveredSensorsWithServiceId:serviceId];
+		return [self->bluetoothDeviceFinder discoveredSensorsWithServiceId:serviceId];
 	}
 	return nil;
 }
 
 - (NSMutableArray*)listDiscoveredBluetoothSensorsWithCustomServiceId:(NSString*)serviceId
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		return [self->btleSensorFinder discoveredSensorsWithCustomServiceId:serviceId];
+		return [self->bluetoothDeviceFinder discoveredSensorsWithCustomServiceId:serviceId];
 	}
 	return nil;
 }
 
+// Tells the sensor discovery object whether or not unknown devices are welcome to connect.
+- (void)allowConnectionsFromUnknownBluetoothDevices:(BOOL)allow
+{
+	if (self->bluetoothDeviceFinder)
+	{
+		[self->bluetoothDeviceFinder allowConnectionsFromUnknownDevices:allow];
+	}
+}
+
 #pragma mark sensor management methods
 
+// Initiates bluetooth sensor discovery.
 - (void)startSensorDiscovery
 {
 	if ([Preferences shouldScanForSensors])
 	{
-		if ([self hasLeBluetooth])
+		if ([self hasBluetoothSupport])
 		{
-			self->btleSensorFinder = [BtleDiscovery sharedInstance];
+			self->bluetoothDeviceFinder = [BtleDiscovery sharedInstance];
 		}
 		else
 		{
-			self->btleSensorFinder = NULL;
+			self->bluetoothDeviceFinder = NULL;
 		}
 	}
 }
 
+// Stops bluetooth sensor discovery.
 - (void)stopSensorDiscovery
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		[self->btleSensorFinder stopScanning];
-		self->btleSensorFinder = NULL;
+		[self->bluetoothDeviceFinder stopScanning];
+		self->bluetoothDeviceFinder = NULL;
 	}
 }
 
+// Allows views to register for sensor discovery information.
 - (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		[self->btleSensorFinder addDelegate:delegate];
+		[self->bluetoothDeviceFinder addDelegate:delegate];
 	}
 }
 
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		[self->btleSensorFinder removeDelegate:delegate];
+		[self->bluetoothDeviceFinder removeDelegate:delegate];
 	}
 }
 
@@ -702,6 +714,7 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark sensor update methods
 
+// Notification callback for a weight sensor reading.
 - (void)weightHistoryUpdated:(NSNotification*)notification
 {
 	@try
@@ -718,6 +731,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for an accelerometer sensor reading.
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
 	@try
@@ -739,6 +753,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a location sensor reading.
 - (void)locationUpdated:(NSNotification*)notification
 {
 	@try
@@ -804,6 +819,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a heart rate sensor reading.
 - (void)heartRateUpdated:(NSNotification*)notification
 {
 	@try
@@ -836,6 +852,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a cadence sensor reading.
 - (void)cadenceUpdated:(NSNotification*)notification
 {
 	@try
@@ -863,6 +880,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a wheel speed sensor reading.
 - (void)wheelSpeedUpdated:(NSNotification*)notification
 {
 	@try
@@ -890,6 +908,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a power sensor reading.
 - (void)powerUpdated:(NSNotification*)notification
 {
 	@try
@@ -917,6 +936,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a stride length sensor reading.
 - (void)strideLengthUpdated:(NSNotification*)notification
 {
 	@try
@@ -944,6 +964,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a foot pod sensor reading.
 - (void)runDistanceUpdated:(NSNotification*)notification
 {
 	@try
@@ -971,6 +992,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a radar sensor reading.
 - (void)radarUpdated:(NSNotification*)notification
 {
 	@try
@@ -995,6 +1017,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+// Notification callback for a battery level reading.
 - (void)batteryLevelUpdated:(NSNotification*)notification
 {
 	@try

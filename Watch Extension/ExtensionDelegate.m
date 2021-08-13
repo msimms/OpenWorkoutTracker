@@ -221,32 +221,32 @@
 {
 	if ([Preferences shouldScanForSensors])
 	{
-		self->btleSensorFinder = [BtleDiscovery sharedInstance];
+		self->bluetoothDeviceFinder = [BtleDiscovery sharedInstance];
 	}
 }
 
 - (void)stopSensorDiscovery
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		[self->btleSensorFinder stopScanning];
-		self->btleSensorFinder = NULL;
+		[self->bluetoothDeviceFinder stopScanning];
+		self->bluetoothDeviceFinder = NULL;
 	}
 }
 
 - (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		[self->btleSensorFinder addDelegate:delegate];
+		[self->bluetoothDeviceFinder addDelegate:delegate];
 	}
 }
 
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
-	if (self->btleSensorFinder)
+	if (self->bluetoothDeviceFinder)
 	{
-		[self->btleSensorFinder removeDelegate:delegate];
+		[self->bluetoothDeviceFinder removeDelegate:delegate];
 	}
 }
 

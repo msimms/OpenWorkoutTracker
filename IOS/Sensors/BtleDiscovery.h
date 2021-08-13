@@ -66,6 +66,7 @@
 	NSMutableArray*   discoveredSensors;
 	CBCentralManager* centralManager;
 	NSTimer*          scanTimer;
+	bool              connectToUnknownDevices;
 }
 
 + (id)sharedInstance;
@@ -74,11 +75,13 @@
 - (void)removeDelegate:(id<DiscoveryDelegate>)oldDelegate;
 - (void)refreshDelegates;
 
-- (BOOL)hasConnectedSensor:(SensorType)sensorType;
+- (BOOL)hasConnectedSensorOfType:(SensorType)sensorType;
 - (BOOL)hasDiscoveredPeripheral:(CBPeripheral*)peripheral;
 - (void)removeConnectedPeripheral:(CBPeripheral*)peripheral;
 
 - (void)stopScanning;
+
+- (void)allowConnectionsFromUnknownDevices:(BOOL)allow;
 
 - (void)connectPeripheral:(CBPeripheral*)peripheral;
 - (void)disconnectPeripheral:(CBPeripheral*)peripheral;

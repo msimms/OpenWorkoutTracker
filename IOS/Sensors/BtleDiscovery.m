@@ -81,10 +81,11 @@
 	self = [super init];
 	if (self)
 	{
-		self->discoveryDelegates    = [[NSMutableArray alloc] init];
-		self->centralManager        = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
-		self->discoveredPeripherals = [[NSMutableArray alloc] init];
-		self->discoveredSensors     = [[NSMutableArray alloc] init];
+		self->discoveryDelegates      = [[NSMutableArray alloc] init];
+		self->centralManager          = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
+		self->discoveredPeripherals   = [[NSMutableArray alloc] init];
+		self->discoveredSensors       = [[NSMutableArray alloc] init];
+		self->connectToUnknownDevices = false;
 	}
 	return self;
 }
@@ -131,7 +132,7 @@
 
 #pragma mark discovery methods
 
-- (BOOL)hasConnectedSensor:(SensorType)sensorType
+- (BOOL)hasConnectedSensorOfType:(SensorType)sensorType
 {
 	@synchronized(self->discoveredSensors)
 	{
@@ -196,6 +197,7 @@
 	CBUUID* cyclingSCSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_SPEED_AND_CADENCE]];
 	CBUUID* cyclingPowerSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_POWER]];
 	CBUUID* weightSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_WEIGHT]];
+
 	return [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, weightSvc, nil];
 }
 
@@ -219,6 +221,7 @@
 - (void)retrieveConnectedSensors
 {
 	NSArray* sensorUUIDs = [self usableSensors];
+
 	if (sensorUUIDs)
 	{
 		[self->centralManager retrieveConnectedPeripheralsWithServices:sensorUUIDs];
@@ -230,6 +233,11 @@
 	[self->centralManager stopScan];
 	[self->scanTimer invalidate];
 	self->scanTimer = NULL;
+}
+
+- (void)allowConnectionsFromUnknownDevices:(BOOL)allow
+{
+	self->connectToUnknownDevices = allow;
 }
 
 #pragma mark timer methods
@@ -273,6 +281,18 @@
 
 - (void)centralManager:(CBCentralManager*)central didDiscoverPeripheral:(CBPeripheral*)peripheral advertisementData:(NSDictionary*)advertisementData RSSI:(NSNumber*)RSSI
 {
+	// This can be toggled to block connection attempts from unknown devices when
+	// that is not desired, such as during an activity.
+	if (!self->connectToUnknownDevices)
+	{
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if (![Preferences shouldUsePeripheral:idStr])
+		{
+			return;
+		}
+	}
+
 	if ([self hasDiscoveredPeripheral:peripheral] == FALSE)
 	{
 		@synchronized(self->discoveredPeripherals)
@@ -280,6 +300,7 @@
 			[self->discoveredPeripherals addObject:peripheral];
 		}
 	}
+
 	[peripheral setDelegate:self];
 	[self connectPeripheral:peripheral];
 	[self refreshDelegates];

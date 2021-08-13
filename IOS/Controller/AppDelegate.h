@@ -28,7 +28,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 {
 	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
-	BtleDiscovery*       btleSensorFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
+	BtleDiscovery*       bluetoothDeviceFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
 	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
 #if !OMIT_BROADCAST
@@ -91,10 +91,11 @@
 
 // bluetooth methods
 
-- (BOOL)hasLeBluetooth;
-- (BOOL)hasLeBluetoothSensor:(SensorType)sensorType;
+- (BOOL)hasBluetoothSupport;
+- (BOOL)hasBluetoothSensorOfType:(SensorType)sensorType;
 - (NSMutableArray*)listDiscoveredBluetoothSensorsWithServiceId:(BluetoothServiceId)serviceId;
 - (NSMutableArray*)listDiscoveredBluetoothSensorsWithCustomServiceId:(NSString*)serviceId;
+- (void)allowConnectionsFromUnknownBluetoothDevices:(BOOL)allow;
 
 // sensor management methods
 
