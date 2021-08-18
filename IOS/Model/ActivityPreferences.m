@@ -12,6 +12,9 @@
 #import "ActivityType.h"
 #import "Preferences.h"
 
+#define INTEGER_VALUE_NOT_SET -1
+#define DEFAULT_MIN_ACCURACY_METERS 50
+
 @implementation ActivityPreferences
 
 - (id)init
@@ -204,7 +207,7 @@
 	{
 		return [defaults integerForKey:key];
 	}
-	return -1;
+	return INTEGER_VALUE_NOT_SET;
 }
 
 - (BOOL)readBoolValue:(NSString*)activityType withAttributeName:(NSString*)attributeName
@@ -259,7 +262,7 @@
 {
 	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_VIEW_TYPE];
 
-	if (value == -1)
+	if (value == INTEGER_VALUE_NOT_SET)
 	{
 		if ([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
 			[activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE])
@@ -434,18 +437,18 @@
 {
 	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN];
 
-	if (value == -1)
+	if (value == INTEGER_VALUE_NOT_SET)
 	{
 		if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP] ||
 			[activityType isEqualToString:@ACTIVITY_TYPE_PULLUP] ||
 			[activityType isEqualToString:@ACTIVITY_TYPE_PUSHUP] ||
 			[activityType isEqualToString:@ACTIVITY_TYPE_SQUAT])
 		{
-			value = 3;
+			value = 3; // Three second countdown for strength activities.
 		}
 		else
 		{
-			value = 0;
+			value = 0; // No countdown for cycling, running, etc.
 		}
 	}
 	return value;
@@ -460,8 +463,8 @@
 {
 	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY];
 
-	if (value == -1)
-		value = 0;
+	if (value == INTEGER_VALUE_NOT_SET)
+		value = DEFAULT_MIN_ACCURACY_METERS;
 	return value;	
 }
 
@@ -474,8 +477,8 @@
 {
 	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY];
 
-	if (value == -1)
-		value = 0;
+	if (value == INTEGER_VALUE_NOT_SET)
+		value = DEFAULT_MIN_ACCURACY_METERS;
 	return value;
 }
 
@@ -488,7 +491,7 @@
 {
 	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION];
 
-	if (value == -1)
+	if (value == INTEGER_VALUE_NOT_SET)
 		return GPS_FILTER_WARN;
 	return (GpsFilterOption)value;
 }
