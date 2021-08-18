@@ -21,7 +21,7 @@ namespace FileLib
 	typedef struct __attribute__((__packed__)) DefinitionMessageHeader
 	{
 		uint8_t  reserved;
-		uint8_t  architecture;
+		uint8_t  architecture; // 1 = Definition and Data Message are Big Endian
 		uint16_t globalMessageNumber;
 		uint8_t  numFields;
 	} DefinitionMessageHeader;
@@ -32,23 +32,41 @@ namespace FileLib
 		uint8_t size;
 		uint8_t baseType;
 	} FieldDefinition;
+	typedef std::vector<FieldDefinition> FieldDefinitions;
+
+	typedef union FieldValue
+	{
+		uint32_t    uintVal;
+		int32_t     intVal;
+		double      floatVal;
+	} FieldValue;
+	typedef std::vector<FieldValue> FieldValues;
 
 	typedef struct __attribute__((__packed__)) FitHeader
 	{
 		uint8_t  headerSize;      // Indicates the length of this file header including header size. Minimum size is 12.
-		uint8_t  protocolVersion; // Protocol version number as provided in SDK
-		uint16_t profileVersion;  // Profile version number as provided in SDK
-		uint32_t dataSize;        // Length of the Data Records section in bytesDoes not include Header or CRC
-		uint8_t  dataType[4];     // ASCII values for “.FIT”
-		uint16_t crc;             // CRC
+		uint8_t  protocolVersion; // Protocol version number as provided in SDK.
+		uint16_t profileVersion;  // Profile version number as provided in SDK.
+		uint32_t dataSize;        // Length of the Data Records section in bytes. Does not include Header or CRC.
+		uint8_t  dataType[4];     // ASCII values for “.FIT”.
+		uint16_t crc;             // CRC.
 	} FitHeader;
 
 	typedef struct FileId
 	{
+		uint8_t  file;
+		uint16_t manufacturer;
+		uint16_t product;
+		uint32_t serialNumber;
+		uint32_t timeCreated;
+		uint16_t number;
+		std::string productName;		
 	} FileId;
 
 	typedef struct FileCreator
 	{
+		uint16_t softwareVersion;
+		uint8_t  hardwareVersion;
 	} FileCreator;
 
 	typedef struct FitSession
@@ -65,6 +83,7 @@ namespace FileLib
 
 	typedef struct FitRecord
 	{
+		uint32_t timestamp;
 		int32_t  positionLong; // Longitude, in semicircles
 		int32_t  positionLat;  // Longitude, in semicircles
 		uint16_t altitude;
@@ -93,12 +112,17 @@ namespace FileLib
 		bool WriteEvent(const FitEvent& evt);
 		bool WriteRecord(const FitRecord& rec);
 
+		static uint32_t UnixTimestampToFitTimestamp(uint64_t unixTimestamp);
 		static int32_t DegreesToSemicircles(double degrees);
 
 	private:
-		bool WriteHeader();
-		bool WriteDefinitionMessage(uint16_t globalMsgNum, uint8_t localMsgType, const std::vector<FieldDefinition>& fieldDefinitions);
-		bool WriteDataMessage();
+		bool m_needRecordDefinition;
+
+	private:
+		bool WriteFitFileHeader();
+		bool WriteNormalDefinitionMessage(uint16_t globalMsgNum, uint8_t localMsgType, const std::vector<FieldDefinition>& fieldDefinitions);
+		bool WriteNormalDataMessage(uint8_t localMsgType, const FieldDefinitions& fieldDefinitions, const FieldValues& fieldValues);
+		bool WriteString(const std::string& str);
 	};
 }
 

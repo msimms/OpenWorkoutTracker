@@ -215,6 +215,7 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 						
 						FileLib::FitRecord rec;
 
+						rec.timestamp = FileLib::FitFileWriter::UnixTimestampToFitTimestamp(coordinate.time);
 						rec.positionLong = FileLib::FitFileWriter::DegreesToSemicircles(coordinate.longitude);
 						rec.positionLat = FileLib::FitFileWriter::DegreesToSemicircles(coordinate.latitude);
 						rec.altitude = (coordinate.altitude + 500) * 5.0;
@@ -845,7 +846,8 @@ bool DataExporter::ExportActivityFromDatabase(FileFormat format, std::string& fi
 {
 	if (pActivity)
 	{
-		fileName.append("/");
+		if (fileName.length() == 0 || fileName.at(fileName.length() - 1) != '/')
+			fileName.append("/");
 		fileName.append(GenerateFileName(format, pActivity->GetStartTimeSecs(), pActivity->GetType()));
 
 		switch (format)
@@ -873,7 +875,8 @@ bool DataExporter::ExportActivityFromDatabase(FileFormat format, std::string& fi
 
 bool DataExporter::ExportActivityUsingCallbackData(FileFormat format, std::string& fileName, time_t startTime, const std::string& sportType, const std::string& activityId, NextCoordinateCallback nextCoordinateCallback, void* context)
 {
-	fileName.append("/");
+	if (fileName.length() == 0 || fileName.at(fileName.length() - 1) != '/')
+		fileName.append("/");
 	fileName.append(GenerateFileName(format, startTime, sportType));
 
 	switch (format)
