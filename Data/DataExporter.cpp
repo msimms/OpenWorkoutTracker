@@ -215,7 +215,7 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 						
 						FileLib::FitRecord rec;
 
-						rec.timestamp = FileLib::FitFileWriter::UnixTimestampToFitTimestamp(coordinate.time);
+						rec.timestamp = FileLib::FitFileWriter::UnixTimestampToFitTimestamp(coordinate.time / 1000);
 						rec.positionLong = FileLib::FitFileWriter::DegreesToSemicircles(coordinate.longitude);
 						rec.positionLat = FileLib::FitFileWriter::DegreesToSemicircles(coordinate.latitude);
 						rec.altitude = (coordinate.altitude + 500) * 5.0;
@@ -249,7 +249,7 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 						}
 						else
 						{
-							rec.cadence256 = FIT_INVALID_UINT16;
+							rec.power = FIT_INVALID_UINT16;
 						}
 
 						result = writer.WriteRecord(rec);

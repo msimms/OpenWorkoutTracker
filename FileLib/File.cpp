@@ -57,6 +57,12 @@ namespace FileLib
 		return m_file.is_open();
 	}
 
+	bool File::SeekFromStart(size_t offset)
+	{
+		m_file.seekp(offset, std::ios::beg);
+		return true;
+	}
+
 	bool File::WriteString(const std::string& str)
 	{
 		if (m_file.is_open())

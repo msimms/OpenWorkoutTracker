@@ -44,12 +44,13 @@ namespace FileLib
 
 	typedef struct __attribute__((__packed__)) FitHeader
 	{
-		uint8_t  headerSize;      // Indicates the length of this file header including header size. Minimum size is 12.
-		uint8_t  protocolVersion; // Protocol version number as provided in SDK.
-		uint16_t profileVersion;  // Profile version number as provided in SDK.
-		uint32_t dataSize;        // Length of the Data Records section in bytes. Does not include Header or CRC.
-		uint8_t  dataType[4];     // ASCII values for “.FIT”.
-		uint16_t crc;             // CRC.
+		uint8_t  headerSize;        // Indicates the length of this file header including header size. Minimum size is 12.
+		uint8_t  protocolVersion;   // Protocol version number as provided in SDK.
+		uint8_t  profileVersionLsb; // Profile version number as provided in SDK.
+		uint8_t  profileVersionMsb; // Profile version number as provided in SDK.
+		uint32_t dataSize;          // Length of the Data Records section in bytes. Does not include Header or CRC.
+		uint8_t  dataType[4];       // ASCII values for “.FIT”.
+		uint16_t crc;               // CRC.
 	} FitHeader;
 
 	typedef struct FileId
@@ -117,12 +118,20 @@ namespace FileLib
 
 	private:
 		bool m_needRecordDefinition;
+		uint16_t m_dataLen;
 
 	private:
+		bool WriteBinaryData(const uint8_t* data, size_t len);
+
 		bool WriteFitFileHeader();
+		bool UpdateFitFileHeader();
+
 		bool WriteNormalDefinitionMessage(uint16_t globalMsgNum, uint8_t localMsgType, const std::vector<FieldDefinition>& fieldDefinitions);
 		bool WriteNormalDataMessage(uint8_t localMsgType, const FieldDefinitions& fieldDefinitions, const FieldValues& fieldValues);
+
 		bool WriteString(const std::string& str);
+
+		uint16_t CRC(uint16_t crc, uint8_t byte);
 	};
 }
 

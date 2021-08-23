@@ -9,12 +9,21 @@
 #include "Defines.h"
 
 // Record message header byte offsets.
-#define RECORD_HDR_NORMAL                    0x80
-#define RECORD_HDR_MSG_TYPE                  0x40
-#define RECORD_HDR_MSG_TYPE_SPECIFIC         0x20
+#define RECORD_HDR_NORMAL                    0x80 // 0 = Normal Header
+#define RECORD_HDR_MSG_TYPE                  0x40 // 1 = Definition, 0 = Data Message
+#define RECORD_HDR_MSG_TYPE_SPECIFIC         0x20 // Contains developer specific data
 #define RECORD_HDR_RESERVED                  0x10
 #define RECORD_HDR_LOCAL_MSG_TYPE            0x0f
 #define RECORD_HDR_LOCAL_MSG_TYPE_COMPRESSED 0x60
+
+// Protocol version.
+#define FIT_PROTOCOL_VERSION_MAJOR_SHIFT 4
+#define FIT_PROTOCOL_VERSION_10 ((uint8_t)(1 << FIT_PROTOCOL_VERSION_MAJOR_SHIFT) | 0)
+#define FIT_PROTOCOL_VERSION_20 ((uint8_t)(2 << FIT_PROTOCOL_VERSION_MAJOR_SHIFT) | 0)
+
+// Profile version.
+#define FIT_PROFILE_VERSION_MAJOR 21
+#define FIT_PROFILE_VERSION_MINOR 60
 
 // Global message numbers.
 #define GLOBAL_MSG_NUM_FILE_ID 0
@@ -217,10 +226,21 @@ namespace FileLib
 	FitFileWriter::FitFileWriter()
 	{
 		m_needRecordDefinition = true;
+		m_dataLen = 0;
 	}
 	
 	FitFileWriter::~FitFileWriter()
 	{
+	}
+
+	bool FitFileWriter::WriteBinaryData(const uint8_t* data, size_t len)
+	{
+		if (File::WriteBinaryData(data, len))
+		{
+			m_dataLen += len;
+			return true;
+		}
+		return false;
 	}
 
 	bool FitFileWriter::WriteFitFileHeader()
@@ -228,8 +248,9 @@ namespace FileLib
 		FitHeader header;
 
 		header.headerSize = sizeof(FitHeader);
-		header.protocolVersion = 0;
-		header.profileVersion = 0;
+		header.protocolVersion = FIT_PROTOCOL_VERSION_20;
+		header.profileVersionLsb = FIT_PROFILE_VERSION_MAJOR;
+		header.profileVersionMsb = 0;
 		header.dataSize = 0;
 		header.dataType[0] = '.';
 		header.dataType[1] = 'F';
@@ -240,16 +261,25 @@ namespace FileLib
 		return WriteBinaryData((uint8_t*)&header, sizeof(FitHeader));
 	}
 
+	bool FitFileWriter::UpdateFitFileHeader()
+	{
+		if (SeekFromStart(4))
+		{
+			uint16_t dataLen = m_dataLen - sizeof(FitHeader);
+			return WriteBinaryData((const uint8_t*)&dataLen, sizeof(dataLen));
+		}
+		return false;
+	}
+
 	bool FitFileWriter::WriteNormalDefinitionMessage(uint16_t globalMsgNum, uint8_t localMsgType, const std::vector<FieldDefinition>& fieldDefinitions)
 	{
 		bool result = false;
 
 		//
-		// Normal record header.
+		// Normal record header for a definition message.
 		//
 
-		uint8_t headerByte = RECORD_HDR_NORMAL;
-		headerByte |= RECORD_HDR_MSG_TYPE;
+		uint8_t headerByte = RECORD_HDR_MSG_TYPE;
 
 		if (WriteBinaryData(&headerByte, 1))
 		{
@@ -260,7 +290,7 @@ namespace FileLib
 			DefinitionMessageHeader msgHeader;
 
 			msgHeader.reserved = 0;
-			msgHeader.architecture = 1;
+			msgHeader.architecture = 0;
 			msgHeader.globalMessageNumber = globalMsgNum;
 			msgHeader.numFields = fieldDefinitions.size();
 
@@ -333,7 +363,7 @@ namespace FileLib
 				fileId.manufacturer = 0;
 				fileId.product = 0;
 				fileId.serialNumber = 0;
-				fileId.timeCreated = (uint32_t)time(NULL);
+				fileId.timeCreated = UnixTimestampToFitTimestamp(time(NULL));
 				fileId.number = 0;
 				fileId.productName = APP_NAME;
 
@@ -353,7 +383,7 @@ namespace FileLib
 
 	bool FitFileWriter::CloseFile()
 	{
-		return File::CloseFile();
+		return UpdateFitFileHeader() && File::CloseFile();
 	}
 
 	bool FitFileWriter::StartActivity()
@@ -470,6 +500,25 @@ namespace FileLib
 				m_needRecordDefinition = false;
 		}
 		return result && WriteNormalDataMessage(0, fieldDefs, fieldValues);
+	}
+
+	uint16_t FitFileWriter::CRC(uint16_t crc, uint8_t byte)
+	{
+		static const uint16_t CRC_TABLE[16] =
+		{
+			0x0000, 0xCC01, 0xD801, 0x1400, 0xF001, 0x3C00, 0x2800, 0xE401,
+			0xA001, 0x6C00, 0x7800, 0xB401, 0x5000, 0x9C01, 0x8801, 0x4400
+		};
+
+		uint16_t tmp = CRC_TABLE[crc & 0xF];
+		crc  = (crc >> 4) & 0x0FFF;
+		crc  = crc ^ tmp ^ CRC_TABLE[byte & 0xF];
+
+		tmp = CRC_TABLE[crc & 0xF];
+		crc  = (crc >> 4) & 0x0FFF;
+		crc  = crc ^ tmp ^ CRC_TABLE[(byte >> 4) & 0xF];
+
+		return crc;
 	}
 
 	uint32_t FitFileWriter::UnixTimestampToFitTimestamp(uint64_t unixTimestamp)

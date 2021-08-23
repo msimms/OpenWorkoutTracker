@@ -25,9 +25,10 @@ namespace FileLib
 		bool CreateFile(const std::string& fileName);
 		bool CloseFile();
 		bool IsOpen() const;
+		bool SeekFromStart(size_t offset);
 
-		bool WriteString(const std::string& str);
-		bool WriteBinaryData(const uint8_t* data, size_t len);
+		virtual bool WriteString(const std::string& str);
+		virtual bool WriteBinaryData(const uint8_t* data, size_t len);
 
 	protected:
 		std::string  m_fileName;
