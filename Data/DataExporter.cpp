@@ -150,7 +150,9 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 
 	if (writer.CreateFile(fileName))
 	{
-		if (writer.StartActivity())
+		uint8_t fitSportType = FileLib::FitFileWriter::SportTypeToEnum(pActivity->GetType());
+
+		if (writer.StartActivity() && writer.WriteSport(fitSportType))
 		{
 			std::string activityId = pActivity->GetId();
 
@@ -202,7 +204,9 @@ bool DataExporter::ExportActivityFromDatabaseToFit(const std::string& fileName, 
 				// Write the lap message.
 				//
 
-				if (writer.StartLap(lapStartTimeMs))
+				uint32_t lapStartTimeFit = FileLib::FitFileWriter::UnixTimestampToFitTimestamp(lapStartTimeMs / 1000);
+
+				if (writer.StartLap(lapStartTimeFit))
 				{
 					while (coordinateIter != coordinateList.end())
 					{

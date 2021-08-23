@@ -105,20 +105,24 @@ namespace FileLib
 		bool StartActivity();
 		bool EndActivity();
 
-		bool StartLap(uint64_t timeMS);
+		bool StartLap(uint32_t lapStartedTime);
 
 		bool WriteFileId(const FileId& fileId);
 		bool WriteFileCreator(const FileCreator& creator);
+		bool WriteSport(uint8_t sportType);
 		bool WriteSession(const FitSession& session);
 		bool WriteEvent(const FitEvent& evt);
 		bool WriteRecord(const FitRecord& rec);
 
 		static uint32_t UnixTimestampToFitTimestamp(uint64_t unixTimestamp);
 		static int32_t DegreesToSemicircles(double degrees);
+		static uint8_t SportTypeToEnum(const std::string& sportType);
 
 	private:
+		bool m_needLapDefinition;
 		bool m_needRecordDefinition;
 		uint16_t m_dataLen;
+		uint16_t m_crc;
 
 	private:
 		bool WriteBinaryData(const uint8_t* data, size_t len);

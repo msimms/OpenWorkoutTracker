@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "FitFileWriter.h"
+#include "ActivityType.h"
 #include "Defines.h"
 
 // Record message header byte offsets.
@@ -201,6 +202,17 @@
 #define FIT_STROKE_TYPE_SMASH 5
 #define FIT_STROKE_TYPE_COUNT 6
 
+// Lap trigger enumation.
+#define FIT_LAP_TRIGGER_MANUAL 0
+#define FIT_LAP_TRIGGER_TIME 1
+#define FIT_LAP_TRIGGER_DISTANCE 2
+#define FIT_LAP_TRIGGER_POSITION_START 3
+#define FIT_LAP_TRIGGER_POSITION_LAP 4
+#define FIT_LAP_TRIGGER_POSITION_WAYPOINT 5
+#define FIT_LAP_TRIGGER_POSITION_MARKED 6
+#define FIT_LAP_TRIGGER_SESSION_END 7
+#define FIT_LAP_TRIGGER_FITNESS_EQUIPMENT 8
+
 // Base types.
 #define FIT_BASE_TYPE_ENUM 0x00
 #define FIT_BASE_TYPE_SINT8 0x01
@@ -225,8 +237,10 @@ namespace FileLib
 {
 	FitFileWriter::FitFileWriter()
 	{
+		m_needLapDefinition = true;
 		m_needRecordDefinition = true;
 		m_dataLen = 0;
+		m_crc = 0;
 	}
 	
 	FitFileWriter::~FitFileWriter()
@@ -237,6 +251,8 @@ namespace FileLib
 	{
 		if (File::WriteBinaryData(data, len))
 		{
+			for (size_t i = 0; i < len; ++i)
+				m_crc = CRC(m_crc, data[i]);
 			m_dataLen += len;
 			return true;
 		}
@@ -258,17 +274,31 @@ namespace FileLib
 		header.dataType[3] = 'T';
 		header.crc = 0;
 
-		return WriteBinaryData((uint8_t*)&header, sizeof(FitHeader));
+		return File::WriteBinaryData((uint8_t*)&header, sizeof(FitHeader));
 	}
 
 	bool FitFileWriter::UpdateFitFileHeader()
 	{
+		bool result = false;
+
+		//
+		// Update the data length.
+		//
+
 		if (SeekFromStart(4))
 		{
-			uint16_t dataLen = m_dataLen - sizeof(FitHeader);
-			return WriteBinaryData((const uint8_t*)&dataLen, sizeof(dataLen));
+			result = File::WriteBinaryData((const uint8_t*)&m_dataLen, sizeof(m_dataLen));
 		}
-		return false;
+
+		//
+		// Update the header CRC.
+		//
+
+		if (result && SeekFromStart(12))
+		{
+			result = File::WriteBinaryData((const uint8_t*)&m_crc, sizeof(m_crc));
+		}
+		return result;
 	}
 
 	bool FitFileWriter::WriteNormalDefinitionMessage(uint16_t globalMsgNum, uint8_t localMsgType, const std::vector<FieldDefinition>& fieldDefinitions)
@@ -396,16 +426,32 @@ namespace FileLib
 		return true;
 	}
 
-	bool FitFileWriter::StartLap(uint64_t timeMS)
+	bool FitFileWriter::StartLap(uint32_t lapStartedTime)
 	{
 		FieldDefinitions fieldDefs;
 		FieldValues fieldValues;
 
+		fieldDefs.push_back( { 253, sizeof(lapStartedTime), FIT_BASE_TYPE_UINT32 } );
+		fieldValues.push_back( { .uintVal = lapStartedTime } );
+
+		fieldDefs.push_back( { 2, sizeof(lapStartedTime), FIT_BASE_TYPE_UINT32 } );
+		fieldValues.push_back( { .uintVal = lapStartedTime } );
+
+		fieldDefs.push_back( { 24, 1, FIT_BASE_TYPE_ENUM } );
+		fieldValues.push_back( { .uintVal = FIT_LAP_TRIGGER_MANUAL } );
+		
 		uint16_t globalMsgNum = GLOBAL_MSG_NUM_LAP;
 		uint8_t localMsgType = 0;
 
-		bool result = WriteNormalDefinitionMessage(globalMsgNum, localMsgType, fieldDefs);
-		return result && WriteNormalDataMessage(0, fieldDefs, fieldValues);
+		bool result = true;
+		
+		if (m_needLapDefinition)
+		{
+			result = WriteNormalDefinitionMessage(globalMsgNum, localMsgType, fieldDefs);
+			if (result)
+				m_needLapDefinition = false;
+		}
+		return result && WriteNormalDataMessage(localMsgType, fieldDefs, fieldValues);
 	}
 
 	bool FitFileWriter::WriteFileId(const FileId& fileId)
@@ -423,7 +469,7 @@ namespace FileLib
 		uint8_t localMsgType = 0;
 
 		bool result = WriteNormalDefinitionMessage(globalMsgNum, localMsgType, fieldDefs);
-		return result && WriteNormalDataMessage(0, fieldDefs, fieldValues);
+		return result && WriteNormalDataMessage(localMsgType, fieldDefs, fieldValues);
 	}
 
 	bool FitFileWriter::WriteFileCreator(const FileCreator& creator)
@@ -435,7 +481,22 @@ namespace FileLib
 		uint8_t localMsgType = 0;
 
 		bool result = WriteNormalDefinitionMessage(globalMsgNum, localMsgType, fieldDefs);
-		return result && WriteNormalDataMessage(0, fieldDefs, fieldValues);
+		return result && WriteNormalDataMessage(localMsgType, fieldDefs, fieldValues);
+	}
+
+	bool FitFileWriter::WriteSport(uint8_t sportType)
+	{
+		FieldDefinitions fieldDefs;
+		FieldValues fieldValues;
+
+		fieldDefs.push_back( { 0, sizeof(sportType), FIT_BASE_TYPE_ENUM } );
+		fieldValues.push_back( { .uintVal = sportType } );
+
+		uint16_t globalMsgNum = GLOBAL_MSG_NUM_SPORT;
+		uint8_t localMsgType = 0;
+
+		bool result = WriteNormalDefinitionMessage(globalMsgNum, localMsgType, fieldDefs);
+		return result && WriteNormalDataMessage(localMsgType, fieldDefs, fieldValues);
 	}
 
 	bool FitFileWriter::WriteSession(const FitSession& session)
@@ -447,7 +508,7 @@ namespace FileLib
 		uint8_t localMsgType = 0;
 
 		bool result = WriteNormalDefinitionMessage(globalMsgNum, localMsgType, fieldDefs);
-		return result && WriteNormalDataMessage(0, fieldDefs, fieldValues);
+		return result && WriteNormalDataMessage(localMsgType, fieldDefs, fieldValues);
 	}
 
 	bool FitFileWriter::WriteEvent(const FitEvent& evt)
@@ -530,5 +591,40 @@ namespace FileLib
 	{
 		// Semicircles to degrees is defined as (180.0 / f64::powf(2.0, 31.0))
 		return degrees / 0.000000083819032; 
+	}
+
+	uint8_t FitFileWriter::SportTypeToEnum(const std::string& sportType)
+	{
+		if (sportType.compare(ACTIVITY_TYPE_CHINUP) == 0)
+			return FIT_SPORT_TRAINING;
+		if (sportType.compare(ACTIVITY_TYPE_CYCLING) == 0)
+			return FIT_SPORT_CYCLING;
+		if (sportType.compare(ACTIVITY_TYPE_HIKING) == 0)
+			return FIT_SPORT_HIKING;
+		if (sportType.compare(ACTIVITY_TYPE_MOUNTAIN_BIKING) == 0)
+			return FIT_SPORT_CYCLING;
+		if (sportType.compare(ACTIVITY_TYPE_RUNNING) == 0)
+			return FIT_SPORT_RUNNING;
+		if (sportType.compare(ACTIVITY_TYPE_SQUAT) == 0)
+			return FIT_SPORT_TRAINING;
+		if (sportType.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0)
+			return FIT_SPORT_CYCLING;
+		if (sportType.compare(ACTIVITY_TYPE_TREADMILL) == 0)
+			return FIT_SPORT_RUNNING;
+		if (sportType.compare(ACTIVITY_TYPE_PULLUP) == 0)
+			return FIT_SPORT_TRAINING;
+		if (sportType.compare(ACTIVITY_TYPE_PUSHUP) == 0)
+			return FIT_SPORT_TRAINING;
+		if (sportType.compare(ACTIVITY_TYPE_WALKING) == 0)
+			return FIT_SPORT_WALKING;
+		if (sportType.compare(ACTIVITY_TYPE_OPEN_WATER_SWIMMING) == 0)
+			return FIT_SPORT_SWIMMING;
+		if (sportType.compare(ACTIVITY_TYPE_POOL_SWIMMING) == 0)
+			return FIT_SPORT_SWIMMING;
+		if (sportType.compare(ACTIVITY_TYPE_DUATHLON) == 0)
+			return FIT_SPORT_MULTISPORT;
+		if (sportType.compare(ACTIVITY_TYPE_TRIATHLON) == 0)
+			return FIT_SPORT_MULTISPORT;
+		return FIT_SPORT_GENERIC;
 	}
 }
