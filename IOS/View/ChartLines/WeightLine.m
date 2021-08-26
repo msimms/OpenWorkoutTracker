@@ -27,7 +27,7 @@ void GetWeightHistoryCallback(time_t measurementTime, double measurementValue, v
 	self->points = [[NSMutableArray alloc] init];
 	if (self->points)
 	{
-		if (GetWeightHistory(GetWeightHistoryCallback, (__bridge void*)self))
+		if (GetUsersWeightHistory(GetWeightHistoryCallback, (__bridge void*)self))
 		{
 			[super draw];
 		}

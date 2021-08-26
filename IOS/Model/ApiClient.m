@@ -375,18 +375,21 @@
 }
 
 // Send the user's weight to the server.
-+ (BOOL)serverSetUserWeight:(NSNumber*)weightKg
++ (BOOL)serverSetUserWeight:(NSNumber*)weightKg withTimestamp:(NSNumber*)timestamp
 {
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* post = [NSString stringWithFormat:@"{"];
-	NSMutableData* postData = [[post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES] mutableCopy];
-
-	[postData appendData:[[NSString stringWithFormat:@"\"%@\": \"%@\"", @PARAM_WEIGHT, weightKg] dataUsingEncoding:NSASCIIStringEncoding]];
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 weightKg, @PARAM_USER_WEIGHT,
+									 timestamp, @PARAM_TIMESTAMP,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
 
 	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_UPDATE_PROFILE_URL];
-	return [self makeRequest:urlStr withMethod:@"POST" withPostData:postData];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
 #endif
 }
 

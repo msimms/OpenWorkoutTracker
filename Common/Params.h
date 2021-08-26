@@ -12,6 +12,10 @@
 #define PARAM_REALNAME                        "realname"
 #define PARAM_DEVICE                          "device"
 
+// User Details
+#define PARAM_USER_WEIGHT                     "weight"
+#define PARAM_TIMESTAMP                       "timestamp"
+
 // Activity Sync
 #define PARAM_ACTIVITY_ID                     "activity_id"
 #define PARAM_ACTIVITY_HASH                   "activity_hash"

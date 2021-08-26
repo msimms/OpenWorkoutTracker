@@ -20,7 +20,7 @@
 + (BOOL)serverCreateTag:(NSString*)tag forActivity:(NSString*)activityId;
 + (BOOL)serverDeleteTag:(NSString*)tag forActivity:(NSString*)activityId;
 + (BOOL)serverClaimDevice:(NSString*)deviceId;
-+ (BOOL)serverSetUserWeight:(NSNumber*)weightKg;
++ (BOOL)serverSetUserWeight:(NSNumber*)weightKg withTimestamp:(NSNumber*)timestamp;
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash;
 + (BOOL)sendActivityToServer:(NSString*)activityId withName:activityName withContents:(NSData*)contents;
 + (BOOL)sendIntervalWorkoutToServer:(NSMutableDictionary*)description;

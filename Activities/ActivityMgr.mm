@@ -588,7 +588,7 @@ extern "C" {
 		}
 	}
 
-	bool GetWeightHistory(WeightCallback callback, void* context)
+	bool GetUsersWeightHistory(WeightCallback callback, void* context)
 	{
 		bool result = false;
 
@@ -606,6 +606,22 @@ extern "C" {
 				}
 				result = true;
 			}
+		}
+
+		g_dbLock.unlock();
+
+		return result;
+	}
+
+	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->RetrieveNewestWeightMeasurement(*timestamp, *weightKg);
 		}
 
 		g_dbLock.unlock();

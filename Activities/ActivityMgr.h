@@ -57,7 +57,8 @@ extern "C" {
 	// Functions for controlling user preferences.
 	void SetUnitSystem(UnitSystem system);
 	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
-	bool GetWeightHistory(WeightCallback callback, void* context);
+	bool GetUsersWeightHistory(WeightCallback callback, void* context);
+	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg);
 
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);

@@ -485,10 +485,14 @@ typedef enum MsgDestinationType
 			break;
 	}
 
+	// Write to HealthKit.
 	if (self->healthMgr)
 	{
 		[self->healthMgr saveHeightIntoHealthStore:[UserProfile heightInInches]];
 	}
+
+	// Send to the server.
+	[self sendUserDetailsToServer];
 }
 
 - (void)setUserWeight:(double)weight
@@ -503,10 +507,14 @@ typedef enum MsgDestinationType
 			break;
 	}
 
+	// Write to HealthKit.
 	if (self->healthMgr)
 	{
 		[self->healthMgr saveWeightIntoHealthStore:[UserProfile weightInLbs]];
 	}
+
+	// Send to the server.
+	[self sendUserDetailsToServer];
 }
 
 - (void)setUserFtp:(double)ftp
@@ -1058,6 +1066,7 @@ void startSensorCallback(SensorType type, void* context)
 		[self serverListPlannedWorkouts];
 		[self serverListIntervalWorkouts];
 		[self serverListPacePlans];
+		[self sendUserDetailsToServer];
 		[self sendMissingActivitiesToServer];
 		[self sendPacePlans:MSG_DESTINATION_WEB];
 
@@ -2184,6 +2193,17 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	{
 		NSMutableArray* activityIdList = (__bridge NSMutableArray*)context;
 		[activityIdList addObject:[[NSString alloc] initWithFormat:@"%s", activityId]];
+	}
+}
+
+- (void)sendUserDetailsToServer
+{
+	time_t timestamp = 0;
+	double weightKg = (double)0.0;
+
+	if (GetUsersCurrentWeight(&timestamp, &weightKg))
+	{
+		[ApiClient serverSetUserWeight:[[NSNumber alloc] initWithDouble:weightKg] withTimestamp:[[NSNumber alloc] initWithUnsignedInteger:timestamp]];
 	}
 }
 
