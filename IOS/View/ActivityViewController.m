@@ -556,18 +556,15 @@
 		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
 
 		if (isMovingActivity)
 		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.weightButton];
+			[self->startedToolbar removeObjectIdenticalTo:self.weightButton];
 		}
 		else
 		{
 			[self->startedToolbar removeObjectIdenticalTo:self.lapButton];
-		}
-		if (!isCyclingActivity || (numBikes == 0))
-		{
-			[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
 	}
 }
