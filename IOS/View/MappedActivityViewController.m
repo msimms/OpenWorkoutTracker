@@ -368,7 +368,8 @@
 			self->crumbRenderer = [[CrumbPathRenderer alloc] initWithOverlay:overlay];
 			if (self->crumbRenderer)
 			{
-				[self->crumbRenderer setColor:[UIColor blueColor]];
+				// Use different colors for dark vs light mode.
+				[self->crumbRenderer setColor:[self isDarkModeEnabled] ? [UIColor redColor] : [UIColor blueColor]];
 			}
 		}
 		return self->crumbRenderer;
