@@ -1248,7 +1248,7 @@
 			if ((self->displayedBroadcastStatus == nil) ||
 				([self->displayedBroadcastStatus boolValue] != [self->currentBroadcastStatus boolValue]))
 			{
-				const CGFloat IMAGE_SIZE = 60;
+				const CGFloat IMAGE_SIZE = 54;
 
 				CGFloat imageX = (self.view.bounds.size.width / 2) - (IMAGE_SIZE / 2);
 				CGFloat imageY = (self.view.bounds.size.height - self.toolbar.bounds.size.height) - (IMAGE_SIZE * 2);
