@@ -283,6 +283,8 @@
 
 - (void)addNewLocation:(CLLocation*)newLocation
 {
+	bool isFirstPoint = false;
+
 	if (self->crumbs)
 	{
 		// If the crumbs MKOverlay model object determines that the current location has moved far enough from the
@@ -314,9 +316,10 @@
 		{
 			[self.mapView addOverlay:self->crumbs];
 		}
+		isFirstPoint = true;
 	}
 
-	if ([Preferences shouldAutoScaleMap])
+	if (isFirstPoint || [Preferences shouldAutoScaleMap])
 	{
 		// Zoom map to user location
 		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 1500, 1500);

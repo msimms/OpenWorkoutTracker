@@ -260,6 +260,8 @@ void KmlPlacemarkEnd(const char* name, void* context)
 
 - (void)addNewLocation:(CLLocation*)newLocation
 {
+	bool isFirstPoint = false;
+
 	if (self->crumbs)
 	{
 		// If the crumbs MKOverlay model object determines that the current location has moved far enough from the
@@ -291,9 +293,10 @@ void KmlPlacemarkEnd(const char* name, void* context)
 		{
 			[self.mapView addOverlay:self->crumbs];
 		}
+		isFirstPoint = true;
 	}
 
-	if ([Preferences shouldAutoScaleMap])
+	if (isFirstPoint || [Preferences shouldAutoScaleMap])
 	{
 		// Zoom map to user location.
 		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 1500, 1500);
