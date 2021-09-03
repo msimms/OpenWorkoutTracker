@@ -720,6 +720,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+- (BOOL)isRadarConnected
+{
+	if (self->sensorMgr)
+	{
+		return [self->sensorMgr hasSensor:SENSOR_TYPE_RADAR];
+	}
+	return FALSE;
+}
+
 #pragma mark sensor update methods
 
 // Notification callback for a weight sensor reading.
@@ -1905,10 +1914,16 @@ void startSensorCallback(SensorType type, void* context)
 	return FALSE;
 }
 
-- (void)deleteActivity:(NSString*)activityId
+- (BOOL)deleteActivity:(NSString*)activityId
 {
-	DeleteActivity([activityId UTF8String]);
-	InitializeHistoricalActivityList();
+	BOOL result = DeleteActivity([activityId UTF8String]);
+
+	if (result)
+	{
+		InitializeHistoricalActivityList();
+		[self serverDeleteActivity:activityId];
+	}
+	return result;
 }
 
 - (void)freeHistoricalActivityList

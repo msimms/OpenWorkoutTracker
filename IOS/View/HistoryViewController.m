@@ -14,12 +14,11 @@
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
 
-#define TITLE                       NSLocalizedString(@"History", nil)
+#define TITLE                     NSLocalizedString(@"History", nil)
 
-#define ACTION_SHEET_TITLE_EXPORT   NSLocalizedString(@"Export using", nil)
-#define BUTTON_TITLE_EXPORT         NSLocalizedString(@"Export Summary", nil)
-#define EMAIL_TITLE                 NSLocalizedString(@"Workout Summary Data", nil)
-#define EMAIL_CONTENTS              NSLocalizedString(@"The data file is attached.", nil)
+#define ACTION_SHEET_TITLE_EXPORT NSLocalizedString(@"Export using", nil)
+#define BUTTON_TITLE_EXPORT       NSLocalizedString(@"Export Summary", nil)
+#define EMAIL_TITLE               NSLocalizedString(@"Workout Summary Data", nil)
 
 @interface RowData : NSObject
 {
@@ -358,11 +357,16 @@
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		NSString* activityId = [self getActivityId:indexPath];
 
-		[appDelegate deleteActivity:activityId];
-		[appDelegate initializeHistoricalActivityList];
-
-		[self buildDictionary];
-		[self.historyTableView reloadData];
+		if ([appDelegate deleteActivity:activityId])
+		{
+			[appDelegate initializeHistoricalActivityList];
+			[self buildDictionary];
+			[self.historyTableView reloadData];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_DELETE_FAILED];
+		}
 	}
 }
 
@@ -453,7 +457,7 @@
 		// Email
 		if ([self->selectedExportService isEqualToString:@SYNC_DEST_EMAIL])
 		{
-			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+			[super displayEmailComposerSheet:EMAIL_TITLE withBody:STR_EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
 		}
 
 		// iCloud Drive

@@ -6,11 +6,21 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
+#import "CorePlot.h"
 
-@interface IntervalEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIActionSheetDelegate>
+@interface IntervalEditViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, CPTBarPlotDataSource, CPTBarPlotDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* intervalTableView;
+	IBOutlet UIView* chartView;
+
+	CPTGraphHostingView* hostingView;
+	CPTGraph* graph;
+
+	double minX;
+	double maxX;
+	double minY;
+	double maxY;
 
 	NSString* workoutId;
 }
@@ -19,7 +29,7 @@
 
 - (void)setWorkoutId:(NSString*)workoutId;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* intervalTableView;
+@property (nonatomic, retain) IBOutlet UIView* chartView;
 
 @end

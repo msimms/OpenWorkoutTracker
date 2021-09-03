@@ -110,7 +110,9 @@
 
 #define STR_LOW_MEMORY            NSLocalizedString(@"Low memory", nil)
 #define STR_MAIL_DISABLED         NSLocalizedString(@"Sending mail is disabled.", nil)
+#define STR_EMAIL_CONTENTS        NSLocalizedString(@"The data file is attached.", nil)
 #define STR_INTERNAL_ERROR        NSLocalizedString(@"Internal error.", nil)
+#define STR_DELETE_FAILED         NSLocalizedString(@"Delete failed!", nil)
 #define STR_EXPORT_FAILED         NSLocalizedString(@"Export failed!", nil)
 #define STR_EXPORT_SUCCEEDED      NSLocalizedString(@"Export succeeded!", nil)
 

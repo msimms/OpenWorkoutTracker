@@ -1267,7 +1267,7 @@ extern "C" {
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
-			if (pWorkout)
+			if (pWorkout && (segmentIndex < pWorkout->segments.size()))
 			{
 				const IntervalWorkoutSegment& segment = pWorkout->segments.at(segmentIndex);
 				result = g_pDatabase->DeleteIntervalSegment(segment.segmentId);
@@ -1289,7 +1289,7 @@ extern "C" {
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
-			if (pWorkout)
+			if (pWorkout && (segmentIndex < pWorkout->segments.size()))
 			{
 				const IntervalWorkoutSegment& tempSegment = pWorkout->segments.at(segmentIndex);
 				(*segment) = tempSegment;

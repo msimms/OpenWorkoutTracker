@@ -59,8 +59,7 @@
 	{
 		if ([obj conformsToProtocol:@protocol(Sensor)])
 		{
-			SensorType type = [obj sensorType];
-			if (type == sensorType)
+			if ([obj sensorType] == sensorType)
 			{
 				[obj startUpdates];
 				return;
@@ -75,8 +74,7 @@
 	{
 		if ([obj conformsToProtocol:@protocol(Sensor)])
 		{
-			SensorType type = [obj sensorType];
-			if (type == sensorType)
+			if ([obj sensorType] == sensorType)
 			{
 				[obj stopUpdates];
 			}
@@ -92,6 +90,21 @@
 - (void)removeSensor:(NSObject*)sensor
 {
 	[self.sensors removeObject:sensor];
+}
+
+- (BOOL)hasSensor:(SensorType)sensorType
+{
+	for (id obj in self.sensors)
+	{
+		if ([obj conformsToProtocol:@protocol(Sensor)])
+		{
+			if ([obj sensorType] == sensorType)
+			{
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
 }
 
 @end

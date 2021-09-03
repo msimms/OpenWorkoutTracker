@@ -34,9 +34,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
-
 	[self drawChart];
+	[super viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotate
@@ -57,6 +56,8 @@
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
 }
+
+#pragma mark chart drawing methods
 
 - (void)drawChart
 {

@@ -105,6 +105,7 @@
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate;
 - (void)stopSensors;
 - (void)startSensors;
+- (BOOL)isRadarConnected;
 
 // sensor update methods
 
@@ -166,7 +167,7 @@
 - (BOOL)loadHistoricalActivitySensorData:(SensorType)sensorType forActivityId:(NSString*)activityId withCallback:(void*)callback withContext:(void*)context;
 - (BOOL)loadAllHistoricalActivitySensorData:(NSString*)activityId;
 - (BOOL)trimActivityData:(NSString*)activityId withNewTime:(uint64_t)newTime fromStart:(BOOL)fromStart;
-- (void)deleteActivity:(NSString*)activityId;
+- (BOOL)deleteActivity:(NSString*)activityId;
 - (void)freeHistoricalActivityList;
 
 // methods for listing locations from the current activity.

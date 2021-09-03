@@ -27,6 +27,8 @@
 - (void)addSensor:(NSObject*)sensor;
 - (void)removeSensor:(NSObject*)sensor;
 
+- (BOOL)hasSensor:(SensorType)sensorType;
+
 @property (nonatomic, retain) NSMutableArray* sensors;
 
 @end

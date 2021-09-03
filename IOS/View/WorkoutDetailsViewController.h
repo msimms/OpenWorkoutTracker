@@ -3,7 +3,6 @@
 
 #import <UIKit/UIKit.h>
 #import "CommonViewController.h"
-
 #import "CorePlot.h"
 
 @interface WorkoutDetailsViewController : CommonViewController<CPTBarPlotDataSource, CPTBarPlotDelegate>

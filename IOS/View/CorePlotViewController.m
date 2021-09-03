@@ -70,7 +70,7 @@
 	[self->hostingView setFrame:[self.chartView bounds]];
 }
 
-#pragma mark
+#pragma mark chart drawing methods
 
 - (void)drawChart
 {	

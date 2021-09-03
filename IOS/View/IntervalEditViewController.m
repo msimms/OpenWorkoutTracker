@@ -36,8 +36,8 @@
 
 @implementation IntervalEditViewController
 
-@synthesize toolbar;
 @synthesize intervalTableView;
+@synthesize chartView;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -54,6 +54,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+	[self drawChart];
 	[super viewDidAppear:animated];
 	[self->intervalTableView reloadData];
 }
@@ -70,6 +71,118 @@
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
 {
+}
+
+#pragma mark chart drawing methods
+
+- (void)drawChart
+{
+	// Check for dark mode.
+	bool darkModeEnabled = [self isDarkModeEnabled];
+
+	// Create the host view.
+	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.chartView.bounds];
+	[self->hostingView setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+	[self.chartView addSubview:self->hostingView];
+
+	// Create the graph from a custom theme.
+	self->graph = [[CPTXYGraph alloc] initWithFrame:self->hostingView.bounds];
+	[self->hostingView setHostedGraph:self->graph];
+
+	// Set graph padding.
+	self->graph.plotAreaFrame.paddingTop    = 20.0f;
+	self->graph.plotAreaFrame.paddingRight  = 20.0f;
+	self->graph.plotAreaFrame.paddingBottom = 20.0f;
+	self->graph.plotAreaFrame.paddingLeft   = 20.0f;
+
+	// Axis set.
+	CPTXYAxisSet* axisSet = (CPTXYAxisSet*)self->graph.axisSet;
+	CPTXYAxis* x          = axisSet.xAxis;
+	CPTXYAxis* y          = axisSet.yAxis;
+
+	// Axis min and max values.
+	self->minX = (double)0.0;
+	self->maxX = (double)1.0; // distance, in 100s of meters
+	self->minY = (double)0.0; // minimum intensity/pace
+	self->maxY = (double)1.0; // maximum intensity/pace
+	IntervalWorkoutSegment segment;
+
+	size_t segmentIndex = 0;
+	while (GetIntervalWorkoutSegment([self->workoutId UTF8String], segmentIndex++, &segment))
+	{
+		switch (segment.units)
+		{
+		case INTERVAL_UNIT_SECONDS:
+			break;
+		case INTERVAL_UNIT_METERS:
+			self->maxX += segment.distance / 100.0;
+			break;
+		case INTERVAL_UNIT_KILOMETERS:
+			self->maxX += segment.distance * 10.0;
+			break;
+		case INTERVAL_UNIT_FEET:
+			self->maxX += segment.distance * 0.003048;
+			break;
+		case INTERVAL_UNIT_YARDS:
+			self->maxX += segment.distance * 0.009144;
+			break;
+		case INTERVAL_UNIT_MILES:
+			self->maxX += segment.distance * 16.09344;
+			break;
+		}
+
+		if (segment.pace > self->maxY)
+		{
+			self->maxY = segment.pace;
+		}
+		if (segment.power > self->maxY)
+		{
+			self->maxY = segment.power;
+		}
+	}
+
+	// Setup plot space.
+	CPTXYPlotSpace* plotSpace       = (CPTXYPlotSpace*)self->graph.defaultPlotSpace;
+	plotSpace.allowsUserInteraction = NO;
+	plotSpace.xRange                = [CPTPlotRange plotRangeWithLocation:@(self->minX) length:@(self->maxX)];
+	plotSpace.yRange                = [CPTPlotRange plotRangeWithLocation:@(self->minY) length:@(self->maxY)];
+	
+	// Axis title style.
+	CPTMutableTextStyle* axisTitleStyle = [CPTMutableTextStyle textStyle];
+	axisTitleStyle.color                = darkModeEnabled ? [CPTColor whiteColor] : [CPTColor blackColor];
+	axisTitleStyle.fontName             = @"Helvetica-Bold";
+	axisTitleStyle.fontSize             = 12.0f;
+
+	// Axis line style.
+	CPTMutableLineStyle* axisLineStyle = [CPTMutableLineStyle lineStyle];
+	axisLineStyle.lineWidth            = 1.0f;
+	axisLineStyle.lineColor            = darkModeEnabled ? [[CPTColor whiteColor] colorWithAlphaComponent:1] : [[CPTColor blackColor] colorWithAlphaComponent:1];
+
+	// Axis configuration.
+	double spreadX          = self->maxX - self->minX;
+	double xHashSpacing     = spreadX / segmentIndex;
+	x.orthogonalPosition    = @(self->minY);
+	x.majorIntervalLength   = @(xHashSpacing);
+	x.minorTicksPerInterval = 0;
+	x.labelingPolicy        = CPTAxisLabelingPolicyNone;
+	x.titleTextStyle        = axisTitleStyle;
+	x.titleOffset           = 5.0f;
+	y.orthogonalPosition    = @(self->minX);
+	y.title                 = @"Pace";
+	y.delegate              = self;
+	y.labelingPolicy        = CPTAxisLabelingPolicyNone;
+	y.titleTextStyle        = axisTitleStyle;
+	y.titleOffset           = 5.0f;
+
+	// Create the plot.
+	CPTBarPlot* plot     = [[CPTBarPlot alloc] init];
+	plot.dataSource      = self;
+	plot.delegate        = self;
+	plot.barWidth        = [NSNumber numberWithInteger:xHashSpacing];
+	plot.barOffset       = [NSNumber numberWithInteger:0];
+	plot.barCornerRadius = 5.0;
+
+	[self->graph addPlot:plot];
 }
 
 #pragma mark helper methods
@@ -369,6 +482,55 @@
 
 - (void)textFieldDidEndEditing:(UITextField*)textField
 {
+}
+
+#pragma mark CPTPlotDataSource methods
+
+- (NSUInteger)numberOfRecordsForPlot:(CPTPlot*)plot
+{
+	return self->maxX;
+}
+
+- (NSNumber*)numberForPlot:(CPTPlot*)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
+{
+	switch (fieldEnum)
+	{
+		case CPTScatterPlotFieldX:
+			return [[NSNumber alloc] initWithInt:(int)index];
+		case CPTScatterPlotFieldY:
+			{
+				IntervalWorkoutSegment segment;
+
+				if (GetIntervalWorkoutSegment([self->workoutId UTF8String], (size_t)index, &segment))
+				{
+				}
+				return [[NSNumber alloc] initWithInt:(int)1.0];
+			}
+		default:
+			break;
+	}
+	return nil;
+}
+
+#pragma mark CPTAxisDelegate methods
+
+- (BOOL)axisShouldRelabel:(CPTAxis*)axis
+{
+	return YES;
+}
+
+- (void)axisDidRelabel:(CPTAxis*)axis
+{
+}
+
+- (BOOL)axis:(CPTAxis*)axis shouldUpdateAxisLabelsAtLocations:(NSSet*)locations
+{
+	return YES;
+}
+
+- (BOOL)axis:(CPTAxis*)axis shouldUpdateMinorAxisLabelsAtLocations:(NSSet*)locations
+{
+	return NO;
 }
 
 @end

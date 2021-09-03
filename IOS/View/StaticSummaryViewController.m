@@ -63,7 +63,6 @@
 #define MSG_LOAD_FAILED                NSLocalizedString(@"Failed to load the activity.", nil)
 
 #define EMAIL_TITLE                    NSLocalizedString(@"Workout Data", nil)
-#define EMAIL_CONTENTS                 NSLocalizedString(@"The data file is attached.", nil)
 
 typedef enum Time1Rows
 {
@@ -396,7 +395,7 @@ typedef enum ExportFileTypeButtons
 		// Email
 		if ([self->selectedExportService isEqualToString:@SYNC_DEST_EMAIL])
 		{
-			[super displayEmailComposerSheet:EMAIL_TITLE withBody:EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
+			[super displayEmailComposerSheet:EMAIL_TITLE withBody:STR_EMAIL_CONTENTS withFileName:self->exportedFileName withMimeType:@"text/xml" withDelegate:self];
 		}
 
 		// Web
@@ -614,9 +613,14 @@ typedef enum ExportFileTypeButtons
 	
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		[appDelegate serverDeleteActivity:self->activityId];
-		[appDelegate deleteActivity:self->activityId];
-		[self.navigationController popViewControllerAnimated:YES];
+		if ([appDelegate deleteActivity:self->activityId])
+		{
+			[self.navigationController popViewControllerAnimated:YES];
+		}
+		else
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_DELETE_FAILED];
+		}
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 	}]];

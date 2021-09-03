@@ -80,9 +80,15 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	[appDelegate generateWorkouts];
-	[self updateWorkoutNames];
-	[self.workoutsView reloadData];
+	if ([appDelegate generateWorkouts])
+	{
+		[self updateWorkoutNames];
+		[self.workoutsView reloadData];
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
+	}
 }
 
 #pragma mark miscelaneous methods
@@ -208,7 +214,7 @@
 				}
 
 				// Load the image.
-				UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(6, 6, 32, 32)];
+				UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
 				if (workoutType == WORKOUT_TYPE_REST)
 					imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Rest" ofType:@"png"]];
 				else

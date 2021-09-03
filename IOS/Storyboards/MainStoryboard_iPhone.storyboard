@@ -253,7 +253,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiH-b3-eRE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1065.5999999999999" y="2994.6026986506749"/>
+            <point key="canvasLocation" x="1065.217391304348" y="2993.9732142857142"/>
         </scene>
         <!--Settings-->
         <scene sceneID="WOk-IE-U1r">
@@ -624,14 +624,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="WAb-Vo-Dwz">
-                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3TS-07-KA2">
+                                <rect key="frame" x="0.0" y="478" width="414" height="335"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="7Er-a4-zwh" id="YdK-h2-hLk"/>
-                                    <outlet property="delegate" destination="7Er-a4-zwh" id="djW-Mr-DL9"/>
-                                </connections>
-                            </tableView>
+                            </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KVM-am-ysX">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
@@ -643,28 +639,42 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="WAb-Vo-Dwz">
+                                <rect key="frame" x="0.0" y="88" width="414" height="390"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="390" id="ZDi-oP-84Q"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="7Er-a4-zwh" id="YdK-h2-hLk"/>
+                                    <outlet property="delegate" destination="7Er-a4-zwh" id="djW-Mr-DL9"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Dxl-vD-DYJ"/>
                         <constraints>
-                            <constraint firstItem="WAb-Vo-Dwz" firstAttribute="top" secondItem="Dxl-vD-DYJ" secondAttribute="top" id="7Hn-zW-Avz"/>
+                            <constraint firstItem="3TS-07-KA2" firstAttribute="top" secondItem="WAb-Vo-Dwz" secondAttribute="bottom" id="13l-z2-u7R" userLabel="Chart View.top = Interval Table View.bottom"/>
+                            <constraint firstItem="KVM-am-ysX" firstAttribute="trailing" secondItem="WAb-Vo-Dwz" secondAttribute="trailing" id="1ox-gS-rCt"/>
                             <constraint firstItem="KVM-am-ysX" firstAttribute="bottom" secondItem="Dxl-vD-DYJ" secondAttribute="bottom" id="98u-Bi-MFj"/>
-                            <constraint firstItem="KVM-am-ysX" firstAttribute="top" secondItem="WAb-Vo-Dwz" secondAttribute="bottom" id="R19-k8-xaC"/>
-                            <constraint firstItem="KVM-am-ysX" firstAttribute="trailing" secondItem="WAb-Vo-Dwz" secondAttribute="trailing" id="ZcG-NL-zOV"/>
+                            <constraint firstItem="KVM-am-ysX" firstAttribute="top" secondItem="3TS-07-KA2" secondAttribute="bottom" id="BXv-0E-0Ji"/>
+                            <constraint firstItem="KVM-am-ysX" firstAttribute="leading" secondItem="WAb-Vo-Dwz" secondAttribute="leading" id="NPm-By-au7"/>
+                            <constraint firstItem="WAb-Vo-Dwz" firstAttribute="top" secondItem="Dxl-vD-DYJ" secondAttribute="top" id="OCE-1i-Ny2"/>
+                            <constraint firstItem="KVM-am-ysX" firstAttribute="centerX" secondItem="s9a-Hc-X1z" secondAttribute="centerX" id="Q7o-2N-x1e"/>
+                            <constraint firstItem="KVM-am-ysX" firstAttribute="leading" secondItem="3TS-07-KA2" secondAttribute="leading" id="Xuq-oM-cWH"/>
+                            <constraint firstItem="KVM-am-ysX" firstAttribute="trailing" secondItem="3TS-07-KA2" secondAttribute="trailing" id="ZIC-Nz-IVb"/>
                             <constraint firstItem="KVM-am-ysX" firstAttribute="leading" secondItem="Dxl-vD-DYJ" secondAttribute="leading" id="mkc-14-FeA"/>
-                            <constraint firstItem="WAb-Vo-Dwz" firstAttribute="leading" secondItem="Dxl-vD-DYJ" secondAttribute="leading" id="nek-ux-3nv"/>
-                            <constraint firstItem="WAb-Vo-Dwz" firstAttribute="trailing" secondItem="Dxl-vD-DYJ" secondAttribute="trailing" id="tBM-nh-yvE"/>
-                            <constraint firstItem="WAb-Vo-Dwz" firstAttribute="centerX" secondItem="s9a-Hc-X1z" secondAttribute="centerX" id="yPA-xl-O0w"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Interval Workout" id="jpC-aq-dws"/>
                     <connections>
+                        <outlet property="chartView" destination="3TS-07-KA2" id="jNc-kK-f1S"/>
                         <outlet property="intervalTableView" destination="WAb-Vo-Dwz" id="3QQ-Kg-oCO"/>
                         <outlet property="toolbar" destination="KVM-am-ysX" id="0FQ-WA-4Zg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="If4-jW-8Mx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1065.5999999999999" y="3692.6536731634187"/>
+            <point key="canvasLocation" x="1065.217391304348" y="3692.4107142857142"/>
         </scene>
         <!--New Bike-->
         <scene sceneID="ygj-e2-fVp">
@@ -1471,7 +1481,6 @@
                             <constraint firstItem="jAL-db-HXU" firstAttribute="leading" secondItem="Kr6-XU-HvP" secondAttribute="leading" id="Nlj-M1-EIb"/>
                             <constraint firstItem="LN4-ge-uuF" firstAttribute="leading" secondItem="Whm-k3-b3p" secondAttribute="leading" id="OdR-b0-pm3"/>
                             <constraint firstItem="LN4-ge-uuF" firstAttribute="trailing" secondItem="Whm-k3-b3p" secondAttribute="trailing" id="PAs-ff-T6O"/>
-                            <constraint firstItem="GwT-k9-o3L" firstAttribute="centerX" secondItem="QwQ-sg-mIp" secondAttribute="centerX" id="Red-rI-dZG"/>
                             <constraint firstItem="Kr6-XU-HvP" firstAttribute="trailing" secondItem="XpE-x3-bnB" secondAttribute="trailing" id="STx-SN-pcT"/>
                             <constraint firstItem="Whm-k3-b3p" firstAttribute="trailing" secondItem="LAR-e6-oIZ" secondAttribute="trailing" id="T2S-ad-rVZ"/>
                             <constraint firstItem="fQQ-Ng-ouf" firstAttribute="firstBaseline" secondItem="JLI-RA-aVc" secondAttribute="firstBaseline" id="Tzh-Xb-Sm2"/>
@@ -1506,9 +1515,7 @@
                             <constraint firstItem="X7F-ml-DE7" firstAttribute="leading" secondItem="QwQ-sg-mIp" secondAttribute="leading" constant="30" id="qGf-J4-VuC"/>
                             <constraint firstItem="Gyi-hB-pEf" firstAttribute="leading" secondItem="QwQ-sg-mIp" secondAttribute="leading" constant="120" id="rHH-AJ-JBC"/>
                             <constraint firstItem="X7F-ml-DE7" firstAttribute="trailing" secondItem="AHP-Iq-h0i" secondAttribute="trailing" id="rh0-X3-vK0"/>
-                            <constraint firstItem="GwT-k9-o3L" firstAttribute="top" secondItem="QwQ-sg-mIp" secondAttribute="top" id="saK-K9-brs"/>
                             <constraint firstItem="nwW-C2-DCc" firstAttribute="trailing" secondItem="fQQ-Ng-ouf" secondAttribute="trailing" id="tIn-a5-YWD"/>
-                            <constraint firstItem="GwT-k9-o3L" firstAttribute="centerX" secondItem="QwQ-sg-mIp" secondAttribute="centerX" id="vKo-3R-opK"/>
                             <constraint firstItem="Whm-k3-b3p" firstAttribute="leading" secondItem="LAR-e6-oIZ" secondAttribute="leading" id="vLv-po-uaU"/>
                             <constraint firstItem="jAL-db-HXU" firstAttribute="firstBaseline" secondItem="r5V-3T-s5T" secondAttribute="firstBaseline" id="ww6-5S-foa"/>
                             <constraint firstItem="jKh-tf-MRU" firstAttribute="firstBaseline" secondItem="LAR-e6-oIZ" secondAttribute="firstBaseline" id="xQo-pI-aSV"/>

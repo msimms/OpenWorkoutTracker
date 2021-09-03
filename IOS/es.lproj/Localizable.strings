@@ -55,6 +55,7 @@
 "Cycling" = "Ciclismo";
 "deg" = "grados";
 "Delete" = "Eliminar";
+"Delete failed!" = "¡Eliminar falló!";
 "Delete 1st Second" = "Eliminar Primera Segunda";
 "Delete 1st Five Seconds" = "Elimine Primero Cinco Segundos";
 "Delete 1st Thirty Seconds" = "Elimine Primero Treinta Segundos";
