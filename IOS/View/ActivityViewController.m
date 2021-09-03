@@ -300,7 +300,7 @@
 	{
 		self.view.backgroundColor = [UIColor clearColor];
 
-		UIBlurEffect* blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemUltraThinMaterial];
+		UIBlurEffect* blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 		self->blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
 
 		blurEffectView.frame = self.view.bounds;
