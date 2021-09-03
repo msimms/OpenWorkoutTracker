@@ -27,7 +27,7 @@ NSString* NumToFloatStringForHashing(NSNumber* num)
 	return [formatter stringFromNumber:num];
 }
 
-void GpsDataHashCallback(const char* activityId, void* context)
+void LocationDataHashCallback(const char* activityId, void* context)
 {
 	ActivityAttributeType latValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_LATITUDE);
 	ActivityAttributeType lonValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_LONGITUDE);
@@ -68,7 +68,7 @@ void GpsDataHashCallback(const char* activityId, void* context)
 	CreateHistoricalActivityObject(activityIndex);
 
 	// Hash the locations.
-	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, GpsDataHashCallback, (void*)&ctx);
+	LoadHistoricalActivitySensorData(activityIndex, SENSOR_TYPE_LOCATION, LocationDataHashCallback, (void*)&ctx);
 
 	// Compute the hash.
 	uint8_t digest[CC_SHA512_DIGEST_LENGTH] = {0};

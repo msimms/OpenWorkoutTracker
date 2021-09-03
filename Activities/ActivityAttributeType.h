@@ -25,21 +25,21 @@ typedef enum ActivityAttributeMeasureType
 {
 	MEASURE_NOT_SET = 0,
 	MEASURE_TIME,
-	MEASURE_PACE,         // minutes/mile or minute/km
-	MEASURE_SPEED,        // mph or kph
-	MEASURE_DISTANCE,     // miles or kilometers
-	MEASURE_WEIGHT,       // pounds or kilograms
-	MEASURE_HEIGHT,       // inches or centimeters
-	MEASURE_ALTITUDE,     // feet or meters
+	MEASURE_PACE,              // minutes/mile or minute/km
+	MEASURE_SPEED,             // mph or kph
+	MEASURE_DISTANCE,          // miles or kilometers
+	MEASURE_WEIGHT,            // pounds or kilograms
+	MEASURE_HEIGHT,            // inches or centimeters
+	MEASURE_ALTITUDE,          // feet or meters
 	MEASURE_COUNT,
-	MEASURE_BPM,          // beats per minute
-	MEASURE_POWER,        // watts
-	MEASURE_CALORIES,     // kilo-calories
+	MEASURE_BPM,               // beats per minute
+	MEASURE_POWER,             // watts
+	MEASURE_CALORIES,          // kilo-calories
 	MEASURE_DEGREES,
-	MEASURE_G,            // gravity
+	MEASURE_G,                 // gravity
 	MEASURE_PERCENTAGE,
-	MEASURE_RPM,          // revolutions per minute
-	MEASURE_GPS_ACCURACY, // meters
+	MEASURE_RPM,               // revolutions per minute
+	MEASURE_LOCATION_ACCURACY, // meters
 	MEASURE_INDEX,
 	MEASURE_ID
 } ActivityAttributeMeasureType;

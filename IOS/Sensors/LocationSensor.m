@@ -134,7 +134,7 @@
 								  [NSNumber numberWithDouble:alt],@KEY_NAME_ALTITUDE,
 								  [NSNumber numberWithDouble:horizontalAccuracy],@KEY_NAME_HORIZONTAL_ACCURACY,
 								  [NSNumber numberWithDouble:verticalAccuracy],@KEY_NAME_VERTICAL_ACCURACY,
-								  [NSNumber numberWithLongLong:theTimeMs],@KEY_NAME_GPS_TIMESTAMP_MS,
+								  [NSNumber numberWithLongLong:theTimeMs],@KEY_NAME_LOCATION_TIMESTAMP_MS,
 								  nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LOCATION object:locationData];
 }

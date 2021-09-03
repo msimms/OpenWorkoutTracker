@@ -459,46 +459,46 @@
 	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_COUNTDOWN withInteger:seconds];
 }
 
-- (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityType
+- (uint8_t)getMinLocationHorizontalAccuracy:(NSString*)activityType
 {
-	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY];
 
 	if (value == INTEGER_VALUE_NOT_SET)
 		value = DEFAULT_MIN_ACCURACY_METERS;
 	return value;	
 }
 
-- (void)setMinGpsHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds
+- (void)setMinLocationHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)meters
 {
-	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY withInteger:seconds];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY withInteger:meters];
 }
 
-- (uint8_t)getMinGpsVerticalAccuracy:(NSString*)activityType
+- (uint8_t)getMinLocationVerticalAccuracy:(NSString*)activityType
 {
-	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY];
 
 	if (value == INTEGER_VALUE_NOT_SET)
 		value = DEFAULT_MIN_ACCURACY_METERS;
 	return value;
 }
 
-- (void)setMinGpsVerticalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds
+- (void)setMinLocationVerticalAccuracy:(NSString*)activityType withMeters:(uint8_t)meters
 {
-	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY withInteger:seconds];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY withInteger:meters];
 }
 
-- (GpsFilterOption)getGpsFilterOption:(NSString*)activityType
+- (LocationFilterOption)getLocationFilterOption:(NSString*)activityType
 {
-	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_LOCATION_FILTER_OPTION];
 
 	if (value == INTEGER_VALUE_NOT_SET)
-		return GPS_FILTER_WARN;
-	return (GpsFilterOption)value;
+		return LOCATION_FILTER_DROP;
+	return (LocationFilterOption)value;
 }
 
-- (void)setGpsFilterOption:(NSString*)activityType withOption:(GpsFilterOption)option
+- (void)setLocationFilterOption:(NSString*)activityType withOption:(LocationFilterOption)option
 {
-	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_GPS_FILTER_OPTION withInteger:(int)option];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_LOCATION_FILTER_OPTION withInteger:(int)option];
 }
 
 - (BOOL)hasShownHelp:(NSString*)activityType

@@ -3247,7 +3247,7 @@ extern "C" {
 		return ProcessSensorReading(reading);
 	}
 
-	bool ProcessLocationReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t gpsTimestampMs)
+	bool ProcessLocationReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t locationTimestampMs)
 	{
 		SensorReading reading;
 		reading.type = SENSOR_TYPE_LOCATION;
@@ -3256,7 +3256,7 @@ extern "C" {
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_ALTITUDE, alt));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_HORIZONTAL_ACCURACY, horizontalAccuracy));
 		reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_VERTICAL_ACCURACY, verticalAccuracy));
-		reading.time = gpsTimestampMs;
+		reading.time = locationTimestampMs;
 		return ProcessSensorReading(reading);
 	}
 

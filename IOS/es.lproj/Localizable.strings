@@ -111,9 +111,6 @@
 "ft" = "pies (de altura)";
 "Gear" = "Equipo";
 "Gender" = "Sexo";
-"GPS" = "GPS";
-"GPS Filter Options" = "Opciones de Filtro GPS";
-"GPS Sample Frequency" = "Muestra GPS Frecuencia";
 "GPX File" = "GPX Archivo";
 "Heart Rate Monitor" = "Monitor de Pulso Cardiaco";
 "Heatmap" = "Mapa de Calor";
@@ -122,6 +119,7 @@
 "Hiking" = "Excursionismo";
 "History" = "Historia";
 "Home" = "Casa";
+"Horizontal Accuracy" = "Exactitud Horizontal";
 "How often do you want to update your position to your followers?" = "¿Con qué frecuencia desea actualizar su posición a tus seguidores?";
 "Hybrid View" = "Híbrido Vista";
 "Import" = "Importar";
@@ -144,6 +142,8 @@
 "Layout" = "Disposición";
 "lbs" = "lbs";
 "Light" = "Leve";
+"Location" = "Posición";
+"Location Filter Options" = "Opciones de Filtro Posición";
 "Location Services is disabled" = "Location Services está desactivada";
 "Login" = "Iniciar Sesión";
 "Low memory" = "Poca memoria";
@@ -161,7 +161,7 @@
 "miles" = "millas";
 "Miles" = "Millas";
 "Minimum Altitude" = "Altitud Mínima";
-"Minimum GPS Accuracy" = "Precisión Mínima GPS";
+"Minimum Location Accuracy" = "Precisión Mínima Posición";
 "mins/km" = "mins/km";
 "mins/mile" = "mins/milla";
 "Moderate" = "Moderado";
@@ -195,7 +195,7 @@
 "Please enter your height" = "Por favor ingrese su altura";
 "Please enter your weight" = "Por favor ingrese su peso";
 "Please specify a URL." = "Por favor especificar una URL.";
-"Poor GPS Signal" = "Mala Señal GPS";
+"Poor Location Data" = "Los datos de ubicación son deficientes";
 "Position" = "Posición";
 "Power Meter" = "Medidor de Energía";
 "Previous" = "Previo";
@@ -212,7 +212,6 @@
 "Replace" = "Reemplazar";
 "Request" = "Solicitar";
 "Reset" = "Reinicializar";
-"Reset ..." = "Reinicializar ...";
 "Reset Data" = "Reinicializar Datos";
 "Reset Settings" = "Reinicializar Configuración";
 "Resume" = "Continuar";
@@ -275,7 +274,6 @@
 "Time" = "Tiempo";
 "Time in Motion" = "Tiempo En Movimiento";
 "Time Interval" = "Intervalo de Tiempo";
-"To view your broadcast visit this webpage" = "Para ver su visita emisión esta página";
 "Total Ascent" = "Ascenso Total";
 "Total Calories" = "Las Calorías Totales";
 "Total Distance" = "Distancia Totales";
@@ -289,6 +287,7 @@
 "Units" = "Unidades";
 "US Customary Units" = "Las Unidades de EE.UU.";
 "Use HTTPS" = "Usar HTTPS";
+"Vertical Accuracy" = "Exactitud Vertical";
 "View" = "Ver";
 "View Weight History" = "Ver Historial de Peso";
 "Wait for screen touch" = "Espere a que la pantalla táctil";
@@ -312,9 +311,8 @@
 "You did not enter a password." = "No ha introducido la contraseña.";
 "You did not enter your name." = "No has introducido tu nombre.";
 "You did not provide an email address." = "Usted no proporcionó una dirección de correo electrónico.";
-"You have not enabled any file hosting services. Services can be enabled using Settings." = "Usted no ha activado ningún archivo de servicios de alojamiento. Los servicios pueden ser habilitadas usando opciones.";
-"You have not done any workouts. Get moving!" = "Usted no ha hecho ningún entrenamientos.";
-"You need a foot pod to use this app with a treadmill." = "Necesita un podómetro para utilizar esta aplicación con una cinta de correr.";
+"You have not done any workouts. Get moving!" = "No has hecho ningún entrenamiento.";
+"You need a foot pod to use this app with a treadmill." = "Necesita un podómetro para usar esta aplicación con una cinta de correr.";
 "You need to choose a bike." = "Usted tiene que elegir una bicicleta.";
 "Your device does not support Bluetooth Smart, which is required for this feature." = "El dispositivo no es compatible con Bluetooth Smart, que se requiere para esta función.";
 "ZWO File" = "ZWO Archivo";

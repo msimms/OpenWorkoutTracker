@@ -111,9 +111,6 @@
 "ft" = "ft";
 "Gear" = "Gear";
 "Gender" = "Gender";
-"GPS" = "GPS";
-"GPS Filter Options" = "GPS Filter Options";
-"GPS Sample Frequency" = "GPS Sample Frequency";
 "GPX File" = "GPX File";
 "Heart Rate Monitor" = "Heart Rate Monitor";
 "Heatmap" = "Heatmap";
@@ -122,6 +119,7 @@
 "Hiking" = "Hiking";
 "History" = "History";
 "Home" = "Home";
+"Horizontal Accuracy" = "Horizontal Accuracy";
 "How often do you want to update your position to your followers?" = "How often do you want to update your position to your followers?";
 "Hybrid View" = "Hybrid View";
 "Import" = "Import";
@@ -144,6 +142,8 @@
 "Layout" = "Layout";
 "lbs" = "lbs";
 "Light" = "Light";
+"Location" = "Location";
+"Location Filter Options" = "Location Filter Options";
 "Location Services is disabled" = "Location Services is disabled";
 "Login" = "Login";
 "Low memory" = "Low memory";
@@ -161,7 +161,7 @@
 "miles" = "miles";
 "Miles" = "Miles";
 "Minimum Altitude" = "Minimum Altitude";
-"Minimum GPS Accuracy" = "Minimum GPS Accuracy";
+"Minimum Location Accuracy" = "Minimum Location Accuracy";
 "mins/km" = "mins/km";
 "mins/mile" = "mins/mile";
 "Moderate" = "Moderate";
@@ -195,7 +195,7 @@
 "Please enter your height" = "Please enter your height";
 "Please enter your weight" = "Please enter your weight";
 "Please specify a URL." = "Please specify a URL.";
-"Poor GPS Signal" = "Poor GPS Signal";
+"Poor Location Data" = "Poor Location Data";
 "Position" = "Position";
 "Power Meter" = "Power Meter";
 "Previous" = "Previous";
@@ -212,7 +212,6 @@
 "Replace" = "Replace";
 "Request" = "Request";
 "Reset" = "Reset";
-"Reset ..." = "Reset ...";
 "Reset Data" = "Reset Data";
 "Reset Settings" = "Reset Settings";
 "Resume" = "Resume";
@@ -274,7 +273,6 @@
 "Time" = "Time";
 "Time in Motion" = "Time In Motion";
 "Time Interval" = "Time Interval";
-"To view your broadcast visit this webpage" = "To view your broadcast visit this webpage";
 "Total Ascent" = "Total Ascent";
 "Total Calories" = "Total Kcals";
 "Total Distance" = "Total Distance";
@@ -288,6 +286,7 @@
 "Units" = "Units";
 "US Customary Units" = "Customary Units";
 "Use HTTPS" = "Use HTTPS";
+"Vertical Accuracy" = "Vertical Accuracy";
 "View" = "View";
 "View Weight History" = "View Weight History";
 "Wait for screen touch" = "Wait for screen touch";
@@ -311,7 +310,6 @@
 "You did not enter a password." = "You did not enter a password.";
 "You did not enter your name." = "You did not enter your name.";
 "You did not provide an email address." = "You did not provide an email address.";
-"You have not enabled any file hosting services. Services can be enabled using Settings." = "You have not enabled any file hosting services. Services can be enabled using Settings.";
 "You have not done any workouts. Get moving!" = "You have not done any workouts. Get moving!";
 "You need a foot pod to use this app with a treadmill." = "You need a foot pod to use this app with a treadmill.";
 "You need to choose a bike." = "You need to choose a bike.";

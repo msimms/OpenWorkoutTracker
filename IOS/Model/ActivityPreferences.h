@@ -20,19 +20,18 @@
 #define ACTIVITY_PREF_SCREEN_AUTO_LOCK                     "Screen Auto-Locking"
 #define ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY "Allow Screen Presses During Activity"
 #define ACTIVITY_PREF_COUNTDOWN                            "Countdown Timer"
-#define ACTIVITY_PREF_GPS_SAMPLE_FREQ                      "GPS Sample Frequency"
-#define ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY          "GPS Horizontal Accuracy"
-#define ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY            "GPS Vertical Accuracy"
-#define ACTIVITY_PREF_GPS_FILTER_OPTION                    "GPS Filter"
+#define ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY     "Horizontal Accuracy"
+#define ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY       "Vertical Accuracy"
+#define ACTIVITY_PREF_LOCATION_FILTER_OPTION               "Filter"
 #define ACTIVITY_PREF_ATTRIBUTES                           "Attributes"
 
 #define ERROR_ATTRIBUTE_NOT_FOUND 255
 
-typedef enum GpsFilterOption
+typedef enum LocationFilterOption
 {
-	GPS_FILTER_WARN = 0,
-	GPS_FILTER_DROP
-} GpsFilterOption;
+	LOCATION_FILTER_WARN = 0,
+	LOCATION_FILTER_DROP
+} LocationFilterOption;
 
 @interface ActivityPreferences : NSObject
 {
@@ -97,14 +96,14 @@ typedef enum GpsFilterOption
 - (uint8_t)getCountdown:(NSString*)activityType;
 - (void)setCountdown:(NSString*)activityType withSeconds:(uint8_t)seconds;
 
-- (uint8_t)getMinGpsHorizontalAccuracy:(NSString*)activityType;
-- (void)setMinGpsHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds;
+- (uint8_t)getMinLocationHorizontalAccuracy:(NSString*)activityType;
+- (void)setMinLocationHorizontalAccuracy:(NSString*)activityType withMeters:(uint8_t)meters;
 
-- (uint8_t)getMinGpsVerticalAccuracy:(NSString*)activityType;
-- (void)setMinGpsVerticalAccuracy:(NSString*)activityType withMeters:(uint8_t)seconds;
+- (uint8_t)getMinLocationVerticalAccuracy:(NSString*)activityType;
+- (void)setMinLocationVerticalAccuracy:(NSString*)activityType withMeters:(uint8_t)meters;
 
-- (GpsFilterOption)getGpsFilterOption:(NSString*)activityType;
-- (void)setGpsFilterOption:(NSString*)activityType withOption:(GpsFilterOption)option;
+- (LocationFilterOption)getLocationFilterOption:(NSString*)activityType;
+- (void)setLocationFilterOption:(NSString*)activityType withOption:(LocationFilterOption)option;
 
 - (BOOL)hasShownHelp:(NSString*)activityType;
 - (void)markHasShownHelp:(NSString*)activityType;

@@ -242,7 +242,7 @@ extern "C" {
 	// Functions for processing sensor reads.
 	bool ProcessWeightReading(double weightKg, time_t timestamp);
 	bool ProcessAccelerometerReading(double x, double y, double z, uint64_t timestampMs);
-	bool ProcessLocationReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t gpsTimestampMs);
+	bool ProcessLocationReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t locationTimestampMs);
 	bool ProcessHrmReading(double bpm, uint64_t timestampMs);
 	bool ProcessCadenceReading(double rpm, uint64_t timestampMs);
 	bool ProcessWheelSpeedReading(double revCount, uint64_t timestampMs);

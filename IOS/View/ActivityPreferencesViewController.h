@@ -15,7 +15,7 @@
 	NSArray* countdownStrings;
 	NSArray* colorMenuStrings;
 	NSArray* accuracySettings;
-	NSArray* gpsFilterOptions;
+	NSArray* locationFilterOptions;
 	
 	NSInteger selectedRow;
 

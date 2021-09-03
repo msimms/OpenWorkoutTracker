@@ -658,7 +658,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 	{
 		result.value.doubleVal = m_currentLoc.horizontalAccuracy;
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
-		result.measureType = MEASURE_GPS_ACCURACY;
+		result.measureType = MEASURE_LOCATION_ACCURACY;
 		result.startTime = m_currentLoc.time;
 		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;
@@ -667,7 +667,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 	{
 		result.value.doubleVal = m_currentLoc.verticalAccuracy;
 		result.valueType = m_previousLocSet ? TYPE_DOUBLE : TYPE_NOT_SET;
-		result.measureType = MEASURE_GPS_ACCURACY;
+		result.measureType = MEASURE_LOCATION_ACCURACY;
 		result.startTime = m_currentLoc.time;
 		result.endTime = m_currentLoc.time;
 		result.valid = m_coordinates.size() > 0;

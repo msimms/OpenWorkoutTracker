@@ -45,7 +45,7 @@
 #define HELP_TREADMILL                NSLocalizedString(@"Treadmill running requires the use of a Bluetooth foot pod.", nil)
 
 #define MESSAGE_INTERVAL_COMPLETE     NSLocalizedString(@"Interval Workout Complete", nil)
-#define MESSAGE_BAD_GPS               NSLocalizedString(@"Poor GPS Signal", nil)
+#define MESSAGE_BAD_LOCATION          NSLocalizedString(@"Poor Location Data", nil)
 #define MESSAGE_NO_LOCATION_SERVICES  NSLocalizedString(@"Location Services is disabled", nil)
 
 #define SECS_PER_MESSAGE              3
@@ -873,12 +873,12 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	if ([appDelegate hasBadGps])
+	if ([appDelegate hasBadLocationData])
 	{
 		@synchronized(self->messages)
 		{
 			bool found = false;
-			NSString* msg = [[NSString alloc] initWithString:MESSAGE_BAD_GPS];
+			NSString* msg = [[NSString alloc] initWithString:MESSAGE_BAD_LOCATION];
 
 			for (NSString* tempMsg in self->messages)
 			{

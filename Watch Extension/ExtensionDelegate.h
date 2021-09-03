@@ -29,7 +29,7 @@
 #endif
 	WatchHealthManager*  healthMgr; // For HealthKit interactions
 
-	BOOL badGps; // TRUE when bad GPS location data has been detected
+	BOOL badLocationData; // TRUE when bad location data has been detected
 	BOOL receivingLocations; // TRUE if we have received at least one location
 	BOOL hasConnectivity; // TRUE if we have confirmed the existence of a cellular/mobile data network
 	time_t lastHeartRateUpdate; // UNIX timestamp of the most recent heart rate update

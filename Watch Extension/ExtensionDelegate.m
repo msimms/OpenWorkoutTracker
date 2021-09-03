@@ -50,7 +50,7 @@
 
 	self->cloudMgr = [[CloudMgr alloc] init];
 	self->activityPrefs = [[ActivityPreferences alloc] init];
-	self->badGps = FALSE;
+	self->badLocationData = FALSE;
 	self->receivingLocations = FALSE;
 	self->hasConnectivity = FALSE;
 	self->lastHeartRateUpdate = 0;
@@ -748,43 +748,43 @@ void syncStatusCallback(const char* const destination, void* context)
 		NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
 		NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
 
-		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
+		NSNumber* locationTimestampMs = [locationData objectForKey:@KEY_NAME_LOCATION_TIMESTAMP_MS];
 
-		BOOL tempBadGps = FALSE;
+		BOOL tempBadLocationData = FALSE;
 
-		uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:self->activityType];
+		uint8_t minHAccuracy = [self->activityPrefs getMinLocationHorizontalAccuracy:self->activityType];
 		if (minHAccuracy != (uint8_t)-1)
 		{
 			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
 			if (minHAccuracy != 0 && accuracy > minHAccuracy)
 			{
-				tempBadGps = TRUE;
+				tempBadLocationData = TRUE;
 			}
 		}
 		
-		uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:self->activityType];
+		uint8_t minVAccuracy = [self->activityPrefs getMinLocationVerticalAccuracy:self->activityType];
 		if (minVAccuracy != (uint8_t)-1)
 		{
 			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
 			if (minVAccuracy != 0 && accuracy > minVAccuracy)
 			{
-				tempBadGps = TRUE;
+				tempBadLocationData = TRUE;
 			}
 		}
 
-		self->badGps = tempBadGps;
+		self->badLocationData = tempBadLocationData;
 
 		BOOL shouldProcessReading = TRUE;
-		GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:self->activityType];
+		LocationFilterOption filterOption = [self->activityPrefs getLocationFilterOption:self->activityType];
 		
-		if (filterOption == GPS_FILTER_DROP && self->badGps)
+		if (filterOption == LOCATION_FILTER_DROP && self->badLocationData)
 		{
 			shouldProcessReading = FALSE;
 		}
 		
 		if (shouldProcessReading)
 		{
-			ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+			ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [locationTimestampMs longLongValue]);
 		}
 	}
 }

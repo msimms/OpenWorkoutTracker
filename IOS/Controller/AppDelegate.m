@@ -109,7 +109,7 @@ typedef enum MsgDestinationType
 
 	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->currentlyImporting = FALSE;
-	self->badGps = FALSE;
+	self->badLocationData = FALSE;
 	self->currentActivityIndex = 0;
 	self->lastServerSync = 0;
 
@@ -784,49 +784,49 @@ void startSensorCallback(SensorType type, void* context)
 		NSNumber* horizontalAccuracy = [locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY];
 		NSNumber* verticalAccuracy = [locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY];
 
-		NSNumber* gpsTimestampMs = [locationData objectForKey:@KEY_NAME_GPS_TIMESTAMP_MS];
+		NSNumber* locationTimestampMs = [locationData objectForKey:@KEY_NAME_LOCATION_TIMESTAMP_MS];
 
 		NSString* activityType = [self getCurrentActivityType];
 
 		if (activityType)
 		{
-			BOOL tempBadGps = FALSE;
+			BOOL tempBadLocationData = FALSE;
 
-			uint8_t minHAccuracy = [self->activityPrefs getMinGpsHorizontalAccuracy:activityType];
+			uint8_t minHAccuracy = [self->activityPrefs getMinLocationHorizontalAccuracy:activityType];
 			if (minHAccuracy != (uint8_t)-1)
 			{
 				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
 				if (minHAccuracy != 0 && accuracy > minHAccuracy)
 				{
-					tempBadGps = TRUE;
+					tempBadLocationData = TRUE;
 				}
 			}
 			
-			uint8_t minVAccuracy = [self->activityPrefs getMinGpsVerticalAccuracy:activityType];
+			uint8_t minVAccuracy = [self->activityPrefs getMinLocationVerticalAccuracy:activityType];
 			if (minVAccuracy != (uint8_t)-1)
 			{
 				uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
 				if (minVAccuracy != 0 && accuracy > minVAccuracy)
 				{
-					tempBadGps = TRUE;
+					tempBadLocationData = TRUE;
 				}
 			}
 			
-			self->badGps = tempBadGps;
+			self->badLocationData = tempBadLocationData;
 
 			if ([self isActivityInProgressAndNotPaused])
 			{
 				BOOL shouldProcessReading = TRUE;
-				GpsFilterOption filterOption = [self->activityPrefs getGpsFilterOption:activityType];
+				LocationFilterOption filterOption = [self->activityPrefs getLocationFilterOption:activityType];
 
-				if (filterOption == GPS_FILTER_DROP && self->badGps)
+				if (filterOption == LOCATION_FILTER_DROP && self->badLocationData)
 				{
 					shouldProcessReading = FALSE;
 				}
 
 				if (shouldProcessReading)
 				{
-					ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [gpsTimestampMs longLongValue]);
+					ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [locationTimestampMs longLongValue]);
 				}
 			}
 		}
@@ -2886,9 +2886,9 @@ void attributeNameCallback(const char* name, void* context)
 	[UIApplication sharedApplication].idleTimerDisabled = !screenLocking;
 }
 
-- (BOOL)hasBadGps
+- (BOOL)hasBadLocationData
 {
-	return self->badGps;
+	return self->badLocationData;
 }
 
 #pragma mark unit conversion methods

@@ -148,7 +148,7 @@
 			return @"%";
 		case MEASURE_RPM:
 			return NSLocalizedString(@"rpm", @"Unit string for revolutions per minute");
-		case MEASURE_GPS_ACCURACY:
+		case MEASURE_LOCATION_ACCURACY:
 			return NSLocalizedString(@"meters", @"Unit string for meters");
 		case MEASURE_INDEX:
 			return @"";

@@ -145,7 +145,7 @@ void UnitMgr::ConvertActivityAttributeToMetric(ActivityAttributeType& value)
 				case MEASURE_G:
 				case MEASURE_PERCENTAGE:
 				case MEASURE_RPM:
-				case MEASURE_GPS_ACCURACY:
+				case MEASURE_LOCATION_ACCURACY:
 				case MEASURE_INDEX:
 				case MEASURE_ID:
 					break;
@@ -193,7 +193,7 @@ void UnitMgr::ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& va
 				case MEASURE_G:
 				case MEASURE_PERCENTAGE:
 				case MEASURE_RPM:
-				case MEASURE_GPS_ACCURACY:
+				case MEASURE_LOCATION_ACCURACY:
 				case MEASURE_INDEX:
 				case MEASURE_ID:
 					break;

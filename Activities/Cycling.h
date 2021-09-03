@@ -14,7 +14,7 @@
 
 typedef enum SpeedDataSource
 {
-	SPEED_FROM_GPS = 0,
+	SPEED_FROM_LOCATION_DATA = 0,
 	SPEED_FROM_WHEEL_SPEED
 } SpeedDataSource;
 

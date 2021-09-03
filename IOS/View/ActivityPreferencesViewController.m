@@ -11,52 +11,52 @@
 #import "AppStrings.h"
 #import "Segues.h"
 
-#define TITLE_SCREEN          NSLocalizedString(@"Screen", nil)
-#define TITLE_COLOR           NSLocalizedString(@"Color", nil)
-#define TITLE_COLORS          NSLocalizedString(@"Colors", nil)
-#define TITLE_SOUNDS          NSLocalizedString(@"Sounds", nil)
-#define TITLE_GPS             NSLocalizedString(@"GPS", nil)
-#define TITLE_COUNTDOWN       NSLocalizedString(@"Countdown Timer", nil)
-#define TITLE_GPS_ACCURACY    NSLocalizedString(@"Minimum GPS Accuracy", nil)
-#define TITLE_GPS_FILTER      NSLocalizedString(@"GPS Filter Options", nil)
+#define TITLE_SCREEN            NSLocalizedString(@"Screen", nil)
+#define TITLE_COLOR             NSLocalizedString(@"Color", nil)
+#define TITLE_COLORS            NSLocalizedString(@"Colors", nil)
+#define TITLE_SOUNDS            NSLocalizedString(@"Sounds", nil)
+#define TITLE_LOCATION          NSLocalizedString(@"Location", nil)
+#define TITLE_COUNTDOWN         NSLocalizedString(@"Countdown Timer", nil)
+#define TITLE_LOCATION_ACCURACY NSLocalizedString(@"Minimum Location Accuracy", nil)
+#define TITLE_LOCATION_FILTER   NSLocalizedString(@"Location Filter Options", nil)
 
-#define LABEL_COMPLEX         NSLocalizedString(@"Complex", nil)
-#define LABEL_MAPPED          NSLocalizedString(@"Mapped", nil)
-#define LABEL_SIMPLE          NSLocalizedString(@"Simple", nil)
+#define LABEL_COMPLEX           NSLocalizedString(@"Complex", nil)
+#define LABEL_MAPPED            NSLocalizedString(@"Mapped", nil)
+#define LABEL_SIMPLE            NSLocalizedString(@"Simple", nil)
 
-#define LABEL_ENABLED         NSLocalizedString(@"Enabled", nil)
-#define LABEL_DISABLED        NSLocalizedString(@"Disabled", nil)
+#define LABEL_ENABLED           NSLocalizedString(@"Enabled", nil)
+#define LABEL_DISABLED          NSLocalizedString(@"Disabled", nil)
 
-#define LABEL_1_SECOND        NSLocalizedString(@"1 Second", nil)
-#define LABEL_2_SECONDS       NSLocalizedString(@"2 Seconds", nil)
-#define LABEL_3_SECONDS       NSLocalizedString(@"3 Seconds", nil)
-#define LABEL_4_SECONDS       NSLocalizedString(@"4 Seconds", nil)
-#define LABEL_5_SECONDS       NSLocalizedString(@"5 Seconds", nil)
+#define LABEL_1_SECOND          NSLocalizedString(@"1 Second", nil)
+#define LABEL_2_SECONDS         NSLocalizedString(@"2 Seconds", nil)
+#define LABEL_3_SECONDS         NSLocalizedString(@"3 Seconds", nil)
+#define LABEL_4_SECONDS         NSLocalizedString(@"4 Seconds", nil)
+#define LABEL_5_SECONDS         NSLocalizedString(@"5 Seconds", nil)
 
-#define LABEL_5_METERS        NSLocalizedString(@"5 Meters", nil)
-#define LABEL_10_METERS       NSLocalizedString(@"10 Meters", nil)
-#define LABEL_20_METERS       NSLocalizedString(@"20 Meters", nil)
-#define LABEL_50_METERS       NSLocalizedString(@"50 Meters", nil)
+#define LABEL_5_METERS          NSLocalizedString(@"5 Meters", nil)
+#define LABEL_10_METERS         NSLocalizedString(@"10 Meters", nil)
+#define LABEL_20_METERS         NSLocalizedString(@"20 Meters", nil)
+#define LABEL_50_METERS         NSLocalizedString(@"50 Meters", nil)
 
-#define LABEL_SECONDS         NSLocalizedString(@"Seconds", nil)
-#define LABEL_METERS          NSLocalizedString(@"Meters", nil)
+#define LABEL_SECONDS           NSLocalizedString(@"Seconds", nil)
+#define LABEL_METERS            NSLocalizedString(@"Meters", nil)
 
-#define LABEL_WARN            NSLocalizedString(@"Warn", nil)
-#define LABEL_DISCARD         NSLocalizedString(@"Discard", nil)
+#define LABEL_WARN              NSLocalizedString(@"Warn", nil)
+#define LABEL_DISCARD           NSLocalizedString(@"Discard", nil)
 
-#define LABEL_SHOW_HR_PERCENT NSLocalizedString(@"Show Heart Rate Percentage", nil)
-#define LABEL_NO_FILTERING    NSLocalizedString(@"No filtering", nil)
-#define LABEL_DISPLAY_WARNING NSLocalizedString(@"Display Warning", nil)
-#define LABEL_DISCARD_GPS     NSLocalizedString(@"Discard GPS Points", nil)
-#define LABEL_OFF             NSLocalizedString(@"Off", nil)
-#define LABEL_LAYOUT          NSLocalizedString(@"Layout", nil)
+#define LABEL_SHOW_HR_PERCENT   NSLocalizedString(@"Show Heart Rate Percentage", nil)
+#define LABEL_NO_FILTERING      NSLocalizedString(@"No filtering", nil)
+#define LABEL_DISPLAY_WARNING   NSLocalizedString(@"Display Warning", nil)
+#define LABEL_DISCARD_LOCATION  NSLocalizedString(@"Discard Location Points", nil)
+#define LABEL_OFF               NSLocalizedString(@"Off", nil)
+#define LABEL_LAYOUT            NSLocalizedString(@"Layout", nil)
 
 typedef enum SectionType
 {
 	SECTION_SCREEN = 0,
 	SECTION_COLORS,
 	SECTION_SOUNDS,
-	SECTION_GPS,
+	SECTION_LOCATION,
 	NUM_SECTIONS
 } SectionType;
 
@@ -85,13 +85,13 @@ typedef enum ScreenSoundItems
 	NUM_SOUND_ITEMS
 } ScreenSoundItems;
 
-typedef enum GpsSectionItems
+typedef enum LocationSectionItems
 {
-	GPS_ITEM_HORIZONTAL_ACCURACY = 0,
-	GPS_ITEM_VERTICAL_ACCURACY,
-	GPS_ITEM_FILTER_OPTIONS,
-	NUM_GPS_ITEMS
-} GpsSectionItems;
+	LOCATION_ITEM_HORIZONTAL_ACCURACY = 0,
+	LOCATION_ITEM_VERTICAL_ACCURACY,
+	LOCATION_ITEM_FILTER_OPTIONS,
+	NUM_LOCATION_ITEMS
+} LocationSectionItems;
 
 @interface ActivityPreferencesViewController ()
 
@@ -111,11 +111,11 @@ typedef enum GpsSectionItems
 {
 	[super viewDidLoad];
 
-	self->layoutStrings    = [NSArray arrayWithObjects:LABEL_COMPLEX, LABEL_MAPPED, LABEL_SIMPLE, nil];
-	self->countdownStrings = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
-	self->colorMenuStrings = [NSArray arrayWithObjects:@"White", @"Gray", @"Black", @"Red", @"Green", @"Blue", @"Yellow", nil];
-	self->accuracySettings = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, LABEL_50_METERS, nil];
-	self->gpsFilterOptions = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
+	self->layoutStrings         = [NSArray arrayWithObjects:LABEL_COMPLEX, LABEL_MAPPED, LABEL_SIMPLE, nil];
+	self->countdownStrings      = [NSArray arrayWithObjects:LABEL_OFF, LABEL_1_SECOND, LABEL_2_SECONDS, LABEL_3_SECONDS, LABEL_4_SECONDS, LABEL_5_SECONDS, nil];
+	self->colorMenuStrings      = [NSArray arrayWithObjects:@"White", @"Gray", @"Black", @"Red", @"Green", @"Blue", @"Yellow", nil];
+	self->accuracySettings      = [NSArray arrayWithObjects:LABEL_NO_FILTERING, LABEL_5_METERS, LABEL_10_METERS, LABEL_20_METERS, LABEL_50_METERS, nil];
+	self->locationFilterOptions = [NSArray arrayWithObjects:LABEL_WARN, LABEL_DISCARD, nil];
 }
 
 - (BOOL)shouldAutorotate
@@ -145,8 +145,8 @@ typedef enum GpsSectionItems
 			return TITLE_COLORS;
 		case SECTION_SOUNDS:
 			return TITLE_SOUNDS;
-		case SECTION_GPS:
-			return TITLE_GPS;
+		case SECTION_LOCATION:
+			return TITLE_LOCATION;
 	}
 	return @"";
 }
@@ -161,8 +161,8 @@ typedef enum GpsSectionItems
 			return NUM_COLOR_ITEMS;
 		case SECTION_SOUNDS:
 			return NUM_SOUND_ITEMS;
-		case SECTION_GPS:
-			return NUM_GPS_ITEMS;
+		case SECTION_LOCATION:
+			return NUM_LOCATION_ITEMS;
 	}
 	return 0;
 }
@@ -266,40 +266,40 @@ typedef enum GpsSectionItems
 						break;
 				}
 				break;
-			case SECTION_GPS:
+			case SECTION_LOCATION:
 				switch (row)
 				{
-					case GPS_ITEM_HORIZONTAL_ACCURACY:
+					case LOCATION_ITEM_HORIZONTAL_ACCURACY:
 						{
-							uint8_t value = [prefs getMinGpsHorizontalAccuracy:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_MIN_GPS_HORIZONTAL_ACCURACY;
+							uint8_t value = [prefs getMinLocationHorizontalAccuracy:activityType];
+							cell.textLabel.text = @ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY;
 							if (value > 0)
 								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_METERS];
 							else
 								cell.detailTextLabel.text = LABEL_NO_FILTERING;
 						}
 						break;
-					case GPS_ITEM_VERTICAL_ACCURACY:
+					case LOCATION_ITEM_VERTICAL_ACCURACY:
 						{
-							uint8_t value = [prefs getMinGpsVerticalAccuracy:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_MIN_GPS_VERTICAL_ACCURACY;
+							uint8_t value = [prefs getMinLocationVerticalAccuracy:activityType];
+							cell.textLabel.text = @ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY;
 							if (value > 0)
 								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_METERS];
 							else
 								cell.detailTextLabel.text = LABEL_NO_FILTERING;
 						}
 						break;
-					case GPS_ITEM_FILTER_OPTIONS:
+					case LOCATION_ITEM_FILTER_OPTIONS:
 						{
-							GpsFilterOption option = [prefs getGpsFilterOption:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_GPS_FILTER_OPTION;
+							LocationFilterOption option = [prefs getLocationFilterOption:activityType];
+							cell.textLabel.text = @ACTIVITY_PREF_LOCATION_FILTER_OPTION;
 							switch (option)
 							{
-								case GPS_FILTER_WARN:
+								case LOCATION_FILTER_WARN:
 									cell.detailTextLabel.text = LABEL_DISPLAY_WARNING;
 									break;
-								case GPS_FILTER_DROP:
-									cell.detailTextLabel.text = LABEL_DISCARD_GPS;
+								case LOCATION_FILTER_DROP:
+									cell.detailTextLabel.text = LABEL_DISCARD_LOCATION;
 									break;
 								default:
 									cell.detailTextLabel.text = STR_ERROR;
@@ -398,7 +398,7 @@ typedef enum GpsSectionItems
 				cell.accessoryView = nil;
 			}
 			break;
-		case SECTION_GPS:
+		case SECTION_LOCATION:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.accessoryView = nil;
 			break;
@@ -442,20 +442,20 @@ typedef enum GpsSectionItems
 			break;
 		case SECTION_SOUNDS:
 			break;
-		case SECTION_GPS:
+		case SECTION_LOCATION:
 			switch (self->selectedRow)
 			{
-				case GPS_ITEM_HORIZONTAL_ACCURACY:
-					title = TITLE_GPS_ACCURACY;
+				case LOCATION_ITEM_HORIZONTAL_ACCURACY:
+					title = TITLE_LOCATION_ACCURACY;
 					buttonNames = self->accuracySettings;
 					break;
-				case GPS_ITEM_VERTICAL_ACCURACY:
-					title = TITLE_GPS_ACCURACY;
+				case LOCATION_ITEM_VERTICAL_ACCURACY:
+					title = TITLE_LOCATION_ACCURACY;
 					buttonNames = self->accuracySettings;
 					break;
-				case GPS_ITEM_FILTER_OPTIONS:
-					title = TITLE_GPS_FILTER;
-					buttonNames = self->gpsFilterOptions;
+				case LOCATION_ITEM_FILTER_OPTIONS:
+					title = TITLE_LOCATION_FILTER;
+					buttonNames = self->locationFilterOptions;
 					break;
 				default:
 					break;
@@ -525,41 +525,41 @@ typedef enum GpsSectionItems
 								break;
 						}
 					}
-					else if ([title isEqualToString:TITLE_GPS_ACCURACY])
+					else if ([title isEqualToString:TITLE_LOCATION_ACCURACY])
 					{
 						switch (self->selectedRow)
 						{
-							case GPS_ITEM_HORIZONTAL_ACCURACY:
+							case LOCATION_ITEM_HORIZONTAL_ACCURACY:
 								if ([buttonName isEqualToString:LABEL_NO_FILTERING])
-									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:0];
+									[prefs setMinLocationHorizontalAccuracy:activityType withMeters:0];
 								else if ([buttonName isEqualToString:LABEL_5_METERS])
-									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:5];
+									[prefs setMinLocationHorizontalAccuracy:activityType withMeters:5];
 								else if ([buttonName isEqualToString:LABEL_10_METERS])
-									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:10];
+									[prefs setMinLocationHorizontalAccuracy:activityType withMeters:10];
 								else if ([buttonName isEqualToString:LABEL_20_METERS])
-									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:20];
+									[prefs setMinLocationHorizontalAccuracy:activityType withMeters:20];
 								else if ([buttonName isEqualToString:LABEL_50_METERS])
-									[prefs setMinGpsHorizontalAccuracy:activityType withMeters:50];
+									[prefs setMinLocationHorizontalAccuracy:activityType withMeters:50];
 								break;
-							case GPS_ITEM_VERTICAL_ACCURACY:
+							case LOCATION_ITEM_VERTICAL_ACCURACY:
 								if ([buttonName isEqualToString:LABEL_NO_FILTERING])
-									[prefs setMinGpsVerticalAccuracy:activityType withMeters:0];
+									[prefs setMinLocationVerticalAccuracy:activityType withMeters:0];
 								else if ([buttonName isEqualToString:LABEL_5_METERS])
-									[prefs setMinGpsVerticalAccuracy:activityType withMeters:5];
+									[prefs setMinLocationVerticalAccuracy:activityType withMeters:5];
 								else if ([buttonName isEqualToString:LABEL_10_METERS])
-									[prefs setMinGpsVerticalAccuracy:activityType withMeters:10];
+									[prefs setMinLocationVerticalAccuracy:activityType withMeters:10];
 								else if ([buttonName isEqualToString:LABEL_20_METERS])
-									[prefs setMinGpsVerticalAccuracy:activityType withMeters:20];
+									[prefs setMinLocationVerticalAccuracy:activityType withMeters:20];
 								else if ([buttonName isEqualToString:LABEL_50_METERS])
-									[prefs setMinGpsVerticalAccuracy:activityType withMeters:50];
+									[prefs setMinLocationVerticalAccuracy:activityType withMeters:50];
 						}
 					}
-					else if ([title isEqualToString:TITLE_GPS_FILTER])
+					else if ([title isEqualToString:TITLE_LOCATION_FILTER])
 					{
 						if ([buttonName isEqualToString:LABEL_WARN])
-							[prefs setGpsFilterOption:activityType withOption:GPS_FILTER_WARN];
+							[prefs setLocationFilterOption:activityType withOption:LOCATION_FILTER_WARN];
 						else if ([buttonName isEqualToString:LABEL_DISCARD])
-							[prefs setGpsFilterOption:activityType withOption:GPS_FILTER_DROP];
+							[prefs setLocationFilterOption:activityType withOption:LOCATION_FILTER_DROP];
 					}
 					else if ([title isEqualToString:TITLE_COUNTDOWN])
 					{

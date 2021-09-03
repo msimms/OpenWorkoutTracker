@@ -15,7 +15,7 @@
 
 Cycling::Cycling() : MovingActivity()
 {
-	m_speedDataSource                   = SPEED_FROM_GPS;
+	m_speedDataSource                   = SPEED_FROM_LOCATION_DATA;
 
 	m_distanceAtFirstWheelSpeedReadingM = (double)0.0;
 
