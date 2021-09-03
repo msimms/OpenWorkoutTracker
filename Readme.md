@@ -16,6 +16,7 @@ Why develop a workout tracker when there are so many closed-source options avail
 * Support for cycling, running, hiking, walking, pull-ups, push-ups (press-ups), etc.
 * Customizable workout screens, very useful when using the application a bike computer.
 * Support for Bluetooth LE sensors, including heart rate, cycling power, and cycling cadence.
+* Support for the Garmin Varia bicycle radar.
 * Optional ability to live broadcast to the companion server app (OpenWorkoutWeb). Note that this is off by default, but is something I added so friends could track me during long cycling events.
 * Integrates with Apple Health.
 * Can export data to the iCloud Drive.
