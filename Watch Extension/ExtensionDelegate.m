@@ -750,41 +750,65 @@ void syncStatusCallback(const char* const destination, void* context)
 
 		NSNumber* locationTimestampMs = [locationData objectForKey:@KEY_NAME_LOCATION_TIMESTAMP_MS];
 
+		BOOL invalidLocationData = FALSE;
+		BOOL invalidAltitudeData = FALSE;
 		BOOL tempBadLocationData = FALSE;
 
-		uint8_t minHAccuracy = [self->activityPrefs getMinLocationHorizontalAccuracy:self->activityType];
-		if (minHAccuracy != (uint8_t)-1)
+		// Horizontal accuracy. Per the documentation, a value of less than 0 indicates the value is completely invalid.
+		// Otherwise, compare it against our own thresholds.
+		double horizAccuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] doubleValue];
+		if (horizAccuracy < (double)0.0)
 		{
-			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_HORIZONTAL_ACCURACY] intValue];
-			if (minHAccuracy != 0 && accuracy > minHAccuracy)
-			{
-				tempBadLocationData = TRUE;
-			}
+			invalidLocationData = TRUE;
 		}
-		
-		uint8_t minVAccuracy = [self->activityPrefs getMinLocationVerticalAccuracy:self->activityType];
-		if (minVAccuracy != (uint8_t)-1)
+		else
 		{
-			uint8_t accuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] intValue];
-			if (minVAccuracy != 0 && accuracy > minVAccuracy)
+			uint8_t minHorizAccuracy = [self->activityPrefs getMinLocationHorizontalAccuracy:activityType];
+			if (minHorizAccuracy != (uint8_t)-1)
 			{
-				tempBadLocationData = TRUE;
+				if (minHorizAccuracy != 0 && horizAccuracy > (double)minHorizAccuracy)
+				{
+					tempBadLocationData = TRUE;
+				}
 			}
 		}
 
-		self->badLocationData = tempBadLocationData;
-
-		BOOL shouldProcessReading = TRUE;
-		LocationFilterOption filterOption = [self->activityPrefs getLocationFilterOption:self->activityType];
-		
-		if (filterOption == LOCATION_FILTER_DROP && self->badLocationData)
+		// Vertical accuracy. Per the documentation, a value of less than 0 indicates the value is completely invalid.
+		// Otherwise, compare it against our own thresholds.
+		double vertAccuracy = [[locationData objectForKey:@KEY_NAME_VERTICAL_ACCURACY] doubleValue];
+		if (vertAccuracy < (double)0.0)
 		{
-			shouldProcessReading = FALSE;
+			invalidAltitudeData = TRUE;
 		}
-		
-		if (shouldProcessReading)
+		else
 		{
-			ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [locationTimestampMs longLongValue]);
+			uint8_t minVertAccuracy = [self->activityPrefs getMinLocationVerticalAccuracy:activityType];
+			if (minVertAccuracy != (uint8_t)-1)
+			{
+				if (minVertAccuracy != 0 && vertAccuracy > (double)minVertAccuracy)
+				{
+					tempBadLocationData = TRUE;
+				}
+			}
+		}
+
+		// Consider a location bad if it is either completely invalid or just beyond our own thresholds.
+		self->badLocationData = invalidLocationData || tempBadLocationData;
+
+		if (!invalidLocationData)
+		{
+			BOOL shouldProcessReading = TRUE;
+			LocationFilterOption filterOption = [self->activityPrefs getLocationFilterOption:self->activityType];
+			
+			if (filterOption == LOCATION_FILTER_DROP && self->badLocationData)
+			{
+				shouldProcessReading = FALSE;
+			}
+			
+			if (shouldProcessReading)
+			{
+				ProcessLocationReading([lat doubleValue], [lon doubleValue], [alt doubleValue], [horizontalAccuracy doubleValue], [verticalAccuracy doubleValue], [locationTimestampMs longLongValue]);
+			}
 		}
 	}
 }
