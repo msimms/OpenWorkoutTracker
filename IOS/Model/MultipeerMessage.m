@@ -5,9 +5,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#import "BroadcastMessage.h"
+#import "MultipeerMessage.h"
 
-@implementation BroadcastMessage
+@implementation MultipeerMessage
 
 - (id)initWithPeerID:(MCPeerID*)peerID message:(NSString*)message
 {

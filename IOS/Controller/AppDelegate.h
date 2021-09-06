@@ -20,6 +20,7 @@
 #import "FileFormat.h"
 #import "Gender.h"
 #import "HealthManager.h"
+#import "MultipeerSession.h"
 #import "SensorMgr.h"
 #import "SensorType.h"
 
@@ -33,6 +34,7 @@
 	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
 #if !OMIT_BROADCAST
 	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
+	MultipeerSession*    multipeerSession; // Handles peer-to-peer connections.
 #endif
 	HealthManager*       healthMgr; // Interfaces with Apple HealthKit.
 	NSTimer*             intervalTimer; // Timer that fires when it's time to advance to the next part of an interval workout.

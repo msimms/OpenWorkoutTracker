@@ -548,15 +548,21 @@ typedef enum MsgDestinationType
 				self->broadcastMgr = [[BroadcastManager alloc] init];
 				[self->broadcastMgr setDeviceId:[self getDeviceId]];
 			}
+			if (!self->multipeerSession)
+			{
+				self->multipeerSession = [[MultipeerSession alloc] init];
+			}
 		}
 		else
 		{
 			self->broadcastMgr = nil;
+			self->multipeerSession = nil;
 		}
 	}
 	else
 	{
 		self->broadcastMgr = nil;
+		self->multipeerSession = nil;
 	}
 #endif
 }
