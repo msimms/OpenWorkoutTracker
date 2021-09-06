@@ -53,6 +53,10 @@ Database::~Database()
 	{
 		sqlite3_finalize(m_footPodStatement);
 	}
+	if (m_eventStatement)
+	{
+		sqlite3_finalize(m_eventStatement);
+	}
 	if (m_selectActivitySummaryStatement)
 	{
 		sqlite3_finalize(m_selectActivitySummaryStatement);
@@ -270,6 +274,13 @@ bool Database::CreateTables()
 		sql = "create index foot_pod_index on foot_pod (activity_id)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("event"))
+	{
+		sql = "create table event (id integer primary key, activity_id text, time unsigned big int, event_type unsigned int, value unsigned int)";
+		queries.push_back(sql);
+		sql = "create index event_index on event (activity_id)";
+		queries.push_back(sql);
+	}
 	if (!DoesTableExist("weight"))
 	{
 		sql = "create table weight (id integer primary key, time unsigned big int, value double)";
@@ -317,6 +328,8 @@ bool Database::CreateStatements()
 	if (sqlite3_prepare_v2(m_pDb, "insert into power_meter values (NULL,?,?,?)", -1, &m_powerInsertStatement, 0) != SQLITE_OK)
 		return false;
 	if (sqlite3_prepare_v2(m_pDb, "insert into foot_pod values (NULL,?,?,?)", -1, &m_footPodStatement, 0) != SQLITE_OK)
+		return false;
+	if (sqlite3_prepare_v2(m_pDb, "insert into event values (NULL,?,?,?,?)", -1, &m_eventStatement, 0) != SQLITE_OK)
 		return false;
 	if (sqlite3_prepare_v2(m_pDb, "select activity_id, attribute, value, start_time, end_time, value_type, measure_type, units from activity_summary where activity_id = ?", -1, &m_selectActivitySummaryStatement, 0) != SQLITE_OK)
 		return false;
@@ -367,6 +380,8 @@ bool Database::Reset()
 	sql = "delete from power_meter";
 	queries.push_back(sql);
 	sql = "delete from foot_pod";
+	queries.push_back(sql);
+	sql = "delete from event";
 	queries.push_back(sql);
 	sql = "delete from weight";
 	queries.push_back(sql);
@@ -1178,17 +1193,22 @@ bool Database::DeleteActivity(const std::string& activityId)
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
-	
+
 	sqlStream << "delete from power_meter where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
-	
+
 	sqlStream << "delete from foot_pod where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
 	sqlStream.clear();
-	
+
+	sqlStream << "delete from event where activity_id = '" << activityId << "'";
+	queries.push_back(sqlStream.str());
+	sqlStream.str(std::string());
+	sqlStream.clear();
+
 	sqlStream << "delete from tag where activity_id = '" << activityId << "'";
 	queries.push_back(sqlStream.str());
 	sqlStream.str(std::string());
@@ -2047,6 +2067,42 @@ bool Database::CreateFootPodReading(const std::string& activityId, const SensorR
 	return result == SQLITE_DONE;
 }
 
+bool Database::CreateEventReading(const std::string& activityId, const SensorReading& reading)
+{
+	int result = SQLITE_ERROR;
+	
+	try
+	{
+		sqlite3_bind_text(m_eventStatement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(m_eventStatement, 2, reading.time);
+		sqlite3_bind_int64(m_eventStatement, 3, reading.type);
+
+		bool validType = true;
+
+		switch (reading.type)
+		{
+			case SENSOR_TYPE_RADAR:
+				sqlite3_bind_int64(m_eventStatement, 4, reading.reading.at(ACTIVITY_ATTRIBUTE_THREAT_COUNT));
+				break;
+			default:
+				validType = false;
+				break;
+		}
+
+		if (validType)
+		{
+			result = sqlite3_step(m_eventStatement);
+		}
+
+		sqlite3_clear_bindings(m_eventStatement);
+		sqlite3_reset(m_eventStatement);
+	}
+	catch (...)
+	{
+	}
+	return result == SQLITE_DONE;
+}
+
 bool Database::ProcessAllCoordinates(coordinateCallback callback, void* context)
 {
 	bool result = false;
@@ -2095,7 +2151,7 @@ bool Database::CreateSensorReading(const std::string& activityId, const SensorRe
 		case SENSOR_TYPE_LIGHT:
 			break;
 		case SENSOR_TYPE_RADAR:
-			break;
+			return CreateEventReading(activityId, reading);
 		case SENSOR_TYPE_GOPRO:
 			break;
 		case NUM_SENSOR_TYPES:

@@ -185,6 +185,7 @@ private:
 	sqlite3_stmt* m_wheelSpeedInsertStatement = NULL;
 	sqlite3_stmt* m_powerInsertStatement = NULL;
 	sqlite3_stmt* m_footPodStatement = NULL;
+	sqlite3_stmt* m_eventStatement = NULL;
 	sqlite3_stmt* m_selectActivitySummaryStatement = NULL;
 	sqlite3_stmt* m_selectActivityIdFromHashStatement = NULL;
 	sqlite3_stmt* m_selectActivityHashFromIdStatement = NULL;
@@ -200,6 +201,7 @@ private:
 	bool CreateWheelSpeedReading(const std::string& activityId, const SensorReading& reading);
 	bool CreatePowerMeterReading(const std::string& activityId, const SensorReading& reading);
 	bool CreateFootPodReading(const std::string& activityId, const SensorReading& reading);
+	bool CreateEventReading(const std::string& activityId, const SensorReading& reading);
 
 	int ExecuteQuery(const std::string& query);
 	int ExecuteQueries(const std::vector<std::string>& queries);
