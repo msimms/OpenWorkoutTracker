@@ -19,6 +19,21 @@ xcuserdata
 DerivedData
 *.xcuserstate
 
+# Android Studio
+*.iml
+.gradle
+android/local.properties
+android/.idea/caches
+android/.idea/libraries
+android/.idea/modules.xml
+android/.idea/workspace.xml
+android/.idea/navEditor.xml
+android/.idea/assetWizardSettings.xml
+android/build
+android/captures
+.externalNativeBuild
+.cxx
+
 # Generated files
 *.o
 *.pyc
