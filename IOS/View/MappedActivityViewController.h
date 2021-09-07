@@ -54,7 +54,7 @@
 - (void)setUIForResumedActivity;
 
 - (void)locationUpdated:(NSNotification*)notification;
-- (void)addNewLocation:(CLLocation*)newLocation;
+- (void)addNewLocation:(CLLocation*)newLocation allowZoom:(BOOL)allowZoom;
 
 - (void)onRefreshTimer:(NSTimer*)timer;
 

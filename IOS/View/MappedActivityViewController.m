@@ -246,11 +246,19 @@
 	size_t pointIndex = 0;
 	double latitude = (double)0.0;
 	double longitude = (double)0.0;
+	CLLocation* lastLocation = nil;
 
 	while ([appDelegate getCurrentActivityPoint:pointIndex++ withLatitude:&latitude withLongitude:&longitude])
 	{
 		CLLocation* location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-		[self addNewLocation:location];
+		[self addNewLocation:location allowZoom:false];
+		lastLocation = location;
+	}
+
+	if (lastLocation)
+	{
+		// Regardless of the autozoom setting, zoom to the end point since we just drew the entire route.
+		[self zoom:lastLocation];
 	}
 }
 
@@ -268,23 +276,26 @@
 
 		if ([appDelegate isActivityInProgress])
 		{
-			[self addNewLocation:newLocation];
+			[self addNewLocation:newLocation allowZoom:true];
  		}
 		else if (!crumbs)
 		{
-			// Zoom map to user location
-			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([newLocation coordinate], 1500, 1500);
-			[self.mapView setRegion:region animated:YES];
+			// Zoom the map to the user's location.
+			[self zoom:newLocation];
 		}
 	}
 
 	[super locationUpdated:notification];
 }
 
-- (void)addNewLocation:(CLLocation*)newLocation
+- (void)zoom:(CLLocation*)loc
 {
-	bool isFirstPoint = false;
+	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(loc.coordinate, 1500, 1500);
+	[self.mapView setRegion:region animated:YES];
+}
 
+- (void)addNewLocation:(CLLocation*)newLocation allowZoom:(BOOL)allowZoom
+{
 	if (self->crumbs)
 	{
 		// If the crumbs MKOverlay model object determines that the current location has moved far enough from the
@@ -316,14 +327,12 @@
 		{
 			[self.mapView addOverlay:self->crumbs];
 		}
-		isFirstPoint = true;
 	}
 
-	if (isFirstPoint || [Preferences shouldAutoScaleMap])
+	if (allowZoom && [Preferences shouldAutoScaleMap])
 	{
-		// Zoom map to user location
-		MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(newLocation.coordinate, 1500, 1500);
-		[self.mapView setRegion:region animated:YES];
+		// Zoom the map to the user's location.
+		[self zoom:newLocation];
 	}
 }
 
@@ -356,6 +365,7 @@
 		if (!self->crumbRenderer)
 		{
 			self->crumbRenderer = [[CrumbPathRenderer alloc] initWithOverlay:overlay];
+
 			if (self->crumbRenderer)
 			{
 				// Use different colors for dark vs light mode.
