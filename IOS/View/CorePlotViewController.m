@@ -45,6 +45,7 @@
                                                object:nil];
 
 	[self drawChart];
+
 	[super initializeNavButtonColor];
 	[super viewDidAppear:animated];
 }

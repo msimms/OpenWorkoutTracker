@@ -55,8 +55,6 @@
 #define START_PIN_NAME                 NSLocalizedString(@"Start", nil)
 #define FINISH_PIN_NAME                NSLocalizedString(@"Finish", nil)
 
-#define ALERT_TITLE_FIX_REPS           NSLocalizedString(@"Repetitions", nil)
-
 #define MSG_DELETE_QUESTION            NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
 #define MSG_FIX_REPS                   NSLocalizedString(@"Enter the correct number of repetitions", nil)
 #define MSG_EXPORT_QUESTION            NSLocalizedString(@"Do you want to export the actvity?", nil)
@@ -695,7 +693,7 @@ typedef enum ExportFileTypeButtons
 	if (repsValue.valid)
 	{
 		[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_FIX_REPS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			UIAlertController* repsAlertController = [UIAlertController alertControllerWithTitle:ALERT_TITLE_FIX_REPS
+			UIAlertController* repsAlertController = [UIAlertController alertControllerWithTitle:STR_REPITITIONS
 																					 message:MSG_FIX_REPS
 																			  preferredStyle:UIAlertControllerStyleAlert];
 			[repsAlertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {

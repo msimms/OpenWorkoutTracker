@@ -285,7 +285,7 @@
 
 		if (text)
 		{
-			[super showOneButtonAlert:STR_CAUTION withMsg:text];
+			[super showOneButtonAlert:STR_INFO withMsg:text];
 		}
 
 		[self->activityPrefs markHasShownHelp:self->activityType];

@@ -11,6 +11,8 @@
 #import "AppStrings.h"
 #import "StringUtils.h"
 
+#define STR_NO_SPLIT_TIMES NSLocalizedString(@"There are no split times to display.", nil)
+
 typedef enum SectionType
 {
 	SECTION_KMS = 0,
@@ -69,6 +71,23 @@ typedef enum SectionType
 	self.title = STR_SPLIT_TIMES;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	
+	if ([self->splitTimesKm count] == 0 && [self->splitTimesMile count] == 0)
+	{
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_INFO
+																				 message:STR_NO_SPLIT_TIMES
+																		  preferredStyle:UIAlertControllerStyleAlert];
+
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
+	}
+}
+
 - (BOOL)shouldAutorotate
 {
 	return NO;
@@ -93,17 +112,17 @@ typedef enum SectionType
 	ActivityAttributeType lastValue;
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	for (uint16_t km = 1; km < 1000; ++km)
+	// Loop will break when we receive the first invalid value.
+	for (uint16_t km = 1; ; ++km)
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sKM %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, km];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 
 		if (value.valid)
 		{
-			NSString* label;
+			NSString* label = [[NSString alloc] initWithFormat:@"KM %d", km];
 			NSString* detail;
 
-			label = [[NSString alloc] initWithFormat:@"KM %d", km];
 			if (km == 1)
 			{
 				detail = [StringUtils formatActivityViewType:value];
@@ -133,17 +152,17 @@ typedef enum SectionType
 	ActivityAttributeType lastValue;
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	for (uint16_t mile = 1; mile < 1000; ++mile)
+	// Loop will break when we receive the first invalid value.
+	for (uint16_t mile = 1; ; ++mile)
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sMile %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, mile];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 
 		if (value.valid)
 		{
-			NSString* label;
+			NSString* label = [[NSString alloc] initWithFormat:@"Mile %d", mile];;
 			NSString* detail;
-			
-			label = [[NSString alloc] initWithFormat:@"Mile %d", mile];
+
 			if (mile == 1)
 			{
 				detail = [StringUtils formatActivityViewType:value];

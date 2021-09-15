@@ -127,6 +127,7 @@
 "Import Overlay" = "Importar";
 "Import Workouts" = "Importar Datos";
 "inches" = "pulgadas";
+"Info" = "Información";
 "Internal" = "Interno";
 "Internal error." = "Error interno.";
 "Interval Workout" = "Entrenamiento de los Intervalos";
@@ -264,6 +265,8 @@
 "TCX File" = "TCX Archivo";
 "The data file is attached." = "Se adjunta el archivo.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "Hay riesgos con el ejercicio. No comience un programa de ejercicios sin consultar a su médico.";
+"There are no lap times to display." = "No hay tiempos de vueltaa para mostrar.";
+"There are no split times to display." = "No hay tiempos parciales para mostrar.";
 "There was an error contacting the web service." = "Hubo un error al ponerse en contacto con el servicio Web.";
 "There was an error creating the overlay." = "Se ha producido un error al crear el superposición.";
 "There is no data to display." = "No hay datos para mostrar.";

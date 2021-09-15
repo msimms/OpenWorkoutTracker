@@ -11,7 +11,8 @@
 #import "AppStrings.h"
 #import "StringUtils.h"
 
-#define TITLE    NSLocalizedString(@"Lap Times", nil)
+#define TITLE            NSLocalizedString(@"Lap Times", nil)
+#define STR_NO_LAP_TIMES NSLocalizedString(@"There are no lap times to display.", nil)
 
 @interface LapTime : NSObject
 {
@@ -64,6 +65,23 @@
 	[self.homeButton setTitle:STR_HOME];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	
+	if ([self->lapTimes count] == 0)
+	{
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_INFO
+																				 message:STR_NO_LAP_TIMES
+																		  preferredStyle:UIAlertControllerStyleAlert];
+
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}]];
+		[self presentViewController:alertController animated:YES completion:nil];
+	}
+}
+
 - (BOOL)shouldAutorotate
 {
 	return NO;
@@ -95,7 +113,8 @@
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-	for (uint16_t lapNum = 1; lapNum < 1000; ++lapNum)
+	// Loop will break when we receive the first invalid value.
+	for (uint16_t lapNum = 1; ; ++lapNum)
 	{
 		NSString* attributeName = [[NSString alloc] initWithFormat:@"%s%d", ACTIVITY_ATTRIBUTE_LAP_TIME, lapNum];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];

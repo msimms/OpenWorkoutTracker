@@ -127,6 +127,7 @@
 "Import Overlay" = "Import Overlay";
 "Import Workouts" = "Import Workouts";
 "inches" = "inches";
+"Info" = "Info";
 "Internal" = "Internal";
 "Internal error." = "Internal error.";
 "Interval Workout" = "Interval Workout";
@@ -264,6 +265,8 @@
 "TCX File" = "TCX File";
 "The data file is attached." = "The data file is attached.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "There are risks with exercise. Do not start an exercise program without consulting your doctor.";
+"There are no lap times to display." = "There are no lap times to display.";
+"There are no split times to display." = "There are no split times to display.";
 "There was an error contacting the web service." = "There was an error contacting the web service.";
 "There was an error creating the overlay." = "There was an error creating the overlay.";
 "This exercise should be performed with the phone positioned on the upper arm." = "This exercise should be performed with the phone positioned on the upper arm.";
