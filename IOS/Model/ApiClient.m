@@ -93,12 +93,6 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:downloadedData];
 			} );
 		}
-		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS_URL].location != NSNotFound)
-		{
-			dispatch_async(dispatch_get_main_queue(),^{
-				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:downloadedData];
-			} );
-		}
 		else if ([urlStr rangeOfString:@REMOTE_API_LIST_INTERVAL_WORKOUTS_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
@@ -115,6 +109,18 @@
 		{
 			dispatch_async(dispatch_get_main_queue(),^{
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:downloadedData];
+			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_ACTIVITY_METADATA_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_METADATA object:downloadedData];
+			} );
+		}
+		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_WORKOUT_DETAILS_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED object:downloadedData];
 			} );
 		}
 		else if ([urlStr rangeOfString:@REMOTE_API_REQUEST_TO_FOLLOW_URL].location != NSNotFound)
@@ -274,6 +280,20 @@
 	return FALSE;
 #else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_LIST_PACE_PLANS_URL];
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
+}
+
+// Request meatadata for a given activity from the server.
++ (BOOL)serverRequestActivityMetadata:(NSString*)activityId
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%@?", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_REQUEST_ACTIVITY_METADATA_URL];
+
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", @PARAM_ACTIVITY_ID, activityId]];
+
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
 }

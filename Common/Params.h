@@ -62,3 +62,6 @@
 #define PARAM_PACE_PLAN_SPLITS                "splits"
 #define PARAM_PACE_PLAN_ROUTE                 "route"
 #define PARAM_PACE_PLAN_LAST_UPDATED_TIME     "last updated"
+
+// Activities
+#define PARAM_ACTIVITY_NAME                   "Name"

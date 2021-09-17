@@ -131,6 +131,7 @@ typedef enum MsgDestinationType
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityMetadataReceived:) name:@NOTIFICATION_NAME_ACTIVITY_METADATA object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleHasActivityResponse:) name:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastMgrHasFinishedSendingActivity:) name:@NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY object:nil];
 	
@@ -1357,6 +1358,34 @@ void startSensorCallback(SensorType type, void* context)
 		else
 		{
 			NSLog(@"Invalid JSON received.");
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+// Called when the server responds to a request for activity metadata.
+- (void)activityMetadataReceived:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* responseData = [notification object];
+		NSString* responseStr = [responseData objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSError* error = nil;
+		NSDictionary* activityData = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+		// Valid JSON?
+		if (activityData)
+		{
+			NSString* activityId = [activityData objectForKey:@PARAM_ACTIVITY_ID];
+			NSString* activityName = [activityData objectForKey:@PARAM_ACTIVITY_NAME];
+
+			// If we were sent the activity name then update it in the database.
+			if (activityId && activityName)
+			{
+				SetActivityName([activityId UTF8String], [activityName UTF8String]);
+			}
 		}
 	}
 	@catch (...)
@@ -3036,6 +3065,11 @@ void attributeNameCallback(const char* name, void* context)
 - (BOOL)serverRequestToFollow:(NSString*)targetUsername
 {
 	return [ApiClient serverRequestToFollow:targetUsername];
+}
+
+- (BOOL)serverRequestActivityMetadata:(NSString*)activityId
+{
+	return [ApiClient serverRequestActivityMetadata:activityId];
 }
 
 - (BOOL)serverDeleteActivity:(NSString*)activityId

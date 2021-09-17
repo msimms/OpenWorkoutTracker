@@ -302,6 +302,7 @@
 - (BOOL)serverLogout;
 - (BOOL)serverListFriends;
 - (BOOL)serverRequestToFollow:(NSString*)targetUsername;
+- (BOOL)serverRequestActivityMetadata:(NSString*)activityId;
 - (BOOL)serverDeleteActivity:(NSString*)activityId;
 - (BOOL)serverCreateTag:(NSString*)tag forActivity:(NSString*)activityId;
 - (BOOL)serverDeleteTag:(NSString*)tag forActivity:(NSString*)activityId;

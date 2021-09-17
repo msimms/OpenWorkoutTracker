@@ -16,7 +16,9 @@
 #import "ElevationLine.h"
 #import "LapTimesViewController.h"
 #import "LineFactory.h"
+#import "Notifications.h"
 #import "OverlayFactory.h"
+#import "Params.h"
 #import "Pin.h"
 #import "Segues.h"
 #import "SplitTimesViewController.h"
@@ -179,7 +181,7 @@ typedef enum ExportFileTypeButtons
 		[self->liftingToolbar removeObjectIdenticalTo:self.mapButton];
 		[self->liftingToolbar removeObjectIdenticalTo:self.bikeButton];
 	}
-	
+
 	self->syncedServices = [appDelegate retrieveSyncDestinationsForActivityId:self->activityId];
 	self->notSyncedServices = [[NSMutableArray alloc] init];
 	if ([self->syncedServices indexOfObject:@SYNC_DEST_WEB] == NSNotFound)
@@ -188,6 +190,21 @@ typedef enum ExportFileTypeButtons
 		[self->notSyncedServices addObject:@SYNC_DEST_ICLOUD_DRIVE];
 
 	[self redraw];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityMetadataReceived:) name:@NOTIFICATION_NAME_ACTIVITY_METADATA object:nil];
+
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate serverRequestActivityMetadata:self->activityId];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)shouldAutorotate
@@ -204,6 +221,73 @@ typedef enum ExportFileTypeButtons
 {
 	return UIInterfaceOrientationPortrait;
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
+{
+	NSString* segueId = [segue identifier];
+
+	if ([segueId isEqualToString:@SEGUE_TO_TAG_VIEW])
+	{
+		TagViewController* tagVC = (TagViewController*)[segue destinationViewController];
+		if (tagVC)
+		{
+			tagVC.title = self.navItem.title;
+			[tagVC setActivityId:self->activityId];
+		}
+	}
+	else if ([segueId isEqualToString:@SEGUE_TO_CORE_PLOT_VIEW])
+	{
+		CorePlotViewController* plotVC = (CorePlotViewController*)[segue destinationViewController];
+		if (plotVC)
+		{
+			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId withView:plotVC];
+			if (line)
+			{
+				[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:self->selectedRowStr];
+				[plotVC setTitle:self->selectedRowStr];
+			}
+		}
+	}
+	else if ([segueId isEqualToString:@SEGUE_TO_SPLIT_TIMES_VIEW])
+	{
+		SplitTimesViewController* splitVC = (SplitTimesViewController*)[segue destinationViewController];
+		if (splitVC)
+		{
+			[splitVC setActivityId:self->activityId];
+		}
+	}
+	else if ([segueId isEqualToString:@SEGUE_TO_LAP_TIMES_VIEW])
+	{
+		LapTimesViewController* lapVC = (LapTimesViewController*)[segue destinationViewController];
+		if (lapVC)
+		{
+			[lapVC setActivityId:self->activityId];
+		}
+	}
+}
+
+#pragma mark notification handlers
+
+- (void)activityMetadataReceived:(NSNotification*)notification
+{
+	NSDictionary* responseData = [notification object];
+	NSString* responseStr = [responseData objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSError* error = nil;
+	NSDictionary* activityData = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+	// Valid JSON?
+	if (activityData)
+	{
+		// If we were sent the activity name then update it in the database.
+		NSString* activityName = [activityData objectForKey:@PARAM_ACTIVITY_NAME];
+		if (activityName)
+		{
+			[self.summaryTableView reloadData];
+		}
+	}
+}
+
+#pragma mark methods for configuring the initial screen view
 
 - (void)redraw
 {	
@@ -328,51 +412,7 @@ typedef enum ExportFileTypeButtons
 	}
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
-{
-	NSString* segueId = [segue identifier];
-
-	if ([segueId isEqualToString:@SEGUE_TO_TAG_VIEW])
-	{
-		TagViewController* tagVC = (TagViewController*)[segue destinationViewController];
-		if (tagVC)
-		{
-			tagVC.title = self.navItem.title;
-			[tagVC setActivityId:self->activityId];
-		}
-	}
-	else if ([segueId isEqualToString:@SEGUE_TO_CORE_PLOT_VIEW])
-	{
-		CorePlotViewController* plotVC = (CorePlotViewController*)[segue destinationViewController];
-		if (plotVC)
-		{
-			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId withView:plotVC];
-			if (line)
-			{
-				[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:self->selectedRowStr];
-				[plotVC setTitle:self->selectedRowStr];
-			}
-		}
-	}
-	else if ([segueId isEqualToString:@SEGUE_TO_SPLIT_TIMES_VIEW])
-	{
-		SplitTimesViewController* splitVC = (SplitTimesViewController*)[segue destinationViewController];
-		if (splitVC)
-		{
-			[splitVC setActivityId:self->activityId];
-		}
-	}
-	else if ([segueId isEqualToString:@SEGUE_TO_LAP_TIMES_VIEW])
-	{
-		LapTimesViewController* lapVC = (LapTimesViewController*)[segue destinationViewController];
-		if (lapVC)
-		{
-			[lapVC setActivityId:self->activityId];
-		}
-	}
-}
-
-#pragma mark random methods
+#pragma mark utility methods
 
 - (BOOL)isRecordName:(NSString*)name
 {
