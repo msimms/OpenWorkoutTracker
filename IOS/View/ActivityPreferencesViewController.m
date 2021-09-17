@@ -552,6 +552,7 @@ typedef enum LocationSectionItems
 									[prefs setMinLocationVerticalAccuracy:activityType withMeters:20];
 								else if ([buttonName isEqualToString:LABEL_50_METERS])
 									[prefs setMinLocationVerticalAccuracy:activityType withMeters:50];
+								break;
 						}
 					}
 					else if ([title isEqualToString:TITLE_LOCATION_FILTER])
