@@ -228,6 +228,7 @@
 
 // methods for managing the activity name
 
+- (BOOL)setActivityName:(NSString*)activityId withName:(NSString*)name;
 - (NSString*)getActivityName:(NSString*)activityId;
 
 // accessor methods

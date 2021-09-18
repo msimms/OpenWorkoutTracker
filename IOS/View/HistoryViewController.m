@@ -291,10 +291,6 @@
 
 	// Get the activity name.
 	NSString* name = [appDelegate getActivityName:activityId];
-	if ([name length] > 0)
-	{
-		name = [name stringByAppendingString:@": "];
-	}
 
 	// Get the start time.
 	time_t startTime = 0;
@@ -306,7 +302,7 @@
 		startTimeStr = [startTimeStr stringByAppendingString:@"\n"];
 	}
 
-	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@", name, startTimeStr, allTagsStr];
+	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@ %@", startTimeStr, name, allTagsStr];
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 

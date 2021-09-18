@@ -65,3 +65,4 @@
 
 // Activities
 #define PARAM_ACTIVITY_NAME                   "Name"
+#define PARAM_ACTIVITY_NAME2                  "name"

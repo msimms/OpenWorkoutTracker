@@ -2509,6 +2509,16 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 #pragma mark methods for managing the activity name
 
+- (BOOL)setActivityName:(NSString*)activityId withName:(NSString*)name
+{
+	if (SetActivityName([activityId UTF8String], [name UTF8String]))
+	{
+		[ApiClient serverSetActivityName:activityId withName:name];
+		return TRUE;
+	}
+	return FALSE;
+}
+
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;

@@ -230,6 +230,7 @@ typedef enum SettingsRowsHealthKit
 																			 message:ALERT_TITLE_BROADCAST_HOST
 																	  preferredStyle:UIAlertControllerStyleAlert];
 
+	// Default text.
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
 		textField.placeholder = [Preferences broadcastHostName];
 	}];

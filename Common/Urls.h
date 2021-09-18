@@ -30,6 +30,7 @@
 #define REMOTE_API_DELETE_TAG_URL                "api/1.0/delete_tag"
 #define REMOTE_API_CLAIM_DEVICE_URL              "api/1.0/claim_device"
 #define REMOTE_API_UPDATE_PROFILE_URL            "api/1.0/update_profile"
+#define REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL   "api/1.0/update_activity_metadata"
 #define REMOTE_API_UPLOAD_ACTIVITY_FILE_URL      "api/1.0/upload_activity_file"
 #define REMOTE_API_CREATE_INTERVAL_WORKOUT_URL   "api/1.0/create_interval_workout"
 #define REMOTE_API_CREATE_PACE_PLAN_URL          "api/1.0/create_pace_plan"
