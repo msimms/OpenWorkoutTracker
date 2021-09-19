@@ -2526,7 +2526,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 	if (activityName)
 	{
-		result = [NSString stringWithFormat:@"%s", activityName];
+		result = [NSString stringWithUTF8String:activityName];
 		free((void*)activityName);
 	}
 	return result;
