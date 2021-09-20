@@ -38,6 +38,10 @@ extern "C" {
 	bool SetActivityName(const char* const activityId, const char* const name);
 	char* GetActivityName(const char* const activityId);
 
+	// Functions for managing the activity description.
+	bool SetActivityDescription(const char* const activityId, const char* const description);
+	char* GetActivityDescription(const char* const activityId);
+
 	// Functions for managing tags.
 	bool GetTags(const char* const activityId, TagCallback callback, void* context);
 	bool StoreTag(const char* const activityId, const char* const tag);

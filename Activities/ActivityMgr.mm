@@ -255,6 +255,46 @@ extern "C" {
 	}
 
 	//
+	// Functions for managing the activity description.
+	//
+
+	bool SetActivityDescription(const char* const activityId, const char* const description)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->UpdateActivityDescription(activityId, description);
+		}
+
+		g_dbLock.unlock();
+
+		return result;
+	}
+	char* GetActivityDescription(const char* const activityId)
+	{
+		char* description = NULL;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			std::string tempDesc;
+
+			if (g_pDatabase->RetrieveActivityDescription(activityId, tempDesc))
+			{
+				description = strdup(tempDesc.c_str());
+			}
+		}
+
+		g_dbLock.unlock();
+
+		return description;
+	}
+
+	//
 	// Functions for managing tags.
 	//
 

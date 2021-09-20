@@ -29,6 +29,7 @@
 #define ROW_TITLE_LAP_TIMES              NSLocalizedString(@"Lap Times", nil)
 
 #define SECTION_TITLE_NAME               NSLocalizedString(@"Name", nil)
+#define SECTION_TITLE_DESCRIPTION        NSLocalizedString(@"Description", nil)
 #define SECTION_TITLE_START_AND_STOP     NSLocalizedString(@"Start and Finish", nil)
 #define SECTION_TITLE_LAP_AND_SPLIT      NSLocalizedString(@"Lap and Split Times", nil)
 #define SECTION_TITLE_CHARTS             NSLocalizedString(@"Charts", nil)
@@ -54,6 +55,7 @@
 #define ACTION_SHEET_TITLE_FILE_FORMAT   NSLocalizedString(@"Export as", nil)
 #define ACTION_SHEET_TITLE_EDIT          NSLocalizedString(@"Edit", nil)
 #define ACTION_SHEET_TITLE_ACTIVITY_NAME NSLocalizedString(@"Activity Name", nil)
+#define ACTION_SHEET_TITLE_ACTIVITY_DESC NSLocalizedString(@"Activity Description", nil)
 
 #define START_PIN_NAME                   NSLocalizedString(@"Start", nil)
 #define FINISH_PIN_NAME                  NSLocalizedString(@"Finish", nil)
@@ -63,6 +65,7 @@
 #define MSG_EXPORT_QUESTION              NSLocalizedString(@"Do you want to export the actvity?", nil)
 #define MSG_LOAD_FAILED                  NSLocalizedString(@"Failed to load the activity.", nil)
 #define MSG_ENTER_A_NEW_ACTIVITY_NAME    NSLocalizedString(@"Enter a new activity name.", nil)
+#define MSG_ENTER_A_NEW_ACTIVITY_DESC    NSLocalizedString(@"Enter a new activity description.", nil)
 
 #define EMAIL_TITLE                      NSLocalizedString(@"Workout Data", nil)
 
@@ -81,6 +84,7 @@ typedef enum Time2Rows
 typedef enum Sections
 {
 	SECTION_NAME = 0,
+	SECTION_DESCRIPTION,
 	SECTION_START_AND_END_TIME,
 	SECTION_LAP_AND_SPLIT_TIMES,
 	SECTION_CHARTS,
@@ -90,6 +94,18 @@ typedef enum Sections
 	SECTION_INTERNAL,
 	NUM_SECTIONS
 } Sections;
+
+typedef enum NameSectionItems
+{
+	ROW_NAME = 0,
+	NUM_NAME_SECTION_ROWS
+} NameSectionItems;
+
+typedef enum DescriptionSectionItems
+{
+	ROW_DESCRIPTION = 0,
+	NUM_DESCRIPTION_SECTION_ROWS
+} DescriptionSectionItems;
 
 typedef enum InternalSectionItems
 {
@@ -367,7 +383,10 @@ typedef enum ExportFileTypeButtons
 			switch (sectionIndex)
 			{
 				case SECTION_NAME:
-					count = 1;
+					count = NUM_NAME_SECTION_ROWS;
+					break;
+				case SECTION_DESCRIPTION:
+					count = NUM_DESCRIPTION_SECTION_ROWS;
 					break;
 				case SECTION_START_AND_END_TIME:
 					count = [self->timeSection1RowNames count];
@@ -799,7 +818,7 @@ typedef enum ExportFileTypeButtons
 	[self.navigationController popToRootViewControllerAnimated:TRUE];
 }
 
-#pragma mark called when renaming the activity
+#pragma mark called when renaming the activity or changing its description
 
 - (void)getNewActivityName
 {
@@ -820,6 +839,30 @@ typedef enum ExportFileTypeButtons
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		UITextField* field = alertController.textFields.firstObject;
 		[appDelegate setActivityName:self->activityId withName:[field text]];
+		[self.summaryTableView reloadData];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)getNewActivityDescription
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ACTION_SHEET_TITLE_ACTIVITY_DESC
+																			 message:MSG_ENTER_A_NEW_ACTIVITY_DESC
+																	  preferredStyle:UIAlertControllerStyleAlert];
+
+	// Default text.
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		textField.placeholder = [appDelegate getActivityDescription:self->activityId];
+	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		UITextField* field = alertController.textFields.firstObject;
+		[appDelegate setActivityDescription:self->activityId withName:[field text]];
 		[self.summaryTableView reloadData];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
@@ -860,6 +903,9 @@ typedef enum ExportFileTypeButtons
 	{
 		case SECTION_NAME:
 			[self getNewActivityName];
+			break;
+		case SECTION_DESCRIPTION:
+			[self getNewActivityDescription];
 			break;
 		case SECTION_START_AND_END_TIME:
 			break;
@@ -930,6 +976,8 @@ typedef enum ExportFileTypeButtons
 	{
 		case SECTION_NAME:
 			return SECTION_TITLE_NAME;
+		case SECTION_DESCRIPTION:
+			return SECTION_TITLE_DESCRIPTION;
 		case SECTION_START_AND_END_TIME:
 			return SECTION_TITLE_START_AND_STOP;
 		case SECTION_LAP_AND_SPLIT_TIMES:
@@ -955,7 +1003,9 @@ typedef enum ExportFileTypeButtons
 	switch (actualSection)
 	{
 		case SECTION_NAME:
-			return 1;
+			return NUM_NAME_SECTION_ROWS;
+		case SECTION_DESCRIPTION:
+			return NUM_DESCRIPTION_SECTION_ROWS;
 		case SECTION_START_AND_END_TIME:
 			return [self->timeSection1RowNames count];
 		case SECTION_LAP_AND_SPLIT_TIMES:
@@ -993,13 +1043,26 @@ typedef enum ExportFileTypeButtons
 	switch (actualSection)
 	{
 		case SECTION_NAME:
+			if (row == ROW_NAME)
 			{
 				NSString* name = [appDelegate getActivityName:self->activityId];
 
 				if ([name length] > 0)
 					cell.textLabel.text = name;
 				else
-					cell.textLabel.text = @"--";
+					cell.textLabel.text = @"---";
+				cell.detailTextLabel.text = @"";
+			}
+			break;
+		case SECTION_DESCRIPTION:
+			if (row == ROW_DESCRIPTION)
+			{
+				NSString* description = [appDelegate getActivityDescription:self->activityId];
+
+				if ([description length] > 0)
+					cell.textLabel.text = description;
+				else
+					cell.textLabel.text = @"---";
 				cell.detailTextLabel.text = @"";
 			}
 			break;
@@ -1143,6 +1206,9 @@ typedef enum ExportFileTypeButtons
 	switch (actualSection)
 	{
 		case SECTION_NAME:
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			break;
+		case SECTION_DESCRIPTION:
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			break;
 		case SECTION_START_AND_END_TIME:

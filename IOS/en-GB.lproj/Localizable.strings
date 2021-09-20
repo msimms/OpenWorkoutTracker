@@ -62,6 +62,7 @@
 "Delete Last Second" = "Delete Last Second";
 "Delete Last Five Seconds" = "Delete Last Five Seconds";
 "Delete Last Thirty Seconds" = "Delete Last Thirty Seconds";
+"Description" = "Description";
 "Disabled" = "Disabled";
 "Distance" = "Distance";
 "Distance Interval" = "Distance Interval";
@@ -74,7 +75,8 @@
 "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network." = "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.";
 "End" = "End";
 "End of Workout" = "End of Workout";
-"Enter your birthdate" = "Enter your birthdate";
+"Enter a new activity description." = "Enter a new activity description.";
+"Enter a new activity name." = "Enter a new activity name.";
 "Enter the amount of weight being used" = "Enter the amount of weight being used";
 "Enter the correct number of repetitions" = "Enter the correct number of repetitions";
 "Enter the distance" = "Enter the distance";
@@ -83,6 +85,7 @@
 "Enter the number of reps" = "Enter the number of reps";
 "Enter the number of sets" = "Enter the number of sets";
 "Enter the time (in seconds)" = "Enter the time (in seconds)";
+"Enter your birthdate" = "Enter your birthdate";
 "Error" = "Error";
 "Export" = "Export";
 "Export as" = "Export as";

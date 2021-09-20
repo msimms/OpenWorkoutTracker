@@ -113,6 +113,9 @@ public:
 	bool RetrieveActivityName(const std::string& activityId, std::string& name);
 	bool UpdateActivityName(const std::string& activityId, const std::string& name);
 
+	bool RetrieveActivityDescription(const std::string& activityId, std::string& description);
+	bool UpdateActivityDescription(const std::string& activityId, const std::string& description);
+
 	bool CreateLap(const std::string& activityId, const LapSummary& lap);
 	bool RetrieveLaps(const std::string& activityId, LapSummaryList& laps);
 

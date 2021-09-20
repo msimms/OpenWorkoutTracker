@@ -204,8 +204,16 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("activity"))
 	{
-		sql = "create table activity (id integer primary key, activity_id text, user_id text, type text, name text, start_time unsigned big int, end_time unsigned big int)";
+		sql = "create table activity (id integer primary key, activity_id text, user_id text, type text, name text, description text, start_time unsigned big int, end_time unsigned big int)";
 		queries.push_back(sql);
+	}
+	else
+	{
+		if (!DoesTableHaveColumn("activity", "description"))
+		{
+			sql = "alter table activity add column description text";
+			queries.push_back(sql);
+		}
 	}
 	if (!DoesTableExist("lap"))
 	{
@@ -1412,9 +1420,12 @@ bool Database::RetrieveActivityName(const std::string& activityId, std::string& 
 		
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			name = (const char*)sqlite3_column_text(statement, 0);
+			if (sqlite3_column_bytes(statement, 0) > 0)
+			{
+				name = (const char*)sqlite3_column_text(statement, 0);
+			}
 		}
-		
+
 		sqlite3_finalize(statement);
 		result = true;
 	}
@@ -1429,6 +1440,44 @@ bool Database::UpdateActivityName(const std::string& activityId, const std::stri
 	if (sqlite3_prepare_v2(m_pDb, "update activity set name = ? where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveActivityDescription(const std::string& activityId, std::string& description)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select description from activity where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		
+		if (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			if (sqlite3_column_bytes(statement, 0) > 0)
+			{
+				description = (const char*)sqlite3_column_text(statement, 0);
+			}
+		}
+		
+		sqlite3_finalize(statement);
+		result = true;
+	}
+	return result;
+}
+
+bool Database::UpdateActivityDescription(const std::string& activityId, const std::string& description)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "update activity set description = ? where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, description.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);

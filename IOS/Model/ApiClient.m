@@ -432,6 +432,25 @@
 #endif
 }
 
+// Sends the new activity description to the server.
++ (BOOL)serverSetActivityDescription:(NSString*)activityId withDescription:(NSString*)description
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 activityId, @PARAM_ACTIVITY_ID,
+									 description, @PARAM_ACTIVITY_DESCRIPTION,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
+
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
+}
+
 // Ask the server if it has the activity with the given ID and hash.
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash
 {

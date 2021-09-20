@@ -231,6 +231,11 @@
 - (BOOL)setActivityName:(NSString*)activityId withName:(NSString*)name;
 - (NSString*)getActivityName:(NSString*)activityId;
 
+// methods for managing the activity description
+
+- (BOOL)setActivityDescription:(NSString*)activityId withName:(NSString*)description;
+- (NSString*)getActivityDescription:(NSString*)activityId;
+
 // accessor methods
 
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId;

@@ -62,6 +62,7 @@
 "Delete Last Second" = "Eliminar Último Segundo";
 "Delete Last Five Seconds" = "Elimine Último Cinco Segundos";
 "Delete Last Thirty Seconds" = "Elimine Último Treinta Segundos";
+"Description" = "Descripción";
 "Disabled" = "Discapacitado";
 "Distance" = "Distancia";
 "Distance Interval" = "Intervalo de Distancia";
@@ -74,7 +75,8 @@
 "Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network." = "Al habilitar esta emitirá su posición para que otros puedan seguir. Los datos pueden ser transmitidos, mientras que en la red del proveedor.";
 "End" = "Fin";
 "End of Workout" = "Fin del Entrenamiento";
-"Enter your birthdate" = "Introduzca su cumpleaño";
+"Enter a new activity description." = "Ingrese una nueva descripción de actividad.";
+"Enter a new activity name." = "Ingresa un nuevo nombre de actividad.";
 "Enter the amount of weight being used" = "Introduzca la cantidad de peso que se utiliza";
 "Enter the correct number of repetitions" = "Introduce el número de repeticiones";
 "Enter the distance" = "Introduzca la distancia";
@@ -83,6 +85,7 @@
 "Enter the number of reps" = "Introduzca la cantidad de los repeticións";
 "Enter the number of sets" = "Introduzca la cantidad de los series";
 "Enter the time (in seconds)" = "Introduzca la tiempo (en segundos)";
+"Enter your birthdate" = "Introduzca su cumpleaño";
 "Error" = "Error";
 "Export" = "Exportar";
 "Export as" = "Exportar como";

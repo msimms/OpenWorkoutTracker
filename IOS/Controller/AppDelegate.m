@@ -2532,6 +2532,31 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return result;
 }
 
+#pragma mark methods for managing the activity description
+
+- (BOOL)setActivityDescription:(NSString*)activityId withName:(NSString*)description
+{
+	if (SetActivityDescription([activityId UTF8String], [description UTF8String]))
+	{
+		[ApiClient serverSetActivityDescription:activityId withDescription:description];
+		return TRUE;
+	}
+	return FALSE;
+}
+
+- (NSString*)getActivityDescription:(NSString*)activityId
+{
+	NSString* result = nil;
+	char* description = GetActivityDescription([activityId UTF8String]);
+
+	if (description)
+	{
+		result = [NSString stringWithUTF8String:description];
+		free((void*)description);
+	}
+	return result;
+}
+
 #pragma mark accessor methods
 
 void tagCallback(const char* name, void* context)

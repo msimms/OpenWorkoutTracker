@@ -90,7 +90,9 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate initializeHistoricalActivityList];
 
+	[self.spinner startAnimating];
 	[self buildDictionary];
+	[self.spinner stopAnimating];
 	[self.historyTableView reloadData];
 }
 
