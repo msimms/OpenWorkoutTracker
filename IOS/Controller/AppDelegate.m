@@ -1380,11 +1380,16 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			NSString* activityId = [activityData objectForKey:@PARAM_ACTIVITY_ID];
 			NSString* activityName = [activityData objectForKey:@PARAM_ACTIVITY_NAME];
+			NSString* activityDesc = [activityData objectForKey:@PARAM_ACTIVITY_DESCRIPTION];
 
-			// If we were sent the activity name then update it in the database.
+			// If we were sent the activity name or description then update it in the database.
 			if (activityId && activityName)
 			{
 				SetActivityName([activityId UTF8String], [activityName UTF8String]);
+			}
+			if (activityId && activityDesc)
+			{
+				SetActivityDescription([activityId UTF8String], [activityDesc UTF8String]);
 			}
 		}
 	}

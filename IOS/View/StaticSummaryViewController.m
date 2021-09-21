@@ -296,9 +296,10 @@ typedef enum ExportFileTypeButtons
 	// Valid JSON?
 	if (activityData)
 	{
-		// If we were sent the activity name then update it in the database.
+		// If we were sent the activity name or description then update the view.
 		NSString* activityName = [activityData objectForKey:@PARAM_ACTIVITY_NAME];
-		if (activityName)
+		NSString* activityDesc = [activityData objectForKey:@PARAM_ACTIVITY_DESCRIPTION];
+		if (activityName || activityDesc)
 		{
 			[self.summaryTableView reloadData];
 		}
