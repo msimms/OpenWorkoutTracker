@@ -7,6 +7,7 @@
 
 #include "PushUpAnalyzer.h"
 #include "AxisName.h"
+#import <TargetConditionals.h>
 
 PushUpAnalyzer::PushUpAnalyzer()
 {
