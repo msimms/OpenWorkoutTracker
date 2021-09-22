@@ -18,6 +18,7 @@ xcuserdata
 *.moved-aside
 DerivedData
 *.xcuserstate
+*.xcworkspacedata
 
 # Android Studio
 *.iml
