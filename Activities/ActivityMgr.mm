@@ -2901,7 +2901,7 @@ extern "C" {
 			{
 				if (g_pCurrentActivity->Start())
 				{
-					if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+					if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), "", g_pCurrentActivity->GetStartTimeSecs()))
 					{
 						g_pCurrentActivity->SetId(activityId);
 						result = true;
@@ -2929,7 +2929,7 @@ extern "C" {
 				{
 					g_pCurrentActivity->SetStartTimeSecs(startTime);
 
-					if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), g_pCurrentActivity->GetStartTimeSecs()))
+					if (g_pDatabase->StartActivity(activityId, "", g_pCurrentActivity->GetType(), "", g_pCurrentActivity->GetStartTimeSecs()))
 					{
 						g_pCurrentActivity->SetId(activityId);
 						result = true;

@@ -1122,11 +1122,11 @@ bool Database::DeleteCustomActivity(const std::string& activityType)
 	return result == SQLITE_DONE;
 }
 
-bool Database::StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, time_t startTime)
+bool Database::StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, const std::string& activityDescription, time_t startTime)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into activity values (NULL,?,?,?,?,?,0)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into activity (id,activity_id,user_id,type,name,description,start_time,end_time) values (NULL,?,?,?,?,?,?,0)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		std::string activityName;
@@ -1135,7 +1135,8 @@ bool Database::StartActivity(const std::string& activityId, const std::string& u
 		sqlite3_bind_text(statement, 2, userId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 3, activityType.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 4, activityName.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 5, startTime);
+		sqlite3_bind_text(statement, 5, activityDescription.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 6, startTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

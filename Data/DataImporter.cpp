@@ -133,7 +133,7 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 				if (m_pDb)
 				{
 					time_t startTimeSecs = (time_t)(ts / 1000);
-					result = m_pDb->StartActivity(m_activityId, "", m_activityType, startTimeSecs);
+					result = m_pDb->StartActivity(m_activityId, "", m_activityType, "", startTimeSecs);
 				}
 				m_started = true;
 			}
@@ -184,7 +184,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 		{
 			time_t startTimeSecs = (time_t)(time / 1000);
 
-			result = m_pDb->StartActivity(m_activityId, "", m_activityType, startTimeSecs);
+			result = m_pDb->StartActivity(m_activityId, "", m_activityType, "", startTimeSecs);
 		}
 		m_started = true;
 	}

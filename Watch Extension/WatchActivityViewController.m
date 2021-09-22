@@ -180,6 +180,12 @@
 	{		
 		[self setUIForStartedActivity];
 	}
+	else
+	{
+		WKAlertAction* okAction = [WKAlertAction actionWithTitle:STR_OK style:WKAlertActionStyleDefault handler:^(void){}];
+		NSArray* actions = @[okAction];
+		[self presentAlertControllerWithTitle:STR_ERROR message:STR_INTERNAL_ERROR preferredStyle:WKAlertControllerStyleAlert actions:actions];
+	}
 }
 
 - (void)doStop

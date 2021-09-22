@@ -99,7 +99,7 @@ public:
 
 	// Methods for managing activities.
 
-	bool StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, time_t startTime);
+	bool StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, const std::string& activityDescription, time_t startTime);
 	bool StopActivity(time_t endTime, const std::string& activityId);
 	bool DeleteActivity(const std::string& activityId);
 	bool RetrieveActivity(const std::string& activityId, ActivitySummary& summary);

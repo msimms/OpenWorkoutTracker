@@ -609,6 +609,10 @@
 		}
 		[self setUIForStartedActivity];
 	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
+	}
 
 	[self.navigationItem setHidesBackButton:TRUE];
 }
