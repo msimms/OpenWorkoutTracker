@@ -1839,23 +1839,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Ye8-WC-EvB">
-                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="fa6-ul-wkg"/>
-                                </constraints>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="dJZ-L6-U8P" id="55f-4d-IIo"/>
-                                </connections>
-                            </searchBar>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Acj-HM-0Y7" userLabel="Large Activity Indicator">
-                                <rect key="frame" x="192" y="454" width="37" height="37"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="GdY-yc-cLp"/>
-                                </constraints>
-                                <color key="color" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </activityIndicatorView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JGP-tQ-dfp">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
@@ -1867,6 +1850,16 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Ye8-WC-EvB">
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="fa6-ul-wkg"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="dJZ-L6-U8P" id="55f-4d-IIo"/>
+                                </connections>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="5zW-R0-NSW">
                                 <rect key="frame" x="0.0" y="132" width="414" height="681"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1875,17 +1868,21 @@
                                     <outlet property="delegate" destination="dJZ-L6-U8P" id="INz-AC-E3A"/>
                                 </connections>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Acj-HM-0Y7" userLabel="Large Activity Indicator">
+                                <rect key="frame" x="188.5" y="454" width="37" height="37"/>
+                                <color key="color" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bjb-f8-TuA"/>
                         <constraints>
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="top" secondItem="Ye8-WC-EvB" secondAttribute="bottom" id="3z2-hJ-lOk"/>
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="leading" secondItem="JGP-tQ-dfp" secondAttribute="leading" id="Agz-nb-DiH"/>
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="trailing" secondItem="JGP-tQ-dfp" secondAttribute="trailing" id="D0b-yv-499"/>
-                            <constraint firstItem="Acj-HM-0Y7" firstAttribute="leading" secondItem="Bjb-f8-TuA" secondAttribute="leading" constant="192" id="DXl-G2-frl"/>
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="leading" secondItem="Bjb-f8-TuA" secondAttribute="leading" id="E33-ze-dn2"/>
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="centerX" secondItem="IRu-K0-0Jf" secondAttribute="centerX" id="LoF-Hv-ei7"/>
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="top" secondItem="Bjb-f8-TuA" secondAttribute="top" id="Mbc-XH-zHK"/>
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="trailing" secondItem="5zW-R0-NSW" secondAttribute="trailing" id="QvY-c9-YAo"/>
+                            <constraint firstItem="Acj-HM-0Y7" firstAttribute="centerX" secondItem="Bjb-f8-TuA" secondAttribute="centerX" id="eHW-Dv-q3M"/>
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="leading" secondItem="5zW-R0-NSW" secondAttribute="leading" id="iSj-Gn-Loq"/>
                             <constraint firstItem="5zW-R0-NSW" firstAttribute="centerY" secondItem="Acj-HM-0Y7" secondAttribute="centerY" id="jaj-Sd-poW"/>
                             <constraint firstItem="JGP-tQ-dfp" firstAttribute="top" secondItem="5zW-R0-NSW" secondAttribute="bottom" id="udB-BW-eMs"/>
