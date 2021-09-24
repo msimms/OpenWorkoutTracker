@@ -247,6 +247,7 @@ typedef enum ExportFileTypeButtons
 	if ([segueId isEqualToString:@SEGUE_TO_TAG_VIEW])
 	{
 		TagViewController* tagVC = (TagViewController*)[segue destinationViewController];
+
 		if (tagVC)
 		{
 			tagVC.title = self.navItem.title;
@@ -256,9 +257,11 @@ typedef enum ExportFileTypeButtons
 	else if ([segueId isEqualToString:@SEGUE_TO_CORE_PLOT_VIEW])
 	{
 		CorePlotViewController* plotVC = (CorePlotViewController*)[segue destinationViewController];
+
 		if (plotVC)
 		{
 			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId withView:plotVC];
+
 			if (line)
 			{
 				[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:self->selectedRowStr];
@@ -269,6 +272,7 @@ typedef enum ExportFileTypeButtons
 	else if ([segueId isEqualToString:@SEGUE_TO_SPLIT_TIMES_VIEW])
 	{
 		SplitTimesViewController* splitVC = (SplitTimesViewController*)[segue destinationViewController];
+
 		if (splitVC)
 		{
 			[splitVC setActivityId:self->activityId];
@@ -277,6 +281,7 @@ typedef enum ExportFileTypeButtons
 	else if ([segueId isEqualToString:@SEGUE_TO_LAP_TIMES_VIEW])
 	{
 		LapTimesViewController* lapVC = (LapTimesViewController*)[segue destinationViewController];
+
 		if (lapVC)
 		{
 			[lapVC setActivityId:self->activityId];

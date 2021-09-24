@@ -76,6 +76,7 @@ typedef enum GearSections
 	if ([segueId isEqualToString:@SEGUE_TO_BIKE_PROFILE])
 	{
 		BikeProfileViewController* bikeVC = (BikeProfileViewController*)[segue destinationViewController];
+
 		if (bikeVC)
 		{
 			if (self->bikeViewMode == BIKE_PROFILE_UPDATE)
@@ -89,6 +90,7 @@ typedef enum GearSections
 	else if ([segueId isEqualToString:@SEQUE_TO_SHOE_PROFILE])
 	{
 		ShoeProfileViewController* shoeVC = (ShoeProfileViewController*)[segue destinationViewController];
+
 		if (shoeVC)
 		{
 			if (self->shoeViewMode == SHOE_PROFILE_UPDATE)

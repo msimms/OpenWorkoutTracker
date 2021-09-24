@@ -67,6 +67,7 @@
 	if ([segueId isEqualToString:@SEGUE_TO_PACE_PLAN_EDIT_VIEW])
 	{
 		PacePlanEditViewController* editVC = (PacePlanEditViewController*)[segue destinationViewController];
+
 		if (editVC)
 		{
 			[editVC setPlanId:self->selectedPlanId];

@@ -38,6 +38,12 @@
 	[appDelegate serverListFriends];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (BOOL)shouldAutorotate
 {
 	return NO;

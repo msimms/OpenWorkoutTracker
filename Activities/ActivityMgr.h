@@ -30,7 +30,8 @@ extern "C" {
 
 	// Functions for managing the database.
 	bool Initialize(const char* const dbFileName);
-	bool DeleteActivity(const char* const activityId);
+	bool DeleteActivityFromDatabase(const char* const activityId);
+	bool IsActivityInDatabase(const char* activityId);
 	bool ResetDatabase(void);
 	bool CloseDatabase(void);
 
@@ -47,7 +48,7 @@ extern "C" {
 	bool StoreTag(const char* const activityId, const char* const tag);
 	bool DeleteTag(const char* const activityId, const char* const tag);
 	bool SearchForTags(const char* const searchStr);
-	
+
 	// Functions for managing the activity hash.
 	bool StoreHash(const char* const activityId, const char* const hash);
 	char* GetActivityIdByHash(const char* const hash);

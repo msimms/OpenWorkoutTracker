@@ -367,7 +367,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)deleteActivity:(NSString*)activityId
 {
-	return DeleteActivity([activityId UTF8String]);
+	return DeleteActivityFromDatabase([activityId UTF8String]);
 }
 
 - (BOOL)startNewLap
@@ -1058,8 +1058,7 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (self->watchSession)
 	{
-		NSString* activityHash = [self retrieveHashForActivityId:activityId];
-		[self->watchSession sendActivity:activityId withHash:activityHash];
+		[self->watchSession sendActivity:activityId];
 	}
 	return result;
 }

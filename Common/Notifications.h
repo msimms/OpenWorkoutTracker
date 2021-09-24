@@ -20,6 +20,7 @@
 #define NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE       "HasActivityResponse"      // The (optional) server responded to an activity existence check
 #define NOTIFICATION_NAME_ACTIVITY_METADATA           "ActivityMetadata"         // The (optional) server returned activity metadata
 #define NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY "BroadcastMgrSentActivity"
+#define NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY     "ReceivedWatchActivity"    // An activity was received from the watch
 
 #define KEY_NAME_ACTIVITY_ID                          "ActivityId"
 #define KEY_NAME_ACTIVITY_TYPE                        "ActivityType"

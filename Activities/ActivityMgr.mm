@@ -161,7 +161,7 @@ extern "C" {
 		return result;
 	}
 
-	bool DeleteActivity(const char* const activityId)
+	bool DeleteActivityFromDatabase(const char* const activityId)
 	{
 		bool deleted = false;
 
@@ -179,6 +179,23 @@ extern "C" {
 		g_dbLock.unlock();
 
 		return deleted;
+	}
+
+	bool IsActivityInDatabase(const char* activityId)
+	{
+		bool exists = false;
+		ActivitySummary summary;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			exists = g_pDatabase->RetrieveActivity(activityId, summary);
+		}
+
+		g_dbLock.unlock();
+
+		return exists;
 	}
 
 	bool ResetDatabase()
@@ -312,11 +329,9 @@ extern "C" {
 			{
 				std::sort(tags.begin(), tags.end());
 
-				std::vector<std::string>::iterator iter = tags.begin();
-				while (iter != tags.end())
+				for (auto iter = tags.begin(); iter != tags.end(); ++iter)
 				{
 					callback((*iter).c_str(), context);
-					++iter;
 				}
 
 				result = true;

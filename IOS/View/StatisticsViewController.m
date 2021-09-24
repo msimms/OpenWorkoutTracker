@@ -101,6 +101,7 @@ typedef enum Sections
 	if ([[segue identifier] isEqualToString:@SEGUE_TO_MAP_OVERVIEW])
 	{
 		MapOverviewViewController* mapVC = (MapOverviewViewController*)[segue destinationViewController];
+
 		if (mapVC)
 		{
 			[mapVC setActivityId:self->activityIdToMap];

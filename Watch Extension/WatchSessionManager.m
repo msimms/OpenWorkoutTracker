@@ -57,26 +57,20 @@
 		numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
 	}
 
-	// Check each activity.
-	for (size_t i = 0; i < numHistoricalActivities; ++i)
+	// Check each activity. Loop in reverse order because the most recent activities are probably the most interesting.
+	for (size_t i = numHistoricalActivities - 1; i > 0; i--)
 	{
 		NSString* activityId = [extDelegate getActivityIdFromActivityIndex:i];
 
 		// If it's already been synched then skip it. Otherwise, offer up the activity.
 		if (![extDelegate isSyncedToPhone:activityId])
 		{
-			NSString* hash = [extDelegate retrieveHashForActivityId:activityId];
+			NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
+									 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+									 nil];
 
-			if (hash)
-			{
-				NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
-										 hash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
-										 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
-										 nil];
-
-				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
-			}
-		} 
+			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+		}
 	}
 }
 
@@ -123,7 +117,7 @@
 }
 
 // Sends the activity to the phone.
-- (void)sendActivity:(NSString*)activityId withHash:(NSString*)activityHash
+- (void)sendActivity:(NSString*)activityId
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
@@ -147,7 +141,6 @@
 										@WATCH_MSG_ACTIVITY, @WATCH_MSG_TYPE,
 										activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
 										activityType, @WATCH_MSG_PARAM_ACTIVITY_TYPE,
-										activityHash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
 										startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
 										endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
 										nil];
@@ -249,8 +242,7 @@
 	{
 		// The phone app is requesting an activity.
 		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-		[self sendActivity:activityId withHash:activityHash];
+		[self sendActivity:activityId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
@@ -306,8 +298,7 @@
 	{
 		// The phone app is requesting an activity.
 		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-		[self sendActivity:activityId withHash:activityHash];
+		[self sendActivity:activityId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{

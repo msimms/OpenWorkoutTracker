@@ -1977,7 +1977,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)deleteActivity:(NSString*)activityId
 {
-	BOOL result = DeleteActivity([activityId UTF8String]);
+	BOOL result = DeleteActivityFromDatabase([activityId UTF8String]);
 
 	if (result)
 	{
@@ -3152,26 +3152,16 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 // Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
-- (void)checkForActivity:(NSString*)activityId withHash:(NSString*)activityHash
+- (void)checkForActivity:(NSString*)activityId
 {
-	if (activityHash)
+	if (!IsActivityInDatabase([activityId UTF8String]))
 	{
-		const char* ourActivityId = GetActivityIdByHash([activityHash UTF8String]);
+		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+										@WATCH_MSG_REQUEST_ACTIVITY, @WATCH_MSG_TYPE,
+										activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+										nil];
 
-		if (ourActivityId == NULL)
-		{
-			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-											@WATCH_MSG_REQUEST_ACTIVITY, @WATCH_MSG_TYPE,
-											activityHash, @WATCH_MSG_PARAM_ACTIVITY_HASH,
-											activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
-											nil];
-
-			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
-		}
-		else
-		{
-			free((void*)ourActivityId);
-		}
+		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 	}
 }
 
@@ -3240,61 +3230,64 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
-// Import an activity that was sent from the watch.
+// Imports an activity that was sent from the watch.
 - (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
 {
 	NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-	NSString* activityType = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
-	NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
-	NSNumber* startTime = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_START_TIME];
 
-	if (activityId && activityType && activityHash && startTime)
+	if (activityId && !IsActivityInDatabase([activityId UTF8String]))
 	{
-		self->currentlyImporting = TRUE;
+		NSString* activityType = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
+		NSNumber* startTime = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_START_TIME];
 
-		// Delete any existing activities with the same ID.
-		while (ConvertActivityIdToActivityIndex([activityId UTF8String]) != ACTIVITY_INDEX_UNKNOWN)
+		if (activityType && startTime)
 		{
-			DeleteActivity([activityId UTF8String]);
-			InitializeHistoricalActivityList();
-		}
+			self->currentlyImporting = TRUE;
 
-		// Create the activity object and database entry.
-		CreateActivityObject([activityType UTF8String]);
-		if (StartActivityWithTimestamp([activityId UTF8String], [startTime longLongValue]))
-		{
-			// Add all the locations.
-			NSArray* locationData = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
-			if (locationData)
+			// Delete any existing activities with the same ID.
+			while (ConvertActivityIdToActivityIndex([activityId UTF8String]) != ACTIVITY_INDEX_UNKNOWN)
 			{
-				for (NSArray* locationPoints in locationData)
-				{
-					if ([locationPoints count] >= 5)
-					{
-						ProcessLocationReading([locationPoints[0] doubleValue], [locationPoints[1] doubleValue], [locationPoints[2] doubleValue], [locationPoints[3] longLongValue], [locationPoints[4] longLongValue], [locationPoints[5] longLongValue]);
-					}
-				}
+				DeleteActivityFromDatabase([activityId UTF8String]);
+				InitializeHistoricalActivityList();
 			}
 
-			// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
-			StopCurrentActivity();
+			// Create the activity object and database entry.
+			CreateActivityObject([activityType UTF8String]);
+			if (StartActivityWithTimestamp([activityId UTF8String], [startTime longLongValue]))
+			{
+				// Add all the locations.
+				NSArray* locationData = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
+				if (locationData)
+				{
+					for (NSArray* locationPoints in locationData)
+					{
+						if ([locationPoints count] >= 5)
+						{
+							ProcessLocationReading([locationPoints[0] doubleValue], [locationPoints[1] doubleValue], [locationPoints[2] doubleValue], [locationPoints[3] longLongValue], [locationPoints[4] longLongValue], [locationPoints[5] longLongValue]);
+						}
+					}
+				}
 
-			// Store summary data.
-			SaveActivitySummaryData();
+				// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
+				StopCurrentActivity();
 
-			// Save the hash since we already know it and so that we don't have to compute it.
-			StoreHash([activityId UTF8String], [activityHash UTF8String]);
+				// Store summary data.
+				SaveActivitySummaryData();
+			}
+			else
+			{
+				// Something went wrong, cleanup and move on.
+				DeleteActivityFromDatabase([activityId UTF8String]);
+			}
+
+			// Re-initialize the list of activities since we added a new activity.
+			InitializeHistoricalActivityList();
+
+			self->currentlyImporting = FALSE;
+
+			// Some views may want to refresh so let them know.
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY object:nil];
 		}
-		else
-		{
-			// Something went wrong, cleanup and move on.
-			DeleteActivity([activityId UTF8String]);
-		}
-
-		// Re-initialize the list of activities since we added a new activity.
-		InitializeHistoricalActivityList();
-
-		self->currentlyImporting = FALSE;
 	}
 }
 
@@ -3372,9 +3365,8 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
 		// The watch app wants to know if we have an activity.
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
 		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-		[self checkForActivity:activityId withHash:activityHash];
+		[self checkForActivity:activityId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
@@ -3423,9 +3415,8 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
 		// The watch app wants to know if we have an activity.
-		NSString* activityHash = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_HASH];
 		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-		[self checkForActivity:activityId withHash:activityHash];
+		[self checkForActivity:activityId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{

@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "ImageUtils.h"
+#import "Notifications.h"
 #import "Segues.h"
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
@@ -73,19 +74,26 @@
 	[super viewDidLoad];
 
 	self.title = TITLE;
+	self.spinner.hidden = FALSE;
+	self.spinner.center = self.view.center;
 
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
-	[self.spinner stopAnimating];
 
 	self->selectedActivityId = nil;
 	self->searching = false;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedWatchActivity:) name:@NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	[self.spinner stopAnimating];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate initializeHistoricalActivityList];
@@ -121,6 +129,15 @@
 			[summaryVC setActivityId:self->selectedActivityId];
 		}
 	}
+}
+
+#pragma mark update notification
+
+- (void)receivedWatchActivity:(NSNotification*)notification
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.historyTableView reloadData];
+	});
 }
 
 #pragma mark methods for loading and sorting activity data
@@ -208,9 +225,6 @@
 {
 	self->selectedActivityId = [self getActivityId:indexPath];
 
-	self.spinner.hidden = FALSE;
-	self.spinner.center = self.view.center;
-
 	[self.spinner startAnimating];
 	[self performSegueWithIdentifier:@SEGUE_TO_ACTIVITY_SUMMARY sender:self];
 	[self.spinner stopAnimating];
@@ -293,8 +307,12 @@
 
 	// Get the activity name.
 	NSString* name = [appDelegate getActivityName:activityId];
+	if (!name)
+	{
+		name = @"";
+	}
 
-	// Get the start time.
+	// Get the start time and format it and a string.
 	time_t startTime = 0;
 	time_t endTime = 0;
 	[appDelegate getHistoricalActivityStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];

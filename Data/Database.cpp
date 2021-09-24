@@ -972,10 +972,10 @@ bool Database::RetrieveWorkoutIntervals(Workout& workout)
 			interval.m_recoveryDistance = (double)sqlite3_column_double(statement, 3);
 			interval.m_recoveryPace = (double)sqlite3_column_double(statement, 4);
 			workout.AddInterval(interval);
+			result = true;
 		}
 
 		sqlite3_finalize(statement);
-		result = true;
 	}
 	return result;
 }
@@ -1052,7 +1052,7 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 
 			plans.push_back(plan);
 		}
-		
+
 		sqlite3_finalize(statement);
 		result = true;
 	}
@@ -1250,10 +1250,10 @@ bool Database::RetrieveActivity(const std::string& activityId, ActivitySummary& 
 			summary.startTime = (time_t)sqlite3_column_int64(statement, 3);
 			summary.endTime = (time_t)sqlite3_column_int64(statement, 4);
 			summary.pActivity = NULL;
+			result = true;
 		}
 		
 		sqlite3_finalize(statement);
-		result = true;
 	}
 	return result;
 }
@@ -1372,10 +1372,10 @@ bool Database::RetrieveActivityStartAndEndTime(const std::string& activityId, ti
 		{
 			startTime = (time_t)sqlite3_column_int64(statement, 0);
 			endTime = (time_t)sqlite3_column_int64(statement, 1);
+			result = true;
 		}
-		
+
 		sqlite3_finalize(statement);
-		result = true;
 	}
 	return result;
 }
@@ -1424,11 +1424,11 @@ bool Database::RetrieveActivityName(const std::string& activityId, std::string& 
 			if (sqlite3_column_bytes(statement, 0) > 0)
 			{
 				name = (const char*)sqlite3_column_text(statement, 0);
+				result = true;
 			}
 		}
 
 		sqlite3_finalize(statement);
-		result = true;
 	}
 	return result;
 }
@@ -1462,11 +1462,11 @@ bool Database::RetrieveActivityDescription(const std::string& activityId, std::s
 			if (sqlite3_column_bytes(statement, 0) > 0)
 			{
 				description = (const char*)sqlite3_column_text(statement, 0);
+				result = true;
 			}
 		}
 		
 		sqlite3_finalize(statement);
-		result = true;
 	}
 	return result;
 }
