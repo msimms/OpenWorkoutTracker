@@ -16,6 +16,7 @@
 	IBOutlet UIButton* viewButton;
 	IBOutlet UIButton* editButton;
 	IBOutlet UIButton* resetButton;
+	IBOutlet UIActivityIndicatorView* spinner;
 
 	NSMutableArray* activityTypes;
 	NSString*       newActivityType;
@@ -34,5 +35,6 @@
 @property (nonatomic, retain) UIButton* viewButton;
 @property (nonatomic, retain) UIButton* editButton;
 @property (nonatomic, retain) UIButton* resetButton;
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 
 @end

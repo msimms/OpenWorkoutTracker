@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "MapOverviewViewController.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "Segues.h"
 
@@ -46,10 +47,14 @@
 @synthesize viewButton;
 @synthesize editButton;
 @synthesize resetButton;
+@synthesize spinner;
 
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+
+	self.spinner.hidden = FALSE;
+	self.spinner.center = self.view.center;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self->activityTypes = [appDelegate getActivityTypes];
@@ -58,6 +63,8 @@
 	[self.viewButton setTitle:BUTTON_TITLE_VIEW forState:UIControlStateNormal];
 	[self.editButton setTitle:BUTTON_TITLE_EDIT forState:UIControlStateNormal];
 	[self.resetButton setTitle:BUTTON_TITLE_RESET forState:UIControlStateNormal];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationInitialized:) name:@NOTIFICATION_NAME_APPLICATION_INITIALIZED object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -87,6 +94,12 @@
 {
 	self.navigationController.navigationBarHidden = FALSE;
 	[super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)shouldAutorotate
@@ -126,6 +139,13 @@
 		default:
 			break;
 	}
+}
+
+#pragma mark notification handlers
+
+- (void)applicationInitialized:(NSNotification*)notification
+{
+	self.spinner.hidden = TRUE;
 }
 
 #pragma mark button handlers
@@ -252,6 +272,10 @@
 
 		// Switch to the activity view.
 		[self showActivityView:activityType];
+	}
+	else
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
 	}
 }
 

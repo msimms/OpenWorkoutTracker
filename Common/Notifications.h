@@ -1,6 +1,7 @@
 // Created by Michael Simms on 7/15/12.
 // Copyright (c) 2012 Michael J. Simms. All rights reserved.
 
+#define NOTIFICATION_NAME_APPLICATION_INITIALIZED     "AppInitialized"           // the application has finished initializing
 #define NOTIFICATION_NAME_ACTIVITY_STARTED            "ActivityStarted"          // The user has started an activity
 #define NOTIFICATION_NAME_ACTIVITY_STOPPED            "ActivityStopped"          // The user has stopped an activity
 #define NOTIFICATION_NAME_FRIEND_LOCATION_UPDATED     "FriendLocationUpdated"

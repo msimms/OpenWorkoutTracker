@@ -17,6 +17,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" id="NoD-6n-lTv" userLabel="Large Activity Indicator">
+                                <rect key="frame" x="188" y="429" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Background1.png" translatesAutoresizingMaskIntoConstraints="NO" id="3MJ-dG-U6e">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
@@ -141,6 +146,7 @@
                         <outlet property="editButton" destination="XGp-p1-MzY" id="YTG-tI-5Zr"/>
                         <outlet property="navItem" destination="EAK-eB-3IZ" id="dva-VD-bp7"/>
                         <outlet property="resetButton" destination="EyH-bS-fuV" id="jME-iz-Vrx"/>
+                        <outlet property="spinner" destination="NoD-6n-lTv" id="mBO-IC-hhL"/>
                         <outlet property="startWorkoutButton" destination="e7o-Hb-o9t" id="6N8-Tm-8SK"/>
                         <outlet property="viewButton" destination="H2K-iC-FnB" id="dzv-wL-PJv"/>
                         <segue destination="0n6-g5-UTs" kind="push" identifier="SegueToComplexActivityView" id="9a3-gf-2Lj"/>
