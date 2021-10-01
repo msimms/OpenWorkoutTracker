@@ -4,3 +4,6 @@
 [submodule "LibMath"]
 	path = LibMath
 	url = https://github.com/msimms/LibMath
+[submodule "PeakFinder"]
+	path = PeakFinder
+	url = git@github.com:msimms/PeakFinder.git
