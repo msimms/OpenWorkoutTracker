@@ -74,7 +74,6 @@ typedef enum MsgDestinationType
 
 - (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_APPLICATION_INITIALIZED object:nil];
 	return YES;
 }
 
@@ -161,6 +160,8 @@ typedef enum MsgDestinationType
 	{
 		[self serverIsLoggedIn];
 	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_APPLICATION_INITIALIZED object:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication*)application

@@ -37,6 +37,24 @@
 	self.navigationController.navigationBar.translucent = NO;
 }
 
+- (void)startSpinner:(UIActivityIndicatorView*)spinner withDispatch:(BOOL)dispatch
+{
+	if (dispatch)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			spinner.hidden = FALSE;
+			spinner.center = self.view.center;
+			[spinner startAnimating];
+		});
+	}
+	else
+	{
+		spinner.hidden = FALSE;
+		spinner.center = self.view.center;
+		[spinner startAnimating];
+	}
+}
+
 - (void)initializeToolbarButtonColor
 {
 	bool isDarkModeEnabled = [self isDarkModeEnabled];

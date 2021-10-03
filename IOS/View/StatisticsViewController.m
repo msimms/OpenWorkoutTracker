@@ -67,7 +67,7 @@ typedef enum Sections
 
 	self.title = STR_SUMMARY;
 
-	[self.spinner stopAnimating];
+	[self startSpinner:self.spinner withDispatch:FALSE];
 
 	InitializeHistoricalActivityList();
 	CreateAllHistoricalActivityObjects();
@@ -256,12 +256,7 @@ typedef enum Sections
 	self->segmentNameToMap = title;
 	self->mapMode = MAP_OVERVIEW_SEGMENT_VIEW;
 
-	self.spinner.hidden = FALSE;
-	self.spinner.center = self.view.center;
-
-	[self.spinner startAnimating];
 	[self performSegueWithIdentifier:@SEGUE_TO_MAP_OVERVIEW sender:self];
-	[self.spinner stopAnimating];
 }
 
 #pragma mark called when the user selects a row

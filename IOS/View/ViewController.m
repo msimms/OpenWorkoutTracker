@@ -53,8 +53,7 @@
 {
 	[super viewDidLoad];
 
-	self.spinner.hidden = FALSE;
-	self.spinner.center = self.view.center;
+	[self startSpinner:self.spinner withDispatch:FALSE];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self->activityTypes = [appDelegate getActivityTypes];
@@ -145,7 +144,7 @@
 
 - (void)applicationInitialized:(NSNotification*)notification
 {
-	self.spinner.hidden = TRUE;
+	[self.spinner stopAnimating];
 }
 
 #pragma mark button handlers

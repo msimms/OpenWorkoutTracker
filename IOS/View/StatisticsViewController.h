@@ -7,9 +7,10 @@
 
 #import <UIKit/UIKit.h>
 #import "ActivityAttributeType.h"
+#import "CommonViewController.h"
 #import "MapOverviewViewController.h"
 
-@interface StatisticsViewController : UIViewController
+@interface StatisticsViewController : CommonViewController
 {
 	IBOutlet UIActivityIndicatorView* spinner;
 

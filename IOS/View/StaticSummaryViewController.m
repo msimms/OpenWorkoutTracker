@@ -316,8 +316,7 @@ typedef enum ExportFileTypeButtons
 - (void)redraw
 {	
 	[self.mapView setShowsUserLocation:FALSE];
-	[self.spinner stopAnimating];
-	
+
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	if (appDelegate && [appDelegate loadHistoricalActivity:self->activityId])
 	{
@@ -437,6 +436,8 @@ typedef enum ExportFileTypeButtons
 	{
 		[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOAD_FAILED];
 	}
+
+	[self.spinner stopAnimating];
 }
 
 #pragma mark utility methods
@@ -918,21 +919,15 @@ typedef enum ExportFileTypeButtons
 		case SECTION_LAP_AND_SPLIT_TIMES:
 			if (row == ROW_SPLIT_TIMES)
 			{
-				self.spinner.hidden = FALSE;
-				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_SPLIT_TIMES_VIEW sender:self];
 			}
 			else if (row == ROW_LAP_TIMES)
 			{
-				self.spinner.hidden = FALSE;
-				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_LAP_TIMES_VIEW sender:self];
 			}
 			break;
 		case SECTION_CHARTS:
 			{
-				self.spinner.hidden = FALSE;
-				[self.spinner startAnimating];
 				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
 			}
 			break;
@@ -958,8 +953,6 @@ typedef enum ExportFileTypeButtons
 		case SECTION_INTERNAL:
 			break;
 	}
-
-	[self.spinner stopAnimating];
 }
 
 #pragma mark UITableView methods

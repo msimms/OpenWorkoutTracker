@@ -74,10 +74,9 @@
 	[super viewDidLoad];
 
 	self.title = TITLE;
-	self.spinner.hidden = FALSE;
-	self.spinner.center = self.view.center;
 
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
+	[self startSpinner:self.spinner withDispatch:FALSE];
 
 	self->selectedActivityId = nil;
 	self->searching = false;
@@ -98,10 +97,10 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate initializeHistoricalActivityList];
 
-	[self.spinner startAnimating];
 	[self buildDictionary];
-	[self.spinner stopAnimating];
 	[self.historyTableView reloadData];
+
+	[self.spinner stopAnimating];
 }
 
 - (BOOL)shouldAutorotate
@@ -225,9 +224,7 @@
 {
 	self->selectedActivityId = [self getActivityId:indexPath];
 
-	[self.spinner startAnimating];
 	[self performSegueWithIdentifier:@SEGUE_TO_ACTIVITY_SUMMARY sender:self];
-	[self.spinner stopAnimating];
 }
 
 #pragma mark UITableView methods
