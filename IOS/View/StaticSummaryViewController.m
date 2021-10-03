@@ -1051,6 +1051,8 @@ typedef enum ExportFileTypeButtons
 				else
 					cell.textLabel.text = @"---";
 				cell.detailTextLabel.text = @"";
+				cell.textLabel.numberOfLines = 0;
+				cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 			}
 			break;
 		case SECTION_DESCRIPTION:
@@ -1063,6 +1065,8 @@ typedef enum ExportFileTypeButtons
 				else
 					cell.textLabel.text = @"---";
 				cell.detailTextLabel.text = @"";
+				cell.textLabel.numberOfLines = 0;
+				cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 			}
 			break;
 		case SECTION_START_AND_END_TIME:
