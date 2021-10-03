@@ -41,10 +41,10 @@ protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 
 protected:
-	LibMath::GraphLine m_graphLine;
-	LibMath::Peaks     m_peakFinder;
-	uint64_t           m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
-	uint16_t           m_stepsTaken;
+	std::vector<double> m_graphLine;
+	Peaks::Peaks        m_peakFinder;
+	uint64_t            m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
+	uint16_t            m_stepsTaken;
 
 protected:
 	void CalculateStepsTaken();

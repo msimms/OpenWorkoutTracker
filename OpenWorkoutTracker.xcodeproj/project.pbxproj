@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2704717A216D997000EE47FF /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
-		2704717B216D997000EE47FF /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047177216D997000EE47FF /* Peaks.cpp */; };
 		2704717C216D997000EE47FF /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047178216D997000EE47FF /* Distance.cpp */; };
 		2704717F216E253B00EE47FF /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
 		270547A222EE3B930071F3C2 /* WatchSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 270547A122EE3B930071F3C2 /* WatchSessionManager.m */; };
@@ -132,8 +131,6 @@
 		270CF49D2391F1B800584058 /* Double.h in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0692300165100A248BE /* Double.h */; };
 		270CF49E2391F1B800584058 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
 		270CF49F2391F1B800584058 /* KMeans.h in Sources */ = {isa = PBXBuildFile; fileRef = 2704717D216E253A00EE47FF /* KMeans.h */; };
-		270CF4A02391F1B800584058 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047177216D997000EE47FF /* Peaks.cpp */; };
-		270CF4A12391F1B800584058 /* Peaks.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047176216D997000EE47FF /* Peaks.h */; };
 		270CF4A22391F1B800584058 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
 		270CF4A32391F1B800584058 /* Statistics.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047179216D997000EE47FF /* Statistics.h */; };
 		270CF4A42392C2CD00584058 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14919BFE3B7008F8672 /* Downloader.m */; };
@@ -437,8 +434,6 @@
 		27DCF63B22B72EE0009A23C2 /* Distance.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047174216D996F00EE47FF /* Distance.h */; };
 		27DCF63C22B72EE0009A23C2 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
 		27DCF63D22B72EE0009A23C2 /* KMeans.h in Sources */ = {isa = PBXBuildFile; fileRef = 2704717D216E253A00EE47FF /* KMeans.h */; };
-		27DCF63E22B72EE0009A23C2 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047177216D997000EE47FF /* Peaks.cpp */; };
-		27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047176216D997000EE47FF /* Peaks.h */; };
 		27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
 		27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047179216D997000EE47FF /* Statistics.h */; };
 		27DCF64222B72EFA009A23C2 /* CsvFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F17319BFE48E008F8672 /* CsvFileWriter.cpp */; };
@@ -513,6 +508,9 @@
 		27F6D0792300166500A248BE /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27F6D0772300165100A248BE /* Double.cpp */; };
 		27F841B61CC33F5E00ACF409 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */; };
 		27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F841B71CC33F8000ACF409 /* libxml2.tbd */; };
+		27FB329F2707D95900C66AC2 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27FB329D2707D95900C66AC2 /* Peaks.cpp */; };
+		27FB32A02707D95900C66AC2 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27FB329D2707D95900C66AC2 /* Peaks.cpp */; };
+		27FB32A72707DC9C00C66AC2 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27FB329D2707D95900C66AC2 /* Peaks.cpp */; };
 		27FE9887265D92D7004BE31E /* AppCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE9886265D92D7004BE31E /* AppCloudService.m */; };
 		27FE988E265D9345004BE31E /* AppCloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27FE9886265D92D7004BE31E /* AppCloudService.m */; };
 /* End PBXBuildFile section */
@@ -633,8 +631,6 @@
 		2702470A2612B4F300558380 /* TrainingIntensityDistType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingIntensityDistType.h; path = Activities/TrainingIntensityDistType.h; sourceTree = SOURCE_ROOT; };
 		27047174216D996F00EE47FF /* Distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Distance.h; path = LibMath/cpp/Distance.h; sourceTree = SOURCE_ROOT; };
 		27047175216D997000EE47FF /* Statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Statistics.cpp; path = LibMath/cpp/Statistics.cpp; sourceTree = SOURCE_ROOT; };
-		27047176216D997000EE47FF /* Peaks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Peaks.h; path = LibMath/cpp/Peaks.h; sourceTree = SOURCE_ROOT; };
-		27047177216D997000EE47FF /* Peaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Peaks.cpp; path = LibMath/cpp/Peaks.cpp; sourceTree = SOURCE_ROOT; };
 		27047178216D997000EE47FF /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = LibMath/cpp/Distance.cpp; sourceTree = SOURCE_ROOT; };
 		27047179216D997000EE47FF /* Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Statistics.h; path = LibMath/cpp/Statistics.h; sourceTree = SOURCE_ROOT; };
 		2704717D216E253A00EE47FF /* KMeans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KMeans.h; path = LibMath/cpp/KMeans.h; sourceTree = SOURCE_ROOT; };
@@ -1091,6 +1087,8 @@
 		27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		27F841B71CC33F8000ACF409 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		27F9C33E232C08380077BE2A /* WatchMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchMessages.h; path = Common/WatchMessages.h; sourceTree = SOURCE_ROOT; };
+		27FB329D2707D95900C66AC2 /* Peaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Peaks.cpp; path = PeakFinder/cpp/Peaks.cpp; sourceTree = SOURCE_ROOT; };
+		27FB329E2707D95900C66AC2 /* Peaks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Peaks.h; path = PeakFinder/cpp/Peaks.h; sourceTree = SOURCE_ROOT; };
 		27FE9879265D92D7004BE31E /* AppCloudService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppCloudService.h; path = Cloud/AppCloud/AppCloudService.h; sourceTree = SOURCE_ROOT; };
 		27FE9886265D92D7004BE31E /* AppCloudService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppCloudService.m; path = Cloud/AppCloud/AppCloudService.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -1143,8 +1141,6 @@
 				27F6D0692300165100A248BE /* Double.h */,
 				2704717E216E253B00EE47FF /* KMeans.cpp */,
 				2704717D216E253A00EE47FF /* KMeans.h */,
-				27047177216D997000EE47FF /* Peaks.cpp */,
-				27047176216D997000EE47FF /* Peaks.h */,
 				276526E125BB9345003AA2D5 /* Signals.cpp */,
 				276526E225BB9345003AA2D5 /* Signals.h */,
 				27047175216D997000EE47FF /* Statistics.cpp */,
@@ -1471,6 +1467,7 @@
 				2797F17219BFE47A008F8672 /* FileLib */,
 				27047166216D98F200EE47FF /* LibMath */,
 				27B7CDD719BFD987000383E3 /* Sensors */,
+				27FB32902707D40400C66AC2 /* PeakFinder */,
 				27B7CD2519BFD887000383E3 /* Units */,
 				2797F13919BFE2B0008F8672 /* Utilities */,
 				2797F15619BFE3E8008F8672 /* User */,
@@ -1846,6 +1843,16 @@
 			path = Shoes;
 			sourceTree = "<group>";
 		};
+		27FB32902707D40400C66AC2 /* PeakFinder */ = {
+			isa = PBXGroup;
+			children = (
+				27FB329D2707D95900C66AC2 /* Peaks.cpp */,
+				27FB329E2707D95900C66AC2 /* Peaks.h */,
+			);
+			name = PeakFinder;
+			path = OpenWorkoutTracker/PeakFinder;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2144,8 +2151,6 @@
 				270CF49E2391F1B800584058 /* KMeans.cpp in Sources */,
 				270CF49F2391F1B800584058 /* KMeans.h in Sources */,
 				2741B53625D22D2C00A43A63 /* StrainCalculator.cpp in Sources */,
-				270CF4A02391F1B800584058 /* Peaks.cpp in Sources */,
-				270CF4A12391F1B800584058 /* Peaks.h in Sources */,
 				270CF4A22391F1B800584058 /* Statistics.cpp in Sources */,
 				270CF4A32391F1B800584058 /* Statistics.h in Sources */,
 				270CF4952391F18900584058 /* ActivityLevel.h in Sources */,
@@ -2181,6 +2186,7 @@
 				27F4241123A46A5E00F59F50 /* PoolSwim.cpp in Sources */,
 				270CF4852391F0BB00584058 /* XmlFileReader.cpp in Sources */,
 				270CF4862391F0BB00584058 /* XmlFileReader.h in Sources */,
+				27FB32A72707DC9C00C66AC2 /* Peaks.cpp in Sources */,
 				270CF4872391F0BB00584058 /* XmlFileWriter.cpp in Sources */,
 				270CF4A42392C2CD00584058 /* Downloader.m in Sources */,
 				270CF4882391F0BB00584058 /* XmlFileWriter.h in Sources */,
@@ -2315,10 +2321,10 @@
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
 				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
 				27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */,
-				2704717B216D997000EE47FF /* Peaks.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
 				27B7CDC319BFD953000383E3 /* AccelerometerLine.m in Sources */,
 				27E3021C24F0976D00EB5501 /* WorkoutFactory.cpp in Sources */,
+				27FB329F2707D95900C66AC2 /* Peaks.cpp in Sources */,
 				27B7CD9719BFD91C000383E3 /* LapTimesViewController.m in Sources */,
 				27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */,
 				2704717A216D997000EE47FF /* Statistics.cpp in Sources */,
@@ -2494,8 +2500,6 @@
 				27DCF63C22B72EE0009A23C2 /* KMeans.cpp in Sources */,
 				27DCF68B22C2E527009A23C2 /* ActivityPreferences.m in Sources */,
 				27DCF63D22B72EE0009A23C2 /* KMeans.h in Sources */,
-				27DCF63E22B72EE0009A23C2 /* Peaks.cpp in Sources */,
-				27DCF63F22B72EE0009A23C2 /* Peaks.h in Sources */,
 				27DCF64022B72EE0009A23C2 /* Statistics.cpp in Sources */,
 				27DCF64122B72EE0009A23C2 /* Statistics.h in Sources */,
 				27DCF63022B716CB009A23C2 /* Database.cpp in Sources */,
@@ -2539,6 +2543,7 @@
 				27DCF68522C29577009A23C2 /* Accelerometer.m in Sources */,
 				27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */,
 				27DCF60E22B71628009A23C2 /* GForceAnalyzerFactory.h in Sources */,
+				27FB32A02707D95900C66AC2 /* Peaks.cpp in Sources */,
 				27F3E7AC25BCFF41001D3CCE /* CloudPreferences.m in Sources */,
 				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,
 				27DCF61022B71628009A23C2 /* Hike.h in Sources */,

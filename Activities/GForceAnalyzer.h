@@ -14,8 +14,8 @@
 #include "Peaks.h"
 #include "SensorReading.h"
 
-typedef std::map<std::string, LibMath::GraphPeakList> GraphPeakListMap;
-typedef std::map<std::string, LibMath::GraphLine> GraphLineMap;
+typedef std::map<std::string, Peaks::GraphPeakList> GraphPeakListMap;
+typedef std::map<std::string, Peaks::GraphLine> GraphLineMap;
 typedef std::vector<std::string> AxisList;
 
 /**
@@ -31,17 +31,17 @@ public:
 
 	void Clear();
 
-	LibMath::GraphPeakList ProcessAccelerometerReading(const SensorReading& reading);
+	Peaks::GraphPeakList ProcessAccelerometerReading(const SensorReading& reading);
 
 	virtual std::string PrimaryAxis() const = 0;
 	virtual std::string SecondaryAxis() const = 0;
 
 protected:
-	GraphPeakListMap       m_peaks;
-	GraphLineMap           m_graphLines;
-	LibMath::Peaks         m_peakFinder;
-	LibMath::GraphPeakList m_dataPeaks;
-	uint64_t               m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
+	GraphPeakListMap     m_peaks;
+	GraphLineMap         m_graphLines;
+	Peaks::Peaks         m_peakFinder;
+	Peaks::GraphPeakList m_dataPeaks;
+	uint64_t             m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
 };
 
 #endif

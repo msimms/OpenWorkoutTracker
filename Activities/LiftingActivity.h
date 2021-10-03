@@ -47,12 +47,12 @@ public:
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
 
 protected:
-	GForceAnalyzer* m_analyzer;
-	LibMath::GraphPeakList m_computedRepList;
-	uint16_t m_repsCorrected;
-	uint16_t m_sets;
-	uint64_t m_lastRepTime;
-	uint64_t m_restingTimeMs;
+	GForceAnalyzer*      m_analyzer;
+	Peaks::GraphPeakList m_computedRepList;
+	uint16_t             m_repsCorrected;
+	uint16_t             m_sets;
+	uint64_t             m_lastRepTime;
+	uint64_t             m_restingTimeMs;
 
 protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);

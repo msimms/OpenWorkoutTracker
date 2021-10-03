@@ -13,8 +13,8 @@
 
 #include <math.h>
 
-bool GraphPeakLessThan(LibMath::GraphPeak i, LibMath::GraphPeak j) { return (i < j); }
-bool GraphPeakGreaterThan(LibMath::GraphPeak i, LibMath::GraphPeak j) { return (i > j); }
+bool GraphPeakLessThan(Peaks::GraphPeak i, Peaks::GraphPeak j) { return (i < j); }
+bool GraphPeakGreaterThan(Peaks::GraphPeak i, Peaks::GraphPeak j) { return (i > j); }
 
 GForceAnalyzer::GForceAnalyzer()
 {
@@ -27,12 +27,12 @@ GForceAnalyzer::~GForceAnalyzer()
 
 void GForceAnalyzer::Clear()
 {
-	LibMath::GraphLine x, y, z;
+	Peaks::GraphLine x, y, z;
 	m_graphLines[AXIS_NAME_X] = x;
 	m_graphLines[AXIS_NAME_Y] = y;
 	m_graphLines[AXIS_NAME_Z] = z;
 
-	LibMath::GraphPeakList xPeaks, yPeaks, zPeaks;
+	Peaks::GraphPeakList xPeaks, yPeaks, zPeaks;
 	m_peaks[AXIS_NAME_X] = xPeaks;
 	m_peaks[AXIS_NAME_Y] = yPeaks;
 	m_peaks[AXIS_NAME_Z] = zPeaks;
@@ -41,26 +41,20 @@ void GForceAnalyzer::Clear()
 	m_lastPeakCalculationTime = 0;
 }
 
-LibMath::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorReading& reading)
+Peaks::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorReading& reading)
 {
 	try
 	{
 		const std::string& axisName = PrimaryAxis();
 		uint64_t timeSinceLastCalc = m_lastPeakCalculationTime - reading.time;
 		double value = reading.reading.at(axisName);
-
-		//
-		// Make the value bigger. This will also get rid of any negatives.
-		//
-
-		value = value + 10.0;
+		Peaks::GraphLine& line = m_graphLines.at(axisName);
 
 		//
 		// Append the value to the data line for this axis.
 		//
 
-		LibMath::GraphLine& line = m_graphLines.at(axisName);
-		line.push_back(LibMath::GraphPoint(reading.time, value));
+		line.push_back(Peaks::GraphPoint(reading.time, value));
 
 		//
 		// To save processor time, only analyze the data, at most, once per second.
@@ -72,7 +66,7 @@ LibMath::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorR
 			// Locate all statistically significant peaks on this axis.
 			//
 
-			LibMath::GraphPeakList peaks = m_peakFinder.findPeaks(line, (double)0.2);
+			Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverThreshold(line, (double)0.0);
 			m_peaks[axisName] = peaks;
 
 			//
@@ -93,10 +87,10 @@ LibMath::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorR
 			// If there isn't much variation in the data then skip k-means and assume all the peaks are significant.
 			//
 
-			size_t areasCount = 0;
 			double* areas = new double[peaks.size()];
 			if (areas)
 			{
+				size_t areasCount = 0;
 				double areasMean = 0.0;
 				for (auto primaryPeakIter = peaks.begin(); primaryPeakIter != peaks.end(); ++primaryPeakIter, ++areasCount)
 				{
@@ -108,7 +102,7 @@ LibMath::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorR
 				double areasStdDev = LibMath::Statistics::standardDeviation(areas, areasCount, areasMean);
 
 				//
-				// The peaks are all pretty similar, so we'll assume they're all meaningful.
+				// If the peaks are all pretty similar, so we'll assume they're all meaningful.
 				//
 
 				if (areasStdDev < 1.0)
@@ -117,7 +111,7 @@ LibMath::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorR
 				}
 
 				//
-				// There's a wide range of variation in the peaks, do a k-means analysis so we can get rid of any outliers.
+				// If there's a wide range of variation in the peaks, do a k-means analysis so we can get rid of any outliers.
 				//
 
 				else

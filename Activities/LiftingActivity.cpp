@@ -59,14 +59,16 @@ bool LiftingActivity::ProcessAccelerometerReading(const SensorReading& reading)
 	{
 		if (m_analyzer)
 		{
+			// Extract peaks.
 			m_computedRepList = m_analyzer->ProcessAccelerometerReading(reading);
+
+			// Update time of last rep and last set completion, and also the set count.
 			m_sets = 0;
 			m_lastRepTime = 0;
 			m_restingTimeMs = 0;
-
 			for (auto peakIter = m_computedRepList.begin(); peakIter != m_computedRepList.end(); ++peakIter)
 			{
-				LibMath::GraphPeak& curPeak = (*peakIter);
+				Peaks::GraphPeak& curPeak = (*peakIter);
 				uint64_t currentRepTime = curPeak.peak.x;
 				uint64_t timeSinceLastRep = currentRepTime - m_lastRepTime;
 
@@ -139,7 +141,7 @@ ActivityAttributeType LiftingActivity::QueryActivityAttribute(const std::string&
 			
 			if ((num > 0) && (num <= m_computedRepList.size()))
 			{
-				LibMath::GraphPeak peak = m_computedRepList.at(num - 1);
+				Peaks::GraphPeak peak = m_computedRepList.at(num - 1);
 				result.valueType = TYPE_INTEGER;
 				result.measureType = MEASURE_INDEX;
 				result.value.intVal = 0;

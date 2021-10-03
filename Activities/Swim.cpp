@@ -44,8 +44,8 @@ bool Swim::ProcessAccelerometerReading(const SensorReading& reading)
 	{
 		if (reading.reading.count(AXIS_NAME_Y) > 0)
 		{
-			m_graphLine.push_back(LibMath::GraphPoint(reading.time, reading.reading.at(AXIS_NAME_Y)));
-			
+			m_graphLine.push_back(reading.reading.at(AXIS_NAME_Y));
+
 			time_t endTime = GetEndTimeSecs();
 			if (endTime == 0) // Activity is in progress; if loading from the database we'll do all the calculations at the end.
 			{
@@ -100,6 +100,11 @@ void Swim::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 
 void Swim::CalculateStrokesTaken()
 {
-	LibMath::GraphPeakList peaks = m_peakFinder.findPeaksOfSize(m_graphLine, (double)40.0);
-	m_strokesTaken = peaks.size();
+	Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverThreshold(m_graphLine, (double)0.0);
+	m_strokesTaken = 0;
+	for (auto iter = peaks.begin(); iter != peaks.end(); ++iter)
+	{
+		if ((*iter).area >= (double)40.0)
+			++m_strokesTaken;
+	}
 }
