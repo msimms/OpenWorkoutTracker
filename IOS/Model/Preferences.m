@@ -448,8 +448,12 @@
 	{
 		if ([key isEqualToString:@PREF_NAME_UNITS])
 		{
-			UnitSystem value = (UnitSystem)[prefs objectForKey:key];
-			[Preferences setPreferredUnitSystem:value];
+			id tempValue = [prefs objectForKey:key];
+			if (tempValue)
+			{
+				UnitSystem value = (UnitSystem)tempValue;
+				[Preferences setPreferredUnitSystem:value];
+			}
 		}
 		else if ([key isEqualToString:@PREF_NAME_SCAN_FOR_SENSORS])
 		{
