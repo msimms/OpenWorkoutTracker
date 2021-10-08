@@ -112,7 +112,6 @@
 
 // hash methods
 
-- (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
 - (NSString*)retrieveHashForActivityId:(NSString*)activityId;
 - (NSString*)retrieveActivityIdByHash:(NSString*)activityHash;

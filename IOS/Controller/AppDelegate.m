@@ -2024,18 +2024,6 @@ void startSensorCallback(SensorType type, void* context)
 	return result;
 }
 
-- (NSString*)hashActivityWithId:(NSString*)activityId
-{
-	ActivityHash* hash = [[ActivityHash alloc] init];
-	NSString* hashStr = [hash calculateWithActivityId:activityId];
-
-	if (hashStr)
-	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
-	}
-	return hashStr;
-}
-
 - (NSString*)hashCurrentActivity
 {
 	ActivityHash* hash = [[ActivityHash alloc] init];

@@ -649,18 +649,6 @@ void syncStatusCallback(const char* const destination, void* context)
 
 #pragma mark hash methods
 
-- (NSString*)hashActivityWithId:(NSString*)activityId
-{
-	ActivityHash* hash = [[ActivityHash alloc] init];
-	NSString* hashStr = [hash calculateWithActivityId:activityId];
-
-	if (hashStr)
-	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
-	}
-	return hashStr;
-}
-
 - (NSString*)hashCurrentActivity
 {
 	ActivityHash* hash = [[ActivityHash alloc] init];

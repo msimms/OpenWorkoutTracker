@@ -179,7 +179,6 @@
 // hash methods
 
 - (NSString*)getActivityHash:(NSString*)activityId;
-- (NSString*)hashActivityWithId:(NSString*)activityId;
 - (NSString*)hashCurrentActivity;
 
 // methods for managing bike profiles
