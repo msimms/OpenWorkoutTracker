@@ -12,10 +12,13 @@
 {
 	IBOutlet UINavigationItem* navItem;
 	IBOutlet UIToolbar*        toolbar;
+	
+	int spinCount;
 }
 
 - (void)initializeNavButtonColor;
 - (void)startSpinner:(UIActivityIndicatorView*)spinner withDispatch:(BOOL)dispatch;
+- (void)stopSpinner:(UIActivityIndicatorView*)spinner;
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg;
 - (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate;
 - (UIImage*)activityTypeToIcon:(NSString*)activityType;

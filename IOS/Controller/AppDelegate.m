@@ -160,8 +160,6 @@ typedef enum MsgDestinationType
 	{
 		[self serverIsLoggedIn];
 	}
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_APPLICATION_INITIALIZED object:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication*)application

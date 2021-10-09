@@ -79,7 +79,7 @@ typedef enum Sections
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.spinner stopAnimating];
+	[self stopSpinner:self.spinner];
 }
 
 - (BOOL)shouldAutorotate

@@ -76,6 +76,8 @@
 		[super showOneButtonAlert:STR_CAUTION withMsg:MSG_FIRST_TIME_USING];
 		[Preferences setHashShownFirstTimeUseMessage:TRUE];
 	}
+
+	[self stopSpinner:self.spinner];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -144,7 +146,7 @@
 
 - (void)applicationInitialized:(NSNotification*)notification
 {
-	[self.spinner stopAnimating];
+	[self stopSpinner:self.spinner];
 }
 
 #pragma mark button handlers

@@ -100,7 +100,7 @@
 	[self buildDictionary];
 	[self.historyTableView reloadData];
 
-	[self.spinner stopAnimating];
+	[self stopSpinner:self.spinner];
 }
 
 - (BOOL)shouldAutorotate

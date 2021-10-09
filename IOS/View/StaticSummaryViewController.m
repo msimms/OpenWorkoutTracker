@@ -437,7 +437,7 @@ typedef enum ExportFileTypeButtons
 		[super showOneButtonAlert:STR_ERROR withMsg:MSG_LOAD_FAILED];
 	}
 
-	[self.spinner stopAnimating];
+	[self stopSpinner:self.spinner];
 }
 
 #pragma mark utility methods

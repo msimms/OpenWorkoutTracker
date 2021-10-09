@@ -20,6 +20,8 @@
 
 	[self initializeNavButtonColor];
 	[self initializeToolbarButtonColor];
+	
+	self->spinCount = 0;
 }
 
 - (void)initializeNavButtonColor
@@ -39,20 +41,30 @@
 
 - (void)startSpinner:(UIActivityIndicatorView*)spinner withDispatch:(BOOL)dispatch
 {
-	if (dispatch)
+	if (self->spinCount == 0)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^{
+		if (dispatch)
+		{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				spinner.hidden = FALSE;
+				spinner.center = self.view.center;
+				[spinner startAnimating];
+			});
+		}
+		else
+		{
 			spinner.hidden = FALSE;
 			spinner.center = self.view.center;
 			[spinner startAnimating];
-		});
+		}
 	}
-	else
-	{
-		spinner.hidden = FALSE;
-		spinner.center = self.view.center;
-		[spinner startAnimating];
-	}
+	self->spinCount++;
+}
+
+- (void)stopSpinner:(UIActivityIndicatorView*)spinner
+{
+	[spinner stopAnimating];
+	self->spinCount--;
 }
 
 - (void)initializeToolbarButtonColor
