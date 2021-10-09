@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1080,7 +1080,6 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YfA-XP-cLf"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="j0C-0N-T2k" firstAttribute="baseline" secondItem="Xsd-KW-cey" secondAttribute="baseline" id="1XJ-yc-lyF"/>
@@ -1462,7 +1461,6 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="QwQ-sg-mIp"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="GwT-k9-o3L" firstAttribute="top" secondItem="QwQ-sg-mIp" secondAttribute="top" id="0Ej-vF-4P2"/>
@@ -1738,7 +1736,6 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="jKC-D5-5LH"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="IsL-dv-F2Z" firstAttribute="leading" secondItem="Eg5-L5-zFn" secondAttribute="leading" id="0Ii-Oq-dJW"/>
@@ -2974,9 +2971,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ksp-tA-xd6"/>
-        <segue reference="Zfp-Rg-OxX"/>
-        <segue reference="1Bm-YM-doO"/>
-        <segue reference="8pE-cX-Fug"/>
+        <segue reference="cVH-8j-NfP"/>
+        <segue reference="fz0-Br-1wA"/>
+        <segue reference="kzb-01-qIL"/>
         <segue reference="mpc-lI-yFA"/>
     </inferredMetricsTieBreakers>
     <resources>
