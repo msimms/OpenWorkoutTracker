@@ -22,9 +22,6 @@
 
 #define BUTTON_TITLE_SCAN           NSLocalizedString(@"Scan", nil)
 
-#define CONNECTED                   NSLocalizedString(@"Connected", nil)
-#define NOT_CONNECTED               NSLocalizedString(@"Not Connected", nil)
-
 #define MESSAGE_BT_POWERED_OFF      NSLocalizedString(@"Bluetooth is powered off. Turn Bluetooth on to scan for sensors.", nil)
 #define MESSAGE_NO_BT_SMART         NSLocalizedString(@"Your device does not support Bluetooth Smart, which is required for this feature.", nil)
 
@@ -280,11 +277,11 @@ typedef enum SettingsSections
 			numRows = [self->connectedScales count];
 			break;
 		case SECTION_LIGHT:
-			self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_LIGHT];
+			self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_FLY6_LIGHT];
 			numRows = [self->connectedLights count];
 			break;
 		case SECTION_RADAR:
-			self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_RADAR];
+			self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_VARIA_RADAR];
 			numRows = [self->connectedRadarUnits count];
 			break;
 	}

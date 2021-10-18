@@ -28,21 +28,20 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 {
-	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
+	SensorMgr*           sensorMgr;             // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
 	BtleDiscovery*       bluetoothDeviceFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
-	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
-	ActivityPreferences* activityPrefs; // For managing activity-related preferences.
+	CloudMgr*            cloudMgr;              // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
+	ActivityPreferences* activityPrefs;         // For managing activity-related preferences.
 #if !OMIT_BROADCAST
-	BroadcastManager*    broadcastMgr; // For sending data to the cloud service.
-	MultipeerSession*    multipeerSession; // Handles peer-to-peer connections.
+	BroadcastManager*    broadcastMgr;          // For sending data to the cloud service.
+	MultipeerSession*    multipeerSession;      // Handles peer-to-peer connections.
 #endif
-	HealthManager*       healthMgr; // Interfaces with Apple HealthKit.
-	NSTimer*             intervalTimer; // Timer that fires when it's time to advance to the next part of an interval workout.
-	WCSession*           watchSession; // Interfaces with the watch app.
-	BOOL                 badLocationData; // TRUE if we're getting location data that doesn't look good.
-	BOOL                 currentlyImporting; // TRUE if currently importing an activity (like from the watch, for example).
-	size_t               currentActivityIndex; // Used when iterating over historical activities.
-	time_t               lastServerSync; // Timestamp of the last time we synchronized with the server (if logged in, of course).
+	HealthManager*       healthMgr;             // Interfaces with Apple HealthKit.
+	NSTimer*             intervalTimer;         // Timer that fires when it's time to advance to the next part of an interval workout.
+	WCSession*           watchSession;          // Interfaces with the watch app.
+	BOOL                 currentlyImporting;    // TRUE if currently importing an activity (like from the watch, for example).
+	size_t               currentActivityIndex;  // Used when iterating over historical activities.
+	time_t               lastServerSync;        // Timestamp of the last time we synchronized with the server (if logged in, of course).
 }
 
 - (NSString*)getDeviceId;
@@ -283,7 +282,6 @@
 // utility methods
 
 - (void)setScreenLocking;
-- (BOOL)hasBadLocationData;
 
 // unit conversion methods
 

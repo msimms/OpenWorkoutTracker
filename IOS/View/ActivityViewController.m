@@ -163,6 +163,9 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutComplete:) name:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(printMessage:) name:@NOTIFICATION_NAME_PRINT_MESSAGE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastStatus:) name:@NOTIFICATION_NAME_BROADCAST_STATUS object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(badLocationDataReceived:) name:@NOTIFICATION_NAME_BAD_LOCATION_DATA_DETECTED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sensorConnected:) name:@NOTIFICATION_NAME_SENSOR_CONNECTED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sensorDisconnected:) name:@NOTIFICATION_NAME_SENSOR_DISCONNECTED object:nil];
 
 	[self initializeToolbarButtonColor];
 	[self startTimer];
@@ -875,31 +878,6 @@
 
 - (void)locationUpdated:(NSNotification*)notification
 {
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
-	if ([appDelegate hasBadLocationData])
-	{
-		@synchronized(self->messages)
-		{
-			bool found = false;
-			NSString* msg = [[NSString alloc] initWithString:MESSAGE_BAD_LOCATION];
-
-			for (NSString* tempMsg in self->messages)
-			{
-				if ([tempMsg isEqualToString:msg])
-				{
-					found = true;
-					break;
-				}
-			}
-
-			if (!found)
-			{
-				[self->messages addObject:msg];
-			}
-		}
-	}
-	
 	if (IsAutoStartEnabled())
 	{
 		NSDictionary* locationData = [notification object];
@@ -1137,6 +1115,69 @@
 		else
 		{
 			self->currentBroadcastStatus = status;
+		}
+	}
+}
+
+- (void)badLocationDataReceived:(NSNotification*)notification
+{
+	@synchronized(self->messages)
+	{
+		bool found = false;
+		NSString* msg = [[NSString alloc] initWithString:MESSAGE_BAD_LOCATION];
+
+		for (NSString* tempMsg in self->messages)
+		{
+			if ([tempMsg isEqualToString:msg])
+			{
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			[self->messages addObject:msg];
+		}
+	}
+}
+
+- (void)sensorConnected:(NSNotification*)notification
+{
+	NSDictionary* msgData = [notification object];
+
+	if (msgData)
+	{
+		NSString* sensorName = [msgData objectForKey:@KEY_NAME_SENSOR_NAME];
+
+		if (sensorName)
+		{
+			NSString* msg = [sensorName stringByAppendingFormat:@" %@", STR_CONNECTED];
+
+			@synchronized(self->messages)
+			{
+				[self->messages addObject:msg];
+			}
+		}
+	}
+}
+
+- (void)sensorDisconnected:(NSNotification*)notification
+{
+	NSDictionary* msgData = [notification object];
+
+	if (msgData)
+	{
+		NSString* sensorName = [msgData objectForKey:@KEY_NAME_SENSOR_NAME];
+
+		if (sensorName)
+		{
+			NSString* msg = [sensorName stringByAppendingFormat:@" %@", STR_NOT_CONNECTED];
+
+			@synchronized(self->messages)
+			{
+				[self->messages addObject:msg];
+			}
 		}
 	}
 }

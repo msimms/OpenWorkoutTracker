@@ -123,7 +123,7 @@ typedef struct RadarMeasurement
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
 	// Radar service.
-	if ([self serviceEquals:service withCustomService:@CUSTOM_BT_SERVICE_RADAR])
+	if ([self serviceEquals:service withCustomService:@CUSTOM_BT_SERVICE_VARIA_RADAR])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{

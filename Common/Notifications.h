@@ -9,6 +9,8 @@
 #define NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED    "PlannedWorkoutsUpdated"   // The planned workouts list from the (optional) server was updated
 #define NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED     "PlannedWorkoutUpdated"    // A planned workout from the (optional) server was updated
 #define NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED    "IntervalWorkoutUpdated"   // The interval workouts list from the (optional) server was updated
+#define NOTIFICATION_NAME_INTERVAL_UPDATED            "IntervalUpdated"
+#define NOTIFICATION_NAME_INTERVAL_COMPLETE           "IntervalComplete"
 #define NOTIFICATION_NAME_PACE_PLANS_UPDATED          "PacePlansUpdated"         // The pace plans list from the (optional) server was updated
 #define NOTIFICATION_NAME_FRIENDS_LIST_UPDATED        "FriendsListUpdated"       // The friends list from the (optional) server was updated
 #define NOTIFICATION_NAME_LOGIN_PROCESSED             "LoginProcessed"           // The (optional) server responded to a login attempt
@@ -22,7 +24,11 @@
 #define NOTIFICATION_NAME_ACTIVITY_METADATA           "ActivityMetadata"         // The (optional) server returned activity metadata
 #define NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY "BroadcastMgrSentActivity"
 #define NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY     "ReceivedWatchActivity"    // An activity was received from the watch
+#define NOTIFICATION_NAME_BAD_LOCATION_DATA_DETECTED  "BadLocationDataDetected"  // Invalid location data was detected
+#define NOTIFICATION_NAME_SENSOR_CONNECTED            "SensorConnected"          // A peripheral sensor connected
+#define NOTIFICATION_NAME_SENSOR_DISCONNECTED         "SensorDisconnected"       // A peripheral sensor disconnected
 
+// Parameters that are associated with the notifications
 #define KEY_NAME_ACTIVITY_ID                          "ActivityId"
 #define KEY_NAME_ACTIVITY_TYPE                        "ActivityType"
 #define KEY_NAME_ACTIVITY_HASH                        "ActivityHash"
@@ -38,10 +44,7 @@
 #define KEY_NAME_TAG                                  "Tag"
 #define KEY_NAME_MESSAGE                              "Message"
 #define KEY_NAME_STATUS                               "Status"
-
-#define NOTIFICATION_NAME_INTERVAL_UPDATED            "IntervalUpdated"
-#define NOTIFICATION_NAME_INTERVAL_COMPLETE           "IntervalComplete"
-
+#define KEY_NAME_SENSOR_NAME                          "SensorName"
 #define KEY_NAME_DEVICE_ID                            "DeviceId"
 #define KEY_NAME_USER_NAME                            "Name"
 #define KEY_NAME_INTERVAL_SEGMENT                     "IntervalSegment"

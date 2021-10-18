@@ -101,6 +101,9 @@
 #define STR_LOGIN                 NSLocalizedString(@"Login", nil)
 #define STR_LOGOUT                NSLocalizedString(@"Log Out", nil)
 
+#define STR_CONNECTED             NSLocalizedString(@"Connected", nil)
+#define STR_NOT_CONNECTED         NSLocalizedString(@"Not Connected", nil)
+
 #define STR_RESET_PREFS           NSLocalizedString(@"Reset Settings", nil)
 #define STR_RESET_DATA            NSLocalizedString(@"Reset Data", nil)
 

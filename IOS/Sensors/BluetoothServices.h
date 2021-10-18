@@ -52,7 +52,8 @@ typedef enum BluetoothServiceId
 	BT_SERVICE_WEIGHT =                        0x1901
 } BluetoothServiceId;
 
-#define CUSTOM_BT_SERVICE_LIGHT "f000dd03-0451-4000-b000-000000000000" // Fly6 Light
-#define CUSTOM_BT_SERVICE_RADAR "6a4e3200-667b-11e3-949a-0800200c9a66" // Garmin Varia
+#define CUSTOM_BT_SERVICE_FLY6_LIGHT "f000dd03-0451-4000-b000-000000000000" // Fly6 Light
+#define CUSTOM_BT_SERVICE_KTV_LIGHT "29580001-d281-83bd-bc46-ad9b5bb78380" // Lezyne KTV Light
+#define CUSTOM_BT_SERVICE_VARIA_RADAR "6a4e3200-667b-11e3-949a-0800200c9a66" // Garmin Varia
 
 #endif

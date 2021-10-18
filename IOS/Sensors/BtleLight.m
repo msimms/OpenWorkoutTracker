@@ -62,7 +62,7 @@
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
 {
 	// Light service.
-	if ([self serviceEquals:service withCustomService:@CUSTOM_BT_SERVICE_LIGHT])
+	if ([self serviceEquals:service withCustomService:@CUSTOM_BT_SERVICE_FLY6_LIGHT])
 	{
 		for (CBCharacteristic* aChar in service.characteristics)
 		{

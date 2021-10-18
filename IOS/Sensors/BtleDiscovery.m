@@ -58,6 +58,7 @@
 #import "BtleFootPod.h"
 #import "BtleHeartRateMonitor.h"
 #import "BtlePowerMeter.h"
+#import "Notifications.h"
 #import "Preferences.h"
 #import "SensorFactory.h"
 
@@ -271,12 +272,18 @@
 {
 	[peripheral discoverServices:nil];
 	[self refreshDelegates];
+
+//	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:[peripheral name], @KEY_NAME_SENSOR_NAME, nil];
+//	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_SENSOR_CONNECTED object:msgData];
 }
 
 - (void)centralManager:(CBCentralManager*)central didDisconnectPeripheral:(CBPeripheral*)peripheral error:(NSError*)error
 {
 	[self removeConnectedPeripheral:peripheral];
 	[self refreshDelegates];
+
+	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:[peripheral name], @KEY_NAME_SENSOR_NAME, nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_SENSOR_DISCONNECTED object:msgData];
 }
 
 - (void)centralManager:(CBCentralManager*)central didDiscoverPeripheral:(CBPeripheral*)peripheral advertisementData:(NSDictionary*)advertisementData RSSI:(NSNumber*)RSSI
@@ -353,8 +360,8 @@
 			self->scanTimer = NULL;
 			break;
 		case CBManagerStatePoweredOn:
-			self->scanTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 3.0]
-													   interval:1
+			self->scanTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:3.0]
+													   interval:3
 														 target:self
 													   selector:@selector(onScanTimer:)
 													   userInfo:nil
@@ -420,11 +427,15 @@
 				{
 					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
 				}
-				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_LIGHT]])
+				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_FLY6_LIGHT]])
 				{
 					sensor = [[[SensorFactory alloc] init] createLightSensor:peripheral];
 				}
-				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_RADAR]])
+				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_KTV_LIGHT]])
+				{
+					sensor = [[[SensorFactory alloc] init] createLightSensor:peripheral];
+				}
+				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_VARIA_RADAR]])
 				{
 					sensor = [[[SensorFactory alloc] init] createRadarSensor:peripheral];
 				}

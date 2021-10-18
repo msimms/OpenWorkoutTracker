@@ -109,7 +109,6 @@ typedef enum MsgDestinationType
 
 	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->currentlyImporting = FALSE;
-	self->badLocationData = FALSE;
 	self->currentActivityIndex = 0;
 	self->lastServerSync = 0;
 
@@ -799,7 +798,7 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			BOOL invalidLocationData = FALSE;
 			BOOL invalidAltitudeData = FALSE;
-			BOOL tempBadLocationData = FALSE;
+			BOOL locationDataOutOfBounds = FALSE;
 
 			// Horizontal accuracy. Per the documentation, a value of less than 0 indicates the value is completely invalid.
 			// Otherwise, compare it against our own thresholds.
@@ -811,11 +810,12 @@ void startSensorCallback(SensorType type, void* context)
 			else
 			{
 				uint8_t minHorizAccuracy = [self->activityPrefs getMinLocationHorizontalAccuracy:activityType];
+
 				if (minHorizAccuracy != (uint8_t)-1)
 				{
 					if (minHorizAccuracy != 0 && horizAccuracy > (double)minHorizAccuracy)
 					{
-						tempBadLocationData = TRUE;
+						locationDataOutOfBounds = TRUE;
 					}
 				}
 			}
@@ -830,24 +830,29 @@ void startSensorCallback(SensorType type, void* context)
 			else
 			{
 				uint8_t minVertAccuracy = [self->activityPrefs getMinLocationVerticalAccuracy:activityType];
+
 				if (minVertAccuracy != (uint8_t)-1)
 				{
 					if (minVertAccuracy != 0 && vertAccuracy > (double)minVertAccuracy)
 					{
-						tempBadLocationData = TRUE;
+						locationDataOutOfBounds = TRUE;
 					}
 				}
 			}
 
 			// Consider a location bad if it is either completely invalid or just beyond our own thresholds.
-			self->badLocationData = invalidLocationData || tempBadLocationData;
+			BOOL badLocationData = invalidLocationData || locationDataOutOfBounds;
+			if (badLocationData)
+			{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BAD_LOCATION_DATA_DETECTED object:nil];
+			}
 
 			if (!invalidLocationData && [self isActivityInProgressAndNotPaused])
 			{
 				BOOL shouldProcessReading = TRUE;
 				LocationFilterOption filterOption = [self->activityPrefs getLocationFilterOption:activityType];
 
-				if (filterOption == LOCATION_FILTER_DROP && self->badLocationData)
+				if (filterOption == LOCATION_FILTER_DROP && badLocationData)
 				{
 					shouldProcessReading = FALSE;
 				}
@@ -2244,6 +2249,10 @@ void syncStatusCallback(const char* const destination, void* context)
 					}
 				}
 			}
+			else
+			{
+				NSLog(@"Invalid JSON received.");
+			}
 		}
 	}
 	@catch (...)
@@ -2968,11 +2977,6 @@ void attributeNameCallback(const char* name, void* context)
 	BOOL screenLocking = [activityPrefs getScreenAutoLocking:activityType];
 
 	[UIApplication sharedApplication].idleTimerDisabled = !screenLocking;
-}
-
-- (BOOL)hasBadLocationData
-{
-	return self->badLocationData;
 }
 
 #pragma mark unit conversion methods
