@@ -395,7 +395,7 @@ typedef enum MsgDestinationType
 	SetUnitSystem(preferredUnits);
 }
 
-#pragma mark user profile methods
+#pragma mark copies the user profile to the backend
 
 - (void)setUserProfile
 {
@@ -408,6 +408,8 @@ typedef enum MsgDestinationType
 
 	SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm, userFtp);
 }
+
+#pragma mark user profile methods (getters)
 
 - (ActivityLevel)userActivityLevel
 {
@@ -448,6 +450,26 @@ typedef enum MsgDestinationType
 	return (double)0.0;
 }
 
+void WeightHistoryCallback(time_t measurementTime, double measurementValue, void* context)
+{
+	NSMutableDictionary* history = (__bridge NSMutableDictionary*)context;
+	NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:measurementTime];
+	NSNumber* y = [[NSNumber alloc] initWithDouble:measurementValue];
+
+	[history setObject:y forKey:x];
+}
+
+- (NSDictionary*)userWeightHistory
+{
+	NSMutableDictionary* history = [[NSMutableDictionary alloc] init];
+
+	if (history)
+	{
+		GetUsersWeightHistory(WeightHistoryCallback, (__bridge void*)history);
+	}
+	return history;
+}
+
 - (double)userSpecifiedFtp
 {
 	return [UserProfile ftp];
@@ -457,6 +479,8 @@ typedef enum MsgDestinationType
 {
 	return EstimateFtp();
 }
+
+#pragma mark user profile methods (setters)
 
 - (void)setUserActivityLevel:(ActivityLevel)activityLevel
 {
@@ -569,6 +593,26 @@ typedef enum MsgDestinationType
 
 #pragma mark healthkit methods
 
+- (void)mergeWeightHistoryFromHealthKit
+{
+	NSDictionary* existingWeightHistory = [self userWeightHistory];
+
+	[self->healthMgr readWeightHistory:^(HKQuantity* quantity, NSDate* date, NSError* error)
+	{
+		if (quantity && date)
+		{
+			time_t measurementTime = [date timeIntervalSince1970];
+			NSNumber* measurementTimeKey = [[NSNumber alloc] initWithUnsignedInteger:measurementTime];
+
+			if (![existingWeightHistory objectForKey:measurementTimeKey])
+			{
+				double measurementValue = [quantity doubleValueForUnit:[HKUnit gramUnit]] / (double)1000.0; // Convert to kg
+				ProcessWeightReading(measurementValue, measurementTime);
+			}
+		}
+	}];
+}
+
 // Initializes our Health Manager object and does anything that needs to be done with HealthKit at startup.
 - (void)startHealthMgr
 {
@@ -578,19 +622,10 @@ typedef enum MsgDestinationType
 		// Request authorization.
 		[self->healthMgr requestAuthorization];
 
-		// Read weight history from HealthKit.
+		// Merge weight history from HealthKit, but not if we're busy doing something more important.
 		if (![self isActivityInProgress])
 		{
-			[self->healthMgr readWeightHistory:^(HKQuantity* quantity, NSDate* date, NSError* error)
-			{
-				if (quantity && date)
-				{
-					double measurementValue = [quantity doubleValueForUnit:[HKUnit gramUnit]] / (double)1000.0; // Convert to kg
-					time_t measurementTime = [date timeIntervalSince1970];
-
-					ProcessWeightReading(measurementValue, measurementTime);
-				}
-			}];
+			[self mergeWeightHistoryFromHealthKit];
 		}
 	}
 }

@@ -61,13 +61,12 @@
 
 // user profile methods
 
-- (void)setUserProfile;
-
 - (ActivityLevel)userActivityLevel;
 - (Gender)userGender;
 - (struct tm)userBirthDate;
 - (double)userHeight;
 - (double)userWeight;
+- (NSDictionary*)userWeightHistory;
 - (double)userSpecifiedFtp;
 - (double)userEstimatedFtp;
 

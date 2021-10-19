@@ -12,26 +12,17 @@
 
 @implementation WeightLine
 
-void GetWeightHistoryCallback(time_t measurementTime, double measurementValue, void* context)
-{
-	WeightLine* weightLine = (__bridge WeightLine*)context;
-	NSNumber* x = [[NSNumber alloc] initWithUnsignedInteger:measurementTime];
-	NSNumber* y = [[NSNumber alloc] initWithDouble:measurementValue];
-	ChartPoint* point = [[ChartPoint alloc] initWithValues:x :y];
-
-	[weightLine->points addObject:point];
-}
-
 - (void)draw
 {
-	self->points = [[NSMutableArray alloc] init];
-	if (self->points)
-	{
-		if (GetUsersWeightHistory(GetWeightHistoryCallback, (__bridge void*)self))
-		{
-			[super draw];
-		}
-	}
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSDictionary* lineData = [appDelegate userWeightHistory];
+
+	[lineData enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {
+		ChartPoint* point = [[ChartPoint alloc] initWithValues:key :obj];
+		[self->points addObject:point];
+	}];
+
+	[super draw];
 }
 
 @end

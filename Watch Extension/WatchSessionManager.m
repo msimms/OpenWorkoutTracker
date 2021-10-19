@@ -65,7 +65,7 @@
 		// If it's already been synched then skip it. Otherwise, offer up the activity.
 		if (![extDelegate isSyncedToPhone:activityId])
 		{
-			NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
+			NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
 									 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
 									 nil];
 
@@ -77,9 +77,7 @@
 // Asks the watch to send interval workouts.
 - (void)requestIntervalWorkouts
 {
-	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-									@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS, @WATCH_MSG_TYPE,
-									nil];
+	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys: @WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS, @WATCH_MSG_TYPE, nil];
 
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
@@ -87,9 +85,7 @@
 // Asks the phone to send pace plans.
 - (void)requestPacePlans
 {
-	NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-									@WATCH_MSG_DOWNLOAD_PACE_PLANS, @WATCH_MSG_TYPE,
-									nil];
+	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_DOWNLOAD_PACE_PLANS, @WATCH_MSG_TYPE, nil];
 
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
