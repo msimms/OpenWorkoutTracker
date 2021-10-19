@@ -81,7 +81,9 @@
 	NSUInteger numPoints = [self numPointsToDraw];
 	if (numPoints == 0)
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:STR_NOT_DATA];
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_NOT_DATA handler:^(UIAlertAction* action){
+			[self.navigationController popToRootViewControllerAnimated:TRUE];
+		}];
 		return;
 	}
 

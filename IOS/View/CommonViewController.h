@@ -20,6 +20,7 @@
 - (void)startSpinner:(UIActivityIndicatorView*)spinner withDispatch:(BOOL)dispatch;
 - (void)stopSpinner:(UIActivityIndicatorView*)spinner;
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg;
+- (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg handler:(void (^)(UIAlertAction* action))handler;
 - (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate;
 - (UIImage*)activityTypeToIcon:(NSString*)activityType;
 - (BOOL)isDarkModeEnabled;

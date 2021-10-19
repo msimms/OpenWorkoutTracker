@@ -88,6 +88,16 @@
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
+- (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg handler:(void (^)(UIAlertAction* action))handler
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:title
+																			 message:msg
+																	  preferredStyle:UIAlertControllerStyleAlert];
+
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:handler]];
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
 - (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate
 {
 	if ([MFMailComposeViewController canSendMail])
