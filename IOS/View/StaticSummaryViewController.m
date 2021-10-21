@@ -1050,12 +1050,16 @@ typedef enum ExportFileTypeButtons
 			if (row == ROW_NAME)
 			{
 				[content setText:[appDelegate getActivityName:self->activityId]];
+				content.textProperties.numberOfLines = 0;
+				content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
 			}
 			break;
 		case SECTION_DESCRIPTION:
 			if (row == ROW_DESCRIPTION)
 			{
 				[content setText:[appDelegate getActivityDescription:self->activityId]];
+				content.textProperties.numberOfLines = 0;
+				content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
 			}
 			break;
 		case SECTION_START_AND_END_TIME:
