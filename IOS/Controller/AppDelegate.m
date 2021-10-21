@@ -668,7 +668,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 {
 	if (self->bluetoothDeviceFinder)
 	{
-		return [self->bluetoothDeviceFinder discoveredSensorsWithServiceId:serviceId];
+		return [self->bluetoothDeviceFinder discoveredPeripheralsWithServiceId:serviceId];
 	}
 	return nil;
 }
@@ -677,7 +677,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 {
 	if (self->bluetoothDeviceFinder)
 	{
-		return [self->bluetoothDeviceFinder discoveredSensorsWithCustomServiceId:serviceId];
+		return [self->bluetoothDeviceFinder discoveredPeripheralsWithCustomServiceId:serviceId];
 	}
 	return nil;
 }

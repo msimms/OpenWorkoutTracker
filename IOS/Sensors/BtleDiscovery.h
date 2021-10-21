@@ -61,9 +61,9 @@
 
 @interface BtleDiscovery : NSObject<CBCentralManagerDelegate, CBPeripheralDelegate, Discovery>
 {
-	NSMutableArray*   discoveryDelegates;
-	NSMutableArray*   discoveredPeripherals;
-	NSMutableArray*   discoveredSensors;
+	NSMutableArray*   discoveryDelegates;    // Delegates that want to know about changes to bluetooth discovery
+	NSMutableArray*   discoveredPeripherals; // List of discovered Bluetooth devices/peripherals
+	NSMutableArray*   discoveredSensors;     // List of service objects that correspond to peripherals
 	CBCentralManager* centralManager;
 	NSTimer*          scanTimer;
 	bool              connectToUnknownDevices;
@@ -76,8 +76,6 @@
 - (void)refreshDelegates;
 
 - (BOOL)hasConnectedSensorOfType:(SensorType)sensorType;
-- (BOOL)hasDiscoveredPeripheral:(CBPeripheral*)peripheral;
-- (void)removeConnectedPeripheral:(CBPeripheral*)peripheral;
 
 - (void)stopScanning;
 
@@ -103,8 +101,8 @@
 - (void)peripheral:(CBPeripheral*)peripheral didWriteValueForDescriptor:(CBDescriptor*)descriptor error:(NSError*)error;
 - (void)peripheral:(CBPeripheral*)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error;
 
-- (NSMutableArray*)discoveredSensorsWithServiceId:(BluetoothServiceId)serviceId;
-- (NSMutableArray*)discoveredSensorsWithCustomServiceId:(NSString*)serviceId;
+- (NSMutableArray*)discoveredPeripheralsWithServiceId:(BluetoothServiceId)serviceId;
+- (NSMutableArray*)discoveredPeripheralsWithCustomServiceId:(NSString*)serviceId;
 - (NSMutableArray*)sensorsForPeripheral:(CBPeripheral*)peripheral;
 
 - (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2;

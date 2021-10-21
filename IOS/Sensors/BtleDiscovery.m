@@ -148,7 +148,7 @@
 	return FALSE;
 }
 
-- (BOOL)hasDiscoveredPeripheral:(CBPeripheral*)peripheral
+- (BOOL)addDiscoveredPeripheral:(CBPeripheral*)peripheral
 {
 	@synchronized(self->discoveredPeripherals)
 	{
@@ -159,6 +159,11 @@
 				return TRUE;
 			}
 		}
+
+		// Not found, add it.
+		[self->discoveredPeripherals addObject:peripheral];
+		[peripheral setDelegate:self];
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -300,17 +305,11 @@
 		}
 	}
 
-	if ([self hasDiscoveredPeripheral:peripheral] == FALSE)
+	if ([self addDiscoveredPeripheral:peripheral])
 	{
-		@synchronized(self->discoveredPeripherals)
-		{
-			[self->discoveredPeripherals addObject:peripheral];
-		}
+		[self connectPeripheral:peripheral];
+		[self refreshDelegates];
 	}
-
-	[peripheral setDelegate:self];
-	[self connectPeripheral:peripheral];
-	[self refreshDelegates];
 }
 
 - (void)centralManager:(CBCentralManager*)central didFailToConnectPeripheral:(CBPeripheral*)peripheral error:(NSError*)error
@@ -387,7 +386,7 @@
 
 		@synchronized(self->discoveredSensors)
 		{
-			// Have we already seen this peripheral. If so, we may need to update it.
+			// Have we already seen this peripheral? If so, we may need to update it.
 			for (BtleSensor* sensor in self->discoveredSensors)
 			{
 				if ([sensor peripheral] == peripheral)
@@ -487,7 +486,7 @@
 
 #pragma mark accessor methods
 
-- (NSMutableArray*)discoveredSensorsWithServiceId:(BluetoothServiceId)serviceId
+- (NSMutableArray*)discoveredPeripheralsWithServiceId:(BluetoothServiceId)serviceId
 {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
 
@@ -510,7 +509,7 @@
 	return result;
 }
 
-- (NSMutableArray*)discoveredSensorsWithCustomServiceId:(NSString*)serviceId
+- (NSMutableArray*)discoveredPeripheralsWithCustomServiceId:(NSString*)serviceId
 {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
 	

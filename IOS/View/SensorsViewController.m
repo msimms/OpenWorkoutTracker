@@ -355,6 +355,7 @@ typedef enum SettingsSections
 		UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
 		cell.accessoryView = switchView;
 		[content setText:[[peripheralList objectAtIndex:row] name]];
+		[content setSecondaryText:@""];
 
 		CBPeripheral* peripheral = [peripheralList objectAtIndex:row];
 		NSString* idStr = [[peripheral identifier] UUIDString];
@@ -404,7 +405,10 @@ typedef enum SettingsSections
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
 			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
+			[content setText:[peripheral name]];
 			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
+
+			[cell setContentConfiguration:content];
 		}
 	}
 }
@@ -426,7 +430,10 @@ typedef enum SettingsSections
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
 			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
+			[content setText:[peripheral name]];
 			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]]];
+
+			[cell setContentConfiguration:content];
 		}
 	}
 }
@@ -448,7 +455,10 @@ typedef enum SettingsSections
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
 			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
+			[content setText:[peripheral name]];
 			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]]];
+
+			[cell setContentConfiguration:content];
 		}
 	}
 }
@@ -484,7 +494,10 @@ typedef enum SettingsSections
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
 			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
+			[content setText:[peripheral name]];
 			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
+
+			[cell setContentConfiguration:content];
 		}
 	}
 }
@@ -534,7 +547,10 @@ typedef enum SettingsSections
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
 			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
+			[content setText:[peripheral name]];
 			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@", [value longValue], UNIT_THREATS]];
+
+			[cell setContentConfiguration:content];
 		}
 	}
 }
