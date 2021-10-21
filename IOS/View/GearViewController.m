@@ -148,27 +148,28 @@ typedef enum GearSections
 	static NSString* CellIdentifier = @"Cell";
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
 	switch (section)
 	{
 		case SECTION_BIKES:
-			cell.textLabel.text = [self->bikeNames objectAtIndex:row];
-			cell.detailTextLabel.text = @"";
+			[content setText:[self->bikeNames objectAtIndex:row]];
 			break;
 		case SECTION_SHOES:
-			cell.textLabel.text = [self->shoeNames objectAtIndex:row];
-			cell.detailTextLabel.text = @"";
+			[content setText:[self->shoeNames objectAtIndex:row]];
 			break;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

@@ -165,13 +165,14 @@
 	static NSString* CellIdentifier = @"Cell";
 	
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
@@ -180,15 +181,15 @@
 		case 0:
 			{
 				LapTime* arrayItem = [self->lapTimes objectAtIndex:row];
-				cell.textLabel.text = arrayItem->label;
-				cell.detailTextLabel.text = arrayItem->detail;
+				[content setText:arrayItem->label];
+				[content setSecondaryText:arrayItem->detail];
 			}
 			break;
 		default:
-			cell.textLabel.text = @"";
-			cell.detailTextLabel.text = @"";
 			break;
 	}
+
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

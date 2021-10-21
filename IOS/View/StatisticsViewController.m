@@ -324,6 +324,7 @@ typedef enum Sections
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
@@ -391,22 +392,24 @@ typedef enum Sections
 					detailText = [NSString stringWithFormat:@"%@", valueStr];
 
 				if ((startTime > 0) && (startTimeStr != nil) && (attrDictItem->activityId != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == FALSE))
-					cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\n%@", detailText, startTimeStr];
+					[content setSecondaryText:[NSString stringWithFormat:@"%@\n%@", detailText, startTimeStr]];
 				else
-					cell.detailTextLabel.text = detailText;
+					[content setSecondaryText:detailText];
 
 				cell.detailTextLabel.numberOfLines = 0;
 				cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 			}
 			else
 			{
-				cell.detailTextLabel.text = STR_NONE;
+				[content setSecondaryText:STR_NONE];
 			}
 
-			cell.textLabel.text = attribute;
+			[content setText:attribute];
 			cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		}
 	}
+
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

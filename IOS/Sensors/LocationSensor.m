@@ -57,7 +57,7 @@
 }
 #endif
 
-- (void)locationManager:(CLLocationManager*)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+- (void)locationManager:(CLLocationManager*)manager locationManagerDidChangeAuthorization:(CLAuthorizationStatus)status
 {
 	switch (status)
 	{
@@ -145,23 +145,27 @@
 	{
 		self->shouldUpdateLocation = true;
 
+#if TARGET_OS_WATCH // Needed until watchOS 7 becomes standard
 		switch ([CLLocationManager authorizationStatus])
+#else
+		switch (self->locationManager.authorizationStatus)
+#endif
 		{
-		case kCLAuthorizationStatusDenied:
-		case kCLAuthorizationStatusRestricted:
-			[self->locationManager requestAlwaysAuthorization];
-			break;
-		case kCLAuthorizationStatusAuthorizedAlways:
-			[self->locationManager startUpdatingLocation];
-			break;
-		case kCLAuthorizationStatusAuthorizedWhenInUse:
-			[self->locationManager startUpdatingLocation];
-			break;
-		case kCLAuthorizationStatusNotDetermined:
-			[self->locationManager requestAlwaysAuthorization];
-			break;
-		default:
-			break;
+			case kCLAuthorizationStatusDenied:
+			case kCLAuthorizationStatusRestricted:
+				[self->locationManager requestAlwaysAuthorization];
+				break;
+			case kCLAuthorizationStatusAuthorizedAlways:
+				[self->locationManager startUpdatingLocation];
+				break;
+			case kCLAuthorizationStatusAuthorizedWhenInUse:
+				[self->locationManager startUpdatingLocation];
+				break;
+			case kCLAuthorizationStatusNotDetermined:
+				[self->locationManager requestAlwaysAuthorization];
+				break;
+			default:
+				break;
 		}
 	}
 

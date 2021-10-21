@@ -370,11 +370,14 @@
 	static NSString* CellIdentifier = @"Cell";
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
@@ -389,22 +392,22 @@
 					switch (segment.units)
 					{
 					case INTERVAL_UNIT_SECONDS:
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %u second(s)", row + 1, segment.duration];
+						[content setText:[NSString stringWithFormat:@"%zd. %u second(s)", row + 1, segment.duration]];
 						break;
 					case INTERVAL_UNIT_METERS:
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f meter(s)", row + 1, segment.distance];
+						[content setText:[NSString stringWithFormat:@"%zd. %0.2f meter(s)", row + 1, segment.distance]];
 						break;
 					case INTERVAL_UNIT_KILOMETERS:
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f kilometer(s)", row + 1, segment.distance];
+						[content setText:[NSString stringWithFormat:@"%zd. %0.2f kilometer(s)", row + 1, segment.distance]];
 						break;
 					case INTERVAL_UNIT_FEET:
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f feet", row + 1, segment.distance];
+						[content setText:[NSString stringWithFormat:@"%zd. %0.2f feet", row + 1, segment.distance]];
 						break;
 					case INTERVAL_UNIT_YARDS:
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f yard(s)", row + 1, segment.distance];
+						[content setText:[NSString stringWithFormat:@"%zd. %0.2f yard(s)", row + 1, segment.distance]];
 						break;
 					case INTERVAL_UNIT_MILES:
-						cell.textLabel.text = [NSString stringWithFormat:@"%zd. %0.2f mile(s)", row + 1, segment.distance];
+						 [content setText:[NSString stringWithFormat:@"%zd. %0.2f mile(s)", row + 1, segment.distance]];
 						break;
 					}
 				}
@@ -414,7 +417,7 @@
 			break;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

@@ -82,7 +82,7 @@
 	if (numPoints == 0)
 	{
 		[super showOneButtonAlert:STR_ERROR withMsg:STR_NOT_DATA handler:^(UIAlertAction* action){
-			[self.navigationController popToRootViewControllerAnimated:TRUE];
+			[self.navigationController popViewControllerAnimated:TRUE];
 		}];
 		return;
 	}

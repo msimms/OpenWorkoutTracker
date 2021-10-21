@@ -153,11 +153,14 @@
 	static NSString* CellIdentifier = @"Cell";
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
@@ -179,14 +182,15 @@
 					mainStr = [NSString stringWithFormat:@"%@", attributeName];
 				detailsStr = [StringUtils formatActivityViewType:attr];
 
-				cell.textLabel.text = mainStr;
-				cell.detailTextLabel.text = detailsStr;
-				cell.selectionStyle = UITableViewCellSelectionStyleGray;
+				[content setText:mainStr];
+				[content setSecondaryText:detailsStr];
 			}
 			break;
 		default:
 			break;
 	}
+
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

@@ -141,14 +141,16 @@
 	static NSString* CellIdentifier = @"Cell";
 	
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
-	
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-	
+
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
+
 	if (section == 0)
 	{
 		NSInteger row = [indexPath row];
@@ -157,24 +159,25 @@
 		{
 			@try
 			{
-				cell.textLabel.text = [self->users objectAtIndex:row];
+				[content setText:[self->users objectAtIndex:row]];
 			}
 			@catch (NSException* exception)
 			{
 			}
 			@finally
 			{
-				cell.textLabel.text = @"";
+				[content setText:@""];
 			}
 		}
-		cell.detailTextLabel.text = @"";
+		[content setSecondaryText:@""];
 	}
 	else
 	{
-		cell.textLabel.text = @"";
-		cell.detailTextLabel.text = @"";
+		[content setText:@""];
+		[content setSecondaryText:@""];
 	}
 
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

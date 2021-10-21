@@ -348,15 +348,15 @@ typedef enum SettingsRowsHealthKit
 	static NSString* CellIdentifier = @"Cell";
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
@@ -366,14 +366,14 @@ typedef enum SettingsRowsHealthKit
 			switch (row)
 			{
 				case SETTINGS_ROW_UNIT:
-					cell.textLabel.text = UNIT_TITLE;
+					[content setText:UNIT_TITLE];
 					switch ([Preferences preferredUnitSystem])
 					{
 						case UNIT_SYSTEM_METRIC:
-							cell.detailTextLabel.text = STR_METRIC;
+							[content setSecondaryText:STR_METRIC];
 							break;
 						case UNIT_SYSTEM_US_CUSTOMARY:
-							cell.detailTextLabel.text = STR_US_CUSTOMARY;
+							[content setSecondaryText:STR_US_CUSTOMARY];
 							break;
 					}
 					break;
@@ -389,14 +389,14 @@ typedef enum SettingsRowsHealthKit
 				switch (row)
 				{
 					case SETTINGS_ROW_INTEGRATE_HEALTHKIT:
-						cell.textLabel.text = READ_ACTIVITIES_FROM_HEALTHKIT;
-						cell.detailTextLabel.text = @"";
+						[content setText:READ_ACTIVITIES_FROM_HEALTHKIT];
+						[content setSecondaryText:@""];
 						[switchview setOn:[Preferences willIntegrateHealthKitActivities]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_HIDE_DUPLICATES:
-						cell.textLabel.text = HIDE_DUPLICATES;
-						cell.detailTextLabel.text = @"";
+						[content setText:HIDE_DUPLICATES];
+						[content setSecondaryText:@""];
 						[switchview setOn:[Preferences hideHealthKitDuplicates]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
@@ -426,26 +426,26 @@ typedef enum SettingsRowsHealthKit
 				switch (row)
 				{
 					case SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
-						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER];
-						cell.detailTextLabel.text = @"";
+						[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER]];
+						[content setSecondaryText:@""];
 						[switchview setOn:[CloudPreferences usingRunKeeper]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_EXPORT_TO_STRAVA:
-						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA];
-						cell.detailTextLabel.text = @"";
+						[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA]];
+						[content setSecondaryText:@""];
 						[switchview setOn:[CloudPreferences usingStrava]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_EXPORT_TO_DROPBOX:
-						cell.textLabel.text = [appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX];
-						cell.detailTextLabel.text = @"";
+						[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX]];
+						[content setSecondaryText:@""];
 						[switchview setOn:[CloudPreferences usingDropbox]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_EXPORT_TO_ICLOUD:
-						cell.textLabel.text = AUTO_SAVE_TO_ICLOUD_DRIVE;
-						cell.detailTextLabel.text = @"";
+						[content setText:AUTO_SAVE_TO_ICLOUD_DRIVE];
+						[content setSecondaryText:@""];
 						[switchview setOn:[CloudPreferences usingiCloud]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
@@ -468,49 +468,49 @@ typedef enum SettingsRowsHealthKit
 				switch (row)
 				{
 					case SETTINGS_ROW_BROADCAST_ENABLED:
-						cell.textLabel.text = BROADCAST_ENABLED;
-						cell.detailTextLabel.text = @"";
+						[content setText:BROADCAST_ENABLED];
+						[content setSecondaryText:@""];
 						[switchview setOn:[Preferences shouldBroadcastToServer]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_BROADCAST_RATE:
-						cell.textLabel.text = BROADCAST_RATE;
-						cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS];
+						[content setText:BROADCAST_RATE];
+						[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS]];
 						break;
 					case SETTINGS_ROW_BROADCAST_PROTOCOL:
-						cell.textLabel.text = BROADCAST_HTTPS;
-						cell.detailTextLabel.text = @"";
+						[content setText:BROADCAST_HTTPS];
+						[content setSecondaryText:@""];
 						bool usingHttps = [[Preferences broadcastProtocol] isEqualToString: @"https"];
 						[switchview setOn:usingHttps];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_BROADCAST_HOST:
-						cell.textLabel.text = BROADCAST_HOST;
-						cell.detailTextLabel.text = [Preferences broadcastHostName];
+						[content setText:BROADCAST_HOST];
+						[content setSecondaryText:[Preferences broadcastHostName]];
 						break;
 					case SETTINGS_ROW_BROADCAST_SHOW_ICON:
-						cell.textLabel.text = BROADCAST_SHOW_ICON;
-						cell.detailTextLabel.text = @"";
+						[content setText:BROADCAST_SHOW_ICON];
+						[content setSecondaryText:@""];
 						[switchview setOn:[Preferences broadcastShowIcon]];
 						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
 						break;
 					case SETTINGS_ROW_FRIENDS:
-						cell.textLabel.text = FRIENDS;
-						cell.detailTextLabel.text = @"";
+						[content setText:FRIENDS];
+						[content setSecondaryText:@""];
 						break;
 					case SETTINGS_ROW_DEVICE_ID:
-						cell.textLabel.text = DEVICE_ID;
-						cell.detailTextLabel.text = [appDelegate getDeviceId];
+						[content setText:DEVICE_ID];
+						[content setSecondaryText:[appDelegate getDeviceId]];
 						break;
 				}
 				break;
 			}
 			break;
 		default:
-			cell.textLabel.text = @"";
-			cell.detailTextLabel.text = @"";
 			break;
 	}
+
+	[cell setContentConfiguration:content];
 	return cell;
 }
 
@@ -518,7 +518,7 @@ typedef enum SettingsRowsHealthKit
 {
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
-	
+
 	switch (section)
 	{
 		case SECTION_UNITS:

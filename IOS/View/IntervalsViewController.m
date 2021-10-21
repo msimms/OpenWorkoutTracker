@@ -172,11 +172,14 @@
 	static NSString* CellIdentifier = @"Cell";
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
@@ -185,14 +188,14 @@
 		case 0:
 			{
 				NSDictionary* nameAndId = [self->workoutNamesAndIds objectAtIndex:row];
-				cell.textLabel.text = nameAndId[@"name"];
+				[content setText:nameAndId[@"name"]];
 			}
 			break;
 		default:
 			break;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

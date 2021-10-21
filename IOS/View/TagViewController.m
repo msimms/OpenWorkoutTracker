@@ -109,6 +109,7 @@
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
 	NSInteger section = [indexPath section];
@@ -137,7 +138,6 @@
 			break;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	return cell;
 }
 

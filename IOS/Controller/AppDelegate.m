@@ -226,7 +226,7 @@ typedef enum MsgDestinationType
 
 #pragma mark methods for managing application state restoration
 
-- (BOOL)application:(UIApplication*)application shouldSaveApplicationState:(NSCoder*)coder
+- (BOOL)application:(UIApplication*)application shouldSaveSecureApplicationState:(NSCoder*)coder
 {
 	return YES;
 }

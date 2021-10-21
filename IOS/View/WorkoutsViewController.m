@@ -126,6 +126,7 @@
 	static NSString* CellIdentifier = @"Cell";
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
@@ -205,12 +206,7 @@
 				// Append the scheduled time, if it is set.
 				if (scheduledTime > 0)
 				{
-					NSString* scheduledTimeStr = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
-					cell.textLabel.text = scheduledTimeStr;
-				}
-				else
-				{
-					cell.textLabel.text = STR_WORKOUT_NOT_SCHEDULED;
+					cell.textLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
 				}
 
 				// Load the image.

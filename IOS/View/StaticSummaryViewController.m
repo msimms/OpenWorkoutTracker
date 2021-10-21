@@ -146,6 +146,7 @@ typedef enum ExportFileTypeButtons
 	if (self)
 	{
 		self->attributeIndex = 0;
+		self->selectedChartIndex = 0;
 		self->activityId = nil;
 
 		self->startTime = 0;
@@ -260,12 +261,13 @@ typedef enum ExportFileTypeButtons
 
 		if (plotVC)
 		{
-			ChartLine* line = [LineFactory createLine:self->selectedRowStr withActivityId:self->activityId withView:plotVC];
+			NSString* chartTitle = [self->chartTitles objectAtIndex:self->selectedChartIndex];
+			ChartLine* line = [LineFactory createLine:chartTitle withActivityId:self->activityId withView:plotVC];
 
 			if (line)
 			{
-				[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:self->selectedRowStr];
-				[plotVC setTitle:self->selectedRowStr];
+				[plotVC appendChartLine:line withXLabel:STR_TIME withYLabel:chartTitle];
+				[plotVC setTitle:chartTitle];
 			}
 		}
 	}
@@ -845,6 +847,7 @@ typedef enum ExportFileTypeButtons
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		UITextField* field = alertController.textFields.firstObject;
+
 		[appDelegate setActivityName:self->activityId withName:[field text]];
 		[self.summaryTableView reloadData];
 	}]];
@@ -869,6 +872,7 @@ typedef enum ExportFileTypeButtons
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		UITextField* field = alertController.textFields.firstObject;
+
 		[appDelegate setActivityDescription:self->activityId withName:[field text]];
 		[self.summaryTableView reloadData];
 	}]];
@@ -904,8 +908,6 @@ typedef enum ExportFileTypeButtons
 	NSInteger actualSection = self->sectionIndexes[visibleSection];
 	NSInteger row = [indexPath row];
 
-	self->selectedRowStr = cell.textLabel.text;
-
 	switch (actualSection)
 	{
 		case SECTION_NAME:
@@ -928,6 +930,7 @@ typedef enum ExportFileTypeButtons
 			break;
 		case SECTION_CHARTS:
 			{
+				self->selectedChartIndex = row;
 				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
 			}
 			break;
@@ -1033,58 +1036,40 @@ typedef enum ExportFileTypeButtons
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger visibleSection = [indexPath section];
 	NSInteger actualSection = self->sectionIndexes[visibleSection];
 	NSInteger row = [indexPath row];
-	
+
 	switch (actualSection)
 	{
 		case SECTION_NAME:
 			if (row == ROW_NAME)
 			{
-				NSString* name = [appDelegate getActivityName:self->activityId];
-
-				if ([name length] > 0)
-					cell.textLabel.text = name;
-				else
-					cell.textLabel.text = @"---";
-				cell.detailTextLabel.text = @"";
-				cell.textLabel.numberOfLines = 0;
-				cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+				[content setText:[appDelegate getActivityName:self->activityId]];
 			}
 			break;
 		case SECTION_DESCRIPTION:
 			if (row == ROW_DESCRIPTION)
 			{
-				NSString* description = [appDelegate getActivityDescription:self->activityId];
-
-				if ([description length] > 0)
-					cell.textLabel.text = description;
-				else
-					cell.textLabel.text = @"---";
-				cell.detailTextLabel.text = @"";
-				cell.textLabel.numberOfLines = 0;
-				cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+				[content setText:[appDelegate getActivityDescription:self->activityId]];
 			}
 			break;
 		case SECTION_START_AND_END_TIME:
 			switch (row)
 			{
 				case ROW_START_TIME:
-					cell.textLabel.text = STR_STARTED;
-					if (startTime == 0)
-						cell.detailTextLabel.text = @"--";
-					else
-						cell.detailTextLabel.text = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
+					[content setText:STR_STARTED];
+					if (startTime > 0)
+						[content setSecondaryText:[StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]]];
 					break;
 				case ROW_END_TIME:
-					cell.textLabel.text = STR_FINISHED;
-					if (endTime == 0)
-						cell.detailTextLabel.text = @"--";
-					else
-						cell.detailTextLabel.text = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]];
+					[content setText:STR_FINISHED];
+					if (endTime > 0)
+						[content setSecondaryText:[StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]]];
 					break;
 			}
 			break;
@@ -1092,19 +1077,16 @@ typedef enum ExportFileTypeButtons
 			switch (row)
 			{
 				case ROW_SPLIT_TIMES:
-					cell.textLabel.text = ROW_TITLE_SPLIT_TIMES;
-					cell.detailTextLabel.text = @"";
+					[content setText:ROW_TITLE_SPLIT_TIMES];
 					break;
 				case ROW_LAP_TIMES:
-					cell.textLabel.text = ROW_TITLE_LAP_TIMES;
-					cell.detailTextLabel.text = @"";
+					[content setText:ROW_TITLE_LAP_TIMES];
 					break;
 			}
 			break;
 		case SECTION_CHARTS:
 			{
-				cell.textLabel.text = NSLocalizedString([self->chartTitles objectAtIndex:row], nil);
-				cell.detailTextLabel.text = @"";
+				[content setText:NSLocalizedString([self->chartTitles objectAtIndex:row], nil)];
 			}
 			break;
 		case SECTION_ATTRIBUTES:
@@ -1121,16 +1103,16 @@ typedef enum ExportFileTypeButtons
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
 					NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
 
-					cell.textLabel.text = NSLocalizedString(attributeName, nil);
+					// Add the text to the table.
+					[content setText:NSLocalizedString(attributeName, nil)];
 					if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
-						cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", valueStr, unitsStr];
+						[content setSecondaryText:[NSString stringWithFormat:@"%@ %@", valueStr, unitsStr]];
 					else
-						cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", valueStr];
+						[content setSecondaryText:[NSString stringWithFormat:@"%@", valueStr]];
 				}
 				else
 				{
-					cell.textLabel.text = NSLocalizedString(attributeName, nil);
-					cell.detailTextLabel.text = @"";
+					[content setText:NSLocalizedString(attributeName, nil)];
 				}
 			}
 			break;
@@ -1141,19 +1123,20 @@ typedef enum ExportFileTypeButtons
 
 				if (attr.valid)
 				{
+					// Format the display strings.
 					NSString* valueStr = [StringUtils formatActivityViewType:attr];
 					NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
 
-					cell.textLabel.text = NSLocalizedString(attributeName, nil);
+					// Add the text to the table.
+					[content setText:NSLocalizedString(attributeName, nil)];
 					if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
-						cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", valueStr, unitsStr];
+						[content setSecondaryText:[NSString stringWithFormat:@"%@ %@", valueStr, unitsStr]];
 					else
-						cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", valueStr];
+						[content setSecondaryText:[NSString stringWithFormat:@"%@", valueStr]];
 				}
 				else
 				{
-					cell.textLabel.text = NSLocalizedString(attributeName, nil);
-					cell.detailTextLabel.text = @"";
+					[content setText:NSLocalizedString(attributeName, nil)];
 				}
 			}
 			break;
@@ -1161,13 +1144,13 @@ typedef enum ExportFileTypeButtons
 			{
 				if (row < [self->syncedServices count])
 				{
-					cell.textLabel.text = NSLocalizedString([self->syncedServices objectAtIndex:row], nil);
-					cell.detailTextLabel.text = NSLocalizedString(STR_SYNCHED, nil);
+					[content setText:NSLocalizedString([self->syncedServices objectAtIndex:row], nil)];
+					[content setSecondaryText:NSLocalizedString(STR_SYNCHED, nil)];
 				}
 				else
 				{
-					cell.textLabel.text = NSLocalizedString([self->notSyncedServices objectAtIndex:row - [self->syncedServices count]], nil);
-					cell.detailTextLabel.text = NSLocalizedString(STR_NOT_SYNCHED, nil);
+					[content setText:NSLocalizedString([self->notSyncedServices objectAtIndex:row - [self->syncedServices count]], nil)];
+					[content setSecondaryText:NSLocalizedString(STR_NOT_SYNCHED, nil)];
 				}
 			}
 			break;
@@ -1176,18 +1159,16 @@ typedef enum ExportFileTypeButtons
 				switch (row)
 				{
 				case ROW_ACTIVITY_ID:
-					cell.textLabel.text = NSLocalizedString(@"Activity ID", nil);
-					cell.detailTextLabel.text = self->activityId;
+					[content setText:NSLocalizedString(@"Activity ID", nil)];
+					[content setSecondaryText:self->activityId];
 					break;
 				case ROW_ACTIVITY_HASH:
 					{
 						NSString* hash = [appDelegate getActivityHash:self->activityId];
 
-						cell.textLabel.text = NSLocalizedString(@"Activity Hash", nil);
+						[content setText:NSLocalizedString(@"Activity Hash", nil)];
 						if ([hash length] > 0)
-							cell.detailTextLabel.text = hash;
-						else
-							cell.detailTextLabel.text = @"--";
+							[content setSecondaryText:hash];
 					}
 					break;
 				}
@@ -1197,7 +1178,7 @@ typedef enum ExportFileTypeButtons
 			break;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

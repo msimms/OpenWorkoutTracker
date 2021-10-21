@@ -41,7 +41,7 @@
 
 	NSString* exportedFileName; // Name of the exported file
 	NSString* selectedExportService; // Describes where the user wants to save the file: "Email", "iCloud", etc.
-	NSString* selectedRowStr;
+	NSInteger selectedChartIndex;
 
 	NSString* activityId;
 

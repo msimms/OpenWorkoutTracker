@@ -297,13 +297,14 @@ typedef enum SettingsSections
 	static NSString* CellIdentifier = @"Cell";
 
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 	NSMutableArray* peripheralList = nil;
@@ -336,8 +337,6 @@ typedef enum SettingsSections
 		case NUM_SETTINGS_SECTIONS:
 			break;
 		default:
-			cell.textLabel.text = @"";
-			cell.detailTextLabel.text = @"";
 			break;
 	}
 	
@@ -345,7 +344,7 @@ typedef enum SettingsSections
 	{
 		UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
 		cell.accessoryView = switchView;
-		cell.textLabel.text = TOGGLE_LABEL;
+		[content setText:TOGGLE_LABEL];
 
 		[switchView setOn:[Preferences shouldScanForSensors]];
 		[switchView setTag:(section * 100) + row];
@@ -355,7 +354,7 @@ typedef enum SettingsSections
 	{
 		UISwitch* switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
 		cell.accessoryView = switchView;
-		cell.textLabel.text = [[peripheralList objectAtIndex:row] name];
+		[content setText:[[peripheralList objectAtIndex:row] name]];
 
 		CBPeripheral* peripheral = [peripheralList objectAtIndex:row];
 		NSString* idStr = [[peripheral identifier] UUIDString];
@@ -365,10 +364,12 @@ typedef enum SettingsSections
 	}
 	else
 	{
-		cell.textLabel.text = STR_NONE;
-		cell.detailTextLabel.text = @"";
+		[content setText:STR_NONE];
+		[content setSecondaryText:@""];
 		cell.accessoryView = nil;
 	}
+
+	[cell setContentConfiguration:content];
 	return cell;
 }
 
@@ -401,8 +402,9 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_SCALE, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
+			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
 		}
 	}
 }
@@ -422,8 +424,9 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_HRM, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]];
+			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]]];
 		}
 	}
 }
@@ -443,8 +446,9 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_CADENCE_WHEEL_SPEED, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]];
+			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]]];
 		}
 	}
 }
@@ -478,8 +482,9 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_POWER_METER, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
 		}
 	}
 }
@@ -527,8 +532,9 @@ typedef enum SettingsSections
 			NSUInteger newIndex[] = { SECTION_RADAR, row };
 			NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 			UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
+			UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-			cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], UNIT_THREATS];
+			[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@", [value longValue], UNIT_THREATS]];
 		}
 	}
 }

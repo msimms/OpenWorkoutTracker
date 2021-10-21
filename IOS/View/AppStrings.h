@@ -108,7 +108,7 @@
 #define STR_RESET_DATA            NSLocalizedString(@"Reset Data", nil)
 
 #define STR_NOT_SET               NSLocalizedString(@"Not Set", nil)
-#define STR_WORKOUT_NOT_SCHEDULED NSLocalizedString(@"Workout Not Scheduled", nil)
+#define STR_NOT_SCHEDULED         NSLocalizedString(@"Not Scheduled", nil)
 #define STR_NO_WORKOUTS           NSLocalizedString(@"You have not done any workouts.\nGet moving!", nil)
 #define STR_IN_PROGRESS           NSLocalizedString(@"An unfinished activity has been found. Do you wish to resume it?", nil)
 #define STR_NO_INTERVAL_WORKOUTS  NSLocalizedString(@"No interval workouts have been created.", nil)

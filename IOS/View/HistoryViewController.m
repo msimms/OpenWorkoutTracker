@@ -271,11 +271,11 @@
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
-
 	NSString* activityId = [self getActivityId:indexPath];
+	NSString* activityType = [appDelegate getHistoricalActivityType:activityId];
 	NSString* bikeName = [appDelegate getBikeNameForActivity:activityId];
 	NSString* allTagsStr = @"";
 
@@ -322,8 +322,6 @@
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@ %@", startTimeStr, name, allTagsStr];
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-
-	NSString* activityType = [appDelegate getHistoricalActivityType:activityId];
 	cell.textLabel.text = NSLocalizedString(activityType, nil);
 
 	// Load the image that goes with the activity.

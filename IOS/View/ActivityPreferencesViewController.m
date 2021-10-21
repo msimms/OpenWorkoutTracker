@@ -170,22 +170,23 @@ typedef enum LocationSectionItems
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	static NSString* CellIdentifier = @"Cell";
-	
-	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	if (cell == nil)
-	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-	}
-
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 
-	NSString* activityType = [appDelegate getCurrentActivityType];
+	if (cell == nil)
+	{
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	}
+
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
 
+	NSString* activityType = [appDelegate getCurrentActivityType];
 	ActivityPreferences* prefs = [[ActivityPreferences alloc] init];
+
 	if (prefs)
 	{
 		switch (section)
@@ -194,41 +195,38 @@ typedef enum LocationSectionItems
 				switch (row)
 				{
 					case SCREEN_ITEM_LAYOUT:
-						cell.textLabel.text = LABEL_LAYOUT;
+						[content setText:LABEL_LAYOUT];
 						switch ([prefs getDefaultViewForActivityType:activityType])
 						{
 							case ACTIVITY_VIEW_COMPLEX:
-								cell.detailTextLabel.text = LABEL_COMPLEX;
+								[content setSecondaryText:LABEL_COMPLEX];
 								break;
 							case ACTIVITY_VIEW_MAPPED:
-								cell.detailTextLabel.text = LABEL_MAPPED;
+								[content setSecondaryText:LABEL_MAPPED];
 								break;
 							case ACTIVITY_VIEW_SIMPLE:
-								cell.detailTextLabel.text = LABEL_SIMPLE;
+								[content setSecondaryText:LABEL_SIMPLE];
 								break;
 						}
 						break;
 					case SCREEN_ITEM_AUTOLOCK:
-						cell.textLabel.text = @ACTIVITY_PREF_SCREEN_AUTO_LOCK;
-						cell.detailTextLabel.text = @"";
+						[content setText:@ACTIVITY_PREF_SCREEN_AUTO_LOCK];
 						break;
 					case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
-						cell.textLabel.text = @ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY;
-						cell.detailTextLabel.text = @"";
+						[content setText:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY];
 						break;
 					case SCREEN_ITEM_COUNTDOWN_TIMER:
 						{
 							uint8_t value = [prefs getCountdown:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_COUNTDOWN;
+							[content setText:@ACTIVITY_PREF_COUNTDOWN];
 							if (value > 0)
-								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_SECONDS];
+								[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_SECONDS]];
 							else
-								cell.detailTextLabel.text = LABEL_OFF;
+								[content setSecondaryText:LABEL_OFF];
 						}
 						break;
 					case SCREEN_ITEM_SHOW_HR_PERCENT:
-						cell.textLabel.text = LABEL_SHOW_HR_PERCENT;
-						cell.detailTextLabel.text = @"";
+						[content setText:LABEL_SHOW_HR_PERCENT];
 						break;
 				}
 				break;
@@ -236,20 +234,16 @@ typedef enum LocationSectionItems
 				switch (row)
 				{
 					case COLOR_ITEM_BACKGROUND:
-						cell.textLabel.text = @ACTIVITY_PREF_BACKGROUND_COLOR;
-						cell.detailTextLabel.text = [prefs getBackgroundColorName:activityType];
+						[content setText:@ACTIVITY_PREF_BACKGROUND_COLOR];
+						[content setSecondaryText:[prefs getBackgroundColorName:activityType]];
 						break;
 					case COLOR_ITEM_LABEL:
-						cell.textLabel.text = @ACTIVITY_PREF_LABEL_COLOR;
-						cell.detailTextLabel.text = [prefs getLabelColorName:activityType];
+						[content setText:@ACTIVITY_PREF_LABEL_COLOR];
+						[content setSecondaryText:[prefs getLabelColorName:activityType]];
 						break;
 					case COLOR_ITEM_TEXT:
-						cell.textLabel.text = @ACTIVITY_PREF_TEXT_COLOR;
-						cell.detailTextLabel.text = [prefs getTextColorName:activityType];
-						break;
-					default:
-						cell.textLabel.text = @"";
-						cell.detailTextLabel.text = @"";
+						[content setText:@ACTIVITY_PREF_TEXT_COLOR];
+						[content setSecondaryText:[prefs getTextColorName:activityType]];
 						break;
 				}
 				break;
@@ -257,12 +251,10 @@ typedef enum LocationSectionItems
 				switch (row)
 				{
 					case SOUND_ITEM_START_STOP_BEEP:
-						cell.textLabel.text = @ACTIVITY_PREF_START_STOP_BEEP;
-						cell.detailTextLabel.text = @"";
+						[content setText:@ACTIVITY_PREF_START_STOP_BEEP];
 						break;
 					case SOUND_ITEM_SPLIT_BEEP:
-						cell.textLabel.text = @ACTIVITY_PREF_SPLIT_BEEP;
-						cell.detailTextLabel.text = @"";
+						[content setText:@ACTIVITY_PREF_SPLIT_BEEP];
 						break;
 				}
 				break;
@@ -272,37 +264,37 @@ typedef enum LocationSectionItems
 					case LOCATION_ITEM_HORIZONTAL_ACCURACY:
 						{
 							uint8_t value = [prefs getMinLocationHorizontalAccuracy:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY;
+							[content setText:@ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY];
 							if (value > 0)
-								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_METERS];
+								[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_METERS]];
 							else
-								cell.detailTextLabel.text = LABEL_NO_FILTERING;
+								[content setSecondaryText:LABEL_NO_FILTERING];
 						}
 						break;
 					case LOCATION_ITEM_VERTICAL_ACCURACY:
 						{
 							uint8_t value = [prefs getMinLocationVerticalAccuracy:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY;
+							[content setText:@ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY];
 							if (value > 0)
-								cell.detailTextLabel.text = [NSString stringWithFormat:@"%d %@", value, LABEL_METERS];
+								[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_METERS]];
 							else
-								cell.detailTextLabel.text = LABEL_NO_FILTERING;
+								[content setSecondaryText:LABEL_NO_FILTERING];
 						}
 						break;
 					case LOCATION_ITEM_FILTER_OPTIONS:
 						{
 							LocationFilterOption option = [prefs getLocationFilterOption:activityType];
-							cell.textLabel.text = @ACTIVITY_PREF_LOCATION_FILTER_OPTION;
+							[content setText:@ACTIVITY_PREF_LOCATION_FILTER_OPTION];
 							switch (option)
 							{
 								case LOCATION_FILTER_WARN:
-									cell.detailTextLabel.text = LABEL_DISPLAY_WARNING;
+									[content setSecondaryText:LABEL_DISPLAY_WARNING];
 									break;
 								case LOCATION_FILTER_DROP:
-									cell.detailTextLabel.text = LABEL_DISCARD_LOCATION;
+									[content setSecondaryText:LABEL_DISCARD_LOCATION];
 									break;
 								default:
-									cell.detailTextLabel.text = STR_ERROR;
+									[content setSecondaryText:STR_ERROR];
 									break;										
 							}
 						}
@@ -310,11 +302,11 @@ typedef enum LocationSectionItems
 				}
 				break;
 			default:
-				cell.textLabel.text = @"";
-				cell.detailTextLabel.text = @"";
 				break;
 		}
 	}
+
+	[cell setContentConfiguration:content];
 	return cell;
 }
 

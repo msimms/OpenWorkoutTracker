@@ -243,16 +243,18 @@ typedef enum ProfilePerformanceRows
 {
 	static NSString* CellIdentifier = @"Cell";
 
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
-
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	switch (section)
 	{
@@ -261,28 +263,28 @@ typedef enum ProfilePerformanceRows
 				switch (row)
 				{
 					case ROW_GENDER:
-						cell.textLabel.text = STR_GENDER;
-						cell.detailTextLabel.text = [StringUtils genderToStr:[appDelegate userGender]];
+						[content setText:STR_GENDER];
+						[content setSecondaryText:[StringUtils genderToStr:[appDelegate userGender]]];
 						break;
 					case ROW_BIRTHDATE:
 						{
 							struct tm birthDate = [appDelegate userBirthDate];
-							cell.textLabel.text = TITLE_BIRTHDATE;
-							cell.detailTextLabel.text = [StringUtils formatDateFromTimeStruct:&birthDate];
+							[content setText:TITLE_BIRTHDATE];
+							[content setSecondaryText:[StringUtils formatDateFromTimeStruct:&birthDate]];
 						}
 						break;
 					case ROW_HEIGHT:
 						{
 							double height = [appDelegate userHeight];
-							cell.textLabel.text = STR_HEIGHT;
-							cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", height, [StringUtils formatActivityMeasureType:MEASURE_HEIGHT]];
+							[content setText:STR_HEIGHT];
+							[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.1f %@", height, [StringUtils formatActivityMeasureType:MEASURE_HEIGHT]]];
 						}
 						break;
 					case ROW_WEIGHT:
 						{
 							double weight = [appDelegate userWeight];
-							cell.textLabel.text = STR_WEIGHT;
-							cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]];
+							[content setText:STR_WEIGHT];
+							[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
 						}
 						break;
 					default:
@@ -295,26 +297,26 @@ typedef enum ProfilePerformanceRows
 				switch (row)
 				{
 					case ROW_ACTIVITY_LEVEL:
-						cell.textLabel.text = ACTION_SHEET_TITLE_ACTIVITY_LEVEL;
-						cell.detailTextLabel.text = [StringUtils activityLevelToStr:[appDelegate userActivityLevel]];
+						[content setText:ACTION_SHEET_TITLE_ACTIVITY_LEVEL];
+						[content setSecondaryText:[StringUtils activityLevelToStr:[appDelegate userActivityLevel]]];
 						break;
 					case ROW_FTP:
 						{
 							double declaredFtp = [appDelegate userSpecifiedFtp];
-							cell.textLabel.text = STR_FTP;
+							[content setText:STR_FTP];
 
 							if (declaredFtp >= (double)1.0)
 							{
-								cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@", declaredFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+								[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.0f %@", declaredFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
 							}
 							else
 							{
 								double estimatedFtp = [appDelegate userEstimatedFtp];
 
 								if (estimatedFtp >= (double)1.0)
-									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%0.0f %@ (Estimated)", estimatedFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]];
+									[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.0f %@ (Estimated)", estimatedFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
 								else
-									cell.detailTextLabel.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+									[content setSecondaryText:[[NSString alloc] initWithFormat:STR_NOT_SET]];
 							}
 						}
 						break;
@@ -327,7 +329,7 @@ typedef enum ProfilePerformanceRows
 			break;
 	}
 
-	cell.selectionStyle = UITableViewCellSelectionStyleGray;
+	[cell setContentConfiguration:content];
 	return cell;
 }
 
