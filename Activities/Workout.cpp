@@ -2,7 +2,7 @@
 // Copyright (c) 2020 Michael J. Simms. All rights reserved.
 
 #include "Workout.h"
-#include "StrainCalculator.h"
+#include "IntensityCalculator.h"
 
 Workout::Workout()
 {
@@ -90,7 +90,7 @@ double Workout::CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMi
 {
 	double workoutDurationSecs = 0.0;
 	double avgWorkoutPaceMetersPerSec = 0.0;
-	StrainCalculator calc;
+	IntensityCalculator calc;
 
 	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
 	{
@@ -114,7 +114,7 @@ double Workout::CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMi
 		avgWorkoutPaceMetersPerSec = avgWorkoutPaceMetersPerSec / workoutDurationSecs;
 	}
 
-	m_estimatedIntensityScore = calc.EstimateStressScore(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
+	m_estimatedIntensityScore = calc.EstimateIntensityScore(workoutDurationSecs, avgWorkoutPaceMetersPerSec, thresholdPaceMetersPerMinute);
 	return m_estimatedIntensityScore;
 }
 

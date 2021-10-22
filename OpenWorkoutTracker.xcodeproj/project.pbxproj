@@ -134,6 +134,9 @@
 		270CF4A22391F1B800584058 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047175216D997000EE47FF /* Statistics.cpp */; };
 		270CF4A32391F1B800584058 /* Statistics.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047179216D997000EE47FF /* Statistics.h */; };
 		270CF4A42392C2CD00584058 /* Downloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14919BFE3B7008F8672 /* Downloader.m */; };
+		270F7645272372D6006E0D61 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270F76412723556A006E0D61 /* IntensityCalculator.cpp */; };
+		270F7649272372D7006E0D61 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270F76412723556A006E0D61 /* IntensityCalculator.cpp */; };
+		270F764A272372D8006E0D61 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270F76412723556A006E0D61 /* IntensityCalculator.cpp */; };
 		271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
@@ -153,9 +156,6 @@
 		27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* BtleScale.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
-		2741B53125D22D2A00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
-		2741B53525D22D2B00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
-		2741B53625D22D2C00A43A63 /* StrainCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */; };
 		274EF7CB26BCB0DA008AA465 /* Threat.png in Resources */ = {isa = PBXBuildFile; fileRef = 274EF7BE26BCB0DA008AA465 /* Threat.png */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		2753386726B9A6AF007169B6 /* Duathlon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2753385926B9A6AF007169B6 /* Duathlon.png */; };
@@ -657,6 +657,8 @@
 		270CF4142391C34900584058 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 		270CF4912391F12400584058 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		270CF4932391F14200584058 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
+		270F76402723556A006E0D61 /* IntensityCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntensityCalculator.h; path = Activities/IntensityCalculator.h; sourceTree = SOURCE_ROOT; };
+		270F76412723556A006E0D61 /* IntensityCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntensityCalculator.cpp; path = Activities/IntensityCalculator.cpp; sourceTree = SOURCE_ROOT; };
 		271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchHistoryViewController.m; sourceTree = "<group>"; };
 		271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchHistoryViewController.h; sourceTree = "<group>"; };
 		271C5E3820D59C2700DE759C /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = SOURCE_ROOT; };
@@ -680,8 +682,6 @@
 		27345D0819EDEE4600059FFF /* BtleScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleScale.h; path = IOS/Sensors/BtleScale.h; sourceTree = SOURCE_ROOT; };
 		27345D0919EDEE4600059FFF /* BtleScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleScale.m; path = IOS/Sensors/BtleScale.m; sourceTree = SOURCE_ROOT; };
 		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
-		2741B52C25D22C6E00A43A63 /* StrainCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StrainCalculator.h; path = Activities/StrainCalculator.h; sourceTree = SOURCE_ROOT; };
-		2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StrainCalculator.cpp; path = Activities/StrainCalculator.cpp; sourceTree = SOURCE_ROOT; };
 		274EF7BE26BCB0DA008AA465 /* Threat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Threat.png; path = Images/Threat.png; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
@@ -1724,6 +1724,8 @@
 				27C0842919BFD063007CE934 /* GForceAnalyzerFactory.h */,
 				27C0842D19BFD063007CE934 /* Hike.cpp */,
 				27C0842E19BFD063007CE934 /* Hike.h */,
+				270F76412723556A006E0D61 /* IntensityCalculator.cpp */,
+				270F76402723556A006E0D61 /* IntensityCalculator.h */,
 				27C0842F19BFD063007CE934 /* IntervalWorkout.h */,
 				27C0843019BFD063007CE934 /* IntervalWorkoutSegment.h */,
 				27C0843119BFD063007CE934 /* LiftingActivity.cpp */,
@@ -1756,8 +1758,6 @@
 				27C0844519BFD063007CE934 /* SquatAnalyzer.h */,
 				27C0844619BFD063007CE934 /* StationaryCycling.cpp */,
 				27C0844719BFD063007CE934 /* StationaryCycling.h */,
-				2741B52D25D22C6E00A43A63 /* StrainCalculator.cpp */,
-				2741B52C25D22C6E00A43A63 /* StrainCalculator.h */,
 				27F4240623A44D4A00F59F50 /* Swim.cpp */,
 				27F4240723A44D4A00F59F50 /* Swim.h */,
 				273F732B25AF274000484A29 /* SyncDestination.h */,
@@ -2150,7 +2150,6 @@
 				270CF49D2391F1B800584058 /* Double.h in Sources */,
 				270CF49E2391F1B800584058 /* KMeans.cpp in Sources */,
 				270CF49F2391F1B800584058 /* KMeans.h in Sources */,
-				2741B53625D22D2C00A43A63 /* StrainCalculator.cpp in Sources */,
 				270CF4A22391F1B800584058 /* Statistics.cpp in Sources */,
 				270CF4A32391F1B800584058 /* Statistics.h in Sources */,
 				270CF4952391F18900584058 /* ActivityLevel.h in Sources */,
@@ -2198,6 +2197,7 @@
 				270CF46B2391F0B200584058 /* Database.h in Sources */,
 				270CF46C2391F0B200584058 /* DataExporter.cpp in Sources */,
 				270CF46D2391F0B200584058 /* DataExporter.h in Sources */,
+				270F764A272372D8006E0D61 /* IntensityCalculator.cpp in Sources */,
 				270CF46E2391F0B200584058 /* DataImporter.cpp in Sources */,
 				270CF46F2391F0B200584058 /* DataImporter.h in Sources */,
 				2768E503239DC4B600DD06E9 /* WorkoutImporter.cpp in Sources */,
@@ -2303,7 +2303,6 @@
 				27AAB9D62389E76C00C0A91F /* Version.m in Sources */,
 				27B7CDD519BFD979000383E3 /* OverlayFactory.m in Sources */,
 				27C0845C19BFD063007CE934 /* PushUp.cpp in Sources */,
-				2741B53125D22D2A00A43A63 /* StrainCalculator.cpp in Sources */,
 				27621C9B2641BC6C00F1C86F /* FitFileWriter.cpp in Sources */,
 				27B7CD3219BFD8AC000383E3 /* AppDelegate.m in Sources */,
 				27CF013224DAF68700263CEC /* BtleLight.m in Sources */,
@@ -2320,6 +2319,7 @@
 				27FE9887265D92D7004BE31E /* AppCloudService.m in Sources */,
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
 				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
+				270F7645272372D6006E0D61 /* IntensityCalculator.cpp in Sources */,
 				27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
 				27B7CDC319BFD953000383E3 /* AccelerometerLine.m in Sources */,
@@ -2451,7 +2451,6 @@
 				27DCF66022B72F50009A23C2 /* Gender.h in Sources */,
 				27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */,
 				27DCF66122B72F50009A23C2 /* User.cpp in Sources */,
-				2741B53525D22D2B00A43A63 /* StrainCalculator.cpp in Sources */,
 				27DCF66222B72F50009A23C2 /* User.h in Sources */,
 				27DCF65922B72F24009A23C2 /* Coordinate.h in Sources */,
 				27DCF65A22B72F24009A23C2 /* UnitConversionFactors.h in Sources */,
@@ -2482,6 +2481,7 @@
 				27DCF65022B72EFA009A23C2 /* TcxFileWriter.cpp in Sources */,
 				27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */,
 				2772FEAD2503EE7C00ED9F2A /* BikePlanGenerator.cpp in Sources */,
+				270F7649272372D7006E0D61 /* IntensityCalculator.cpp in Sources */,
 				27CF012824D8539300263CEC /* RunPlanGenerator.cpp in Sources */,
 				27DCF65122B72EFA009A23C2 /* TcxFileWriter.h in Sources */,
 				27DCF65222B72EFA009A23C2 /* TcxTags.h in Sources */,

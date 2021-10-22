@@ -1,22 +1,22 @@
 // Created by Michael Simms on 10/01/20.
 // Copyright (c) 2020 Michael J. Simms. All rights reserved.
 
-#include "StrainCalculator.h"
+#include "IntensityCalculator.h"
 
-StrainCalculator::StrainCalculator()
+IntensityCalculator::IntensityCalculator()
 {
 }
 
-StrainCalculator::~StrainCalculator()
+IntensityCalculator::~IntensityCalculator()
 {
 }
 
-double StrainCalculator::EstimateStressScore(double workoutDurationSecs, double avgWorkoutPaceMetersPerSec, double thresholdPaceMetersPerHour)
+double IntensityCalculator::EstimateIntensityScore(double workoutDurationSecs, double avgWorkoutPaceMetersPerSec, double thresholdPaceMetersPerHour)
 {
 	return ((workoutDurationSecs * avgWorkoutPaceMetersPerSec) / thresholdPaceMetersPerHour) * 100.0;
 }
 
-double StrainCalculator::CalculateStressScoreFromPower(double workoutDurationSecs, double np, double ftp)
+double IntensityCalculator::CalculateIntensityScoreFromPower(double workoutDurationSecs, double np, double ftp)
 {
 	// Compute the training stress score (TSS = (t * NP * IF) / (FTP * 36)).
 	double intFac = np / ftp;
