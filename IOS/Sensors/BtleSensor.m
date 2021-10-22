@@ -192,6 +192,12 @@
 	return ([char1.UUID isEqual:[CBUUID UUIDWithString:char2]]);
 }
 
+- (NSString*)characteristicToString:(CBCharacteristic*)char1
+{
+	NSString* str = [char1.UUID UUIDString];
+	return str;
+}
+
 - (uint64_t)currentTimeInMs
 {
 	NSDate* now = [NSDate date];

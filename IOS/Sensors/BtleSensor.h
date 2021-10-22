@@ -54,6 +54,7 @@
 - (BOOL)serviceEquals:(CBService*)service1 withCustomService:(NSString*)service2;
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withBTChar:(BluetoothCharacteristic)char2;
 - (BOOL)characteristicEquals:(CBCharacteristic*)char1 withCustomChar:(NSString*)char2;
+- (NSString*)characteristicToString:(CBCharacteristic*)char1;
 
 - (uint64_t)currentTimeInMs;
 

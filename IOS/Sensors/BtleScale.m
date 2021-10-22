@@ -139,6 +139,10 @@ typedef struct WeightScaleFeature
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
+			else
+			{
+				NSLog(@"Unrecognized characteristic for Bluetooth weight scale service: %@", [super characteristicToString:aChar]);
+			}
 			[peripheral discoverDescriptorsForCharacteristic:aChar];
 		}
 		[super handleCharacteristicForService:service];
@@ -153,6 +157,10 @@ typedef struct WeightScaleFeature
 				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
+			}
+			else
+			{
+				NSLog(@"Unrecognized characteristic for Bluetooth weight service: %@", [super characteristicToString:aChar]);
 			}
 			[peripheral discoverDescriptorsForCharacteristic:aChar];
 		}
