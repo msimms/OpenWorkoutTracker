@@ -24,21 +24,24 @@ public:
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingIntensityDistType trainingIntensityDist);
 	
 private:
-	uint64_t m_easyDistanceTotalMeters; // Total weekly meters spent running easy
-	uint64_t m_hardDistanceTotalMeters; // Total weekly meters spent running hard
-	uint64_t m_totalEasySeconds; // Total weekly seconds spent running easy
-	uint64_t m_totalHardSeconds; // Total weekly seconds spent running hard
+	double m_cutoffPace1;
+	double m_cutoffPace2;
+	double m_intensityDistributionMeters[3];    // Distribution of distance spent in each intensity zone
+	uint64_t m_intensityDistributionSeconds[3]; // Distribution of time spent in each intensity zone
 
 	static bool ValidFloat(double num, double minValue);
 	static double RoundDistance(double distance);
 	static uint64_t NearestIntervalDistance(double distance, double minDistanceInMeters);
+
+	void ClearIntensityDistribution();
+	void UpdateIntensityDistribution(uint64_t seconds, double meters);
 
 	Workout* GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
 	Workout* GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance);
 	Workout* GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance);
 	Workout* GenerateSpeedRun(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance);
 	Workout* GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance);
-	Workout* GenerateFreeRun(void);
+	Workout* GenerateFreeRun(double easyRunPace);
 	Workout* GenerateHillRepeats(void);
 	Workout* GenerateFartlekRun(void);
 };

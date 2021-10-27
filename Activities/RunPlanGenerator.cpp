@@ -15,8 +15,15 @@
 #include <math.h>
 #include <random>
 
+// Max zone 1, zone 2, zone 3 total intensity distributions for each training philosophy
+#define TID_THRESHOLD = { 55, 55, 20 };
+#define TID_POLARIZED = { 85, 10, 25 };
+#define TID_PYRAMIDAL = { 75, 25, 10 };
+
 RunPlanGenerator::RunPlanGenerator()
 {
+	m_cutoffPace1 = (double)0.0;
+	m_cutoffPace2 = (double)0.0;
 }
 
 RunPlanGenerator::~RunPlanGenerator()
@@ -63,6 +70,57 @@ uint64_t RunPlanGenerator::NearestIntervalDistance(double distance, double minDi
 	return METRIC_INTERVALS[numIntervals - 1];
 }
 
+// Resets all intensity distribution tracking variables.
+void RunPlanGenerator::ClearIntensityDistribution()
+{
+	// Distribution of distance spent in each intensity zone.
+	// 0 index is least intense.
+	this->m_intensityDistributionMeters[0] = 0.0;
+	this->m_intensityDistributionMeters[1] = 0.0;
+	this->m_intensityDistributionMeters[2] = 0.0;
+
+	// Distribution of time spent in each intensity zone.
+	// 0 index is least intense.
+	this->m_intensityDistributionSeconds[0] = 0;
+	this->m_intensityDistributionSeconds[1] = 0;
+	this->m_intensityDistributionSeconds[2] = 0;
+
+	// Paces that determine the cutoffs for intensity distribution.
+	this->m_cutoffPace1 = 0.0;
+	this->m_cutoffPace2 = 0.0;
+}
+
+// Updates the variables used to track intensity distribution.
+void RunPlanGenerator::UpdateIntensityDistribution(uint64_t seconds, double meters)
+{
+	double pace = 0.0;
+
+	// Distance not specified.
+	if (meters >= 0.01)
+		pace = seconds / meters;
+
+	// Above L2 pace.
+	if (pace > this->m_cutoffPace2)
+	{
+		this->m_intensityDistributionSeconds[2] += seconds;
+		this->m_intensityDistributionMeters[2] += meters;
+	}
+
+	// Above L1 pace.
+	else if (pace > this->m_cutoffPace1)
+	{
+		this->m_intensityDistributionSeconds[1] += seconds;
+		this->m_intensityDistributionMeters[1] += meters;
+	}
+
+	// Easy pace.
+	else
+	{
+		this->m_intensityDistributionSeconds[0] += seconds;
+		this->m_intensityDistributionMeters[0] += meters;
+	}
+}
+
 // Utility function for creating an easy run of some random distance between min and max.
 Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance)
 {
@@ -85,10 +143,7 @@ Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance,
 		workout->AddInterval(1, intervalDistanceMeters, pace, 0, 0);
 
 		// Tally up the easy and hard distance so we can keep the weekly plan in check.
-		this->m_easyDistanceTotalMeters += intervalDistanceMeters;
-
-		// Tally up the easy and hard seconds.
-		this->m_totalEasySeconds += intervalDistanceMeters * pace;
+		this->UpdateIntensityDistribution(intervalDistanceMeters * pace, intervalDistanceMeters);
 	}
 
 	return workout;
@@ -122,15 +177,10 @@ Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunP
 		// Tally up the easy and hard distance so we can keep the weekly plan in check.
 		double totalRestMeters = ((numIntervals - 1) * intervalDistanceMeters);
 		double totalHardMeters = (numIntervals * intervalDistanceMeters);
-		this->m_easyDistanceTotalMeters += (warmupDuration / easyRunPace);
-		this->m_easyDistanceTotalMeters += (cooldownDuration / easyRunPace);
-		this->m_easyDistanceTotalMeters += (totalRestMeters);
-		this->m_hardDistanceTotalMeters += (totalHardMeters);
-
-		// Tally up the easy and hard seconds.
-		this->m_totalEasySeconds += (warmupDuration + cooldownDuration);
-		this->m_totalEasySeconds += (totalRestMeters * easyRunPace);
-		this->m_totalHardSeconds += (totalHardMeters * tempoRunPace);
+		this->UpdateIntensityDistribution(totalRestMeters * easyRunPace, totalRestMeters);
+		this->UpdateIntensityDistribution(totalHardMeters * tempoRunPace, totalHardMeters);
+		this->UpdateIntensityDistribution(warmupDuration, easyRunPace);
+		this->UpdateIntensityDistribution(cooldownDuration, easyRunPace);
 	}
 
 	return workout;
@@ -139,15 +189,31 @@ Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunP
 // Utility function for creating a threshold workout.
 Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance)
 {
+	// Decide on the number of intervals and their distance.
+	double tempDistance = 20.0 * thresholdRunPace;
+	uint64_t intervalDistanceMeters = RunPlanGenerator::NearestIntervalDistance(tempDistance, 2000.0);
+
+	// Sanity check.
+	if (intervalDistanceMeters > maxRunDistance)
+		intervalDistanceMeters = maxRunDistance;
+	if (intervalDistanceMeters < 1000)
+		intervalDistanceMeters = 1000;
+
 	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RUN, ACTIVITY_TYPE_RUNNING);
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_THRESHOLD_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
+		workout->AddInterval(1, intervalDistanceMeters, thresholdRunPace, 0, 0);
 		workout->AddCooldown(cooldownDuration);
+
+		// Tally up the easy and hard distance so we can keep the weekly plan in check.
+		this->UpdateIntensityDistribution(intervalDistanceMeters * thresholdRunPace, intervalDistanceMeters);
+		this->UpdateIntensityDistribution(warmupDuration, easyRunPace);
+		this->UpdateIntensityDistribution(cooldownDuration, easyRunPace);
 	}
 
 	return workout;
@@ -206,15 +272,10 @@ Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double 
 		// Tally up the easy and hard distance so we can keep the weekly plan in check.
 		double totalRestMeters = ((selectedReps - 1) * restIntervalDistance);
 		double totalHardMeters = (selectedReps * intervalDistance);
-		this->m_easyDistanceTotalMeters += (warmupDuration / easyRunPace);
-		this->m_easyDistanceTotalMeters += (cooldownDuration / easyRunPace);
-		this->m_easyDistanceTotalMeters += (totalRestMeters);
-		this->m_hardDistanceTotalMeters += (totalHardMeters);
-
-		// Tally up the easy and hard seconds.
-		this->m_totalEasySeconds += (warmupDuration + cooldownDuration);
-		this->m_totalEasySeconds += (totalRestMeters * easyRunPace);
-		this->m_totalHardSeconds += (totalHardMeters * intervalPace);
+		this->UpdateIntensityDistribution(totalRestMeters * easyRunPace, totalRestMeters);
+		this->UpdateIntensityDistribution(totalHardMeters * intervalPace, totalHardMeters);
+		this->UpdateIntensityDistribution(warmupDuration, 0.0);
+		this->UpdateIntensityDistribution(cooldownDuration, 0.0);
 	}
 
 	return workout;
@@ -238,17 +299,14 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 		workout->AddInterval(1, intervalDistanceMeters, longRunPace, 0, 0);
 
 		// Tally up the easy and hard distance so we can keep the weekly plan in check.
-		this->m_easyDistanceTotalMeters += intervalDistanceMeters;
-
-		// Tally up the easy and hard seconds.
-		this->m_totalEasySeconds += intervalDistanceMeters + longRunPace;
+		this->UpdateIntensityDistribution(intervalDistanceMeters * longRunPace, intervalDistanceMeters);
 	}
 
 	return workout;
 }
 
 // Utility function for creating a free run workout.
-Workout* RunPlanGenerator::GenerateFreeRun(void)
+Workout* RunPlanGenerator::GenerateFreeRun(double easyRunPace)
 {
 	// Roll the dice to figure out the distance.
 	std::default_random_engine generator;
@@ -263,7 +321,7 @@ Workout* RunPlanGenerator::GenerateFreeRun(void)
 		workout->AddInterval(1, intervalDistanceMeters, 0, 0, 0);
 
 		// Tally up the easy and hard distance so we can keep the weekly plan in check.
-		this->m_easyDistanceTotalMeters += intervalDistanceMeters;
+		this->UpdateIntensityDistribution(intervalDistanceMeters * easyRunPace, intervalDistanceMeters);
 	}
 
 	return workout;
@@ -333,16 +391,16 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Handle situation in which the user hasn't run in four weeks.
 	if (!RunPlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
 	{
-		workouts.push_back(this->GenerateFreeRun());
-		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun(easyRunPace));
+		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		return workouts;
 	}
 
 	// Handle situation in which the user hasn't run *much* in the last four weeks.
 	if (numRuns < 4)
 	{
-		workouts.push_back(this->GenerateFreeRun());
-		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun(easyRunPace));
+		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		return workouts;
 	}
 
@@ -403,10 +461,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	while (!done)
 	{
 		// Keep track of the number of easy miles/kms and the number of hard miles/kms we're expecting the user to run so we can balance the two.
-		this->m_easyDistanceTotalMeters = 0.0;
-		this->m_hardDistanceTotalMeters = 0.0;
-		this->m_totalEasySeconds = 0.0;
-		this->m_totalHardSeconds = 0.0;
+		this->ClearIntensityDistribution();
 
 		// Add a long run.
 		Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
@@ -423,9 +478,23 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		// The user cares about speed as well as completing the distance. Also note that we should add strikes to one of the other workouts.
 		if (goalType == GOAL_TYPE_SPEED)
 		{
-			// Add an interval/speed session.
-			Workout* intervalWorkout = this->GenerateSpeedRun(shortIntervalRunPace, speedRunPace, easyRunPace, goalDistance);
-			workouts.push_back(intervalWorkout);
+			// Decide which workout we're going to do.
+			std::default_random_engine generator;
+			std::uniform_int_distribution<uint64_t> distribution(0, 100);
+			uint64_t workoutProbability = distribution(generator);
+
+			if (workoutProbability < 50)
+			{
+				// Add an interval/speed session.
+				Workout* intervalWorkout = this->GenerateSpeedRun(shortIntervalRunPace, speedRunPace, easyRunPace, goalDistance);
+				workouts.push_back(intervalWorkout);
+			}
+			else
+			{
+				// Add a threshold session.
+				Workout* intervalWorkout = this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, goalDistance);
+				workouts.push_back(intervalWorkout);
+			}
 		}
 
 		// Add an easy run.
@@ -433,8 +502,8 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		workouts.push_back(easyRunWorkout);
 
 		// Keep track of the total distance as well as the easy distance to keep from planning too many intense miles/kms.
-		double totalDistance = this->m_easyDistanceTotalMeters + this->m_hardDistanceTotalMeters;
-		double easyDistancePercentage = this->m_easyDistanceTotalMeters / totalDistance;
+		double totalDistance = this->m_intensityDistributionMeters[0]  + this->m_intensityDistributionMeters[1] + this->m_intensityDistributionMeters[2];
+		double easyDistancePercentage = this->m_intensityDistributionMeters[0] / totalDistance;
 
 		// This is used to make sure we don't loop forever.
 		iterCount = iterCount + 1;
