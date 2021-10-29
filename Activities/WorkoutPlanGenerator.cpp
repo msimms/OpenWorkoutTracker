@@ -10,7 +10,7 @@
 #include "BikePlanGenerator.h"
 #include "Cycling.h"
 #include "FtpCalculator.h"
-#include "GoalType.h"
+#include "Measure.h"
 #include "Run.h"
 #include "RunPlanGenerator.h"
 #include "TrainingIntensityDistType.h"
@@ -41,6 +41,103 @@ void WorkoutPlanGenerator::Reset()
 	m_avgRunningDistanceFourWeeks = (double)0.0;
 	m_bikeCount = 0;
 	m_runCount = 0;
+}
+
+void WorkoutPlanGenerator::InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
+{
+	std::string tempActivityId = activityId;
+	std::string tempActivityType = activityType;
+	ActivitySummary activitySummary;
+
+	activitySummary.activityId = tempActivityId;
+	activitySummary.startTime = startTime;
+	activitySummary.endTime = endTime;
+	activitySummary.type = tempActivityType;
+	activitySummary.summaryAttributes.insert(std::make_pair(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, distanceAttr));
+	activitySummary.pActivity = NULL;
+	m_additionalActivitySummaries.insert(std::make_pair(tempActivityId, activitySummary));
+}
+
+std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate)
+{
+	std::map<std::string, double> inputs;
+	time_t now = time(NULL);
+	double weeksUntilGoal = (double)0.0;
+
+	// Need the user's goals.
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL, goal));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_TYPE, goalType));
+
+	// Compute the time remaining until the goal.
+	if (goal != GOAL_FITNESS)
+	{
+		// Sanity-check the goal date.
+		if (goalDate > now)
+			weeksUntilGoal = (goalDate - now) / (7 * 24 * 60 * 60);
+	}
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_WEEKS_UNTIL_GOAL, weeksUntilGoal));	
+
+	// Need the user's experience level. This is meant to give us an idea as to how quickly we can ramp up the intensity.
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, 5.0));	
+	
+	// Need cycling FTP.
+	FtpCalculator ftpCalc;
+	double estimatedFtp = ftpCalc.Estimate(historicalActivities);
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, estimatedFtp));
+
+	// Need last four weeks averages, bests, etc.
+	for (auto iter = historicalActivities.begin(); iter != historicalActivities.end(); ++iter)
+	{
+		const ActivitySummary& summary = (*iter);
+		ProcessActivitySummary(summary);
+	}
+	for (auto iter = m_additionalActivitySummaries.begin(); iter != m_additionalActivitySummaries.end(); ++iter)
+	{
+		const ActivitySummary& summary = (*iter).second;
+		ProcessActivitySummary(summary);
+	}
+	if (m_runCount > 0)
+	{
+		m_avgRunningDistanceFourWeeks /= (double)m_runCount;
+	}
+	if (m_bikeCount > 0)
+	{
+		m_avgCyclingDistanceFourWeeks /= (double)m_bikeCount;
+	}
+
+	// Store all the inputs in a dictionary.
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_IN_FOUR_WEEKS, m_longestRunInFourWeeks));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_1, m_longestRunWeek1));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunWeek2));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS, m_runCount));
+
+	// Append run training paces.
+	this->CalculateRunTrainingPaces(inputs);
+
+	// Append the goal distances.
+	this->CalculateGoalDistances(inputs);
+
+	return inputs;
+}
+
+std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
+{
+	RunPlanGenerator runGen;
+	BikePlanGenerator bikeGen;
+	TrainingIntensityDistType trainingIntensityDist = TRAINING_INTENSITY_DIST_TYPE_POLARIZED;
+
+	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
+	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> workouts;
+
+	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
+	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());
+
+	return workouts;
 }
 
 void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary)
@@ -119,87 +216,6 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 	}
 }
 
-void WorkoutPlanGenerator::InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
-{
-	std::string tempActivityId = activityId;
-	std::string tempActivityType = activityType;
-	ActivitySummary activitySummary;
-
-	activitySummary.activityId = tempActivityId;
-	activitySummary.startTime = startTime;
-	activitySummary.endTime = endTime;
-	activitySummary.type = tempActivityType;
-	activitySummary.summaryAttributes.insert(std::make_pair(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, distanceAttr));
-	activitySummary.pActivity = NULL;
-	m_additionalActivitySummaries.insert(std::make_pair(tempActivityId, activitySummary));
-}
-
-std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const ActivitySummaryList& historicalActivities)
-{
-	std::map<std::string, double> inputs;
-
-	// Need the user's goals.
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_RUN_DISTANCE, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_TYPE, GOAL_TYPE_COMPLETION));
-
-	// Need the user's experience level. This is meant to give us an idea as to how quickly we can ramp up the intensity.
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, 5.0));	
-	
-	// Need cycling FTP.
-	FtpCalculator ftpCalc;
-	double estimatedFtp = ftpCalc.Estimate(historicalActivities);
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, estimatedFtp));
-
-	// Need last four weeks averages, bests, etc.
-	for (auto iter = historicalActivities.begin(); iter != historicalActivities.end(); ++iter)
-	{
-		const ActivitySummary& summary = (*iter);
-		ProcessActivitySummary(summary);
-	}
-	for (auto iter = m_additionalActivitySummaries.begin(); iter != m_additionalActivitySummaries.end(); ++iter)
-	{
-		const ActivitySummary& summary = (*iter).second;
-		ProcessActivitySummary(summary);
-	}
-	if (m_runCount > 0)
-	{
-		m_avgRunningDistanceFourWeeks /= (double)m_runCount;
-	}
-	if (m_bikeCount > 0)
-	{
-		m_avgCyclingDistanceFourWeeks /= (double)m_bikeCount;
-	}
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_IN_FOUR_WEEKS, m_longestRunInFourWeeks));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_1, m_longestRunWeek1));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunWeek2));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS, m_runCount));
-
-	// Run training paces.
-	this->CalculateRunTrainingPaces(inputs);
-
-	return inputs;
-}
-
-std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
-{
-	RunPlanGenerator runGen;
-	BikePlanGenerator bikeGen;
-	TrainingIntensityDistType trainingIntensityDist = TRAINING_INTENSITY_DIST_TYPE_POLARIZED;
-
-	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
-	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs);
-	std::vector<Workout*> workouts;
-
-	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
-	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());
-
-	return workouts;
-}
-
 void WorkoutPlanGenerator::CalculateRunTrainingPaces(std::map<std::string, double>& inputs)
 {
 	TrainingPaceCalculator paceCalc;
@@ -212,4 +228,42 @@ void WorkoutPlanGenerator::CalculateRunTrainingPaces(std::map<std::string, doubl
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE, paces.at(SHORT_INTERVAL_RUN_PACE)));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_SPEED_RUN_PACE, paces.at(SPEED_RUN_PACE)));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE, paces.at(SHORT_INTERVAL_RUN_PACE)));
+}
+
+// Adds the goal distances to the inputs.
+void WorkoutPlanGenerator::CalculateGoalDistances(std::map<std::string, double>& inputs)
+{
+	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
+
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_SWIM_DISTANCE, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_BIKE_DISTANCE, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_RUN_DISTANCE, 0.0));
+
+	switch (goal)
+	{
+		case GOAL_FITNESS:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+			break;
+		case GOAL_5K_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+			break;
+		case GOAL_10K_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 10000.0;
+			break;
+		case GOAL_15K_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 15000.0;
+			break;
+		case GOAL_HALF_MARATHON_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_HALF_MARATHON;
+			break;
+		case GOAL_MARATHON_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_MARATHON;
+			break;
+		case GOAL_50K_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 50000.0;
+			break;
+		case GOAL_50_MILE_RUN:
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_50_MILE;
+			break;
+	}
 }

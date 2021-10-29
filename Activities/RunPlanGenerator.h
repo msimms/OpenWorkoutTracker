@@ -15,6 +15,8 @@
 #include "TrainingIntensityDistType.h"
 #include "Workout.h"
 
+#define NUM_TRAINING_ZONES 3
+
 class RunPlanGenerator
 {
 public:
@@ -26,8 +28,9 @@ public:
 private:
 	double m_cutoffPace1;
 	double m_cutoffPace2;
-	double m_intensityDistributionMeters[3];    // Distribution of distance spent in each intensity zone
-	uint64_t m_intensityDistributionSeconds[3]; // Distribution of time spent in each intensity zone
+	double m_trainingIntensityDistribution[NUM_TRAINING_ZONES];  // Ideal distribution of intensity across training zones
+	double m_intensityDistributionMeters[NUM_TRAINING_ZONES];    // Distribution of distance spent in each intensity zone
+	uint64_t m_intensityDistributionSeconds[NUM_TRAINING_ZONES]; // Distribution of time spent in each intensity zone
 
 	static bool ValidFloat(double num, double minValue);
 	static double RoundDistance(double distance);
@@ -35,6 +38,7 @@ private:
 
 	void ClearIntensityDistribution();
 	void UpdateIntensityDistribution(uint64_t seconds, double meters);
+	double CheckIntensityDistribution();
 
 	Workout* GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
 	Workout* GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance);

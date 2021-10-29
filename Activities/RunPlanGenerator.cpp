@@ -9,21 +9,27 @@
 #include "ActivityAttribute.h"
 #include "ActivitySummary.h"
 #include "GoalType.h"
+#include "Goal.h"
 #include "WorkoutFactory.h"
 #include "WorkoutPlanInputs.h"
 
 #include <math.h>
+#include <numeric>
 #include <random>
 
 // Max zone 1, zone 2, zone 3 total intensity distributions for each training philosophy
-#define TID_THRESHOLD = { 55, 55, 20 };
-#define TID_POLARIZED = { 85, 10, 25 };
-#define TID_PYRAMIDAL = { 75, 25, 10 };
+double TID_THRESHOLD[] = { 55.0, 55.0, 20.0 };
+double TID_POLARIZED[] = { 85.0, 10.0, 25.0 };
+double TID_PYRAMIDAL[] = { 75.0, 25.0, 10.0 };
 
 RunPlanGenerator::RunPlanGenerator()
 {
 	m_cutoffPace1 = (double)0.0;
 	m_cutoffPace2 = (double)0.0;
+	for (size_t i = 0; i < NUM_TRAINING_ZONES; ++i)
+	{
+		m_trainingIntensityDistribution[i] = 0.0;
+	}
 }
 
 RunPlanGenerator::~RunPlanGenerator()
@@ -119,6 +125,25 @@ void RunPlanGenerator::UpdateIntensityDistribution(uint64_t seconds, double mete
 		this->m_intensityDistributionSeconds[0] += seconds;
 		this->m_intensityDistributionMeters[0] += meters;
 	}
+}
+
+// How far are these workouts from the ideal intensity distribution?
+double RunPlanGenerator::CheckIntensityDistribution()
+{
+	double totalMeters = (double)0.0;
+	double intensityDistributionPercent[NUM_TRAINING_ZONES];
+	double intensityDistributionScore = (double)0.0;
+
+	std::accumulate(this->m_intensityDistributionMeters, this->m_intensityDistributionMeters + NUM_TRAINING_ZONES, totalMeters);
+	for (size_t i = 0; i < NUM_TRAINING_ZONES; ++i)
+	{
+		intensityDistributionPercent[i] = (this->m_intensityDistributionMeters[i] / totalMeters) * 100.0;
+	}
+	for (size_t i = 0; i < NUM_TRAINING_ZONES; ++i)
+	{
+		intensityDistributionScore += fabs(intensityDistributionPercent[i] - m_trainingIntensityDistribution[i]);
+	}
+	return intensityDistributionScore;
 }
 
 // Utility function for creating an easy run of some random distance between min and max.
@@ -369,10 +394,12 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 {
 	std::vector<Workout*> workouts;
 
-	// 3 Critical runs: Speed session, tempo run, and long run
+	// 3 Critical runs: Speed session, tempo or threshold run, and long run
 
 	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_RUN_DISTANCE);
+	double goal = inputs.at(WORKOUT_INPUT_GOAL);
 	double goalType = inputs.at(WORKOUT_INPUT_GOAL_TYPE);
+	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
 	double shortIntervalRunPace = inputs.at(WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE);
 	double functionalThresholdPace = inputs.at(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE);
 	double speedRunPace = inputs.at(WORKOUT_INPUT_SPEED_RUN_PACE);
@@ -383,10 +410,38 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1);
 	double longestRunWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_2);
 	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
-	//double inTaper = inputs.at(WORKOUT_INPUT_IN_TAPER);
 	double avgRunDistance = inputs.at(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS);
 	double numRuns = inputs.at(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS);
 	double expLevel = inputs.at(WORKOUT_INPUT_EXPERIENCE_LEVEL);
+
+	// Cutoff paces.
+	this->m_cutoffPace1 = tempoRunPace;
+	this->m_cutoffPace1 = speedRunPace;
+
+	// Ideal training intensity distribution.
+	for (size_t i = 0; i < NUM_TRAINING_ZONES; ++i)
+	{
+		switch (trainingIntensityDist)
+		{
+			case TRAINING_INTENSITY_DIST_TYPE_POLARIZED:
+				m_trainingIntensityDistribution[i] = TID_POLARIZED[i];
+				break;
+			case TRAINING_INTENSITY_DIST_TYPE_PYRAMIDAL:
+				m_trainingIntensityDistribution[i] = TID_PYRAMIDAL[i];
+				break;
+			case TRAINING_INTENSITY_DIST_TYPE_THRESHOLD:
+				m_trainingIntensityDistribution[i] = TID_THRESHOLD[i];
+				break;
+		}
+	}
+
+	// Are we in a taper?
+	// Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less
+	bool inTaper = false;
+	if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
+		inTaper = true;
+	if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
+		inTaper = true;
 
 	// Handle situation in which the user hasn't run in four weeks.
 	if (!RunPlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
@@ -447,16 +502,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	if (minRunDistance > maxEasyRunDistance)
 		minRunDistance = maxEasyRunDistance;
 
-	// We'll also set the percentage of easy miles/kms based on the experience level.
-	double minEasyDistancePercentage;
-	if (expLevel <= 5.0)
-		minEasyDistancePercentage = 0.90;
-	else if (expLevel <= 7.0)
-		minEasyDistancePercentage = 0.80;
-	else
-		minEasyDistancePercentage = 0.75;
-
 	size_t iterCount = 0;
+	double bestIntensityDistributionScore = (double)0.0;
+	std::vector<Workout*> bestWorkouts;
 	bool done = false;
 	while (!done)
 	{
@@ -501,17 +549,23 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		easyRunWorkout = this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance);
 		workouts.push_back(easyRunWorkout);
 
-		// Keep track of the total distance as well as the easy distance to keep from planning too many intense miles/kms.
-		double totalDistance = this->m_intensityDistributionMeters[0]  + this->m_intensityDistributionMeters[1] + this->m_intensityDistributionMeters[2];
-		double easyDistancePercentage = this->m_intensityDistributionMeters[0] / totalDistance;
+		// How far are these workouts from the ideal intensity distribution?
+		double intensityDistributionScore = this->CheckIntensityDistribution();
+		if (iterCount == 0 || intensityDistributionScore < bestIntensityDistributionScore)
+		{
+			for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
+			{
+				delete (*iter);
+			}
+			bestIntensityDistributionScore = intensityDistributionScore;
+			bestWorkouts = workouts;
+		}
 
 		// This is used to make sure we don't loop forever.
 		iterCount = iterCount + 1;
 
 		// Exit conditions:
 		if (iterCount >= 6)
-			done = true;
-		if (easyDistancePercentage >= minEasyDistancePercentage)
 			done = true;
 	}
 

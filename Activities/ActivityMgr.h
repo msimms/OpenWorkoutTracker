@@ -15,6 +15,8 @@
 #include "Coordinate.h"
 #include "FileFormat.h"
 #include "Gender.h"
+#include "Goal.h"
+#include "GoalType.h"
 #include "IntervalWorkoutSegment.h"
 #include "SensorType.h"
 #include "SyncDestination.h"
@@ -186,7 +188,7 @@ extern "C" {
 
 	// Functions for managing workout generation.
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
-	bool GenerateWorkouts(void);
+	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate);
 
 	// Functions for managing workout generation.
 	bool InitializeWorkoutList(void);

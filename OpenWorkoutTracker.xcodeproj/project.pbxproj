@@ -736,6 +736,8 @@
 		276E3BA123B83ADA00EAC341 /* PacePlansViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PacePlansViewController.m; path = IOS/View/PacePlansViewController.m; sourceTree = SOURCE_ROOT; };
 		276E3BA323BC042000EAC341 /* PacePlanEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacePlanEditViewController.h; path = IOS/View/PacePlanEditViewController.h; sourceTree = SOURCE_ROOT; };
 		276E3BA423BC042000EAC341 /* PacePlanEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PacePlanEditViewController.m; path = IOS/View/PacePlanEditViewController.m; sourceTree = SOURCE_ROOT; };
+		2772146F272B50450032DF85 /* Measure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Measure.h; path = Activities/Measure.h; sourceTree = SOURCE_ROOT; };
+		2772147F272B510F0032DF85 /* Goal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Goal.h; path = Activities/Goal.h; sourceTree = SOURCE_ROOT; };
 		2772FE9C2503DFD200ED9F2A /* BikePlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BikePlanGenerator.h; path = Activities/BikePlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		2772FEAB2503DFD300ED9F2A /* BikePlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BikePlanGenerator.cpp; path = Activities/BikePlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
 		2772FEAF2503EF5F00ED9F2A /* WorkoutDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorkoutDetailsViewController.m; path = IOS/View/WorkoutDetailsViewController.m; sourceTree = SOURCE_ROOT; };
@@ -1717,6 +1719,7 @@
 				27C0842419BFD063007CE934 /* Cycling.h */,
 				27CF010824D1E87A00263CEC /* FtpCalculator.cpp */,
 				27CF011724D1E87A00263CEC /* FtpCalculator.h */,
+				2772147F272B510F0032DF85 /* Goal.h */,
 				27E3022024F2FA7100EB5501 /* GoalType.h */,
 				27C0842619BFD063007CE934 /* GForceAnalyzer.cpp */,
 				27C0842719BFD063007CE934 /* GForceAnalyzer.h */,
@@ -1730,6 +1733,7 @@
 				27C0843019BFD063007CE934 /* IntervalWorkoutSegment.h */,
 				27C0843119BFD063007CE934 /* LiftingActivity.cpp */,
 				27C0843219BFD063007CE934 /* LiftingActivity.h */,
+				2772146F272B50450032DF85 /* Measure.h */,
 				27C0843319BFD063007CE934 /* MountainBiking.cpp */,
 				27C0843419BFD063007CE934 /* MountainBiking.h */,
 				27C0843519BFD063007CE934 /* MovingActivity.cpp */,

@@ -13,6 +13,8 @@
 #include <vector>
 
 #include "ActivitySummary.h"
+#include "Goal.h"
+#include "GoalType.h"
 #include "Workout.h"
 
 /**
@@ -26,7 +28,7 @@ public:
 
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 
-	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities);
+	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate);
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 
 private:
@@ -48,6 +50,7 @@ private:
 	void Reset();
 	void ProcessActivitySummary(const ActivitySummary& summary);
 	void CalculateRunTrainingPaces(std::map<std::string, double>& inputs);
+	void CalculateGoalDistances(std::map<std::string, double>& inputs);
 };
 
 #endif

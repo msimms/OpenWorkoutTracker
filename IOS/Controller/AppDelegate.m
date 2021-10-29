@@ -2936,7 +2936,7 @@ void attributeNameCallback(const char* name, void* context)
 	}
 
 	// Run the algorithm.
-	return GenerateWorkouts();
+	return GenerateWorkouts(GOAL_FITNESS, GOAL_TYPE_COMPLETION, 0);
 }
 
 // Retrieve planned workouts from the database.

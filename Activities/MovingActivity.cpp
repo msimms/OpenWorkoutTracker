@@ -13,16 +13,13 @@
 #include "ActivityAttribute.h"
 #include "Defines.h"
 #include "Distance.h"
+#include "Measure.h"
 #include "UnitConverter.h"
 #include "UnitConversionFactors.h"
 #include "UnitMgr.h"
 
 #define MIN_METERS_MOVED          1.0
 #define MIN_VERTICAL_METERS_MOVED 0.1
-
-#define METERS_PER_HALF_MARATHON  21082.4064
-#define METERS_PER_MARATHON       42164.8128
-#define METERS_PER_CENTURY        160934.4
 
 MovingActivity::MovingActivity() : Activity()
 {

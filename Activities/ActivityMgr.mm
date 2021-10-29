@@ -2485,7 +2485,7 @@ extern "C" {
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	bool GenerateWorkouts(void)
+	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate)
 	{
 		bool result = false;
 
@@ -2494,7 +2494,7 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			// Calculate inputs from activities in the database.
-			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList);
+			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate);
 
 			// Generate new workouts.
 			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
