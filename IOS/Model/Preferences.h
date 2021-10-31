@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Goal.h"
+#import "GoalType.h"
 #import "UnitSystem.h"
 
 @interface Preferences : NSObject
@@ -49,6 +51,9 @@
 + (BOOL)hasShownStationaryBikeHelp;
 + (BOOL)hasShownTreadmillHelp;
 + (BOOL)useWatchHeartRate;
++ (Goal)workoutGoal;
++ (GoalType)workoutGoalType;
++ (time_t)workoutGoalDate;
 
 #pragma mark set methods
 
@@ -73,6 +78,9 @@
 + (void)setHasShownStationaryBikeHelp:(BOOL)value;
 + (void)setHasShownTreadmillHelp:(BOOL)value;
 + (void)setUseWatchHeartRate:(BOOL)value;
++ (void)setWorkoutGoal:(Goal)value;
++ (void)setWorkoutGoalType:(GoalType)value;
++ (void)setWorkoutGoalDate:(time_t)value;
 
 #pragma mark methods for managing the list of accessories
 

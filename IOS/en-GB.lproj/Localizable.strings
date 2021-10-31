@@ -114,6 +114,7 @@
 "ft" = "ft";
 "Gear" = "Gear";
 "Gender" = "Gender";
+"Goal" = "Goal";
 "GPX File" = "GPX File";
 "Heart Rate Monitor" = "Heart Rate Monitor";
 "Heatmap" = "Heatmap";
@@ -259,6 +260,7 @@
 "Stop" = "Stop";
 "Strava" = "Strava";
 "Successful login." = "Successful login.";
+"Suggested Workouts" = "Suggested Workouts";
 "Summary" = "Summary";
 "Superlatives" = "Superlatives";
 "Synchronization" = "Synchronisation";

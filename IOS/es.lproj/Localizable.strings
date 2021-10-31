@@ -114,6 +114,7 @@
 "ft" = "pies (de altura)";
 "Gear" = "Equipo";
 "Gender" = "Sexo";
+"Goal" = "Objetivo";
 "GPX File" = "GPX Archivo";
 "Heart Rate Monitor" = "Monitor de Pulso Cardiaco";
 "Heatmap" = "Mapa de Calor";
@@ -259,6 +260,7 @@
 "Stop" = "Deténgase";
 "Strava" = "Strava";
 "Successful login." = "Acceso exitoso.";
+"Suggested Workouts" = "Entrenamientos Sugeridos";
 "Summary" = "Sumario";
 "Superlatives" = "Superlativos";
 "Synched" = "Sincronizado";

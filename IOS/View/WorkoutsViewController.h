@@ -17,6 +17,7 @@
 	NSMutableArray* plannedWorkouts;
 }
 
+- (IBAction)onGoal:(id)sender;
 - (IBAction)onGenerateWorkouts:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UITableView* workoutsView;

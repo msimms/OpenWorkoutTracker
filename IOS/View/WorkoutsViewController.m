@@ -11,8 +11,18 @@
 #import "AppStrings.h"
 #import "ImageUtils.h"
 #import "Params.h"
+#import "Preferences.h"
 #import "Segues.h"
 #import "StringUtils.h"
+
+#define BUTTON_TITLE_FITNESS           NSLocalizedString(@"Fitness", nil)
+#define BUTTON_TITLE_5K_RUN            NSLocalizedString(@"5K Run", nil)
+#define BUTTON_TITLE_10K_RUN           NSLocalizedString(@"10K Run", nil)
+#define BUTTON_TITLE_15K_RUN           NSLocalizedString(@"15K Run", nil)
+#define BUTTON_TITLE_HALF_MARATHON_RUN NSLocalizedString(@"Half Marathon", nil)
+#define BUTTON_TITLE_MARATHON_RUN      NSLocalizedString(@"Marathon", nil)
+#define BUTTON_TITLE_50K_RUN           NSLocalizedString(@"50K Run", nil)
+#define BUTTON_TITLE_50_MILE_RUN       NSLocalizedString(@"50 Mile Run", nil)
 
 @interface WorkoutsViewController ()
 
@@ -75,6 +85,44 @@
 }
 
 #pragma mark button handlers
+
+- (IBAction)onGoal:(id)sender
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_GOAL
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_FITNESS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_FITNESS];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_5K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_5K_RUN];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_10K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_10K_RUN];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_15K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_15K_RUN];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_HALF_MARATHON_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_HALF_MARATHON_RUN];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_MARATHON_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_MARATHON_RUN];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_50K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_50K_RUN];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_50_MILE_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoal:GOAL_50_MILE_RUN];
+	}]];
+
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
+}
 
 - (IBAction)onGenerateWorkouts:(id)sender
 {

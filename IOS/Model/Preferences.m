@@ -29,6 +29,9 @@
 #define PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP       "Has Shown Stationary Bike Help"
 #define PREF_NAME_HAS_SHOWN_TREADMILL_HELP             "Has Shown Treadmill Help"
 #define PREF_NAME_USE_WATCH_HEART_RATE                 "Use Watch Heart Rate"
+#define PREF_NAME_WORKOUT_GOAL                         "Workout Goal"
+#define PREF_NAME_WORKOUT_GOAL_TYPE                    "Workout Goal Type"
+#define PREF_NAME_WORKOUT_GOAL_DATE                    "Workout Goal Date"
 
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
@@ -246,6 +249,24 @@
 	return [self readBooleanValue:@PREF_NAME_USE_WATCH_HEART_RATE];
 }
 
++ (Goal)workoutGoal
+{
+	NSInteger goal = [self readNumericValue:@PREF_NAME_WORKOUT_GOAL];
+	return (Goal)goal;
+}
+
++ (GoalType)workoutGoalType
+{
+	NSInteger goalType = [self readNumericValue:@PREF_NAME_WORKOUT_GOAL_TYPE];
+	return (GoalType)goalType;
+}
+
++ (time_t)workoutGoalDate
+{
+	NSInteger goalDate = [self readNumericValue:@PREF_NAME_WORKOUT_GOAL_DATE];
+	return (time_t)goalDate;
+}
+
 #pragma mark set methods
 
 + (void)setUuid:(NSString*)value
@@ -365,6 +386,21 @@
 	[self writeBoolValue:@PREF_NAME_USE_WATCH_HEART_RATE withValue:value];
 }
 
++ (void)setWorkoutGoal:(Goal)value
+{
+	[self writeIntValue:@PREF_NAME_WORKOUT_GOAL withValue:(NSInteger)value];
+}
+
++ (void)setWorkoutGoalType:(GoalType)value
+{
+	[self writeIntValue:@PREF_NAME_WORKOUT_GOAL_TYPE withValue:(NSInteger)value];
+}
+
++ (void)setWorkoutGoalDate:(time_t)value
+{
+	[self writeIntValue:@PREF_NAME_WORKOUT_GOAL_DATE withValue:(NSInteger)value];
+}
+
 #pragma mark methods for managing the list of accessories
 
 + (NSArray*)listPeripheralsToUse
@@ -378,6 +414,7 @@
 	if (![self shouldUsePeripheral:uuid])
 	{
 		NSString* peripheralList = [self readStringValue:@PREF_NAME_ALWAYS_CONNECT];
+
 		if (peripheralList && ([peripheralList length] > 0))
 		{
 			NSString* newList = [peripheralList stringByAppendingFormat:@";%@", uuid];
@@ -394,6 +431,7 @@
 {
 	NSString* peripheralList = [self readStringValue:@PREF_NAME_ALWAYS_CONNECT];
 	NSRange rangeOfSubstring = [peripheralList rangeOfString:uuid];
+
 	if (rangeOfSubstring.location != NSNotFound)
 	{
 		NSString* newList = [peripheralList substringToIndex:rangeOfSubstring.location];
@@ -405,6 +443,7 @@
 + (BOOL)shouldUsePeripheral:(NSString*)uuid
 {
 	NSString* peripheralList = [self readStringValue:@PREF_NAME_ALWAYS_CONNECT];
+
 	if (peripheralList)
 	{
 		NSRange range = [peripheralList rangeOfString:uuid options:NSCaseInsensitiveSearch];
@@ -418,6 +457,7 @@
 + (NSMutableDictionary*)exportPrefs
 {
 	NSMutableDictionary* prefs = [[NSMutableDictionary alloc] init];
+
 	[prefs setObject:[NSNumber numberWithInteger:[self preferredUnitSystem]] forKey:@PREF_NAME_UNITS];
 	[prefs setObject:[NSNumber numberWithBool:[self shouldScanForSensors]] forKey:@PREF_NAME_SCAN_FOR_SENSORS];
 	[prefs setObject:[NSNumber numberWithBool:[self shouldBroadcastToServer]] forKey:@PREF_NAME_BROADCAST_TO_SERVER];

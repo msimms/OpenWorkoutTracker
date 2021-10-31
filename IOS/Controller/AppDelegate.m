@@ -2935,8 +2935,13 @@ void attributeNameCallback(const char* name, void* context)
 		}
 	}
 
+	// Load the user's goals.
+	Goal goal = [Preferences workoutGoal];
+	GoalType goalType = [Preferences workoutGoalType];
+	time_t goalDate = [Preferences workoutGoalDate];
+
 	// Run the algorithm.
-	return GenerateWorkouts(GOAL_FITNESS, GOAL_TYPE_COMPLETION, 0);
+	return GenerateWorkouts(goal, goalType, goalDate);
 }
 
 // Retrieve planned workouts from the database.

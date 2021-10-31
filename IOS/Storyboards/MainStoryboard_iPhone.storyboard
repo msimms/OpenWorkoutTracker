@@ -2548,6 +2548,11 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     <constraint firstAttribute="height" constant="44" id="b5I-hY-EHJ"/>
                                 </constraints>
                                 <items>
+                                    <barButtonItem title="Goal" id="7KF-48-wlb" userLabel="Goal">
+                                        <connections>
+                                            <action selector="onGoal:" destination="Yuq-BJ-ges" id="nFq-bH-zaE"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="euL-8d-aC6"/>
                                     <barButtonItem systemItem="refresh" id="dAT-Yg-1IA">
                                         <connections>
