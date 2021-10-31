@@ -18,6 +18,7 @@
 #define BUTTON_TITLE_VIEW            NSLocalizedString(@"View", nil)
 #define BUTTON_TITLE_EDIT            NSLocalizedString(@"Edit", nil)
 #define BUTTON_TITLE_RESET           NSLocalizedString(@"Reset", nil)
+#define BUTTON_TITLE_ABOUT           NSLocalizedString(@"About", nil)
 #define BUTTON_TITLE_VIEW_HISTORY    NSLocalizedString(@"History", nil)
 #define BUTTON_TITLE_VIEW_STATISTICS NSLocalizedString(@"Statistics", nil)
 #define BUTTON_TITLE_VIEW_WORKOUTS   NSLocalizedString(@"Workouts", nil)
@@ -47,6 +48,7 @@
 @synthesize viewButton;
 @synthesize editButton;
 @synthesize resetButton;
+@synthesize aboutButton;
 @synthesize spinner;
 
 - (void)viewDidLoad
@@ -62,6 +64,7 @@
 	[self.viewButton setTitle:BUTTON_TITLE_VIEW forState:UIControlStateNormal];
 	[self.editButton setTitle:BUTTON_TITLE_EDIT forState:UIControlStateNormal];
 	[self.resetButton setTitle:BUTTON_TITLE_RESET forState:UIControlStateNormal];
+	[self.aboutButton setTitle:BUTTON_TITLE_ABOUT forState:UIControlStateNormal];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationInitialized:) name:@NOTIFICATION_NAME_APPLICATION_INITIALIZED object:nil];
 }

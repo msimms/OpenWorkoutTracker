@@ -11,6 +11,7 @@
 @interface WorkoutsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
 	IBOutlet UITableView* workoutsView;
+	IBOutlet UIBarButtonItem* goalButton;
 	IBOutlet UIBarButtonItem* generateButton;
 	
 	NSMutableDictionary* selectedWorkoutDetails;
@@ -21,6 +22,7 @@
 - (IBAction)onGenerateWorkouts:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UITableView* workoutsView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* goalButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* generateButton;
 
 @end

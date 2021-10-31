@@ -141,6 +141,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="EAK-eB-3IZ"/>
                     <connections>
+                        <outlet property="aboutButton" destination="k8x-Jc-LVD" id="Gi3-bw-euy"/>
                         <outlet property="editButton" destination="XGp-p1-MzY" id="YTG-tI-5Zr"/>
                         <outlet property="navItem" destination="EAK-eB-3IZ" id="dva-VD-bp7"/>
                         <outlet property="resetButton" destination="EyH-bS-fuV" id="jME-iz-Vrx"/>
@@ -2576,6 +2577,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <navigationItem key="navigationItem" id="bEy-hg-a2T"/>
                     <connections>
                         <outlet property="generateButton" destination="dAT-Yg-1IA" id="em2-o6-Pi9"/>
+                        <outlet property="goalButton" destination="7KF-48-wlb" id="ICl-4T-fDD"/>
                         <outlet property="navItem" destination="bEy-hg-a2T" id="qJg-eq-Hlt"/>
                         <outlet property="toolbar" destination="9P9-KK-ntB" id="2oL-LD-93Q"/>
                         <outlet property="workoutsView" destination="bf3-gh-9hW" id="agC-Bu-gTU"/>
@@ -2976,8 +2978,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     <inferredMetricsTieBreakers>
         <segue reference="ksp-tA-xd6"/>
         <segue reference="Zfp-Rg-OxX"/>
-        <segue reference="fz0-Br-1wA"/>
-        <segue reference="kzb-01-qIL"/>
+        <segue reference="1Bm-YM-doO"/>
+        <segue reference="8pE-cX-Fug"/>
         <segue reference="mpc-lI-yFA"/>
     </inferredMetricsTieBreakers>
     <resources>

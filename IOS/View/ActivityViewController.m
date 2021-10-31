@@ -109,6 +109,7 @@
 	self->tappedButtonIndex = 0;
 
 	[self.moreButton setTitle:STR_NEXT];
+	[self.paceButton setTitle:STR_PACE];
 	[self.lapButton setTitle:STR_LAP];
 	[self.weightButton setTitle:STR_WEIGHT];
 	[self.customizeButton setTitle:BUTTON_TITLE_CUSTOMIZE];

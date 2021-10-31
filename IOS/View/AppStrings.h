@@ -45,6 +45,7 @@
 #define STR_NEXT                  NSLocalizedString(@"Next", nil)
 #define STR_NONE                  NSLocalizedString(@"None", nil)
 #define STR_NOT_SYNCHED           NSLocalizedString(@"Not Synched", nil)
+#define STR_PACE                  NSLocalizedString(@"Pace", nil)
 #define STR_PROFILE               NSLocalizedString(@"Profile", nil)
 #define STR_PREVIOUS              NSLocalizedString(@"Previous", nil)
 #define STR_REPITITIONS           NSLocalizedString(@"Repetitions", nil)

@@ -5,6 +5,11 @@
  
 */
 
+"5K Run" = "Carrera de 5 km";
+"10K Run" = "Carrera de 10 km";
+"15K Run" = "Carrera de 15 km";
+"50K Run" = "Carrera de 50 km";
+"50 Mile Run" = "Carrera de 50 millas";
 "About" = "Sobre";
 "Active" = "Activo";
 "Activity Level" = "Nivel de Actividad";
@@ -116,6 +121,7 @@
 "Gender" = "Sexo";
 "Goal" = "Objetivo";
 "GPX File" = "GPX Archivo";
+"Half Marathon" = "Medio Maratón";
 "Heart Rate Monitor" = "Monitor de Pulso Cardiaco";
 "Heatmap" = "Mapa de Calor";
 "Height" = "Altura";
@@ -157,6 +163,7 @@
 "Map Options" = "Opciones de Mapa";
 "Map Overlays" = "Superposiciónes";
 "Map Type" = "Tipo de Mapa";
+"Marathon" = "Maratón";
 "Max. Distance" = "Distancia Máxima";
 "Maximum Altitude" = "Altitud Máxima";
 "Measure distance in which units?" = "¿Medir la distancia en la que las unidades?";
@@ -194,6 +201,7 @@
 "Open Water Swimming" = "Natación en Aguas Abiertas";
 "Overlay" = "Superposición";
 "Overview" = "Visión de Conjunto";
+"Pace" = "Ritmo";
 "Pace Plans" = "Planes de Ritmo";
 "Pause" = "Pausa";
 "Please enter your FTP" = "Por favor ingrese su FTP";
@@ -248,7 +256,7 @@
 "Squat" = "Sentadillas";
 "Standard View" = "Estándar Vista";
 "Start" = "Comienzo";
-"Start a Workout" = "Nuevo Entrenamiento";
+"Start a Workout" = "Comienzo";
 "Start and Finish" = "Comienzo y Terminar";
 "Start of Workout" = "Comienzo del Entrenamiento";
 "Started" = "Comenzado";
@@ -288,6 +296,7 @@
 "Total Reps" = "Repeticións Totales";
 "Treadmill" = "Rueda de Andar";
 "Treadmill running requires the use of a Bluetooth foot pod." = "Correr Cinta de correr requiere el uso de un podómetro Bluetooth.";
+"Triathlon" = "Triatlón";
 "Trim" = "Recortar";
 "Update" = "Actualizar";
 "Update Rate" = "Frecuencia de Actualización";

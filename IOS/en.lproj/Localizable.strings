@@ -5,6 +5,11 @@
  
 */
 
+"5K Run" = "5K Run";
+"10K Run" = "10K Run";
+"15K Run" = "15K Run";
+"50K Run" = "50K Run";
+"50 Mile Run" = "50 Mile Run";
 "About" = "About";
 "Active" = "Active";
 "Activity Level" = "Activity Level";
@@ -116,6 +121,7 @@
 "Gender" = "Gender";
 "Goal" = "Goal";
 "GPX File" = "GPX File";
+"Half Marathon" = "Half Marathon";
 "Heart Rate Monitor" = "Heart Rate Monitor";
 "Heatmap" = "Heatmap";
 "Height" = "Height";
@@ -157,6 +163,7 @@
 "Map Options" = "Map Options";
 "Map Overlays" = "Map Overlays";
 "Map Type" = "Map Type";
+"Marathon" = "Marathon";
 "Max. Distance" = "Max. Distance";
 "Maximum Altitude" = "Maximum Altitude";
 "Measure distance in which units?" = "Measure distance in which units?";
@@ -194,6 +201,7 @@
 "Open Water Swimming" = "Open Water Swimming";
 "Overlay" = "Overlay";
 "Overview" = "Overview";
+"Pace" = "Pace";
 "Pace Plans" = "Pace Plans";
 "Pause" = "Pause";
 "Please enter your FTP" = "Please enter your FTP";
@@ -288,6 +296,7 @@
 "Total Reps" = "Total Reps";
 "Treadmill" = "Treadmill";
 "Treadmill running requires the use of a Bluetooth foot pod." = "Treadmill running requires the use of a Bluetooth foot pod.";
+"Triathlon" = "Triathlon";
 "Trim" = "Trim";
 "Update" = "Update";
 "Update Rate" = "Update Rate";

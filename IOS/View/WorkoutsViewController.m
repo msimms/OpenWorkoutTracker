@@ -31,6 +31,7 @@
 @implementation WorkoutsViewController
 
 @synthesize workoutsView;
+@synthesize goalButton;
 @synthesize generateButton;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -41,12 +42,14 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+
 	self.title = STR_WORKOUTS;
 
 	[self.generateButton setTitle:STR_GENERATE];
 	[self updateWorkoutNames];
 
-	[super viewDidLoad];
+	[self.goalButton setTitle:STR_GOAL];
 }
 
 - (void)viewDidAppear:(BOOL)animated
