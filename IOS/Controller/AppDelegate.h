@@ -274,7 +274,7 @@
 
 // methods for managing tags
 
-- (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId;
+- (BOOL)createTag:(NSString*)tag forActivityId:(NSString*)activityId;
 - (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId;
 - (void)searchForTags:(NSString*)searchText;
 

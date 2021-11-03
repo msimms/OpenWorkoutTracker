@@ -234,7 +234,7 @@ extern "C" {
 	// Functions for managing the activity name.
 	//
 
-	bool SetActivityName(const char* const activityId, const char* const name)
+	bool CreateActivityName(const char* const activityId, const char* const name)
 	{
 		bool result = false;
 
@@ -250,7 +250,7 @@ extern "C" {
 		return result;
 	}
 
-	char* GetActivityName(const char* const activityId)
+	char* RetrieveActivityName(const char* const activityId)
 	{
 		char* name = NULL;
 
@@ -275,7 +275,7 @@ extern "C" {
 	// Functions for managing the activity description.
 	//
 
-	bool SetActivityDescription(const char* const activityId, const char* const description)
+	bool CreateActivityDescription(const char* const activityId, const char* const description)
 	{
 		bool result = false;
 
@@ -290,7 +290,7 @@ extern "C" {
 
 		return result;
 	}
-	char* GetActivityDescription(const char* const activityId)
+	char* RetrieveActivityDescription(const char* const activityId)
 	{
 		char* description = NULL;
 
@@ -315,7 +315,23 @@ extern "C" {
 	// Functions for managing tags.
 	//
 
-	bool GetTags(const char* const activityId, TagCallback callback, void* context)
+	bool CreateTag(const char* const activityId, const char* const tag)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->CreateTag(activityId, tag);
+		}
+
+		g_dbLock.unlock();
+
+		return result;
+	}
+
+	bool RetrieveTags(const char* const activityId, TagCallback callback, void* context)
 	{
 		bool result = false;
 
@@ -343,22 +359,6 @@ extern "C" {
 		return result;
 	}
 
-	bool StoreTag(const char* const activityId, const char* const tag)
-	{
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			result = g_pDatabase->CreateTag(activityId, tag);
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
 	bool DeleteTag(const char* const activityId, const char* const tag)
 	{
 		bool result = false;
@@ -371,6 +371,28 @@ extern "C" {
 		}
 
 		g_dbLock.lock();
+
+		return result;
+	}
+
+	bool HasTag(const char* const activityId, const char* const tag)
+	{
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			std::vector<std::string> tags;
+
+			if (g_pDatabase->RetrieveTags(activityId, tags))
+			{
+				std::string tempTag = tag;
+				result = std::find(tags.begin(), tags.end(), tempTag) != tags.end();
+			}
+		}
+
+		g_dbLock.unlock();
 
 		return result;
 	}
@@ -413,7 +435,7 @@ extern "C" {
 	// Functions for managing the activity hash.
 	//
 
-	bool StoreHash(const char* const activityId, const char* const hash)
+	bool CreateOrUpdateActivityHash(const char* const activityId, const char* const hash)
 	{
 		bool result = false;
 
@@ -920,7 +942,7 @@ extern "C" {
 		return false;
 	}
 
-	void SetActivityBikeProfile(const char* const activityId, uint64_t bikeId)
+	void CreateOrUpdateActivityBikeProfile(const char* const activityId, uint64_t bikeId)
 	{
 		g_dbLock.lock();
 
@@ -951,7 +973,7 @@ extern "C" {
 
 				if (bike.name.compare(name) == 0)
 				{
-					SetActivityBikeProfile(g_pCurrentActivity->GetIdCStr(), bike.id);
+					CreateOrUpdateActivityBikeProfile(g_pCurrentActivity->GetIdCStr(), bike.id);
 
 					Cycling* pCycling = dynamic_cast<Cycling*>(g_pCurrentActivity);
 					if (pCycling)

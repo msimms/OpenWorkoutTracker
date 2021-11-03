@@ -38,21 +38,22 @@ extern "C" {
 	bool CloseDatabase(void);
 
 	// Functions for managing the activity name.
-	bool SetActivityName(const char* const activityId, const char* const name);
-	char* GetActivityName(const char* const activityId);
+	bool CreateActivityName(const char* const activityId, const char* const name);
+	char* RetrieveActivityName(const char* const activityId);
 
 	// Functions for managing the activity description.
-	bool SetActivityDescription(const char* const activityId, const char* const description);
-	char* GetActivityDescription(const char* const activityId);
+	bool CreateActivityDescription(const char* const activityId, const char* const description);
+	char* RetrieveActivityDescription(const char* const activityId);
 
 	// Functions for managing tags.
-	bool GetTags(const char* const activityId, TagCallback callback, void* context);
-	bool StoreTag(const char* const activityId, const char* const tag);
+	bool CreateTag(const char* const activityId, const char* const tag);
+	bool RetrieveTags(const char* const activityId, TagCallback callback, void* context);
 	bool DeleteTag(const char* const activityId, const char* const tag);
+	bool HasTag(const char* const activityId, const char* const tag);
 	bool SearchForTags(const char* const searchStr);
 
 	// Functions for managing the activity hash.
-	bool StoreHash(const char* const activityId, const char* const hash);
+	bool CreateOrUpdateActivityHash(const char* const activityId, const char* const hash);
 	char* GetActivityIdByHash(const char* const hash);
 	char* GetHashForActivityId(const char* const activityId);
 
@@ -77,7 +78,7 @@ extern "C" {
 	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm);
 	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm);
 	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId);
-	void SetActivityBikeProfile(const char* const activityId, uint64_t bikeId);
+	void CreateOrUpdateActivityBikeProfile(const char* const activityId, uint64_t bikeId);
 	void SetCurrentBicycle(const char* const name);
 	uint64_t GetBikeIdFromName(const char* const name);
 

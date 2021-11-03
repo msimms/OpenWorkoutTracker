@@ -214,7 +214,7 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSString* tag = [textField text];
 
-	if ([appDelegate storeTag:tag forActivityId:self->activityId])
+	if ([appDelegate createTag:tag forActivityId:self->activityId])
 	{
 		[appDelegate serverCreateTag:tag forActivity:self->activityId];
 	}

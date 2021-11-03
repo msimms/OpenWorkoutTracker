@@ -67,3 +67,4 @@
 #define PARAM_ACTIVITY_NAME                   "Name"
 #define PARAM_ACTIVITY_NAME2                  "name"
 #define PARAM_ACTIVITY_DESCRIPTION            "Description"
+#define PARAM_ACTIVITY_TAGS                   "tags"

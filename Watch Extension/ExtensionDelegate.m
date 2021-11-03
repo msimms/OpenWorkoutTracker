@@ -658,7 +658,7 @@ void syncStatusCallback(const char* const destination, void* context)
 
 	if (hashStr)
 	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		CreateOrUpdateActivityHash([activityId UTF8String], [hashStr UTF8String]);
 	}
 	return hashStr;
 }
@@ -694,7 +694,7 @@ void syncStatusCallback(const char* const destination, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* activityName = GetActivityName([activityId UTF8String]);
+	char* activityName = RetrieveActivityName([activityId UTF8String]);
 
 	if (activityName)
 	{

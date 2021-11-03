@@ -1421,16 +1421,31 @@ void startSensorCallback(SensorType type, void* context)
 			NSString* activityId = [activityData objectForKey:@PARAM_ACTIVITY_ID];
 			NSString* activityName = [activityData objectForKey:@PARAM_ACTIVITY_NAME];
 			NSString* activityDesc = [activityData objectForKey:@PARAM_ACTIVITY_DESCRIPTION];
+			NSArray* tags = [activityData objectForKey:@PARAM_ACTIVITY_TAGS];
 
-			// If we were sent the activity name or description then update it in the database.
+			// If we were sent the activity name, description, or tags then update it in the database.
 			if (activityId && activityName)
 			{
-				SetActivityName([activityId UTF8String], [activityName UTF8String]);
+				CreateActivityName([activityId UTF8String], [activityName UTF8String]);
 			}
 			if (activityId && activityDesc)
 			{
-				SetActivityDescription([activityId UTF8String], [activityDesc UTF8String]);
+				CreateActivityDescription([activityId UTF8String], [activityDesc UTF8String]);
 			}
+			if (tags)
+			{
+				for (NSString* tag in tags)
+				{
+					if (!HasTag([activityId UTF8String], [tag UTF8String]))
+					{
+						CreateTag([activityId UTF8String], [tag UTF8String]);
+					}
+				}
+			}
+		}
+		else
+		{
+			NSLog(@"Invalid JSON received.");
 		}
 	}
 	@catch (...)
@@ -2070,7 +2085,7 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (hashStr)
 	{
-		StoreHash([activityId UTF8String], [hashStr UTF8String]);
+		CreateOrUpdateActivityHash([activityId UTF8String], [hashStr UTF8String]);
 	}
 	return hashStr;
 }
@@ -2132,7 +2147,7 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
 	{
-		SetActivityBikeProfile(GetCurrentActivityId(), bikeId);
+		CreateOrUpdateActivityBikeProfile(GetCurrentActivityId(), bikeId);
 	}
 }
 
@@ -2144,7 +2159,7 @@ void startSensorCallback(SensorType type, void* context)
 	
 	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
 	{
-		SetActivityBikeProfile([activityId UTF8String], bikeId);
+		CreateOrUpdateActivityBikeProfile([activityId UTF8String], bikeId);
 	}
 }
 
@@ -2548,7 +2563,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 - (BOOL)setActivityName:(NSString*)activityId withName:(NSString*)name
 {
-	if (SetActivityName([activityId UTF8String], [name UTF8String]))
+	if (CreateActivityName([activityId UTF8String], [name UTF8String]))
 	{
 		[ApiClient serverSetActivityName:activityId withName:name];
 		return TRUE;
@@ -2559,7 +2574,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 - (NSString*)getActivityName:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* activityName = GetActivityName([activityId UTF8String]);
+	char* activityName = RetrieveActivityName([activityId UTF8String]);
 
 	if (activityName)
 	{
@@ -2573,7 +2588,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 - (BOOL)setActivityDescription:(NSString*)activityId withName:(NSString*)description
 {
-	if (SetActivityDescription([activityId UTF8String], [description UTF8String]))
+	if (CreateActivityDescription([activityId UTF8String], [description UTF8String]))
 	{
 		[ApiClient serverSetActivityDescription:activityId withDescription:description];
 		return TRUE;
@@ -2584,7 +2599,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 - (NSString*)getActivityDescription:(NSString*)activityId
 {
 	NSString* result = nil;
-	char* description = GetActivityDescription([activityId UTF8String]);
+	char* description = RetrieveActivityDescription([activityId UTF8String]);
 
 	if (description)
 	{
@@ -2607,7 +2622,7 @@ void tagCallback(const char* name, void* context)
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 	if (names)
 	{
-		GetTags([activityId UTF8String], tagCallback, (__bridge void*)names);
+		RetrieveTags([activityId UTF8String], tagCallback, (__bridge void*)names);
 	}
 	return names;
 }
@@ -2994,9 +3009,9 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark methods for managing tags
 
-- (BOOL)storeTag:(NSString*)tag forActivityId:(NSString*)activityId
+- (BOOL)createTag:(NSString*)tag forActivityId:(NSString*)activityId
 {
-	return StoreTag([activityId UTF8String], [tag UTF8String]);
+	return CreateTag([activityId UTF8String], [tag UTF8String]);
 }
 
 - (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId
