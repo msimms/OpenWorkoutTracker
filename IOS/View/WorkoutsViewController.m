@@ -32,7 +32,9 @@
 
 @synthesize workoutsView;
 @synthesize goalButton;
+@synthesize goalDateButton;
 @synthesize generateButton;
+@synthesize datePicker;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
 {
@@ -46,10 +48,14 @@
 
 	self.title = STR_WORKOUTS;
 
-	[self.generateButton setTitle:STR_GENERATE];
-	[self updateWorkoutNames];
-
 	[self.goalButton setTitle:STR_GOAL];
+	[self.goalDateButton setTitle:STR_GOAL_DATE];
+
+	[self.datePicker setHidden:TRUE];
+	[self.datePicker setDatePickerMode:UIDatePickerModeDate];
+	[self.datePicker addTarget:self action:@selector(updateLabel:) forControlEvents:UIControlEventValueChanged];
+
+	[self updateWorkoutNames];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,6 +91,15 @@
 			[detailsVC setWorkoutDetails:self->selectedWorkoutDetails];
 		}
 	}
+}
+
+#pragma mark methods for getting the result from the UIPickerView
+
+- (void)updateLabel:(id)sender
+{
+	NSDate* newDate = [self.datePicker date];
+	
+	[Preferences setWorkoutGoalDate:[newDate timeIntervalSince1970]];
 }
 
 #pragma mark button handlers
@@ -127,6 +142,21 @@
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
+- (IBAction)onGoalDate:(id)sender
+{
+	if (self.datePicker.hidden)
+	{
+		NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:[Preferences workoutGoalDate]];
+
+		[self.datePicker setDate:dateObj];
+		[self.datePicker setHidden:FALSE];
+	}
+	else
+	{
+		[self.datePicker setHidden:TRUE];
+	}
+}
+
 - (IBAction)onGenerateWorkouts:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -159,7 +189,7 @@
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return STR_WORKOUT;
+	return STR_SUGGESTED_WORKOUTS;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section

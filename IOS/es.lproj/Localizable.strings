@@ -118,8 +118,9 @@
 "Friends" = "Amigos";
 "ft" = "pies (de altura)";
 "Gear" = "Equipo";
-"Gender" = "Sexo";
+"Gender" = "Género Biológico";
 "Goal" = "Objetivo";
+"Goal Date" = "Fecha Objetivo";
 "GPX File" = "GPX Archivo";
 "Half Marathon" = "Medio Maratón";
 "Heart Rate Monitor" = "Monitor de Pulso Cardiaco";

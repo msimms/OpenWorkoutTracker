@@ -182,7 +182,7 @@
                                     <outlet property="delegate" destination="2GL-V3-JX0" id="ZsM-Ua-3NF"/>
                                 </connections>
                             </tableView>
-                            <datePicker hidden="YES" contentMode="scaleAspectFit" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" id="7kL-qg-Dsf">
+                            <datePicker hidden="YES" contentMode="scaleToFill" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" id="7kL-qg-Dsf">
                                 <rect key="frame" x="0.0" y="367" width="414" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             </datePicker>
@@ -190,9 +190,9 @@
                         <viewLayoutGuide key="safeArea" id="gfk-8M-Gq9"/>
                         <constraints>
                             <constraint firstItem="TFu-Tc-0Aa" firstAttribute="top" secondItem="gfk-8M-Gq9" secondAttribute="top" id="81x-We-wQe"/>
-                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="trailing" secondItem="7kL-qg-Dsf" secondAttribute="trailing" id="GAM-jr-DEG"/>
-                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="leading" secondItem="7kL-qg-Dsf" secondAttribute="leading" id="cyO-NR-M2W"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="TFu-Tc-0Aa" secondAttribute="bottom" constant="-34" id="vT1-69-Hmg"/>
+                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="trailing" secondItem="gfk-8M-Gq9" secondAttribute="trailing" id="GAM-jr-DEG"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="TFu-Tc-0Aa" secondAttribute="bottom" constant="-34" id="OtD-ek-Uz2"/>
+                            <constraint firstItem="TFu-Tc-0Aa" firstAttribute="leading" secondItem="gfk-8M-Gq9" secondAttribute="leading" id="cyO-NR-M2W"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="AKv-aO-jig"/>
@@ -373,7 +373,7 @@
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="yB7-Ck-VdY" userLabel="Large Activity Indicator">
-                                <rect key="frame" x="30" y="430" width="360" height="37"/>
+                                <rect key="frame" x="188.5" y="456.5" width="37" height="37"/>
                                 <color key="color" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                         </subviews>
@@ -381,15 +381,14 @@
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
                             <constraint firstItem="Xk7-K9-X0j" firstAttribute="top" secondItem="DYt-YB-u6W" secondAttribute="bottom" constant="30" id="2WE-EE-28k"/>
-                            <constraint firstItem="yB7-Ck-VdY" firstAttribute="top" secondItem="eS9-Ox-hB4" secondAttribute="centerY" constant="-45" id="B5s-Dg-VXz"/>
-                            <constraint firstItem="Vfn-s4-dcZ" firstAttribute="centerX" secondItem="yB7-Ck-VdY" secondAttribute="centerX" constant="-5" id="E2c-9X-krr"/>
+                            <constraint firstItem="yB7-Ck-VdY" firstAttribute="centerY" secondItem="eS9-Ox-hB4" secondAttribute="centerY" id="B5s-Dg-VXz"/>
+                            <constraint firstItem="eS9-Ox-hB4" firstAttribute="centerX" secondItem="yB7-Ck-VdY" secondAttribute="centerX" id="E2c-9X-krr"/>
                             <constraint firstItem="DYt-YB-u6W" firstAttribute="top" secondItem="Vfn-s4-dcZ" secondAttribute="bottom" constant="7" id="Hem-j2-m2m"/>
                             <constraint firstItem="Vfn-s4-dcZ" firstAttribute="leading" secondItem="DYt-YB-u6W" secondAttribute="leading" id="I5b-AD-aQd"/>
                             <constraint firstItem="2dr-je-Xiw" firstAttribute="top" secondItem="TxI-p7-8MB" secondAttribute="bottom" constant="8" id="Iw5-DK-72s"/>
                             <constraint firstItem="eS9-Ox-hB4" firstAttribute="trailing" secondItem="TxI-p7-8MB" secondAttribute="trailing" constant="24" id="KMw-XQ-C9O"/>
                             <constraint firstItem="TxI-p7-8MB" firstAttribute="trailing" secondItem="Vfn-s4-dcZ" secondAttribute="trailing" id="LC6-cK-yXq"/>
                             <constraint firstItem="TxI-p7-8MB" firstAttribute="top" secondItem="eS9-Ox-hB4" secondAttribute="top" constant="52" id="LWT-JH-Pmn"/>
-                            <constraint firstItem="yB7-Ck-VdY" firstAttribute="leading" secondItem="eS9-Ox-hB4" secondAttribute="leading" constant="30" id="LhY-oU-ssw"/>
                             <constraint firstItem="TxI-p7-8MB" firstAttribute="leading" secondItem="eS9-Ox-hB4" secondAttribute="leading" constant="20" id="VBY-Kg-VYi"/>
                             <constraint firstItem="TxI-p7-8MB" firstAttribute="leading" secondItem="2dr-je-Xiw" secondAttribute="leading" id="aAw-oj-LWO"/>
                             <constraint firstItem="Vfn-s4-dcZ" firstAttribute="top" secondItem="2dr-je-Xiw" secondAttribute="bottom" constant="20" id="bM6-eC-WV5"/>
@@ -558,7 +557,7 @@
                                 </connections>
                             </textField>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="OjG-w1-AKa" userLabel="Large Activity Indicator">
-                                <rect key="frame" x="188.5" y="369" width="37" height="161"/>
+                                <rect key="frame" x="188.5" y="456.5" width="37" height="37"/>
                                 <color key="color" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XJt-tQ-rQL">
@@ -592,10 +591,9 @@
                             <constraint firstItem="8ls-co-mQ3" firstAttribute="trailing" secondItem="twH-Es-iRC" secondAttribute="trailing" constant="19" id="a1b-SE-Uf6"/>
                             <constraint firstItem="9g0-8M-3xe" firstAttribute="top" secondItem="huY-gS-3GX" secondAttribute="bottom" constant="6" id="aCg-r3-EQY"/>
                             <constraint firstItem="XJt-tQ-rQL" firstAttribute="top" secondItem="9g0-8M-3xe" secondAttribute="bottom" constant="31" id="aLN-De-cck"/>
-                            <constraint firstItem="8ls-co-mQ3" firstAttribute="bottom" secondItem="OjG-w1-AKa" secondAttribute="bottomMargin" constant="340" id="bhy-ei-gH7"/>
                             <constraint firstItem="rOG-6R-5wb" firstAttribute="trailing" secondItem="huY-gS-3GX" secondAttribute="trailing" constant="-198" id="e8c-qY-nrk"/>
                             <constraint firstItem="9g0-8M-3xe" firstAttribute="leading" secondItem="twH-Es-iRC" secondAttribute="leading" id="fGs-Yr-TKq"/>
-                            <constraint firstItem="OjG-w1-AKa" firstAttribute="top" secondItem="8ls-co-mQ3" secondAttribute="centerY" constant="-106" id="jbj-ec-lGF"/>
+                            <constraint firstItem="OjG-w1-AKa" firstAttribute="centerY" secondItem="8ls-co-mQ3" secondAttribute="centerY" id="jbj-ec-lGF"/>
                             <constraint firstItem="8QN-TK-8f7" firstAttribute="trailing" secondItem="twH-Es-iRC" secondAttribute="trailing" id="lKT-1z-gG4"/>
                             <constraint firstItem="huY-gS-3GX" firstAttribute="top" secondItem="kbZ-rq-sqm" secondAttribute="bottom" constant="17" id="nvk-Bj-CBA"/>
                             <constraint firstItem="9g0-8M-3xe" firstAttribute="trailing" secondItem="twH-Es-iRC" secondAttribute="trailing" id="pYD-29-XT8"/>
@@ -1871,7 +1869,7 @@
                                 </connections>
                             </tableView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Acj-HM-0Y7" userLabel="Large Activity Indicator">
-                                <rect key="frame" x="188.5" y="454" width="37" height="37"/>
+                                <rect key="frame" x="188.5" y="456.5" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bjb-f8-TuA"/>
@@ -1885,7 +1883,7 @@
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="trailing" secondItem="5zW-R0-NSW" secondAttribute="trailing" id="QvY-c9-YAo"/>
                             <constraint firstItem="Acj-HM-0Y7" firstAttribute="centerX" secondItem="Bjb-f8-TuA" secondAttribute="centerX" id="eHW-Dv-q3M"/>
                             <constraint firstItem="Ye8-WC-EvB" firstAttribute="leading" secondItem="5zW-R0-NSW" secondAttribute="leading" id="iSj-Gn-Loq"/>
-                            <constraint firstItem="5zW-R0-NSW" firstAttribute="centerY" secondItem="Acj-HM-0Y7" secondAttribute="centerY" id="jaj-Sd-poW"/>
+                            <constraint firstItem="Bjb-f8-TuA" firstAttribute="centerY" secondItem="Acj-HM-0Y7" secondAttribute="centerY" id="jaj-Sd-poW"/>
                             <constraint firstItem="JGP-tQ-dfp" firstAttribute="top" secondItem="5zW-R0-NSW" secondAttribute="bottom" id="udB-BW-eMs"/>
                             <constraint firstItem="JGP-tQ-dfp" firstAttribute="bottom" secondItem="Bjb-f8-TuA" secondAttribute="bottom" id="vKE-bV-WPo"/>
                         </constraints>
@@ -2262,7 +2260,7 @@
                                 </connections>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="center" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="BUf-HZ-dRP">
-                                <rect key="frame" x="0.0" y="456.5" width="414" height="37"/>
+                                <rect key="frame" x="188.5" y="456.5" width="37" height="37"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DpB-ef-ZOm"/>
@@ -2273,7 +2271,6 @@
                             <constraint firstItem="BUf-HZ-dRP" firstAttribute="centerY" secondItem="DpB-ef-ZOm" secondAttribute="centerY" id="hMg-CM-ZAd"/>
                             <constraint firstItem="BUf-HZ-dRP" firstAttribute="centerX" secondItem="DpB-ef-ZOm" secondAttribute="centerX" id="ioJ-zJ-gbX"/>
                             <constraint firstItem="oxv-mt-mTJ" firstAttribute="centerX" secondItem="DpB-ef-ZOm" secondAttribute="centerX" id="kcw-v5-gTj"/>
-                            <constraint firstItem="BUf-HZ-dRP" firstAttribute="leading" secondItem="DpB-ef-ZOm" secondAttribute="leading" id="yXQ-GL-9Ig"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Statistics" id="Cfq-Ij-STH"/>
@@ -2543,6 +2540,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     <outlet property="delegate" destination="Yuq-BJ-ges" id="Xdm-AZ-16m"/>
                                 </connections>
                             </tableView>
+                            <datePicker hidden="YES" contentMode="center" highlighted="YES" selected="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="center" datePickerMode="date" style="inline" id="9ha-6Z-5KJ">
+                                <rect key="frame" x="0.0" y="426" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </datePicker>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9P9-KK-ntB">
                                 <rect key="frame" x="0.0" y="818" width="414" height="44"/>
                                 <constraints>
@@ -2552,6 +2553,11 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     <barButtonItem title="Goal" id="7KF-48-wlb" userLabel="Goal">
                                         <connections>
                                             <action selector="onGoal:" destination="Yuq-BJ-ges" id="nFq-bH-zaE"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Goal Date" id="Me9-ZC-d1b">
+                                        <connections>
+                                            <action selector="onGoalDate:" destination="Yuq-BJ-ges" id="Blq-FY-sf8"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="euL-8d-aC6"/>
@@ -2576,8 +2582,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     </view>
                     <navigationItem key="navigationItem" id="bEy-hg-a2T"/>
                     <connections>
+                        <outlet property="datePicker" destination="9ha-6Z-5KJ" id="Gsg-nF-ZuI"/>
                         <outlet property="generateButton" destination="dAT-Yg-1IA" id="em2-o6-Pi9"/>
                         <outlet property="goalButton" destination="7KF-48-wlb" id="ICl-4T-fDD"/>
+                        <outlet property="goalDateButton" destination="Me9-ZC-d1b" id="0tO-Lj-CCo"/>
                         <outlet property="navItem" destination="bEy-hg-a2T" id="qJg-eq-Hlt"/>
                         <outlet property="toolbar" destination="9P9-KK-ntB" id="2oL-LD-93Q"/>
                         <outlet property="workoutsView" destination="bf3-gh-9hW" id="agC-Bu-gTU"/>
@@ -2971,12 +2979,16 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <outlet property="delegate" destination="qGH-Hf-FM1" id="M2C-EA-eOO"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <datePicker hidden="YES" contentMode="scaleAspectFit" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="wheels" id="t5A-c6-kOv">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="162"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                </datePicker>
             </objects>
             <point key="canvasLocation" x="1990" y="1835"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ksp-tA-xd6"/>
+        <segue reference="gtm-yZ-0Yg"/>
         <segue reference="Zfp-Rg-OxX"/>
         <segue reference="1Bm-YM-doO"/>
         <segue reference="8pE-cX-Fug"/>

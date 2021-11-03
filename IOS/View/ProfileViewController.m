@@ -140,8 +140,8 @@ typedef enum ProfilePerformanceRows
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	struct tm dateStruct = [appDelegate userBirthDate];
 	NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:mktime(&dateStruct)];
-	[self.datePicker setDate:dateObj];
 
+	[self.datePicker setDate:dateObj];
 	[self.datePicker setHidden:FALSE];
 }
 
@@ -351,11 +351,16 @@ typedef enum ProfilePerformanceRows
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
+
+	// If clicking anything other than the birthdate item, then make sure the date picker is hidden.
+	if (!(section == SECTION_USER && row == ROW_BIRTHDATE))
+	{
+		[self.datePicker setHidden:TRUE];
+	}
 
 	if (section == SECTION_USER)
 	{
-		NSInteger row = [indexPath row];
-
 		switch (row)
 		{
 			case ROW_GENDER:

@@ -118,8 +118,9 @@
 "Friends" = "Friends";
 "ft" = "ft";
 "Gear" = "Gear";
-"Gender" = "Gender";
+"Gender" = "Biological Gender";
 "Goal" = "Goal";
+"Goal Date" = "Goal Date";
 "GPX File" = "GPX File";
 "Half Marathon" = "Half Marathon";
 "Heart Rate Monitor" = "Heart Rate Monitor";

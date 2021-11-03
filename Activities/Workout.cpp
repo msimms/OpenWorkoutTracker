@@ -71,6 +71,11 @@ void Workout::AddInterval(uint8_t repeat, double distance, double pace, double r
 		interval.m_recoveryDistance = recoveryDistance;
 		interval.m_recoveryPace = recoveryPace;
 	}
+	else
+	{
+		interval.m_recoveryDistance = 0.0;
+		interval.m_recoveryPace = 0.0;
+	}
 	this->m_intervals.push_back(interval);
 }
 void Workout::AddInterval(const WorkoutInterval& interval)
