@@ -241,20 +241,20 @@ typedef enum ProfilePerformanceRows
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	static NSString* CellIdentifier = @"Cell";
-
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
+	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
+	NSString* cellIdentifier = [NSString stringWithFormat:@"S%1ldR%1ld", (long)section, (long)row]; 
+	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
 	UIListContentConfiguration* content = [cell defaultContentConfiguration];
-	NSInteger section = [indexPath section];
-	NSInteger row = [indexPath row];
 
 	switch (section)
 	{
@@ -269,6 +269,15 @@ typedef enum ProfilePerformanceRows
 					case ROW_BIRTHDATE:
 						{
 							struct tm birthDate = [appDelegate userBirthDate];
+							NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:mktime(&birthDate)];
+
+							UIDatePicker* birthdatePicker = [[UIDatePicker alloc]init];
+							birthdatePicker.datePickerMode = UIDatePickerModeDate;
+							birthdatePicker.clipsToBounds = YES;
+							[birthdatePicker setDate:dateObj];
+
+							[cell.accessoryView addSubview:birthdatePicker];
+
 							[content setText:TITLE_BIRTHDATE];
 							[content setSecondaryText:[StringUtils formatDateFromTimeStruct:&birthDate]];
 						}
@@ -402,69 +411,69 @@ typedef enum ProfilePerformanceRows
 
 		switch (row)
 		{
-		case ROW_ACTIVITY_LEVEL:
-			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																						 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
-																				  preferredStyle:UIAlertControllerStyleAlert];
+			case ROW_ACTIVITY_LEVEL:
+				{
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																							 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
+																					  preferredStyle:UIAlertControllerStyleAlert];
 
-				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_SEDENTARY];
-					[self.profileTableView reloadData];
-				}]];
-				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_LIGHT] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_LIGHT];
-					[self.profileTableView reloadData];
-				}]];
-				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_MODERATE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_MODERATE];
-					[self.profileTableView reloadData];
-				}]];
-				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_ACTIVE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_ACTIVE];
-					[self.profileTableView reloadData];
-				}]];
-				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_EXTREME] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_EXTREME];
-					[self.profileTableView reloadData];
-				}]];
-
-				// Show the action sheet.
-				[self presentViewController:alertController animated:YES completion:nil];
-			}
-			break;
-		case ROW_FTP:
-			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_FTP
-																						 message:ALERT_MSG_FTP
-																				  preferredStyle:UIAlertControllerStyleAlert];
-				
-				// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-				[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
-				}]];
-				[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-					textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userSpecifiedFtp]];
-					textField.keyboardType = UIKeyboardTypeNumberPad;
-				}];
-				[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					UITextField* field = alertController.textFields.firstObject;
-					double ftp = [[field text] doubleValue];
-
-					if (ftp > (double)0.0)
-					{
-						[appDelegate setUserFtp:ftp];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_SEDENTARY];
 						[self.profileTableView reloadData];
-					}
-				}]];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_LIGHT] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_LIGHT];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_MODERATE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_MODERATE];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_ACTIVE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_ACTIVE];
+						[self.profileTableView reloadData];
+					}]];
+					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_EXTREME] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_EXTREME];
+						[self.profileTableView reloadData];
+					}]];
 
-				// Show the action sheet.
-				[self presentViewController:alertController animated:YES completion:nil];
-			}
-			break;
-		case NUM_PROFILE_PERFORMANCE_ROWS:
-			break;
+					// Show the action sheet.
+					[self presentViewController:alertController animated:YES completion:nil];
+				}
+				break;
+			case ROW_FTP:
+				{
+					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_FTP
+																							 message:ALERT_MSG_FTP
+																					  preferredStyle:UIAlertControllerStyleAlert];
+					
+					// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+					}]];
+					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userSpecifiedFtp]];
+						textField.keyboardType = UIKeyboardTypeNumberPad;
+					}];
+					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+						UITextField* field = alertController.textFields.firstObject;
+						double ftp = [[field text] doubleValue];
+
+						if (ftp > (double)0.0)
+						{
+							[appDelegate setUserFtp:ftp];
+							[self.profileTableView reloadData];
+						}
+					}]];
+
+					// Show the action sheet.
+					[self presentViewController:alertController animated:YES completion:nil];
+				}
+				break;
+			case NUM_PROFILE_PERFORMANCE_ROWS:
+				break;
 		}
 	}
 }

@@ -15,6 +15,20 @@
 #import "Segues.h"
 #import "StringUtils.h"
 
+typedef enum WorkoutsSections
+{
+	SECTION_GOAL = 0,
+	SECTION_WORKOUTS,
+	NUM_WORKOUTS_SECTIONS
+} WorkoutsSections;
+
+typedef enum WorkoutsGoalRows
+{
+	ROW_GOAL = 0,
+	ROW_GOAL_DATE,
+	NUM_WORKOUTS_GOAL_ROWS
+} WorkoutsGoalRows;
+
 #define BUTTON_TITLE_FITNESS           NSLocalizedString(@"Fitness", nil)
 #define BUTTON_TITLE_5K_RUN            NSLocalizedString(@"5K Run", nil)
 #define BUTTON_TITLE_10K_RUN           NSLocalizedString(@"10K Run", nil)
@@ -31,8 +45,6 @@
 @implementation WorkoutsViewController
 
 @synthesize workoutsView;
-@synthesize goalButton;
-@synthesize goalDateButton;
 @synthesize generateButton;
 @synthesize datePicker;
 
@@ -48,12 +60,9 @@
 
 	self.title = STR_WORKOUTS;
 
-	[self.goalButton setTitle:STR_GOAL];
-	[self.goalDateButton setTitle:STR_GOAL_DATE];
-
 	[self.datePicker setHidden:TRUE];
 	[self.datePicker setDatePickerMode:UIDatePickerModeDate];
-	[self.datePicker addTarget:self action:@selector(updateLabel:) forControlEvents:UIControlEventValueChanged];
+	[self.datePicker addTarget:self action:@selector(updateGoalDate:) forControlEvents:UIControlEventValueChanged];
 
 	[self updateWorkoutNames];
 }
@@ -93,18 +102,43 @@
 	}
 }
 
+#pragma mark utility methods
+
+- (NSString*)workoutGoalToString:(Goal)goal
+{
+	switch (goal)
+	{
+	case GOAL_FITNESS:
+		return BUTTON_TITLE_FITNESS;
+	case GOAL_5K_RUN:
+		return BUTTON_TITLE_5K_RUN;
+	case GOAL_10K_RUN:
+		return BUTTON_TITLE_10K_RUN;
+	case GOAL_15K_RUN:
+		return BUTTON_TITLE_15K_RUN;
+	case GOAL_HALF_MARATHON_RUN:
+		return BUTTON_TITLE_HALF_MARATHON_RUN;
+	case GOAL_MARATHON_RUN:
+		return BUTTON_TITLE_MARATHON_RUN;
+	case GOAL_50K_RUN:
+		return BUTTON_TITLE_50K_RUN;
+	case GOAL_50_MILE_RUN:
+		return BUTTON_TITLE_50_MILE_RUN;
+	}
+}
+
 #pragma mark methods for getting the result from the UIPickerView
 
-- (void)updateLabel:(id)sender
+- (void)updateGoalDate:(id)sender
 {
 	NSDate* newDate = [self.datePicker date];
-	
+
 	[Preferences setWorkoutGoalDate:[newDate timeIntervalSince1970]];
 }
 
 #pragma mark button handlers
 
-- (IBAction)onGoal:(id)sender
+- (void)selectGoal
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_GOAL
@@ -142,13 +176,18 @@
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (IBAction)onGoalDate:(id)sender
+- (void)selectGoalDate
 {
 	if (self.datePicker.hidden)
 	{
-		NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:[Preferences workoutGoalDate]];
+		time_t goalDate = [Preferences workoutGoalDate];
 
-		[self.datePicker setDate:dateObj];
+		if (goalDate > 0)
+		{
+			NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:goalDate];
+
+			[self.datePicker setDate:dateObj];
+		}
 		[self.datePicker setHidden:FALSE];
 	}
 	else
@@ -156,6 +195,8 @@
 		[self.datePicker setHidden:TRUE];
 	}
 }
+
+#pragma mark button handlers
 
 - (IBAction)onGenerateWorkouts:(id)sender
 {
@@ -177,6 +218,7 @@
 - (void)updateWorkoutNames
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
 	self->plannedWorkouts = [appDelegate getPlannedWorkouts];
 }
 
@@ -184,19 +226,28 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView
 {
-	return 1;
+	return NUM_WORKOUTS_SECTIONS;
 }
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return STR_SUGGESTED_WORKOUTS;
+	switch (section)
+	{
+		case SECTION_GOAL:
+			return STR_GOAL;
+		case SECTION_WORKOUTS:
+			return STR_SUGGESTED_WORKOUTS;
+	}
+	return @"";
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
 	switch (section)
 	{
-		case 0:
+		case SECTION_GOAL:
+			return NUM_WORKOUTS_GOAL_ROWS;
+		case SECTION_WORKOUTS:
 			return [self->plannedWorkouts count];
 	}
 	return 0;
@@ -218,9 +269,36 @@
 	
 	bool displayDisclosureIndicator = true;
 
+	// If selecting anything other than the goal date then make sure the goal date picker is hidden.
+	if (!(section == SECTION_GOAL && row == ROW_GOAL))
+	{
+		[self.datePicker setHidden:TRUE];
+	}
+
 	switch (section)
 	{
-		case 0:
+		case SECTION_GOAL:
+			switch (row)
+			{
+				case ROW_GOAL:
+					cell.textLabel.text = STR_GOAL;
+					cell.detailTextLabel.text = [self workoutGoalToString:[Preferences workoutGoal]];
+					break;
+				case ROW_GOAL_DATE:
+					{
+						time_t goalDate = [Preferences workoutGoalDate];
+						cell.textLabel.text = STR_GOAL_DATE;
+						
+						if (goalDate == 0)
+							cell.detailTextLabel.text = STR_NOT_SET;
+						else
+							cell.detailTextLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:goalDate]];
+					}
+					break;
+			}
+			displayDisclosureIndicator = false;
+			break;
+		case SECTION_WORKOUTS:
 			{
 				NSDictionary* workoutDetails = [self->plannedWorkouts objectAtIndex:row];
 				WorkoutType workoutType = (WorkoutType)([workoutDetails[@PARAM_WORKOUT_WORKOUT_TYPE] integerValue]);
@@ -308,8 +386,6 @@
 				[cell.contentView addSubview:imageView];
 			}
 			break;
-		default:
-			break;
 	}
 
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -325,11 +401,25 @@
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
 
-	if (section == 0)
+	switch (section)
 	{
-		self->selectedWorkoutDetails = [self->plannedWorkouts objectAtIndex:[indexPath row]];
-		[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
+		case SECTION_GOAL:
+			switch (row)
+			{
+				case ROW_GOAL:
+					[self selectGoal];
+					break;
+				case ROW_GOAL_DATE:
+					[self selectGoalDate];
+					break;
+			}
+			break;
+		case SECTION_WORKOUTS:
+			self->selectedWorkoutDetails = [self->plannedWorkouts objectAtIndex:row];
+			[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
+			break;
 	}
 }
 
@@ -369,32 +459,6 @@
 - (BOOL)tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	return NO;
-}
-
-#pragma mark UITextFieldDelegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField*)textField
-{
-	[textField resignFirstResponder];
-	return YES;
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField
-{
-	return YES;
-}
-
-- (BOOL)textFieldShouldEndEditing:(UITextField*)textField
-{
-	return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField*)textField
-{
-}
-
-- (void)textFieldDidEndEditing:(UITextField*)textField
-{
 }
 
 @end

@@ -2550,16 +2550,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                     <constraint firstAttribute="height" constant="44" id="b5I-hY-EHJ"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="Goal" id="7KF-48-wlb" userLabel="Goal">
-                                        <connections>
-                                            <action selector="onGoal:" destination="Yuq-BJ-ges" id="nFq-bH-zaE"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="Goal Date" id="Me9-ZC-d1b">
-                                        <connections>
-                                            <action selector="onGoalDate:" destination="Yuq-BJ-ges" id="Blq-FY-sf8"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="euL-8d-aC6"/>
                                     <barButtonItem systemItem="refresh" id="dAT-Yg-1IA">
                                         <connections>
@@ -2584,8 +2574,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <connections>
                         <outlet property="datePicker" destination="9ha-6Z-5KJ" id="Gsg-nF-ZuI"/>
                         <outlet property="generateButton" destination="dAT-Yg-1IA" id="em2-o6-Pi9"/>
-                        <outlet property="goalButton" destination="7KF-48-wlb" id="ICl-4T-fDD"/>
-                        <outlet property="goalDateButton" destination="Me9-ZC-d1b" id="0tO-Lj-CCo"/>
                         <outlet property="navItem" destination="bEy-hg-a2T" id="qJg-eq-Hlt"/>
                         <outlet property="toolbar" destination="9P9-KK-ntB" id="2oL-LD-93Q"/>
                         <outlet property="workoutsView" destination="bf3-gh-9hW" id="agC-Bu-gTU"/>

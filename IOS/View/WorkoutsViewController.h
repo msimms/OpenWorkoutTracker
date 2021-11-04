@@ -8,11 +8,9 @@
 #import <UIKit/UIKit.h>
 #import "CommonViewController.h"
 
-@interface WorkoutsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface WorkoutsViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate>
 {
 	IBOutlet UITableView* workoutsView;
-	IBOutlet UIBarButtonItem* goalButton;
-	IBOutlet UIBarButtonItem* goalDateButton;
 	IBOutlet UIBarButtonItem* generateButton;
 	IBOutlet UIDatePicker* datePicker;
 
@@ -20,13 +18,9 @@
 	NSMutableArray* plannedWorkouts;
 }
 
-- (IBAction)onGoal:(id)sender;
-- (IBAction)onGoalDate:(id)sender;
 - (IBAction)onGenerateWorkouts:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UITableView* workoutsView;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* goalButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* goalDateButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* generateButton;
 @property (nonatomic, retain) IBOutlet UIDatePicker* datePicker;
 
