@@ -3011,12 +3011,24 @@ void attributeNameCallback(const char* name, void* context)
 
 - (BOOL)createTag:(NSString*)tag forActivityId:(NSString*)activityId
 {
-	return CreateTag([activityId UTF8String], [tag UTF8String]);
+	bool created = CreateTag([activityId UTF8String], [tag UTF8String]);
+	
+	if (created)
+	{
+		[self serverCreateTag:tag forActivity:activityId];
+	}
+	return created;
 }
 
 - (BOOL)deleteTag:(NSString*)tag forActivityId:(NSString*)activityId
 {
-	return DeleteTag([activityId UTF8String], [tag UTF8String]);
+	bool deleted = DeleteTag([activityId UTF8String], [tag UTF8String]);
+	
+	if (deleted)
+	{
+		[self serverDeleteTag:tag forActivity:activityId];
+	}
+	return deleted;
 }
 
 - (void)searchForTags:(NSString*)searchText

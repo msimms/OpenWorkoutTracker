@@ -119,7 +119,7 @@ MapViewController* g_ptrToMapViewCtrl;
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-	return UIInterfaceOrientationMaskPortrait;
+	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 
 #pragma mark broadcast notifications

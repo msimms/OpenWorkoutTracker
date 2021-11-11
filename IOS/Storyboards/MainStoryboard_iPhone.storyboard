@@ -642,7 +642,7 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="WAb-Vo-Dwz">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="WAb-Vo-Dwz">
                                 <rect key="frame" x="0.0" y="88" width="414" height="390"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
@@ -2159,7 +2159,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="HQH-Wv-fmj">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="HQH-Wv-fmj">
                                 <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
@@ -2195,7 +2195,7 @@
                     <connections>
                         <outlet property="tagButton" destination="ScY-Jm-Z4w" id="MuD-ZC-q51"/>
                         <outlet property="tagTableView" destination="HQH-Wv-fmj" id="b7m-1K-BoW"/>
-                        <outlet property="toolbar" destination="ZdL-wM-ECI" id="6U3-o4-s7y"/>
+                        <outlet property="toolbar" destination="ZdL-wM-ECI" id="pax-0n-K1V"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dhy-qE-EeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2976,7 +2976,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="gtm-yZ-0Yg"/>
+        <segue reference="ksp-tA-xd6"/>
         <segue reference="Zfp-Rg-OxX"/>
         <segue reference="1Bm-YM-doO"/>
         <segue reference="8pE-cX-Fug"/>

@@ -6,25 +6,20 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import <UIKit/UIKit.h>
+#import "CommonViewController.h"
 
-@interface TagViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface TagViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate>
 {
-	IBOutlet UIToolbar* toolbar;
 	IBOutlet UITableView* tagTableView;
 	IBOutlet UIBarButtonItem* tagButton;
-
-	NSInteger selectedSection;
-	NSInteger selectedRow;
 	
 	NSMutableArray* tags;
-
 	NSString* activityId;
 }
 
 - (IBAction)onNewTag:(id)sender;
 - (void)setActivityId:(NSString*)activityIdent;
 
-@property (nonatomic, retain) IBOutlet UIToolbar* toolbar;
 @property (nonatomic, retain) IBOutlet UITableView* tagTableView;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* tagButton;
 

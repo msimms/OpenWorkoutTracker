@@ -110,7 +110,7 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
@@ -291,6 +291,7 @@
 	{
 		if ([allTagsStr length] > 0)
 			allTagsStr = [allTagsStr stringByAppendingString:@", "];
+		allTagsStr = [allTagsStr stringByAppendingString:@"#"];
 		allTagsStr = [allTagsStr stringByAppendingString:tag];
 	}
 	
@@ -299,7 +300,7 @@
 	{
 		if ([allTagsStr length] > 0)
 			allTagsStr = [allTagsStr stringByAppendingString:@", "];
-		allTagsStr = [allTagsStr stringByAppendingString:@"HealthKit"];
+		allTagsStr = [allTagsStr stringByAppendingString:@"#HealthKit"];
 	}
 
 	// Get the activity name.
@@ -314,12 +315,18 @@
 	time_t endTime = 0;
 	[appDelegate getHistoricalActivityStartAndEndTime:activityId withStartTime:&startTime withEndTime:&endTime];
 	NSString* startTimeStr = [StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]];
-	if ([allTagsStr length] > 0)
+
+	// Add line breaks where necessary.
+	if ([name length] > 0)
 	{
 		startTimeStr = [startTimeStr stringByAppendingString:@"\n"];
 	}
+	if ([allTagsStr length] > 0)
+	{
+		name = [name stringByAppendingString:@"\n"];
+	}
 
-	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@ %@", startTimeStr, name, allTagsStr];
+	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@", startTimeStr, name, allTagsStr];
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
 	cell.textLabel.text = NSLocalizedString(activityType, nil);

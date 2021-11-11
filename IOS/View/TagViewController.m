@@ -15,7 +15,6 @@
 
 @implementation TagViewController
 
-@synthesize toolbar;
 @synthesize tagTableView;
 @synthesize tagButton;
 
@@ -35,11 +34,6 @@
 
 	self.title = STR_TAGS;
 
-	[self.tagButton setTitle:STR_NEW_TAG];
-
-	self->selectedSection = 0;
-	self->selectedRow = 0;
-
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	self->tags = [appDelegate getTagsForActivity:self->activityId];
 }
@@ -58,7 +52,7 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+	return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 
 - (void)deviceOrientationDidChange:(NSNotification*)notification
@@ -76,10 +70,36 @@
 
 - (IBAction)onNewTag:(id)sender
 {
-	[self->tags insertObject:STR_NEW_TAG atIndex:0];
+	[self getNewTagName];
+}
 
-	NSArray* newData = [NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil];
-	[self.tagTableView insertRowsAtIndexPaths:newData withRowAnimation:UITableViewRowAnimationNone];
+#pragma mark called when editing a tag name
+
+- (void)getNewTagName
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_TAG
+																			 message:STR_NEW_TAG
+																	  preferredStyle:UIAlertControllerStyleAlert];
+
+	// Default text.
+	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		UITextField* field = alertController.textFields.firstObject;
+
+		if (![appDelegate createTag:[field text] forActivityId:self->activityId])
+		{
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_INTERNAL_ERROR];
+		}
+		self->tags = [appDelegate getTagsForActivity:self->activityId];
+		[self.tagTableView reloadData];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark UITableView methods
@@ -97,53 +117,46 @@
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (self->tags)
+	{
 		return [self->tags count];
+	}
 	return 0;
 }
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	static NSString* CellIdentifier = @"Cell";
+	NSInteger section = [indexPath section];
+	NSInteger row = [indexPath row];
+	NSString* cellIdentifier = [NSString stringWithFormat:@"S%1ldR%1ld", (long)section, (long)row]; 
+	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 
-	UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
-	NSInteger section = [indexPath section];
-	NSInteger row = [indexPath row];
+	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
 	switch (section)
 	{
 		case 0:
 			if (row < [self->tags count])
 			{
-				UITextField* txtField = [[UITextField alloc] initWithFrame:CGRectMake(40, 12, 320, 39)];
-				if (txtField)
-				{
-					txtField.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-					txtField.autoresizesSubviews = YES;
-					txtField.keyboardType = UIKeyboardTypeDefault;
-					txtField.returnKeyType = UIReturnKeyDone;
-					txtField.delegate = self;
-
-					[txtField setPlaceholder: [self->tags objectAtIndex:row]];
-					[cell addSubview:txtField];
-				}
+				[content setText: [self->tags objectAtIndex:row]];
 			}
 			break;
 		default:
 			break;
 	}
 
+	[cell setContentConfiguration:content];
 	return cell;
 }
 
 - (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	cell.accessoryType = UITableViewCellAccessoryNone;
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
@@ -152,8 +165,6 @@
 
 - (void)tableView:(UITableView*)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath*)indexPath
 {
-	self->selectedSection = [indexPath section];
-	self->selectedRow = [indexPath row];
 }
 
 - (BOOL)tableView:(UITableView*)tableView canEditRowAtIndexPath:(NSIndexPath*)indexPath
@@ -176,8 +187,7 @@
 		if ([appDelegate deleteTag:tag forActivityId:self->activityId])
 		{
 			[self->tags removeObjectAtIndex:indexPath.row];
-			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-			[appDelegate serverDeleteTag:tag forActivity:self->activityId];
+			[self.tagTableView reloadData];
 		}
 	}
 }
@@ -185,39 +195,6 @@
 - (BOOL)tableView:(UITableView*)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath*)indexPath
 {
 	return NO;
-}
-
-#pragma mark UITextFieldDelegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField*)textField
-{
-	[textField resignFirstResponder];
-	return YES;
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField
-{
-	return YES;
-}
-
-- (BOOL)textFieldShouldEndEditing:(UITextField*)textField
-{
-	return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField*)textField
-{
-}
-
-- (void)textFieldDidEndEditing:(UITextField*)textField
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* tag = [textField text];
-
-	if ([appDelegate createTag:tag forActivityId:self->activityId])
-	{
-		[appDelegate serverCreateTag:tag forActivity:self->activityId];
-	}
 }
 
 @end
