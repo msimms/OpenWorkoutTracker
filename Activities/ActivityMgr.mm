@@ -370,7 +370,7 @@ extern "C" {
 			result = g_pDatabase->DeleteTag(activityId, tag);
 		}
 
-		g_dbLock.lock();
+		g_dbLock.unlock();
 
 		return result;
 	}

@@ -41,8 +41,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	
-	[self.tagTableView setEditing:YES animated: YES];
 }
 
 - (BOOL)shouldAutorotate
@@ -132,7 +130,7 @@
 
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
@@ -156,7 +154,6 @@
 
 - (void)tableView:(UITableView*)tableView willDisplayCell:(UITableViewCell*)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	cell.accessoryType = UITableViewCellAccessoryNone;
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath

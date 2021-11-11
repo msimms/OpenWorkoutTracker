@@ -180,7 +180,8 @@
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath
 {
-	NSInteger section = [indexPath section];	
+	NSInteger section = [indexPath section];
+
 	if (section == 0)
 	{
 		NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:[indexPath row]];
