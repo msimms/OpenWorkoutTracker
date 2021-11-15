@@ -421,7 +421,7 @@
 	}
 
 	// Refresh the activity attributes.
-	for (uint8_t i = 0; i < [self->titleLabels count]; i++)
+	for (uint8_t i = 0; i < [self->titleLabels count] && i < [attributeNames count]; i++)
 	{
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
 		if (titleLabel)
