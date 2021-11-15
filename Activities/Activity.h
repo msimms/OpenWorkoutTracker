@@ -132,8 +132,6 @@ protected:
 	IntervalWorkout      m_intervalWorkout;           // interval workout to use (optional)
 	IntervalWorkoutState m_intervalWorkoutState;      // current position within the interval workout
 	PacePlan             m_pacePlan;                  // pace plan to use (optional)
-
-private:
 	double               m_additionalWeightKg;        // weight of barbells, dumbells, etc.
 	uint64_t             m_lastHeartRateUpdateTime;   // time the heart rate data was last updated
 	SegmentType          m_currentHeartRateBpm;       // the most recent heart rate monitor sample

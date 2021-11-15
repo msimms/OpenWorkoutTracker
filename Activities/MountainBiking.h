@@ -18,6 +18,8 @@ public:
 	
 	static std::string Type() { return ACTIVITY_TYPE_MOUNTAIN_BIKING; };
 	virtual std::string GetType() const { return MountainBiking::Type(); };
+
+	virtual double CaloriesBurned() const;
 };
 
 #endif

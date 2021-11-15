@@ -66,7 +66,7 @@ protected:
 	virtual bool ProcessWheelSpeedReading(const SensorReading& reading);
 	virtual bool ProcessPowerMeterReading(const SensorReading& reading);
 	
-private:
+protected:
 	Bike            m_bike;
 	SpeedDataSource m_speedDataSource;
 	

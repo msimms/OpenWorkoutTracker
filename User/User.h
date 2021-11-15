@@ -55,6 +55,7 @@ public:
 	double EstimateMaxHeartRate() const;
 	double EstimateRestingHeartRate() const;
 	double EstimateModerateIntensityHeartRate() const;
+	double EstimateHighIntensityHeartRate() const;
 	double EstimateVO2Max() const;
 
 	// Height.

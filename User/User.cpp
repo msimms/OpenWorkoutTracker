@@ -220,7 +220,16 @@ double User::EstimateRestingHeartRate() const
 
 double User::EstimateModerateIntensityHeartRate() const
 {
+	// Rough estimation of heart rate for a moderate intensity activity.
+	// Used in calorie calculations when nothing better is available.
 	return (double)0.67 * EstimateMaxHeartRate();
+}
+
+double User::EstimateHighIntensityHeartRate() const
+{
+	// Rough estimation of heart rate for a high intensity activity.
+	// Used in calorie calculations when nothing better is available.
+	return (double)0.85 * EstimateMaxHeartRate();
 }
 
 double User::EstimateVO2Max() const
