@@ -429,7 +429,7 @@
 			NSString* attributeName = [attributeNames objectAtIndex:i];
 			if (attributeName)
 			{
-				titleLabel.text = attributeName;
+				titleLabel.text = NSLocalizedString(attributeName, nil);
 			}
 		}
 	}

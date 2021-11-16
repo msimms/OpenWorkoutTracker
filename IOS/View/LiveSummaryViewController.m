@@ -177,9 +177,9 @@
 				NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
 
 				if (unitsStr != nil)
-					mainStr = [NSString stringWithFormat:@"%@ (%@)", attributeName, unitsStr];
+					mainStr = [NSString stringWithFormat:@"%@ (%@)", NSLocalizedString(attributeName, nil), NSLocalizedString(unitsStr, nil)];
 				else
-					mainStr = [NSString stringWithFormat:@"%@", attributeName];
+					mainStr = [NSString stringWithFormat:@"%@", NSLocalizedString(attributeName, nil)];
 				detailsStr = [StringUtils formatActivityViewType:attr];
 
 				[content setText:mainStr];
