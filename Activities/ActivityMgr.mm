@@ -163,6 +163,12 @@ extern "C" {
 
 	bool DeleteActivityFromDatabase(const char* const activityId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+
 		bool deleted = false;
 
 		g_dbLock.lock();
@@ -183,6 +189,12 @@ extern "C" {
 
 	bool IsActivityInDatabase(const char* activityId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+
 		bool exists = false;
 		ActivitySummary summary;
 
@@ -236,6 +248,16 @@ extern "C" {
 
 	bool CreateActivityName(const char* const activityId, const char* const name)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (name == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -252,6 +274,12 @@ extern "C" {
 
 	char* RetrieveActivityName(const char* const activityId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return NULL;
+		}
+
 		char* name = NULL;
 
 		g_dbLock.lock();
@@ -277,6 +305,16 @@ extern "C" {
 
 	bool CreateActivityDescription(const char* const activityId, const char* const description)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (description == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -292,6 +330,12 @@ extern "C" {
 	}
 	char* RetrieveActivityDescription(const char* const activityId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return NULL;
+		}
+
 		char* description = NULL;
 
 		g_dbLock.lock();
@@ -317,6 +361,16 @@ extern "C" {
 
 	bool CreateTag(const char* const activityId, const char* const tag)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (tag == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -333,6 +387,12 @@ extern "C" {
 
 	bool RetrieveTags(const char* const activityId, TagCallback callback, void* context)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -361,6 +421,16 @@ extern "C" {
 
 	bool DeleteTag(const char* const activityId, const char* const tag)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (tag == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -377,6 +447,16 @@ extern "C" {
 
 	bool HasTag(const char* const activityId, const char* const tag)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (tag == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -399,6 +479,12 @@ extern "C" {
 
 	bool SearchForTags(const char* const searchStr)
 	{
+		// Sanity checks.
+		if (searchStr == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		FreeHistoricalActivityList();
@@ -437,6 +523,16 @@ extern "C" {
 
 	bool CreateOrUpdateActivityHash(const char* const activityId, const char* const hash)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (hash == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -462,6 +558,12 @@ extern "C" {
 
 	char* GetActivityIdByHash(const char* const hash)
 	{
+		// Sanity checks.
+		if (hash == NULL)
+		{
+			return NULL;
+		}
+
 		char* activityId = NULL;
 
 		g_dbLock.lock();
@@ -483,6 +585,12 @@ extern "C" {
 
 	char* GetHashForActivityId(const char* const activityId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return NULL;
+		}
+
 		char* hash = NULL;
 
 		g_dbLock.lock();
@@ -508,6 +616,16 @@ extern "C" {
 
 	bool CreateActivitySync(const char* const activityId, const char* const destination)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (destination == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -540,6 +658,12 @@ extern "C" {
 
 	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 		std::vector<std::string> destinations;
 
@@ -729,6 +853,12 @@ extern "C" {
 
 	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		if (g_pDatabase)
@@ -761,6 +891,12 @@ extern "C" {
 
 	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		if (g_pDatabase)
@@ -908,6 +1044,12 @@ extern "C" {
 
 	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return false;
+		}
+
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
@@ -928,6 +1070,12 @@ extern "C" {
 
 	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -944,6 +1092,12 @@ extern "C" {
 
 	void CreateOrUpdateActivityBikeProfile(const char* const activityId, uint64_t bikeId)
 	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return;
+		}
+
 		g_dbLock.lock();
 
 		if (g_pDatabase)
@@ -965,6 +1119,12 @@ extern "C" {
 
 	void SetCurrentBicycle(const char* const name)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return;
+		}
+
 		if (g_pCurrentActivity)
 		{
 			for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
@@ -988,6 +1148,12 @@ extern "C" {
 
 	uint64_t GetBikeIdFromName(const char* const name)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return (uint64_t)-1;
+		}
+
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
 			const Bike& bike = (*iter);
@@ -1023,6 +1189,16 @@ extern "C" {
 
 	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return false;
+		}
+		if (description == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		if (g_pDatabase)
@@ -1054,6 +1230,16 @@ extern "C" {
 
 	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return false;
+		}
+		if (description == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		if (g_pDatabase)
@@ -1129,6 +1315,12 @@ extern "C" {
 
 	uint64_t GetShoeIdFromName(const char* const name)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return (uint64_t)-1;
+		}
+
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
 		{
 			const Shoes& shoe = (*iter);
@@ -1147,16 +1339,19 @@ extern "C" {
 
 	const IntervalWorkout* GetIntervalWorkout(const char* const workoutId)
 	{
-		if (workoutId)
+		// Sanity checks.
+		if (workoutId == NULL)
 		{
-			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
-			{
-				const IntervalWorkout& workout = (*iter);
+			return NULL;
+		}
 
-				if (workout.workoutId.compare(workoutId) == 0)
-				{
-					return &workout;
-				}
+		for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
+		{
+			const IntervalWorkout& workout = (*iter);
+
+			if (workout.workoutId.compare(workoutId) == 0)
+			{
+				return &workout;
 			}
 		}
 		return NULL;
@@ -1164,6 +1359,12 @@ extern "C" {
 
 	bool SetCurrentIntervalWorkout(const char* const workoutId)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+
 		if (g_pCurrentActivity && workoutId)
 		{
 			const IntervalWorkout* workout = GetIntervalWorkout(workoutId);
@@ -1258,6 +1459,20 @@ extern "C" {
 
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+		if (workoutName == NULL)
+		{
+			return false;
+		}
+		if (sport == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1274,6 +1489,12 @@ extern "C" {
 
 	bool DeleteIntervalWorkout(const char* const workoutId)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1294,6 +1515,12 @@ extern "C" {
 
 	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return 0;
+		}
+
 		size_t numSegments = 0;
 
 		g_dbLock.lock();
@@ -1315,6 +1542,12 @@ extern "C" {
 
 	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1336,6 +1569,12 @@ extern "C" {
 
 	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1358,6 +1597,12 @@ extern "C" {
 
 	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment)
 	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1424,6 +1669,16 @@ extern "C" {
 
 	bool CreateNewPacePlan(const char* const planName, const char* planId)
 	{
+		// Sanity checks.
+		if (planName == NULL)
+		{
+			return false;
+		}
+		if (planId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1451,30 +1706,33 @@ extern "C" {
 
 	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime)
 	{
-		if (planId)
+		// Sanity checks.
+		if (planId == NULL)
 		{
-			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
-			{
-				const PacePlan& pacePlan = (*iter);
+			return false;
+		}
 
-				if (pacePlan.planId.compare(planId) == 0)
-				{
-					if (name)
-						(*name) = strdup(pacePlan.name.c_str());
-					if (targetPaceInMinKm)
-						(*targetPaceInMinKm) = pacePlan.targetPaceInMinKm;
-					if (targetDistanceInKms)
-						(*targetDistanceInKms) = pacePlan.targetDistanceInKms;
-					if (splits)
-						(*splits) = pacePlan.splits;
-					if (targetDistanceUnits)
-						(*targetDistanceUnits) = pacePlan.displayUnitsDistance;
-					if (targetPaceUnits)
-						(*targetPaceUnits) = pacePlan.displayUnitsPace;
-					if (lastUpdatedTime)
-						(*lastUpdatedTime) = pacePlan.lastUpdatedTime;
-					return true;
-				}
+		for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+		{
+			const PacePlan& pacePlan = (*iter);
+
+			if (pacePlan.planId.compare(planId) == 0)
+			{
+				if (name)
+					(*name) = strdup(pacePlan.name.c_str());
+				if (targetPaceInMinKm)
+					(*targetPaceInMinKm) = pacePlan.targetPaceInMinKm;
+				if (targetDistanceInKms)
+					(*targetDistanceInKms) = pacePlan.targetDistanceInKms;
+				if (splits)
+					(*splits) = pacePlan.splits;
+				if (targetDistanceUnits)
+					(*targetDistanceUnits) = pacePlan.displayUnitsDistance;
+				if (targetPaceUnits)
+					(*targetPaceUnits) = pacePlan.displayUnitsPace;
+				if (lastUpdatedTime)
+					(*lastUpdatedTime) = pacePlan.lastUpdatedTime;
+				return true;
 			}
 		}
 		return false;
@@ -1482,6 +1740,16 @@ extern "C" {
 
 	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime)
 	{
+		// Sanity checks.
+		if (planId == NULL)
+		{
+			return false;
+		}
+		if (name == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1519,6 +1787,12 @@ extern "C" {
 
 	bool DeletePacePlan(const char* planId)
 	{
+		// Sanity checks.
+		if (planId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1539,16 +1813,19 @@ extern "C" {
 
 	const PacePlan* GetPacePlan(const char* const planId)
 	{
-		if (planId)
+		// Sanity checks.
+		if (planId == NULL)
 		{
-			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
-			{
-				const PacePlan& pacePlan = (*iter);
+			return NULL;
+		}
 
-				if (pacePlan.planId.compare(planId) == 0)
-				{
-					return &pacePlan;
-				}
+		for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
+		{
+			const PacePlan& pacePlan = (*iter);
+
+			if (pacePlan.planId.compare(planId) == 0)
+			{
+				return &pacePlan;
 			}
 		}
 		return NULL;
@@ -1556,7 +1833,13 @@ extern "C" {
 
 	bool SetCurrentPacePlan(const char* const planId)
 	{
-		if (g_pCurrentActivity && planId)
+		// Sanity checks.
+		if (planId == NULL)
+		{
+			return false;
+		}
+
+		if (g_pCurrentActivity)
 		{
 			const PacePlan* pacePlan = GetPacePlan(planId);
 
@@ -1575,6 +1858,16 @@ extern "C" {
 
 	bool MergeActivities(const char* const activityId1, const char* const activityId2)
 	{
+		// Sanity checks.
+		if (activityId1 == NULL)
+		{
+			return false;
+		}
+		if (activityId2 == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -2232,6 +2525,12 @@ extern "C" {
 
 	size_t GetNumHistoricalActivitiesByType(const char* const pActivityType)
 	{
+		// Sanity checks.
+		if (pActivityType == NULL)
+		{
+			return 0;
+		}
+
 		size_t numActivities = 0;
 
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)

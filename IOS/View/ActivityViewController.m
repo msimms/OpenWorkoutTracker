@@ -146,7 +146,6 @@
 	}
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-
 	[appDelegate setScreenLocking];
 
 	if (![CLLocationManager locationServicesEnabled])
@@ -413,7 +412,7 @@
 
 - (void)initializeLabelText
 {
-	NSArray* attributeNames = [self->activityPrefs getAttributeNames:self->activityType];
+	self->attributesToDisplay = [self->activityPrefs getAttributeNames:self->activityType];
 
 	for (UILabel* label in self->valueLabels)
 	{
@@ -421,12 +420,12 @@
 	}
 
 	// Refresh the activity attributes.
-	for (uint8_t i = 0; i < [self->titleLabels count] && i < [attributeNames count]; i++)
+	for (uint8_t i = 0; i < [self->titleLabels count] && i < [self->attributesToDisplay count]; i++)
 	{
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
 		if (titleLabel)
 		{
-			NSString* attributeName = [attributeNames objectAtIndex:i];
+			NSString* attributeName = [self->attributesToDisplay objectAtIndex:i];
 			if (attributeName)
 			{
 				titleLabel.text = NSLocalizedString(attributeName, nil);
@@ -1198,12 +1197,13 @@
 	// Refresh the activity attributes.
 	for (uint8_t i = 0; i < self->numAttributes; i++)
 	{
+		NSString* attributeName = [self->attributesToDisplay objectAtIndex:i];
 		UILabel* titleLabel = [self->titleLabels objectAtIndex:i];
 		UILabel* valueLabel = [self->valueLabels objectAtIndex:i];
 
 		if (titleLabel && valueLabel)
 		{
-			ActivityAttributeType value = QueryLiveActivityAttribute([titleLabel.text cStringUsingEncoding:NSASCIIStringEncoding]);
+			ActivityAttributeType value = QueryLiveActivityAttribute([attributeName cStringUsingEncoding:NSASCIIStringEncoding]);
 
 			if ([titleLabel.text isEqualToString:@ACTIVITY_ATTRIBUTE_HEART_RATE])
 			{

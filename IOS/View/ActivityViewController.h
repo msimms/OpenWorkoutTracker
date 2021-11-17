@@ -39,10 +39,10 @@
 	UIImageView*               broadcastImageView; // Currently displayed broadcast status image, or nil if no image is displayed
 	UIImage*                   threatImage; // Radar threat image, cached for performance
 	NSMutableArray*            threatImageViews; // Images of threats that were detected by a radar unit, such as a Garmin Varia
-	NSMutableArray*            attributesToDisplay; // Names of the things to display
-	NSMutableArray*            valueLabels;
-	NSMutableArray*            titleLabels;
-	NSMutableArray*            unitsLabels;
+	NSArray*                   attributesToDisplay; // Names of the things to display
+	NSMutableArray*            valueLabels; // Label objects for each value display
+	NSMutableArray*            titleLabels; // Label objects for each title display
+	NSMutableArray*            unitsLabels; // Label objects for each units display
 	NSMutableArray*            messages; // List of messages that need to be displayed
 	uint8_t                    messageDisplayCounter; // The number of seconds remaining before we remove the currently displayed message
 	uint8_t                    numAttributes; // The number of attributes being displayed
