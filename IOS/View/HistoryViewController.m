@@ -329,10 +329,12 @@
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@", startTimeStr, name, allTagsStr];
 	cell.detailTextLabel.numberOfLines = 0;
 	cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-	cell.textLabel.text = NSLocalizedString(activityType, nil);
+	cell.textLabel.text = [NSLocalizedString(activityType, nil) stringByReplacingOccurrencesOfString:@" " withString:@"\n"];
+	cell.textLabel.numberOfLines = 0;
+	cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 
 	// Load the image that goes with the activity.
-	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
+	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(8, 9, 32, 32)];
 	imageView.image = [self activityTypeToIcon:activityType];
 
 	// If dark mode is enabled, invert the image.
