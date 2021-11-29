@@ -26,5 +26,6 @@
 + (NSString*)genderToStr:(Gender)gender;
 + (NSString*)bytesToHexStr:(NSData*)data;
 + (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds;
++ (BOOL)parseDurationToSeconds:(NSString*)str withSeconds:(uint32_t*)seconds;
 
 @end

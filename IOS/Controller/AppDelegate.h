@@ -286,6 +286,7 @@
 
 - (double)convertMilesToKms:(double)value;
 - (double)convertMinutesPerMileToMinutesPerKm:(double)value;
+- (double)convertMinutesPerKmToMinutesPerMile:(double)value;
 - (double)convertPoundsToKgs:(double)value;
 - (void)convertToPreferredUnits:(ActivityAttributeType*)attr;
 

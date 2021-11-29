@@ -48,7 +48,7 @@
 #define MESSAGE_BAD_LOCATION          NSLocalizedString(@"Poor Location Data", nil)
 #define MESSAGE_NO_LOCATION_SERVICES  NSLocalizedString(@"Location Services is disabled", nil)
 
-#define SECS_PER_MESSAGE              3
+#define SECS_PER_MESSAGE              10
 
 @interface ActivityViewController ()
 
@@ -388,7 +388,7 @@
 - (void)startTimer
 {
 	self->messageDisplayCounter = 0;
-	self->refreshTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]
+	self->refreshTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
 												  interval:1
 													target:self
 												  selector:@selector(onRefreshTimer:)
@@ -722,7 +722,7 @@
 			{
 				[self blurBackground];
 
-				self->countdownTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]
+				self->countdownTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
 																interval:1
 																  target:self
 																selector:@selector(onCountdownTimer:)
@@ -1036,33 +1036,49 @@
 
 	if (intervalData)
 	{
-		NSValue* segmentValue = [intervalData objectForKey:@KEY_NAME_INTERVAL_SEGMENT];
-
-		if (segmentValue)
+//		NSNumber* segmentId = [intervalData objectForKey:@KEY_NAME_INTERVAL_SEGMENT_ID];
+		NSNumber* segmentSets = [intervalData objectForKey:@KEY_NAME_INTERVAL_SETS];
+		NSNumber* segmentReps = [intervalData objectForKey:@KEY_NAME_INTERVAL_REPS];
+		NSNumber* segmentDuration = [intervalData objectForKey:@KEY_NAME_INTERVAL_DURATION];
+//		NSNumber* segmentDistance = [intervalData objectForKey:@KEY_NAME_INTERVAL_DISTANCE];
+		NSNumber* segmentPace = [intervalData objectForKey:@KEY_NAME_INTERVAL_PACE];
+//		NSNumber* segmentPower = [intervalData objectForKey:@KEY_NAME_INTERVAL_POWER];
+//		NSNumber* segmentUnits = [intervalData objectForKey:@KEY_NAME_INTERVAL_UNITS];
+		NSString* msg;
+		
+		if (segmentSets && [segmentSets unsignedLongValue] > 0)
 		{
-			IntervalWorkoutSegment* segment = (IntervalWorkoutSegment*)[segmentValue objCType];
-			NSString* msg;
-			
-			if (segment->sets > 0)
+			msg = [[NSString alloc] initWithFormat:@"%lu %@", [segmentSets unsignedLongValue], STR_SETS];
+		}
+		if (segmentReps && [segmentReps unsignedLongValue] > 0)
+		{
+			msg = [[NSString alloc] initWithFormat:@"%lu %@", [segmentReps unsignedLongValue], STR_REPITITIONS];
+		}
+		if (segmentDuration && [segmentDuration unsignedLongValue] > 0)
+		{
+			if (segmentPace && [segmentPace unsignedLongValue] > 0)
 			{
-				msg = [[NSString alloc] initWithFormat:@"%ul Set(s)", segment->sets];
-			}
-			else if (segment->reps > 0)
-			{
-				msg = [[NSString alloc] initWithFormat:@"%ul Rep(s)", segment->reps];
-			}
-			else if (segment->duration > 0)
-			{
-				msg = [[NSString alloc] initWithFormat:@"%ul Seconds", segment->duration];				
-			}
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				double pace = [segmentPace doubleValue]; 
+				NSString* paceStr;
 
-			if (msg)
+				if ([Preferences preferredUnitSystem] == UNIT_SYSTEM_US_CUSTOMARY)
+					pace = [appDelegate convertMinutesPerKmToMinutesPerMile:pace];
+				paceStr = [StringUtils formatSeconds:(uint32_t)pace];
+				msg = [[NSString alloc] initWithFormat:@"%lu %@ at %@", [segmentDuration unsignedLongValue], STR_SECONDS, paceStr];
+			}
+			else
 			{
-				@synchronized(self->messages)
-				{
-					[self->messages removeAllObjects];
-					[self->messages addObject:msg];
-				}
+				msg = [[NSString alloc] initWithFormat:@"%lu %@", [segmentDuration unsignedLongValue], STR_SECONDS];
+			}
+		}
+
+		if (msg)
+		{
+			@synchronized(self->messages)
+			{
+				[self->messages removeAllObjects];
+				[self->messages addObject:msg];
 			}
 		}
 	}

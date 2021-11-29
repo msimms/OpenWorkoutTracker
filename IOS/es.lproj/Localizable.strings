@@ -100,6 +100,8 @@
 "Enter the number of reps" = "Introduzca la cantidad de los repeticións";
 "Enter the number of sets" = "Introduzca la cantidad de los series";
 "Enter the time (in seconds)" = "Introduzca la tiempo (en segundos)";
+"Enter the time (in seconds) followed by the pace (in min/mile)" = "Introduzca la tiempo (en segundos) seguido por el ritmo (en min/milla)";
+"Enter the time (in seconds) followed by the pace (in min/km)" = "Introduzca la tiempo (en segundos) seguido por el ritmo (en min/km)";
 "Enter your birthdate" = "Introduzca su cumpleaño";
 "Error" = "Error";
 "Export" = "Exportar";
@@ -164,6 +166,7 @@
 "Interval Workout Complete" = "Fin";
 "Interval Workouts" = "Entrenamientos de los Intervalos";
 "Intervals" = "Intervalos";
+"Invalid or no input." = "Entrada no válida o no.";
 "Invite" = "Invitar";
 "kgs" = "kgs";
 "Kilometers" = "Kilómetros";
@@ -314,6 +317,9 @@
 "Time" = "Tiempo";
 "Time in Motion" = "Tiempo En Movimiento";
 "Time Interval" = "Intervalo de Tiempo";
+"Time & Pace Interval" = "Intervalo de Tiempo y Ritmo";
+"Time & Power Interval" = "Intervalo de Tiempo y Energía";
+"Time & Speed Interval" = "Intervalo de Tiempo y Velocidad";
 "Total Ascent" = "Ascenso Total";
 "Total Calories" = "Las Calorías Totales";
 "Total Distance" = "Distancia Totales";

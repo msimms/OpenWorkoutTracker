@@ -1595,7 +1595,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment)
+	bool GetIntervalWorkoutSegmentByIndex(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment)
 	{
 		// Sanity checks.
 		if (workoutId == NULL)
@@ -1613,9 +1613,40 @@ extern "C" {
 
 			if (pWorkout && (segmentIndex < pWorkout->segments.size()))
 			{
-				const IntervalWorkoutSegment& tempSegment = pWorkout->segments.at(segmentIndex);
-				(*segment) = tempSegment;
+				(*segment) = pWorkout->segments.at(segmentIndex);
 				result = true;
+			}
+		}
+
+		g_dbLock.unlock();
+
+		return result;
+	}
+
+	bool GetIntervalWorkoutSegmentByTimeOffset(const char* const workoutId, time_t timeOffsetInSecs, IntervalWorkoutSegment* segment)
+	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase && workoutId)
+		{
+			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+			size_t segmentIndex = 0;
+			time_t cumulativeTime = 0;
+
+			while (!result && (segmentIndex < pWorkout->segments.size()))
+			{
+				(*segment) = pWorkout->segments.at(segmentIndex);
+				cumulativeTime += (*segment).duration;
+				result = (timeOffsetInSecs < cumulativeTime);
+				++segmentIndex;
 			}
 		}
 

@@ -12,24 +12,30 @@
 
 typedef enum IntervalUnit
 {
-	INTERVAL_UNIT_SECONDS = 0,
+	INTERVAL_UNIT_NOT_SET = 0,
+	INTERVAL_UNIT_SECONDS,
 	INTERVAL_UNIT_METERS,
 	INTERVAL_UNIT_KILOMETERS,
 	INTERVAL_UNIT_FEET,
 	INTERVAL_UNIT_YARDS,
-	INTERVAL_UNIT_MILES
+	INTERVAL_UNIT_MILES,
+	INTERVAL_UNIT_PACE_US_CUSTOMARY,
+	INTERVAL_UNIT_PACE_METRIC,
+	INTERVAL_UNIT_SPEED_US_CUSTOMARY,
+	INTERVAL_UNIT_SPEED_METRIC,
+	INTERVAL_UNIT_TIME_AND_POWER
 } IntervalUnit;
 
 typedef struct IntervalWorkoutSegment
 {
 	uint64_t     segmentId; // Database identifier for this segment
 	uint32_t     sets;      // Number of sets
-	uint32_t     reps;      // Number of sets
+	uint32_t     reps;      // Number of repititions
 	uint32_t     duration;  // Duration, if applicable, in seconds
 	double       distance;  // Distance, if applicable, in the specified units
 	double       pace;      // Pace, if applicable, in meters/second
 	double       power;     // Power, if applicable, in percentage of FTP
-	IntervalUnit units;
+	IntervalUnit units;     // Informs the consumer of this structure as to which fields are meaningful and how to interpret the distance field
 } IntervalWorkoutSegment;
 
 #endif

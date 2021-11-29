@@ -100,6 +100,8 @@
 "Enter the number of reps" = "Enter the number of reps";
 "Enter the number of sets" = "Enter the number of sets";
 "Enter the time (in seconds)" = "Enter the time (in seconds)";
+"Enter the time (in seconds) followed by the pace (in min/mile)" = "Enter the time (in seconds) followed by the pace (in min/mile)";
+"Enter the time (in seconds) followed by the pace (in min/km)" = "Enter the time (in seconds) followed by the pace (in min/km)";
 "Enter your birthdate" = "Enter your birthdate";
 "Error" = "Error";
 "Export" = "Export";
@@ -164,6 +166,7 @@
 "Interval Workout Complete" = "Interval Workout Complete";
 "Interval Workouts" = "Interval Workouts";
 "Intervals" = "Intervals";
+"Invalid or no input." = "Invalid or no input.";
 "Invite" = "Invite";
 "kgs" = "kgs";
 "Kilometers" = "Kilometers";
@@ -314,6 +317,9 @@
 "Time" = "Time";
 "Time in Motion" = "Time In Motion";
 "Time Interval" = "Time Interval";
+"Time & Pace Interval" = "Time & Pace Interval";
+"Time & Power Interval" = "Time & Power Interval";
+"Time & Speed Interval" = "Time & Speed Interval";
 "Total Ascent" = "Total Ascent";
 "Total Calories" = "Total Calories";
 "Total Distance" = "Total Distance";

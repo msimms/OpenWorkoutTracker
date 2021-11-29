@@ -108,7 +108,8 @@ extern "C" {
 	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId);
 	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment);
 	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex);
-	bool GetIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment);
+	bool GetIntervalWorkoutSegmentByIndex(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment);
+	bool GetIntervalWorkoutSegmentByTimeOffset(const char* const workoutId, time_t timeOffsetInSecs, IntervalWorkoutSegment* segment);
 
 	// Functions for managing pace plans.
 	bool InitializePacePlanList(void);

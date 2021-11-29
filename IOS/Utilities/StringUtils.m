@@ -28,6 +28,7 @@
 				if (attribute.measureType == MEASURE_DISTANCE)
 				{
 					NSNumberFormatter* formatter = [NSNumberFormatter new];
+
 					[formatter setNumberStyle:NSNumberFormatterDecimalStyle];
 					[formatter setMaximumFractionDigits:2];
 					[formatter setMinimumFractionDigits:2];
@@ -230,7 +231,7 @@
 {
 	if (gender == GENDER_MALE)
 		return NSLocalizedString(@"Male", nil);
-	else
+	else if (gender == GENDER_FEMALE)
 		return NSLocalizedString(@"Female", nil);
 	return nil;
 }
@@ -240,6 +241,7 @@
 	NSUInteger capacity = data.length * 2;
 	NSMutableString* sbuf = [NSMutableString stringWithCapacity:capacity];
 	const unsigned char* buf = data.bytes;
+
 	for (NSInteger i = 0; i < data.length; ++i)
 	{
 		[sbuf appendFormat:@"%02X", (unsigned int)buf[i]];
@@ -257,25 +259,60 @@
 	uint16_t tempSeconds = 0;
 
 	if (numItems == 0)
+	{
 		return FALSE;
+	}
 
 	if (numItems >= 3)
+	{
 		tempHours = [reversedList[2] intValue];
 		if (tempHours < 0)
 			return FALSE;
+	}
 	if (numItems >= 2)
+	{
 		tempMinutes = [reversedList[1] intValue];
 		if (tempMinutes < 0 || tempMinutes >= 60)
 			return FALSE;
+	}
 	if (numItems >= 1)
+	{
 		tempSeconds = [reversedList[0] intValue];
 		if (tempSeconds < 0 || tempSeconds >= 60)
 			return FALSE;
+	}
 
 	(*hours) = tempHours;
 	(*minutes) = tempMinutes;
 	(*seconds) = tempSeconds;
 	return TRUE;
+}
+
++ (BOOL)parseDurationToSeconds:(NSString*)str withSeconds:(uint32_t*)seconds
+{
+	if (str.length <= 0)
+	{
+		return FALSE;
+	}
+
+	if ([str rangeOfCharacterFromSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]].location == NSNotFound)
+	{
+		(*seconds) = (uint32_t)[str integerValue];
+		return TRUE;
+	}
+	else
+	{
+		uint16_t tempHours = 0;
+		uint16_t tempMinutes = 0;
+		uint16_t tempSeconds = 0;
+
+		if ([StringUtils parseHHMMSS:(NSString*)str withHours:&tempHours withMinutes:&tempMinutes withSeconds:&tempSeconds])
+		{
+			(*seconds) = (tempHours * 3600) + (tempMinutes * 60) + tempSeconds;
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 @end

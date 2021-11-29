@@ -1469,14 +1469,17 @@ void startSensorCallback(SensorType type, void* context)
 
 			if (GetCurrentIntervalWorkoutSegment(&segment))
 			{
-				NSValue* segmentValue = [NSValue value:&segmentValue withObjCType:@encode(IntervalWorkoutSegment)]; 
 				NSDictionary* intervalData = [[NSDictionary alloc] initWithObjectsAndKeys:
-											  segmentValue, @KEY_NAME_INTERVAL_SEGMENT,
+											  [NSNumber numberWithLongLong:segment.segmentId], @KEY_NAME_INTERVAL_SEGMENT_ID,
+											  [NSNumber numberWithLong:segment.sets], @KEY_NAME_INTERVAL_SETS,
+											  [NSNumber numberWithLong:segment.reps], @KEY_NAME_INTERVAL_REPS,
+											  [NSNumber numberWithLong:segment.duration], @KEY_NAME_INTERVAL_DURATION,
+											  [NSNumber numberWithDouble:segment.distance], @KEY_NAME_INTERVAL_DISTANCE,
+											  [NSNumber numberWithDouble:segment.pace], @KEY_NAME_INTERVAL_PACE,
+											  [NSNumber numberWithDouble:segment.power], @KEY_NAME_INTERVAL_POWER,
+											  [NSNumber numberWithLong:segment.units], @KEY_NAME_INTERVAL_UNITS,
 											  nil];
-				if (intervalData)
-				{
-					[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_UPDATED object:intervalData];
-				}
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_UPDATED object:intervalData];
 			}
 		}
 
@@ -1486,7 +1489,7 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)startInteralTimer
 {
-	self->intervalTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow: 1.0]
+	self->intervalTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:1.0]
 												   interval:1
 													 target:self
 												   selector:@selector(onIntervalTimer:)
@@ -3071,6 +3074,19 @@ void attributeNameCallback(const char* name, void* context)
 	attr.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 	attr.valid = true;
 	ConvertToMetric(&attr);
+	return attr.value.doubleVal;
+}
+
+- (double)convertMinutesPerKmToMinutesPerMile:(double)value
+{
+	ActivityAttributeType attr;
+
+	attr.value.doubleVal = value;
+	attr.valueType = TYPE_DOUBLE;
+	attr.measureType = MEASURE_PACE;
+	attr.unitSystem = UNIT_SYSTEM_METRIC;
+	attr.valid = true;
+	ConvertToCustomaryUnits(&attr);
 	return attr.value.doubleVal;
 }
 

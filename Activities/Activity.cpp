@@ -445,8 +445,8 @@ void Activity::SetActivityAttribute(const std::string& attributeName, ActivityAt
 
 bool Activity::CheckIntervalWorkout()
 {
-	if ((m_intervalWorkout.workoutId.size() > 0) ||
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
+	// Is the interval workout still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
 	{
 		return false;
 	}
@@ -480,8 +480,8 @@ bool Activity::CheckIntervalWorkout()
 
 bool Activity::GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment)
 {
-	if ((m_intervalWorkout.workoutId.size() > 0) ||
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
+	// Is the interval workout still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
 	{
 		return false;
 	}
@@ -500,8 +500,8 @@ bool Activity::GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment)
 
 bool Activity::IsIntervalWorkoutComplete()
 {
-	if ((m_intervalWorkout.workoutId.size() > 0) &&
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
+	// Is the interval workout still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
 	{
 		return true;
 	}
@@ -510,8 +510,8 @@ bool Activity::IsIntervalWorkoutComplete()
 
 bool Activity::CheckTimeInterval()
 {
-	if ((m_intervalWorkout.workoutId.size() > 0) ||
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
+	// Is the interval workout still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
 	{
 		return false;
 	}
