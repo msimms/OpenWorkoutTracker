@@ -95,6 +95,9 @@
 {
 	// Check for dark mode.
 	bool darkModeEnabled = [self isDarkModeEnabled];
+	
+	// Remove any existing charts.
+	[[self.chartView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
 	// Create the host view.
 	self->hostingView = [[CPTGraphHostingView alloc] initWithFrame:self.chartView.bounds];
@@ -210,6 +213,7 @@
 	x.labelingPolicy        = CPTAxisLabelingPolicyNone;
 	x.titleTextStyle        = axisTitleStyle;
 	x.titleOffset           = 5.0f;
+	x.title                 = STR_TIME;
 	y.orthogonalPosition    = @(self->minX);
 	y.title                 = STR_PACE;
 	y.delegate              = self;
@@ -226,6 +230,7 @@
 	plot.barCornerRadius = 5.0;
 
 	[self->graph addPlot:plot];
+	[self.chartView setNeedsDisplay];
 }
 
 #pragma mark helper methods
@@ -336,7 +341,8 @@
 
 				if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 				{
-					[self reload];			
+					[self drawChart];
+					[self reload];
 				}
 				else
 				{
@@ -388,7 +394,8 @@
 
 				if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 				{
-					[self reload];			
+					[self drawChart];
+					[self reload];
 				}
 				else
 				{
@@ -463,7 +470,8 @@
 
 				if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 				{
-					[self reload];			
+					[self drawChart];
+					[self reload];
 				}
 				else
 				{
@@ -495,7 +503,8 @@
 			{
 				if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 				{
-					[self reload];			
+					[self drawChart];
+					[self reload];
 				}
 				else
 				{
@@ -527,6 +536,7 @@
 			{
 				if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 				{
+					[self drawChart];
 					[self reload];
 				}
 				else
