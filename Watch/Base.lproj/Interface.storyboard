@@ -111,12 +111,21 @@
                                 </tapGestureRecognizer>
                             </gestureRecognizers>
                         </group>
-                        <button width="1" alignment="center" verticalAlignment="center" title="Start" id="75M-0x-o8w">
-                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <connections>
-                                <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
-                            </connections>
-                        </button>
+                        <group width="1" alignment="left" id="cwu-4o-fZE">
+                            <items>
+                                <button alignment="right" verticalAlignment="center" title="Start" id="75M-0x-o8w">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <connections>
+                                        <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
+                                    </connections>
+                                </button>
+                                <button alignment="left" verticalAlignment="center" title="Cancel" id="NEd-Jy-FaU">
+                                    <connections>
+                                        <action selector="onCancel" destination="Bpo-6v-NAv" id="B0d-oQ-iP2"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
                         <button width="1" alignment="center" verticalAlignment="center" title="Intervals" id="Nbx-ph-zUl">
                             <connections>
                                 <action selector="onIntervals" destination="Bpo-6v-NAv" id="les-54-tL4"/>
@@ -125,11 +134,6 @@
                         <button width="1" alignment="center" verticalAlignment="center" title="Pace Plan" id="TJ5-Yl-Fdq">
                             <connections>
                                 <action selector="onPacePlan" destination="Bpo-6v-NAv" id="8bn-S8-e81"/>
-                            </connections>
-                        </button>
-                        <button width="1" alignment="left" verticalAlignment="bottom" title="Cancel" id="NEd-Jy-FaU">
-                            <connections>
-                                <action selector="onCancel" destination="Bpo-6v-NAv" id="B0d-oQ-iP2"/>
                             </connections>
                         </button>
                         <imageView alignment="center" verticalAlignment="bottom" id="zvu-77-qb2"/>
