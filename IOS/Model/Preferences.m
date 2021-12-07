@@ -488,12 +488,12 @@
 	{
 		if ([key isEqualToString:@PREF_NAME_UNITS])
 		{
-			id tempValue = [prefs objectForKey:key];
-			if (tempValue)
-			{
-				UnitSystem value = (UnitSystem)tempValue;
-				[Preferences setPreferredUnitSystem:value];
-			}
+			long tempValue = (long)[prefs objectForKey:key];
+
+            if (tempValue == (long)UNIT_SYSTEM_METRIC)
+                [Preferences setPreferredUnitSystem:UNIT_SYSTEM_METRIC];
+            else if (tempValue == (long)UNIT_SYSTEM_US_CUSTOMARY)
+                [Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
 		}
 		else if ([key isEqualToString:@PREF_NAME_SCAN_FOR_SENSORS])
 		{

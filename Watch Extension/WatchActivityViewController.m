@@ -26,7 +26,7 @@
 @synthesize startStopButton;
 @synthesize intervalsButton;
 @synthesize pacePlanButton;
-@synthesize cancelButton;
+@synthesize cancelPauseButton;
 @synthesize value1;
 @synthesize value2;
 @synthesize value3;
@@ -60,7 +60,10 @@
 
 	[super willActivate];
 
-	self->valueLabels = [[NSMutableArray alloc] init];
+    [self.intervalsButton setTitle:STR_INTERVALS];
+    [self.pacePlanButton setTitle:STR_PACE_PLAN];
+
+    self->valueLabels = [[NSMutableArray alloc] init];
 	if (self->valueLabels)
 	{
 		[self->valueLabels addObject:self.value1];
@@ -131,22 +134,22 @@
 
 - (void)setUIForStartedActivity
 {
-	[self.startStopButton setTitle:STR_STOP];
+    [self.cancelPauseButton setTitle:STR_PAUSE];
+    [self.startStopButton setTitle:STR_STOP];
 	[self.startStopButton setBackgroundColor:[UIColor redColor]];
 	
 	// Hide these after starting the activity so we don't accidentally press them.
 	[self.intervalsButton setHidden:TRUE];
 	[self.pacePlanButton setHidden:TRUE];
-	[self.cancelButton setHidden:TRUE];
 }
 
 - (void)setUIForStoppedActivity
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 
+    [self.cancelPauseButton setTitle:STR_CANCEL];
 	[self.startStopButton setTitle:STR_START];
 	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
-	[self.cancelButton setHidden:FALSE];
 
 	// Don't show the interval workouts button if there are no interval workouts.
 	NSMutableArray* intervalWorkoutNames = [extDelegate getIntervalWorkoutNamesAndIds];
@@ -159,14 +162,12 @@
 
 - (void)setUIForPausedActivity
 {
-	[self.startStopButton setTitle:STR_RESUME];
-	[self.startStopButton setBackgroundColor:[UIColor greenColor]];
+    [self.cancelPauseButton setTitle:STR_RESUME];
 }
 
 - (void)setUIForResumedActivity
 {
-	[self.startStopButton setTitle:STR_STOP];
-	[self.startStopButton setBackgroundColor:[UIColor redColor]];
+    [self.cancelPauseButton setTitle:STR_CANCEL];
 }
 
 #pragma mark button handlers
@@ -214,6 +215,7 @@
 	}
 }
 
+// The user wants to start, stop, or pause the activity.
 - (IBAction)onStartStop
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -245,6 +247,7 @@
 	}
 }
 
+// The user wants to select the interval workout.
 - (IBAction)onIntervals
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -267,6 +270,7 @@
 	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_INTERVAL_WORKOUT preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
+// The user wants to select the pace plan.
 - (IBAction)onPacePlan
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -289,10 +293,20 @@
 	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_PACE_PLAN preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
+// Button can be cancel or pause depending on whether or not an activity is in progress.
 - (IBAction)onCancel
 {
-	[self popController];
-	self->isPopping = TRUE;
+    ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+ 
+    if ([extDelegate isActivityInProgress])
+    {
+        [self doPause];
+    }
+    else
+    {
+        [self popController];
+        self->isPopping = TRUE;
+    }
 }
 
 #pragma mark method for refreshing screen values

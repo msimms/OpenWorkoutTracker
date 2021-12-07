@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17701" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="19455" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17500"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="19454"/>
     </dependencies>
     <scenes>
         <!--WatchAboutViewController-->
@@ -113,13 +113,13 @@
                         </group>
                         <group width="1" alignment="left" id="cwu-4o-fZE">
                             <items>
-                                <button alignment="right" verticalAlignment="center" title="Start" id="75M-0x-o8w">
+                                <button width="60" alignment="right" verticalAlignment="center" title="Start" id="75M-0x-o8w">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <connections>
                                         <action selector="onStartStop" destination="Bpo-6v-NAv" id="q5F-qx-G5A"/>
                                     </connections>
                                 </button>
-                                <button alignment="left" verticalAlignment="center" title="Cancel" id="NEd-Jy-FaU">
+                                <button width="1" widthAdjustment="-62" alignment="left" verticalAlignment="center" title="Cancel" id="NEd-Jy-FaU">
                                     <connections>
                                         <action selector="onCancel" destination="Bpo-6v-NAv" id="B0d-oQ-iP2"/>
                                     </connections>
@@ -141,7 +141,7 @@
                     <edgeInsets key="margins" left="1" right="1" top="22" bottom="0.0"/>
                     <connections>
                         <outlet property="broadcastImage" destination="zvu-77-qb2" id="HCM-57-YVb"/>
-                        <outlet property="cancelButton" destination="NEd-Jy-FaU" id="mzk-Fk-Id1"/>
+                        <outlet property="cancelPauseButton" destination="NEd-Jy-FaU" id="bSN-jY-dUK"/>
                         <outlet property="group1" destination="pJ5-uP-Shn" id="7RW-cp-4g3"/>
                         <outlet property="group2" destination="PPr-6M-NT3" id="yeS-ya-6Di"/>
                         <outlet property="group3" destination="8Du-RJ-V9w" id="vBH-d0-Vsp"/>

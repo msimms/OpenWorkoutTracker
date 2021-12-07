@@ -15,7 +15,7 @@
 	IBOutlet __strong WKInterfaceButton* startStopButton;
 	IBOutlet __strong WKInterfaceButton* intervalsButton;
 	IBOutlet __strong WKInterfaceButton* pacePlanButton;
-	IBOutlet __strong WKInterfaceButton* cancelButton;
+	IBOutlet __strong WKInterfaceButton* cancelPauseButton;
 	IBOutlet __strong WKInterfaceLabel* value1;
 	IBOutlet __strong WKInterfaceLabel* value2;
 	IBOutlet __strong WKInterfaceLabel* value3;
@@ -44,7 +44,7 @@
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* startStopButton;
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* intervalsButton;
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* pacePlanButton;
-@property (nonatomic, retain) IBOutlet WKInterfaceButton* cancelButton;
+@property (nonatomic, retain) IBOutlet WKInterfaceButton* cancelPauseButton;
 @property (nonatomic, retain) IBOutlet WKInterfaceLabel* value1;
 @property (nonatomic, retain) IBOutlet WKInterfaceLabel* value2;
 @property (nonatomic, retain) IBOutlet WKInterfaceLabel* value3;
