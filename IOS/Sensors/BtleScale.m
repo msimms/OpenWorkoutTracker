@@ -108,9 +108,9 @@ typedef struct WeightScaleFeature
 		const Weight* reportData = [data bytes];
 		float weightKg = (float)CFSwapInt32LittleToHost(reportData->weight) / (float)1000.0;
 		NSDictionary* weightData = [[NSDictionary alloc] initWithObjectsAndKeys:
-									   [NSNumber numberWithFloat:weightKg], @KEY_NAME_WEIGHT_KG,
-									   self->peripheral, @KEY_NAME_SCALE_PERIPHERAL_OBJ,
-									   nil];
+									[NSNumber numberWithFloat:weightKg], @KEY_NAME_WEIGHT_KG,
+									self->peripheral, @KEY_NAME_SCALE_PERIPHERAL_OBJ,
+									nil];
 		if (weightData)
 		{
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:weightData];
@@ -118,8 +118,13 @@ typedef struct WeightScaleFeature
 	}
 }
 
+- (void)updateWithWeightHistory:(NSData*)data
+{
+}
+
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverServices:(NSError*)error
 {
+	// Request characteristics for each service exposed by this peripheral.
 	for (CBService* service in peripheral.services)
 	{
 		[peripheral discoverCharacteristics:nil forService:service];
@@ -154,7 +159,9 @@ typedef struct WeightScaleFeature
 			if ([super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT] ||
 				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_MEASUREMENT] ||
 				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_SCALE_FEATURE] ||
-				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE] ||
+				[super characteristicEquals:aChar withBTChar:BT_CHARACTERISTIC_TEMPERATURE_MEASUREMENT] ||
+				[super characteristicEquals:aChar withCustomChar:@CUSTOM_BT_CHARACTERISTIC_WAHOO_SCALE])
 			{
 				[self->peripheral setNotifyValue:YES forCharacteristic:aChar];
 			}
@@ -202,6 +209,13 @@ typedef struct WeightScaleFeature
 	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_WEIGHT_LIVE])
 	{
 		[self updateWithWeightData:characteristic.value];
+	}
+	else if ([super characteristicEquals:characteristic withBTChar:BT_CHARACTERISTIC_TEMPERATURE_MEASUREMENT])
+	{
+	}
+	else if ([super characteristicEquals:characteristic withCustomChar:@CUSTOM_BT_CHARACTERISTIC_WAHOO_SCALE])
+	{
+		[self updateWithWeightHistory:characteristic.value];
 	}
 }
 

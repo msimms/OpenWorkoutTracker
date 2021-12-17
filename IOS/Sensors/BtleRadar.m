@@ -143,7 +143,7 @@ typedef struct RadarMeasurement
 		return;
 	}
 
-	if ([super characteristicEquals:characteristic withCustomChar:@CUSTOM_BT_CHARATERISTIC_RADAR_UPDATED])
+	if ([super characteristicEquals:characteristic withCustomChar:@CUSTOM_BT_CHARACTERISTIC_RADAR_UPDATED])
 	{
 		[self updateWithRadarData:characteristic.value];
 	}
