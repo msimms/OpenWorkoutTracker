@@ -27,6 +27,7 @@
 - (void)initializeNavButtonColor
 {
 	bool isDarkModeEnabled = [self isDarkModeEnabled];
+
 	UIColor* buttonColor = isDarkModeEnabled ? [UIColor whiteColor] : [UIColor blackColor];
 	UIColor* toolbarColor = isDarkModeEnabled ? [UIColor blackColor] : [UIColor whiteColor];
 
@@ -35,8 +36,24 @@
 	for (UIBarButtonItem* item in self->navItem.rightBarButtonItems)
 		[item setTintColor:buttonColor];
 
-	self.navigationController.navigationBar.barTintColor = toolbarColor;
-	self.navigationController.navigationBar.translucent = NO;
+	self.navigationController.navigationBar.tintColor = buttonColor;
+	self.navigationController.navigationBar.backgroundColor = toolbarColor;
+	self.navigationController.navigationBar.translucent = !isDarkModeEnabled;
+}
+
+- (void)initializeToolbarButtonColor
+{
+	bool isDarkModeEnabled = [self isDarkModeEnabled];
+
+	UIColor* buttonColor = isDarkModeEnabled ? [UIColor whiteColor] : [UIColor blackColor];
+	UIColor* toolbarColor = isDarkModeEnabled ? [UIColor blackColor] : [UIColor whiteColor];
+
+	for (UIBarButtonItem* item in self->toolbar.items)
+		[item setTintColor:buttonColor];
+
+	self.toolbar.tintColor = toolbarColor;
+	self.toolbar.barTintColor = toolbarColor;
+	self.toolbar.translucent = !isDarkModeEnabled;
 }
 
 - (void)startSpinner:(UIActivityIndicatorView*)spinner withDispatch:(BOOL)dispatch
@@ -65,17 +82,6 @@
 {
 	[spinner stopAnimating];
 	self->spinCount--;
-}
-
-- (void)initializeToolbarButtonColor
-{
-	bool isDarkModeEnabled = [self isDarkModeEnabled];
-	UIColor* buttonColor = isDarkModeEnabled ? [UIColor whiteColor] : [UIColor blackColor];
-	UIColor* toolbarColor = isDarkModeEnabled ? [UIColor blackColor] : [UIColor whiteColor];
-
-	for (UIBarButtonItem* item in self->toolbar.items)
-		[item setTintColor:buttonColor];
-	self.toolbar.barTintColor = toolbarColor;
 }
 
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg
