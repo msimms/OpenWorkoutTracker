@@ -54,6 +54,7 @@
 + (Goal)workoutGoal;
 + (GoalType)workoutGoalType;
 + (time_t)workoutGoalDate;
++ (time_t)lastServerSyncTime;
 
 #pragma mark set methods
 
@@ -81,6 +82,7 @@
 + (void)setWorkoutGoal:(Goal)value;
 + (void)setWorkoutGoalType:(GoalType)value;
 + (void)setWorkoutGoalDate:(time_t)value;
++ (void)setLastServerSyncTime:(time_t)value;
 
 #pragma mark methods for managing the list of accessories
 

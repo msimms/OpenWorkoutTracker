@@ -32,6 +32,7 @@
 #define PREF_NAME_WORKOUT_GOAL                         "Workout Goal"
 #define PREF_NAME_WORKOUT_GOAL_TYPE                    "Workout Goal Type"
 #define PREF_NAME_WORKOUT_GOAL_DATE                    "Workout Goal Date"
+#define PREF_NAME_LAST_SERVER_SYNC_TIME                "Last Server Sync Time"
 
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
@@ -267,6 +268,12 @@
 	return (time_t)goalDate;
 }
 
++ (time_t)lastServerSyncTime
+{
+	NSInteger syncTime = [self readNumericValue:@PREF_NAME_LAST_SERVER_SYNC_TIME];
+	return (time_t)syncTime;
+}
+
 #pragma mark set methods
 
 + (void)setUuid:(NSString*)value
@@ -399,6 +406,11 @@
 + (void)setWorkoutGoalDate:(time_t)value
 {
 	[self writeIntValue:@PREF_NAME_WORKOUT_GOAL_DATE withValue:(NSInteger)value];
+}
+
++ (void)setLastServerSyncTime:(time_t)value
+{
+	[self writeIntValue:@PREF_NAME_LAST_SERVER_SYNC_TIME withValue:(NSInteger)value];
 }
 
 #pragma mark methods for managing the list of accessories

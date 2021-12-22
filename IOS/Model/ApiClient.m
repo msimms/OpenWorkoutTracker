@@ -451,6 +451,19 @@
 #endif
 }
 
++ (BOOL)serverRequestUpdatesSince:(time_t)ts
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%@?", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_DEVICE_SYNC_URL];
+
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%@=%ld", @PARAM_TIMESTAMP, ts]];
+
+	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
+#endif
+}
+
 // Ask the server if it has the activity with the given ID and hash.
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash
 {
