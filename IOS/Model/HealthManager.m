@@ -115,10 +115,10 @@
 
 #pragma mark methods for reading quantity samples (height, weight, etc.) from HealthKit.
 
-- (void)subscribeToQuantitySamplesOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+- (void)subscribeToQuantitySamplesOfType:(HKQuantityType*)quantityType callback:(void (^)(HKQuantity*, NSDate*, NSError*))callback
 {
-	// It's invalid to call this without a completion handler.
-	if (!completion)
+	// It's invalid to call this without a callback handler.
+	if (!callback)
 	{
 		return;
 	}
@@ -134,7 +134,7 @@
 		{
 			for (HKQuantitySample* sample in addedObjects)
 			{
-				completion(sample.quantity, sample.endDate, error);
+				callback(sample.quantity, sample.endDate, error);
 			}
 		}
 	}];
@@ -145,7 +145,7 @@
 		{
 			for (HKQuantitySample* sample in addedObjects)
 			{
-				completion(sample.quantity, sample.endDate, error);
+				callback(sample.quantity, sample.endDate, error);
 			}
 		}
 	};
@@ -154,10 +154,10 @@
 	[self->healthStore executeQuery:query];
 }
 
-- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+- (void)mostRecentQuantitySampleOfType:(HKQuantityType*)quantityType callback:(void (^)(HKQuantity*, NSDate*, NSError*))callback
 {
-	// It's invalid to call this without a completion handler.
-	if (!completion)
+	// It's invalid to call this without a callback handler.
+	if (!callback)
 	{
 		return;
 	}
@@ -171,17 +171,17 @@
 													 sortDescriptors:@[timeSortDescriptor]
 													  resultsHandler:^(HKSampleQuery* query, NSArray* results, NSError* error)
 	{
-		// Error case: Call the completion handler, passing nil for the results.
+		// Error case: Call the callback handler, passing nil for the results.
 		if (!results)
 		{
-			completion(nil, nil, error);
+			callback(nil, nil, error);
 		}
 
-		// Normal case: Call the completion handler with the results.
+		// Normal case: Call the callback handler with the results.
 		else
 		{
 			HKQuantitySample* quantitySample = results.firstObject;
-			completion(quantitySample.quantity, quantitySample.startDate, error);
+			callback(quantitySample.quantity, quantitySample.startDate, error);
 		}
 	}];
 
@@ -189,10 +189,10 @@
 	[self->healthStore executeQuery:query];
 }
 
-- (void)quantitySamplesOfType:(HKQuantityType*)quantityType completion:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+- (void)quantitySamplesOfType:(HKQuantityType*)quantityType callback:(void (^)(HKQuantity*, NSDate*, NSError*))callback
 {
-	// It's invalid to call this without a completion handler.
-	if (!completion)
+	// It's invalid to call this without a callback handler.
+	if (!callback)
 	{
 		return;
 	}
@@ -204,18 +204,18 @@
 													 sortDescriptors:nil
 													  resultsHandler:^(HKSampleQuery* query, NSArray* results, NSError* error)
 	{
-		// Error case: Call the completion handler, passing nil for the results.
+		// Error case: Call the callback handler, passing nil for the results.
 		if (!results)
 		{
-			completion(nil, nil, error);
+			callback(nil, nil, error);
 		}
 
-		// Normal case: Call the completion handler with the results.
+		// Normal case: Call the callback handler with the results.
 		else
 		{
 			for (HKQuantitySample* quantitySample in results)
 			{
-				completion(quantitySample.quantity, quantitySample.startDate, error);
+				callback(quantitySample.quantity, quantitySample.startDate, error);
 			}
 		}
 	}];
@@ -245,7 +245,7 @@
 	HKQuantityType* heightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
 	
 	[self mostRecentQuantitySampleOfType:heightType
-							  completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
+								callback:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 	 {
 		 if (mostRecentQuantity)
 		 {
@@ -262,7 +262,7 @@
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 
 	[self mostRecentQuantitySampleOfType:weightType
-							  completion:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
+								callback:^(HKQuantity* mostRecentQuantity, NSDate* startDate, NSError* error)
 	 {
 		if (mostRecentQuantity)
 		{
@@ -286,11 +286,11 @@
 
 // methods for returning HealthKit data.
 
-- (void)readWeightHistory:(void (^)(HKQuantity*, NSDate*, NSError*))completion
+- (void)readWeightHistory:(void (^)(HKQuantity*, NSDate*, NSError*))callback
 {
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
 
-	[self quantitySamplesOfType:weightType completion:completion];
+	[self quantitySamplesOfType:weightType callback:callback];
 }
 
 #pragma mark methods for managing workouts

@@ -95,7 +95,7 @@
 			 HKQuantityType* hrType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeartRate];
 
 			 [super subscribeToQuantitySamplesOfType:hrType
-										  completion:^(HKQuantity* heartRateQuantity, NSDate* heartRateTime, NSError* error)
+											callback:^(HKQuantity* heartRateQuantity, NSDate* heartRateTime, NSError* error)
 			  {
 				  if (heartRateQuantity)
 				  {
@@ -109,6 +109,8 @@
 
 					  [[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
 				  }
+
+				 completionHandler();
 			  }];
 		 }
 	}];
