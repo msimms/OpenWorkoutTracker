@@ -58,7 +58,8 @@ git submodule update --init --recursive
 This app uses three other source projects to work properly:
 
 * [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS.
-* [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities, including a peak finding algorithm.
+* [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities.
+* [PeakFinder](https://github.com/msimms/PeakFinder) - A peak finding algorithm.
 * [sqlite](https://www.sqlite.org) - Database for storing activities.
 
 The app is written in a combination of Objective-C and C++ and targets the Apple iPhone and Apple Watch.
