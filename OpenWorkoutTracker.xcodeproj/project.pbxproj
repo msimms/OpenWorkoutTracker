@@ -154,6 +154,10 @@
 		2733EDC9250AEEE70096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
 		2733EDCA250AEEE80096D58B /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2733EDC6250AC7880096D58B /* ZwoFileWriter.cpp */; };
 		27345D0A19EDEE4600059FFF /* BtleScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 27345D0919EDEE4600059FFF /* BtleScale.m */; };
+		27384FC52777D641002BD39D /* WorkoutPlanTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27384FB82777D641002BD39D /* WorkoutPlanTest.m */; };
+		27384FC62778F7FE002BD39D /* StringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F13B19BFE2C1008F8672 /* StringUtils.m */; };
+		27384FC82778FADD002BD39D /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14B19BFE3B7008F8672 /* Preferences.m */; };
+		27384FCA2778FBA9002BD39D /* BaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27384FC92778FBA9002BD39D /* BaseTest.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
 		274EF7CB26BCB0DA008AA465 /* Threat.png in Resources */ = {isa = PBXBuildFile; fileRef = 274EF7BE26BCB0DA008AA465 /* Threat.png */; };
@@ -681,6 +685,9 @@
 		2733EDC7250AC7880096D58B /* ZwoFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileWriter.h; path = FileLib/ZwoFileWriter.h; sourceTree = SOURCE_ROOT; };
 		27345D0819EDEE4600059FFF /* BtleScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleScale.h; path = IOS/Sensors/BtleScale.h; sourceTree = SOURCE_ROOT; };
 		27345D0919EDEE4600059FFF /* BtleScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleScale.m; path = IOS/Sensors/BtleScale.m; sourceTree = SOURCE_ROOT; };
+		27384FB82777D641002BD39D /* WorkoutPlanTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkoutPlanTest.m; sourceTree = "<group>"; };
+		27384FC72778F987002BD39D /* BaseTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTest.h; sourceTree = "<group>"; };
+		27384FC92778FBA9002BD39D /* BaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTest.m; sourceTree = "<group>"; };
 		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
 		274EF7BE26BCB0DA008AA465 /* Threat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Threat.png; path = Images/Threat.png; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
@@ -1167,11 +1174,14 @@
 		270CF3F82391B5D600584058 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				27384FC72778F987002BD39D /* BaseTest.h */,
+				27384FC92778FBA9002BD39D /* BaseTest.m */,
 				27EFE5F926C58D520025B9F4 /* FitExportTest.m */,
 				270CF3FA2391B63800584058 /* GpxImportTest.m */,
 				270CF3FC2391B63800584058 /* PeakFindTest.m */,
 				270CF4092391BBF400584058 /* Tests.m */,
 				270CF3FB2391B63800584058 /* TcxImportTest.m */,
+				27384FB82777D641002BD39D /* WorkoutPlanTest.m */,
 				270CF3F92391B63700584058 /* ZwoImportTest.m */,
 				270CF40B2391BBF400584058 /* Info.plist */,
 				270CF4142391C34900584058 /* TestPlan.xctestplan */,
@@ -2184,6 +2194,7 @@
 				270CF4802391F0BB00584058 /* TcxFileWriter.cpp in Sources */,
 				270CF4812391F0BB00584058 /* TcxFileWriter.h in Sources */,
 				270CF4822391F0BB00584058 /* TcxTags.h in Sources */,
+				27384FC62778F7FE002BD39D /* StringUtils.m in Sources */,
 				270CF4832391F0BB00584058 /* TextFileReader.cpp in Sources */,
 				270CF4842391F0BB00584058 /* TextFileReader.h in Sources */,
 				27F4241123A46A5E00F59F50 /* PoolSwim.cpp in Sources */,
@@ -2210,6 +2221,8 @@
 				27CF012324D7A68400263CEC /* WorkoutPlanGenerator.cpp in Sources */,
 				270CF4252391F05200584058 /* Activity.cpp in Sources */,
 				270CF4262391F05200584058 /* Activity.h in Sources */,
+				27384FC52777D641002BD39D /* WorkoutPlanTest.m in Sources */,
+				27384FCA2778FBA9002BD39D /* BaseTest.m in Sources */,
 				2772FEAE2503EE8200ED9F2A /* BikePlanGenerator.cpp in Sources */,
 				2768E51C23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
 				2733EDCA250AEEE80096D58B /* ZwoFileWriter.cpp in Sources */,
@@ -2280,6 +2293,7 @@
 				270CF40F2391BE0800584058 /* GpxImportTest.m in Sources */,
 				270CF4122391BE1900584058 /* ZwoImportTest.m in Sources */,
 				270CF40A2391BBF400584058 /* Tests.m in Sources */,
+				27384FC82778FADD002BD39D /* Preferences.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

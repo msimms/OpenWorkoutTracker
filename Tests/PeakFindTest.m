@@ -9,9 +9,10 @@
 #import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "ActivityAttribute.h"
+#import "BaseTest.h"
 #import "Downloader.h"
 
-@interface PeakFindTest : XCTestCase
+@interface PeakFindTest : BaseTest
 
 @end
 
@@ -29,6 +30,9 @@
 
 - (void)testPeakFinding
 {
+	// Downloads accelerometer data from the test files repository and runs them through the same peak
+	// peak finding code used when performing pullup and pushup exercises.
+
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
@@ -68,17 +72,34 @@
 					[fileHandle closeFile];
 
 					NSString* activityId = [[NSUUID UUID] UUIDString];
-					XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_PUSHUP, [activityId UTF8String]));
+					char* activityType = NULL;
 
+					// For debugging.
+					printf("Testing %s\n", [destFileName UTF8String]);
+					
+					// Attempt to figure out the activity type from the input file name.
+					if ([sourceFileName containsString:@"pullup"])
+						activityType = ACTIVITY_TYPE_PUSHUP;
+					else if ([sourceFileName containsString:@"pushup"])
+						activityType = ACTIVITY_TYPE_PULLUP;
+
+					// Load the activity into the database.
+					XCTAssert(ImportActivityFromFile([destFileName UTF8String], activityType, [activityId UTF8String]));
+
+					// Refresh the database metadata.
 					InitializeHistoricalActivityList();
 					XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
 					XCTAssert(SaveHistoricalActivitySummaryDataById([activityId UTF8String]));
 					XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
 
-					ActivityAttributeType numPushups = QueryHistoricalActivityAttributeById([activityId UTF8String], ACTIVITY_ATTRIBUTE_REPS);
-					XCTAssert(numPushups.value.intVal > 0);
-					XCTAssert(DeleteActivity([activityId UTF8String]));
+					// For debugging.
+					[super printActivityAttributes:activityId];
 
+					ActivityAttributeType numReps = QueryHistoricalActivityAttributeById([activityId UTF8String], ACTIVITY_ATTRIBUTE_REPS);
+					XCTAssert(numReps.value.intVal > 0);
+					
+					// Clean up.
+					XCTAssert(DeleteActivityFromDatabase([activityId UTF8String]));
 					[fm removeItemAtPath:sourceFileName error:nil];
 				}
 
@@ -88,14 +109,6 @@
 	}
 
 	dispatch_group_wait(queryGroup, DISPATCH_TIME_FOREVER);
-}
-
-- (void)testPeakFindingPerformance
-{
-	// This is an example of a performance test case.
-	[self measureBlock:^{
-		// Put the code you want to measure the time of here.
-	}];
 }
 
 @end

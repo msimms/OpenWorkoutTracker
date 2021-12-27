@@ -25,6 +25,8 @@
 }
 
 - (void)testExample {
+	// Downloads files from the test files repository, imports them, and then exports them as .fit files.
+
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
@@ -66,7 +68,7 @@
 				XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
 				XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
 				XCTAssert(ExportActivityFromDatabase([activityId UTF8String], FILE_FIT, [[tempUrl resourceSpecifier] UTF8String]));
-				XCTAssert(DeleteActivity([activityId UTF8String]));
+				XCTAssert(DeleteActivityFromDatabase([activityId UTF8String]));
 
 				[fm removeItemAtPath:sourceFileName error:nil];
 			}

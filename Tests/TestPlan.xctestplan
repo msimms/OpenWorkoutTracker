@@ -14,7 +14,7 @@
   "testTargets" : [
     {
       "skippedTests" : [
-        "Tests"
+        "Test"
       ],
       "target" : {
         "containerPath" : "container:OpenWorkoutTracker.xcodeproj",

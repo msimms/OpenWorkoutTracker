@@ -149,6 +149,8 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 				reading.reading.insert(SensorNameValuePair(AXIS_NAME_Z, z));
 
 				result = m_pDb->CreateSensorReading(m_activityId, reading);
+				
+				m_lastTime = ts;
 			}
 		}
 	}

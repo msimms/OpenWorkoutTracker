@@ -1963,7 +1963,8 @@ extern "C" {
 					// Build the activity id to index hash map.
 					g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex));
 
-					// Load cached summary data because this is quicker than recreated the activity object and recomputing everything.
+					// Load cached summary data because this is quicker than recreated the activity
+					// object and recomputing everything.
 					g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
 				}
 			}

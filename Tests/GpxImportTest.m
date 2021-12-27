@@ -9,8 +9,9 @@
 #import "ActivityMgr.h"
 #import "ActivityType.h"
 #import "Downloader.h"
+#import "BaseTest.h"
 
-@interface GpxImportTest : XCTestCase
+@interface GpxImportTest : BaseTest
 
 @end
 
@@ -28,6 +29,8 @@
 
 - (void)testGpxImport
 {
+	// Downloads files from the test files repository and imports them.
+
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
@@ -63,10 +66,26 @@
 				[fileHandle writeData:data];
 				[fileHandle closeFile];
 
-				NSString* activityId = [[NSUUID UUID] UUIDString];
-				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_RUNNING, [activityId UTF8String]));
-				XCTAssert(DeleteActivity([activityId UTF8String]));
+				// For debugging.
+				printf("Testing %s\n", [destFileName UTF8String]);
 
+				// Make up an activity ID.
+				NSString* activityId = [[NSUUID UUID] UUIDString];
+
+				// Load the activity into the database.
+				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_RUNNING, [activityId UTF8String]));
+
+				// Refresh the database metadata.
+				InitializeHistoricalActivityList();
+				XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
+				XCTAssert(SaveHistoricalActivitySummaryDataById([activityId UTF8String]));
+				XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
+
+				// For debugging.
+				[super printActivityAttributes:activityId];
+
+				// Clean up.
+				XCTAssert(DeleteActivityFromDatabase([activityId UTF8String]));
 				[fm removeItemAtPath:sourceFileName error:nil];
 			}
 

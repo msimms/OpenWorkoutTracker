@@ -7,7 +7,6 @@
 
 #import <XCTest/XCTest.h>
 #import "ActivityMgr.h"
-#import "ActivityType.h"
 #import "Downloader.h"
 
 @interface ZwoImportTest : XCTestCase
@@ -28,6 +27,8 @@
 
 - (void)testZwoImport
 {
+	// Downloads files from the test files repository and imports them.
+
 	Downloader* downloader = [[Downloader alloc] init];
 	NSFileManager* fm = [NSFileManager defaultManager];
 
@@ -64,9 +65,13 @@
 				[fileHandle writeData:data];
 				[fileHandle closeFile];
 
-				XCTAssert(ImportZwoFile([destFileName UTF8String], [intervalId UTF8String], "Test Workout"));
-				XCTAssert(DeleteIntervalWorkout([intervalId UTF8String]));
+				// For debugging.
+				printf("Testing %s\n", [destFileName UTF8String]);
 
+				XCTAssert(ImportZwoFile([destFileName UTF8String], [intervalId UTF8String], "Test Workout"));
+
+				// Clean up.
+				XCTAssert(DeleteIntervalWorkout([intervalId UTF8String]));
 				[fm removeItemAtPath:sourceFileName error:nil];
 			}
 
