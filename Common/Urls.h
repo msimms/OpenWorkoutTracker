@@ -20,7 +20,7 @@
 #define REMOTE_API_LIST_PLANNED_WORKOUTS_URL     "api/1.0/list_planned_workouts"
 #define REMOTE_API_LIST_INTERVAL_WORKOUTS_URL    "api/1.0/list_interval_workouts"
 #define REMOTE_API_LIST_PACE_PLANS_URL           "api/1.0/list_pace_plans"
-#define REMOTE_API_DEVICE_SYNC_URL               "api/1.0/device_sync"
+#define REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL "api/1.0/list_unsynched_activities"
 #define REMOTE_API_HAS_ACTIVITY_URL              "api/1.0/has_activity"
 #define REMOTE_API_REQUEST_ACTIVITY_METADATA_URL "api/1.0/activity_metadata"
 #define REMOTE_API_REQUEST_WORKOUT_DETAILS_URL   "api/1.0/export_workout"

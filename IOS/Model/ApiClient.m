@@ -456,7 +456,7 @@
 #if OMIT_BROADCAST
 	return FALSE;
 #else
-	NSString* str = [NSString stringWithFormat:@"%@://%@/%@?", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_DEVICE_SYNC_URL];
+	NSString* str = [NSString stringWithFormat:@"%@://%@/%@?", [Preferences broadcastProtocol], [Preferences broadcastHostName], REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL];
 
 	str = [str stringByAppendingString:[NSString stringWithFormat:@"%@=%ld", @PARAM_TIMESTAMP, ts]];
 
