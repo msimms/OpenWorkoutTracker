@@ -991,8 +991,8 @@
 
 				if (threatCount)
 				{
-					const CGFloat IMAGE_SIZE = 24;
-					const CGFloat IMAGE_LEFT = 3;
+					const CGFloat IMAGE_SIZE = 22;
+					const CGFloat IMAGE_LEFT = 2;
 					const CGFloat MAX_THREAT_DISTANCE_METERS = 160.0;
 
 					// How many threats were reported?
