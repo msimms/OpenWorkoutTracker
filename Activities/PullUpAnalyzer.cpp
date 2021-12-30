@@ -18,7 +18,7 @@ PullUpAnalyzer::~PullUpAnalyzer()
 
 std::string PullUpAnalyzer::PrimaryAxis() const
 {
-	return AXIS_NAME_Z;
+	return AXIS_NAME_Y;
 }
 
 std::string PullUpAnalyzer::SecondaryAxis() const

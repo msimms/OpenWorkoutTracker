@@ -22,7 +22,7 @@ GForceAnalyzer::GForceAnalyzer()
 }
 
 GForceAnalyzer::~GForceAnalyzer()
-{	
+{
 }
 
 void GForceAnalyzer::Clear()
@@ -46,14 +46,16 @@ Peaks::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorRea
 	try
 	{
 		const std::string& axisName = PrimaryAxis();
-		uint64_t timeSinceLastCalc = m_lastPeakCalculationTime - reading.time;
+		uint64_t timeSinceLastCalc = reading.time - m_lastPeakCalculationTime;
 		double value = reading.reading.at(axisName);
 		Peaks::GraphLine& line = m_graphLines.at(axisName);
 
 		//
 		// Append the value to the data line for this axis.
+		// Squre the value to get rid of any negatives.
 		//
 
+		value = value * value;
 		line.push_back(Peaks::GraphPoint(reading.time, value));
 
 		//
@@ -66,7 +68,7 @@ Peaks::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorRea
 			// Locate all statistically significant peaks on this axis.
 			//
 
-			Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverThreshold(line, (double)0.0);
+			Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverStd(line, (double)1.0);
 			m_peaks[axisName] = peaks;
 
 			//
@@ -77,61 +79,69 @@ Peaks::GraphPeakList GForceAnalyzer::ProcessAccelerometerReading(const SensorRea
 			m_lastPeakCalculationTime = reading.time;
 
 			//
-			// We'll recalculate everything, so clear the list of previously computed data peaks.
-			//
-
-			m_dataPeaks.clear();
-
-			//
 			// Prepare for k-means analysis to find the statistically significant peaks.
 			// If there isn't much variation in the data then skip k-means and assume all the peaks are significant.
 			//
 
-			double* areas = new double[peaks.size()];
-			if (areas)
+			size_t peakCount = peaks.size();
+			if (peakCount > 0)
 			{
-				size_t areasCount = 0;
-				double areasMean = 0.0;
-				for (auto primaryPeakIter = peaks.begin(); primaryPeakIter != peaks.end(); ++primaryPeakIter, ++areasCount)
+				//
+				// We'll recalculate everything, so clear the list of previously computed data peaks.
+				//
+
+				m_dataPeaks.clear();
+
+				//
+				// Need the result as an array of floats so we can do further analysis with it.
+				//
+
+				double* areas = new double[peaks.size()];
+				if (areas)
 				{
-					double area = (*primaryPeakIter).area;
-					areasMean = areasMean + area;
-					areas[areasCount] = area;
-				}
-				areasMean = areasMean / peaks.size();
-				double areasStdDev = LibMath::Statistics::standardDeviation(areas, areasCount, areasMean);
-
-				//
-				// If the peaks are all pretty similar, so we'll assume they're all meaningful.
-				//
-
-				if (areasStdDev < 1.0)
-				{
-					m_dataPeaks = peaks;
-				}
-
-				//
-				// If there's a wide range of variation in the peaks, do a k-means analysis so we can get rid of any outliers.
-				//
-
-				else
-				{
-					size_t* tags = LibMath::KMeans::withEquallySpacedCentroids1D(areas, areasCount, 2, 1, areasCount);
-					if (tags)
+					size_t areasCount = 0;
+					double areasMean = 0.0;
+					for (auto primaryPeakIter = peaks.begin(); primaryPeakIter != peaks.end(); ++primaryPeakIter, ++areasCount)
 					{
-						for (size_t peakIndex = 0; peakIndex < areasCount; ++peakIndex)
+						double area = (*primaryPeakIter).area;
+						areasMean = areasMean + area;
+						areas[areasCount] = area;
+					}
+					areasMean = areasMean / peaks.size();
+					double areasStdDev = LibMath::Statistics::standardDeviation(areas, areasCount, areasMean);
+
+					//
+					// If the peaks are all pretty similar, so we'll assume they're all meaningful.
+					//
+
+					if (areasStdDev < 1.0)
+					{
+						m_dataPeaks = peaks;
+					}
+
+					//
+					// If there's a wide range of variation in the peaks, do a k-means analysis so we can get rid of any outliers.
+					//
+
+					else
+					{
+						size_t* tags = LibMath::KMeans::withEquallySpacedCentroids1D(areas, areasCount, 2, 1, areasCount);
+						if (tags)
 						{
-							if (tags[peakIndex] == 1)
+							for (size_t peakIndex = 0; peakIndex < areasCount; ++peakIndex)
 							{
-								m_dataPeaks.push_back(peaks.at(peakIndex));
+								if (tags[peakIndex] == 1)
+								{
+									m_dataPeaks.push_back(peaks.at(peakIndex));
+								}
 							}
+							delete[] tags;
 						}
-						delete[] tags;
 					}
 				}
+				
+				delete[] areas;
 			}
-			
-			delete[] areas;
 		}
 	}
 	catch (...)
