@@ -73,7 +73,6 @@ typedef enum SettingsRowsHealthKit
 #define HEALTHKIT                      NSLocalizedString(@"HealthKit", nil)
 #define READ_ACTIVITIES_FROM_HEALTHKIT NSLocalizedString(@"Read Activities From HealthKit", nil)
 #define HIDE_DUPLICATES                NSLocalizedString(@"Hide Duplicates", nil)
-#define ALERT_TITLE_BROADCAST_USER     NSLocalizedString(@"Enter the name you want to use", nil)
 #define ALERT_TITLE_BROADCAST_RATE     NSLocalizedString(@"How often do you want to update your position to your followers?", nil)
 #define ALERT_TITLE_BROADCAST_HOST     NSLocalizedString(@"What is the host name of the broadcast server?", nil)
 #define ALERT_TITLE_BROADCAST_WARN     NSLocalizedString(@"Enabling this will broadcast your position so that others may follow you. Data may be transmitted while on your carrier's network.", nil)
@@ -182,23 +181,6 @@ typedef enum SettingsRowsHealthKit
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_US_CUSTOMARY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setPreferredUnitSystem:UNIT_SYSTEM_US_CUSTOMARY];
-		[self.settingsTableView reloadData];
-	}]];
-	[self presentViewController:alertController animated:YES completion:nil];
-}
-
-- (void)showBroadcastUserNameDialog
-{
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:BROADCAST
-																			 message:ALERT_TITLE_BROADCAST_USER
-																	  preferredStyle:UIAlertControllerStyleAlert];
-
-	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-	}];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		UITextField* field = alertController.textFields.firstObject;
-
-		[Preferences setBroadcastUserName:[field text]];
 		[self.settingsTableView reloadData];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
@@ -456,13 +438,18 @@ typedef enum SettingsRowsHealthKit
 			{
 				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
+				// These rows don't get toggle switches.
 				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
 					(row != SETTINGS_ROW_BROADCAST_HOST) &&
 					(row != SETTINGS_ROW_FRIENDS) &&
-					(row != SETTINGS_ROW_DEVICE_ID))	// these rows don't get toggle switches
+					(row != SETTINGS_ROW_DEVICE_ID))
 				{
 					cell.accessoryView = switchview;
 					[switchview setTag:(section * 100) + row];
+				}
+				else
+				{
+					cell.accessoryView = NULL;
 				}
 
 				switch (row)

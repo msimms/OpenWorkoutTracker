@@ -91,6 +91,7 @@
 	{
 		CIImage* tempImage = [CIImage imageWithCGImage:self->threatImage.CGImage];
 		CIFilter* filter = [CIFilter filterWithName:@"CIColorInvert"];
+
 		[filter setDefaults];
 		[filter setValue:tempImage forKey:kCIInputImageKey];
 		self->threatImage = [[UIImage alloc] initWithCIImage:filter.outputImage];
