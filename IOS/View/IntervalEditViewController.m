@@ -242,35 +242,43 @@
 	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) { textField.keyboardType = UIKeyboardTypeNumberPad; }];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		IntervalWorkoutSegment segment2 = segment;
-		uint32_t valueFromUser = [[alertController.textFields.firstObject text] intValue];
+		double valueFromUser = [[alertController.textFields.firstObject text] doubleValue];
 
-		switch (unit)
+		// Check for a valid, i.e. non zero, value.
+		if (valueFromUser < 0.0001)
 		{
-		case INTERVAL_UNIT_NOT_SET:
-			break;
-		case INTERVAL_UNIT_SECONDS:
-			segment2.duration = valueFromUser;
-			segment2.units = INTERVAL_UNIT_SECONDS;
-			break;
-		case INTERVAL_UNIT_METERS:
-		case INTERVAL_UNIT_KILOMETERS:
-		case INTERVAL_UNIT_FEET:
-		case INTERVAL_UNIT_YARDS:
-		case INTERVAL_UNIT_MILES:
-			segment2.distance = valueFromUser;
-			segment2.units = unit;
-			break;
-		case INTERVAL_UNIT_PACE_US_CUSTOMARY:
-		case INTERVAL_UNIT_PACE_METRIC:
-		case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
-		case INTERVAL_UNIT_SPEED_METRIC:
-		case INTERVAL_UNIT_TIME_AND_POWER:
-			break;
+			[super showOneButtonAlert:STR_ERROR withMsg:STR_INVALID_OR_NO_INPUT];
 		}
-
-		if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment2))
+		else
 		{
-			[self reload];
+			switch (unit)
+			{
+			case INTERVAL_UNIT_NOT_SET:
+				break;
+			case INTERVAL_UNIT_SECONDS:
+				segment2.duration = valueFromUser;
+				segment2.units = INTERVAL_UNIT_SECONDS;
+				break;
+			case INTERVAL_UNIT_METERS:
+			case INTERVAL_UNIT_KILOMETERS:
+			case INTERVAL_UNIT_FEET:
+			case INTERVAL_UNIT_YARDS:
+			case INTERVAL_UNIT_MILES:
+				segment2.distance = valueFromUser;
+				segment2.units = unit;
+				break;
+			case INTERVAL_UNIT_PACE_US_CUSTOMARY:
+			case INTERVAL_UNIT_PACE_METRIC:
+			case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
+			case INTERVAL_UNIT_SPEED_METRIC:
+			case INTERVAL_UNIT_TIME_AND_POWER:
+				break;
+			}
+
+			if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment2))
+			{
+				[self reload];
+			}
 		}
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
