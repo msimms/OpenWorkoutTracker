@@ -105,6 +105,12 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:downloadedData];
 			} );
 		}
+		else if ([urlStr rangeOfString:@REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL].location != NSNotFound)
+		{
+			dispatch_async(dispatch_get_main_queue(),^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST object:downloadedData];
+			} );
+		}
 		else if ([urlStr rangeOfString:@REMOTE_API_HAS_ACTIVITY_URL].location != NSNotFound)
 		{
 			dispatch_async(dispatch_get_main_queue(),^{

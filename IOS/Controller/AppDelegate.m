@@ -110,7 +110,6 @@ typedef enum MsgDestinationType
 	self->activityPrefs = [[ActivityPreferences alloc] init];
 	self->currentlyImporting = FALSE;
 	self->currentActivityIndex = 0;
-	self->lastServerSync = 0;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(weightHistoryUpdated:) name:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accelerometerUpdated:) name:@NOTIFICATION_NAME_ACCELEROMETER object:nil];
@@ -129,7 +128,8 @@ typedef enum MsgDestinationType
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unsynchedActivitiesListReceived:) name:@NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityMetadataReceived:) name:@NOTIFICATION_NAME_ACTIVITY_METADATA object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleHasActivityResponse:) name:@NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(broadcastMgrHasFinishedSendingActivity:) name:@NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY object:nil];
@@ -1137,7 +1137,8 @@ void startSensorCallback(SensorType type, void* context)
 - (void)syncWithServer
 {
 	// Rate limit the server synchronizations. Let's not be spammy.
-	if (time(NULL) - self->lastServerSync > 60)
+	time_t lastServerSync = [Preferences lastServerSyncTime];
+	if (time(NULL) - lastServerSync > 60)
 	{
 		[self serverListGear];
 		[self serverListPlannedWorkouts];
@@ -1146,8 +1147,8 @@ void startSensorCallback(SensorType type, void* context)
 		[self sendUserDetailsToServer];
 		[self sendMissingActivitiesToServer];
 		[self sendPacePlans:MSG_DESTINATION_WEB];
-
-		self->lastServerSync = time(NULL);
+		[ApiClient serverRequestUpdatesSince:lastServerSync];
+		[Preferences setLastServerSyncTime:time(NULL)];
 	}
 }
 
@@ -1398,6 +1399,30 @@ void startSensorCallback(SensorType type, void* context)
 		else
 		{
 			NSLog(@"Invalid JSON received.");
+		}
+	}
+	@catch (...)
+	{
+	}
+}
+
+// Called when the server returns the list of activities that need synchronizing.
+- (void)unsynchedActivitiesListReceived:(NSNotification*)notification
+{
+	@try
+	{
+		NSDictionary* responseData = [notification object];
+		NSString* responseStr = [responseData objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSError* error = nil;
+		NSDictionary* activityIdList = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
+		// Valid JSON?
+		if (activityIdList)
+		{
+			for (NSString* activityId in activityIdList)
+			{
+				[ApiClient serverRequestActivityMetadata:activityId];
+			}
 		}
 	}
 	@catch (...)

@@ -41,7 +41,6 @@
 	WCSession*           watchSession;          // Interfaces with the watch app.
 	BOOL                 currentlyImporting;    // TRUE if currently importing an activity (like from the watch, for example).
 	size_t               currentActivityIndex;  // Used when iterating over historical activities.
-	time_t               lastServerSync;        // Timestamp of the last time we synchronized with the server (if logged in, of course).
 }
 
 - (NSString*)getDeviceId;

@@ -12,6 +12,7 @@
 #define NOTIFICATION_NAME_INTERVAL_UPDATED            "IntervalUpdated"
 #define NOTIFICATION_NAME_INTERVAL_COMPLETE           "IntervalComplete"
 #define NOTIFICATION_NAME_PACE_PLANS_UPDATED          "PacePlansUpdated"         // The pace plans list from the (optional) server was updated
+#define NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST   "UnsyncheActivitiesList"   // A list of activity IDs that need to be synched was returned from the server (optional)
 #define NOTIFICATION_NAME_FRIENDS_LIST_UPDATED        "FriendsListUpdated"       // The friends list from the (optional) server was updated
 #define NOTIFICATION_NAME_LOGIN_PROCESSED             "LoginProcessed"           // The (optional) server responded to a login attempt
 #define NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED      "CreateLoginProcessed"     // The (optional) server responded to an attempt to create a new login
