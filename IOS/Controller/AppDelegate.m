@@ -2880,6 +2880,27 @@ void attributeNameCallback(const char* name, void* context)
 	return CreateNewIntervalWorkout([workoutId UTF8String], [workoutName UTF8String], [sport UTF8String]);
 }
 
+- (BOOL)retrieveIntervalWorkout:(NSString*)workoutId withName:(NSString**)workoutName withSport:(NSString**)sport
+{
+	char* tempWorkoutName = NULL;
+	char* tempSport = NULL;
+
+	BOOL result = RetrieveIntervalWorkout([workoutId UTF8String], &tempWorkoutName, &tempSport);
+
+	if (tempWorkoutName)
+	{
+		(*workoutName) = [NSString stringWithFormat:@"%s", tempWorkoutName];
+		free((void*)tempWorkoutName);
+	}
+	if (tempSport)
+	{
+		(*sport) = [NSString stringWithFormat:@"%s", tempSport];
+		free((void*)tempSport);
+	}
+
+	return result;
+}
+
 - (BOOL)deleteIntervalWorkout:(NSString*)workoutId
 {
 	return DeleteIntervalWorkout([workoutId UTF8String]);

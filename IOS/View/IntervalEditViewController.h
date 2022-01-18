@@ -23,6 +23,8 @@
 	double maxY;
 
 	NSString* workoutId;
+	NSString* workoutName;
+	NSString* workoutSport;
 }
 
 - (IBAction)onAddInterval:(id)sender;

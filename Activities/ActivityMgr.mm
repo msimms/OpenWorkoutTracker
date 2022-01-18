@@ -1452,9 +1452,45 @@ extern "C" {
 
 			params.insert(std::make_pair("id", workout.workoutId));
 			params.insert(std::make_pair("name", workout.name));
+			params.insert(std::make_pair("sport", workout.sport));
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;
+	}
+
+	bool RetrieveIntervalWorkout(const char* const workoutId, char** const workoutName, char** const sport)
+	{
+		// Sanity checks.
+		if (workoutId == NULL)
+		{
+			return false;
+		}
+		if (workoutName == NULL)
+		{
+			return false;
+		}
+		if (sport == NULL)
+		{
+			return false;
+		}
+
+		bool result = false;
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			std::string tempWorkoutName;
+			std::string tempSport;
+
+			result = g_pDatabase->RetrieveIntervalWorkout(workoutId, tempWorkoutName, tempSport);
+			(*workoutName) = strdup(tempWorkoutName.c_str());
+			(*sport) = strdup(tempSport.c_str());
+		}
+
+		g_dbLock.unlock();
+
+		return result;
 	}
 
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
@@ -1477,7 +1513,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId && workoutName && sport)
+		if (g_pDatabase)
 		{
 			result = g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
 		}
@@ -1499,7 +1535,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId)
+		if (g_pDatabase)
 		{
 			result = g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
 		}
@@ -1525,7 +1561,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId)
+		if (g_pDatabase)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
@@ -1579,7 +1615,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId)
+		if (g_pDatabase)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
@@ -1607,7 +1643,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId)
+		if (g_pDatabase)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 
@@ -1635,7 +1671,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId)
+		if (g_pDatabase)
 		{
 			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
 			size_t segmentIndex = 0;
@@ -1714,7 +1750,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && planName && planId)
+		if (g_pDatabase)
 		{
 			PacePlan plan;
 
@@ -1785,7 +1821,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && planId)
+		if (g_pDatabase)
 		{
 			for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end() && !result; ++iter)
 			{
@@ -1828,7 +1864,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && planId)
+		if (g_pDatabase)
 		{
 			result = g_pDatabase->DeletePacePlan(planId);
 		}
@@ -1903,7 +1939,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && activityId1 && activityId2)
+		if (g_pDatabase)
 		{
 			result = g_pDatabase->MergeActivities(activityId1, activityId2);
 		}
@@ -1981,6 +2017,7 @@ extern "C" {
 		g_historicalActivityLock.lock();
 		initialized = g_historicalActivityList.size() > 0;
 		g_historicalActivityLock.unlock();
+
 		return initialized;
 	}
 
@@ -3291,7 +3328,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
+			if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted())
 			{
 				if (g_pCurrentActivity->Start())
 				{

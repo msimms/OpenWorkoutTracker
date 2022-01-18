@@ -101,6 +101,7 @@ extern "C" {
 	// Functions for managing interval workouts.
 	bool InitializeIntervalWorkoutList(void);
 	char* RetrieveIntervalWorkoutAsJSON(size_t workoutIndex);
+	bool RetrieveIntervalWorkout(const char* const workoutId, char** const workoutName, char** const sport);
 	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
 	bool DeleteIntervalWorkout(const char* const workoutId);
 

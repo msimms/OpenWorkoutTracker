@@ -255,6 +255,7 @@
 // methods for managing interval workouts
 
 - (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport;
+- (BOOL)retrieveIntervalWorkout:(NSString*)workoutId withName:(NSString**)workoutName withSport:(NSString**)sport;
 - (BOOL)deleteIntervalWorkout:(NSString*)workoutId;
 
 // methods for managing pace plans

@@ -64,6 +64,7 @@ public:
 	// Methods for interval workouts.
 	
 	bool CreateIntervalWorkout(const std::string& workoutId, const std::string& name, const std::string& sport);
+	bool RetrieveIntervalWorkout(const std::string& workoutId, std::string& name, std::string& sport);
 	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
 	bool DeleteIntervalWorkout(const std::string& workoutId);
 

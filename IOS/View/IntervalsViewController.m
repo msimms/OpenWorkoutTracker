@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 #import "IntervalEditViewController.h"
+#import "ImageUtils.h"
 #import "Segues.h"
 
 #define TITLE                        NSLocalizedString(@"Interval Workouts", nil)
@@ -175,27 +176,39 @@
 
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	}
 
-	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 	NSInteger section = [indexPath section];
 	NSInteger row = [indexPath row];
+	NSDictionary* nameAndId = [self->workoutNamesAndIds objectAtIndex:row];
 
 	switch (section)
 	{
 		case 0:
 			{
-				NSDictionary* nameAndId = [self->workoutNamesAndIds objectAtIndex:row];
-				[content setText:nameAndId[@"name"]];
+				cell.textLabel.text = nameAndId[@"name"];
 			}
 			break;
 		default:
 			break;
 	}
 
-	[cell setContentConfiguration:content];
+	// Load the image that goes with the activity.
+	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 9, 32, 32)];
+	imageView.image = [self activityTypeToIcon:nameAndId[@"sport"]];
+
+	// If dark mode is enabled, invert the image.
+	if ([self isDarkModeEnabled])
+	{
+		imageView.image = [ImageUtils invertImage2:imageView.image];
+	}
+
+	// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
+	[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+	[cell.contentView addSubview:imageView];
+
 	return cell;
 }
 
