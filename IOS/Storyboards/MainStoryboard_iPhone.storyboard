@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
@@ -849,33 +849,28 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wYW-qR-P2n">
                                 <rect key="frame" x="0.0" y="818" width="414" height="44"/>
                                 <items>
-                                    <barButtonItem systemItem="edit" id="aKJ-Tx-UlF">
+                                    <barButtonItem image="pencil" catalog="system" id="aKJ-Tx-UlF">
                                         <connections>
                                             <action selector="onCustomize:" destination="0n6-g5-UTs" id="mqv-jt-cvj"/>
                                             <segue destination="kob-qG-sz6" kind="push" id="YOw-2o-8H3"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Bike" id="QJm-EO-aLj">
+                                    <barButtonItem title="Bike" image="bicycle.circle" catalog="system" id="QJm-EO-aLj">
                                         <connections>
                                             <action selector="onBike:" destination="0n6-g5-UTs" id="1Nn-vx-8sb"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Intervals" id="oiz-6O-Wrp">
+                                    <barButtonItem title="Intervals" image="line.3.horizontal" catalog="system" id="oiz-6O-Wrp">
                                         <connections>
-                                            <action selector="onIntervals:" destination="0n6-g5-UTs" id="Clq-jo-jXR"/>
+                                            <action selector="onPlan:" destination="0n6-g5-UTs" id="Lj8-wL-1fj"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Pace" id="f5k-h3-Ygl">
-                                        <connections>
-                                            <action selector="onPace:" destination="0n6-g5-UTs" id="Nn3-V0-Hms"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="Weight" id="4Rs-oZ-4To">
+                                    <barButtonItem title="Weight" image="scalemass" catalog="system" id="4Rs-oZ-4To">
                                         <connections>
                                             <action selector="onWeight:" destination="0n6-g5-UTs" id="BH9-WS-8dC"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Lap" id="92T-xb-WOa">
+                                    <barButtonItem title="Lap" image="stopwatch" catalog="system" id="92T-xb-WOa">
                                         <connections>
                                             <action selector="onLap:" destination="0n6-g5-UTs" id="E4q-2a-8eq"/>
                                         </connections>
@@ -1200,13 +1195,12 @@
                         <outlet property="autoStartButton" destination="gRk-PZ-6MW" id="Dvt-3e-c8F"/>
                         <outlet property="bikeButton" destination="QJm-EO-aLj" id="3ZT-Gb-dM1"/>
                         <outlet property="customizeButton" destination="aKJ-Tx-UlF" id="J0v-Nz-i6n"/>
-                        <outlet property="intervalsButton" destination="oiz-6O-Wrp" id="Aef-IF-MFk"/>
                         <outlet property="lapButton" destination="92T-xb-WOa" id="bO5-jg-xrz"/>
                         <outlet property="leftSwipe" destination="jST-vv-9A3" id="bQY-Jk-v24"/>
                         <outlet property="messagesLabel" destination="U2o-bG-CJ3" id="bpl-s2-09u"/>
                         <outlet property="moreButton" destination="PMl-gG-wNv" id="qwT-e9-qDx"/>
                         <outlet property="navItem" destination="uwA-vG-wXj" id="O91-tw-Ax6"/>
-                        <outlet property="paceButton" destination="f5k-h3-Ygl" id="0g7-YF-IJv"/>
+                        <outlet property="planButton" destination="oiz-6O-Wrp" id="zvW-Bp-hX9"/>
                         <outlet property="rightSwipe" destination="9y9-X4-WqX" id="Kbe-h1-VZn"/>
                         <outlet property="startStopButton" destination="Zqe-eo-52i" id="5WQ-5A-2Rl"/>
                         <outlet property="title_Large" destination="9W6-Sq-nCV" id="ErC-hk-oeJ"/>
@@ -1299,33 +1293,33 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sir-57-T5G">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem systemItem="edit" id="5bt-HJ-NJO">
+                                    <barButtonItem image="pencil" catalog="system" id="5bt-HJ-NJO">
                                         <connections>
                                             <action selector="onCustomize:" destination="pMk-kM-n8i" id="78a-jY-XKd"/>
                                             <segue destination="kob-qG-sz6" kind="push" id="mpc-lI-yFA"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Bike" id="KdQ-Ib-2W3">
+                                    <barButtonItem title="Bike" image="bicycle.circle" catalog="system" id="KdQ-Ib-2W3">
                                         <connections>
                                             <action selector="onBike:" destination="pMk-kM-n8i" id="llP-Uv-ebH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Intervals" id="PNs-eK-OM5">
+                                    <barButtonItem title="Intervals" image="line.3.horizontal" catalog="system" id="PNs-eK-OM5">
                                         <connections>
-                                            <action selector="onIntervals:" destination="pMk-kM-n8i" id="tNV-Hl-yna"/>
+                                            <action selector="onPlan:" destination="pMk-kM-n8i" id="ZPj-Tr-p5Q"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Pace" id="3qL-0J-Bja">
+                                    <barButtonItem title="Item" image="scalemass" catalog="system" id="Ixa-Xn-IMF">
                                         <connections>
-                                            <action selector="onPace:" destination="pMk-kM-n8i" id="4Zp-BV-EaB"/>
+                                            <action selector="onWeight:" destination="pMk-kM-n8i" id="fzG-K5-6CD"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Lap" id="8vo-Kn-qHg">
+                                    <barButtonItem title="Lap" image="stopwatch" catalog="system" id="8vo-Kn-qHg">
                                         <connections>
                                             <action selector="onLap:" destination="pMk-kM-n8i" id="ccG-Df-Y0x"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Map" id="HTh-Gm-FHv">
+                                    <barButtonItem title="Map" image="map" catalog="system" id="HTh-Gm-FHv">
                                         <connections>
                                             <action selector="onMap:" destination="pMk-kM-n8i" id="dwh-KB-sMa"/>
                                         </connections>
@@ -1539,7 +1533,6 @@
                         <outlet property="autoStartButton" destination="Lgl-Li-DCx" id="e3b-sf-i0F"/>
                         <outlet property="bikeButton" destination="KdQ-Ib-2W3" id="mlX-zv-ARB"/>
                         <outlet property="customizeButton" destination="5bt-HJ-NJO" id="WHG-hy-0Xs"/>
-                        <outlet property="intervalsButton" destination="PNs-eK-OM5" id="Lfv-TR-Mw8"/>
                         <outlet property="lapButton" destination="8vo-Kn-qHg" id="1WR-6t-cAK"/>
                         <outlet property="leftSwipe" destination="GCW-Lk-NFp" id="BqL-B4-Xjq"/>
                         <outlet property="mapButton" destination="HTh-Gm-FHv" id="f19-zc-SxT"/>
@@ -1547,7 +1540,7 @@
                         <outlet property="messagesLabel" destination="fWa-ef-Rda" id="vGc-8Y-esc"/>
                         <outlet property="moreButton" destination="bv0-b4-Cmb" id="3K8-E8-udi"/>
                         <outlet property="navItem" destination="sdv-7e-4LU" id="o4h-SQ-4Ee"/>
-                        <outlet property="paceButton" destination="3qL-0J-Bja" id="4sY-ik-Mw1"/>
+                        <outlet property="planButton" destination="PNs-eK-OM5" id="Pj2-L7-fIe"/>
                         <outlet property="rightSwipe" destination="aZp-cG-pmV" id="cuD-MA-D8h"/>
                         <outlet property="startStopButton" destination="s0a-k9-ORr" id="TR0-2h-tKJ"/>
                         <outlet property="title1" destination="jAL-db-HXU" id="4ot-kR-enB"/>
@@ -1566,6 +1559,7 @@
                         <outlet property="value3" destination="nwW-C2-DCc" id="EaM-ey-Vxn"/>
                         <outlet property="value4" destination="sLF-U3-EmA" id="P7r-8C-X96"/>
                         <outlet property="value_Large" destination="AHP-Iq-h0i" id="YfW-Cw-MRK"/>
+                        <outlet property="weightButton" destination="Ixa-Xn-IMF" id="leW-rk-e8h"/>
                         <segue destination="2uT-mo-S6M" kind="push" identifier="SegueToLiveSummaryView" id="rmC-zq-awJ"/>
                         <segue destination="xf7-Mc-VJA" kind="push" identifier="SegueToActivitySummaryView" id="cVH-8j-NfP"/>
                     </connections>
@@ -1587,33 +1581,28 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IJ4-Iq-sIP">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem systemItem="edit" id="u0W-qK-ak4">
+                                    <barButtonItem image="pencil" catalog="system" id="u0W-qK-ak4">
                                         <connections>
                                             <action selector="onCustomize:" destination="hC7-Vx-aYi" id="8NI-tB-IgI"/>
                                             <segue destination="kob-qG-sz6" kind="push" id="g4d-Zp-BfC"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Bike" id="CGf-Kq-SDA">
+                                    <barButtonItem title="Bike" image="bicycle.circle" catalog="system" id="CGf-Kq-SDA">
                                         <connections>
                                             <action selector="onBike:" destination="hC7-Vx-aYi" id="Pol-7b-07E"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Intervals" id="ji6-6p-aBX">
+                                    <barButtonItem title="Intervals" image="line.3.horizontal" catalog="system" id="ji6-6p-aBX">
                                         <connections>
-                                            <action selector="onIntervals:" destination="hC7-Vx-aYi" id="qNd-7P-WOX"/>
+                                            <action selector="onPlan:" destination="hC7-Vx-aYi" id="rwK-Kt-sem"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Pace" id="n7C-Er-Fc8">
-                                        <connections>
-                                            <action selector="onPace:" destination="hC7-Vx-aYi" id="ujY-nJ-HeN"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="Weight" id="0gz-RG-vbY">
+                                    <barButtonItem title="Weight" image="scalemass" catalog="system" id="0gz-RG-vbY">
                                         <connections>
                                             <action selector="onWeight:" destination="hC7-Vx-aYi" id="jVE-yq-Rqj"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Lap" id="z6c-zC-6IQ">
+                                    <barButtonItem title="Lap" image="stopwatch" catalog="system" id="z6c-zC-6IQ">
                                         <connections>
                                             <action selector="onLap:" destination="hC7-Vx-aYi" id="msY-Hg-c2B"/>
                                         </connections>
@@ -1795,13 +1784,12 @@
                         <outlet property="autoStartButton" destination="Bvl-g0-7qP" id="Oqd-pb-n3h"/>
                         <outlet property="bikeButton" destination="CGf-Kq-SDA" id="LKO-du-jxc"/>
                         <outlet property="customizeButton" destination="u0W-qK-ak4" id="Go8-m2-DA8"/>
-                        <outlet property="intervalsButton" destination="ji6-6p-aBX" id="mC0-EI-GKH"/>
                         <outlet property="lapButton" destination="z6c-zC-6IQ" id="O0n-qW-Vhp"/>
                         <outlet property="leftSwipe" destination="L53-oa-T9H" id="HOA-B9-9Pz"/>
                         <outlet property="messagesLabel" destination="ngk-5R-KXr" id="AYU-r9-Nnw"/>
                         <outlet property="moreButton" destination="wE7-XD-cTo" id="JS4-VT-Ipw"/>
                         <outlet property="navItem" destination="zFq-xI-Fl3" id="rzP-QT-l7j"/>
-                        <outlet property="paceButton" destination="n7C-Er-Fc8" id="zbx-tI-Kqf"/>
+                        <outlet property="planButton" destination="ji6-6p-aBX" id="X8B-Ih-USk"/>
                         <outlet property="rightSwipe" destination="To0-02-FdF" id="HpB-on-FAY"/>
                         <outlet property="startStopButton" destination="cqS-Tg-XEP" id="9R6-8D-aDg"/>
                         <outlet property="title1" destination="IsL-dv-F2Z" id="9yF-rh-R1e"/>
@@ -1844,7 +1832,7 @@
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="3Jk-pU-nRz"/>
-                                    <barButtonItem title="Export Summary" id="UvD-Is-7zv">
+                                    <barButtonItem systemItem="action" id="UvD-Is-7zv">
                                         <connections>
                                             <action selector="onExportSummary:" destination="dJZ-L6-U8P" id="hzy-7b-FHR"/>
                                         </connections>
@@ -1936,17 +1924,22 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jfP-Xt-Jaz">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
+                                    <barButtonItem title="Home" image="house" catalog="system" id="74U-xk-lw2">
+                                        <connections>
+                                            <action selector="onHome:" destination="xf7-Mc-VJA" id="nia-ls-Y0Q"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem systemItem="action" id="Kme-ZG-q82">
                                         <connections>
                                             <action selector="onExport:" destination="xf7-Mc-VJA" id="aLe-AY-39W"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Map" id="2o1-zv-u06">
+                                    <barButtonItem title="Map" image="map" catalog="system" id="2o1-zv-u06">
                                         <connections>
                                             <action selector="onMapType:" destination="xf7-Mc-VJA" id="dnq-lU-rKC"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Bike" id="RsU-GE-HQE">
+                                    <barButtonItem title="Bike" image="bicycle" catalog="system" id="RsU-GE-HQE">
                                         <connections>
                                             <action selector="onBike:" destination="xf7-Mc-VJA" id="A6z-rU-Cuh"/>
                                         </connections>
@@ -1956,7 +1949,7 @@
                                             <action selector="onTag:" destination="xf7-Mc-VJA" id="Eih-xi-7sD"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Edit" id="beB-Zg-cNd">
+                                    <barButtonItem systemItem="edit" id="beB-Zg-cNd">
                                         <connections>
                                             <action selector="onEdit:" destination="xf7-Mc-VJA" id="fez-hZ-mFp"/>
                                         </connections>
@@ -1988,13 +1981,7 @@
                             <constraint firstItem="jPf-SE-mfk" firstAttribute="trailing" secondItem="saM-2L-dvE" secondAttribute="trailing" id="yOO-as-yUB"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Summary" id="tMM-Bs-yS7">
-                        <barButtonItem key="rightBarButtonItem" title="Home" id="74U-xk-lw2">
-                            <connections>
-                                <action selector="onHome:" destination="xf7-Mc-VJA" id="nia-ls-Y0Q"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Summary" id="tMM-Bs-yS7"/>
                     <connections>
                         <outlet property="bikeButton" destination="RsU-GE-HQE" id="PcH-nN-BFU"/>
                         <outlet property="deleteButton" destination="Nm1-qW-ADU" id="2R6-G3-2Ci"/>
@@ -2212,29 +2199,34 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pAg-IZ-B4l">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="748"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="dpF-uY-DXe" id="Gfv-bB-JfR"/>
                                     <outlet property="delegate" destination="dpF-uY-DXe" id="Z0Z-bk-ZJs"/>
                                 </connections>
                             </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="EPF-9F-SO9">
+                                <rect key="frame" x="0.0" y="836" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Home" id="GXh-HE-k1W">
+                                        <connections>
+                                            <action selector="onHome:" destination="dpF-uY-DXe" id="gZg-gU-PRD"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yhx-0X-OOC"/>
                         <constraints>
                             <constraint firstItem="pAg-IZ-B4l" firstAttribute="centerX" secondItem="tAj-m4-jCc" secondAttribute="centerX" id="ZjW-fT-xdw"/>
                             <constraint firstItem="pAg-IZ-B4l" firstAttribute="leading" secondItem="yhx-0X-OOC" secondAttribute="leading" id="byH-su-ydy"/>
                             <constraint firstItem="pAg-IZ-B4l" firstAttribute="top" secondItem="yhx-0X-OOC" secondAttribute="top" id="qsc-Kq-JSG"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="pAg-IZ-B4l" secondAttribute="bottom" constant="-34" id="zW6-mZ-RTa"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="pAg-IZ-B4l" secondAttribute="bottom" constant="26" id="zW6-mZ-RTa"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Split Times" id="Cct-HV-smL">
-                        <barButtonItem key="rightBarButtonItem" title="Home" id="GXh-HE-k1W">
-                            <connections>
-                                <action selector="onHome:" destination="dpF-uY-DXe" id="gZg-gU-PRD"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Split Times" id="Cct-HV-smL"/>
                     <connections>
                         <outlet property="homeButton" destination="GXh-HE-k1W" id="9r2-Me-lb7"/>
                         <outlet property="splitTimesTableView" destination="pAg-IZ-B4l" id="MNG-Ws-HST"/>
@@ -2736,25 +2728,30 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7MD-Cu-cOa">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="743"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jKy-IV-XSl">
+                                <rect key="frame" x="0.0" y="831" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Home" id="vor-L1-ec4">
+                                        <connections>
+                                            <action selector="onHome:" destination="Hzl-Rw-NWa" id="g93-nt-tSk"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="khU-og-qjx"/>
                         <constraints>
                             <constraint firstItem="7MD-Cu-cOa" firstAttribute="leading" secondItem="khU-og-qjx" secondAttribute="leading" id="G1T-r9-Lj9"/>
                             <constraint firstItem="7MD-Cu-cOa" firstAttribute="top" secondItem="khU-og-qjx" secondAttribute="top" id="KXf-25-krH"/>
                             <constraint firstItem="7MD-Cu-cOa" firstAttribute="centerX" secondItem="XSu-9B-5NA" secondAttribute="centerX" id="UYN-RS-a4c"/>
-                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="bottom" secondItem="khU-og-qjx" secondAttribute="bottom" constant="34" id="dMc-W0-Fhq"/>
+                            <constraint firstItem="7MD-Cu-cOa" firstAttribute="bottom" secondItem="khU-og-qjx" secondAttribute="bottom" constant="-31" id="dMc-W0-Fhq"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Fae-2l-XhH">
-                        <barButtonItem key="rightBarButtonItem" title="Home" id="vor-L1-ec4">
-                            <connections>
-                                <action selector="onHome:" destination="Hzl-Rw-NWa" id="g93-nt-tSk"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="Fae-2l-XhH"/>
                     <connections>
                         <outlet property="chartView" destination="7MD-Cu-cOa" id="1XN-ea-boa"/>
                         <outlet property="homeButton" destination="vor-L1-ec4" id="Nxd-63-MQy"/>
@@ -2792,29 +2789,34 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Est-rx-Zfn">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="750"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="nlb-r6-Zc5" id="9no-kz-CKC"/>
                                     <outlet property="delegate" destination="nlb-r6-Zc5" id="DYU-XS-mqi"/>
                                 </connections>
                             </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="fyL-Lk-QGR">
+                                <rect key="frame" x="0.0" y="838" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Home" id="Efg-nu-1Yp">
+                                        <connections>
+                                            <action selector="onHome:" destination="nlb-r6-Zc5" id="pNV-gS-meX"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="TKn-k5-3uq"/>
                         <constraints>
                             <constraint firstItem="Est-rx-Zfn" firstAttribute="leading" secondItem="TKn-k5-3uq" secondAttribute="leading" id="00f-fU-ced"/>
                             <constraint firstItem="Est-rx-Zfn" firstAttribute="top" secondItem="TKn-k5-3uq" secondAttribute="top" id="3N8-ic-QbP"/>
                             <constraint firstItem="Est-rx-Zfn" firstAttribute="centerX" secondItem="x9T-lf-dhI" secondAttribute="centerX" id="NXL-h2-CHd"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Est-rx-Zfn" secondAttribute="bottom" constant="-34" id="vww-iy-mxF"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Est-rx-Zfn" secondAttribute="bottom" constant="24" id="vww-iy-mxF"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Lap Times" id="heS-L1-j4j">
-                        <barButtonItem key="rightBarButtonItem" title="Home" id="Efg-nu-1Yp">
-                            <connections>
-                                <action selector="onHome:" destination="nlb-r6-Zc5" id="pNV-gS-meX"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Lap Times" id="heS-L1-j4j"/>
                     <connections>
                         <outlet property="homeButton" destination="Efg-nu-1Yp" id="H9N-ci-d0O"/>
                         <outlet property="lapTimesTableView" destination="Est-rx-Zfn" id="ujl-Of-j47"/>
@@ -2977,14 +2979,22 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ksp-tA-xd6"/>
-        <segue reference="Zfp-Rg-OxX"/>
-        <segue reference="1Bm-YM-doO"/>
-        <segue reference="8pE-cX-Fug"/>
+        <segue reference="gtm-yZ-0Yg"/>
+        <segue reference="D1W-a8-Nen"/>
+        <segue reference="fz0-Br-1wA"/>
+        <segue reference="kzb-01-qIL"/>
         <segue reference="mpc-lI-yFA"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Background1.png" width="640" height="1136"/>
+        <image name="bicycle" catalog="system" width="128" height="78"/>
+        <image name="bicycle.circle" catalog="system" width="128" height="121"/>
+        <image name="house" catalog="system" width="128" height="106"/>
+        <image name="line.3.horizontal" catalog="system" width="128" height="64"/>
+        <image name="map" catalog="system" width="128" height="110"/>
+        <image name="pencil" catalog="system" width="128" height="113"/>
+        <image name="scalemass" catalog="system" width="128" height="119"/>
+        <image name="stopwatch" catalog="system" width="121" height="128"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

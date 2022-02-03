@@ -60,8 +60,7 @@
 @synthesize moreButton;
 @synthesize customizeButton;
 @synthesize bikeButton;
-@synthesize intervalsButton;
-@synthesize paceButton;
+@synthesize planButton;
 @synthesize lapButton;
 @synthesize autoStartButton;
 @synthesize startStopButton;
@@ -110,12 +109,6 @@
 	self->tappedButtonIndex = 0;
 
 	[self.moreButton setTitle:STR_NEXT];
-	[self.paceButton setTitle:STR_PACE];
-	[self.lapButton setTitle:STR_LAP];
-	[self.weightButton setTitle:STR_WEIGHT];
-	[self.customizeButton setTitle:BUTTON_TITLE_CUSTOMIZE];
-	[self.bikeButton setTitle:STR_BIKE];
-	[self.intervalsButton setTitle:BUTTON_TITLE_INTERVALS];
 	[self.autoStartButton setTitle:BUTTON_TITLE_AUTOSTART];
 }
 
@@ -528,13 +521,9 @@
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
 	{
-		if ([[appDelegate getIntervalWorkoutNamesAndIds] count] == 0)
+		if ([[appDelegate getIntervalWorkoutNamesAndIds] count] == 0 && [[appDelegate getPacePlanNamesAndIds] count] == 0)
 		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		}
-		if ([[appDelegate getPacePlanNamesAndIds] count] == 0)
-		{
-			[self->stoppedToolbar removeObjectIdenticalTo:self.paceButton];
+			[self->stoppedToolbar removeObjectIdenticalTo:self.planButton];
 		}
 
 		[self->stoppedToolbar removeObjectIdenticalTo:self.lapButton];
@@ -557,8 +546,7 @@
 	self->startedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->startedToolbar)
 	{
-		[self->startedToolbar removeObjectIdenticalTo:self.intervalsButton];
-		[self->startedToolbar removeObjectIdenticalTo:self.paceButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.planButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
 
@@ -808,10 +796,11 @@
 	}
 }
 
-- (IBAction)onIntervals:(id)sender
+- (IBAction)onPlan:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
+	NSMutableArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
 
 	if ([workoutNamesAndIds count] > 0)
 	{
@@ -837,12 +826,6 @@
 		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}
-}
-
-- (IBAction)onPace:(id)sender
-{
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
 
 	if ([pacePlanNamesAndIds count] > 0)
 	{

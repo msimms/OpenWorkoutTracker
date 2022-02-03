@@ -92,8 +92,7 @@
 - (IBAction)onLap:(id)sender;
 - (IBAction)onCustomize:(id)sender;
 - (IBAction)onBike:(id)sender;
-- (IBAction)onIntervals:(id)sender;
-- (IBAction)onPace:(id)sender;
+- (IBAction)onPlan:(id)sender;
 - (IBAction)onSummary:(id)sender;
 
 - (void)locationUpdated:(NSNotification*)notification;
@@ -106,8 +105,7 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  customizeButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  bikeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  intervalsButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  paceButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem*  planButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  lapButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  autoStartButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem*  startStopButton;
