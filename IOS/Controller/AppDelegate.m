@@ -2593,8 +2593,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 {
 	if (CreateActivityName([activityId UTF8String], [name UTF8String]))
 	{
-		[ApiClient serverSetActivityName:activityId withName:name];
-		return TRUE;
+		return [ApiClient serverSetActivityName:activityId withName:name];
 	}
 	return FALSE;
 }
