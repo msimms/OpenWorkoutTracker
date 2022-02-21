@@ -3,3 +3,4 @@
 NSLocationAlwaysUsageDescription = "Esto es necesario para monitorear las actividades basadas en la ubicación cuando la aplicación está en segundo plano.";
 NSLocationAlwaysAndWhenInUseUsageDescription = "Esto es necesario para monitorear las actividades basadas en la ubicación.";
 NSLocationWhenInUseUsageDescription = "Esto es necesario para monitorear las actividades basadas en la ubicación.";
+NSNearbyInteractionUsageDescription = "Esto le permite compartir su posición con otros cuando viaja en grupo.";

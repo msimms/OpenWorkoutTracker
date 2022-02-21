@@ -3,4 +3,4 @@
 NSLocationAlwaysUsageDescription = "This is required to monitor location-based activities when the application is in the background.";
 NSLocationAlwaysAndWhenInUseUsageDescription = "This is required to monitor location-based activities.";
 NSLocationWhenInUseUsageDescription = "This is required to monitor location-based activities.";
-
+NSNearbyInteractionUsageDescription = "This allows you to share your position with others when riding in a group.";

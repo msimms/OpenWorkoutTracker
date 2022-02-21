@@ -118,7 +118,6 @@
 		270CF48E2391F0DF00584058 /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		270CF48F2391F0DF00584058 /* UnitConverter.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE11A9FEDEB008F55AF /* UnitConverter.h */; };
 		270CF4902391F0DF00584058 /* UnitSystem.h in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE21A9FEDEB008F55AF /* UnitSystem.h */; };
-		270CF4922391F12400584058 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 270CF4912391F12400584058 /* libsqlite3.tbd */; };
 		270CF4942391F14200584058 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 270CF4932391F14200584058 /* libxml2.2.tbd */; };
 		270CF4952391F18900584058 /* ActivityLevel.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15719BFE3F5008F8672 /* ActivityLevel.h */; };
 		270CF4962391F18A00584058 /* BmrFormula.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15819BFE3F5008F8672 /* BmrFormula.h */; };
@@ -191,6 +190,10 @@
 		2768E51723A0205500DD06E9 /* TrainingPaceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */; };
 		2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */; };
 		2768E51C23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */; };
+		276A05B827ACC68D00B030E1 /* NearbyInteraction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276A05AB27ACC68C00B030E1 /* NearbyInteraction.framework */; };
+		276A05BA27AD763D00B030E1 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 276A05B927AD763D00B030E1 /* libsqlite3.tbd */; };
+		276A05BC27AD765700B030E1 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 276A05BB27AD765700B030E1 /* libxml2.tbd */; };
+		276A05C127ADBEA800B030E1 /* NearbyInteractionsMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 276A05C027ADBEA800B030E1 /* NearbyInteractionsMgr.m */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
@@ -348,7 +351,6 @@
 		27C0846119BFD063007CE934 /* StationaryCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844619BFD063007CE934 /* StationaryCycling.cpp */; };
 		27C0846219BFD063007CE934 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844819BFD063007CE934 /* Treadmill.cpp */; };
 		27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0844A19BFD063007CE934 /* UnitMgr.cpp */; };
-		27C63293233D950C009BF5CB /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF5F722B70CAE009A23C2 /* HealthKit.framework */; };
 		27CF011824D1E87A00263CEC /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF010824D1E87A00263CEC /* FtpCalculator.cpp */; };
 		27CF011A24D3672A00263CEC /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF010824D1E87A00263CEC /* FtpCalculator.cpp */; };
 		27CF011B24D3672B00263CEC /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27CF010824D1E87A00263CEC /* FtpCalculator.cpp */; };
@@ -433,7 +435,6 @@
 		27DCF63522B716CB009A23C2 /* DataImporter.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1C19BFD807000383E3 /* DataImporter.h */; };
 		27DCF63622B716CB009A23C2 /* HeatMapGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1D19BFD807000383E3 /* HeatMapGenerator.cpp */; };
 		27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CD1E19BFD807000383E3 /* HeatMapGenerator.h */; };
-		27DCF63922B717FE009A23C2 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF63822B717FE009A23C2 /* libsqlite3.tbd */; };
 		27DCF63A22B72EE0009A23C2 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27047178216D997000EE47FF /* Distance.cpp */; };
 		27DCF63B22B72EE0009A23C2 /* Distance.h in Sources */ = {isa = PBXBuildFile; fileRef = 27047174216D996F00EE47FF /* Distance.h */; };
 		27DCF63C22B72EE0009A23C2 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2704717E216E253B00EE47FF /* KMeans.cpp */; };
@@ -473,7 +474,6 @@
 		27DCF66022B72F50009A23C2 /* Gender.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15919BFE3F5008F8672 /* Gender.h */; };
 		27DCF66122B72F50009A23C2 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15A19BFE3F5008F8672 /* User.cpp */; };
 		27DCF66222B72F50009A23C2 /* User.h in Sources */ = {isa = PBXBuildFile; fileRef = 2797F15B19BFE3F5008F8672 /* User.h */; };
-		27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 27DCF66322B72FBF009A23C2 /* libxml2.tbd */; };
 		27DCF67822B814FB009A23C2 /* WatchActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67522B80661009A23C2 /* WatchActivityViewController.m */; };
 		27DCF67A22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
 		27DCF67B22BD6B8F009A23C2 /* HashUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 27DCF67922BD6B8F009A23C2 /* HashUtils.m */; };
@@ -659,7 +659,6 @@
 		270CF4092391BBF400584058 /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		270CF40B2391BBF400584058 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		270CF4142391C34900584058 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
-		270CF4912391F12400584058 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		270CF4932391F14200584058 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
 		270F76402723556A006E0D61 /* IntensityCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntensityCalculator.h; path = Activities/IntensityCalculator.h; sourceTree = SOURCE_ROOT; };
 		270F76412723556A006E0D61 /* IntensityCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntensityCalculator.cpp; path = Activities/IntensityCalculator.cpp; sourceTree = SOURCE_ROOT; };
@@ -718,6 +717,11 @@
 		2768E51823A0241200DD06E9 /* TrainingPaceType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingPaceType.h; path = Activities/TrainingPaceType.h; sourceTree = SOURCE_ROOT; };
 		2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VO2MaxCalculator.cpp; path = Activities/VO2MaxCalculator.cpp; sourceTree = SOURCE_ROOT; };
 		2768E51A23A0270500DD06E9 /* VO2MaxCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VO2MaxCalculator.h; path = Activities/VO2MaxCalculator.h; sourceTree = SOURCE_ROOT; };
+		276A05AB27ACC68C00B030E1 /* NearbyInteraction.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NearbyInteraction.framework; path = System/Library/Frameworks/NearbyInteraction.framework; sourceTree = SDKROOT; };
+		276A05B927AD763D00B030E1 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
+		276A05BB27AD765700B030E1 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.3.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
+		276A05BF27ADBEA800B030E1 /* NearbyInteractionsMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NearbyInteractionsMgr.h; path = IOS/Model/NearbyInteractionsMgr.h; sourceTree = SOURCE_ROOT; };
+		276A05C027ADBEA800B030E1 /* NearbyInteractionsMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NearbyInteractionsMgr.m; path = IOS/Model/NearbyInteractionsMgr.m; sourceTree = SOURCE_ROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
 		276B57E819E21ABD006F47BB /* HealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HealthManager.m; path = IOS/Model/HealthManager.m; sourceTree = SOURCE_ROOT; };
 		276C937B19BFDE3B00D96E7F /* App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "App-Info.plist"; path = "IOS/App-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -1056,9 +1060,6 @@
 		27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		27DCF5F522B70AED009A23C2 /* Watch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Watch.entitlements; sourceTree = "<group>"; };
 		27DCF5F622B70CAE009A23C2 /* Watch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Watch Extension.entitlements"; sourceTree = "<group>"; };
-		27DCF5F722B70CAE009A23C2 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
-		27DCF63822B717FE009A23C2 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		27DCF66322B72FBF009A23C2 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
 		27DCF67522B80661009A23C2 /* WatchActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchActivityViewController.m; sourceTree = "<group>"; };
 		27DCF67622B80661009A23C2 /* WatchActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchActivityViewController.h; sourceTree = "<group>"; };
 		27DCF67922BD6B8F009A23C2 /* HashUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = HashUtils.m; path = IOS/Utilities/HashUtils.m; sourceTree = SOURCE_ROOT; };
@@ -1108,7 +1109,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				270CF4942391F14200584058 /* libxml2.2.tbd in Frameworks */,
-				270CF4922391F12400584058 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1116,6 +1116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				276A05B827ACC68D00B030E1 /* NearbyInteraction.framework in Frameworks */,
 				2707A325259A539D00A942C0 /* CorePlot.framework in Frameworks */,
 				27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */,
 				27F841B81CC33F8000ACF409 /* libxml2.tbd in Frameworks */,
@@ -1132,9 +1133,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27C63293233D950C009BF5CB /* HealthKit.framework in Frameworks */,
-				27DCF66422B72FBF009A23C2 /* libxml2.tbd in Frameworks */,
-				27DCF63922B717FE009A23C2 /* libsqlite3.tbd in Frameworks */,
+				276A05BC27AD765700B030E1 /* libxml2.tbd in Frameworks */,
+				276A05BA27AD763D00B030E1 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1341,6 +1341,8 @@
 				2797F14319BFE3B7008F8672 /* MultipeerMessage.m */,
 				275E998E26E42EE400E9EC93 /* MultipeerSession.h */,
 				275E998926E42EA100E9EC93 /* MultipeerSession.m */,
+				276A05BF27ADBEA800B030E1 /* NearbyInteractionsMgr.h */,
+				276A05C027ADBEA800B030E1 /* NearbyInteractionsMgr.m */,
 				2797F14A19BFE3B7008F8672 /* Preferences.h */,
 				2797F14B19BFE3B7008F8672 /* Preferences.m */,
 				2797F14C19BFE3B7008F8672 /* UserProfile.h */,
@@ -1447,20 +1449,19 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				276A05BB27AD765700B030E1 /* libxml2.tbd */,
+				276A05B927AD763D00B030E1 /* libsqlite3.tbd */,
 				270CF4932391F14200584058 /* libxml2.2.tbd */,
-				270CF4912391F12400584058 /* libsqlite3.tbd */,
-				27C081FC2383780700BEB105 /* CloudKit.framework */,
-				27DCF66322B72FBF009A23C2 /* libxml2.tbd */,
-				27DCF63822B717FE009A23C2 /* libsqlite3.tbd */,
-				27DCF5F722B70CAE009A23C2 /* HealthKit.framework */,
-				2709420F215ABD2200C3BCBE /* HealthKit.framework */,
 				27F841B71CC33F8000ACF409 /* libxml2.tbd */,
 				27F841B51CC33F5E00ACF409 /* libsqlite3.tbd */,
 				27B44D0119BFEF4E0058FE00 /* Accelerate.framework */,
-				2797F1D319BFEAFA008F8672 /* GLKit.framework */,
-				27B7CDFC19BFD9AD000383E3 /* MapKit.framework */,
-				27A3624F19BFB0E200F5A17F /* Foundation.framework */,
+				27C081FC2383780700BEB105 /* CloudKit.framework */,
 				27A3625119BFB0E200F5A17F /* CoreGraphics.framework */,
+				27A3624F19BFB0E200F5A17F /* Foundation.framework */,
+				2797F1D319BFEAFA008F8672 /* GLKit.framework */,
+				2709420F215ABD2200C3BCBE /* HealthKit.framework */,
+				27B7CDFC19BFD9AD000383E3 /* MapKit.framework */,
+				276A05AB27ACC68C00B030E1 /* NearbyInteraction.framework */,
 				2797F1BD19BFE7A4008F8672 /* Twitter.framework */,
 				27A3625319BFB0E200F5A17F /* UIKit.framework */,
 			);
@@ -2401,6 +2402,7 @@
 				27B7CD9A19BFD91C000383E3 /* LiveMapViewController.m in Sources */,
 				27C0845319BFD063007CE934 /* Cycling.cpp in Sources */,
 				276D5B021AA16A7D008F55AF /* Strava.m in Sources */,
+				276A05C127ADBEA800B030E1 /* NearbyInteractionsMgr.m in Sources */,
 				27B7CD9D19BFD91C000383E3 /* MapOverviewViewController.m in Sources */,
 				27B7CDF219BFD99B000383E3 /* Accelerometer.m in Sources */,
 				2772FEAC2503DFD300ED9F2A /* BikePlanGenerator.cpp in Sources */,
