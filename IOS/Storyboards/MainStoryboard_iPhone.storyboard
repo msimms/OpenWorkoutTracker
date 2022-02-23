@@ -860,7 +860,7 @@
                                             <action selector="onBike:" destination="0n6-g5-UTs" id="1Nn-vx-8sb"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Intervals" image="line.3.horizontal" catalog="system" id="oiz-6O-Wrp">
+                                    <barButtonItem title="Intervals" image="doc.circle" catalog="system" id="oiz-6O-Wrp">
                                         <connections>
                                             <action selector="onPlan:" destination="0n6-g5-UTs" id="Lj8-wL-1fj"/>
                                         </connections>
@@ -1304,7 +1304,7 @@
                                             <action selector="onBike:" destination="pMk-kM-n8i" id="llP-Uv-ebH"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Intervals" image="line.3.horizontal" catalog="system" id="PNs-eK-OM5">
+                                    <barButtonItem title="Intervals" image="doc.circle" catalog="system" id="PNs-eK-OM5">
                                         <connections>
                                             <action selector="onPlan:" destination="pMk-kM-n8i" id="ZPj-Tr-p5Q"/>
                                         </connections>
@@ -1592,7 +1592,7 @@
                                             <action selector="onBike:" destination="hC7-Vx-aYi" id="Pol-7b-07E"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Intervals" image="line.3.horizontal" catalog="system" id="ji6-6p-aBX">
+                                    <barButtonItem title="Intervals" image="doc.circle" catalog="system" id="ji6-6p-aBX">
                                         <connections>
                                             <action selector="onPlan:" destination="hC7-Vx-aYi" id="rwK-Kt-sem"/>
                                         </connections>
@@ -2980,17 +2980,17 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="gtm-yZ-0Yg"/>
-        <segue reference="D1W-a8-Nen"/>
+        <segue reference="zxl-cL-SNo"/>
         <segue reference="fz0-Br-1wA"/>
         <segue reference="kzb-01-qIL"/>
-        <segue reference="mpc-lI-yFA"/>
+        <segue reference="YOw-2o-8H3"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Background1.png" width="640" height="1136"/>
         <image name="bicycle" catalog="system" width="128" height="78"/>
         <image name="bicycle.circle" catalog="system" width="128" height="121"/>
+        <image name="doc.circle" catalog="system" width="128" height="121"/>
         <image name="house" catalog="system" width="128" height="106"/>
-        <image name="line.3.horizontal" catalog="system" width="128" height="64"/>
         <image name="map" catalog="system" width="128" height="110"/>
         <image name="pencil" catalog="system" width="128" height="113"/>
         <image name="scalemass" catalog="system" width="128" height="119"/>

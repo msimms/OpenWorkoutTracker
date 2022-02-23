@@ -468,8 +468,7 @@
 	[self->moreButton setTintColor:buttonColor];
 	[self->customizeButton setTintColor:buttonColor];
 	[self->bikeButton setTintColor:buttonColor];
-	[self->intervalsButton setTintColor:buttonColor];
-	[self->paceButton setTintColor:buttonColor];
+	[self->planButton setTintColor:buttonColor];
 	[self->lapButton setTintColor:buttonColor];
 	[self->startStopButton setTintColor:buttonColor];
 	[self->weightButton setTintColor:buttonColor];
@@ -819,7 +818,6 @@
 
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				SetCurrentIntervalWorkout([workoutId UTF8String]);
-				[self->intervalsButton setTitle:name];
 			}]];
 		}
 
@@ -844,7 +842,6 @@
 
 			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				SetCurrentPacePlan([planId UTF8String]);
-				[self->paceButton setTitle:name];
 			}]];
 		}
 
