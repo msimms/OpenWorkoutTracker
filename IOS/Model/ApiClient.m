@@ -427,7 +427,7 @@
 #else
 	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 									 activityId, @PARAM_ACTIVITY_ID,
-									 name, @PARAM_ACTIVITY_NAME2,
+									 name, @PARAM_ACTIVITY_NAME,
 									 nil];
 	NSError* error;
 	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];

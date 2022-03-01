@@ -64,7 +64,6 @@
 #define PARAM_PACE_PLAN_LAST_UPDATED_TIME     "last updated"
 
 // Activities
-#define PARAM_ACTIVITY_NAME                   "Name"
-#define PARAM_ACTIVITY_NAME2                  "name"
-#define PARAM_ACTIVITY_DESCRIPTION            "Description"
+#define PARAM_ACTIVITY_NAME                   "name"
+#define PARAM_ACTIVITY_DESCRIPTION            "description"
 #define PARAM_ACTIVITY_TAGS                   "tags"
