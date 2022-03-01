@@ -3388,7 +3388,8 @@ void attributeNameCallback(const char* name, void* context)
 					}
 				}
 
-				// Close the activity. Need to do this before allowing live sensor processing to continue or bad things will happen.
+				// Close the activity. Need to do this before allowing live sensor processing
+				// to continue or bad things will happen.
 				StopCurrentActivity();
 
 				// Store summary data.

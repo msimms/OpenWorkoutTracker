@@ -11,6 +11,7 @@
 #import "Notifications.h"
 #import "Params.h"
 #import "Preferences.h"
+#import "compression.h"
 
 @interface WatchSessionManager ()
 
@@ -39,7 +40,8 @@
 - (void)sendRegisterDeviceMsg
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_REGISTER_DEVICE, @WATCH_MSG_TYPE,
+	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_REGISTER_DEVICE,
+							 @WATCH_MSG_TYPE,
 							 [extDelegate getDeviceId], @WATCH_MSG_PARAM_DEVICE_ID,
 							 nil];
 
@@ -51,25 +53,29 @@
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	size_t numHistoricalActivities = [extDelegate getNumHistoricalActivities];
 
-	// Only reload the historical activities list if we really have to as it's rather computationally expensive for something running on a watch.
+	// Only reload the historical activities list if we really have to as it's rather
+	// computationally expensive for something running on a watch.
 	if (numHistoricalActivities == 0)
 	{
 		numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
 	}
 
-	// Check each activity. Loop in reverse order because the most recent activities are probably the most interesting.
-	for (size_t i = numHistoricalActivities - 1; i > 0; i--)
+	if (numHistoricalActivities > 0)
 	{
-		NSString* activityId = [extDelegate getActivityIdFromActivityIndex:i];
-
-		// If it's already been synched then skip it. Otherwise, offer up the activity.
-		if (![extDelegate isSyncedToPhone:activityId])
+		// Check each activity. Loop in reverse order because the most recent activities are probably the most interesting.
+		for (size_t i = numHistoricalActivities - 1; i > 0; i--)
 		{
-			NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
-									 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
-									 nil];
+			NSString* activityId = [extDelegate getActivityIdFromActivityIndex:i];
 
-			[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			// If it's already been synched then skip it. Otherwise, offer up the activity.
+			if (![extDelegate isSyncedToPhone:activityId])
+			{
+				NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
+										 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+										 nil];
+
+				[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+			}
 		}
 	}
 }
@@ -112,47 +118,91 @@
 	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withTargetDistanceUnits:(UnitSystem)[targetDistanceUnits intValue] withTargetPaceUnits:(UnitSystem)[targetPaceUnits intValue] withRoute:route];
 }
 
+// Sends the dictionary containing activity data to the phone.
+- (void)sendActivityDictionary:(NSDictionary*)msgDict withActivityId:(NSString*)activityId withCompression:(BOOL)compress
+{
+	if (compress)
+	{
+		NSError* error;
+		NSData* msgData = [NSJSONSerialization dataWithJSONObject:msgDict options:NSJSONWritingPrettyPrinted error:&error];
+
+		size_t srcSize = msgData.length;
+		size_t dstSize = srcSize + 4096;
+		uint8_t* dstBuffer = (uint8_t*)malloc(dstSize);
+		dstSize = compression_encode_buffer(dstBuffer, dstSize, (uint8_t*)[msgData bytes], srcSize, NULL, COMPRESSION_ZLIB);
+
+		[self->watchSession sendMessageData:[NSData dataWithBytes:dstBuffer length:dstSize] replyHandler:^(NSData* replyMessageData) {
+			ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+			[extDelegate markAsSynchedToPhone:activityId];
+			self->timeOfLastPhoneMsg = time(NULL); // Update the time that we last successfully talked to the phone.
+
+			NSLog(@"Sent activity %@ to the phone.", activityId);
+		} errorHandler:^(NSError* error) {
+			NSLog(@"Failed to send %@ to the phone.", activityId);
+		}];
+	}
+	else
+	{
+		[self->watchSession sendMessage:msgDict replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
+			ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+			[extDelegate markAsSynchedToPhone:activityId];
+			self->timeOfLastPhoneMsg = time(NULL); // Update the time that we last successfully talked to the phone.
+
+			NSLog(@"Sent activity %@ to the phone.", activityId);
+		} errorHandler:^(NSError* error) {
+			NSLog(@"Failed to send %@ to the phone.", activityId);
+		}];
+	}
+}
+
 // Sends the activity to the phone.
 - (void)sendActivity:(NSString*)activityId
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+	size_t numHistoricalActivities = [extDelegate getNumHistoricalActivities];
 
-	NSInteger activityIndex = [extDelegate getActivityIndexFromActivityId:activityId];
-	NSString* activityType = [extDelegate getHistoricalActivityType:activityIndex];
-
-	if (activityId && activityType)
+	// Only reload the historical activities list if we really have to as it's rather
+	// computationally expensive for something running on a watch.
+	if (numHistoricalActivities == 0)
 	{
-		NSString* activityName = [extDelegate getHistoricalActivityName:activityIndex];
-		NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
+		numHistoricalActivities = [extDelegate initializeHistoricalActivityList];
+	}
 
-		time_t tempStartTime = 0;
-		time_t tempEndTime = 0;
+	if (numHistoricalActivities > 0)
+	{
+		NSInteger activityIndex = [extDelegate getActivityIndexFromActivityId:activityId];
+		NSString* activityType = [extDelegate getHistoricalActivityType:activityIndex];
 
-		[extDelegate getHistoricalActivityStartAndEndTime:activityIndex withStartTime:&tempStartTime withEndTime:&tempEndTime];
+		if (activityId && activityType)
+		{
+			NSString* activityName = [extDelegate getHistoricalActivityName:activityIndex];
+			NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
+			BOOL compressed = FALSE;
 
-		NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
-		NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
+			time_t tempStartTime = 0;
+			time_t tempEndTime = 0;
 
-		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-										@WATCH_MSG_ACTIVITY, @WATCH_MSG_TYPE,
-										activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
-										activityType, @WATCH_MSG_PARAM_ACTIVITY_TYPE,
-										startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
-										endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
-										nil];
+			[extDelegate getHistoricalActivityStartAndEndTime:activityIndex withStartTime:&tempStartTime withEndTime:&tempEndTime];
 
-		if ([activityName length] > 0)
-			[msgData setObject:activityName forKey:@WATCH_MSG_PARAM_ACTIVITY_NAME];
-		if (locationData)
-			[msgData setObject:locationData forKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
+			NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
+			NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
 
-		[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
-			[extDelegate markAsSynchedToPhone:activityId];
-			NSLog(@"Sent %@ to the phone.", activityId);
-			self->timeOfLastPhoneMsg = time(NULL); // Update the time that we last successfully talked to the phone.
-		} errorHandler:^(NSError* error) {
-			NSLog(@"Failed to send %@ to the phone.", activityId);
-		}];
+			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+											@WATCH_MSG_ACTIVITY, @WATCH_MSG_TYPE,
+											activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+											activityType, @WATCH_MSG_PARAM_ACTIVITY_TYPE,
+											startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
+											endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
+											compressed, @WATCH_MSG_PARAM_COMPRESSED,
+											nil];
+
+			if ([activityName length] > 0)
+				[msgData setObject:activityName forKey:@WATCH_MSG_PARAM_ACTIVITY_NAME];
+			if (locationData)
+				[msgData setObject:locationData forKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
+
+			[self sendActivityDictionary:msgData withActivityId:activityId withCompression:compressed];
+		}
 	}
 }
 
