@@ -21,6 +21,7 @@
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg;
 - (void)showOneButtonAlert:(NSString*)title withMsg:(NSString*)msg handler:(void (^)(UIAlertAction* action))handler;
 - (void)displayEmailComposerSheet:(NSString*)subjectStr withBody:(NSString*)bodyStr withFileName:(NSString*)fileName withMimeType:(NSString*)mimeType withDelegate:(id)delegate;
+- (void)checkActionSheetButton:(UIAlertAction*)button;
 - (UIImage*)activityTypeToIcon:(NSString*)activityType;
 - (BOOL)isDarkModeEnabled;
 

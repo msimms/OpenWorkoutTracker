@@ -783,11 +783,19 @@
 		// Add an option for each bike.
 		for (NSString* name in bikeNames)
 		{
-			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			UIAlertAction* button = [UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->bikeName = name;
-				[self->bikeButton setTitle:self->bikeName];
 				[appDelegate setBikeForCurrentActivity:self->bikeName];
-			}]];
+			}];
+			[alertController addAction:button];
+
+			if (self->bikeName)
+			{
+				if ([name caseInsensitiveCompare:self->bikeName] == NSOrderedSame)
+				{
+					[self checkActionSheetButton:button];
+				}
+			}
 		}
 
 		// Show the action sheet.

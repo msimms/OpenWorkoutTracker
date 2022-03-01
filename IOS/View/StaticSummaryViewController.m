@@ -357,12 +357,6 @@ typedef enum ExportFileTypeButtons
 			self->chartTitles = [[NSMutableArray alloc] init];
 		}
 
-		NSString* bikeName = [appDelegate getBikeNameForActivity:activityId];
-		if (bikeName)
-		{
-			[self.bikeButton setTitle:bikeName];
-		}
-
 		NSArray* tempAttrNames = [appDelegate getHistoricalActivityAttributes:self->activityId];
 		for (NSString* attrName in tempAttrNames)
 		{
@@ -797,9 +791,10 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onBike:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* fileSites = [appDelegate getBikeNames];
+	NSString* selectedBikeName = [appDelegate getBikeNameForActivity:activityId];
+	NSMutableArray* bikeNames = [appDelegate getBikeNames];
 
-	if ([fileSites count] > 0)
+	if ([bikeNames count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:STR_BIKE
@@ -809,12 +804,21 @@ typedef enum ExportFileTypeButtons
 		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 		}]];
 
-		for (NSString* fileSite in fileSites)
+		// Add an option for each bike.
+		for (NSString* bikeName in bikeNames)
 		{
-			[alertController addAction:[UIAlertAction actionWithTitle:fileSite style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				[self->bikeButton setTitle:fileSite];
-				[appDelegate setBikeForActivityId:fileSite withActivityId:self->activityId];
-			}]];
+			UIAlertAction* button = [UIAlertAction actionWithTitle:bikeName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[appDelegate setBikeForActivityId:bikeName withActivityId:self->activityId];
+			}];
+			[alertController addAction:button];
+
+			if (selectedBikeName)
+			{
+				if ([bikeName caseInsensitiveCompare:selectedBikeName] == NSOrderedSame)
+				{
+					[self checkActionSheetButton:button];
+				}
+			}
 		}
 
 		// Show the action sheet.

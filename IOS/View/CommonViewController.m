@@ -134,6 +134,11 @@
 	}
 }
 
+- (void)checkActionSheetButton:(UIAlertAction*)button
+{
+	[button setValue:@true forKey:@"checked"];
+}
+
 - (UIImage*)activityTypeToIcon:(NSString*)activityType
 {
 	UIImage* img = nil;
