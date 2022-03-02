@@ -808,6 +808,8 @@
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
 	NSMutableArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
+	NSString* currentWorkoutId = [appDelegate getCurrentIntervalWorkoutId];
+	NSString* currentPacePlanId = [appDelegate getCurrentPacePlanId];
 
 	if ([workoutNamesAndIds count] > 0)
 	{
@@ -823,10 +825,16 @@
 		{
 			NSString* name = nameAndId[@"name"];
 			NSString* workoutId = nameAndId[@"id"];
+			UIAlertAction* workoutButton = [UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[appDelegate setCurrentIntervalWorkout:workoutId];
+			}];
 
-			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				SetCurrentIntervalWorkout([workoutId UTF8String]);
-			}]];
+			[alertController addAction:workoutButton];
+
+			if ([currentWorkoutId caseInsensitiveCompare:workoutId] == NSOrderedSame)
+			{
+				[self checkActionSheetButton:workoutButton];
+			}
 		}
 
 		// Show the action sheet.
@@ -847,10 +855,16 @@
 		{
 			NSString* name = pacePlanAndId[@"name"];
 			NSString* planId = pacePlanAndId[@"id"];
+			UIAlertAction* pacePlanButton = [UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[appDelegate setCurrentPacePlan:planId];
+			}];
 
-			[alertController addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				SetCurrentPacePlan([planId UTF8String]);
-			}]];
+			[alertController addAction:pacePlanButton];
+			
+			if ([currentPacePlanId caseInsensitiveCompare:planId] == NSOrderedSame)
+			{
+				[self checkActionSheetButton:pacePlanButton];
+			}
 		}
 
 		// Show the action sheet.

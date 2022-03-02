@@ -1378,6 +1378,15 @@ extern "C" {
 		return false;
 	}
 
+	char* GetCurrentIntervalWorkoutId(void)
+	{
+		if (g_pCurrentActivity)
+		{
+			return strdup(g_pCurrentActivity->GetCurrentIntervalWorkoutId().c_str());
+		}
+		return NULL;
+	}
+
 	bool CheckCurrentIntervalWorkout()
 	{
 		if (IsActivityInProgress())
@@ -1917,6 +1926,15 @@ extern "C" {
 			}
 		}
 		return false;
+	}
+
+	char* GetCurrentPacePlanId(void)
+	{
+		if (g_pCurrentActivity)
+		{
+			return strdup(g_pCurrentActivity->GetPacePlanId().c_str());
+		}
+		return NULL;
 	}
 
 	//

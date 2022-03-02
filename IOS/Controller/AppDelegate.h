@@ -256,14 +256,18 @@
 
 - (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport;
 - (BOOL)retrieveIntervalWorkout:(NSString*)workoutId withName:(NSString**)workoutName withSport:(NSString**)sport;
+- (BOOL)setCurrentIntervalWorkout:(NSString*)workoutId;
 - (BOOL)deleteIntervalWorkout:(NSString*)workoutId;
+- (NSString*)getCurrentIntervalWorkoutId;
 
 // methods for managing pace plans
 
 - (BOOL)createNewPacePlan:(NSString*)planName withPlanId:(NSString*)planId;
 - (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits;
 - (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits;
+- (BOOL)setCurrentPacePlan:(NSString*)planId;
 - (BOOL)deletePacePlanWithId:(NSString*)planId;
+- (NSString*)getCurrentPacePlanId;
 
 // methods for managing workouts
 

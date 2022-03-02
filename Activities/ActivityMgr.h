@@ -93,6 +93,7 @@ extern "C" {
 
 	// Functions for managing the currently set interval workout.
 	bool SetCurrentIntervalWorkout(const char* const workoutId);
+	char* GetCurrentIntervalWorkoutId(void);
 	bool CheckCurrentIntervalWorkout(void);
 	bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment* segment);
 	bool IsIntervalWorkoutComplete(void);
@@ -122,6 +123,7 @@ extern "C" {
 
 	// Functions for managing the currently set pace plan.
 	bool SetCurrentPacePlan(const char* const planId);
+	char* GetCurrentPacePlanId(void);
 
 	// Functions for merging historical activities.
 	bool MergeActivities(const char* const activityId1, const char* const activityId2);

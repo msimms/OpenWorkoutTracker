@@ -49,6 +49,7 @@ public:
 	virtual void SetAthleteProfile(const User& athlete) { m_athlete = athlete; };
 	virtual void SetIntervalWorkout(const IntervalWorkout& workout) { m_intervalWorkout = workout; };
 	virtual void SetPacePlan(const PacePlan& pacePlan) { m_pacePlan = pacePlan; };
+	virtual std::string GetPacePlanId() const { return m_pacePlan.planId; };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const = 0;
 
@@ -99,6 +100,7 @@ public:
 
 	SensorReading GetMostRecentSensorReading() const { return m_mostRecentSensorReading; };
 
+	virtual std::string GetCurrentIntervalWorkoutId() const { return m_intervalWorkout.workoutId; };
 	virtual bool CheckIntervalWorkout();
 	virtual bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment);
 	virtual bool IsIntervalWorkoutComplete();

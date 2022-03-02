@@ -2900,9 +2900,27 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
+- (BOOL)setCurrentIntervalWorkout:(NSString*)workoutId
+{
+	return SetCurrentIntervalWorkout([workoutId UTF8String]);
+}
+
 - (BOOL)deleteIntervalWorkout:(NSString*)workoutId
 {
 	return DeleteIntervalWorkout([workoutId UTF8String]);
+}
+
+- (NSString*)getCurrentIntervalWorkoutId
+{
+	char* temp = GetCurrentIntervalWorkoutId();
+
+	if (temp)
+	{
+		NSString* workoutId = [[NSString alloc] initWithUTF8String:temp];
+		free((void*)temp);
+		return workoutId;
+	}
+	return nil;
 }
 
 #pragma mark methods for managing pace plans
@@ -2963,9 +2981,27 @@ void attributeNameCallback(const char* name, void* context)
 	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, time(NULL));
 }
 
+- (BOOL)setCurrentPacePlan:(NSString*)planId
+{
+	return SetCurrentPacePlan([planId UTF8String]);
+}
+
 - (BOOL)deletePacePlanWithId:(NSString*)planId
 {
 	return DeletePacePlan([planId UTF8String]);
+}
+
+- (NSString*)getCurrentPacePlanId
+{
+	char* temp = GetCurrentPacePlanId();
+
+	if (temp)
+	{
+		NSString* pacePlanId = [[NSString alloc] initWithUTF8String:temp];
+		free((void*)temp);
+		return pacePlanId;
+	}
+	return nil;
 }
 
 #pragma mark methods for managing workouts
