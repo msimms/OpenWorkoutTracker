@@ -170,13 +170,6 @@ typedef enum ExportFileTypeButtons
 
 	[super viewDidLoad];
 
-	[self.deleteButton setTitle:STR_DELETE];
-	[self.exportButton setTitle:STR_EXPORT];
-	[self.editButton setTitle:STR_EDIT];
-	[self.mapButton setTitle:STR_MAP];
-	[self.bikeButton setTitle:STR_BIKE];
-	[self.tagsButton setTitle:STR_TAG];
-
 	self->movingToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->movingToolbar)
 	{

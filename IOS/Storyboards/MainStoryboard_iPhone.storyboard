@@ -849,7 +849,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wYW-qR-P2n">
                                 <rect key="frame" x="0.0" y="818" width="414" height="44"/>
                                 <items>
-                                    <barButtonItem image="pencil" catalog="system" id="aKJ-Tx-UlF">
+                                    <barButtonItem image="line.horizontal.3" catalog="system" id="aKJ-Tx-UlF">
                                         <connections>
                                             <action selector="onCustomize:" destination="0n6-g5-UTs" id="mqv-jt-cvj"/>
                                             <segue destination="kob-qG-sz6" kind="push" id="YOw-2o-8H3"/>
@@ -1293,7 +1293,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sir-57-T5G">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem image="pencil" catalog="system" id="5bt-HJ-NJO">
+                                    <barButtonItem image="line.3.horizontal" catalog="system" id="5bt-HJ-NJO">
                                         <connections>
                                             <action selector="onCustomize:" destination="pMk-kM-n8i" id="78a-jY-XKd"/>
                                             <segue destination="kob-qG-sz6" kind="push" id="mpc-lI-yFA"/>
@@ -1581,7 +1581,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IJ4-Iq-sIP">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem image="pencil" catalog="system" id="u0W-qK-ak4">
+                                    <barButtonItem image="line.horizontal.3" catalog="system" id="u0W-qK-ak4">
                                         <connections>
                                             <action selector="onCustomize:" destination="hC7-Vx-aYi" id="8NI-tB-IgI"/>
                                             <segue destination="kob-qG-sz6" kind="push" id="g4d-Zp-BfC"/>
@@ -1944,12 +1944,12 @@
                                             <action selector="onBike:" destination="xf7-Mc-VJA" id="A6z-rU-Cuh"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Tag" id="yi4-Xp-L31">
+                                    <barButtonItem title="Tag" image="tag" catalog="system" id="yi4-Xp-L31">
                                         <connections>
                                             <action selector="onTag:" destination="xf7-Mc-VJA" id="Eih-xi-7sD"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="edit" id="beB-Zg-cNd">
+                                    <barButtonItem image="scissors" catalog="system" id="beB-Zg-cNd">
                                         <connections>
                                             <action selector="onEdit:" destination="xf7-Mc-VJA" id="fez-hZ-mFp"/>
                                         </connections>
@@ -2979,7 +2979,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="gtm-yZ-0Yg"/>
+        <segue reference="ksp-tA-xd6"/>
         <segue reference="zxl-cL-SNo"/>
         <segue reference="fz0-Br-1wA"/>
         <segue reference="kzb-01-qIL"/>
@@ -2991,10 +2991,13 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="bicycle.circle" catalog="system" width="128" height="121"/>
         <image name="doc.circle" catalog="system" width="128" height="121"/>
         <image name="house" catalog="system" width="128" height="106"/>
+        <image name="line.3.horizontal" catalog="system" width="128" height="64"/>
+        <image name="line.horizontal.3" catalog="system" width="128" height="64"/>
         <image name="map" catalog="system" width="128" height="110"/>
-        <image name="pencil" catalog="system" width="128" height="113"/>
         <image name="scalemass" catalog="system" width="128" height="119"/>
+        <image name="scissors" catalog="system" width="128" height="92"/>
         <image name="stopwatch" catalog="system" width="121" height="128"/>
+        <image name="tag" catalog="system" width="128" height="119"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
