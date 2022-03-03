@@ -390,24 +390,57 @@
 																			 message:ACTION_SHEET_TITLE_MAP_OPTIONS
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
+	UIAlertAction* onBtn = [UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setAutoScaleMap:true];
+	}];
+	UIAlertAction* offBtn = [UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setAutoScaleMap:false];
+	}];
+
+	UIAlertAction* mapStd = [UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeStandard;
+	}];
+	UIAlertAction* mapSat = [UIAlertAction actionWithTitle:OPTION_SATELLITE_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeSatellite;
+	}];
+	UIAlertAction* mapHybrid = [UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		self->mapView.mapType = MKMapTypeHybrid;
+	}];
+
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		[Preferences setAutoScaleMap:true];
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_AUTO_SCALE_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		[Preferences setAutoScaleMap:false];
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->mapView.mapType = MKMapTypeStandard;
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_SATELLITE_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->mapView.mapType = MKMapTypeSatellite;
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		self->mapView.mapType = MKMapTypeHybrid;
-	}]];
+	[alertController addAction:onBtn];
+	[alertController addAction:offBtn];
+	[alertController addAction:mapStd];
+	[alertController addAction:mapSat];
+	[alertController addAction:mapHybrid];
+
+	// Set the checkmarks.
+	if ([Preferences shouldAutoScaleMap])
+	{
+		[self checkActionSheetButton:onBtn];
+	}
+	else
+	{
+		[self checkActionSheetButton:offBtn];
+	}
+	switch (self->mapView.mapType)
+	{
+		case MKMapTypeStandard:
+			[self checkActionSheetButton:mapStd];
+			break;
+		case MKMapTypeSatellite:
+			[self checkActionSheetButton:mapSat];
+			break;
+		case MKMapTypeHybrid:
+			[self checkActionSheetButton:mapHybrid];
+			break;
+		case MKMapTypeSatelliteFlyover:
+		case MKMapTypeHybridFlyover:
+		case MKMapTypeMutedStandard:
+			break;
+	}
 
 	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];

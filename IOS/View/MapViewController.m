@@ -333,14 +333,28 @@ void KmlPlacemarkEnd(const char* name, void* context)
 																			 message:ACTION_SHEET_TITLE_MAP_TYPE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 	
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	UIAlertAction* onBtn = [UIAlertAction actionWithTitle:STR_ON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setAutoScaleMap:true];
 		[[self mapView] setUserTrackingMode:MKUserTrackingModeFollow];
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}];
+	UIAlertAction* offBtn = [UIAlertAction actionWithTitle:STR_OFF style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setAutoScaleMap:false];
 		[[self mapView] setUserTrackingMode:MKUserTrackingModeNone];
-	}]];
+	}];
+
+	[alertController addAction:onBtn];
+	[alertController addAction:offBtn];
+	
+	if ([Preferences shouldAutoScaleMap])
+	{
+		[self checkActionSheetButton:onBtn];
+	}
+	else
+	{
+		[self checkActionSheetButton:offBtn];
+	}
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
@@ -349,16 +363,43 @@ void KmlPlacemarkEnd(const char* name, void* context)
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_MAP_TYPE
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
-	
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+
+	UIAlertAction* mapStd = [UIAlertAction actionWithTitle:OPTION_STANDARD_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->mapView.mapType = MKMapTypeStandard;
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_SATELLITE_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}];
+	UIAlertAction* mapSat = [UIAlertAction actionWithTitle:OPTION_SATELLITE_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->mapView.mapType = MKMapTypeSatellite;
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	}];
+	UIAlertAction* mapHybrid = [UIAlertAction actionWithTitle:OPTION_HYBRID_VIEW style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		self->mapView.mapType = MKMapTypeHybrid;
+	}];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 	}]];
+	[alertController addAction:mapStd];
+	[alertController addAction:mapSat];
+	[alertController addAction:mapHybrid];
+
+	// Set the checkmarks.
+	switch (self->mapView.mapType)
+	{
+		case MKMapTypeStandard:
+			[self checkActionSheetButton:mapStd];
+			break;
+		case MKMapTypeSatellite:
+			[self checkActionSheetButton:mapSat];
+			break;
+		case MKMapTypeHybrid:
+			[self checkActionSheetButton:mapHybrid];
+			break;
+		case MKMapTypeSatelliteFlyover:
+		case MKMapTypeHybridFlyover:
+		case MKMapTypeMutedStandard:
+			break;
+	}
+
+	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
