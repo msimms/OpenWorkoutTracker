@@ -28,6 +28,7 @@
 #define NOTIFICATION_NAME_BAD_LOCATION_DATA_DETECTED  "BadLocationDataDetected"  // Invalid location data was detected
 #define NOTIFICATION_NAME_SENSOR_CONNECTED            "SensorConnected"          // A peripheral sensor connected
 #define NOTIFICATION_NAME_SENSOR_DISCONNECTED         "SensorDisconnected"       // A peripheral sensor disconnected
+#define NOTIFICATION_NAME_INTERNAL_ERROR              "InternalError"            // An error was received, typically used to return errors from asynchronous routines
 
 // Parameters that are associated with the notifications
 #define KEY_NAME_ACTIVITY_ID                          "ActivityId"

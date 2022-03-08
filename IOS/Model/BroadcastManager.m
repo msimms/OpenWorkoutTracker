@@ -225,6 +225,7 @@
 	}
 }
 
+/// @brief This method is called in response to an accelerometer updated notification.
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
 	if (![Preferences shouldBroadcastToServer])
@@ -250,6 +251,7 @@
 	[self broadcast];
 }
 
+/// @brief This method is called in response to a location updated notification.
 - (void)locationUpdated:(NSNotification*)notification
 {
 	if (![Preferences shouldBroadcastToServer])
@@ -357,6 +359,7 @@
 	[self broadcast];
 }
 
+/// @brief This method is called in response to an activity started notification.
 - (void)activityStarted:(NSNotification*)notification
 {
 	[self->locationCache removeAllObjects];
@@ -364,6 +367,7 @@
 	self->lastCacheFlush = time(NULL);
 }
 
+/// @brief This method is called in response to an activity stopped notification.
 - (void)activityStopped:(NSNotification*)notification
 {
 	[self flushGlobalBroadcastCacheRest:TRUE];

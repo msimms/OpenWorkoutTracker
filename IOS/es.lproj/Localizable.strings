@@ -140,6 +140,8 @@
 "Grade Adjusted Pace" = "Ritmo Ajustado por Grado";
 "Gradient" = "Inclination";
 "Half Marathon" = "Medio Maratón";
+"HealthKit permissions were not granted. This will limit the application's functionality." = "No se otorgaron permisos de HealthKit. Esto limitará la funcionalidad de la aplicación.";
+"HealthKit is unavailable." = "HealthKit no está disponible.";
 "Heart Rate" = "Pulso Cardiaco";
 "Heart Rate Monitor" = "Monitor de Pulso Cardiaco";
 "Heart Rate Percentage" = "Porcentaje de Pulso Cardiaco";

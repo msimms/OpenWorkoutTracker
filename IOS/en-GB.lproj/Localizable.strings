@@ -140,6 +140,8 @@
 "Grade Adjusted Pace" = "Grade Adjusted Pace";
 "Gradient" = "Gradient";
 "Half Marathon" = "Half Marathon";
+"HealthKit permissions were not granted. This will limit the application's functionality." = "HealthKit permissions were not granted. This will limit the application's functionality.";
+"HealthKit is unavailable." = "HealthKit is unavailable.";
 "Heart Rate" = "Heart Rate";
 "Heart Rate Monitor" = "Heart Rate Monitor";
 "Heart Rate Percentage" = "Heart Rate Percentage";

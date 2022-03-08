@@ -9,6 +9,7 @@
 #import "HealthManager.h"
 #import "ActivityAttribute.h"
 #import "ActivityType.h"
+#import "AppStrings.h"
 #import "BtleHeartRateMonitor.h"
 #import "BtleScale.h"
 #import "Notifications.h"
@@ -48,9 +49,9 @@
 {
 }
 
-#pragma mark HealthKit permissions
+#pragma mark methods for managing HealthKit permissions
 
-// Returns the types of data that the app wishes to write to HealthKit.
+/// @brief Returns the types of data that the app wishes to write to HealthKit.
 - (NSSet*)dataTypesToWrite
 {
 #if TARGET_OS_WATCH
@@ -68,7 +69,7 @@
 #endif
 }
 
-// Returns the types of data that the app wishes to read from HealthKit.
+/// @brief Returns the types of data that the app wishes to read from HealthKit.
 - (NSSet*)dataTypesToRead
 {
 #if TARGET_OS_WATCH
@@ -101,6 +102,7 @@
 		// Request authorization. If granted update the user's metrics.
 		[self->healthStore requestAuthorizationToShareTypes:writeDataTypes readTypes:readDataTypes completion:^(BOOL success, NSError* error)
 		{
+			// Authorization was granted.
 			if (success)
 			{
 				dispatch_async(dispatch_get_main_queue(), ^{
@@ -109,7 +111,19 @@
 					[self updateUsersWeight];
 				});
 			}
+			
+			// Authorization was not granted.
+			else
+			{
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERNAL_ERROR object:STR_HEALTH_KIT_DENIED];
+			}
 		}];
+	}
+	
+	// Something weird happened and HealthKit isn't available.
+	else
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERNAL_ERROR object:STR_HEALTH_KIT_UNAVAIL];
 	}
 }
 
@@ -226,6 +240,7 @@
 
 #pragma mark methods for reading HealthKit data pertaining to the user's height, weight, etc. and storing it in our database.
 
+/// @brief Gets the user's age from HealthKit and updates the copy in our database.
 - (void)updateUsersAge
 {
 	NSError* error;
@@ -240,6 +255,7 @@
 	}
 }
 
+/// @brief Gets the user's height from HealthKit and updates the copy in our database.
 - (void)updateUsersHeight
 {
 	HKQuantityType* heightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierHeight];
@@ -257,6 +273,7 @@
 	 }];
 }
 
+/// @brief Gets the user's weight from HealthKit and updates the copy in our database.
 - (void)updateUsersWeight
 {
 	HKQuantityType* weightType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBodyMass];
@@ -284,7 +301,7 @@
 	 }];
 }
 
-// methods for returning HealthKit data.
+#pragma mark methods for returning HealthKit data.
 
 - (void)readWeightHistory:(void (^)(HKQuantity*, NSDate*, NSError*))callback
 {
@@ -497,13 +514,13 @@
 	}
 }
 
-// Blocks until all HealthKit queries have completed.
+/// @brief Blocks until all HealthKit queries have completed.
 - (void)waitForHealthKitQueries
 {
 	dispatch_group_wait(self->queryGroup, DISPATCH_TIME_FOREVER);
 }
 
-// Searches the HealthKit activity list for duplicates and removes them, keeping the first in the list.
+/// @brief Searches the HealthKit activity list for duplicates and removes them, keeping the first in the list.
 - (void)removeDuplicateActivities
 {
 	@synchronized(self->workouts)
@@ -556,7 +573,7 @@
 	}
 }
 
-// Used for de-duplicating the HealthKit activity list, so we don't see activities recorded with this app twice.
+/// @brief Used for de-duplicating the HealthKit activity list, so we don't see activities recorded with this app twice.
 - (void)removeActivitiesThatOverlapWithStartTime:(time_t)startTime withEndTime:(time_t)endTime
 {
 	@synchronized(self->workouts)
@@ -907,6 +924,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	return false;
 }
 
+/// @brief Exports the activity with the specified ID to a file of the given format in the given directory..
 - (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDir:(NSString*)dir
 {
 	NSString* newFileName;
@@ -932,6 +950,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 
 #pragma mark notification handlers
 
+/// @brief This method is called in response to a heart rate updated notification.
 - (void)heartRateUpdated:(NSNotification*)notification
 {
 	@try
@@ -956,6 +975,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	}
 }
 
+/// @brief This method is called in response to an activity stopped notification.
 - (void)activityStopped:(NSNotification*)notification
 {
 	@try
@@ -995,6 +1015,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 
 #pragma mark methods for converting between our activity type strings and HealthKit's workout enum
 
+/// @brief Utility method for converting between the specified unit system and HKUnit.
 - (HKUnit*)unitSystemToHKDistanceUnit:(UnitSystem)units
 {
 	switch (units)
@@ -1007,6 +1028,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	return [HKUnit mileUnit];
 }
 
+/// @brief Utility method for converting between the activity type strings used in this app and the workout enums used by Apple.
 - (HKWorkoutActivityType)activityTypeToHKWorkoutType:(NSString*)activityType
 {
 	if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP])
@@ -1064,6 +1086,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	return HKWorkoutActivityTypeFencing; // Shouldn't get here, so return something funny to make it easier to debug if we do.
 }
 
+/// @brief Utility method for converting between the activity type strings used in this app and the workout session location enums used by Apple.
 - (HKWorkoutSessionLocationType)activityTypeToHKWorkoutSessionLocationType:(NSString*)activityType
 {
 	if ([activityType isEqualToString:@ACTIVITY_TYPE_CHINUP])

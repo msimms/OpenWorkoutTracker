@@ -127,6 +127,8 @@
 #define STR_DELETE_FAILED         NSLocalizedString(@"Delete failed!", nil)
 #define STR_EXPORT_FAILED         NSLocalizedString(@"Export failed!", nil)
 #define STR_EXPORT_SUCCEEDED      NSLocalizedString(@"Export succeeded!", nil)
+#define STR_HEALTH_KIT_UNAVAIL    NSLocalizedString(@"HealthKit permissions were not granted. This will limit the application's functionality.", nil)
+#define STR_HEALTH_KIT_DENIED     NSLocalizedString(@"HealthKit is unavailable.", nil)
 
 #define SUMMARY_ATTRIBUTE_TOTAL_DISTANCE NSLocalizedString(@"Total Distance", nil)
 #define SUMMARY_ATTRIBUTE_MAX_DISTANCE   NSLocalizedString(@"Max. Distance", nil)

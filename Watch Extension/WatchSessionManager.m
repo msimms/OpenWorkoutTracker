@@ -374,6 +374,7 @@
 {
 }
 
+/// @brief This method is called in response to activity stopped notification.
 - (void)activityStopped:(NSNotification*)notification
 {
 }
