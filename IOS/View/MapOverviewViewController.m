@@ -448,11 +448,4 @@ void HeapMapPointReceived(Coordinate coordinate, uint32_t count, void* context)
 	}
 }
 
-#pragma mark button handlers
-
-- (IBAction)onHome:(id)sender
-{
-	[self.navigationController popToRootViewControllerAnimated:TRUE];
-}
-
 @end

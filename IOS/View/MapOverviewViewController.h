@@ -41,6 +41,4 @@ typedef enum MapOverviewMode
 - (void)showActivityStarts:(NSString*)activityType;
 - (void)showSegments;
 
-- (IBAction)onHome:(id)sender;
-
 @end
