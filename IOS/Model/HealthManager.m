@@ -38,6 +38,7 @@
 		self->distances = [[NSMutableDictionary alloc] init];
 		self->speeds = [[NSMutableDictionary alloc] init];
 		self->queryGroup = dispatch_group_create();
+		self->longRunningQueries = [[NSMutableArray alloc] init];
 
 		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(heartRateUpdated:) name:@NOTIFICATION_NAME_HRM object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
@@ -978,6 +979,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 /// @brief This method is called in response to an activity stopped notification.
 - (void)activityStopped:(NSNotification*)notification
 {
+	// Save activity summary totals to the Health Store.
 	@try
 	{
 		NSDictionary* activityData = [notification object];
@@ -1007,6 +1009,19 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 
 			[self saveCaloriesBurnedIntoHealthStore:[calories doubleValue] withStartDate:startDate withEndDate:endDate];
 		}
+	}
+	@catch (...)
+	{
+	}
+
+	// Cancel any long running queries.
+	@try
+	{
+		for (HKQuery* query in self->longRunningQueries)
+		{
+			[self->healthStore stopQuery:query];
+		}
+		[self->longRunningQueries removeAllObjects];
 	}
 	@catch (...)
 	{

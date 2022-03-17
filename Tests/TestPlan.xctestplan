@@ -14,7 +14,11 @@
   "testTargets" : [
     {
       "skippedTests" : [
-        "Test"
+        "FitExportTest",
+        "GpxImportTest",
+        "TcxImportTest",
+        "Test",
+        "ZwoImportTest"
       ],
       "target" : {
         "containerPath" : "container:OpenWorkoutTracker.xcodeproj",

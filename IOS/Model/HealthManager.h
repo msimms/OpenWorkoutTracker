@@ -31,6 +31,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 	NSDate*              lastHeartRateSample;  // timestamp associated with the last element in the heart rates array
 	dispatch_group_t     queryGroup;           // tracks queries until they are completed
 	NSInteger            tempPointIndex;
+	NSMutableArray*      longRunningQueries;   // handles to queries that run in the background
 }
 
 // methods for managing authorization.
