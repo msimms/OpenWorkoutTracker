@@ -298,7 +298,7 @@
 #else
 	NSString* str = [NSString stringWithFormat:@"%@://%@/%@?", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_REQUEST_ACTIVITY_METADATA_URL];
 
-	str = [str stringByAppendingString:[NSString stringWithFormat:@"%@=%@&", @PARAM_ACTIVITY_ID, activityId]];
+	str = [str stringByAppendingString:[NSString stringWithFormat:@"%@=%@", @PARAM_ACTIVITY_ID, activityId]];
 
 	return [self makeRequest:str withMethod:@"GET" withPostData:nil];
 #endif
