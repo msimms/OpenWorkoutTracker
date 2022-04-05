@@ -76,12 +76,12 @@ public:
 	virtual SegmentType CurrentVerticalSpeed() const;
 
 	virtual double DistanceTraveled() const;
-	virtual double DistanceTraveledInMeters() const { return m_distanceTraveledM; };
+	virtual double DistanceTraveledInMeters() const { return m_distanceTraveledRawM; };
 	virtual double PrevDistanceTraveled() const;	// previous value of DistanceTraveled()
-	virtual double PrevDistanceTraveledInMeters() const { return m_prevDistanceTraveledM; };
+	virtual double PrevDistanceTraveledInMeters() const { return m_prevDistanceTraveledRawM; };
 	
-	virtual void SetDistanceTraveledInMeters(double distance) { m_distanceTraveledM = distance; };
-	virtual void SetPrevDistanceTraveledInMeters(double distance) { m_prevDistanceTraveledM = distance; };
+	virtual void SetDistanceTraveledInMeters(double distance) { m_distanceTraveledRawM = distance; };
+	virtual void SetPrevDistanceTraveledInMeters(double distance) { m_prevDistanceTraveledRawM = distance; };
 
 	virtual SegmentType CurrentClimb() const;
 	virtual SegmentType BiggestClimb() const { return m_biggestClimbM; };
@@ -114,41 +114,44 @@ public:
 	const LapSummaryList& GetLaps() const { return m_laps; };
 
 protected:
-	Coordinate           m_currentLoc;              // most recent point
-	Coordinate           m_previousLoc;             // second most recent point
-	bool                 m_previousLocSet;
-	double               m_prevDistanceTraveledM;   // total distance - second to last reading (in meters)
-	double               m_distanceTraveledM;       // total distance (in meters)
-	double               m_totalAscentM;            // sum of all ascents (in meters)
-	double               m_currentGradient;         // last computed gradient
-	std::vector<double>  m_altitudeBuffer;          // for computing a running average of altitude
-	uint64_t             m_stoppedTimeMS;           // amount of time spent not moving (in milliseconds)
-	SegmentType          m_minAltitudeM;
-	SegmentType          m_maxAltitudeM;
-	SegmentType          m_biggestClimbM;
-	SegmentType          m_fastestVerticalSpeed;    // fastest instantaneous vertical speed
-	SegmentType          m_fastestPace;             // fastest instantaneous pace
-	SegmentType          m_fastestSpeed;            // fastest instantaneous speed
-	SegmentType          m_fastestCenturySec;       // fastest 100 mile time
-	SegmentType          m_fastestMetricCenturySec; // fastest 100 K time
-	SegmentType          m_fastestMarathonSec;      // fastest 26.2 mile time
-	SegmentType          m_fastestHalfMarathonSec;  // fastest 13.1 mile time
-	SegmentType          m_fastest10KSec;           // fastest 10K time
-	SegmentType          m_fastest5KSec;            // fastest 5K time
-	SegmentType          m_fastestMileSec;          // fastest mile time
-	SegmentType          m_fastestKmSec;            // fastest KM time
-	SegmentType          m_fastest400MSec;          // fastest 400 meter time
-	SegmentType          m_lastCenturySec;          // most recent 100 mile time
-	SegmentType          m_lastMetricCenturySec;    // most recent 100K time
-	SegmentType          m_lastMarathonSec;         // most recent 26.2 mile time
-	SegmentType          m_lastHalfMarathonSec;     // most recent 13.1 mile time
-	SegmentType          m_last10KSec;              // most recent 10K time
-	SegmentType          m_last5KSec;               // most recent 5K time
-	SegmentType          m_lastMileSec;             // most recent mile time
-	SegmentType          m_lastKmSec;               // most recent KM time
-	SegmentType          m_last400MSec;             // most recent 400M time
-	CoordinateList       m_coordinates;             // list of all coordinates comprising the activity
-	TimeDistancePairList m_distances;               // list of all time/distance pairs comprising the activity
+	Coordinate           m_currentLoc;                    // most recent point
+	Coordinate           m_previousLoc;                   // second most recent point
+	bool                 m_previousLocSet;                // TRUE if m_previousLoc is valid
+	double               m_prevDistanceTraveledRawM;      // total distance - second to last reading (in meters)
+	double               m_distanceTraveledRawM;          // total distance (in meters)
+	double               m_prevDistanceTraveledSmoothedM; // total distance - second to last reading (in meters)
+	double               m_distanceTraveledSmoothedM;     // total distance (in meters)
+	double               m_totalAscentM;                  // sum of all ascents (in meters)
+	double               m_currentGradient;               // last computed gradient
+	std::vector<double>  m_altitudeBuffer;                // for computing a running average of altitude
+	uint64_t             m_stoppedTimeMS;                 // amount of time spent not moving (in milliseconds)
+	SegmentType          m_minAltitudeM;                  // lowest altitude so far, units are in meters
+	SegmentType          m_maxAltitudeM;                  // highest altitude so far, units are in meters
+	SegmentType          m_biggestClimbM;                 // biggest climb so far, units are in meters
+	SegmentType          m_fastestVerticalSpeed;          // fastest instantaneous vertical speed
+	SegmentType          m_fastestPace;                   // fastest instantaneous pace
+	SegmentType          m_fastestSpeed;                  // fastest instantaneous speed
+	SegmentType          m_fastestCenturySec;             // fastest 100 mile time
+	SegmentType          m_fastestMetricCenturySec;       // fastest 100 K time
+	SegmentType          m_fastestMarathonSec;            // fastest 26.2 mile time
+	SegmentType          m_fastestHalfMarathonSec;        // fastest 13.1 mile time
+	SegmentType          m_fastest10KSec;                 // fastest 10K time
+	SegmentType          m_fastest5KSec;                  // fastest 5K time
+	SegmentType          m_fastestMileSec;                // fastest mile time
+	SegmentType          m_fastestKmSec;                  // fastest KM time
+	SegmentType          m_fastest400MSec;                // fastest 400 meter time
+	SegmentType          m_lastCenturySec;                // most recent 100 mile time
+	SegmentType          m_lastMetricCenturySec;          // most recent 100K time
+	SegmentType          m_lastMarathonSec;               // most recent 26.2 mile time
+	SegmentType          m_lastHalfMarathonSec;           // most recent 13.1 mile time
+	SegmentType          m_last10KSec;                    // most recent 10K time
+	SegmentType          m_last5KSec;                     // most recent 5K time
+	SegmentType          m_lastMileSec;                   // most recent mile time
+	SegmentType          m_lastKmSec;                     // most recent KM time
+	SegmentType          m_last400MSec;                   // most recent 400M time
+	CoordinateList       m_coordinates;                   // list of all coordinates comprising the activity
+	TimeDistancePairList m_distances;                     // list of all time/distance pairs comprising the activity (raw data)
+	TimeDistancePairList m_smoothedDistances;             // list of all time/distance pairs comprising the activity (smoothed data)
 	LapSummaryList       m_laps;
 	ActivityAttributeMap m_splitTimes;
 

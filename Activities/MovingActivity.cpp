@@ -32,8 +32,10 @@ MovingActivity::MovingActivity() : Activity()
 	m_previousLoc.altitude = (double)0.0;
 	m_previousLoc.time = (uint64_t)0;
 	m_previousLocSet = false;
-	m_prevDistanceTraveledM = (double)0.0;
-	m_distanceTraveledM = (double)0.0;
+	m_prevDistanceTraveledRawM = (double)0.0;
+	m_distanceTraveledRawM = (double)0.0;
+	m_prevDistanceTraveledSmoothedM = (double)0.0;
+	m_distanceTraveledSmoothedM = (double)0.0;
 	m_totalAscentM = (double)0.0;
 	m_currentGradient = (double)0.0;
 	m_stoppedTimeMS = 0;
@@ -70,6 +72,7 @@ MovingActivity::~MovingActivity()
 	m_altitudeBuffer.clear();
 	m_coordinates.clear();
 	m_distances.clear();
+	m_smoothedDistances.clear();
 	m_laps.clear();
 	m_splitTimes.clear();
 }
@@ -393,12 +396,14 @@ bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 	{
 		TimeDistancePair distanceInfo;
 
+		// Compute the raw distance.
 		distanceInfo.verticalDistanceM = m_currentLoc.altitude - m_previousLoc.altitude;
 		distanceInfo.distanceM = LibMath::Distance::haversineDistance(m_previousLoc.latitude, m_previousLoc.longitude, m_previousLoc.altitude, m_currentLoc.latitude, m_currentLoc.longitude, m_currentLoc.altitude);
 		distanceInfo.time = reading.time;
 		m_distances.push_back(distanceInfo);
-
 		SetDistanceTraveledInMeters(DistanceTraveledInMeters() + distanceInfo.distanceM);
+
+		// Compute the smoothed distance.
 
 		// Are we moving (horizontally)? If so, update horizontal speed.
 		if (distanceInfo.distanceM >= (double)MIN_METERS_MOVED)
@@ -625,6 +630,9 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_DISTANCE;
 		result.valid = true;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_SMOOTHED_DISTANCE_TRAVELED) == 0)
+	{
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_PREVIOUS_DISTANCE_TRAVELED) == 0)
 	{
@@ -1313,7 +1321,7 @@ double MovingActivity::DistanceTraveled() const
 
 double MovingActivity::PrevDistanceTraveled() const
 {
-	return UnitMgr::ConvertToPreferredDistanceFromMeters(m_prevDistanceTraveledM);
+	return UnitMgr::ConvertToPreferredDistanceFromMeters(m_prevDistanceTraveledRawM);
 }
 
 void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) const
@@ -1333,6 +1341,7 @@ void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_SPEED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_SMOOTHED_DISTANCE_TRAVELED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_LATITUDE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_LONGITUDE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_ALTITUDE);
