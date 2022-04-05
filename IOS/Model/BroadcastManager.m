@@ -40,7 +40,7 @@
 
 - (void)dealloc
 {
-	[self flushGlobalBroadcastCacheRest:FALSE];
+	[self flushGlobalBroadcastCacheRest:FALSE withActivityId:[[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()]];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -110,7 +110,7 @@
 	[dataTask resume];
 }
 
-- (void)flushGlobalBroadcastCacheRest:(BOOL)activityStopped
+- (void)flushGlobalBroadcastCacheRest:(BOOL)activityStopped withActivityId:(NSString*)activityId
 {
 	// No host name set, just return.
 	NSString* hostName = [Preferences broadcastHostName];
@@ -119,9 +119,6 @@
 		NSLog(@"Broadcast host name not specified.");
 		return;
 	}
-
-	// Get the activity ID.
-	NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 
 	// Still waiting on last data to be sent.
 	if (self->dataBeingSent)
@@ -221,7 +218,7 @@
 	NSInteger rate = [Preferences broadcastRate];
 	if (([self->locationCache count] > 0 || [self->accelerometerCache count] > 0) && (time(NULL) - self->lastCacheFlush > rate))
 	{
-		[self flushGlobalBroadcastCacheRest:FALSE];
+		[self flushGlobalBroadcastCacheRest:FALSE withActivityId:[[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()]];
 	}
 }
 
@@ -370,7 +367,20 @@
 /// @brief This method is called in response to an activity stopped notification.
 - (void)activityStopped:(NSNotification*)notification
 {
-	[self flushGlobalBroadcastCacheRest:TRUE];
+	// Save activity summary totals to the Health Store.
+	@try
+	{
+		NSDictionary* activityData = [notification object];
+
+		if (activityData)
+		{
+			NSString* activityId = [activityData objectForKey:@KEY_NAME_ACTIVITY_ID];
+			[self flushGlobalBroadcastCacheRest:TRUE withActivityId:activityId];
+		}
+	}
+	@catch (...)
+	{
+	}
 }
 
 @end
