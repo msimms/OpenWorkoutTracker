@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yid-NO-4iO">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1251,7 +1251,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="AvI-td-8vi">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="kob-qG-sz6" id="oWK-hJ-1DZ"/>
@@ -1263,7 +1263,7 @@
                         <constraints>
                             <constraint firstItem="AvI-td-8vi" firstAttribute="top" secondItem="8x9-gE-itg" secondAttribute="topMargin" id="AUU-kR-fpR"/>
                             <constraint firstItem="AvI-td-8vi" firstAttribute="leading" secondItem="40l-lE-1Eg" secondAttribute="leading" id="NSZ-Qw-vzP"/>
-                            <constraint firstItem="AvI-td-8vi" firstAttribute="bottom" secondItem="40l-lE-1Eg" secondAttribute="bottom" constant="34" id="qD7-pv-3Nc"/>
+                            <constraint firstItem="AvI-td-8vi" firstAttribute="bottom" secondItem="40l-lE-1Eg" secondAttribute="bottom" id="qD7-pv-3Nc"/>
                             <constraint firstItem="AvI-td-8vi" firstAttribute="centerX" secondItem="8x9-gE-itg" secondAttribute="centerX" id="s1A-bm-615"/>
                         </constraints>
                     </view>
@@ -2210,7 +2210,7 @@
                                 <rect key="frame" x="0.0" y="836" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem title="Home" id="GXh-HE-k1W">
+                                    <barButtonItem title="Home" image="house" catalog="system" id="GXh-HE-k1W">
                                         <connections>
                                             <action selector="onHome:" destination="dpF-uY-DXe" id="gZg-gU-PRD"/>
                                         </connections>
@@ -2245,7 +2245,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="oxv-mt-mTJ">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="ubg-tP-SOX" id="1Qa-Uq-Aar"/>
@@ -2258,8 +2258,8 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DpB-ef-ZOm"/>
                         <constraints>
-                            <constraint firstItem="oxv-mt-mTJ" firstAttribute="bottom" secondItem="DpB-ef-ZOm" secondAttribute="bottom" constant="34" id="d7O-z0-Bm6"/>
-                            <constraint firstItem="oxv-mt-mTJ" firstAttribute="centerY" secondItem="DpB-ef-ZOm" secondAttribute="centerY" constant="17" id="dUx-kN-gLE"/>
+                            <constraint firstItem="oxv-mt-mTJ" firstAttribute="bottom" secondItem="DpB-ef-ZOm" secondAttribute="bottom" id="d7O-z0-Bm6"/>
+                            <constraint firstItem="oxv-mt-mTJ" firstAttribute="centerY" secondItem="DpB-ef-ZOm" secondAttribute="centerY" id="dUx-kN-gLE"/>
                             <constraint firstItem="oxv-mt-mTJ" firstAttribute="leading" secondItem="DpB-ef-ZOm" secondAttribute="leading" id="fTl-pg-Ws6"/>
                             <constraint firstItem="BUf-HZ-dRP" firstAttribute="centerY" secondItem="DpB-ef-ZOm" secondAttribute="centerY" id="hMg-CM-ZAd"/>
                             <constraint firstItem="BUf-HZ-dRP" firstAttribute="centerX" secondItem="DpB-ef-ZOm" secondAttribute="centerX" id="ioJ-zJ-gbX"/>
@@ -2614,8 +2614,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <constraint firstItem="IzN-VU-DL2" firstAttribute="trailing" secondItem="fUO-t0-pEF" secondAttribute="trailing" id="A5R-P2-e6L"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="top" secondItem="BmK-jm-Hlr" secondAttribute="top" id="Dkh-S4-X4q"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="trailing" secondItem="BmK-jm-Hlr" secondAttribute="trailing" id="KOy-Wi-QZc"/>
+                            <constraint firstItem="IzN-VU-DL2" firstAttribute="top" secondItem="fUO-t0-pEF" secondAttribute="bottom" id="Lij-Ok-UPU"/>
                             <constraint firstItem="BmK-jm-Hlr" firstAttribute="bottom" secondItem="IzN-VU-DL2" secondAttribute="bottom" id="QFB-Bb-r0G"/>
-                            <constraint firstItem="fUO-t0-pEF" firstAttribute="centerY" secondItem="heL-qQ-kTG" secondAttribute="centerY" constant="5" id="XSt-hh-ROT"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="leading" secondItem="BmK-jm-Hlr" secondAttribute="leading" id="qgo-3j-UM8"/>
                             <constraint firstItem="fUO-t0-pEF" firstAttribute="centerX" secondItem="heL-qQ-kTG" secondAttribute="centerX" id="zdm-Ng-gJG"/>
                         </constraints>
@@ -2692,7 +2692,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="iMA-5M-Gi5">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <sections/>
                                 <connections>
@@ -2706,7 +2706,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                             <constraint firstItem="iMA-5M-Gi5" firstAttribute="top" secondItem="EtM-6w-u95" secondAttribute="topMargin" id="GRA-Yw-yS5"/>
                             <constraint firstItem="iMA-5M-Gi5" firstAttribute="leading" secondItem="6g5-bR-80n" secondAttribute="leading" id="N5P-15-NbJ"/>
                             <constraint firstItem="iMA-5M-Gi5" firstAttribute="centerX" secondItem="EtM-6w-u95" secondAttribute="centerX" id="dzM-MY-hud"/>
-                            <constraint firstItem="iMA-5M-Gi5" firstAttribute="centerY" secondItem="EtM-6w-u95" secondAttribute="centerY" constant="44" id="fQy-ZQ-zSD"/>
+                            <constraint firstItem="iMA-5M-Gi5" firstAttribute="centerY" secondItem="EtM-6w-u95" secondAttribute="centerY" constant="27" id="fQy-ZQ-zSD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Sensors" id="dhO-zg-Xwm"/>
@@ -2800,7 +2800,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <rect key="frame" x="0.0" y="838" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem title="Home" id="Efg-nu-1Yp">
+                                    <barButtonItem title="Home" image="house" catalog="system" id="Efg-nu-1Yp">
                                         <connections>
                                             <action selector="onHome:" destination="nlb-r6-Zc5" id="pNV-gS-meX"/>
                                         </connections>
@@ -2980,10 +2980,10 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ksp-tA-xd6"/>
-        <segue reference="cVH-8j-NfP"/>
+        <segue reference="V9h-tU-0NS"/>
         <segue reference="fz0-Br-1wA"/>
         <segue reference="kzb-01-qIL"/>
-        <segue reference="mpc-lI-yFA"/>
+        <segue reference="g4d-Zp-BfC"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Background1.png" width="640" height="1136"/>
