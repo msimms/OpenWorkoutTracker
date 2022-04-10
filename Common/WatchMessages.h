@@ -20,6 +20,7 @@
 #define WATCH_MSG_PACE_PLAN                  "Pace Plan"
 #define WATCH_MSG_CHECK_ACTIVITY             "Check Activity"
 #define WATCH_MSG_REQUEST_ACTIVITY           "Request Activity"
+#define WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED   "Mark Synched Activity"
 #define WATCH_MSG_ACTIVITY                   "Activity"
 #define WATCH_MSG_PARAM_ACTIVITY_ID          "Activity ID"
 #define WATCH_MSG_PARAM_ACTIVITY_TYPE        "Activity Type"
@@ -27,6 +28,5 @@
 #define WATCH_MSG_PARAM_ACTIVITY_START_TIME  "Activity Start Time"
 #define WATCH_MSG_PARAM_ACTIVITY_END_TIME    "Activity End Time"
 #define WATCH_MSG_PARAM_ACTIVITY_LOCATIONS   "Activity Locations"
-#define WATCH_MSG_PARAM_COMPRESSED           "Compressed"
 
 #endif

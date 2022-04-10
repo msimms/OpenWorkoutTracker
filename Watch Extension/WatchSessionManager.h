@@ -10,7 +10,7 @@
 
 @interface WatchSessionManager : NSObject<WCSessionDelegate>
 {
-	WCSession* watchSession; // Handles communication between the watch and the phone
+	WCSession* watchSession;   // Handles communication between the watch and the phone
 	time_t timeOfLastPhoneMsg; // Timestamp of the last time we got a message from the phone
 }
 

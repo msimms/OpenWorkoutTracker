@@ -215,7 +215,7 @@
 	}
 }
 
-// The user wants to start, stop, or pause the activity.
+/// @brief The user wants to start, stop, or pause the activity.
 - (IBAction)onStartStop
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -247,7 +247,7 @@
 	}
 }
 
-// The user wants to select the interval workout.
+/// @brief The user wants to select the interval workout.
 - (IBAction)onIntervals
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -270,7 +270,7 @@
 	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_INTERVAL_WORKOUT preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
-// The user wants to select the pace plan.
+/// @brief The user wants to select the pace plan.
 - (IBAction)onPacePlan
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -293,7 +293,7 @@
 	[self presentAlertControllerWithTitle:nil message:MSG_SELECT_PACE_PLAN preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
-// Button can be cancel or pause depending on whether or not an activity is in progress.
+/// @brief Button can be cancel or pause depending on whether or not an activity is in progress.
 - (IBAction)onCancel
 {
     ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -419,7 +419,7 @@
 
 #pragma mark method for showing the attributes menu
 
-// This allows the user to select a new attribute to display on the user interface.
+/// @brief This allows the user to select a new attribute to display on the user interface.
 - (void)showAttributesMenu
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -451,7 +451,7 @@
 	[self presentAlertControllerWithTitle:nil message:STR_ATTRIBUTES preferredStyle:WKAlertControllerStyleAlert actions:actions];
 }
 
-// This allows the user to select which item on the user interface they want to replace.
+/// @brief This allows the user to select which item on the user interface they want to replace.
 - (void)showReplacementMenu
 {
 	NSArray* attributeNames = [self->prefs getAttributeNames:self->activityType]; // Currently displayed attributes

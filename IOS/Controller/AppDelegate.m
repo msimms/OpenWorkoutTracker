@@ -33,6 +33,7 @@
 #import "UnitConversionFactors.h"
 #import "UserProfile.h"
 #import "WatchMessages.h"
+#import "compression.h"
 
 #include <sys/sysctl.h>
 
@@ -78,7 +79,7 @@ typedef enum MsgDestinationType
 }
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
-{	
+{
 	NSArray*  paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString* docDir = [paths objectAtIndex: 0];
 	NSString* dbFileName = [docDir stringByAppendingPathComponent:@DATABASE_NAME];
@@ -613,7 +614,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 	}];
 }
 
-// Initializes our Health Manager object and does anything that needs to be done with HealthKit at startup.
+/// @brief Initializes our Health Manager object and does anything that needs to be done with HealthKit at startup.
 - (void)startHealthMgr
 {
 	self->healthMgr = [[HealthManager alloc] init];
@@ -682,7 +683,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 	return nil;
 }
 
-// Tells the sensor discovery object whether or not unknown devices are welcome to connect.
+/// @brief Tells the sensor discovery object whether or not unknown devices are welcome to connect.
 - (void)allowConnectionsFromUnknownBluetoothDevices:(BOOL)allow
 {
 	if (self->bluetoothDeviceFinder)
@@ -693,7 +694,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 
 #pragma mark sensor management methods
 
-// Initiates bluetooth sensor discovery.
+/// @brief Initiates bluetooth sensor discovery.
 - (void)startSensorDiscovery
 {
 	if ([Preferences shouldScanForSensors])
@@ -709,7 +710,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 	}
 }
 
-// Stops bluetooth sensor discovery.
+/// @brief Stops bluetooth sensor discovery.
 - (void)stopSensorDiscovery
 {
 	if (self->bluetoothDeviceFinder)
@@ -719,7 +720,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 	}
 }
 
-// Allows views to register for sensor discovery information.
+/// @brief Allows views to register for sensor discovery information.
 - (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
 	if (self->bluetoothDeviceFinder)
@@ -772,7 +773,7 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark sensor update methods
 
-// Notification callback for a weight sensor reading.
+/// @brief Notification callback for a weight sensor reading.
 - (void)weightHistoryUpdated:(NSNotification*)notification
 {
 	@try
@@ -789,9 +790,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for an accelerometer sensor reading.
+/// @brief Notification callback for an accelerometer sensor reading.
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -811,9 +818,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a location sensor reading.
+/// @brief Notification callback for a location sensor reading.
 - (void)locationUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		NSDictionary* locationData = [notification object];
@@ -904,9 +917,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a heart rate sensor reading.
+/// @brief Notification callback for a heart rate sensor reading.
 - (void)heartRateUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -937,9 +956,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a cadence sensor reading.
+/// @brief Notification callback for a cadence sensor reading.
 - (void)cadenceUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -965,9 +990,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a wheel speed sensor reading.
+/// @brief Notification callback for a wheel speed sensor reading.
 - (void)wheelSpeedUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -993,9 +1024,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a power sensor reading.
+/// @brief Notification callback for a power sensor reading.
 - (void)powerUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -1021,9 +1058,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a stride length sensor reading.
+/// @brief Notification callback for a stride length sensor reading.
 - (void)strideLengthUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -1049,9 +1092,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a foot pod sensor reading.
+/// @brief Notification callback for a foot pod sensor reading.
 - (void)runDistanceUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		if ([self isActivityInProgressAndNotPaused])
@@ -1077,9 +1126,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a radar sensor reading.
+/// @brief Notification callback for a radar sensor reading.
 - (void)radarUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		NSDictionary* radarData = [notification object];
@@ -1102,9 +1157,15 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Notification callback for a battery level reading.
+/// @brief Notification callback for a battery level reading.
 - (void)batteryLevelUpdated:(NSNotification*)notification
 {
+	// Ignore everything while we're importing watch data or we might corrupt the database.
+	if ([self isImportingActivityFromWatch])
+	{
+		return;
+	}
+
 	@try
 	{
 		NSDictionary* batteryData = [notification object];
@@ -1132,8 +1193,7 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for handling responses from the server
 
-// Request the latest of everything from the server.
-// Also, send the server anything it is missing as well.
+/// @brief Request the latest of everything from the server.  Also, send the server anything it is missing as well.
 - (void)syncWithServer
 {
 	// Rate limit the server synchronizations. Let's not be spammy.
@@ -1146,13 +1206,13 @@ void startSensorCallback(SensorType type, void* context)
 		[self serverListPacePlans];
 		[self sendUserDetailsToServer];
 		[self sendMissingActivitiesToServer];
-		[self sendPacePlans:MSG_DESTINATION_WEB];
+		[self sendPacePlans:MSG_DESTINATION_WEB replyHandler:nil];
 		[ApiClient serverRequestUpdatesSince:lastServerSync];
 		[Preferences setLastServerSyncTime:time(NULL)];
 	}
 }
 
-// Called when the server responds to the user attempting to log in.
+/// @brief Called when the server responds to the user attempting to log in.
 - (void)loginProcessed:(NSNotification*)notification
 {
 	@try
@@ -1172,7 +1232,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Called when the server responds to a login state check.
+/// @brief Called when the server responds to a login state check.
 - (void)loginChecked:(NSNotification*)notification
 {
 	@try
@@ -1191,7 +1251,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Called when the server responds to a gear list request.
+/// @brief Called when the server responds to a gear list request.
 - (void)gearListUpdated:(NSNotification*)notification
 {
 	@try
@@ -1219,14 +1279,14 @@ void startSensorCallback(SensorType type, void* context)
 				if ([retireTime intValue] == 0)
 				{
 					if ([gearType isEqualToString:@"shoes"])
-					{				
+					{
 						// Do we already have shoes with this name?
 						uint64_t gearId = [self getShoeIdFromName:gearName];
 
 						// If not, add it.
 						if (gearId == (uint64_t)-1)
 						{
-							[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];						
+							[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];
 						}
 					}
 					else if ([gearType isEqualToString:@"bike"])
@@ -1245,7 +1305,7 @@ void startSensorCallback(SensorType type, void* context)
 		}
 		else
 		{
-			NSLog(@"Invalid JSON received.");
+			NSLog(@"Invalid JSON received when processing the gear list.");
 		}
 	}
 	@catch (...)
@@ -1253,7 +1313,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Called when the server responds to a request for the workouts planned for the user.
+/// @brief Called when the server responds to a request for the workouts planned for the user.
 - (void)plannedWorkoutsUpdated:(NSNotification*)notification
 {
 	@try
@@ -1325,7 +1385,7 @@ void startSensorCallback(SensorType type, void* context)
 		}
 		else
 		{
-			NSLog(@"Invalid JSON received.");
+			NSLog(@"Invalid JSON received when processing the planned workouts.");
 		}
 	}
 	@catch (...)
@@ -1333,7 +1393,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Called when the server responds to a request for the user's list of interval workouts.
+/// @brief Called when the server responds to a request for the user's list of interval workouts.
 - (void)intervalWorkoutsUpdated:(NSNotification*)notification
 {
 	@try
@@ -1344,7 +1404,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Called when the server responds to a request for the user's list of pace plans.
+/// @brief Called when the server responds to a request for the user's list of pace plans.
 - (void)pacePlansUpdated:(NSNotification*)notification
 {
 	@try
@@ -1398,7 +1458,7 @@ void startSensorCallback(SensorType type, void* context)
 		}
 		else
 		{
-			NSLog(@"Invalid JSON received.");
+			NSLog(@"Invalid JSON received when processing pace plans.");
 		}
 	}
 	@catch (...)
@@ -1406,7 +1466,7 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
-// Called when the server returns the list of activities that need synchronizing.
+/// @brief Called when the server returns the list of activities that need synchronizing.
 - (void)unsynchedActivitiesListReceived:(NSNotification*)notification
 {
 	@try
@@ -1424,13 +1484,17 @@ void startSensorCallback(SensorType type, void* context)
 				[ApiClient serverRequestActivityMetadata:activityId];
 			}
 		}
+		else
+		{
+			NSLog(@"Invalid JSON received when processing unsynched activities.");
+		}
 	}
 	@catch (...)
 	{
 	}
 }
 
-// Called when the server responds to a request for activity metadata.
+/// @brief Called when the server responds to a request for activity metadata.
 - (void)activityMetadataReceived:(NSNotification*)notification
 {
 	@try
@@ -1470,7 +1534,7 @@ void startSensorCallback(SensorType type, void* context)
 		}
 		else
 		{
-			NSLog(@"Invalid JSON received.");
+			NSLog(@"Invalid JSON received when processing activity metadata.");
 		}
 	}
 	@catch (...)
@@ -1529,23 +1593,28 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)startActivity
 {
-	NSString* activityId = [[NSUUID UUID] UUIDString];
-	BOOL result = StartActivity([activityId UTF8String]);
+	BOOL result = FALSE;
 
-	if (result)
+	@synchronized (self)
 	{
-		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+		NSString* activityId = [[NSUUID UUID] UUIDString];
+		result = StartActivity([activityId UTF8String]);
 
-		NSString* activityType = [self getCurrentActivityType];
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+		if (result)
+		{
+			ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 
-		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								   activityId, @KEY_NAME_ACTIVITY_ID,
-								   activityType, @KEY_NAME_ACTIVITY_TYPE,
-								   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
-								   nil];
+			NSString* activityType = [self getCurrentActivityType];
+			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
+			NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									   activityId, @KEY_NAME_ACTIVITY_ID,
+									   activityType, @KEY_NAME_ACTIVITY_TYPE,
+									   [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+									   nil];
+
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STARTED object:startData];
+		}
 	}
 	return result;
 }
@@ -1563,43 +1632,50 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)stopActivity
 {
-	BOOL result = StopCurrentActivity();
-
-	if (result)
+	BOOL result = FALSE;
+	
+	@synchronized (self)
 	{
-		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
-		ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
-		ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
-		ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
+		result = StopCurrentActivity();
 
-		NSString* activityType = [self getCurrentActivityType];
-		NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
-		NSString* activityHash = [self hashCurrentActivity];
-
-		// So we don't have to recompute everything each time the activity is loaded, save a summary.
-		SaveActivitySummaryData();
-
-		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
-								  activityId, @KEY_NAME_ACTIVITY_ID,
-								  activityType, @KEY_NAME_ACTIVITY_TYPE,
-								  activityHash, @KEY_NAME_ACTIVITY_HASH,
-								  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
-								  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
-								  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
-								  [NSNumber numberWithInt:(UnitSystem)distance.unitSystem], @KEY_NAME_UNITS,
-								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
-								  nil];
-
-		// Let other modules know that the activity is stopped.
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
-
-		// Stop requesting data from sensors.
-		[self stopSensors];
-
-		// If we're supposed to export the activity to any services then do that.
-		if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD_DRIVE] && [CloudPreferences usingiCloud])
+		if (result)
 		{
-			[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_WEB];
+			ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
+			ActivityAttributeType endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME);
+			ActivityAttributeType distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+			ActivityAttributeType calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
+
+			NSString* activityType = [self getCurrentActivityType];
+			NSString* activityId = [[NSString alloc] initWithFormat:@"%s", GetCurrentActivityId()];
+			NSString* activityHash = [self hashCurrentActivity];
+
+			// So we don't have to recompute everything each time the activity is loaded, save a summary.
+			SaveActivitySummaryData();
+
+			// Delete the object.
+			DestroyCurrentActivity();
+
+			// Stop requesting data from sensors.
+			[self stopSensors];
+
+			// Let other modules know that the activity is stopped.
+			NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									  activityId, @KEY_NAME_ACTIVITY_ID,
+									  activityType, @KEY_NAME_ACTIVITY_TYPE,
+									  activityHash, @KEY_NAME_ACTIVITY_HASH,
+									  [NSNumber numberWithLongLong:startTime.value.intVal], @KEY_NAME_START_TIME,
+									  [NSNumber numberWithLongLong:endTime.value.intVal], @KEY_NAME_END_TIME,
+									  [NSNumber numberWithDouble:distance.value.doubleVal], @KEY_NAME_DISTANCE,
+									  [NSNumber numberWithInt:(UnitSystem)distance.unitSystem], @KEY_NAME_UNITS,
+									  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
+									  nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
+
+			// If we're supposed to export the activity to any services then do that.
+			if ([self->cloudMgr isLinked:CLOUD_SERVICE_ICLOUD_DRIVE] && [CloudPreferences usingiCloud])
+			{
+				[self exportActivityToCloudService:activityId toService:CLOUD_SERVICE_WEB];
+			}
 		}
 	}
 	return result;
@@ -1624,21 +1700,35 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)createActivity:(NSString*)activityType
 {
-	CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	@synchronized (self)
+	{
+		CreateActivityObject([activityType cStringUsingEncoding:NSASCIIStringEncoding]);
+	}
 }
 
 - (void)recreateOrphanedActivity:(NSInteger)activityIndex
 {
-	DestroyCurrentActivity();
-	ReCreateOrphanedActivity(activityIndex);
+	@synchronized (self)
+	{
+		DestroyCurrentActivity();
+		ReCreateOrphanedActivity(activityIndex);
+	}
 }
 
 - (void)destroyCurrentActivity
 {
-	DestroyCurrentActivity();
+	@synchronized (self)
+	{
+		DestroyCurrentActivity();
+	}
 }
 
 #pragma mark methods for querying the status of the current activity
+
+- (BOOL)isImportingActivityFromWatch
+{
+	return self->currentlyImporting;
+}
 
 - (BOOL)isActivityCreated
 {
@@ -1652,8 +1742,6 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)isActivityInProgressAndNotPaused
 {
-	if (self->currentlyImporting)
-		return FALSE;
 	return IsActivityInProgressAndNotPaused();
 }
 
@@ -2270,7 +2358,7 @@ void startSensorCallback(SensorType type, void* context)
 	return CreateActivitySync([activityId UTF8String], SYNC_DEST_ICLOUD_DRIVE);
 }
 
-// Callback used by retrieveSyncDestinationsForActivityId
+/// @brief Callback used by retrieveSyncDestinationsForActivityId
 void syncStatusCallback(const char* const destination, void* context)
 {
 	if (context)
@@ -2329,7 +2417,7 @@ void syncStatusCallback(const char* const destination, void* context)
 			}
 			else
 			{
-				NSLog(@"Invalid JSON received.");
+				NSLog(@"Invalid JSON received when processing activity response.");
 			}
 		}
 	}
@@ -2380,7 +2468,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	}
 }
 
-// Called when the broadcast manager has finished with an activity.
+/// @brief Called when the broadcast manager has finished with an activity.
 - (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
 {
 	@try
@@ -2502,7 +2590,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 }
 
 - (NSString*)exportActivitySummary:(NSString*)activityType
-{	
+{
 	NSString* exportFileName = nil;
 	NSString* exportDir = [ExportUtils createExportDir];
 
@@ -2724,6 +2812,10 @@ void tagCallback(const char* name, void* context)
 				free((void*)workoutJson);
 			}
 		}
+		else
+		{
+			NSLog(@"Failed to initialize the interval workout list.");
+		}
 	}
 	return namesAndIds;
 }
@@ -2749,6 +2841,10 @@ void tagCallback(const char* name, void* context)
 					[namesAndIds addObject:jsonObject];
 				free((void*)pacePlanJson);
 			}
+		}
+		else
+		{
+			NSLog(@"Failed to initialize the pace plan list.");
 		}
 	}
 	return namesAndIds;
@@ -2938,7 +3034,7 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (tempName)
 	{
-		(*name) = [[NSString alloc] initWithUTF8String:tempName]; 
+		(*name) = [[NSString alloc] initWithUTF8String:tempName];
 		free((void*)tempName);
 	}
 
@@ -3043,7 +3139,7 @@ void attributeNameCallback(const char* name, void* context)
 	return GenerateWorkouts(goal, goalType, goalDate);
 }
 
-// Retrieve planned workouts from the database.
+/// @brief Retrieve planned workouts from the database.
 - (NSMutableArray*)getPlannedWorkouts
 {
 	NSMutableArray* workoutData = [[NSMutableArray alloc] init];
@@ -3063,6 +3159,10 @@ void attributeNameCallback(const char* name, void* context)
 				[workoutData addObject:workoutDict];
 			free((void*)workoutJson);
 		}
+	}
+	else
+	{
+		NSLog(@"Failed to initialize the workout list.");
 	}
 
 	return workoutData;
@@ -3307,22 +3407,49 @@ void attributeNameCallback(const char* name, void* context)
 	[self serverClaimDevice:deviceId];
 }
 
-// Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
-- (void)checkForActivity:(NSString*)activityId
+/// @brief Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
+- (void)checkForActivity:(NSString*)activityId replyHandler:(void (^)(NSDictionary<NSString*,id>*))replyHandler
 {
-	if (!IsActivityInDatabase([activityId UTF8String]))
+	// Don't try to import anything when we're in the middle of doing an activity.
+	if ([self isActivityCreated])
+	{
+		return;
+	}
+
+	if (IsActivityInDatabase([activityId UTF8String]))
+	{
+		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+										@WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED, @WATCH_MSG_TYPE,
+										activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+										nil];
+		if (replyHandler)
+		{
+			replyHandler(msgData);
+		}
+		else
+		{
+			NSLog(@"Unexpected NULL reply handler.");
+		}
+	}
+	else
 	{
 		NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 										@WATCH_MSG_REQUEST_ACTIVITY, @WATCH_MSG_TYPE,
 										activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
 										nil];
-
-		[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+		if (replyHandler)
+		{
+			replyHandler(msgData);
+		}
+		else
+		{
+			NSLog(@"Unexpected NULL reply handler.");
+		}
 	}
 }
 
-// Sends interval workouts to the watch.
-- (void)sendIntervalWorkouts:(MsgDestinationType)dest
+/// @brief Sends interval workouts to the watch.
+- (void)sendIntervalWorkouts:(MsgDestinationType)dest replyHandler:(void (^)(NSDictionary<NSString*,id>*))replyHandler
 {
 	if (InitializeIntervalWorkoutList())
 	{
@@ -3343,18 +3470,33 @@ void attributeNameCallback(const char* name, void* context)
 						[ApiClient sendIntervalWorkoutToServer:msgData];
 						break;
 					case MSG_DESTINATION_WATCH:
-						[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
-						[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+						if (replyHandler)
+						{
+							[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
+							replyHandler(msgData);
+						}
+						else
+						{
+							NSLog(@"Unexpected NULL reply handler.");
+						}
 						break;
 				}
+			}
+			else
+			{
+				NSLog(@"Failed to serialize interval workouts when sending to the watch.");
 			}
 			free((void*)workoutJson);
 		}
 	}
+	else
+	{
+		NSLog(@"Failed to initialize the interval workout list.");
+	}
 }
 
-// Sends pace plans to the watch.
-- (void)sendPacePlans:(MsgDestinationType)dest
+/// @brief Sends pace plans to the watch.
+- (void)sendPacePlans:(MsgDestinationType)dest replyHandler:(void (^)(NSDictionary<NSString*,id>*))replyHandler
 {
 	if (InitializePacePlanList())
 	{
@@ -3375,82 +3517,164 @@ void attributeNameCallback(const char* name, void* context)
 						[ApiClient sendPacePlanToServer:msgData];
 						break;
 					case MSG_DESTINATION_WATCH:
-						[msgData setObject:@WATCH_MSG_PACE_PLAN forKey:@WATCH_MSG_TYPE];
-						[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+						if (replyHandler)
+						{
+							[msgData setObject:@WATCH_MSG_PACE_PLAN forKey:@WATCH_MSG_TYPE];
+							replyHandler(msgData);
+						}
+						else
+						{
+							NSLog(@"Unexpected NULL reply handler.");
+						}
 						break;
 				}
+			}
+			else
+			{
+				NSLog(@"Failed to serialize pace plan data when sending to the watch.");
 			}
 
 			free((void*)pacePlanJson);
 		}
 	}
+	else
+	{
+		NSLog(@"Failed to initialize pace plan list.");
+	}
 }
 
-// Imports an activity that was sent from the watch.
-- (void)importWatchActivity:(NSDictionary<NSString*,id>*)message
+/// @brief Imports an activity that was sent from the watch.
+- (void)importWatchActivity:(NSDictionary<NSString*,id>*)message replyHandler:(void (^)(NSDictionary<NSString*,id>*))replyHandler
 {
-	NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-
-	if (activityId && !IsActivityInDatabase([activityId UTF8String]))
+	// Don't try to import anything when we're in the middle of doing an activity.
+	if ([self isActivityCreated])
 	{
-		NSString* activityType = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
-		NSNumber* startTime = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_START_TIME];
+		return;
+	}
 
-		if (activityType && startTime)
+	// Mutex to prevent someone from trying to start an activity while we're importing.
+	@synchronized (self)
+	{
+		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
+
+		if (activityId && !IsActivityInDatabase([activityId UTF8String]))
 		{
-			self->currentlyImporting = TRUE;
+			NSString* activityType = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
+			NSNumber* startTime = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_START_TIME];
 
-			// Delete any existing activities with the same ID.
-			while (ConvertActivityIdToActivityIndex([activityId UTF8String]) != ACTIVITY_INDEX_UNKNOWN)
+			if (activityType && startTime)
 			{
-				DeleteActivityFromDatabase([activityId UTF8String]);
-				InitializeHistoricalActivityList();
-			}
+				self->currentlyImporting = TRUE;
 
-			// Create the activity object and database entry.
-			CreateActivityObject([activityType UTF8String]);
-			if (StartActivityWithTimestamp([activityId UTF8String], [startTime longLongValue]))
-			{
-				// Add all the locations.
-				NSArray* locationData = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
-				if (locationData)
+				// Delete any existing activities with the same ID.
+				while (ConvertActivityIdToActivityIndex([activityId UTF8String]) != ACTIVITY_INDEX_UNKNOWN)
 				{
-					for (NSArray* locationPoints in locationData)
-					{
-						if ([locationPoints count] >= 5)
-						{
-							ProcessLocationReading([locationPoints[0] doubleValue], [locationPoints[1] doubleValue], [locationPoints[2] doubleValue], [locationPoints[3] longLongValue], [locationPoints[4] longLongValue], [locationPoints[5] longLongValue]);
-						}
-					}
+					DeleteActivityFromDatabase([activityId UTF8String]);
+					InitializeHistoricalActivityList();
 				}
 
-				// Close the activity. Need to do this before allowing live sensor processing
-				// to continue or bad things will happen.
-				StopCurrentActivity();
+				// Create the activity object and database entry.
+				CreateActivityObject([activityType UTF8String]);
+				if (StartActivityWithTimestamp([activityId UTF8String], [startTime longLongValue]))
+				{
+					// Add all the locations.
+					NSArray* locationData = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
+					if (locationData)
+					{
+						for (NSArray* locationPoints in locationData)
+						{
+							if ([locationPoints count] >= 5)
+							{
+								ProcessLocationReading([locationPoints[0] doubleValue], [locationPoints[1] doubleValue], [locationPoints[2] doubleValue], [locationPoints[3] longLongValue], [locationPoints[4] longLongValue], [locationPoints[5] longLongValue]);
+							}
+						}
+					}
 
-				// Store summary data.
-				SaveActivitySummaryData();
+					// Close the activity. Need to do this before allowing live sensor processing
+					// to continue or bad things will happen.
+					StopCurrentActivity();
+
+					// Store summary data.
+					SaveActivitySummaryData();
+					
+					// Delete the object.
+					DestroyCurrentActivity();
+				}
+				else
+				{
+					// Something went wrong, cleanup and move on.
+					DeleteActivityFromDatabase([activityId UTF8String]);
+				}
+
+				if (replyHandler)
+				{
+					NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+													@WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED, @WATCH_MSG_TYPE,
+													activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+													nil];
+					replyHandler(msgData);
+				}
+
+				// Re-initialize the list of activities since we added a new activity.
+				InitializeHistoricalActivityList();
+
+				self->currentlyImporting = FALSE;
+
+				// Some views may want to refresh so let them know.
+				[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY object:nil];
 			}
 			else
 			{
-				// Something went wrong, cleanup and move on.
-				DeleteActivityFromDatabase([activityId UTF8String]);
+				// Required attributes missing.
+				NSLog(@"Cannot import activity %@ from the watch as required attributes are missing.", activityId);
 			}
-
-			// Re-initialize the list of activities since we added a new activity.
-			InitializeHistoricalActivityList();
-
-			self->currentlyImporting = FALSE;
-
-			// Some views may want to refresh so let them know.
-			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY object:nil];
 		}
+		else
+		{
+			// Already exists.
+			NSLog(@"Cannot import activity %@ from the watch as it already exists in the database.", activityId);
+		}
+	}
+}
+
+/// @brief Imports a compressed activity that was sent from the watch.
+- (void)importCompressedWatchActivity:(NSData*)messageData replyHandler:(void (^)(NSData *replyMessageData))replyHandler
+{
+	size_t decompressedBufferSize = [messageData length] * 4;
+	uint8_t* decompressedBuffer = (uint8_t*)malloc(decompressedBufferSize);
+
+	if (decompressedBuffer)
+	{
+		size_t decompressedBytesWritten = compression_decode_buffer(decompressedBuffer, decompressedBufferSize, [messageData bytes], [messageData length], NULL, COMPRESSION_ZLIB);
+
+		if (decompressedBytesWritten > 0)
+		{
+			NSError* error;
+			NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithBytes:decompressedBuffer length:decompressedBytesWritten] options:0 error:&error];
+
+			[self importWatchActivity:jsonDict replyHandler:nil];
+
+			if (replyHandler)
+			{
+				replyHandler([@"SYNCHED" dataUsingEncoding:NSUTF8StringEncoding]);
+			}
+			else
+			{
+				NSLog(@"Unexpected NULL reply handler.");
+			}
+		}
+		
+		free((void*)decompressedBuffer);
+	}
+	else
+	{
+		NSLog(@"Cannot import a compressed activity as there was not enough memory to allocate a buffer.");
 	}
 }
 
 #pragma mark watch session methods
 
-// Watch connection changed.
+/// @brief Watch connection changed.
 - (void)session:(WCSession*)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(NSError*)error
 {
 	switch (activationState)
@@ -3486,7 +3710,7 @@ void attributeNameCallback(const char* name, void* context)
 {
 }
 
-// Received a message from the watch.
+/// @brief Received a message from the watch.
 - (void)session:(nonnull WCSession*)session didReceiveMessage:(nonnull NSDictionary<NSString*,id> *)message replyHandler:(nonnull void (^)(NSDictionary<NSString*,id> * __nonnull))replyHandler
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
@@ -3504,12 +3728,12 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
-		[self sendIntervalWorkouts:MSG_DESTINATION_WATCH];
+		[self sendIntervalWorkouts:MSG_DESTINATION_WATCH replyHandler:replyHandler];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
 		// The watch app wants to download pace plans.
-		[self sendPacePlans:MSG_DESTINATION_WATCH];
+		[self sendPacePlans:MSG_DESTINATION_WATCH replyHandler:replyHandler];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{
@@ -3523,20 +3747,24 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch app wants to know if we have an activity.
 		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-		[self checkForActivity:activityId];
+		[self checkForActivity:activityId replyHandler:replyHandler];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The watch app is requesting an activity.
 	}
+	else if ([msgType isEqualToString:@WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED])
+	{
+		// The watch app is telling us to mark an activity as synchronized.
+	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
 		// The watch app is sending an activity.
-		[self importWatchActivity:message];
+		[self importWatchActivity:message replyHandler:replyHandler];
 	}
 }
 
-// Received a message from the watch.
+/// @brief Received a message from the watch.
 - (void)session:(WCSession*)session didReceiveMessage:(NSDictionary<NSString*,id> *)message
 {
 	NSString* msgType = [message objectForKey:@WATCH_MSG_TYPE];
@@ -3554,12 +3782,10 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
-		[self sendIntervalWorkouts:MSG_DESTINATION_WATCH];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_PACE_PLANS])
 	{
 		// The watch app wants to download pace plans.
-		[self sendPacePlans:MSG_DESTINATION_WATCH];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
 	{
@@ -3572,17 +3798,18 @@ void attributeNameCallback(const char* name, void* context)
 	else if ([msgType isEqualToString:@WATCH_MSG_CHECK_ACTIVITY])
 	{
 		// The watch app wants to know if we have an activity.
-		NSString* activityId = [message objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
-		[self checkForActivity:activityId];
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
 	{
 		// The watch app is requesting an activity.
 	}
+	else if ([msgType isEqualToString:@WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED])
+	{
+		// The watch app is telling us to mark an activity as synchronized.
+	}
 	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
 	{
 		// The watch app is sending an activity.
-		[self importWatchActivity:message];
 	}
 }
 
@@ -3592,6 +3819,8 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)session:(WCSession*)session didReceiveMessageData:(NSData*)messageData replyHandler:(void (^)(NSData *replyMessageData))replyHandler
 {
+	// Currently this is the only thing sent as 'data'.
+	[self importCompressedWatchActivity:messageData replyHandler:replyHandler];
 }
 
 - (void)session:(WCSession*)session didReceiveFile:(WCSessionFile*)file

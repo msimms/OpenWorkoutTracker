@@ -634,7 +634,7 @@ void syncStatusCallback(const char* const destination, void* context)
 	return destinations;
 }
 
-// Called when the broadcast manager has finished with an activity.
+/// @brief Called when the broadcast manager has finished with an activity.
 - (void)broadcastMgrHasFinishedSendingActivity:(NSNotification*)notification
 {
 	@try
