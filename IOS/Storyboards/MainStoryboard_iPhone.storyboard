@@ -2287,7 +2287,7 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="goP-S4-6Sr">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <string key="text">Copyright (c) 2015-2021, by MJ Simms Software, LLC. All rights reserved.
+                                <mutableString key="text">Copyright (c) 2015-2022, by MJ Simms Software, LLC. All rights reserved.
 
 Portions of this application are: Copyright (c) 2014, Drew McCormack, Brad Larson, Eric Skroch, Barry Wark, Dirkjan Krijnders, Rick Maddy, Vijay Kalusani, Caleb Cannon, Jeff Buck, Thomas Elstner, Jeroen Leenarts, Craig Hockenberry, Hartwig Wiesmann, Koen van der Drift, Nino Ag, Mike Lischke, Trevor Harmon, Travis Fischer, Graham Mueller, and Rafał Wójcik. All rights reserved.
 
@@ -2298,7 +2298,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
 1. THE SOFTWARE IS LICENSED, NOT SOLD. YOU ACKNOWLEDGE THAT NO TITLE TO THE INTELLECTUAL PROPERTY IN THE SOFTWARE IS TRANSFERRED TO YOU. YOU FURTHER ACKNOWLEDGE THAT TITLE AND FULL OWNERSHIP RIGHTS TO THE SOFTWARE WILL REMAIN THE EXCLUSIVE PROPERTY OF THE DEVELOPER(S), AND YOU WILL NOT ACQUIRE ANY RIGHTS TO THE SOFTWARE, EXCEPT AS EXPRESSLY SET FORTH ABOVE. THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATY PROVISIONS.
 
 2. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</string>
+</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
