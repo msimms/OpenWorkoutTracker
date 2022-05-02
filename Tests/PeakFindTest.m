@@ -79,9 +79,9 @@
 					
 					// Attempt to figure out the activity type from the input file name.
 					if ([sourceFileName containsString:@"pullup"])
-						activityType = ACTIVITY_TYPE_PUSHUP;
-					else if ([sourceFileName containsString:@"pushup"])
 						activityType = ACTIVITY_TYPE_PULLUP;
+					else if ([sourceFileName containsString:@"pushup"])
+						activityType = ACTIVITY_TYPE_PUSHUP;
 
 					// Load the activity into the database.
 					XCTAssert(ImportActivityFromFile([destFileName UTF8String], activityType, [activityId UTF8String]));

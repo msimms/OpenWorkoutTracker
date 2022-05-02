@@ -13,6 +13,7 @@
 
 @implementation WatchHistoryRowController
 
+@synthesize itemImage;
 @synthesize itemLabel;
 @synthesize itemSubLabel;
 

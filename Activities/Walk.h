@@ -43,7 +43,7 @@ protected:
 protected:
 	std::vector<double> m_graphLine;
 	Peaks::Peaks        m_peakFinder;
-	uint64_t            m_lastPeakCalculationTime; // timestamp of when we last ran the peak calculation, so we're not calling it for every accelerometer reading
+	uint64_t            m_lastStepCalculationTime; // timestamp of when we last ran the step calculation, so we're not calling it for every accelerometer reading
 	uint16_t            m_stepsTaken;
 
 protected:

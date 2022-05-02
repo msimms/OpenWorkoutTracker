@@ -77,7 +77,9 @@
 
 				// Refresh the database metadata.
 				InitializeHistoricalActivityList();
-				XCTAssert(CreateAllHistoricalActivityObjects());
+				XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
+				XCTAssert(SaveHistoricalActivitySummaryDataById([activityId UTF8String]));
+				XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
 
 				// For debugging.
 				[super printActivityAttributes:activityId];

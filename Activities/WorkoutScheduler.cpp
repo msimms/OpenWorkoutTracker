@@ -171,7 +171,7 @@ void WorkoutScheduler::ScheduleWorkouts(Workout* workouts[], size_t numWorkouts,
 		RandomScheduler(workouts, numWorkouts, week, startTime);
 		double newScheduleScore = ScoreSchedule(week);
 
-	 	if (newScheduleScore < bestScheduleScore)
+		if (newScheduleScore < bestScheduleScore)
 		{
 /*			bestSchedule = newSchedule;
 			bestWeek = newWeek; */

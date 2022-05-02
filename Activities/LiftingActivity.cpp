@@ -72,6 +72,7 @@ bool LiftingActivity::ProcessAccelerometerReading(const SensorReading& reading)
 				uint64_t currentRepTime = curPeak.peak.x;
 				uint64_t timeSinceLastRep = currentRepTime - m_lastRepTime;
 
+				// The beginning of a new set is determined by the amount of rest between reps.
 				if (timeSinceLastRep > 1000)
 				{
 					if (m_lastRepTime > 0)

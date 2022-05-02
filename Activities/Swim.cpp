@@ -12,7 +12,7 @@
 
 Swim::Swim()
 {
-	m_lastPeakCalculationTime = 0;
+	m_lastStrokeCalculationTime = 0;
 	m_strokesTaken = 0;
 }
 
@@ -49,10 +49,10 @@ bool Swim::ProcessAccelerometerReading(const SensorReading& reading)
 			time_t endTime = GetEndTimeSecs();
 			if (endTime == 0) // Activity is in progress; if loading from the database we'll do all the calculations at the end.
 			{
-				if (reading.time - m_lastPeakCalculationTime > 5000)
+				if (reading.time - m_lastStrokeCalculationTime > 5000)
 				{
 					CalculateStrokesTaken();
-					m_lastPeakCalculationTime = reading.time;
+					m_lastStrokeCalculationTime = reading.time;
 				}
 			}
 		}

@@ -15,7 +15,7 @@
 
 Walk::Walk() : MovingActivity()
 {
-	m_lastPeakCalculationTime = 0;
+	m_lastStepCalculationTime = 0;
 	m_stepsTaken = 0;
 }
 
@@ -60,10 +60,10 @@ bool Walk::ProcessAccelerometerReading(const SensorReading& reading)
 			time_t endTime = GetEndTimeSecs();
 			if (endTime == 0) // Activity is in progress; if loading from the database we'll do all the calculations at the end.
 			{
-				if (reading.time - m_lastPeakCalculationTime > 5000)
+				if (reading.time - m_lastStepCalculationTime > 5000)
 				{
 					CalculateStepsTaken();
-					m_lastPeakCalculationTime = reading.time;
+					m_lastStepCalculationTime = reading.time;
 				}
 			}
 		}
