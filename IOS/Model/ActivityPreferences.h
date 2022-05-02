@@ -43,6 +43,7 @@ typedef enum LocationFilterOption
 	NSArray* defaultRunningLayout;
 	NSArray* defaultLiftingLayout;
 	NSArray* defaultTriathlonLayout;
+	NSArray* defaultPoolSwimmingLayout;
 }
 
 - (id)init;

@@ -7,8 +7,6 @@
 #import "PacePlanEditViewController.h"
 #import "Segues.h"
 
-#define TITLE                     NSLocalizedString(@"Pace Plans", nil)
-
 #define ADD_PACE_PLAN             NSLocalizedString(@"Add Pace Plan", nil)
 #define ALERT_TITLE_NEW_PACE_PLAN NSLocalizedString(@"New Pace Plan", nil)
 #define ALERT_MSG_NEW_PACE_PLAN   NSLocalizedString(@"Name this pace plan", nil)
@@ -30,7 +28,7 @@
 
 - (void)viewDidLoad
 {
-	self.title = TITLE;
+	self.title = STR_PACE_PLANS;
 
 	[self.addPlanButton setTitle:ADD_PACE_PLAN];
 	[self updatePacePlanNames];
@@ -128,7 +126,7 @@
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return TITLE;
+	return STR_PACE_PLANS;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section

@@ -28,7 +28,8 @@ public:
 
 	void SetUser(User user) { m_user = user; };
 
-	std::vector<std::string> ListActivityTypes();
+	std::vector<std::string> ListSupportedActivityTypes();
+
 	Activity* CreateActivity(const std::string& name, Database& database);
 	void CreateActivity(ActivitySummary& summary, Database& database);
 	

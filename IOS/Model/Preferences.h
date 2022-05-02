@@ -55,6 +55,8 @@
 + (GoalType)workoutGoalType;
 + (time_t)workoutGoalDate;
 + (time_t)lastServerSyncTime;
++ (uint16_t)poolLength;
++ (UnitSystem)poolLengthUnits;
 
 #pragma mark set methods
 
@@ -83,6 +85,8 @@
 + (void)setWorkoutGoalType:(GoalType)value;
 + (void)setWorkoutGoalDate:(time_t)value;
 + (void)setLastServerSyncTime:(time_t)value;
++ (void)setPoolLength:(uint16_t)poolLength;
++ (void)setPoolLengthUnits:(UnitSystem)poolLengthUnits;
 
 #pragma mark methods for managing the list of accessories
 

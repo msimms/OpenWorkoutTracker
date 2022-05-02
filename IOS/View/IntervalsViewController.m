@@ -12,8 +12,6 @@
 #import "ImageUtils.h"
 #import "Segues.h"
 
-#define TITLE                        NSLocalizedString(@"Interval Workouts", nil)
-
 #define ADD_INTERVAL                 NSLocalizedString(@"Add Interval Workout", nil)
 #define ALERT_TITLE_NEW_INTERVAL     NSLocalizedString(@"New Interval Workout", nil)
 #define ALERT_MSG_NEW_INTERVAL_SPORT NSLocalizedString(@"Create an interval for which sport?", nil)
@@ -38,7 +36,7 @@
 {
 	[super viewDidLoad];
 
-	self.title = TITLE;
+	self.title = STR_INTERVAL_WORKOUTS;
 
 	[self.intervalButton setTitle:ADD_INTERVAL];
 }
@@ -155,7 +153,7 @@
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return TITLE;
+	return STR_INTERVAL_WORKOUTS;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section

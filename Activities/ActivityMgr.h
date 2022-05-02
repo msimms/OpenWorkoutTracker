@@ -68,6 +68,9 @@ extern "C" {
 	bool GetUsersWeightHistory(WeightCallback callback, void* context);
 	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg);
 
+	// For configuring a pool swimming session.
+	void SetPoolLength(uint16_t poolLength, UnitSystem units);
+
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);
 	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm);

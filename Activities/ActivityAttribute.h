@@ -90,6 +90,8 @@
 #define ACTIVITY_ATTRIBUTE_LAP_TIME                   "Lap Time "               // "Lap Time 1", etc.
 #define ACTIVITY_ATTRIBUTE_LAP_DISTANCE               "Lap Distance "           // "Lap Distance 1", etc.
 #define ACTIVITY_ATTRIBUTE_LAP_CALORIES               "Lap Calories "           // "Lap Calories 1", etc.
+#define ACTIVITY_ATTRIBUTE_NUM_LAPS                   "Number of Laps"          // number of laps, as with pool swimming
+#define ACTIVITY_ATTRIBUTE_POOL_LENGTH                "Pool Length"             // length of the swimming pool, in meters
 #define ACTIVITY_ATTRIBUTE_GRAPH_PEAK                 "Graph Peak "             // "Graph Peak 1", etc.
 #define ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME           "Current Lap Time"        //
 #define ACTIVITY_ATTRIBUTE_CURRENT_LAP_NUMBER         "Current Lap Num"         //

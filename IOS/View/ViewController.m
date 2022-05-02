@@ -26,8 +26,6 @@
 #define BUTTON_TITLE_EDIT_PROFILE    NSLocalizedString(@"Profile", nil)
 #define BUTTON_TITLE_EDIT_SETTINGS   NSLocalizedString(@"Settings", nil)
 #define BUTTON_TITLE_EDIT_SENSORS    NSLocalizedString(@"Sensors", nil)
-#define BUTTON_TITLE_EDIT_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
-#define BUTTON_TITLE_EDIT_PACE_PLANS NSLocalizedString(@"Pace Plans", nil)
 #define BUTTON_TITLE_EDIT_GEAR       NSLocalizedString(@"Gear", nil)
 
 #define MSG_RESET                    NSLocalizedString(@"This will delete all of your data. Do you wish to continue? This cannot be undone.", nil)
@@ -222,10 +220,10 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_SENSORS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_SENSORS_VIEW sender:self];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_INTERVALS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_INTERVAL_WORKOUTS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_INTERVALS_VIEW sender:self];
 	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_PACE_PLANS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_PACE_PLANS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[self performSegueWithIdentifier:@SEQUE_TO_PACE_PLANS_VIEW sender:self];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_EDIT_GEAR style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {

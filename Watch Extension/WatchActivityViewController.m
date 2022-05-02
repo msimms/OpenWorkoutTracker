@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "WatchActivityViewController.h"
+#import "ActivityType.h"
 #import "AppStrings.h"
 #import "ExtensionDelegate.h"
 #import "Notifications.h"
@@ -128,6 +129,7 @@
 
 - (void)didAppear
 {
+	[self setPoolLength];
 }
 
 #pragma mark methods for resetting the UI based on activity state
@@ -168,6 +170,43 @@
 - (void)setUIForResumedActivity
 {
     [self.cancelPauseButton setTitle:STR_CANCEL];
+}
+
+#pragma mark method for asking the user to define the length of a swimming pool
+
+- (void)setPoolLength
+{
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
+
+	if ([self->activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING] && ![extDelegate isActivityInProgress])
+	{
+		uint16_t currentPoolLength = [Preferences poolLength];
+
+		if (currentPoolLength == MEASURE_NOT_SET)
+		{
+			NSMutableArray* actions = [[NSMutableArray alloc] init];
+
+			// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+			[actions addObject:[WKAlertAction actionWithTitle:[NSString stringWithFormat:@"25 %@", STR_METERS] style:WKAlertActionStyleCancel handler:^(void) {
+				[Preferences setPoolLength:25];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_METRIC];
+			}]];
+			[actions addObject:[WKAlertAction actionWithTitle:[NSString stringWithFormat:@"50 %@", STR_METERS] style:WKAlertActionStyleCancel handler:^(void) {
+				[Preferences setPoolLength:50];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_METRIC];
+			}]];
+			[actions addObject:[WKAlertAction actionWithTitle:[NSString stringWithFormat:@"25 %@", STR_YARDS] style:WKAlertActionStyleCancel handler:^(void) {
+				[Preferences setPoolLength:25];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_US_CUSTOMARY];
+			}]];
+			[actions addObject:[WKAlertAction actionWithTitle:[NSString stringWithFormat:@"50 %@", STR_YARDS] style:WKAlertActionStyleCancel handler:^(void) {
+				[Preferences setPoolLength:50];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_US_CUSTOMARY];
+			}]];
+
+			[self presentAlertControllerWithTitle:STR_POOL_LENGTH message:STR_DEFINE_POOL_LENGTH preferredStyle:WKAlertControllerStyleAlert actions:actions];
+		}
+	}
 }
 
 #pragma mark button handlers

@@ -33,16 +33,18 @@ ActivityFactory::~ActivityFactory()
 {
 }
 
-std::vector<std::string> ActivityFactory::ListActivityTypes()
+/// @brief Returns a list of all activity types supported on the current platform.
+std::vector<std::string> ActivityFactory::ListSupportedActivityTypes()
 {
 	std::vector<std::string> types;
 
-//	types.push_back(ChinUp::Type());
 	types.push_back(Cycling::Type());
 	types.push_back(Hike::Type());
 	types.push_back(MountainBiking::Type());
 	types.push_back(OpenWaterSwim::Type());
-//	types.push_back(PoolSwim::Type());
+#if TARGET_OS_WATCH
+	types.push_back(PoolSwim::Type());
+#endif
 	types.push_back(PullUp::Type());
 	// We're not getting good enough accelerometer data from the wrist for pushups detection to work.
 #if !TARGET_OS_WATCH

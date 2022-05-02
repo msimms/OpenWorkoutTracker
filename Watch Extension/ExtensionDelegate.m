@@ -8,6 +8,7 @@
 #import "ExtensionDelegate.h"
 #import "ActivityAttribute.h"
 #import "ActivityHash.h"
+#import "ActivityType.h"
 #import "ActivityMgr.h"
 #import "ApiClient.h"
 #import "CloudPreferences.h"
@@ -291,7 +292,13 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		ActivityAttributeType startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME);
 
-		self->activityType = [self getCurrentActivityType];		
+		self->activityType = [self getCurrentActivityType];
+
+		// If we're doing a pool swim then we'll need to set the length of the pool.
+		if ([self->activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame)
+		{
+			SetPoolLength([Preferences poolLength], [Preferences poolLengthUnits]);
+		}
 
 		NSDictionary* startData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								   activityId, @KEY_NAME_ACTIVITY_ID,

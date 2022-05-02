@@ -24,6 +24,7 @@
 #include "Hike.h"
 #include "LiftingActivity.h"
 #include "MountainBiking.h"
+#include "PoolSwim.h"
 #include "Run.h"
 #include "Shoes.h"
 #include "UnitMgr.h"
@@ -828,6 +829,22 @@ extern "C" {
 		g_dbLock.unlock();
 
 		return result;
+	}
+
+	//
+	// For configuring a pool swimming session.
+	//
+
+	void SetPoolLength(uint16_t poolLength, UnitSystem units)
+	{
+		if (g_pCurrentActivity && g_pCurrentActivity->GetType().compare(ACTIVITY_TYPE_POOL_SWIMMING) == 0)
+		{
+			PoolSwim* pPoolActivity = dynamic_cast<PoolSwim*>(g_pCurrentActivity);
+			if (pPoolActivity)
+			{
+				pPoolActivity->SetPoolLength(poolLength, units);
+			}
+		}
 	}
 
 	//
@@ -2809,7 +2826,7 @@ extern "C" {
 	{
 		if (g_pActivityFactory)
 		{
-			std::vector<std::string> activityTypes = g_pActivityFactory->ListActivityTypes();
+			std::vector<std::string> activityTypes = g_pActivityFactory->ListSupportedActivityTypes();
 
 			for (auto iter = activityTypes.begin(); iter != activityTypes.end(); ++iter)
 			{

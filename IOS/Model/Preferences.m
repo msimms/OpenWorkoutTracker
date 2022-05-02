@@ -7,6 +7,10 @@
 
 #import "Preferences.h"
 
+///
+/// The names of the preferences as stored in the plist file.
+///
+
 #define PREF_NAME_UUID                                 "UUID"
 #define PREF_NAME_UNITS                                "Units"
 #define PREF_NAME_AUTOSCALE_MAP                        "Autoscale Map"
@@ -33,15 +37,23 @@
 #define PREF_NAME_WORKOUT_GOAL_TYPE                    "Workout Goal Type"
 #define PREF_NAME_WORKOUT_GOAL_DATE                    "Workout Goal Date"
 #define PREF_NAME_LAST_SERVER_SYNC_TIME                "Last Server Sync Time"
+#define PREF_NAME_POOL_LENGTH                          "Pool Length"
+#define PREF_NAME_POOL_LENGTH_UNITS                    "Pool Length Units"
 
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
 
+///
+/// Default preference values
+///
+
 #define MIN_BROADCAST_RATE     60
 #define MAX_BROADCAST_RATE     5
+
 #define DEFAULT_BROADCAST_RATE 30
 #define DEFAULT_PROTOCOL       "https"
 #define DEFAULT_HOST_NAME      "openworkout.cloud"
+#define DEFAULT_POOL_LENGTH    MEASURE_NOT_SET
 
 @implementation Preferences
 
@@ -274,6 +286,18 @@
 	return (time_t)syncTime;
 }
 
++ (uint16_t)poolLength
+{
+	NSInteger poolLength = [self readNumericValue:@PREF_NAME_POOL_LENGTH];
+	return (uint16_t)poolLength;
+}
+
++ (UnitSystem)poolLengthUnits
+{
+	NSInteger poolLengthUnits = [self readNumericValue:@PREF_NAME_POOL_LENGTH_UNITS];
+	return (UnitSystem)poolLengthUnits;
+}
+
 #pragma mark set methods
 
 + (void)setUuid:(NSString*)value
@@ -411,6 +435,16 @@
 + (void)setLastServerSyncTime:(time_t)value
 {
 	[self writeIntValue:@PREF_NAME_LAST_SERVER_SYNC_TIME withValue:(NSInteger)value];
+}
+
++ (void)setPoolLength:(uint16_t)poolLength
+{
+	[self writeIntValue:@PREF_NAME_POOL_LENGTH withValue:(NSInteger)poolLength];
+}
+
++ (void)setPoolLengthUnits:(UnitSystem)poolLengthUnits
+{
+	[self writeIntValue:@PREF_NAME_POOL_LENGTH_UNITS withValue:(NSInteger)poolLengthUnits];
 }
 
 #pragma mark methods for managing the list of accessories

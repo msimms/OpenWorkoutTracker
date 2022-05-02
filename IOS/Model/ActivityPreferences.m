@@ -116,6 +116,12 @@
 									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
 									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
 									  nil];
+		self->defaultPoolSwimmingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_NUM_LAPS,
+								      @ACTIVITY_ATTRIBUTE_SWIM_STROKES,
+								      @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  nil];
 #else
 		self->defaultTriathlonLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_MOVING_TIME,
 									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
@@ -125,6 +131,14 @@
 									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
 									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
 									  @ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
+									  nil];
+		self->defaultPoolSwimmingLayout = [[NSArray alloc] initWithObjects:@ACTIVITY_ATTRIBUTE_ELAPSED_TIME,
+									  @ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
+									  @ACTIVITY_ATTRIBUTE_NUM_LAPS,
+									  @ACTIVITY_ATTRIBUTE_SWIM_STROKES,
+									  @ACTIVITY_ATTRIBUTE_HEART_RATE,
+									  @ACTIVITY_ATTRIBUTE_CALORIES_BURNED,
+									  @ACTIVITY_ATTRIBUTE_POOL_LENGTH,
 									  nil];
 #endif
 	}

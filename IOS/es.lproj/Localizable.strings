@@ -69,6 +69,7 @@
 "Customize" = "Personalizar";
 "Cycling" = "Ciclismo";
 "deg" = "grados";
+"Define the length of the swimming pool." = "Define la longitud de la piscina.";
 "Delete" = "Eliminar";
 "Delete failed!" = "¡Eliminar falló!";
 "Delete 1st Second" = "Eliminar Primera Segunda";
@@ -234,6 +235,7 @@
 "Please enter your height" = "Por favor ingrese su altura";
 "Please enter your weight" = "Por favor ingrese su peso";
 "Please specify a URL." = "Por favor especificar una URL.";
+"Pool Length" = "Longitud de la Piscina";
 "Poor Location Data" = "Los datos de ubicación son deficientes";
 "Position" = "Posición";
 "Power" = "Energía";

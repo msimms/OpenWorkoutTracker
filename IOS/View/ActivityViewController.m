@@ -25,9 +25,6 @@
 
 #define ALERT_TITLE_WEIGHT            NSLocalizedString(@"Additional Weight", nil)
 
-#define ACTION_SHEET_TITLE_INTERVALS  NSLocalizedString(@"Interval Workouts", nil)
-#define ACTION_SHEET_TITLE_PACE_PLANS NSLocalizedString(@"Pace Plans", nil)
-
 #define ALERT_MSG_STOP                NSLocalizedString(@"Are you sure you want to stop?", nil)
 #define ALERT_MSG_WEIGHT              NSLocalizedString(@"Enter the amount of weight being used", nil)
 #define ALERT_MSG_NO_BIKE             NSLocalizedString(@"You need to choose a bike.", nil)
@@ -164,6 +161,7 @@
 	[self initializeToolbarButtonColor];
 	[self startTimer];
 	[self showHelp];
+	[self setPoolLength];
 
 	self->activityType = [appDelegate getCurrentActivityType];
 	self->showBroadcastIcon = [Preferences broadcastShowIcon];
@@ -286,6 +284,41 @@
 		}
 
 		[self->activityPrefs markHasShownHelp:self->activityType];
+	}
+}
+
+#pragma mark method for asking the user to define the length of a swimming pool
+
+- (void)setPoolLength
+{
+	if ([self->activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+	{
+		uint16_t currentPoolLength = [Preferences poolLength];
+
+		if (currentPoolLength == MEASURE_NOT_SET)
+		{
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_POOL_LENGTH
+																					 message:STR_DEFINE_POOL_LENGTH
+																			  preferredStyle:UIAlertControllerStyleActionSheet];
+
+			[alertController addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"25 %@", STR_METERS] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[Preferences setPoolLength:25];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_METRIC];
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"50 %@", STR_METERS] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[Preferences setPoolLength:50];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_METRIC];
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"25 %@", STR_YARDS] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[Preferences setPoolLength:25];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_US_CUSTOMARY];
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:[NSString stringWithFormat:@"50 %@", STR_YARDS] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[Preferences setPoolLength:50];
+				[Preferences setPoolLengthUnits:UNIT_SYSTEM_US_CUSTOMARY];
+			}]];
+			[self presentViewController:alertController animated:YES completion:nil];
+		}
 	}
 }
 
@@ -814,7 +847,7 @@
 	if ([workoutNamesAndIds count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																				 message:ACTION_SHEET_TITLE_INTERVALS
+																				 message:STR_INTERVAL_WORKOUTS
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
 		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
@@ -844,7 +877,7 @@
 	if ([pacePlanNamesAndIds count] > 0)
 	{
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																				 message:ACTION_SHEET_TITLE_PACE_PLANS
+																				 message:STR_PACE_PLANS
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
 
 		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
