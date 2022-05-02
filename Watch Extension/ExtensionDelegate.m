@@ -343,8 +343,13 @@ void startSensorCallback(SensorType type, void* context)
 		dispatch_queue_t summarizerQueue = dispatch_queue_create("summarizer", NULL);
 		dispatch_async(summarizerQueue, ^{
 			SaveActivitySummaryData();
+			DestroyCurrentActivity();
 		});
 
+		// Stop the activity in HealthKit.
+		[self->healthMgr stopWorkout:[[NSDate alloc] initWithTimeIntervalSince1970:endTime.value.intVal]];
+
+		// Let other modules know that the activity is stopped.
 		NSDictionary* stopData = [[NSDictionary alloc] initWithObjectsAndKeys:
 								  activityId, @KEY_NAME_ACTIVITY_ID,
 								  self->activityType, @KEY_NAME_ACTIVITY_TYPE,
@@ -355,11 +360,6 @@ void startSensorCallback(SensorType type, void* context)
 								  [NSNumber numberWithInt:(UnitSystem)distance.unitSystem], @KEY_NAME_UNITS,
 								  [NSNumber numberWithDouble:calories.value.doubleVal], @KEY_NAME_CALORIES,
 								  nil];
-
-		// Stop the activity in HealthKit.
-		[self->healthMgr stopWorkout:[[NSDate alloc] initWithTimeIntervalSince1970:endTime.value.intVal]];
-
-		// Let the others know.
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:stopData];
 
 		self->activityType = nil;

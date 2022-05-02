@@ -135,6 +135,7 @@
 
 // methods for querying the status of the current activity.
 
+- (BOOL)isImportingActivityFromWatch;
 - (BOOL)isActivityCreated;
 - (BOOL)isActivityInProgress;
 - (BOOL)isActivityInProgressAndNotPaused;

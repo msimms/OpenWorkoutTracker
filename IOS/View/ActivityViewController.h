@@ -50,6 +50,7 @@
 	uint8_t                    lastThreatCount;          // Most recent threat count (as from a radar)
 	ActivityPreferences*       activityPrefs;            // Prefs object, cached here for performance reasons
 	NSString*                  activityType;             // Current activity type, cached here for performance reasons
+	NSString*                  activityId;               // Current activity id
 	NSString*                  bikeName;                 // The name of the bicycle that ia associated with this activity, if any
 	bool                       autoStartCoordinateSet;   // TRUE if we have a meaningful value in 'autoStartCoordinate'
 	Coordinate                 autoStartCoordinate;      // Location reference for the autostart on move feature

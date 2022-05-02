@@ -164,6 +164,7 @@
 	[self setPoolLength];
 
 	self->activityType = [appDelegate getCurrentActivityType];
+	self->activityId = NULL;
 	self->showBroadcastIcon = [Preferences broadcastShowIcon];
 }
 
@@ -198,8 +199,7 @@
 
 		if (summaryVC)
 		{
-			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-			[summaryVC setActivityId:[appDelegate getCurrentActivityId]];
+			[summaryVC setActivityId:self->activityId];
 		}
 	}
 }
@@ -627,6 +627,8 @@
 
 	if (started)
 	{
+		self->activityId = [appDelegate getCurrentActivityId];
+
 		if ([self->activityPrefs getStartStopBeepEnabled:self->activityType])
 		{
 			[self playBeepSound];

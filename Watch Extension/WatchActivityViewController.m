@@ -217,7 +217,7 @@
 	BOOL started = [extDelegate startActivity];
 
 	if (started)
-	{		
+	{
 		[self setUIForStartedActivity];
 	}
 	else
