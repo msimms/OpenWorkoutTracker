@@ -10,6 +10,7 @@
 #include "ActivitySummary.h"
 #include "GoalType.h"
 #include "Goal.h"
+#include "Measure.h"
 #include "WorkoutFactory.h"
 #include "WorkoutPlanInputs.h"
 
@@ -390,6 +391,30 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 	return workout;
 }
 
+// Returns the maximum distance for a single run during the taper.
+double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
+{
+	switch (goalDistance)
+	{
+		case GOAL_FITNESS:
+		case GOAL_5K_RUN:
+			return 5000;
+		case GOAL_10K_RUN:
+			return 10000;
+		case GOAL_15K_RUN:
+			return 0.9 * 15000;
+		case GOAL_HALF_MARATHON_RUN:
+			return 0.75 * METERS_PER_HALF_MARATHON;
+		case GOAL_MARATHON_RUN:
+			return METERS_PER_HALF_MARATHON;
+		case GOAL_50K_RUN:
+			return METERS_PER_HALF_MARATHON;
+		case GOAL_50_MILE_RUN:
+			return METERS_PER_HALF_MARATHON;
+	}
+	return 0.0;
+}
+
 std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingIntensityDistType trainingIntensityDist)
 {
 	std::vector<Workout*> workouts;
@@ -397,8 +422,8 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// 3 Critical runs: Speed session, tempo or threshold run, and long run
 
 	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_RUN_DISTANCE);
-	double goal = inputs.at(WORKOUT_INPUT_GOAL);
-	double goalType = inputs.at(WORKOUT_INPUT_GOAL_TYPE);
+	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
+	GoalType goalType = (GoalType)inputs.at(WORKOUT_INPUT_GOAL_TYPE);
 	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
 	double shortIntervalRunPace = inputs.at(WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE);
 	double functionalThresholdPace = inputs.at(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE);
@@ -475,7 +500,11 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Compute the longest run needed to accomplish the goal.
 	// If the goal distance is a marathon then the longest run should be somewhere between 18 and 22 miles.
 	// This equation was derived by playing with trendlines in a spreadsheet.
-	double maxLongRunDistance = ((-0.002 * goalDistance) *  (-0.002 * goalDistance)) + (0.7 * goalDistance) + 4.4;
+	double maxLongRunDistance = 0.0;
+	if (inTaper)
+		maxLongRunDistance = this->MaxTaperDistance(goal);
+	else
+		maxLongRunDistance = ((-0.002 * goalDistance) *  (-0.002 * goalDistance)) + (0.7 * goalDistance) + 4.4;
 
 	// Handle situation in which the user is already meeting or exceeding the goal distance.
 	if (longestRunInFourWeeks >= maxLongRunDistance)
@@ -512,8 +541,11 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		this->ClearIntensityDistribution();
 
 		// Add a long run.
-		Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
-		workouts.push_back(longRunWorkout);
+		if (!inTaper)
+		{
+			Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
+			workouts.push_back(longRunWorkout);
+		}
 
 		// Add an easy run.
 		Workout* easyRunWorkout = this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance);

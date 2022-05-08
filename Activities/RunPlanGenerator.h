@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "Goal.h"
 #include "TrainingIntensityDistType.h"
 #include "Workout.h"
 
@@ -48,6 +49,8 @@ private:
 	Workout* GenerateFreeRun(double easyRunPace);
 	Workout* GenerateHillRepeats(void);
 	Workout* GenerateFartlekRun(void);
+
+	double MaxTaperDistance(Goal raceDistance);
 };
 
 #endif
