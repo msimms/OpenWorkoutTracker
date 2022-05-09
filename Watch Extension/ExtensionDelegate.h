@@ -82,7 +82,7 @@
 - (BOOL)isActivityCreated;
 - (BOOL)isActivityInProgress;
 - (BOOL)isActivityInProgressAndNotPaused;
-- (BOOL)isActivityInProgressAndNotPausedAndLiftingActivity;
+- (BOOL)isActivityInProgressAndNotPausedAndUsesTheAccelerometer;
 - (BOOL)isActivityPaused;
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex;
 

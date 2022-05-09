@@ -93,5 +93,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 - (HKUnit*)unitSystemToHKDistanceUnit:(UnitSystem)units;
 - (HKWorkoutActivityType)activityTypeToHKWorkoutType:(NSString*)activityType;
 - (HKWorkoutSessionLocationType)activityTypeToHKWorkoutSessionLocationType:(NSString*)activityType;
+- (HKWorkoutSwimmingLocationType)activityTypeToHKWorkoutSwimmingLocationType:(NSString*)activityType;
+- (HKQuantity*)poolLengthToHKQuantity;
 
 @end

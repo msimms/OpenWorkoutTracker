@@ -424,9 +424,9 @@ void startSensorCallback(SensorType type, void* context)
 	return IsActivityInProgressAndNotPaused();
 }
 
-- (BOOL)isActivityInProgressAndNotPausedAndLiftingActivity
+- (BOOL)isActivityInProgressAndNotPausedAndUsesTheAccelerometer
 {
-	return IsActivityInProgressAndNotPaused() && IsLiftingActivity();
+	return IsActivityInProgressAndNotPaused() && (IsLiftingActivity() || IsSwimmingActivity());
 }
 
 - (BOOL)isActivityPaused
@@ -715,7 +715,7 @@ void syncStatusCallback(const char* const destination, void* context)
 
 - (void)accelerometerUpdated:(NSNotification*)notification
 {
-	if ([self isActivityInProgressAndNotPausedAndLiftingActivity])
+	if ([self isActivityInProgressAndNotPausedAndUsesTheAccelerometer])
 	{
 		NSDictionary* accelerometerData = [notification object];
 		

@@ -1159,4 +1159,32 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	return HKWorkoutSessionLocationTypeUnknown; // Shouldn't get here
 }
 
+/// @brief Utility method for converting between the activity type strings used in this app and the workout session swimming location enums used by Apple.
+- (HKWorkoutSwimmingLocationType)activityTypeToHKWorkoutSwimmingLocationType:(NSString*)activityType
+{
+	if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING])
+		return HKWorkoutSwimmingLocationTypeOpenWater;
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+		return HKWorkoutSwimmingLocationTypePool;
+	return HKWorkoutSwimmingLocationTypeUnknown;
+}
+
+- (HKQuantity*)poolLengthToHKQuantity
+{
+	uint16_t poolLength = [Preferences poolLength];
+	UnitSystem poolLengthUnits = [Preferences poolLengthUnits];
+	HKQuantity* lengthQuantity = NULL;
+
+	switch (poolLengthUnits)
+	{
+		case UNIT_SYSTEM_METRIC:
+			lengthQuantity = [HKQuantity quantityWithUnit:[HKUnit meterUnit] doubleValue:poolLength];
+			break;
+		case UNIT_SYSTEM_US_CUSTOMARY:
+			lengthQuantity = [HKQuantity quantityWithUnit:[HKUnit yardUnit] doubleValue:poolLength];
+			break;
+	}
+	return lengthQuantity;
+}
+
 @end

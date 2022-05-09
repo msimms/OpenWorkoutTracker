@@ -44,7 +44,8 @@ bool Swim::ProcessAccelerometerReading(const SensorReading& reading)
 	{
 		if (reading.reading.count(AXIS_NAME_Y) > 0)
 		{
-			m_graphLine.push_back(reading.reading.at(AXIS_NAME_Y));
+			double z = reading.reading.at(AXIS_NAME_Z);
+			m_graphLine.push_back(z * z); // square the vaule to get rid of any negative values
 
 			time_t endTime = GetEndTimeSecs();
 			if (endTime == 0) // Activity is in progress; if loading from the database we'll do all the calculations at the end.

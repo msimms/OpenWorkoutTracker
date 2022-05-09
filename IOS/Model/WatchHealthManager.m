@@ -7,6 +7,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import "WatchHealthManager.h"
+#import "ActivityType.h"
 #import "BtleHeartRateMonitor.h"
 #import "Preferences.h"
 
@@ -31,8 +32,21 @@
 
 	if (workoutConfig)
 	{
+		// Convert the activity strings we use internally to Apple's activity type enumeration.
 		workoutConfig.activityType = [super activityTypeToHKWorkoutType:activityType];
+		
+		// From the activity type, infer the type of location (indoor, outdoor).
 		workoutConfig.locationType = [super activityTypeToHKWorkoutSessionLocationType:activityType];
+		
+		// Swim specifc configuration.
+		if (workoutConfig.activityType == HKWorkoutActivityTypeSwimming)
+		{
+			workoutConfig.swimmingLocationType = [super activityTypeToHKWorkoutSwimmingLocationType:activityType];
+			if (workoutConfig.locationType == HKWorkoutSessionLocationTypeIndoor)
+			{
+				workoutConfig.lapLength = [super poolLengthToHKQuantity];
+			}
+		}
 
 		self->workoutSession = [[HKWorkoutSession alloc] initWithHealthStore:self->healthStore configuration:workoutConfig error:nil];
 		self->workoutSession.delegate = self;

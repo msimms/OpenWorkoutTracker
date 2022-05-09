@@ -22,7 +22,7 @@ PoolSwim::~PoolSwim()
 void PoolSwim::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 {
 	sensorTypes.push_back(SENSOR_TYPE_ACCELEROMETER);
-	Swim::ListUsableSensors(sensorTypes);
+	sensorTypes.push_back(SENSOR_TYPE_HEART_RATE);
 }
 
 ActivityAttributeType PoolSwim::QueryActivityAttribute(const std::string& attributeName) const

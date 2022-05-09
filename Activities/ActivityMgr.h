@@ -247,6 +247,7 @@ extern "C" {
 	bool IsMovingActivity(void);
 	bool IsLiftingActivity(void);
 	bool IsCyclingActivity(void);
+	bool IsSwimmingActivity(void);
 
 	// Functions for importing/exporting activities.
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType, const char* const activityId);

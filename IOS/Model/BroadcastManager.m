@@ -233,7 +233,7 @@
 	{
 		return;
 	}
-	if (!IsLiftingActivity())
+	if (!(IsLiftingActivity() || IsSwimmingActivity()))
 	{
 		return;
 	}

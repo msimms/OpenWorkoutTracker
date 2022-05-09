@@ -3564,6 +3564,16 @@ extern "C" {
 		return false;
 	}
 
+	bool IsSwimmingActivity(void)
+	{
+		if (g_pCurrentActivity)
+		{
+			Swim* pSwim = dynamic_cast<Swim*>(g_pCurrentActivity);
+			return pSwim != NULL;
+		}
+		return false;
+	}
+
 	//
 	// Functions for importing/exporting activities.
 	//
