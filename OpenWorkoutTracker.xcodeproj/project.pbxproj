@@ -136,6 +136,7 @@
 		270F7645272372D6006E0D61 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270F76412723556A006E0D61 /* IntensityCalculator.cpp */; };
 		270F7649272372D7006E0D61 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270F76412723556A006E0D61 /* IntensityCalculator.cpp */; };
 		270F764A272372D8006E0D61 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270F76412723556A006E0D61 /* IntensityCalculator.cpp */; };
+		271B827D282BDAD4002F5D2C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 271B827C282BDAD4002F5D2C /* HealthKit.framework */; };
 		271C3E1422DD3292003912F8 /* WatchHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */; };
 		271D8B0619D0E76C00857109 /* CadenceCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 271D8B0519D0E76C00857109 /* CadenceCalculator.m */; };
 		2728FD2819C1250E00CE2BAD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2728FD2719C124DC00CE2BAD /* Default-568h@2x.png */; };
@@ -662,6 +663,7 @@
 		270CF4932391F14200584058 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
 		270F76402723556A006E0D61 /* IntensityCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IntensityCalculator.h; path = Activities/IntensityCalculator.h; sourceTree = SOURCE_ROOT; };
 		270F76412723556A006E0D61 /* IntensityCalculator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntensityCalculator.cpp; path = Activities/IntensityCalculator.cpp; sourceTree = SOURCE_ROOT; };
+		271B827C282BDAD4002F5D2C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.5.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		271C3E0422DD3283003912F8 /* WatchHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchHistoryViewController.m; sourceTree = "<group>"; };
 		271C3E1222DD3283003912F8 /* WatchHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchHistoryViewController.h; sourceTree = "<group>"; };
 		271C5E3820D59C2700DE759C /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = SOURCE_ROOT; };
@@ -1133,6 +1135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				271B827D282BDAD4002F5D2C /* HealthKit.framework in Frameworks */,
 				276A05BC27AD765700B030E1 /* libxml2.tbd in Frameworks */,
 				276A05BA27AD763D00B030E1 /* libsqlite3.tbd in Frameworks */,
 			);
@@ -1449,6 +1452,7 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				271B827C282BDAD4002F5D2C /* HealthKit.framework */,
 				276A05BB27AD765700B030E1 /* libxml2.tbd */,
 				276A05B927AD763D00B030E1 /* libsqlite3.tbd */,
 				270CF4932391F14200584058 /* libxml2.2.tbd */,

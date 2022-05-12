@@ -22,4 +22,4 @@
 #define OMIT_STRENGTH_ACTIVITIES FALSE
 
 // When set to TRUE, this removes the ability to do track swimming activities.
-#define OMIT_SWIM_ACTIVITIES TRUE
+#define OMIT_SWIM_ACTIVITIES FALSE

@@ -42,7 +42,7 @@ bool Swim::ProcessAccelerometerReading(const SensorReading& reading)
 {
 	try
 	{
-		if (reading.reading.count(AXIS_NAME_Y) > 0)
+		if (reading.reading.count(AXIS_NAME_Z) > 0)
 		{
 			double z = reading.reading.at(AXIS_NAME_Z);
 			m_graphLine.push_back(z * z); // square the vaule to get rid of any negative values
@@ -101,11 +101,6 @@ void Swim::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 
 void Swim::CalculateStrokesTaken()
 {
-	Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverThreshold(m_graphLine, (double)0.0);
-	m_strokesTaken = 0;
-	for (auto iter = peaks.begin(); iter != peaks.end(); ++iter)
-	{
-		if ((*iter).area >= (double)40.0)
-			++m_strokesTaken;
-	}
+	Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverStd(m_graphLine, (double)2.0);
+	m_strokesTaken = peaks.size();
 }
