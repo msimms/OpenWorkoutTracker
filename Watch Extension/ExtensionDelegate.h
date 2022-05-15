@@ -19,21 +19,21 @@
 
 @interface ExtensionDelegate : NSObject <WKExtensionDelegate>
 {
-	SensorMgr*           sensorMgr; // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
+	SensorMgr*           sensorMgr;             // For managing sensors, whether they are built into the phone (location, accelerometer) or external (cycling power).
 	BtleDiscovery*       bluetoothDeviceFinder; // For discovering Bluetooth devices, such as heart rate monitors and power meters.
-	CloudMgr*            cloudMgr; // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
+	CloudMgr*            cloudMgr;              // For interfacing with cloud services such as iCloud, Dropbox, and Strava.
 	ActivityPreferences* activityPrefs;
-	WatchSessionManager* watchSession; // Handles interactions between the watch and the phone
+	WatchSessionManager* watchSession;          // Handles interactions between the watch and the phone
 #if !OMIT_BROADCAST
-	BroadcastManager*    broadcastMgr; // Handles interactions between the watch and the web service, if applicable
+	BroadcastManager*    broadcastMgr;          // Handles interactions between the watch and the web service, if applicable
 #endif
-	WatchHealthManager*  healthMgr; // For HealthKit interactions
+	WatchHealthManager*  healthMgr;             // For HealthKit interactions
 
-	BOOL badLocationData; // TRUE when bad location data has been detected
-	BOOL receivingLocations; // TRUE if we have received at least one location
-	BOOL hasConnectivity; // TRUE if we have confirmed the existence of a cellular/mobile data network
-	time_t lastHeartRateUpdate; // UNIX timestamp of the most recent heart rate update
-	NSString* activityType; // Current activity type, cached here for performance reasons
+	BOOL badLocationData;                       // TRUE when bad location data has been detected
+	BOOL receivingLocations;                    // TRUE if we have received at least one location
+	BOOL hasConnectivity;                       // TRUE if we have confirmed the existence of a cellular/mobile data network
+	time_t lastHeartRateUpdate;                 // UNIX timestamp of the most recent heart rate update
+	NSString* activityType;                     // Current activity type, cached here for performance reasons
 }
 
 // network monitoring methods
@@ -139,6 +139,7 @@
 // methods for exporting activities
 
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
+- (BOOL)isCloudServiceAvailable:(CloudServiceType)service;
 - (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service;
 - (BOOL)exportActivityToCloudService:(NSString*)activityId toService:(CloudServiceType)service;
 - (BOOL)exportActivityToPhone:(NSString*)activityId;

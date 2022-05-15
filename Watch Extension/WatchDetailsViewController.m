@@ -229,10 +229,13 @@
 	}
 	
 	// iCloud Drive status.
-	self->syncDestICloudDriveRowIndex = [nameStrs count];
-	BOOL synchedToICloudDrive = [syncDests indexOfObject:@SYNC_DEST_ICLOUD_DRIVE] != NSNotFound;
-	[nameStrs addObject:NSLocalizedString(@SYNC_DEST_ICLOUD_DRIVE, nil)];
-	[valueStrs addObject:synchedToICloudDrive ? STR_SYNCHED : STR_NOT_SYNCHED];
+	if ([extDelegate isCloudServiceAvailable:CLOUD_SERVICE_ICLOUD_DRIVE])
+	{
+		self->syncDestICloudDriveRowIndex = [nameStrs count];
+		BOOL synchedToICloudDrive = [syncDests indexOfObject:@SYNC_DEST_ICLOUD_DRIVE] != NSNotFound;
+		[nameStrs addObject:NSLocalizedString(@SYNC_DEST_ICLOUD_DRIVE, nil)];
+		[valueStrs addObject:synchedToICloudDrive ? STR_SYNCHED : STR_NOT_SYNCHED];
+	}
 
 	// Configure the table object and set the row controllers.
 	[self->detailsTable setNumberOfRows:[nameStrs count] withRowType:@"WatchDetailsRowType"];

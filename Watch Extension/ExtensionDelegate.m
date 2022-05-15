@@ -1006,6 +1006,15 @@ void attributeNameCallback(const char* name, void* context)
 	return exportFileName;
 }
 
+- (BOOL)isCloudServiceAvailable:(CloudServiceType)service
+{
+	if (self->cloudMgr)
+	{
+		return ([self->cloudMgr isLinked:service]);
+	}
+	return FALSE;
+}
+
 - (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service
 {
 	if (self->cloudMgr)
