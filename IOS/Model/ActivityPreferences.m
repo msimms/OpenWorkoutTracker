@@ -176,10 +176,13 @@
 	{
 		defaults = self->defaultRunningLayout;
 	}
-	else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING] ||
-			 [activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_OPEN_WATER_SWIMMING])
 	{
 		defaults = self->defaultSwimmingLayout;
+	}
+	else if ([activityType isEqualToString:@ACTIVITY_TYPE_POOL_SWIMMING])
+	{
+		defaults = self->defaultPoolSwimmingLayout;
 	}
 	else if ([activityType isEqualToString:@ACTIVITY_TYPE_TRIATHLON])
 	{
