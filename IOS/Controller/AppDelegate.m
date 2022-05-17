@@ -1220,10 +1220,43 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* loginData = [notification object];
 		NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
 
-		// The user is logged in, request the most recent gear list and planned workout list.
+		// The user is logged in.
 		if (responseCode && [responseCode intValue] == 200)
 		{
+			// Extract the session cookie from the response and store it.
+			NSString* responseStr = [loginData objectForKey:@KEY_NAME_RESPONSE_STR];
+			if ([responseStr length] > 0)
+			{
+				NSError* error = nil;
+				NSArray* sessionObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+				if (sessionObjects)
+				{
+					for (NSDictionary* sessionDict in sessionObjects)
+					{
+						NSString* sessionCookieStr = [sessionDict objectForKey:@"cookie"];
+						NSNumber* sessionExpiry = [sessionDict objectForKey:@"expiry"];
+
+						NSMutableDictionary* cookieProperties = [NSMutableDictionary dictionary];
+						[cookieProperties setObject:@"session_cookie" forKey:NSHTTPCookieName];
+						[cookieProperties setObject:sessionCookieStr forKey:NSHTTPCookieValue];
+						[cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
+						[cookieProperties setObject:[Preferences broadcastHostName] forKey:NSHTTPCookieDomain];
+						NSDate* expiryDate = [[NSDate date] initWithTimeIntervalSince1970:[sessionExpiry unsignedIntValue]];
+						[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
+						[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];
+
+						NSHTTPCookie* cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+						[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+
+						[[NSUserDefaults standardUserDefaults] synchronize];
+					}
+				}
+			}
+
+			// Associate this device with the logged in user.
 			[self serverClaimDevice:[Preferences uuid]];
+			
+			// Request the most recent gear list and planned workout list.
 			[self syncWithServer];
 		}
 	}
