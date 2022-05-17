@@ -1420,6 +1420,7 @@
 		27A3624319BFB0E200F5A17F = {
 			isa = PBXGroup;
 			children = (
+				27214EC81ECB6B96007EE338 /* App.entitlements */,
 				27DCF5F622B70CAE009A23C2 /* Watch Extension.entitlements */,
 				27DCF5F522B70AED009A23C2 /* Watch.entitlements */,
 				27DCF5C322B193B7009A23C2 /* Assets.xcassets */,
@@ -1475,7 +1476,6 @@
 		27A3625519BFB0E200F5A17F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				27214EC81ECB6B96007EE338 /* App.entitlements */,
 				27C0841119BFD051007CE934 /* Activities */,
 				27C0846519BFD06C007CE934 /* Bike */,
 				27B7CD1519BFD7DF000383E3 /* Cloud */,
