@@ -22,6 +22,7 @@
 #import "BtleScale.h"
 #import "CloudMgr.h"
 #import "CloudPreferences.h"
+#import "Cookies.h"
 #import "ExportUtils.h"
 #import "FileUtils.h"
 #import "LocationSensor.h"
@@ -1236,8 +1237,9 @@ void startSensorCallback(SensorType type, void* context)
 						NSString* sessionCookieStr = [sessionDict objectForKey:@"cookie"];
 						NSNumber* sessionExpiry = [sessionDict objectForKey:@"expiry"];
 
+						// Dictionary containing the cookie and the associated expiry date.
 						NSMutableDictionary* cookieProperties = [NSMutableDictionary dictionary];
-						[cookieProperties setObject:@"session_cookie" forKey:NSHTTPCookieName];
+						[cookieProperties setObject:@SESSION_COOKIE_NAME forKey:NSHTTPCookieName];
 						[cookieProperties setObject:sessionCookieStr forKey:NSHTTPCookieValue];
 						[cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
 						[cookieProperties setObject:[Preferences broadcastHostName] forKey:NSHTTPCookieDomain];
@@ -1245,9 +1247,11 @@ void startSensorCallback(SensorType type, void* context)
 						[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
 						[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];
 
+						// Add the cookie to the local cookie store.
 						NSHTTPCookie* cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
 						[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
 
+						// Force sync - necessary in case of an abrupt shutdown.
 						[[NSUserDefaults standardUserDefaults] synchronize];
 					}
 				}
@@ -3435,9 +3439,29 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark watch management methods
 
+/// @brief Called when the watch is sending us it's unique identiier. Pass it on the (optional) server.
 - (void)registerWatch:(NSString*)deviceId
 {
 	[self serverClaimDevice:deviceId];
+}
+
+/// @brief Called when the watch is requesting a session key so that it can authenticate with the (optional) server.
+- (void)generateWatchSessionKey:(void (^)(NSDictionary<NSString*,id>*))replyHandler
+{
+	NSArray* cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+	for (NSHTTPCookie* cookie in cookies)
+	{
+		if ([[cookie valueForKey:NSHTTPCookieName] compare:@SESSION_COOKIE_NAME] == NSOrderedSame)
+		{
+			NSString* sessionKey = [cookie valueForKey:NSHTTPCookieValue];
+			NSDate* expiry = [cookie expiresDate];
+			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+											sessionKey, @WATCH_MSG_PARAM_SESSION_KEY,
+											expiry, @WATCH_MSG_PARAM_SESSION_KEY_EXPIRY,
+											nil];
+			replyHandler(msgData);
+		}
+	}
 }
 
 /// @brief Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
@@ -3519,6 +3543,7 @@ void attributeNameCallback(const char* name, void* context)
 			{
 				NSLog(@"Failed to serialize interval workouts when sending to the watch.");
 			}
+
 			free((void*)workoutJson);
 		}
 	}
@@ -3758,6 +3783,11 @@ void attributeNameCallback(const char* name, void* context)
 		NSString* deviceId = [message objectForKey:@WATCH_MSG_PARAM_DEVICE_ID];
 		[self registerWatch:deviceId];
 	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_SESSION_KEY])
+	{
+		// The watch needs a session key for server communication.
+		[self generateWatchSessionKey:replyHandler];
+	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
 		// The watch app wants to download interval workouts.
@@ -3811,6 +3841,10 @@ void attributeNameCallback(const char* name, void* context)
 		// The watch app wants to register itself.
 		NSString* deviceId = [message objectForKey:@WATCH_MSG_PARAM_DEVICE_ID];
 		[self registerWatch:deviceId];
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_SESSION_KEY])
+	{
+		// The watch needs a session key for server communication.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{

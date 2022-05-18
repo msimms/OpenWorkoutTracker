@@ -92,7 +92,14 @@
 			success = [extDelegate exportActivityToCloudService:self->activityId toService:CLOUD_SERVICE_ICLOUD_DRIVE];
 		}
 
-		if (!success)
+		if (success)
+		{
+			WKAlertAction* okAction = [WKAlertAction actionWithTitle:STR_OK style:WKAlertActionStyleDefault handler:^(void) {
+			}];
+			NSArray* actions = @[okAction];
+			[self presentAlertControllerWithTitle:STR_ERROR message:STR_EXPORT_SUCCEEDED preferredStyle:WKAlertControllerStyleAlert actions:actions];
+		}
+		else
 		{
 			WKAlertAction* okAction = [WKAlertAction actionWithTitle:STR_OK style:WKAlertActionStyleDefault handler:^(void) {
 			}];

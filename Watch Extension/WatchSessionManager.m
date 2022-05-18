@@ -7,6 +7,7 @@
 
 #import "WatchSessionManager.h"
 #import "WatchMessages.h"
+#import "Cookies.h"
 #import "ExtensionDelegate.h"
 #import "Notifications.h"
 #import "Params.h"
@@ -30,13 +31,14 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 }
 
+/// @brief Requests the user's preferences from the phone.
 - (void)sendSyncPrefsMsg
 {
 	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_SYNC_PREFS, @WATCH_MSG_TYPE, nil];
-
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
 }
 
+/// @brief Sends our unique identifier to the phone.
 - (void)sendRegisterDeviceMsg
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
@@ -44,8 +46,37 @@
 							 @WATCH_MSG_TYPE,
 							 [extDelegate getDeviceId], @WATCH_MSG_PARAM_DEVICE_ID,
 							 nil];
-
 	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
+}
+
+/// @brief Called to request a new session key from the phone. The session key is needed for sending to the (optional) server (from an LTE-enabled watch)
+/// and has be be requested from the phone since the watch doesn't have a good way to enter a username and password.
+- (void)sendRequestSessionKeyMsg
+{
+	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_REQUEST_SESSION_KEY, @WATCH_MSG_TYPE, nil];
+	[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
+		NSString* sessionCookieStr = [replyMessage objectForKey:@WATCH_MSG_PARAM_SESSION_KEY];
+		NSDate* expiryDate = [replyMessage objectForKey:@WATCH_MSG_PARAM_SESSION_KEY_EXPIRY];
+
+		// Dictionary containing the cookie and the associated expiry date.
+		NSMutableDictionary* cookieProperties = [NSMutableDictionary dictionary];
+		[cookieProperties setObject:@SESSION_COOKIE_NAME forKey:NSHTTPCookieName];
+		[cookieProperties setObject:sessionCookieStr forKey:NSHTTPCookieValue];
+		[cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
+		[cookieProperties setObject:[Preferences broadcastHostName] forKey:NSHTTPCookieDomain];
+		[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
+		[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];
+
+		// Add the cookie to the local cookie store.
+		NSHTTPCookie* cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+		[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+
+		// Force sync - necessary in case of an abrupt shutdown.
+		[[NSUserDefaults standardUserDefaults] synchronize];
+
+	} errorHandler:^(NSError* error) {
+		NSLog(@"Failed to request a session key from the phone.");
+	}];
 }
 
 /// @brief Called when connecting to the phone so we can determine which activities to send.
@@ -289,6 +320,7 @@
 		if (self->timeOfLastPhoneMsg == 0)
 		{
 			[self sendRegisterDeviceMsg];
+			[self sendRequestSessionKeyMsg];
 			[self requestIntervalWorkouts];
 			[self requestPacePlans];
 		}
@@ -321,6 +353,10 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
 	{
 		// The phone app is asking the watch to register itself.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_SESSION_KEY])
+	{
+		// This message should only be sent from the watch to the phone.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
@@ -377,6 +413,10 @@
 	else if ([msgType isEqualToString:@WATCH_MSG_REGISTER_DEVICE])
 	{
 		// The phone app is asking the watch to register itself.
+	}
+	else if ([msgType isEqualToString:@WATCH_MSG_REQUEST_SESSION_KEY])
+	{
+		// This message should only be sent from the watch to the phone.
 	}
 	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
 	{
