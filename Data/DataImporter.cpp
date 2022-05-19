@@ -124,33 +124,37 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 		if (results.size() == 4)
 		{
 			time_t ts = atol(results[0].c_str());
-			double x = atof(results[1].c_str());
-			double y = atof(results[2].c_str());
-			double z = atof(results[3].c_str());
-
-			if (!m_started)
+			
+			if (ts > 0) // Skip rows with an invalid timestamp.
 			{
+				double x = atof(results[1].c_str());
+				double y = atof(results[2].c_str());
+				double z = atof(results[3].c_str());
+
+				if (!m_started)
+				{
+					if (m_pDb)
+					{
+						time_t startTimeSecs = (time_t)(ts / 1000);
+						result = m_pDb->StartActivity(m_activityId, "", m_activityType, "", startTimeSecs);
+					}
+					m_started = true;
+				}
+
 				if (m_pDb)
 				{
-					time_t startTimeSecs = (time_t)(ts / 1000);
-					result = m_pDb->StartActivity(m_activityId, "", m_activityType, "", startTimeSecs);
+					SensorReading reading;
+
+					reading.time = ts;
+					reading.type = SENSOR_TYPE_ACCELEROMETER;
+					reading.reading.insert(SensorNameValuePair(AXIS_NAME_X, x));
+					reading.reading.insert(SensorNameValuePair(AXIS_NAME_Y, y));
+					reading.reading.insert(SensorNameValuePair(AXIS_NAME_Z, z));
+
+					result = m_pDb->CreateSensorReading(m_activityId, reading);
+					
+					m_lastTime = ts;
 				}
-				m_started = true;
-			}
-
-			if (m_pDb)
-			{
-				SensorReading reading;
-
-				reading.time = ts;
-				reading.type = SENSOR_TYPE_ACCELEROMETER;
-				reading.reading.insert(SensorNameValuePair(AXIS_NAME_X, x));
-				reading.reading.insert(SensorNameValuePair(AXIS_NAME_Y, y));
-				reading.reading.insert(SensorNameValuePair(AXIS_NAME_Z, z));
-
-				result = m_pDb->CreateSensorReading(m_activityId, reading);
-				
-				m_lastTime = ts;
 			}
 		}
 	}

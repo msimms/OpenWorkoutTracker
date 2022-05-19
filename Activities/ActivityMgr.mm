@@ -3588,6 +3588,8 @@ extern "C" {
 			std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);;
 			DataImporter importer;
 
+			g_dbLock.lock();
+
 			if (fileExtension.compare("gpx") == 0)
 			{
 				result = importer.ImportFromGpx(pFileName, pActivityType, activityId, g_pDatabase);
@@ -3604,6 +3606,8 @@ extern "C" {
 			{
 				result = importer.ImportFromCsv(pFileName, pActivityType, activityId, g_pDatabase);
 			}
+
+			g_dbLock.unlock();
 		}
 		return result;
 	}
@@ -3673,6 +3677,28 @@ extern "C" {
 			result = strdup(tempFileName.c_str());
 		}
 		return result;
+	}
+
+	const char* FileFormatToExtension(FileFormat format)
+	{
+		switch (format)
+		{
+		case FILE_UNKNOWN:
+			return "";
+		case FILE_TEXT:
+			return "txt";
+		case FILE_TCX:
+			return "tcx";
+		case FILE_GPX:
+			return "gpx";
+		case FILE_CSV:
+			return "csv";
+		case FILE_ZWO:
+			return "zwo";
+		case FILE_FIT:
+			return "fit";
+		}
+		return "";
 	}
 
 	//

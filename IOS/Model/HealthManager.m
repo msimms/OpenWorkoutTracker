@@ -926,7 +926,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 }
 
 /// @brief Exports the activity with the specified ID to a file of the given format in the given directory..
-- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDir:(NSString*)dir
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDirName:(NSString*)dirName
 {
 	NSString* newFileName;
 
@@ -938,7 +938,7 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 
 	// Export in the desired format.
 	self->tempPointIndex = 0;
-	char* tempFileName = ExportActivityUsingCallbackData([activityId UTF8String], format, [dir UTF8String], startTime, [sportType UTF8String], NextCoordinate, (__bridge void*)self);
+	char* tempFileName = ExportActivityUsingCallbackData([activityId UTF8String], format, [dirName UTF8String], startTime, [sportType UTF8String], NextCoordinate, (__bridge void*)self);
 
 	// Cleanup.
 	if (tempFileName)

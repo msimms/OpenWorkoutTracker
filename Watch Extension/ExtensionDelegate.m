@@ -982,8 +982,16 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark methods for exporting activities
 
+/// @brief Returns the "best" file format for exporting an activity of the specified type.
+- (FileFormat)preferredExportFormatForActivityType:(NSString*)activityType
+{
+	if ([activityType compare:@ACTIVITY_TYPE_POOL_SWIMMING] == NSOrderedSame)
+		return FILE_CSV;
+	return FILE_TCX;
+}
+
 /// @brief Reads an activity from the database and exports it to a file. The file path and name is the return value.
-- (NSString*)exportActivityToFile:(NSString*)activityId toDirName:(NSString*)dirName withFileFormat:(FileFormat)format
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDirName:(NSString*)dirName
 {
 	NSString* exportFileName = nil;
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
@@ -1024,7 +1032,7 @@ void attributeNameCallback(const char* name, void* context)
 			}
 		}
 	}
-	return [self exportActivityToFile:activityId toDirName:exportDir withFileFormat:format];
+	return [self exportActivityToFile:activityId withFileFormat:format toDirName:exportDir];
 }
 
 - (BOOL)isCloudServiceAvailable:(CloudServiceType)service

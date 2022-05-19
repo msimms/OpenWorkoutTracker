@@ -177,6 +177,7 @@
 
 		if (activityId && activityType)
 		{
+			FileFormat fileFormat = [extDelegate preferredExportFormatForActivityType:activityType];
 			NSString* activityName = [extDelegate getHistoricalActivityName:activityIndex];
 
 			time_t tempStartTime = 0;
@@ -186,6 +187,7 @@
 
 			NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
 			NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
+			NSNumber* fileFormatObj = [NSNumber numberWithInt:fileFormat];
 
 			NSMutableDictionary* activityMetaData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 													 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
@@ -193,12 +195,13 @@
 													 activityName, @WATCH_MSG_PARAM_ACTIVITY_NAME,
 													 startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
 													 endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
+													 fileFormatObj, @WATCH_MSG_PARAM_FILE_FORMAT,
 													 nil];
 
 			NSURL* groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier: @"group.mjs-software.OpenWorkoutTracker"];
 			if (groupURL)
 			{
-				NSString* exportFileName = [extDelegate exportActivityToFile:activityId toDirName:[groupURL path] withFileFormat:FILE_TCX];
+				NSString* exportFileName = [extDelegate exportActivityToFile:activityId withFileFormat:fileFormat toDirName:[groupURL path] ];
 				if (exportFileName)
 				{
 					NSURL* exportUrl = [NSURL fileURLWithPath:exportFileName];
@@ -212,7 +215,7 @@
 			}
 			else
 			{
-				NSLog(@"Activity export failed (no group URL).");
+				NSLog(@"Activity export failed (nil group URL).");
 			}
 		}
 		else
@@ -397,9 +400,12 @@
 
 - (void)session:(nonnull WCSession*)session didFinishFileTransfer:(WCSessionFileTransfer*)fileTransfer error:(nullable NSError*)error
 {
+	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	NSString* fileName = [[fileTransfer.file fileURL] absoluteString];
+	NSString* activityId = [fileTransfer.file.metadata objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
+
 	[FileUtils deleteFile:fileName];
-	NSLog(@"File transfer completed.");
+	[extDelegate markAsSynchedToPhone:activityId];
 }
 
 - (void)session:(nonnull WCSession*)session didFinishUserInfoTransfer:(WCSessionUserInfoTransfer*)userInfoTransfer error:(NSError*)error

@@ -2606,7 +2606,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 		{
 			if (self->healthMgr)
 			{
-				return [self->healthMgr exportActivityToFile:activityId withFileFormat:format toDir:exportDir];
+				return [self->healthMgr exportActivityToFile:activityId withFileFormat:format toDirName:exportDir];
 			}
 		}
 		
@@ -3858,7 +3858,14 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		NSString* exportDir = [ExportUtils createExportDir];
 		NSString* activityType = [file.metadata objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
-		NSString* tempFileName = [[NSString alloc] initWithFormat:@"%@/%@.tcx", exportDir, activityId];
+		NSNumber* fileFormat = [file.metadata objectForKey:@WATCH_MSG_PARAM_FILE_FORMAT];
+		FileFormat fileFormatEnum = FILE_TCX;
+
+		if (fileFormat)
+			fileFormatEnum = (FileFormat)[fileFormat intValue];
+
+		NSString* tempFileName = [[NSString alloc] initWithFormat:@"%@/%@.%s", exportDir, activityId, FileFormatToExtension(fileFormatEnum)];
+
 		if ([[NSFileManager defaultManager] createFileAtPath:tempFileName contents:activityData attributes:nil])
 		{
 			if (!ImportActivityFromFile([tempFileName UTF8String], [activityType UTF8String], [activityId UTF8String]))

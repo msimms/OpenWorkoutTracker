@@ -97,7 +97,7 @@
 			WKAlertAction* okAction = [WKAlertAction actionWithTitle:STR_OK style:WKAlertActionStyleDefault handler:^(void) {
 			}];
 			NSArray* actions = @[okAction];
-			[self presentAlertControllerWithTitle:STR_ERROR message:STR_EXPORT_SUCCEEDED preferredStyle:WKAlertControllerStyleAlert actions:actions];
+			[self presentAlertControllerWithTitle:STR_EXPORT message:STR_EXPORT_SUCCEEDED preferredStyle:WKAlertControllerStyleAlert actions:actions];
 		}
 		else
 		{

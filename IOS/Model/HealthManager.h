@@ -86,7 +86,7 @@ typedef void (*SensorDataCallback)(const char* activityId, void* context);
 
 // methods for exporting HealthKit data.
 
-- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDir:(NSString*)dir;
+- (NSString*)exportActivityToFile:(NSString*)activityId withFileFormat:(FileFormat)format toDirName:(NSString*)dirName;
 
 // methods for converting between our activity type strings and HealthKit's workout enum
 

@@ -49,6 +49,11 @@
 
 - (BOOL)uploadFile:(NSString*)fileName
 {
+	if ([fileName length] == 0)
+	{
+		return FALSE;
+	}
+
 	NSString* filePathWithScheme = [NSString stringWithFormat:@"file://%@", fileName];
 	NSURL* localDocumentUrl = [NSURL URLWithString:filePathWithScheme];
 	NSString* fileNameOnly = [localDocumentUrl lastPathComponent];

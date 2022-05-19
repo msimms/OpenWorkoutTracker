@@ -30,5 +30,6 @@
 #define WATCH_MSG_PARAM_ACTIVITY_START_TIME  "Activity Start Time"
 #define WATCH_MSG_PARAM_ACTIVITY_END_TIME    "Activity End Time"
 #define WATCH_MSG_PARAM_ACTIVITY_LOCATIONS   "Activity Locations"
+#define WATCH_MSG_PARAM_FILE_FORMAT          "File Format"
 
 #endif

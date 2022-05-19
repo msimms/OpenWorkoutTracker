@@ -254,6 +254,7 @@ extern "C" {
 	char* ExportActivityFromDatabase(const char* const activityId, FileFormat format, const char* const dirName);
 	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const dirName, time_t startTime, const char* const sportType, NextCoordinateCallback nextCoordinateCallback, void* context);
 	char* ExportActivitySummary(const char* activityType, const char* const dirName);
+	const char* FileFormatToExtension(FileFormat format);
 
 	// Functions for processing sensor reads.
 	bool ProcessWeightReading(double weightKg, time_t timestamp);

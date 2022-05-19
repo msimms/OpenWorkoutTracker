@@ -809,13 +809,17 @@ std::string DataExporter::GenerateFileName(FileFormat format, const std::string&
 std::string DataExporter::GenerateFileName(FileFormat format, time_t startTime, const std::string& sportType)
 {
 	std::string fileName;
+	std::string sanitizedSportType = sportType;
+
+	// Remove any characters that might cause problems down the road.
+	std::replace_if(sanitizedSportType.begin(), sanitizedSportType.end(), [] (const char& c) { return std::isspace(c); }, '_');
 
 	char buf[32];
 	strftime(buf, sizeof(buf) - 1, "%Y-%m-%dT%H-%M-%S", localtime(&startTime));
 
 	fileName.append(buf);
 	fileName.append("-");
-	fileName.append(sportType);
+	fileName.append(sanitizedSportType);
 
 	switch (format)
 	{

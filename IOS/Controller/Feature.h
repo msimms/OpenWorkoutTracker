@@ -10,15 +10,15 @@
 
 typedef enum Feature
 {
-	FEATURE_BROADCAST = 0, // Provides the option to send data to the companion seb service
+	FEATURE_BROADCAST = 0,           // Provides the option to send data to the companion seb service
 	FEATURE_WORKOUT_PLAN_GENERATION, 
-	FEATURE_DROPBOX, // Exporting activities to Dropbox
-	FEATURE_STRAVA, // Exporting activities to Strava
-	FEATURE_RUNKEEPER, // Exporting activities to RunKeeper
-	FEATURE_STRENGTH_ACTIVITIES, // Enables strength-based activities
-	FEATURE_SWIM_ACTIVITIES, // Enables swimming activities
-	FEATURE_MULTISPORT, // Enables triathlon and duathlon modes
-	FEATURE_DEBUG, // Enables debug information
+	FEATURE_DROPBOX,                 // Exporting activities to Dropbox
+	FEATURE_STRAVA,                  // Exporting activities to Strava
+	FEATURE_RUNKEEPER,               // Exporting activities to RunKeeper
+	FEATURE_STRENGTH_ACTIVITIES,     // Enables strength-based activities
+	FEATURE_SWIM_ACTIVITIES,         // Enables swimming activities
+	FEATURE_MULTISPORT,              // Enables triathlon and duathlon modes
+	FEATURE_DEBUG,                   // Enables debug information
 } Feature;
 
 #endif
