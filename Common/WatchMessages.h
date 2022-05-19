@@ -24,7 +24,6 @@
 #define WATCH_MSG_CHECK_ACTIVITY             "Check Activity"
 #define WATCH_MSG_REQUEST_ACTIVITY           "Request Activity"
 #define WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED   "Mark Synched Activity"
-#define WATCH_MSG_ACTIVITY                   "Activity"
 #define WATCH_MSG_PARAM_ACTIVITY_ID          "Activity ID"
 #define WATCH_MSG_PARAM_ACTIVITY_TYPE        "Activity Type"
 #define WATCH_MSG_PARAM_ACTIVITY_NAME        "Activity Name"

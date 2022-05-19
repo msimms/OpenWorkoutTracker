@@ -9,10 +9,10 @@
 #import "WatchMessages.h"
 #import "Cookies.h"
 #import "ExtensionDelegate.h"
+#import "FileUtils.h"
 #import "Notifications.h"
 #import "Params.h"
 #import "Preferences.h"
-#import "compression.h"
 
 @interface WatchSessionManager ()
 
@@ -80,7 +80,7 @@
 }
 
 /// @brief Called when connecting to the phone so we can determine which activities to send.
-- (void)checkIfActivitiesAreUploaded
+- (void)checkIfActivitiesAreUploadedToPhone
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	size_t numHistoricalActivities = [extDelegate getNumHistoricalActivities];
@@ -101,33 +101,9 @@
 			NSString* activityId = [extDelegate getActivityIdFromActivityIndex:i];
 
 			// If it's already been synched then skip it. Otherwise, offer up the activity.
-			if (![extDelegate isSyncedToPhone:activityId])
+			if ([extDelegate isSyncedToPhone:activityId] == FALSE)
 			{
-				NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_CHECK_ACTIVITY, @WATCH_MSG_TYPE,
-										 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
-										 nil];
-
-				// Send the message.
-				[self->watchSession sendMessage:msgData replyHandler:^(NSDictionary<NSString *, id>* replyMessage) {
-
-					// Handle the response.
-					NSString* msgType = [replyMessage objectForKey:@WATCH_MSG_TYPE];
-					if ([msgType isEqualToString:@WATCH_MSG_REQUEST_ACTIVITY])
-					{
-						// The phone app is requesting an activity.
-						[self sendActivity:activityId];
-					}
-					else if ([msgType isEqualToString:@WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED])
-					{
-						// The phone app is telling us to mark an activity as synchronized.
-						ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-						[extDelegate markAsSynchedToPhone:activityId];
-					}
-
-				} errorHandler:^(NSError* error) {
-					NSLog(@"Failed to send a check activity message to the phone.");
-				}];
-
+				[self sendActivityFileToPhone:activityId];
 				++numRequestedSyncs;
 			}
 		}
@@ -135,7 +111,7 @@
 }
 
 /// @brief Asks the watch to send interval workouts.
-- (void)requestIntervalWorkouts
+- (void)requestIntervalWorkoutsFromPhone
 {
 	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys: @WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS, @WATCH_MSG_TYPE, nil];
 
@@ -147,7 +123,7 @@
 }
 
 /// @brief Asks the phone to send pace plans.
-- (void)requestPacePlans
+- (void)requestPacePlansFromPhone
 {
 	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_DOWNLOAD_PACE_PLANS, @WATCH_MSG_TYPE, nil];
 
@@ -180,69 +156,12 @@
 	[extDelegate createPacePlan:planId withPlanName:planName withTargetPaceInMinKm:[targetPaceInMinKm floatValue] withTargetDistanceInKms:[targetDistanceInKms floatValue] withSplits:[splits floatValue] withTargetDistanceUnits:(UnitSystem)[targetDistanceUnits intValue] withTargetPaceUnits:(UnitSystem)[targetPaceUnits intValue] withRoute:route];
 }
 
-/// @brief Sends the dictionary containing activity data to the phone.
-- (void)sendActivityDictionary:(NSDictionary*)msgDict withActivityId:(NSString*)activityId withCompression:(BOOL)compress
-{
-	if (compress)
-	{
-		// Convert the dictionary object to a JSON string.
-		NSError* error;
-		NSData* msgData = [NSJSONSerialization dataWithJSONObject:msgDict options:NSJSONWritingPrettyPrinted error:&error];
-
-		// Compress the JSON string before we send.
-		size_t srcSize = msgData.length;
-		size_t dstSize = srcSize + 4096;
-		uint8_t* dstBuffer = (uint8_t*)malloc(dstSize);
-		if (dstBuffer)
-		{
-			dstSize = compression_encode_buffer(dstBuffer, dstSize, (uint8_t*)[msgData bytes], srcSize, NULL, COMPRESSION_ZLIB);
-
-			// Compression succeeded.
-			if (dstSize > 0)
-			{
-				// Send the data.
-				[self->watchSession sendMessageData:[NSData dataWithBytes:dstBuffer length:dstSize] replyHandler:^(NSData* replyMessageData) {
-
-					// Activity sent, mark as synched.
-					ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-					[extDelegate markAsSynchedToPhone:activityId];
-					self->timeOfLastPhoneMsg = time(NULL); // Update the time that we last successfully talked to the phone.
-
-					free((void*)dstBuffer);
-					NSLog(@"Sent activity %@ to the phone.", activityId);
-				} errorHandler:^(NSError* error) {
-					free((void*)dstBuffer);
-					NSLog(@"Failed to send %@ to the phone.", activityId);
-				}];
-			}
-			else
-			{
-				free((void*)dstBuffer);
-			}
-		}
-	}
-	else
-	{
-		// Send the data.
-		[self->watchSession sendMessage:msgDict replyHandler:^(NSDictionary<NSString *,id>* replyMessage) {
-
-			// Activity sent, mark as synched.
-			ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
-			[extDelegate markAsSynchedToPhone:activityId];
-			self->timeOfLastPhoneMsg = time(NULL); // Update the time that we last successfully talked to the phone.
-
-			NSLog(@"Sent activity %@ to the phone.", activityId);
-		} errorHandler:^(NSError* error) {
-			NSLog(@"Failed to send %@ to the phone.", activityId);
-		}];
-	}
-}
-
-/// @brief Sends the activity to the phone.
-- (void)sendActivity:(NSString*)activityId
+/// @brief Sends the activity to the phone. Returns TRUE on success, FALSE on failure.
+- (BOOL)sendActivityFileToPhone:(NSString*)activityId
 {
 	ExtensionDelegate* extDelegate = (ExtensionDelegate*)[WKExtension sharedExtension].delegate;
 	size_t numHistoricalActivities = [extDelegate getNumHistoricalActivities];
+	BOOL result = FALSE;
 
 	// Only reload the historical activities list if we really have to as it's rather
 	// computationally expensive for something running on a watch.
@@ -259,7 +178,6 @@
 		if (activityId && activityType)
 		{
 			NSString* activityName = [extDelegate getHistoricalActivityName:activityIndex];
-			NSArray* locationData = [extDelegate getHistoricalActivityLocationData:activityId];
 
 			time_t tempStartTime = 0;
 			time_t tempEndTime = 0;
@@ -269,20 +187,33 @@
 			NSNumber* startTime = [NSNumber numberWithUnsignedLongLong:tempStartTime];
 			NSNumber* endTime = [NSNumber numberWithUnsignedLongLong:tempEndTime];
 
-			NSMutableDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-											@WATCH_MSG_ACTIVITY, @WATCH_MSG_TYPE,
-											activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
-											activityType, @WATCH_MSG_PARAM_ACTIVITY_TYPE,
-											startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
-											endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
-											nil];
+			NSMutableDictionary* activityMetaData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+													 activityId, @WATCH_MSG_PARAM_ACTIVITY_ID,
+													 activityType, @WATCH_MSG_PARAM_ACTIVITY_TYPE,
+													 activityName, @WATCH_MSG_PARAM_ACTIVITY_NAME,
+													 startTime, @WATCH_MSG_PARAM_ACTIVITY_START_TIME,
+													 endTime, @WATCH_MSG_PARAM_ACTIVITY_END_TIME,
+													 nil];
 
-			if ([activityName length] > 0)
-				[msgData setObject:activityName forKey:@WATCH_MSG_PARAM_ACTIVITY_NAME];
-			if (locationData)
-				[msgData setObject:locationData forKey:@WATCH_MSG_PARAM_ACTIVITY_LOCATIONS];
-
-			[self sendActivityDictionary:msgData withActivityId:activityId withCompression:FALSE];
+			NSURL* groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier: @"group.mjs-software.OpenWorkoutTracker"];
+			if (groupURL)
+			{
+				NSString* exportFileName = [extDelegate exportActivityToFile:activityId toDirName:[groupURL path] withFileFormat:FILE_TCX];
+				if (exportFileName)
+				{
+					NSURL* exportUrl = [NSURL fileURLWithPath:exportFileName];
+					[self->watchSession transferFile:exportUrl metadata:activityMetaData];
+					return TRUE;
+				}
+				else
+				{
+				   NSLog(@"Activity export failed (file export).");
+				}
+			}
+			else
+			{
+				NSLog(@"Activity export failed (no group URL).");
+			}
 		}
 		else
 		{
@@ -293,6 +224,8 @@
 	{
 		NSLog(@"Failed to load the activities list when sending an activity to the phone.");
 	}
+	
+	return result;
 }
 
 - (void)session:(nonnull WCSession*)session didReceiveApplicationContext:(NSDictionary<NSString*, id>*)applicationContext
@@ -321,14 +254,14 @@
 		{
 			[self sendRegisterDeviceMsg];
 			[self sendRequestSessionKeyMsg];
-			[self requestIntervalWorkouts];
-			[self requestPacePlans];
+			[self requestIntervalWorkoutsFromPhone];
+			[self requestPacePlansFromPhone];
 		}
 
 		// Rate limit the server synchronizations. Let's not be spammy.
 		if (time(NULL) - self->timeOfLastPhoneMsg > 60)
 		{
-			[self checkIfActivitiesAreUploaded];
+			[self checkIfActivitiesAreUploadedToPhone];
 			self->timeOfLastPhoneMsg = time(NULL);
 		}
 	}
@@ -386,10 +319,6 @@
 	{
 		// The phone app is telling us to mark an activity as synchronized.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
-	{
-		// The phone app is sending an activity.
-	}
 
 	self->timeOfLastPhoneMsg = time(NULL);
 }
@@ -446,10 +375,6 @@
 	{
 		// The phone app is telling us to mark an activity as synchronized.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
-	{
-		// The phone app is sending an activity.
-	}
 
 	self->timeOfLastPhoneMsg = time(NULL);
 }
@@ -470,7 +395,14 @@
 {
 }
 
-- (void)session:(nonnull WCSession*)session didFinishUserInfoTransfer:(WCSessionUserInfoTransfer *)userInfoTransfer error:(NSError *)error
+- (void)session:(nonnull WCSession*)session didFinishFileTransfer:(WCSessionFileTransfer*)fileTransfer error:(nullable NSError*)error
+{
+	NSString* fileName = [[fileTransfer.file fileURL] absoluteString];
+	[FileUtils deleteFile:fileName];
+	NSLog(@"File transfer completed.");
+}
+
+- (void)session:(nonnull WCSession*)session didFinishUserInfoTransfer:(WCSessionUserInfoTransfer*)userInfoTransfer error:(NSError*)error
 {
 }
 

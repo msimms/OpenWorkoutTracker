@@ -982,6 +982,27 @@ void attributeNameCallback(const char* name, void* context)
 
 #pragma mark methods for exporting activities
 
+/// @brief Reads an activity from the database and exports it to a file. The file path and name is the return value.
+- (NSString*)exportActivityToFile:(NSString*)activityId toDirName:(NSString*)dirName withFileFormat:(FileFormat)format
+{
+	NSString* exportFileName = nil;
+	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+
+	// Make sure we have a valid activity from the database.
+	if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
+	{
+		char* tempExportFileName = ExportActivityFromDatabase([activityId UTF8String], format, [dirName UTF8String]);
+
+		if (tempExportFileName)
+		{
+			exportFileName = [[NSString alloc] initWithFormat:@"%s", tempExportFileName];
+			free((void*)tempExportFileName);
+		}
+	}
+	return exportFileName;
+}
+
+/// @brief Reads an activity from the database and exports it to a file. The file path and name is the return value.
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format
 {
 	NSString* exportFileName = nil;
@@ -1003,7 +1024,7 @@ void attributeNameCallback(const char* name, void* context)
 			}
 		}
 	}
-	return exportFileName;
+	return [self exportActivityToFile:activityId toDirName:exportDir withFileFormat:format];
 }
 
 - (BOOL)isCloudServiceAvailable:(CloudServiceType)service
@@ -1062,7 +1083,7 @@ void attributeNameCallback(const char* name, void* context)
 
 	if (self->watchSession)
 	{
-		[self->watchSession sendActivity:activityId];
+		result = [self->watchSession sendActivityFileToPhone:activityId];
 	}
 	return result;
 }

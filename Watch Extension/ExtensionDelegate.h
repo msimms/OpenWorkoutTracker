@@ -138,6 +138,7 @@
 
 // methods for exporting activities
 
+- (NSString*)exportActivityToFile:(NSString*)activityId toDirName:(NSString*)dirName withFileFormat:(FileFormat)format;
 - (NSString*)exportActivityToTempFile:(NSString*)activityId withFileFormat:(FileFormat)format;
 - (BOOL)isCloudServiceAvailable:(CloudServiceType)service;
 - (BOOL)exportActivityFileToCloudService:(NSString*)fileName forActivityId:(NSString*)activityId toService:(CloudServiceType)service;

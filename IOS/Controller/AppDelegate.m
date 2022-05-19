@@ -34,7 +34,6 @@
 #import "UnitConversionFactors.h"
 #import "UserProfile.h"
 #import "WatchMessages.h"
-#import "compression.h"
 
 #include <sys/sysctl.h>
 
@@ -3695,41 +3694,6 @@ void attributeNameCallback(const char* name, void* context)
 	}
 }
 
-/// @brief Imports a compressed activity that was sent from the watch.
-- (void)importCompressedWatchActivity:(NSData*)messageData replyHandler:(void (^)(NSData *replyMessageData))replyHandler
-{
-	size_t decompressedBufferSize = [messageData length] * 4;
-	uint8_t* decompressedBuffer = (uint8_t*)malloc(decompressedBufferSize);
-
-	if (decompressedBuffer)
-	{
-		size_t decompressedBytesWritten = compression_decode_buffer(decompressedBuffer, decompressedBufferSize, [messageData bytes], [messageData length], NULL, COMPRESSION_ZLIB);
-
-		if (decompressedBytesWritten > 0)
-		{
-			NSError* error;
-			NSDictionary* jsonDict = [NSJSONSerialization JSONObjectWithData:[NSData dataWithBytes:decompressedBuffer length:decompressedBytesWritten] options:0 error:&error];
-
-			[self importWatchActivity:jsonDict replyHandler:nil];
-
-			if (replyHandler)
-			{
-				replyHandler([@"SYNCHED" dataUsingEncoding:NSUTF8StringEncoding]);
-			}
-			else
-			{
-				NSLog(@"Unexpected NULL reply handler.");
-			}
-		}
-		
-		free((void*)decompressedBuffer);
-	}
-	else
-	{
-		NSLog(@"Cannot import a compressed activity as there was not enough memory to allocate a buffer.");
-	}
-}
-
 #pragma mark watch session methods
 
 /// @brief Watch connection changed.
@@ -3820,11 +3784,6 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch app is telling us to mark an activity as synchronized.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
-	{
-		// The watch app is sending an activity.
-		[self importWatchActivity:message replyHandler:replyHandler];
-	}
 }
 
 /// @brief Received a message from the watch.
@@ -3874,10 +3833,6 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch app is telling us to mark an activity as synchronized.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_ACTIVITY])
-	{
-		// The watch app is sending an activity.
-	}
 }
 
 - (void)session:(WCSession*)session didReceiveMessageData:(NSData*)messageData
@@ -3886,12 +3841,42 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)session:(WCSession*)session didReceiveMessageData:(NSData*)messageData replyHandler:(void (^)(NSData *replyMessageData))replyHandler
 {
-	// Currently this is the only thing sent as 'data'.
-	[self importCompressedWatchActivity:messageData replyHandler:replyHandler];
 }
 
 - (void)session:(WCSession*)session didReceiveFile:(WCSessionFile*)file
 {
+	NSString* activityId = [file.metadata objectForKey:@WATCH_MSG_PARAM_ACTIVITY_ID];
+	if (IsActivityInDatabase([activityId UTF8String]))
+	{
+		NSLog(@"Received a duplicate activity from the watch.");
+		return;
+	}
+
+	// An activity file is received from the watch app.
+	NSData* activityData = [[NSData alloc] initWithContentsOfURL:file.fileURL];
+	if (activityData)
+	{
+		NSString* exportDir = [ExportUtils createExportDir];
+		NSString* activityType = [file.metadata objectForKey:@WATCH_MSG_PARAM_ACTIVITY_TYPE];
+		NSString* tempFileName = [[NSString alloc] initWithFormat:@"%@/%@.tcx", exportDir, activityId];
+		if ([[NSFileManager defaultManager] createFileAtPath:tempFileName contents:activityData attributes:nil])
+		{
+			if (!ImportActivityFromFile([tempFileName UTF8String], [activityType UTF8String], [activityId UTF8String]))
+			{
+				NSLog(@"Failed to import an activity from the watch.");
+			}
+
+			[[NSFileManager defaultManager] removeItemAtPath:tempFileName error:nil];
+		}
+		else
+		{
+			NSLog(@"Unable to create a temporary file for the activity data from the watch.");
+		}
+	}
+	else
+	{
+		NSLog(@"Received empty activity data buffer from the watch.");
+	}
 }
 
 - (void)session:(WCSession*)session didReceiveUserInfo:(NSDictionary<NSString *,id> *)userInfo

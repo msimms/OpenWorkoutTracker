@@ -15,6 +15,6 @@
 }
 
 - (void)startWatchSession;
-- (void)sendActivity:(NSString*)activityId;
+- (BOOL)sendActivityFileToPhone:(NSString*)activityId;
 
 @end
