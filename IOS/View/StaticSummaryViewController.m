@@ -341,7 +341,7 @@ typedef enum ExportFileTypeButtons
 			[self->timeSection2RowNames addObject:ROW_TITLE_LAP_TIMES];
 		}
 
-		if (self->hasLocationData)
+		if (self->hasLocationData || self->hasAccelerometerData)
 		{
 			self->chartTitles = [LineFactory getLineNames:self->hasLocationData hasAccelData:self->hasAccelerometerData hasHRData:self->hasHeartRateData hasCadenceData:self->hasCadenceData hasPowerData:self->hasPowerData willPreferPaceOverSpeed:preferPaceOverSpeed];
 		}
