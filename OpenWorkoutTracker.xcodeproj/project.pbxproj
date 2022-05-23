@@ -367,6 +367,12 @@
 		27CF012B24D8DDE900263CEC /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2768E51923A0270500DD06E9 /* VO2MaxCalculator.cpp */; };
 		27CF013224DAF68700263CEC /* BtleLight.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CF012F24DAF68600263CEC /* BtleLight.m */; };
 		27CF013324DAF68700263CEC /* BtleRadar.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CF013024DAF68600263CEC /* BtleRadar.m */; };
+		27D27630283A775F008E707B /* BenchPress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2762F283A775F008E707B /* BenchPress.cpp */; };
+		27D27631283A775F008E707B /* BenchPress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2762F283A775F008E707B /* BenchPress.cpp */; };
+		27D27632283A775F008E707B /* BenchPress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2762F283A775F008E707B /* BenchPress.cpp */; };
+		27D27635283A7971008E707B /* BenchPressAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D27634283A7971008E707B /* BenchPressAnalyzer.cpp */; };
+		27D27636283A7971008E707B /* BenchPressAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D27634283A7971008E707B /* BenchPressAnalyzer.cpp */; };
+		27D27637283A7971008E707B /* BenchPressAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D27634283A7971008E707B /* BenchPressAnalyzer.cpp */; };
 		27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C022B193B6009A23C2 /* Interface.storyboard */; };
 		27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27DCF5C322B193B7009A23C2 /* Assets.xcassets */; };
 		27DCF5CB22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 27DCF5CA22B193B7009A23C2 /* OpenWorkoutTrackerWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1047,6 +1053,10 @@
 		27CF012F24DAF68600263CEC /* BtleLight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleLight.m; path = IOS/Sensors/BtleLight.m; sourceTree = SOURCE_ROOT; };
 		27CF013024DAF68600263CEC /* BtleRadar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BtleRadar.m; path = IOS/Sensors/BtleRadar.m; sourceTree = SOURCE_ROOT; };
 		27CF013124DAF68700263CEC /* BtleRadar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BtleRadar.h; path = IOS/Sensors/BtleRadar.h; sourceTree = SOURCE_ROOT; };
+		27D27622283A775F008E707B /* BenchPress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchPress.h; path = Activities/BenchPress.h; sourceTree = SOURCE_ROOT; };
+		27D2762F283A775F008E707B /* BenchPress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BenchPress.cpp; path = Activities/BenchPress.cpp; sourceTree = SOURCE_ROOT; };
+		27D27633283A7971008E707B /* BenchPressAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchPressAnalyzer.h; path = Activities/BenchPressAnalyzer.h; sourceTree = SOURCE_ROOT; };
+		27D27634283A7971008E707B /* BenchPressAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BenchPressAnalyzer.cpp; path = Activities/BenchPressAnalyzer.cpp; sourceTree = SOURCE_ROOT; };
 		27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1725,6 +1735,10 @@
 				27C0841C19BFD063007CE934 /* ActivityType.h */,
 				27C0841D19BFD063007CE934 /* ActivityViewType.h */,
 				27C0841E19BFD063007CE934 /* AxisName.h */,
+				27D2762F283A775F008E707B /* BenchPress.cpp */,
+				27D27622283A775F008E707B /* BenchPress.h */,
+				27D27634283A7971008E707B /* BenchPressAnalyzer.cpp */,
+				27D27633283A7971008E707B /* BenchPressAnalyzer.h */,
 				2772FEAB2503DFD300ED9F2A /* BikePlanGenerator.cpp */,
 				2772FE9C2503DFD200ED9F2A /* BikePlanGenerator.h */,
 				27F4445B23E775DF006CC7FB /* Callbacks.h */,
@@ -2188,6 +2202,8 @@
 				270CF4742391F0BA00584058 /* File.cpp in Sources */,
 				270CF4752391F0BA00584058 /* File.h in Sources */,
 				270CF4762391F0BA00584058 /* FileFormat.h in Sources */,
+				27D27632283A775F008E707B /* BenchPress.cpp in Sources */,
+				27D27637283A7971008E707B /* BenchPressAnalyzer.cpp in Sources */,
 				270CF4772391F0BA00584058 /* GpxFileReader.cpp in Sources */,
 				270CF4782391F0BA00584058 /* GpxFileReader.h in Sources */,
 				270CF4792391F0BA00584058 /* GpxFileWriter.cpp in Sources */,
@@ -2344,6 +2360,7 @@
 				27FE9887265D92D7004BE31E /* AppCloudService.m in Sources */,
 				27B7CDD419BFD979000383E3 /* ChartOverlay.m in Sources */,
 				2768E51B23A0270500DD06E9 /* VO2MaxCalculator.cpp in Sources */,
+				27D27635283A7971008E707B /* BenchPressAnalyzer.cpp in Sources */,
 				270F7645272372D6006E0D61 /* IntensityCalculator.cpp in Sources */,
 				27F4240223A432A300F59F50 /* OpenWaterSwim.cpp in Sources */,
 				27B7CD3F19BFD903000383E3 /* BikeProfileViewController.m in Sources */,
@@ -2459,6 +2476,7 @@
 				276D5AF01AA169AF008F55AF /* CloudService.m in Sources */,
 				276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */,
 				27B7CDF819BFD99B000383E3 /* BtlePowerMeter.m in Sources */,
+				27D27630283A775F008E707B /* BenchPress.cpp in Sources */,
 				27B7CD2119BFD807000383E3 /* DataImporter.cpp in Sources */,
 				27CF012624D852EA00263CEC /* RunPlanGenerator.cpp in Sources */,
 				276D5AFF1AA16A67008F55AF /* RunKeeper.m in Sources */,
@@ -2538,6 +2556,7 @@
 				27DCF63622B716CB009A23C2 /* HeatMapGenerator.cpp in Sources */,
 				27DCF63722B716CB009A23C2 /* HeatMapGenerator.h in Sources */,
 				27DCF5FB22B71628009A23C2 /* Activity.cpp in Sources */,
+				27D27636283A7971008E707B /* BenchPressAnalyzer.cpp in Sources */,
 				27DCF5FC22B71628009A23C2 /* Activity.h in Sources */,
 				27DCF68822C2B72E009A23C2 /* Preferences.m in Sources */,
 				27DCF5FD22B71628009A23C2 /* ActivityAttribute.h in Sources */,
@@ -2619,6 +2638,7 @@
 				27DCF62922B71628009A23C2 /* StationaryCycling.h in Sources */,
 				27DCF62A22B71628009A23C2 /* Treadmill.cpp in Sources */,
 				27DCF62B22B71628009A23C2 /* Treadmill.h in Sources */,
+				27D27631283A775F008E707B /* BenchPress.cpp in Sources */,
 				27DCF62C22B71628009A23C2 /* UnitMgr.cpp in Sources */,
 				27DCF62D22B71628009A23C2 /* UnitMgr.h in Sources */,
 				27DCF5F922B7160C009A23C2 /* ActivityMgr.h in Sources */,

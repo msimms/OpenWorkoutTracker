@@ -8,6 +8,7 @@
 #ifndef __ACTIVITY_TYPE__
 #define __ACTIVITY_TYPE__
 
+#define ACTIVITY_TYPE_BENCH_PRESS         "Bench Press"
 #define ACTIVITY_TYPE_CHINUP              "Chin Up"
 #define ACTIVITY_TYPE_CYCLING             "Cycling"
 #define ACTIVITY_TYPE_HIKING              "Hiking"

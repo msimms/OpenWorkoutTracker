@@ -6,6 +6,8 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "GForceAnalyzerFactory.h"
+#include "BenchPress.h"
+#include "BenchPressAnalyzer.h"
 #include "ChinUp.h"
 #include "ChinUpAnalyzer.h"
 #include "PullUp.h"
@@ -29,7 +31,11 @@ GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::stri
 {
 	GForceAnalyzer* pAnalyzer = NULL;
 	
-	if (type.compare(ChinUp::Type()) == 0)
+	if (type.compare(BenchPress::Type()) == 0)
+	{
+		pAnalyzer = new BenchPressAnalyzer();
+	}
+	else if (type.compare(ChinUp::Type()) == 0)
 	{
 		pAnalyzer = new ChinUpAnalyzer();
 	}

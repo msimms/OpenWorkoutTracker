@@ -10,6 +10,7 @@
 #include "ActivityFactory.h"
 #include "GForceAnalyzerFactory.h"
 
+#include "BenchPress.h"
 #include "ChinUp.h"
 #include "Cycling.h"
 #include "Hike.h"
@@ -38,6 +39,9 @@ std::vector<std::string> ActivityFactory::ListSupportedActivityTypes()
 {
 	std::vector<std::string> types;
 
+#if TARGET_OS_WATCH
+	types.push_back(BenchPress::Type());
+#endif
 	types.push_back(Cycling::Type());
 	types.push_back(Hike::Type());
 	types.push_back(MountainBiking::Type());
