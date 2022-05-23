@@ -951,64 +951,58 @@
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
-	NSDictionary* heartRateData = [notification object];
-
-	if (heartRateData)
+	@try
 	{
+		NSDictionary* heartRateData = [notification object];
 		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
-
-			if (rate)
-			{
-				self->lastHeartRateValue = [rate doubleValue];
-			}
+			self->lastHeartRateValue = [rate doubleValue];
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)cadenceUpdated:(NSNotification*)notification
 {
-	NSDictionary* cadenceData = [notification object];
-
-	if (cadenceData)
+	@try
 	{
+		NSDictionary* cadenceData = [notification object];
 		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* rate = [cadenceData objectForKey:@KEY_NAME_CADENCE];
-
-			if (rate)
-			{
-				self->lastCadenceValue = [rate doubleValue];
-			}
+			self->lastCadenceValue = [rate doubleValue];
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)powerUpdated:(NSNotification*)notification
 {
-	NSDictionary* powerData = [notification object];
-
-	if (powerData)
+	@try
 	{
+		NSDictionary* powerData = [notification object];
 		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
 			NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
-
-			if (watts)
-			{
-				self->lastPowerValue = [watts doubleValue];
-			}
+			self->lastPowerValue = [watts doubleValue];
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
@@ -1016,51 +1010,53 @@
 {
 	NSDictionary* radarData = [notification object];
 
-	if (radarData)
+	if (!radarData)
 	{
-		@synchronized(self->threatImageViews)
+		return;
+	}
+
+	@synchronized(self->threatImageViews)
+	{
+		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+		NSString* idStr = [[peripheral identifier] UUIDString];
+
+		if ([Preferences shouldUsePeripheral:idStr])
 		{
-			CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
-			NSString* idStr = [[peripheral identifier] UUIDString];
+			NSNumber* threatCount = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
 
-			if ([Preferences shouldUsePeripheral:idStr])
+			if (threatCount)
 			{
-				NSNumber* threatCount = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
+				const CGFloat IMAGE_SIZE = 22;
+				const CGFloat IMAGE_LEFT = 2;
+				const CGFloat MAX_THREAT_DISTANCE_METERS = 160.0;
 
-				if (threatCount)
+				// How many threats were reported?
+				self->lastThreatCount = [threatCount longValue];
+
+				// Remove any old images.
+				[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+				[self->threatImageViews removeAllObjects];
+
+				// Add new threat images.
+				for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
 				{
-					const CGFloat IMAGE_SIZE = 22;
-					const CGFloat IMAGE_LEFT = 2;
-					const CGFloat MAX_THREAT_DISTANCE_METERS = 160.0;
+					NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
 
-					// How many threats were reported?
-					self->lastThreatCount = [threatCount longValue];
-
-					// Remove any old images.
-					[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-					[self->threatImageViews removeAllObjects];
-
-					// Add new threat images.
-					for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
+					// If we have distance information for this threat then draw it on the left side of the screen.
+					if ([radarData objectForKey:keyName] != nil)
 					{
-						NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
+						NSNumber* threatDistance = [radarData objectForKey:keyName];
+						CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
+						UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
 
-						// If we have distance information for this threat then draw it on the left side of the screen.
-						if ([radarData objectForKey:keyName] != nil)
-						{
-							NSNumber* threatDistance = [radarData objectForKey:keyName];
-							CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
-							UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
+						// This defines the image's position on the screen.
+						threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
 
-							// This defines the image's position on the screen.
-							threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
+						// Add to the view.
+						[self.view addSubview:threatImageView];
 
-							// Add to the view.
-							[self.view addSubview:threatImageView];
-
-							// Remember it so we can remove it later.
-							[self->threatImageViews addObject:threatImageView];
-						}
+						// Remember it so we can remove it later.
+						[self->threatImageViews addObject:threatImageView];
 					}
 				}
 			}
@@ -1135,30 +1131,28 @@
 
 - (void)printMessage:(NSNotification*)notification
 {
-	NSDictionary* msgData = [notification object];
-
-	if (msgData)
+	@try
 	{
+		NSDictionary* msgData = [notification object];
 		NSString* msg = [msgData objectForKey:@KEY_NAME_MESSAGE];
 
-		if (msg)
+		@synchronized(self->messages)
 		{
-			@synchronized(self->messages)
-			{
-				[self->messages addObject:msg];
-			}
+			[self->messages addObject:msg];
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)broadcastStatus:(NSNotification*)notification
 {
-	NSDictionary* msgData = [notification object];
-
-	if (msgData)
+	@try
 	{
+		NSDictionary* msgData = [notification object];
 		NSNumber* status = [msgData objectForKey:@KEY_NAME_STATUS];
-		
+
 		if (self->currentBroadcastStatus)
 		{
 			@synchronized(self->currentBroadcastStatus)
@@ -1170,6 +1164,9 @@
 		{
 			self->currentBroadcastStatus = status;
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
@@ -1198,41 +1195,37 @@
 
 - (void)sensorConnected:(NSNotification*)notification
 {
-	NSDictionary* msgData = [notification object];
-
-	if (msgData)
+	@try
 	{
+		NSDictionary* msgData = [notification object];
 		NSString* sensorName = [msgData objectForKey:@KEY_NAME_SENSOR_NAME];
+		NSString* msg = [sensorName stringByAppendingFormat:@" %@", STR_CONNECTED];
 
-		if (sensorName)
+		@synchronized(self->messages)
 		{
-			NSString* msg = [sensorName stringByAppendingFormat:@" %@", STR_CONNECTED];
-
-			@synchronized(self->messages)
-			{
-				[self->messages addObject:msg];
-			}
+			[self->messages addObject:msg];
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
 - (void)sensorDisconnected:(NSNotification*)notification
 {
-	NSDictionary* msgData = [notification object];
-
-	if (msgData)
+	@try
 	{
+		NSDictionary* msgData = [notification object];
 		NSString* sensorName = [msgData objectForKey:@KEY_NAME_SENSOR_NAME];
+		NSString* msg = [sensorName stringByAppendingFormat:@" %@", STR_NOT_CONNECTED];
 
-		if (sensorName)
+		@synchronized(self->messages)
 		{
-			NSString* msg = [sensorName stringByAppendingFormat:@" %@", STR_NOT_CONNECTED];
-
-			@synchronized(self->messages)
-			{
-				[self->messages addObject:msg];
-			}
+			[self->messages addObject:msg];
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 

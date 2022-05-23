@@ -367,13 +367,13 @@
 /// @brief This method is called in response to an activity stopped notification.
 - (void)activityStopped:(NSNotification*)notification
 {
-	// Save activity summary totals to the Health Store.
 	@try
 	{
 		NSDictionary* activityData = [notification object];
 
 		if (activityData)
 		{
+			// Make sure we've sent all the activity data.
 			NSString* activityId = [activityData objectForKey:@KEY_NAME_ACTIVITY_ID];
 			[self flushGlobalBroadcastCacheRest:TRUE withActivityId:activityId];
 		}

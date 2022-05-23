@@ -528,10 +528,9 @@
 
 - (void)broadcastStatus:(NSNotification*)notification
 {
-	NSDictionary* msgData = [notification object];
-
-	if (msgData)
+	@try
 	{
+		NSDictionary* msgData = [notification object];
 		NSNumber* status = [msgData objectForKey:@KEY_NAME_STATUS];
 		
 		if (self->currentBroadcastStatus != nil)
@@ -545,6 +544,9 @@
 		{
 			self->currentBroadcastStatus = status;
 		}
+	}
+	@catch (...)
+	{
 	}
 }
 
