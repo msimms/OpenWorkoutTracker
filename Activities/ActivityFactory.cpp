@@ -71,7 +71,12 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 {
 	Activity* pActivity = NULL;
 
-	if (type.compare(ChinUp::Type()) == 0)
+	if (type.compare(BenchPress::Type()) == 0)
+	{
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
+		pActivity = new BenchPress(analyzer);
+	}
+	else if (type.compare(ChinUp::Type()) == 0)
 	{
 		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
 		pActivity = new ChinUp(analyzer);

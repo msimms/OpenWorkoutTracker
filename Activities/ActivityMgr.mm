@@ -3337,7 +3337,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted() && g_pDatabase)
+			if (g_pCurrentActivity && !g_pCurrentActivity->HasStarted())
 			{
 				if (g_pCurrentActivity->Start())
 				{
