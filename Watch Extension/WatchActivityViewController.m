@@ -415,11 +415,15 @@
 			{
 				if ([self->currentBroadcastStatus boolValue])
 				{
-					[self->broadcastImage setImageNamed:@"Broadcasting"];
+					UIImageSymbolConfiguration* configuration = [UIImageSymbolConfiguration configurationWithPointSize:36 weight:UIImageSymbolWeightBold scale:UIImageSymbolScaleLarge];
+					UIImage* img = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right" withConfiguration:configuration];
+					[self->broadcastImage setImage:img];
 				}
 				else
 				{
-					[self->broadcastImage setImageNamed:@"BroadcastingFailed"];
+					UIImageSymbolConfiguration* configuration = [UIImageSymbolConfiguration configurationWithPointSize:36 weight:UIImageSymbolWeightBold scale:UIImageSymbolScaleLarge];
+					UIImage* img = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right.slash" withConfiguration:configuration];
+					[self->broadcastImage setImage:img];
 				}
 
 				[self->broadcastImage setHeight:56.0];
@@ -533,7 +537,7 @@
 		NSDictionary* msgData = [notification object];
 		NSNumber* status = [msgData objectForKey:@KEY_NAME_STATUS];
 		
-		if (self->currentBroadcastStatus != nil)
+		if (self->currentBroadcastStatus)
 		{
 			@synchronized(self->currentBroadcastStatus)
 			{

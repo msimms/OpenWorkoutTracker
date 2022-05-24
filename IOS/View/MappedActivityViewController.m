@@ -206,14 +206,14 @@
 
 - (void)setUIForStartedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setTitle:STR_STOP];
 	[self.toolbar setItems:self->startedToolbar animated:NO];
 	[super setUIForStartedActivity];
 }
 
 - (void)setUIForStoppedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+	[self.startStopButton setTitle:STR_START];
 	[self.toolbar setItems:self->stoppedToolbar animated:NO];
 	[super setUIForStoppedActivity];
 }

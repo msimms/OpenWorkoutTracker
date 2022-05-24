@@ -47,6 +47,11 @@
 
 #define SECS_PER_MESSAGE              10
 
+#define DEVICE_TYPE_RADAR             "radar"
+#define DEVICE_TYPE_POWER             "power meter"
+#define DEVICE_TYPE_HEART_RATE        "heart rate monitor"
+#define DEVICE_TYPE_CADENCE           "cadence sensor"
+
 @interface ActivityViewController ()
 
 @end
@@ -80,20 +85,23 @@
 
 	self->countdownSecs = 0;
 
-	NSString* imgPath = [[NSBundle mainBundle] pathForResource:@"Threat" ofType:@"png"];
-	self->threatImage = [UIImage imageNamed:imgPath];
-
-	if ([self isDarkModeEnabled])
-	{
-		CIImage* tempImage = [CIImage imageWithCGImage:self->threatImage.CGImage];
-		CIFilter* filter = [CIFilter filterWithName:@"CIColorInvert"];
-
-		[filter setDefaults];
-		[filter setValue:tempImage forKey:kCIInputImageKey];
-		self->threatImage = [[UIImage alloc] initWithCIImage:filter.outputImage];
-	}
+	// Load all images
+	UIImageSymbolConfiguration* configuration = [UIImageSymbolConfiguration configurationWithPointSize:36 weight:UIImageSymbolWeightBold scale:UIImageSymbolScaleLarge];
+	self->threatImage = [UIImage systemImageNamed:@"car.fill" withConfiguration:configuration];
+	self->radarImage = [UIImage systemImageNamed:@"car.circle" withConfiguration:configuration];
+	self->powerMeterImage = [UIImage systemImageNamed:@"bolt.circle" withConfiguration:configuration];
+	self->heartRateImage = [UIImage systemImageNamed:@"heart.circle" withConfiguration:configuration];
+	self->cadenceImage = [UIImage systemImageNamed:@"c.circle" withConfiguration:configuration];
+	self->broadcastImage = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right.circle" withConfiguration:configuration];
 
 	self->threatImageViews = [[NSMutableArray alloc] init];
+	self->connectedDevicesView = [[NSMutableArray alloc] init];
+
+	self->lastHeardFromTime = [[NSMutableDictionary alloc] init];
+	self->lastHeardFromTime[@DEVICE_TYPE_RADAR] = [[NSNumber alloc] initWithUnsignedLong:0];
+	self->lastHeardFromTime[@DEVICE_TYPE_POWER] = [[NSNumber alloc] initWithUnsignedLong:0];
+	self->lastHeardFromTime[@DEVICE_TYPE_HEART_RATE] = [[NSNumber alloc] initWithUnsignedLong:0];
+	self->lastHeardFromTime[@DEVICE_TYPE_CADENCE] = [[NSNumber alloc] initWithUnsignedLong:0];
 
 	self->lastHeartRateValue = 0.0;
 	self->lastCadenceValue = 0.0;
@@ -595,22 +603,22 @@
 
 - (void)setUIForStartedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setTitle:STR_STOP];
 }
 
 - (void)setUIForStoppedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+	[self.startStopButton setTitle:STR_START];
 }
 
 - (void)setUIForPausedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_RESUME];
+	[self.startStopButton setTitle:STR_RESUME];
 }
 
 - (void)setUIForResumedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setTitle:STR_STOP];
 }
 
 #pragma mark button handlers
@@ -966,6 +974,11 @@
 	@catch (...)
 	{
 	}
+
+	@synchronized (self->lastHeardFromTime)
+	{
+		self->lastHeardFromTime[@DEVICE_TYPE_HEART_RATE] = [[NSNumber alloc] initWithUnsignedLong:time(NULL)];
+	}
 }
 
 - (void)cadenceUpdated:(NSNotification*)notification
@@ -985,6 +998,11 @@
 	@catch (...)
 	{
 	}
+
+	@synchronized (self->lastHeardFromTime)
+	{
+		self->lastHeardFromTime[@DEVICE_TYPE_CADENCE] = [[NSNumber alloc] initWithUnsignedLong:time(NULL)];
+	}
 }
 
 - (void)powerUpdated:(NSNotification*)notification
@@ -1003,6 +1021,11 @@
 	}
 	@catch (...)
 	{
+	}
+
+	@synchronized (self->lastHeardFromTime)
+	{
+		self->lastHeardFromTime[@DEVICE_TYPE_POWER] = [[NSNumber alloc] initWithUnsignedLong:time(NULL)];
 	}
 }
 
@@ -1045,9 +1068,15 @@
 					// If we have distance information for this threat then draw it on the left side of the screen.
 					if ([radarData objectForKey:keyName] != nil)
 					{
+						// Y axis placement is determined by the object's distance from us.
 						NSNumber* threatDistance = [radarData objectForKey:keyName];
 						CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
+
+						// Create the view from the image.
 						UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
+
+						// Handle dark mode.
+						[threatImageView setTintColor:[self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor]];
 
 						// This defines the image's position on the screen.
 						threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
@@ -1061,6 +1090,11 @@
 				}
 			}
 		}
+	}
+
+	@synchronized (self->lastHeardFromTime)
+	{
+		self->lastHeardFromTime[@DEVICE_TYPE_RADAR] = [[NSNumber alloc] initWithUnsignedLong:time(NULL)];
 	}
 }
 
@@ -1241,7 +1275,10 @@
 
 - (void)refreshScreen
 {
+	//
 	// Refresh the activity attributes.
+	//
+
 	for (uint8_t i = 0; i < self->numAttributes; i++)
 	{
 		NSString* attributeName = [self->attributesToDisplay objectAtIndex:i];
@@ -1332,40 +1369,57 @@
 			}
 		}
 	}
-	
-	// Refresh the display status icon.
-	if (self->currentBroadcastStatus && self->showBroadcastIcon)
+
+	//
+	// Refresh the device status icons.
+	//
+
+	// Remove any old images.
+	[self->connectedDevicesView makeObjectsPerformSelector:@selector(removeFromSuperview)];
+	[self->connectedDevicesView removeAllObjects];
+
+	const CGFloat IMAGE_SIZE = 36;
+	const CGFloat IMAGE_SPACING = IMAGE_SIZE * 0.75;
+
+	NSMutableArray* connectedDeviceList = [[NSMutableArray alloc] init];
+
+	@synchronized(self->currentBroadcastStatus)
 	{
-		@synchronized(self->currentBroadcastStatus)
+		if ([self->currentBroadcastStatus boolValue])
 		{
-			if ((self->displayedBroadcastStatus == nil) ||
-				([self->displayedBroadcastStatus boolValue] != [self->currentBroadcastStatus boolValue]))
-			{
-				const CGFloat IMAGE_SIZE = 54;
-
-				CGFloat imageX = (self.view.bounds.size.width / 2) - (IMAGE_SIZE / 2);
-				CGFloat imageY = (self.view.bounds.size.height - self.toolbar.bounds.size.height) - (IMAGE_SIZE * 2);
-				NSString* imgPath = nil;
-
-				// Remove the old image, if any.
-				if (self->broadcastImageView)
-					[self->broadcastImageView removeFromSuperview];
-
-				// Load the image.				
-				if ([self->currentBroadcastStatus boolValue])
-					imgPath = [[NSBundle mainBundle] pathForResource:@"Broadcasting" ofType:@"png"];
-				else
-					imgPath = [[NSBundle mainBundle] pathForResource:@"BroadcastingFailed" ofType:@"png"];
-				self->broadcastImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imgPath]];
-
-				// This defines the image's position on the screen.
-				self->broadcastImageView.frame = CGRectMake(imageX, imageY, IMAGE_SIZE, IMAGE_SIZE);
-
-				// Add the image to the view.
-				[self.view addSubview:self->broadcastImageView];
-			}
-			self->displayedBroadcastStatus = self->currentBroadcastStatus;
+			[connectedDeviceList addObject:self->broadcastImage];
 		}
+	}
+
+	@synchronized (self->lastHeardFromTime)
+	{
+		time_t oneMinuteAgo = time(NULL) - 60;
+
+		if ([[self->lastHeardFromTime objectForKey:@DEVICE_TYPE_RADAR] unsignedIntValue] > oneMinuteAgo)
+			[connectedDeviceList addObject:self->radarImage];
+		if ([[self->lastHeardFromTime objectForKey:@DEVICE_TYPE_HEART_RATE] unsignedIntValue] > oneMinuteAgo)
+			[connectedDeviceList addObject:self->heartRateImage];
+		if ([[self->lastHeardFromTime objectForKey:@DEVICE_TYPE_POWER] unsignedIntValue] > oneMinuteAgo)
+			[connectedDeviceList addObject:self->powerMeterImage];
+		if ([[self->lastHeardFromTime objectForKey:@DEVICE_TYPE_CADENCE] unsignedIntValue] > oneMinuteAgo)
+			[connectedDeviceList addObject:self->cadenceImage];
+	}
+
+	CGFloat numImages = [connectedDeviceList count];
+	CGFloat imageX = ((self.view.bounds.size.width - (IMAGE_SIZE * numImages) - (IMAGE_SPACING * (numImages - 1))) / 2.0);
+	CGFloat imageY = (self.view.bounds.size.height - self.toolbar.bounds.size.height - (IMAGE_SIZE * 2.25));
+
+	for (UIImage* deviceImage in connectedDeviceList)
+	{
+		UIImageView* deviceImageView = [[UIImageView alloc] initWithImage:deviceImage];
+
+		deviceImageView.frame = CGRectMake(imageX, imageY, IMAGE_SIZE, IMAGE_SIZE);
+		[deviceImageView setTintColor:[self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor]];
+
+		[self.view addSubview:deviceImageView];
+		[self->connectedDevicesView addObject:deviceImageView];
+
+		imageX += IMAGE_SIZE + IMAGE_SPACING;
 	}
 }
 

@@ -27,18 +27,18 @@
 	IBOutlet __strong WKInterfaceGroup* group3; // Contains value3 and units3
 	IBOutlet __strong WKInterfaceImage* broadcastImage; // Visual indication of the broadcast status
 
-	NSNumber*       currentBroadcastStatus; // Last broadcast status message regarding broadcast, or nil if not set
-	NSNumber*       displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set
-	NSTimer*        refreshTimer; // Timer for updating the screen
+	NSNumber*       currentBroadcastStatus;     // Last broadcast status message regarding broadcast, or nil if not set
+	NSNumber*       displayedBroadcastStatus;   // Last broadcast status displayed, or nil if not set
+	NSTimer*        refreshTimer;               // Timer for updating the screen
 	NSMutableArray* valueLabels;
 	NSMutableArray* unitsLabels;
 	NSMutableArray* groups;
-	NSInteger       attributePosToReplace; // Indicates which attribute was pressed
-	BOOL            isPopping; // Prevents us from redrawing if we're about to pop
-	NSString*       activityType; // Current activity type, cached here for performance reasons
-	BOOL            showBroadcastIcon; // TRUE if we should show an icon that represents the broadcast status
-	double          totalCrownDelta; // Aggregate movements of the watch crown, for starting and stopping activities without using the screen
-	ActivityPreferences* prefs; // Prefs object, cached here for performance reasons
+	NSInteger       attributePosToReplace;      // Indicates which attribute was pressed
+	BOOL            isPopping;                  // Prevents us from redrawing if we're about to pop
+	NSString*       activityType;               // Current activity type, cached here for performance reasons
+	BOOL            showBroadcastIcon;          // TRUE if we should show an icon that represents the broadcast status
+	double          totalCrownDelta;            // Aggregate movements of the watch crown, for starting and stopping activities without using the screen
+	ActivityPreferences* prefs;                 // Prefs object, cached here for performance reasons
 }
 
 @property (nonatomic, retain) IBOutlet WKInterfaceButton* startStopButton;

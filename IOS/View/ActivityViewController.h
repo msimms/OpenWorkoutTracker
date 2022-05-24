@@ -10,15 +10,10 @@
 #import "Segues.h"
 #import "Coordinate.h"
 
-#define ACTIVITY_BUTTON_AUTOSTART NSLocalizedString(@"Autostart", nil)
-#define ACTIVITY_BUTTON_START     NSLocalizedString(@"Start", nil)
-#define ACTIVITY_BUTTON_STOP      NSLocalizedString(@"Stop", nil)
-#define ACTIVITY_BUTTON_PAUSE     NSLocalizedString(@"Pause", nil)
-#define ACTIVITY_BUTTON_RESUME    NSLocalizedString(@"Resume", nil)
-
 @interface ActivityViewController : CommonViewController <UIActionSheetDelegate, UIGestureRecognizerDelegate, UITraitEnvironment>
 {
 	IBOutlet UILabel*          messagesLabel;
+	IBOutlet UILabel*          connectedDevicesLabel;
 	IBOutlet UIBarButtonItem*  moreButton;
 	IBOutlet UIBarButtonItem*  customizeButton;
 	IBOutlet UIBarButtonItem*  bikeButton;
@@ -34,9 +29,15 @@
 	NSNumber*                  displayedBroadcastStatus; // Last broadcast status displayed, or nil if not set
 	UIVisualEffectView*        blurEffectView;           // Used when the countdown timer is displayed
 	UIImageView*               lastCountdownImageView;   // Last countdown image that was displayed, or nil if no image is displayed
-	UIImageView*               broadcastImageView;       // Currently displayed broadcast status image, or nil if no image is displayed
-	UIImage*                   threatImage;              // Radar threat image, cached for performance
+	UIImage*                   threatImage;              // Radar threat image (i.e. the threat images that move down the side of the screen)
+	UIImage*                   radarImage;               // Radar device image (i.e. used to show the device is connected)
+	UIImage*                   powerMeterImage;          // Power meter device image (i.e. used to show the device is connected)
+	UIImage*                   heartRateImage;           // Heart rate monitor device image (i.e. used to show the device is connected)
+	UIImage*                   cadenceImage;             // Cadence device image (i.e. used to show the device is connected)
+	UIImage*                   broadcastImage;           // Broadcast image (shows we are broadcasting)
 	NSMutableArray*            threatImageViews;         // Images of threats that were detected by a radar unit, such as a Garmin Varia
+	NSMutableArray*            connectedDevicesView;     // Images of currently connected devices
+	NSMutableDictionary*       lastHeardFromTime;        // The time at which each device was last heard from
 	NSArray*                   attributesToDisplay;      // Names of the things to display
 	NSMutableArray*            valueLabels;              // Label objects for each value display
 	NSMutableArray*            titleLabels;              // Label objects for each title display

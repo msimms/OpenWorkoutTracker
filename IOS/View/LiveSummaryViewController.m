@@ -83,13 +83,13 @@
 
 - (void)setUIForStartedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_STOP];
+	[self.startStopButton setTitle:STR_STOP];
 	[super setUIForStartedActivity];
 }
 
 - (void)setUIForStoppedActivity
 {
-	[self.startStopButton setTitle:ACTIVITY_BUTTON_START];
+	[self.startStopButton setTitle:STR_START];
 	[super setUIForStoppedActivity];
 }
 

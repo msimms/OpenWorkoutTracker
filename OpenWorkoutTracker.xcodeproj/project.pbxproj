@@ -166,8 +166,6 @@
 		2753386926B9A6AF007169B6 /* Triathlon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2753386626B9A6AF007169B6 /* Triathlon.png */; };
 		2753387D26B9A7CD007169B6 /* TriathlonOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 2753387426B9A7C0007169B6 /* TriathlonOnWatch.png */; };
 		2753388226B9A90D007169B6 /* DuathlonOnWatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 2753388126B9A90D007169B6 /* DuathlonOnWatch.png */; };
-		2757C2D125DA051000B84BE9 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
-		2757C2E425DA051D00B84BE9 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
 		275BA6E7234BC16B0086A50F /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 275BA6E6234BC16B0086A50F /* ZwoFileReader.cpp */; };
 		275CAC7425DF2B48000727AE /* ExportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC7325DF2B48000727AE /* ExportUtils.m */; };
 		275CAC7825DF2D3D000727AE /* ExportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 275CAC7325DF2B48000727AE /* ExportUtils.m */; };
@@ -326,8 +324,6 @@
 		27B7CDFA19BFD99B000383E3 /* SensorFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEC19BFD99B000383E3 /* SensorFactory.m */; };
 		27B7CDFB19BFD99B000383E3 /* SensorMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B7CDEE19BFD99B000383E3 /* SensorMgr.m */; };
 		27B7CDFD19BFD9AD000383E3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B7CDFC19BFD9AD000383E3 /* MapKit.framework */; };
-		27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFEE25476A210014B257 /* Broadcasting.png */; };
-		27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */ = {isa = PBXBuildFile; fileRef = 27B8CFFD25476A220014B257 /* BroadcastingFailed.png */; };
 		27C044FD19F8622B00E32E96 /* ComplexScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 27C044FC19F8622B00E32E96 /* ComplexScreen.png */; };
 		27C081FD2383780700BEB105 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27C081FC2383780700BEB105 /* CloudKit.framework */; };
 		27C0844E19BFD063007CE934 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27C0841219BFD063007CE934 /* Activity.cpp */; };
@@ -985,8 +981,6 @@
 		27B7CDF019BFD99B000383E3 /* SensorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStyle.h; path = IOS/Sensors/SensorStyle.h; sourceTree = SOURCE_ROOT; };
 		27B7CDF119BFD99B000383E3 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = IOS/Sensors/SensorType.h; sourceTree = SOURCE_ROOT; };
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		27B8CFEE25476A210014B257 /* Broadcasting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Broadcasting.png; path = Images/Broadcasting.png; sourceTree = SOURCE_ROOT; };
-		27B8CFFD25476A220014B257 /* BroadcastingFailed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BroadcastingFailed.png; path = Images/BroadcastingFailed.png; sourceTree = SOURCE_ROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
 		27C081FC2383780700BEB105 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		27C0841219BFD063007CE934 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = SOURCE_ROOT; };
@@ -1529,8 +1523,6 @@
 			isa = PBXGroup;
 			children = (
 				27B44D0419BFF01A0058FE00 /* Background1.png */,
-				27B8CFEE25476A210014B257 /* Broadcasting.png */,
-				27B8CFFD25476A220014B257 /* BroadcastingFailed.png */,
 				27C044FC19F8622B00E32E96 /* ComplexScreen.png */,
 				27B44D0519BFF01A0058FE00 /* Countdown1.png */,
 				27B44D0619BFF01A0058FE00 /* Countdown2.png */,
@@ -2132,8 +2124,6 @@
 				279E70FD2574392C002B4BB6 /* Weights.png in Resources */,
 				2753386726B9A6AF007169B6 /* Duathlon.png in Resources */,
 				27B44D1119BFF01A0058FE00 /* Countdown1.png in Resources */,
-				27B8CFFE25476A220014B257 /* Broadcasting.png in Resources */,
-				27B8CFFF25476A220014B257 /* BroadcastingFailed.png in Resources */,
 				27B44D1219BFF01A0058FE00 /* Countdown2.png in Resources */,
 				27B44D1819BFF01A0058FE00 /* MappedScreen.png in Resources */,
 				279E70F325743463002B4BB6 /* Treadmill.png in Resources */,
@@ -2148,11 +2138,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DCF5C422B193B7009A23C2 /* Assets.xcassets in Resources */,
-				2757C2E425DA051D00B84BE9 /* BroadcastingFailed.png in Resources */,
 				279E717025746EC2002B4BB6 /* TreadmillOnWatch.png in Resources */,
 				2753388226B9A90D007169B6 /* DuathlonOnWatch.png in Resources */,
 				279E717C25746FF4002B4BB6 /* WalkingOnWatch.png in Resources */,
-				2757C2D125DA051000B84BE9 /* Broadcasting.png in Resources */,
 				27DCF5C222B193B6009A23C2 /* Interface.storyboard in Resources */,
 				279E71A025758D02002B4BB6 /* en-GB.lproj in Resources */,
 				2753387D26B9A7CD007169B6 /* TriathlonOnWatch.png in Resources */,
