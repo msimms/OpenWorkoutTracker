@@ -13,8 +13,8 @@
 #include "Measure.h"
 #include "Run.h"
 #include "RunPlanGenerator.h"
-#include "TrainingIntensityDistType.h"
 #include "TrainingPaceCalculator.h"
+#include "TrainingPhilosophyType.h"
 #include "UnitMgr.h"
 #include "WorkoutPlanInputs.h"
 
@@ -34,9 +34,11 @@ void WorkoutPlanGenerator::Reset()
 	m_longestRunWeek1 = (double)0.0;
 	m_longestRunWeek2 = (double)0.0;
 	m_longestRunWeek3 = (double)0.0;
+	m_longestRunWeek4 = (double)0.0;
 	m_numRunsWeek1 = 0;
 	m_numRunsWeek2 = 0;
 	m_numRunsWeek3 = 0;
+	m_numRunsWeek4 = 0;
 	m_avgCyclingDistanceFourWeeks = (double)0.0;
 	m_avgRunningDistanceFourWeeks = (double)0.0;
 	m_bikeCount = 0;
@@ -77,25 +79,37 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	}
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_WEEKS_UNTIL_GOAL, weeksUntilGoal));	
 
-	// Need the user's experience level. This is meant to give us an idea as to how quickly we can ramp up the intensity.
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, 5.0));	
-	
-	// Need cycling FTP.
-	FtpCalculator ftpCalc;
-	double estimatedFtp = ftpCalc.Estimate(historicalActivities);
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, estimatedFtp));
+	//
+	// Need cycling FTP and run training paces.
+	//
 
-	// Need last four weeks averages, bests, etc.
+	// Append run training paces.
+	this->CalculateRunTrainingPaces(inputs);
+
+	// Get the user's current estimated cycling FTP.
+	FtpCalculator ftpCalc;
+	double thresholdPower = ftpCalc.Estimate(historicalActivities);
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, thresholdPower));
+
+	//
+	// Need last four weeks averages and bests.
+	//
+
+	// Search activities in our database.
 	for (auto iter = historicalActivities.begin(); iter != historicalActivities.end(); ++iter)
 	{
 		const ActivitySummary& summary = (*iter);
 		ProcessActivitySummary(summary);
 	}
+
+	// Search activities from HealthKit.
 	for (auto iter = m_additionalActivitySummaries.begin(); iter != m_additionalActivitySummaries.end(); ++iter)
 	{
 		const ActivitySummary& summary = (*iter).second;
 		ProcessActivitySummary(summary);
 	}
+
+	// Compute average running and cycling distances.
 	if (m_runCount > 0)
 	{
 		m_avgRunningDistanceFourWeeks /= (double)m_runCount;
@@ -105,18 +119,28 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 		m_avgCyclingDistanceFourWeeks /= (double)m_bikeCount;
 	}
 
+	//
+	// Need information about the user.
+	//
+
+	// Compute the user's age in years.
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AGE_YEARS, m_user.GetAgeInYears()));
+
+	// Get the experience/comfort level for the user.
+	// This is meant to give us an idea as to how quickly we can ramp up the intensity.
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, 5.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL, 5.0));
+
 	// Store all the inputs in a dictionary.
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_IN_FOUR_WEEKS, m_longestRunInFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_1, m_longestRunWeek1));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunWeek2));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_4, m_longestRunWeek4));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS, m_runCount));
-
-	// Append run training paces.
-	this->CalculateRunTrainingPaces(inputs);
 
 	// Append the goal distances.
 	this->CalculateGoalDistances(inputs);
@@ -128,7 +152,7 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 {
 	RunPlanGenerator runGen;
 	BikePlanGenerator bikeGen;
-	TrainingIntensityDistType trainingIntensityDist = TRAINING_INTENSITY_DIST_TYPE_POLARIZED;
+	TrainingPhilosophyType trainingIntensityDist = TRAINING_PHILOSOPHY_POLARIZED;
 
 	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs);
@@ -143,14 +167,15 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary)
 {
 	const uint64_t SECS_PER_WEEK = 7.0 * 24.0 * 60.0 * 60.0;
+	size_t now = time(NULL);
 
-	time_t fourWeekCutoffTime = time(NULL) - (4.0 * SECS_PER_WEEK); // last four weeks
-	time_t threeWeekCutoffTime = time(NULL) - (3.0 * SECS_PER_WEEK); // last three weeks
-	time_t twoWeekCutoffTime = time(NULL) - (2.0 * SECS_PER_WEEK); // last two weeks
-	time_t oneWeekCutoffTime = time(NULL) - SECS_PER_WEEK; // last week
+	time_t week4CutoffTime = now - (4.0 * SECS_PER_WEEK); // last four weeks
+	time_t week3CutoffTime = now - (3.0 * SECS_PER_WEEK); // last three weeks
+	time_t week2CutoffTime = now - (2.0 * SECS_PER_WEEK); // last two weeks
+	time_t week1CutoffTime = now - SECS_PER_WEEK; // last week
 
 	// Only consider activities within the last four weeks.
-	if (summary.startTime > fourWeekCutoffTime)
+	if (summary.startTime > week4CutoffTime)
 	{
 		// Examine run activity.
 		if (summary.type.compare(Run::Type()) == 0)
@@ -169,19 +194,28 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 						m_longestRunInFourWeeks = activityDistance;
 					}
 
-					if ((summary.startTime > threeWeekCutoffTime) && (activityDistance > m_longestRunWeek3))
+					if (summary.startTime > week3CutoffTime)
 					{
-						m_longestRunWeek3 = activityDistance;
-						++m_numRunsWeek1;
+						if (activityDistance > m_longestRunWeek4)
+							m_longestRunWeek4 = activityDistance;
+						++m_numRunsWeek4;
 					}
-					else if ((summary.startTime > twoWeekCutoffTime) && (summary.startTime < threeWeekCutoffTime) && (activityDistance > m_longestRunWeek2))
+					else if ((summary.startTime > week2CutoffTime) && (summary.startTime < week3CutoffTime))
 					{
-						m_longestRunWeek2 = activityDistance;
+						if (activityDistance > m_longestRunWeek3)
+							m_longestRunWeek3 = activityDistance;
+						++m_numRunsWeek3;
+					}
+					else if ((summary.startTime > week1CutoffTime) && (summary.startTime < week2CutoffTime))
+					{
+						if (activityDistance > m_longestRunWeek2)
+							m_longestRunWeek2 = activityDistance;
 						++m_numRunsWeek2;
 					}
-					else if ((summary.startTime > oneWeekCutoffTime) && (summary.startTime < twoWeekCutoffTime) && (activityDistance > m_longestRunWeek1))
+					else
 					{
-						m_longestRunWeek1 = activityDistance;
+						if (activityDistance > m_longestRunWeek1)
+							m_longestRunWeek1 = activityDistance;
 						++m_numRunsWeek1;
 					}
 

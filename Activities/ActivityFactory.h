@@ -26,15 +26,17 @@ public:
 	ActivityFactory();
 	virtual ~ActivityFactory();
 
+	/// @brief Accessor method for describing the user/athlete for whom we are generating workout suggestions.
 	void SetUser(User user) { m_user = user; };
 
+	/// @brief Returns a list of the activities that are supported by the current platform.
 	std::vector<std::string> ListSupportedActivityTypes();
 
 	Activity* CreateActivity(const std::string& name, Database& database);
 	void CreateActivity(ActivitySummary& summary, Database& database);
 	
 private:
-	User m_user;
+	User m_user; // tells us what we need to know about the user/athlete
 };
 
 #endif

@@ -415,7 +415,7 @@ double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 	return 0.0;
 }
 
-std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingIntensityDistType trainingIntensityDist)
+std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
 	std::vector<Workout*> workouts;
 
@@ -435,38 +435,13 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1);
 	double longestRunWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_2);
 	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
+	double longestRunWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_4);
+	double totalIntensityWeek1 = 0.0;
+	double totalIntensityWeek2 = 0.0;
+	double totalIntensityWeek3 = 0.0;
 	double avgRunDistance = inputs.at(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS);
 	double numRuns = inputs.at(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS);
 	double expLevel = inputs.at(WORKOUT_INPUT_EXPERIENCE_LEVEL);
-
-	// Cutoff paces.
-	this->m_cutoffPace1 = tempoRunPace;
-	this->m_cutoffPace1 = speedRunPace;
-
-	// Ideal training intensity distribution.
-	for (size_t i = 0; i < NUM_TRAINING_ZONES; ++i)
-	{
-		switch (trainingIntensityDist)
-		{
-			case TRAINING_INTENSITY_DIST_TYPE_POLARIZED:
-				m_trainingIntensityDistribution[i] = TID_POLARIZED[i];
-				break;
-			case TRAINING_INTENSITY_DIST_TYPE_PYRAMIDAL:
-				m_trainingIntensityDistribution[i] = TID_PYRAMIDAL[i];
-				break;
-			case TRAINING_INTENSITY_DIST_TYPE_THRESHOLD:
-				m_trainingIntensityDistribution[i] = TID_THRESHOLD[i];
-				break;
-		}
-	}
-
-	// Are we in a taper?
-	// Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less
-	bool inTaper = false;
-	if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
-		inTaper = true;
-	if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
-		inTaper = true;
 
 	// Handle situation in which the user hasn't run in four weeks.
 	if (!RunPlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
@@ -495,6 +470,27 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	{
 		if (longestRunWeek1 >= longestRunWeek2 && longestRunWeek2 >= longestRunWeek3)
 			longestRunInFourWeeks *= 0.75;
+	}
+
+	// Cutoff paces.
+	this->m_cutoffPace1 = tempoRunPace;
+	this->m_cutoffPace1 = speedRunPace;
+
+	// Are we in a taper?
+	// Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less
+	bool inTaper = false;
+	if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
+		inTaper = true;
+	if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
+		inTaper = true;
+
+	// Is it time for an easy week?
+	bool easyWeek = false;
+	if (!inTaper)
+	{
+		if (totalIntensityWeek1 and totalIntensityWeek2 and totalIntensityWeek3)
+			if (totalIntensityWeek1 >= totalIntensityWeek2 and totalIntensityWeek2 >= totalIntensityWeek3)
+				easyWeek = true;
 	}
 
 	// Compute the longest run needed to accomplish the goal.
@@ -529,7 +525,26 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Don't make any runs (other than intervals, tempo runs, etc.) shorter than this.
 	double minRunDistance = avgRunDistance * 0.5;
 	if (minRunDistance > maxEasyRunDistance)
+	{
 		minRunDistance = maxEasyRunDistance;
+	}
+
+	// Ideal training intensity distribution.
+	for (size_t i = 0; i < NUM_TRAINING_ZONES; ++i)
+	{
+		switch (trainingPhilosophy)
+		{
+			case TRAINING_PHILOSOPHY_POLARIZED:
+				m_trainingIntensityDistribution[i] = TID_POLARIZED[i];
+				break;
+			case TRAINING_PHILOSOPHY_PYRAMIDAL:
+				m_trainingIntensityDistribution[i] = TID_PYRAMIDAL[i];
+				break;
+			case TRAINING_PHILOSOPHY_THRESHOLD:
+				m_trainingIntensityDistribution[i] = TID_THRESHOLD[i];
+				break;
+		}
+	}
 
 	size_t iterCount = 0;
 	double bestIntensityDistributionScore = (double)0.0;
@@ -581,16 +596,38 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		easyRunWorkout = this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance);
 		workouts.push_back(easyRunWorkout);
 
-		// How far are these workouts from the ideal intensity distribution?
-		double intensityDistributionScore = this->CheckIntensityDistribution();
-		if (iterCount == 0 || intensityDistributionScore < bestIntensityDistributionScore)
+		// Calculate the total intensity for each workout.
+		double totalIntensity = (double)0.0;
+		for (auto iter = bestWorkouts.begin(); iter != bestWorkouts.end(); ++iter)
 		{
-			for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
+			(*iter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
+			totalIntensity = totalIntensity + (*iter)->GetEstimatedIntensityScore();
+		}
+
+		// If this is supposed to be an easy week then the total intensity should be less than last week's intensity.
+		// Otherwise, it should be more.
+		bool validTotalItensity = true;
+		if (totalIntensityWeek1 > 0.1) // First week in the training plan won't have any prior data.
+		{
+			if (easyWeek)
+				validTotalItensity = totalIntensity < totalIntensityWeek1;
+			else
+				validTotalItensity = totalIntensity > totalIntensityWeek1;
+		}
+
+		// How far are these workouts from the ideal intensity distribution?
+		if (validTotalItensity)
+		{
+			double intensityDistributionScore = this->CheckIntensityDistribution();
+			if (iterCount == 0 || intensityDistributionScore < bestIntensityDistributionScore)
 			{
-				delete (*iter);
+				for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
+				{
+					delete (*iter);
+				}
+				bestIntensityDistributionScore = intensityDistributionScore;
+				bestWorkouts = workouts;
 			}
-			bestIntensityDistributionScore = intensityDistributionScore;
-			bestWorkouts = workouts;
 		}
 
 		// This is used to make sure we don't loop forever.

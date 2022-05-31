@@ -26,24 +26,31 @@ public:
 	WorkoutPlanGenerator();
 	virtual ~WorkoutPlanGenerator();
 
+	/// @brief Accessor method for describing the user/athlete for whom we are generating workout suggestions.
+	void SetUser(User user) { m_user = user; };
+
+	/// @brief For adding data that is not in this application's workout database, such as HealthKit, for example.
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 
 	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate);
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 
 private:
-	double m_best5K; // needed to compute training paces.
+	User   m_user;            // tells us what we need to know about the user/athlete
+	double m_best5K;          // needed to compute training paces.
 	double m_longestRunInFourWeeks;
-	double m_longestRunWeek1; // longest run (in meters) for the 3rd most recent week
+	double m_longestRunWeek1; // longest run (in meters) for the most recent week
 	double m_longestRunWeek2; // longest run (in meters) for the 2nd most recent week
-	double m_longestRunWeek3; // longest run (in meters) for the most recent week
+	double m_longestRunWeek3; // longest run (in meters) for the 3rd most recent week
+	double m_longestRunWeek4; // longest run (in meters) for the 4th most recent week
 	size_t m_numRunsWeek1;
 	size_t m_numRunsWeek2;
 	size_t m_numRunsWeek3;
+	size_t m_numRunsWeek4;
 	double m_avgCyclingDistanceFourWeeks;
 	double m_avgRunningDistanceFourWeeks;
-	size_t m_bikeCount; // For average bike distance
-	size_t m_runCount; // for average run distance
+	size_t m_bikeCount;       // for average bike distance
+	size_t m_runCount;        // for average run distance
 	
 	std::map<std::string, ActivitySummary> m_additionalActivitySummaries; // populated by InsertAdditionalAttributesForWorkoutGeneration
 

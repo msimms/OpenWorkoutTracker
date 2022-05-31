@@ -106,14 +106,14 @@ extern "C" {
 	std::mutex       g_historicalActivityLock;
 
 	ActivitySummaryList           g_historicalActivityList; // cache of completed activities
-	std::map<std::string, size_t> g_activityIdMap; // maps activity IDs to activity indexes
-	std::vector<Bike>             g_bikes; // cache of bike profiles
-	std::vector<Shoes>            g_shoes; // cache of shoe profiles
-	std::vector<IntervalWorkout>  g_intervalWorkouts; // cache of interval workouts
-	std::vector<PacePlan>         g_pacePlans; // cache of pace plans
-	std::vector<Workout>          g_workouts; // cache of planned workouts
-	WorkoutPlanGenerator          g_workoutGen;
-	std::vector<SensorReading>    g_accelerometerCache; // accelerometer readings that need to be written to the db, but have otherwise been processed
+	std::map<std::string, size_t> g_activityIdMap;          // maps activity IDs to activity indexes
+	std::vector<Bike>             g_bikes;                  // cache of bike profiles
+	std::vector<Shoes>            g_shoes;                  // cache of shoe profiles
+	std::vector<IntervalWorkout>  g_intervalWorkouts;       // cache of interval workouts
+	std::vector<PacePlan>         g_pacePlans;              // cache of pace plans
+	std::vector<Workout>          g_workouts;               // cache of planned workouts
+	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
+	std::vector<SensorReading>    g_accelerometerCache;     // accelerometer readings that need to be written to the db, but have otherwise been processed
 
 	//
 	// Functions for managing the database.
@@ -784,10 +784,12 @@ extern "C" {
 		user.SetHeightCm(heightCm);
 		user.SetFtp(ftp);
 
+		// Both the activity factory and the workout plan generator need to know about the user.
 		if (g_pActivityFactory)
 		{
 			g_pActivityFactory->SetUser(user);
 		}
+		g_workoutGen.SetUser(user);
 	}
 
 	bool GetUsersWeightHistory(WeightCallback callback, void* context)

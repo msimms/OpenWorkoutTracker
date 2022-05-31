@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "Goal.h"
-#include "TrainingIntensityDistType.h"
+#include "TrainingPhilosophyType.h"
 #include "Workout.h"
 
 #define NUM_TRAINING_ZONES 3
@@ -24,7 +24,7 @@ public:
 	RunPlanGenerator();
 	virtual ~RunPlanGenerator();
 
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingIntensityDistType trainingIntensityDist);
+	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 	
 private:
 	double m_cutoffPace1;

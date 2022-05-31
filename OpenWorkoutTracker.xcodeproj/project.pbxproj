@@ -635,7 +635,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2702470A2612B4F300558380 /* TrainingIntensityDistType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingIntensityDistType.h; path = Activities/TrainingIntensityDistType.h; sourceTree = SOURCE_ROOT; };
+		2702470A2612B4F300558380 /* TrainingPhilosophyType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TrainingPhilosophyType.h; path = Activities/TrainingPhilosophyType.h; sourceTree = SOURCE_ROOT; };
 		27047174216D996F00EE47FF /* Distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Distance.h; path = LibMath/cpp/Distance.h; sourceTree = SOURCE_ROOT; };
 		27047175216D997000EE47FF /* Statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Statistics.cpp; path = LibMath/cpp/Statistics.cpp; sourceTree = SOURCE_ROOT; };
 		27047178216D997000EE47FF /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = LibMath/cpp/Distance.cpp; sourceTree = SOURCE_ROOT; };
@@ -1051,6 +1051,8 @@
 		27D2762F283A775F008E707B /* BenchPress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BenchPress.cpp; path = Activities/BenchPress.cpp; sourceTree = SOURCE_ROOT; };
 		27D27633283A7971008E707B /* BenchPressAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchPressAnalyzer.h; path = Activities/BenchPressAnalyzer.h; sourceTree = SOURCE_ROOT; };
 		27D27634283A7971008E707B /* BenchPressAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BenchPressAnalyzer.cpp; path = Activities/BenchPressAnalyzer.cpp; sourceTree = SOURCE_ROOT; };
+		27D2763C28452609008E707B /* SwimPlanGenerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = SwimPlanGenerator.cpp; path = Activities/SwimPlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
+		27D2764928452609008E707B /* SwimPlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SwimPlanGenerator.h; path = Activities/SwimPlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		27DCF5BE22B193B5009A23C2 /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27DCF5C122B193B6009A23C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		27DCF5C322B193B7009A23C2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1787,11 +1789,13 @@
 				27C0844719BFD063007CE934 /* StationaryCycling.h */,
 				27F4240623A44D4A00F59F50 /* Swim.cpp */,
 				27F4240723A44D4A00F59F50 /* Swim.h */,
+				27D2763C28452609008E707B /* SwimPlanGenerator.cpp */,
+				27D2764928452609008E707B /* SwimPlanGenerator.h */,
 				273F732B25AF274000484A29 /* SyncDestination.h */,
-				2702470A2612B4F300558380 /* TrainingIntensityDistType.h */,
 				2768E51823A0241200DD06E9 /* TrainingPaceType.h */,
 				2768E51423A0205500DD06E9 /* TrainingPaceCalculator.cpp */,
 				2768E51523A0205500DD06E9 /* TrainingPaceCalculator.h */,
+				2702470A2612B4F300558380 /* TrainingPhilosophyType.h */,
 				27C0844819BFD063007CE934 /* Treadmill.cpp */,
 				27C0844919BFD063007CE934 /* Treadmill.h */,
 				276E366026ADFB2E004D2DC5 /* Triathlon.cpp */,

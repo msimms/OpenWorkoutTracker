@@ -18,8 +18,10 @@
 #define WORKOUT_INPUT_LONGEST_RUN_WEEK_1                 "Longest Run Week 1"
 #define WORKOUT_INPUT_LONGEST_RUN_WEEK_2                 "Longest Run Week 2"
 #define WORKOUT_INPUT_LONGEST_RUN_WEEK_3                 "Longest Run Week 3"
+#define WORKOUT_INPUT_LONGEST_RUN_WEEK_4                 "Longest Run Week 4"
 #define WORKOUT_INPUT_AGE_YEARS                          "Age In Years"
-#define WORKOUT_INPUT_EXPERIENCE_LEVEL                   "Experience Level"
+#define WORKOUT_INPUT_EXPERIENCE_LEVEL                   "Experience Level"          // Athlete's experience level with running (scale 1-10)
+#define WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL  "Structured Training Comfort Level" // Athlete's comfort level (i.e. experience) with doing intervals, long runs, etc. (scale 1-10)
 #define WORKOUT_INPUT_GOAL                               "Goal"
 #define WORKOUT_INPUT_GOAL_TYPE                          "Goal Type"
 #define WORKOUT_INPUT_GOAL_SWIM_DISTANCE                 "Goal Swim Distance"
