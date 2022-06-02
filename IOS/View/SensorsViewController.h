@@ -12,7 +12,7 @@
 {
 	IBOutlet UITableView* peripheralTableView;
 
-	// Sensors that are current connected.
+	// Peripherals that are current connected.
 	NSMutableArray* connectedHRMs;
 	NSMutableArray* connectedScales;
 	NSMutableArray* connectedCadenceWheelSpeedSensors;
@@ -20,6 +20,15 @@
 	NSMutableArray* connectedFootPods;
 	NSMutableArray* connectedLights;
 	NSMutableArray* connectedRadarUnits;
+
+	// Last known values for connected peripherals.
+	NSMutableDictionary* currentValuesOfHRMs;
+	NSMutableDictionary* currentValuesOfScales;
+	NSMutableDictionary* currentValuesOfCadenceWheelSpeedSensors;
+	NSMutableDictionary* currentValuesPowerMeters;
+	NSMutableDictionary* currentValuesOfFootPods;
+	NSMutableDictionary* currentValuesOfLights;
+	NSMutableDictionary* currentValuesOfRadarUnits;
 
 	CBPeripheral* selectedPeripheral;
 }
