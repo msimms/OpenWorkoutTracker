@@ -58,6 +58,7 @@ git submodule update --init --recursive
 This app uses three other source projects to work properly:
 
 * [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS.
+* [LibBluetooth](https://github.com/msimms/LibBluetooth) - Cross-platform Bluetooth library.
 * [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities.
 * [PeakFinder](https://github.com/msimms/PeakFinder) - A peak finding algorithm.
 * [sqlite](https://www.sqlite.org) - Database for storing activities.
