@@ -1,66 +1,15 @@
-/*
-
- File: BtleDiscovery.m
- 
- Abstract: Scan for and discover nearby LE peripherals with the 
- matching service UUID.
- 
- Version: 1.0
- 
- Disclaimer: IMPORTANT:  This Apple software is supplied to you by 
- Apple Inc. ("Apple") in consideration of your agreement to the
- following terms, and your use, installation, modification or
- redistribution of this Apple software constitutes acceptance of these
- terms.  If you do not agree with these terms, please do not use,
- install, modify or redistribute this Apple software.
- 
- In consideration of your agreement to abide by the following terms, and
- subject to these terms, Apple grants you a personal, non-exclusive
- license, under Apple's copyrights in this original Apple software (the
- "Apple Software"), to use, reproduce, modify and redistribute the Apple
- Software, with or without modifications, in source and/or binary forms;
- provided that if you redistribute the Apple Software in its entirety and
- without modifications, you must retain this notice and the following
- text and disclaimers in all such redistributions of the Apple Software. 
- Neither the name, trademarks, service marks or logos of Apple Inc. 
- may be used to endorse or promote products derived from the Apple
- Software without specific prior written permission from Apple.  Except
- as expressly stated in this notice, no other rights or licenses, express
- or implied, are granted by Apple herein, including but not limited to
- any patent rights that may be infringed by your derivative works or by
- other works in which the Apple Software may be incorporated.
- 
- The Apple Software is provided by Apple on an "AS IS" basis.  APPLE
- MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
- THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS
- FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
- OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS.
- 
- IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL
- OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION,
- MODIFICATION AND/OR DISTRIBUTION OF THE APPLE SOFTWARE, HOWEVER CAUSED
- AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
- STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
- POSSIBILITY OF SUCH DAMAGE.
- 
- Copyright (C) 2011 Apple Inc. All Rights Reserved.
- 
- */
-
-// Modified by Michael Simms on 2/19/13.
-// Copyright (c) 2013 Michael J. Simms. All rights reserved.
+// (Re)written to use LibBluetooth by Michael Simms on 6/3/22.
+// Copyright (c) 2022 Michael J. Simms. All rights reserved.
 
 #import "BtleDiscovery.h"
-#import "BtleSensor.h"
-#import "BtleBikeSpeedAndCadence.h"
-#import "BtleFootPod.h"
-#import "BtleHeartRateMonitor.h"
-#import "BtlePowerMeter.h"
+#import "CyclingCadenceParser.h"
+#import "CyclingPowerParser.h"
+#import "FootPodParser.h"
+#import "HeartRateParser.h"
 #import "Notifications.h"
 #import "Preferences.h"
-#import "SensorFactory.h"
+#import "RadarParser.h"
+#import "WeightParser.h"
 
 @implementation BtleDiscovery
 
@@ -82,13 +31,229 @@
 	self = [super init];
 	if (self)
 	{
+		self->scanner                 = [[BluetoothScanner alloc] init];
+		self->cadenceCalc             = [[CadenceCalculator alloc] init];
+
 		self->discoveryDelegates      = [[NSMutableArray alloc] init];
-		self->centralManager          = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_main_queue()];
 		self->discoveredPeripherals   = [[NSMutableArray alloc] init];
 		self->discoveredSensors       = [[NSMutableArray alloc] init];
+
 		self->connectToUnknownDevices = false;
+
+		self->heartRateSvc    = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_HEART_RATE]];
+		self->runningSCSvc    = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_RUNNING_SPEED_AND_CADENCE]];
+		self->cyclingSCSvc    = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_SPEED_AND_CADENCE]];
+		self->cyclingPowerSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_POWER]];
+		self->weightSvc       = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_WEIGHT]];
+		self->radarSvc        = [CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_VARIA_RADAR];
+
+		NSArray* interestingServices = [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, weightSvc, radarSvc, nil];
+
+		[self->scanner start:interestingServices withPeripheralCallback:&peripheralDiscoveredFunc withServiceCallback:&serviceDiscoveredFunc withValueUpdatedCallback:&valueUpdatedFunc withCallbackParam:(void*)self];
+		[self startScanTimer];
 	}
 	return self;
+}
+
+#pragma mark UUID conversion methods
+
+CBUUID* extendUUID(uint16_t value)
+{
+	NSString* str = [[NSString alloc] initWithFormat:@"0000%04X-0000-1000-8000-00805F9B34FB", value];
+	return [CBUUID UUIDWithString:str];
+}
+
+CBUUID* intToCBUUID(uint16_t value)
+{
+	return [CBUUID UUIDWithData:[NSData dataWithBytes:&value length:2]];
+}
+
+- (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2
+{
+	NSString* serviceIdStr = [[NSString alloc] initWithFormat:@"%x", service2];
+	CBUUID* serviceUuid = service1.UUID;
+	return ([serviceUuid isEqual:[CBUUID UUIDWithString:serviceIdStr]]);
+}
+
+- (BOOL)serviceEquals:(CBService*)service1 withCustomServiceId:(NSString*)service2
+{
+	CBUUID* serviceUuid = service1.UUID;
+	return ([serviceUuid isEqual:[CBUUID UUIDWithString:service2]]);
+}
+
+- (uint64_t)currentTimeInMs
+{
+	NSDate* now = [NSDate date];
+	uint64_t theTimeMs = (uint64_t)([now timeIntervalSince1970] * (double)1000.0);
+	return theTimeMs;
+}
+
+#pragma mark timer methods
+
+- (void)startScanTimer
+{
+	self->scanTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:3.0]
+											   interval:3
+												 target:self
+											   selector:@selector(onScanTimer:)
+											   userInfo:nil
+												repeats:YES];
+	NSRunLoop* runner = [NSRunLoop currentRunLoop];
+	if (runner)
+	{
+		[runner addTimer:self->scanTimer forMode: NSDefaultRunLoopMode];
+	}
+}
+
+- (void)onScanTimer:(NSTimer*)timer
+{
+	[self->scanner restart];
+}
+
+#pragma mark callback methods
+
+/// Called when a peripheral is discovered.
+/// Returns true to indicate that we should connect to this peripheral and discover its services.
+- (bool)peripheralDiscovered:(CBPeripheral*)peripheral withDescription:(NSString*)description
+{
+	// This can be toggled to block connection attempts from unknown devices when
+	// that is not desired, such as during an activity.
+	if (!self->connectToUnknownDevices)
+	{
+		NSString* idStr = [[peripheral identifier] UUIDString];
+		if (![Preferences shouldUsePeripheral:idStr])
+			return false;
+	}
+
+	if ([self addDiscoveredPeripheral:peripheral])
+	{
+		[self refreshDelegates];
+	}
+	
+	return true;
+}
+
+/// Called when a peripheral is discovered.
+/// Returns true to indicate that we should connect to this peripheral and discover its services.
+bool peripheralDiscoveredFunc(CBPeripheral* peripheral, NSString* description, void* cb)
+{
+	BtleDiscovery* cbObj = (__bridge BtleDiscovery*)cb;
+	return [cbObj peripheralDiscovered:peripheral withDescription:description];
+}
+
+/// Called when a service is discovered.
+- (void)serviceDiscovered:(CBPeripheral*)peripheral withServiceId:(CBUUID*)serviceId
+{
+}
+
+/// Called when a service is discovered.
+void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb)
+{
+	BtleDiscovery* cbObj = (__bridge BtleDiscovery*)cb;
+	[cbObj serviceDiscovered:peripheral withServiceId:serviceId];
+}
+
+/// Called when a sensor characteristic is updated.
+- (void)valueUpdated:(CBPeripheral*)peripheral withServiceId:(CBUUID*)serviceId withCharacteristicId:(CBUUID*)characteristicId withValue:(NSData*)value
+{
+	if ([serviceId isEqual:self->heartRateSvc])
+	{
+		uint16_t currentHeartRate = [HeartRateParser parse:value];
+		NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									   [NSNumber numberWithLong:currentHeartRate], @KEY_NAME_HEART_RATE,
+									   [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_TIMESTAMP_MS,
+									   peripheral, @KEY_NAME_PERIPHERAL_OBJ,
+									   nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
+	}
+	else if ([serviceId isEqual:self->runningSCSvc])
+	{
+		NSDictionary* footDict = [FootPodParser toDict:value];
+		NSMutableDictionary* footDict2 = [footDict mutableCopy];
+		[footDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+
+		uint32_t strideLength = [[footDict2 valueForKey:@KEY_NAME_STRIDE_LENGTH] unsignedIntValue];
+		uint32_t runDistance = [[footDict2 valueForKey:@KEY_NAME_RUN_DISTANCE] unsignedIntValue];
+		
+		if (strideLength)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:footDict2];
+		}
+		
+		if (runDistance)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RUN_DISTANCE object:footDict2];
+		}
+	}
+	else if ([serviceId isEqual:self->cyclingSCSvc])
+	{
+		NSDictionary* cadenceDict = [CyclingCadenceParser toDict:value];
+		NSMutableDictionary* cadenceDict2 = [cadenceDict mutableCopy];
+		[cadenceDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+
+		uint16_t currentWheelRevCount = [[cadenceDict2 valueForKey:@KEY_NAME_WHEEL_REV_COUNT] unsignedIntValue];
+		uint16_t currentCrankCount = [[cadenceDict2 valueForKey:@KEY_NAME_WHEEL_CRANK_COUNT] unsignedIntValue];
+		uint16_t currentCrankTime = [[cadenceDict2 valueForKey:@KEY_NAME_WHEEL_CRANK_TIME] unsignedIntValue];
+
+		if (currentWheelRevCount)
+		{
+			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BIKE_WHEEL_SPEED object:cadenceDict2];
+		}
+		if (currentCrankCount && currentCrankTime)
+		{
+			[self->cadenceCalc update:[self currentTimeInMs]
+					   withCrankCount:currentCrankCount
+						withCrankTime:currentCrankTime
+					   fromPeripheral:peripheral];
+		}
+	}
+	else if ([serviceId isEqual:self->cyclingPowerSvc])
+	{
+		uint64_t currentTime = [self currentTimeInMs];
+
+		NSDictionary* currentPower = [CyclingPowerParser toDict:value];
+		NSMutableDictionary* currentPower2 = [currentPower mutableCopy];
+		[currentPower2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+		[currentPower2 setObject:[NSNumber numberWithLongLong:[self currentTimeInMs]] forKey:@KEY_NAME_TIMESTAMP_MS];
+
+		uint16_t currentCrankCount = [[currentPower2 valueForKey:@KEY_NAME_CYCLING_POWER_CRANK_REVS] unsignedIntValue];
+		uint16_t currentCrankTime = [[currentPower2 valueForKey:@KEY_NAME_CYCLING_POWER_LAST_CRANK_TIME] unsignedIntValue];
+
+		if (currentCrankCount && currentCrankTime)
+		{
+			[self->cadenceCalc update:currentTime
+					   withCrankCount:currentCrankCount
+						withCrankTime:currentCrankTime
+					   fromPeripheral:peripheral];
+		}
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_POWER object:currentPower2];
+	}
+	else if ([serviceId isEqual:self->weightSvc])
+	{
+		float weightKg = [WeightParser toFloat:value];
+		NSDictionary* weightData = [[NSDictionary alloc] initWithObjectsAndKeys:
+									[NSNumber numberWithFloat:weightKg], @KEY_NAME_WEIGHT_KG,
+									[NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_TIMESTAMP_MS,
+									peripheral, @KEY_NAME_PERIPHERAL_OBJ,
+									nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:weightData];
+	}
+	else if ([serviceId isEqual:self->radarSvc])
+	{
+		NSDictionary* radarDict = [RadarParser toDict:value];
+		NSMutableDictionary* radarDict2 = [radarDict mutableCopy];
+
+		[radarDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RADAR object:radarDict2];
+	}
+}
+
+/// Called when a sensor characteristic is updated.
+void valueUpdatedFunc(CBPeripheral* peripheral, CBUUID* serviceId, CBUUID* characteristicId, NSData* value, void* cb)
+{
+	BtleDiscovery* cbObj = (__bridge BtleDiscovery*)cb;
+	[cbObj valueUpdated:peripheral withServiceId:serviceId withCharacteristicId:characteristicId withValue:value];
 }
 
 #pragma mark methods for managing delegates
@@ -162,7 +327,6 @@
 
 		// Not found, add it.
 		[self->discoveredPeripherals addObject:peripheral];
-		[peripheral setDelegate:self];
 		return TRUE;
 	}
 	return FALSE;
@@ -196,292 +360,9 @@
 	}
 }
 
-- (NSArray*)usableSensors
-{
-	CBUUID* heartRateSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_HEART_RATE]];
-	CBUUID* runningSCSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_RUNNING_SPEED_AND_CADENCE]];
-	CBUUID* cyclingSCSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_SPEED_AND_CADENCE]];
-	CBUUID* cyclingPowerSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_POWER]];
-	CBUUID* weightSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_WEIGHT]];
-
-	return [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, weightSvc, nil];
-}
-
-- (void)retrieveConnectedPeripherals
-{
-	NSArray* peripheralUUIDStrs = [Preferences listPeripheralsToUse];
-	NSMutableArray* uuids = [[NSMutableArray alloc] init];
-
-	for (NSString* peripheralUUIDStr in peripheralUUIDStrs)
-	{
-		NSUUID* nsuuid = [[NSUUID alloc] initWithUUIDString:peripheralUUIDStr];
-
-		if (nsuuid)
-		{
-			[uuids addObject:nsuuid];
-		}
-	}
-	[self->centralManager retrievePeripheralsWithIdentifiers:uuids];
-}
-
-- (void)retrieveConnectedSensors
-{
-	NSArray* sensorUUIDs = [self usableSensors];
-
-	if (sensorUUIDs)
-	{
-		[self->centralManager retrieveConnectedPeripheralsWithServices:sensorUUIDs];
-	}
-}
-
-- (void)stopScanning
-{
-	[self->centralManager stopScan];
-	[self->scanTimer invalidate];
-	self->scanTimer = NULL;
-}
-
 - (void)allowConnectionsFromUnknownDevices:(BOOL)allow
 {
 	self->connectToUnknownDevices = allow;
-}
-
-#pragma mark timer methods
-
-- (void)onScanTimer:(NSTimer*)timer
-{
-	if (self->centralManager && (self->centralManager.state == CBManagerStatePoweredOn))
-	{
-		NSDictionary* options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:CBCentralManagerScanOptionAllowDuplicatesKey];
-
-		[self->centralManager scanForPeripheralsWithServices:nil options:options];	// scan for all periperals as some may not properly advertise their services
-		[self retrieveConnectedPeripherals];
-	}
-}
-
-#pragma mark connection/disconnection methods
-
-- (void)connectPeripheral:(CBPeripheral*)peripheral
-{
-	[self->centralManager connectPeripheral:peripheral options:nil];
-}
-
-- (void)disconnectPeripheral:(CBPeripheral*)peripheral
-{
-	[self->centralManager cancelPeripheralConnection:peripheral];
-}
-
-#pragma mark CBCentralManagerDelegate methods
-
-- (void)centralManager:(CBCentralManager*)central didConnectPeripheral:(CBPeripheral*)peripheral
-{
-	[peripheral discoverServices:nil];
-	[self refreshDelegates];
-
-//	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:[peripheral name], @KEY_NAME_SENSOR_NAME, nil];
-//	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_SENSOR_CONNECTED object:msgData];
-}
-
-- (void)centralManager:(CBCentralManager*)central didDisconnectPeripheral:(CBPeripheral*)peripheral error:(NSError*)error
-{
-	[self removeConnectedPeripheral:peripheral];
-	[self refreshDelegates];
-
-	NSDictionary* msgData = [[NSDictionary alloc] initWithObjectsAndKeys:[peripheral name], @KEY_NAME_SENSOR_NAME, nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_SENSOR_DISCONNECTED object:msgData];
-}
-
-- (void)centralManager:(CBCentralManager*)central didDiscoverPeripheral:(CBPeripheral*)peripheral advertisementData:(NSDictionary*)advertisementData RSSI:(NSNumber*)RSSI
-{
-	// This can be toggled to block connection attempts from unknown devices when
-	// that is not desired, such as during an activity.
-	if (!self->connectToUnknownDevices)
-	{
-		NSString* idStr = [[peripheral identifier] UUIDString];
-
-		if (![Preferences shouldUsePeripheral:idStr])
-		{
-			return;
-		}
-	}
-
-	if ([self addDiscoveredPeripheral:peripheral])
-	{
-		[self connectPeripheral:peripheral];
-		[self refreshDelegates];
-	}
-}
-
-- (void)centralManager:(CBCentralManager*)central didFailToConnectPeripheral:(CBPeripheral*)peripheral error:(NSError*)error
-{
-	[self removeConnectedPeripheral:peripheral];
-	[self refreshDelegates];
-}
-
-- (void)centralManager:(CBCentralManager*)central didRetrieveConnectedPeripherals:(NSArray*)peripherals
-{
-	for (CBPeripheral* peripheral in peripherals)
-	{
-		[central connectPeripheral:peripheral options:nil];
-	}
-	[self refreshDelegates];
-}
-
-- (void)centralManager:(CBCentralManager*)central didRetrievePeripherals:(NSArray*)peripherals
-{
-	for (CBPeripheral* peripheral in peripherals)
-	{
-		[central connectPeripheral:peripheral options:nil];
-	}
-	[self refreshDelegates];
-}
-
-- (void)centralManager:(CBCentralManager*)central didRetrievePeripheral:(CBPeripheral*)peripheral
-{
-	[central connectPeripheral:peripheral options:nil];
-	[self refreshDelegates];
-}
-
-- (void)centralManager:(CBCentralManager*)central didFailToRetrievePeripheralForUUID:(CFUUIDRef)UUID error:(NSError*)error
-{
-}
-
-- (void)centralManagerDidUpdateState:(CBCentralManager*)central
-{
-	switch (central.state)
-	{
-		case CBManagerStateUnknown:
-		case CBManagerStateResetting:
-		case CBManagerStateUnsupported:
-		case CBManagerStateUnauthorized:
-		case CBManagerStatePoweredOff:
-			[self->scanTimer invalidate];
-			self->scanTimer = NULL;
-			break;
-		case CBManagerStatePoweredOn:
-			self->scanTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:3.0]
-													   interval:3
-														 target:self
-													   selector:@selector(onScanTimer:)
-													   userInfo:nil
-														repeats:YES];
-			NSRunLoop* runner = [NSRunLoop currentRunLoop];
-			if (runner)
-			{
-				[runner addTimer:self->scanTimer forMode: NSDefaultRunLoopMode];
-			}
-			break;
-	}
-
-	[self refreshDelegates];
-}
-
-#pragma mark CBPeripheralDelegate methods
-
-- (void)peripheral:(CBPeripheral*)peripheral didDiscoverServices:(NSError*)error
-{
-	for (CBService* service in peripheral.services)
-	{
-		bool alreadyDiscovered = false;
-
-		@synchronized(self->discoveredSensors)
-		{
-			// Have we already seen this peripheral? If so, we may need to update it.
-			for (BtleSensor* sensor in self->discoveredSensors)
-			{
-				if ([sensor peripheral] == peripheral)
-				{
-					[peripheral setDelegate:sensor];
-					[peripheral discoverCharacteristics:nil forService:service];
-					alreadyDiscovered = true;
-				}
-			}
-
-			// If we haven't seen this peripheral yet then instantiate an object to manage it.
-			if (!alreadyDiscovered)
-			{
-				BtleSensor* sensor = nil;
-				
-				if ([self serviceEquals:service withServiceId:BT_SERVICE_HEART_RATE])
-				{
-					sensor = [[[SensorFactory alloc] init] createHeartRateMonitor:peripheral];
-				}
-				else if ([self serviceEquals:service withServiceId:BT_SERVICE_CYCLING_SPEED_AND_CADENCE])
-				{
-					sensor = [[[SensorFactory alloc] init] createBikeSpeedAndCadenceSensor:peripheral];
-				}
-				else if ([self serviceEquals:service withServiceId:BT_SERVICE_CYCLING_POWER])
-				{
-					sensor = [[[SensorFactory alloc] init] createPowerMeter:peripheral];
-				}
-				else if ([self serviceEquals:service withServiceId:BT_SERVICE_RUNNING_SPEED_AND_CADENCE])
-				{
-					sensor = [[[SensorFactory alloc] init] createFootPodSensor:peripheral];
-				}
-				else if ([self serviceEquals:service withServiceId:BT_SERVICE_WEIGHT])
-				{
-					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
-				}
-				else if ([self serviceEquals:service withServiceId:BT_SERVICE_WEIGHT_SCALE])
-				{
-					sensor = [[[SensorFactory alloc] init] createWeightSensor:peripheral];
-				}
-				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_FLY6_LIGHT]])
-				{
-					sensor = [[[SensorFactory alloc] init] createLightSensor:peripheral];
-				}
-				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_KTV_LIGHT]])
-				{
-					sensor = [[[SensorFactory alloc] init] createLightSensor:peripheral];
-				}
-				else if ([service.UUID isEqual:[CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_VARIA_RADAR]])
-				{
-					sensor = [[[SensorFactory alloc] init] createRadarSensor:peripheral];
-				}
-
-				if (sensor)
-				{
-					[self->discoveredSensors addObject:sensor];
-					[peripheral setDelegate:sensor];
-					[peripheral discoverCharacteristics:nil forService:service];
-				}
-			}
-		}
-	}
-
-	[self refreshDelegates];
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didDiscoverIncludedServicesForService:(CBService*)service error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didDiscoverCharacteristicsForService:(CBService*)service error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didUpdateValueForDescriptor:(CBDescriptor*)descriptor error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didWriteValueForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didWriteValueForDescriptor:(CBDescriptor*)descriptor error:(NSError*)error
-{
-}
-
-- (void)peripheral:(CBPeripheral*)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic*)characteristic error:(NSError*)error
-{
 }
 
 #pragma mark accessor methods
@@ -490,18 +371,15 @@
 {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
 
-	if (result)
+	@synchronized(self->discoveredPeripherals)
 	{
-		@synchronized(self->discoveredPeripherals)
+		for (CBPeripheral* peripheral in self->discoveredPeripherals)
 		{
-			for (CBPeripheral* peripheral in self->discoveredPeripherals)
+			for (CBService* service in peripheral.services)
 			{
-				for (CBService* service in peripheral.services)
+				if ([self serviceEquals:service withServiceId:serviceId])
 				{
-					if ([self serviceEquals:service withServiceId:serviceId])
-					{
-						[result addObject:peripheral];
-					}
+					[result addObject:peripheral];
 				}
 			}
 		}
@@ -513,60 +391,20 @@
 {
 	NSMutableArray* result = [[NSMutableArray alloc] init];
 	
-	if (result)
+	@synchronized(self->discoveredPeripherals)
 	{
-		@synchronized(self->discoveredPeripherals)
+		for (CBPeripheral* peripheral in self->discoveredPeripherals)
 		{
-			for (CBPeripheral* peripheral in self->discoveredPeripherals)
+			for (CBService* service in peripheral.services)
 			{
-				for (CBService* service in peripheral.services)
+				if ([self serviceEquals:service withCustomServiceId:serviceId])
 				{
-					if ([self serviceEquals:service withCustomServiceId:serviceId])
-					{
-						[result addObject:peripheral];
-					}
+					[result addObject:peripheral];
 				}
 			}
 		}
 	}
 	return result;
-}
-
-- (NSMutableArray*)sensorsForPeripheral:(CBPeripheral*)peripheral
-{
-	NSMutableArray* result = [[NSMutableArray alloc] init];
-
-	if (result)
-	{
-		@synchronized(self->discoveredSensors)
-		{
-			for (BtleSensor* sensor in self->discoveredSensors)
-			{
-				if ([sensor peripheral] == peripheral)
-				{
-					[result addObject:sensor];
-				}
-			}
-		}
-	}
-	return result;
-}
-
-#pragma mark utility methods
-
-- (BOOL)serviceEquals:(CBService*)service1 withServiceId:(BluetoothServiceId)service2
-{
-	NSString* serviceIdStr = [[NSString alloc] initWithFormat:@"%x", service2];
-	CBUUID* serviceUuid = service1.UUID;
-
-	return ([serviceUuid isEqual:[CBUUID UUIDWithString:serviceIdStr]]);
-}
-
-- (BOOL)serviceEquals:(CBService*)service1 withCustomServiceId:(NSString*)service2
-{
-	CBUUID* serviceUuid = service1.UUID;
-
-	return ([serviceUuid isEqual:[CBUUID UUIDWithString:service2]]);
 }
 
 @end

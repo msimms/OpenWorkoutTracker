@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "CadenceCalculator.h"
+#import "Notifications.h"
 
 @implementation CadenceCalculator
 
@@ -50,11 +51,8 @@
 								 [NSNumber numberWithLongLong:curTimeMs], @KEY_NAME_CADENCE_TIMESTAMP_MS,
 								 peripheral, @KEY_NAME_PERIPHERAL_OBJ,
 								 nil];
-	if (cadenceData)
-	{
-		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BIKE_CADENCE object:cadenceData];
-		self->lastCadenceUpdateTimeMs = curTimeMs;
-	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BIKE_CADENCE object:cadenceData];
+	self->lastCadenceUpdateTimeMs = curTimeMs;
 
 	firstCadenceUpdate = false;
 

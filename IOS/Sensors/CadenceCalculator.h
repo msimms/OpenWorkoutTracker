@@ -8,12 +8,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-#define NOTIFICATION_NAME_BIKE_CADENCE     "CadenceUpdated"
-
-#define KEY_NAME_CADENCE                   "Cadence"
-#define KEY_NAME_CADENCE_TIMESTAMP_MS      "Time"
-#define KEY_NAME_PERIPHERAL_OBJ            "Peripheral"
-
 @interface CadenceCalculator : NSObject
 {
 	bool     firstCadenceUpdate;

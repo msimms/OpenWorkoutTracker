@@ -8,7 +8,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import "WatchHealthManager.h"
 #import "ActivityType.h"
-#import "BtleHeartRateMonitor.h"
+#import "HeartRateParser.h"
+#import "Notifications.h"
 #import "Preferences.h"
 
 @implementation WatchHealthManager
@@ -118,7 +119,7 @@
 					  uint64_t unixTimeMs = (uint64_t)unixTime * (uint64_t)1000;
 					  NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
 													 [NSNumber numberWithLong:(long)hr], @KEY_NAME_HEART_RATE,
-													 [NSNumber numberWithLongLong:unixTimeMs], @KEY_NAME_HRM_TIMESTAMP_MS,
+													 [NSNumber numberWithLongLong:unixTimeMs], @KEY_NAME_TIMESTAMP_MS,
 													 nil];
 
 					  dispatch_async(dispatch_get_main_queue(),^{

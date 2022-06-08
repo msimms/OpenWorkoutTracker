@@ -8,15 +8,14 @@
 #import "SensorsViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
-#import "BtleBikeSpeedAndCadence.h"
-#import "BtleFootPod.h"
-#import "BtleHeartRateMonitor.h"
-#import "BtlePowerMeter.h"
-#import "BtleRadar.h"
-#import "BtleScale.h"
+#import "CyclingPowerParser.h"
+#import "HeartRateParser.h"
+#import "Notifications.h"
 #import "Preferences.h"
+#import "RadarParser.h"
 #import "Segues.h"
 #import "StringUtils.h"
+#import "WeightParser.h"
 
 #define TITLE                       NSLocalizedString(@"Sensors", nil)
 
@@ -413,61 +412,76 @@ typedef enum SettingsSections
 {
 	NSDictionary* data = [notification object];
 
-	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_SCALE_PERIPHERAL_OBJ];
+	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 	NSNumber* value = [data objectForKey:@KEY_NAME_WEIGHT_KG];
 
 	NSInteger row = [self->connectedScales indexOfObject:peripheral];
 	NSUInteger newIndex[] = { SECTION_SCALE, row };
 	NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 	UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-	UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-	[content setText:[peripheral name]];
-	[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
+	// If we're showing this peripheral.
+	if (cell)
+	{
+		UIListContentConfiguration* content = [cell defaultContentConfiguration];
 
-	[cell setContentConfiguration:content];
+		[content setText:[peripheral name]];
+		[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
+
+		[cell setContentConfiguration:content];
+	}
 }
 
 - (void)heartRateUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
 
-	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 	NSNumber* value = [data objectForKey:@KEY_NAME_HEART_RATE];
 
 	NSInteger row = [self->connectedHRMs indexOfObject:peripheral];
 	NSUInteger newIndex[] = { SECTION_HRM, row };
 	NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 	UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-	UIListContentConfiguration* content = [cell defaultContentConfiguration];
-	NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]];
-
-	[content setText:[peripheral name]];
-	[content setSecondaryText:contentStr];
-	[cell setContentConfiguration:content];
 	
-	[self->currentValuesOfHRMs setObject:contentStr forKey:peripheral];
+	// If we're showing this peripheral.
+	if (cell)
+	{
+		UIListContentConfiguration* content = [cell defaultContentConfiguration];
+		NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_BPM]];
+
+		[content setText:[peripheral name]];
+		[content setSecondaryText:contentStr];
+		[cell setContentConfiguration:content];
+		
+		[self->currentValuesOfHRMs setObject:contentStr forKey:peripheral];
+	}
 }
 
 - (void)cadenceUpdated:(NSNotification*)notification
 {
 	NSDictionary* data = [notification object];
 
-	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 	NSNumber* value = [data objectForKey:@KEY_NAME_CADENCE];
 
 	NSInteger row = [self->connectedCadenceWheelSpeedSensors indexOfObject:peripheral];
 	NSUInteger newIndex[] = { SECTION_CADENCE_WHEEL_SPEED, row };
 	NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 	UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-	UIListContentConfiguration* content = [cell defaultContentConfiguration];
-	NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]];
 
-	[content setText:[peripheral name]];
-	[content setSecondaryText:contentStr];
-	[cell setContentConfiguration:content];
+	// If we're showing this peripheral.
+	if (cell)
+	{
+		UIListContentConfiguration* content = [cell defaultContentConfiguration];
+		NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_RPM]];
 
-	[self->currentValuesOfCadenceWheelSpeedSensors setObject:contentStr forKey:peripheral];
+		[content setText:[peripheral name]];
+		[content setSecondaryText:contentStr];
+		[cell setContentConfiguration:content];
+
+		[self->currentValuesOfCadenceWheelSpeedSensors setObject:contentStr forKey:peripheral];
+	}
 }
 
 - (void)wheelSpeedUpdated:(NSNotification*)notification
@@ -480,21 +494,26 @@ typedef enum SettingsSections
 {
 	NSDictionary* data = [notification object];
 
-	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
-	NSNumber* value = [data objectForKey:@KEY_NAME_POWER];
+	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
+	NSNumber* value = [data objectForKey:@KEY_NAME_CYCLING_POWER_WATTS];
 
 	NSInteger row = [self->connectedPowerMeters indexOfObject:peripheral];
 	NSUInteger newIndex[] = { SECTION_POWER_METER, row };
 	NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 	UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-	UIListContentConfiguration* content = [cell defaultContentConfiguration];
-	NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 
-	[content setText:[peripheral name]];
-	[content setSecondaryText:contentStr];
-	[cell setContentConfiguration:content];
+	// If we're showing this peripheral.
+	if (cell)
+	{
+		UIListContentConfiguration* content = [cell defaultContentConfiguration];
+		NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@ ", [value longValue], [StringUtils formatActivityMeasureType:MEASURE_POWER]];
 
-	[self->currentValuesPowerMeters setObject:contentStr forKey:peripheral];
+		[content setText:[peripheral name]];
+		[content setSecondaryText:contentStr];
+		[cell setContentConfiguration:content];
+
+		[self->currentValuesPowerMeters setObject:contentStr forKey:peripheral];
+	}
 }
 
 - (void)strideLengthUpdated:(NSNotification*)notification
@@ -513,21 +532,26 @@ typedef enum SettingsSections
 {
 	NSDictionary* data = [notification object];
 
-	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_RADAR_PERIPHERAL_OBJ];
+	CBPeripheral* peripheral = [data objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 	NSNumber* value = [data objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
 
 	NSInteger row = [self->connectedRadarUnits indexOfObject:peripheral];
 	NSUInteger newIndex[] = { SECTION_RADAR, row };
 	NSIndexPath* newPath = [[NSIndexPath alloc] initWithIndexes:newIndex length:2];
 	UITableViewCell* cell = [self->peripheralTableView cellForRowAtIndexPath:newPath];
-	UIListContentConfiguration* content = [cell defaultContentConfiguration];
-	NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], UNIT_THREATS];
 
-	[content setText:[peripheral name]];
-	[content setSecondaryText:contentStr];
-	[cell setContentConfiguration:content];
+	// If we're showing this peripheral.
+	if (cell)
+	{
+		UIListContentConfiguration* content = [cell defaultContentConfiguration];
+		NSString* contentStr = [[NSString alloc] initWithFormat:@"%ld %@", [value longValue], UNIT_THREATS];
 
-	[self->currentValuesOfRadarUnits setObject:contentStr forKey:peripheral];
+		[content setText:[peripheral name]];
+		[content setSecondaryText:contentStr];
+		[cell setContentConfiguration:content];
+
+		[self->currentValuesOfRadarUnits setObject:contentStr forKey:peripheral];
+	}
 }
 
 @end

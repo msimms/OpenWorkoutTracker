@@ -30,8 +30,33 @@
 #define NOTIFICATION_NAME_SENSOR_DISCONNECTED         "SensorDisconnected"       // A peripheral sensor disconnected
 #define NOTIFICATION_NAME_INTERNAL_ERROR              "InternalError"            // An error was received, typically used to return errors from asynchronous routines
 
+// Heart rate monitor readings
+#define NOTIFICATION_NAME_HRM                         "HeartRateUpdated"         // An updated heart rate value is being published
+
+// Cycling cadence readings
+#define NOTIFICATION_NAME_BIKE_CADENCE                "CadenceUpdated"
+#define KEY_NAME_CADENCE                              "Cadence"
+#define KEY_NAME_CADENCE_TIMESTAMP_MS                 "Time"
+
+// Cycling wheel speed readings
+#define NOTIFICATION_NAME_BIKE_WHEEL_SPEED            "WheelSpeedUdpated"
+
+// Cycling/running power readings
+#define NOTIFICATION_NAME_POWER                       "PowerUpdated"
+
+// Cycling radar readings
+#define NOTIFICATION_NAME_RADAR                       "RadarUpdated"             // New information from the cycling radar
+
+// Foot pod readings
+#define NOTIFICATION_NAME_RUN_DISTANCE                "RunDistanceUpdated"
+#define NOTIFICATION_NAME_RUN_STRIDE_LENGTH           "RunStrideLengthUpdated"
+
+// Scale readings
+#define NOTIFICATION_NAME_LIVE_WEIGHT_READING         "LiveWeightReading"
+#define NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING   "HistoricalWeightReading"
+
 // Parameters that are associated with the notifications
-#define KEY_NAME_ACTIVITY_ID                          "ActivityId"
+#define KEY_NAME_ACTIVITY_ID                          "ActivityId"               // The unique identifier for the activity
 #define KEY_NAME_ACTIVITY_TYPE                        "ActivityType"
 #define KEY_NAME_ACTIVITY_HASH                        "ActivityHash"
 #define KEY_NAME_START_TIME                           "StartTime"
@@ -45,11 +70,13 @@
 #define KEY_NAME_URL                                  "URL"
 #define KEY_NAME_TAG                                  "Tag"
 #define KEY_NAME_MESSAGE                              "Message"
+#define KEY_NAME_PERIPHERAL_OBJ                       "Peripheral"
 #define KEY_NAME_STATUS                               "Status"
 #define KEY_NAME_SENSOR_NAME                          "SensorName"
+#define KEY_NAME_TIMESTAMP_MS                         "Time"
 #define KEY_NAME_DEVICE_ID                            "DeviceId"
 #define KEY_NAME_USER_NAME                            "Name"
-#define KEY_NAME_INTERVAL_SEGMENT_ID                  "IntervalSegmentId"
+#define KEY_NAME_INTERVAL_SEGMENT_ID                  "IntervalSegmentId"        // The unique identifier for the interval segment
 #define KEY_NAME_INTERVAL_SETS                        "IntervalSets"
 #define KEY_NAME_INTERVAL_REPS                        "IntervalReps"
 #define KEY_NAME_INTERVAL_DURATION                    "IntervalDuration"

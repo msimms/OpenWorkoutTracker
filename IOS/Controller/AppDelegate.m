@@ -14,26 +14,25 @@
 #import "Accelerometer.h"
 #import "ActivityAttribute.h"
 #import "ApiClient.h"
-#import "BtleBikeSpeedAndCadence.h"
-#import "BtleFootPod.h"
-#import "BtleHeartRateMonitor.h"
-#import "BtlePowerMeter.h"
-#import "BtleRadar.h"
-#import "BtleScale.h"
 #import "CloudMgr.h"
 #import "CloudPreferences.h"
 #import "Cookies.h"
+#import "CyclingPowerParser.h"
 #import "ExportUtils.h"
 #import "FileUtils.h"
+#import "FootPodParser.h"
+#import "HeartRateParser.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
 #import "Params.h"
 #import "Preferences.h"
-#import "SensorFactory.h"
+#import "RadarParser.h"
 #import "Urls.h"
 #import "UnitConversionFactors.h"
 #import "UserProfile.h"
 #import "WatchMessages.h"
+#import "WeightParser.h"
+#import "WheelSpeedAndCadenceParser.h"
 
 #include <sys/sysctl.h>
 
@@ -100,9 +99,8 @@ typedef enum MsgDestinationType
 	// Sensor management object. Add the accelerometer and location sensors by default.
 	//
 
-	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
-	LocationSensor* locationController = [sensorFactory createLocationSensor];
+	Accelerometer* accelerometerController = [[Accelerometer alloc] init];
+	LocationSensor* locationController = [[LocationSensor alloc] init];
 
 	self->sensorMgr = [SensorMgr sharedInstance];
 	[self->sensorMgr addSensor:accelerometerController];
@@ -715,7 +713,6 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 {
 	if (self->bluetoothDeviceFinder)
 	{
-		[self->bluetoothDeviceFinder stopScanning];
 		self->bluetoothDeviceFinder = NULL;
 	}
 }
@@ -729,6 +726,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 	}
 }
 
+/// @brief Allows views to unregister from sensor discovery information.
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
 	if (self->bluetoothDeviceFinder)
@@ -781,7 +779,7 @@ void startSensorCallback(SensorType type, void* context)
 		NSDictionary* weightData = [notification object];
 
 		NSNumber* weightKg = [weightData objectForKey:@KEY_NAME_WEIGHT_KG];
-		NSNumber* time = [weightData objectForKey:@KEY_NAME_TIME];
+		NSNumber* time = [weightData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 
 		ProcessWeightReading([weightKg doubleValue], (time_t)[time unsignedLongLongValue]);
 	}
@@ -931,12 +929,12 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isActivityInProgressAndNotPaused])
 		{
 			NSDictionary* heartRateData = [notification object];
-			CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+			CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
 
 			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+				NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 				NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
 
 				if (timestampMs && rate)
@@ -970,7 +968,7 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isActivityInProgressAndNotPaused])
 		{
 			NSDictionary* cadenceData = [notification object];
-			CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+			CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
 
 			if ([Preferences shouldUsePeripheral:idStr])
@@ -1004,12 +1002,12 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isActivityInProgressAndNotPaused])
 		{
 			NSDictionary* wheelSpeedData = [notification object];
-			CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+			CBPeripheral* peripheral = [wheelSpeedData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
 
 			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED_TIMESTAMP_MS];
+				NSNumber* timestampMs = [wheelSpeedData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 				NSNumber* count = [wheelSpeedData objectForKey:@KEY_NAME_WHEEL_SPEED];
 
 				if (timestampMs && count)
@@ -1038,13 +1036,13 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isActivityInProgressAndNotPaused])
 		{
 			NSDictionary* powerData = [notification object];
-			CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+			CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
 
 			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_POWER_TIMESTAMP_MS];
-				NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
+				NSNumber* timestampMs = [powerData objectForKey:@KEY_NAME_TIMESTAMP_MS];
+				NSNumber* watts = [powerData objectForKey:@KEY_NAME_CYCLING_POWER_WATTS];
 
 				if (timestampMs && watts)
 				{
@@ -1072,12 +1070,12 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isActivityInProgressAndNotPaused])
 		{
 			NSDictionary* strideData = [notification object];
-			CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+			CBPeripheral* peripheral = [strideData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
 
 			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				NSNumber* timestampMs = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH_TIMESTAMP_MS];
+				NSNumber* timestampMs = [strideData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 				NSNumber* value = [strideData objectForKey:@KEY_NAME_STRIDE_LENGTH];
 
 				if (timestampMs && value)
@@ -1106,12 +1104,12 @@ void startSensorCallback(SensorType type, void* context)
 		if ([self isActivityInProgressAndNotPaused])
 		{
 			NSDictionary* distanceData = [notification object];
-			CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_FOOT_POD_PERIPHERAL_OBJ];
+			CBPeripheral* peripheral = [distanceData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 			NSString* idStr = [[peripheral identifier] UUIDString];
 
 			if ([Preferences shouldUsePeripheral:idStr])
 			{
-				NSNumber* timestampMs = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE_TIMESTAMP_MS];
+				NSNumber* timestampMs = [distanceData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 				NSNumber* value = [distanceData objectForKey:@KEY_NAME_RUN_DISTANCE];
 
 				if (timestampMs && value)
@@ -1138,12 +1136,12 @@ void startSensorCallback(SensorType type, void* context)
 	@try
 	{
 		NSDictionary* radarData = [notification object];
-		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_RADAR_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
-			NSNumber* timestampMs = [radarData objectForKey:@KEY_NAME_RADAR_TIMESTAMP_MS];
+			NSNumber* timestampMs = [radarData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 			NSNumber* value = [radarData objectForKey:@KEY_NAME_RADAR_THREAT_COUNT];
 
 			if (timestampMs && value)

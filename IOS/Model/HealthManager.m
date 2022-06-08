@@ -10,11 +10,12 @@
 #import "ActivityAttribute.h"
 #import "ActivityType.h"
 #import "AppStrings.h"
-#import "BtleHeartRateMonitor.h"
-#import "BtleScale.h"
+#import "BluetoothScanner.h"
+#import "HeartRateParser.h"
 #import "Notifications.h"
 #import "Preferences.h"
 #import "UserProfile.h"
+#import "WeightParser.h"
 
 @implementation HKUnit (HKManager)
 
@@ -294,8 +295,8 @@
 			ConvertToMetric(&tempWeight);
 
 			NSDictionary* weightData = [[NSDictionary alloc] initWithObjectsAndKeys:
-										[NSNumber numberWithDouble:usersWeight],@KEY_NAME_WEIGHT_KG,
-										[NSNumber numberWithLongLong:time(NULL)],@KEY_NAME_TIME,
+										[NSNumber numberWithDouble:usersWeight], @KEY_NAME_WEIGHT_KG,
+										[NSNumber numberWithLongLong:time(NULL) * 1000], @KEY_NAME_TIMESTAMP_MS,
 										nil];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HISTORICAL_WEIGHT_READING object:weightData];
 		}
@@ -957,18 +958,14 @@ bool NextCoordinate(const char* const activityId, Coordinate* coordinate, void* 
 	@try
 	{
 		NSDictionary* heartRateData = [notification object];
-		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
-			NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
 			NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
 
-			if (timestampMs && rate)
-			{
-				[self saveHeartRateIntoHealthStore:[rate doubleValue]];
-			}
+			[self saveHeartRateIntoHealthStore:[rate doubleValue]];
 		}
 	}
 	@catch (...)

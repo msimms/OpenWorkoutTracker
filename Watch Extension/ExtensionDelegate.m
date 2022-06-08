@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #import "ExtensionDelegate.h"
+#import "Accelerometer.h"
 #import "ActivityAttribute.h"
 #import "ActivityHash.h"
 #import "ActivityType.h"
@@ -14,9 +15,10 @@
 #import "CloudPreferences.h"
 #import "ExportUtils.h"
 #import "FileUtils.h"
+#import "HeartRateParser.h"
+#import "LocationSensor.h"
 #import "Notifications.h"
 #import "Preferences.h"
-#import "SensorFactory.h"
 
 #define DATABASE_NAME "Activities.sqlite"
 
@@ -37,9 +39,8 @@
 	// Sensor management object. Add the accelerometer and location sensors by default.
 	//
 
-	SensorFactory* sensorFactory = [[SensorFactory alloc] init];
-	Accelerometer* accelerometerController = [sensorFactory createAccelerometer];
-	LocationSensor* locationController = [sensorFactory createLocationSensor];
+	Accelerometer* accelerometerController = [[Accelerometer alloc] init];
+	LocationSensor* locationController = [[LocationSensor alloc] init];
 
 	self->sensorMgr = [SensorMgr sharedInstance];
 
@@ -218,6 +219,7 @@
 
 #pragma mark sensor methods
 
+/// @brief Initiates bluetooth sensor discovery.
 - (void)startSensorDiscovery
 {
 	if ([Preferences shouldScanForSensors])
@@ -226,15 +228,16 @@
 	}
 }
 
+/// @brief Stops bluetooth sensor discovery.
 - (void)stopSensorDiscovery
 {
 	if (self->bluetoothDeviceFinder)
 	{
-		[self->bluetoothDeviceFinder stopScanning];
 		self->bluetoothDeviceFinder = NULL;
 	}
 }
 
+/// @brief Allows views to register for sensor discovery information.
 - (void)addSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
 	if (self->bluetoothDeviceFinder)
@@ -243,6 +246,7 @@
 	}
 }
 
+/// @brief Allows views to unregister from sensor discovery information.
 - (void)removeSensorDiscoveryDelegate:(id<DiscoveryDelegate>)delegate
 {
 	if (self->bluetoothDeviceFinder)
@@ -814,7 +818,7 @@ void syncStatusCallback(const char* const destination, void* context)
 	{
 		NSDictionary* heartRateData = [notification object];
 
-		NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_HRM_TIMESTAMP_MS];
+		NSNumber* timestampMs = [heartRateData objectForKey:@KEY_NAME_TIMESTAMP_MS];
 		NSNumber* rate = [heartRateData objectForKey:@KEY_NAME_HEART_RATE];
 		
 		time_t now = time(NULL);

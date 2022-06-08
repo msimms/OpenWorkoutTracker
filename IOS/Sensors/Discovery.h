@@ -20,6 +20,4 @@
 - (void)removeDelegate:(id<DiscoveryDelegate>)oldDelegate;
 - (void)refreshDelegates;
 
-- (void)stopScanning;
-
 @end

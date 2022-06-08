@@ -13,13 +13,12 @@
 #import "ActivityType.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
-#import "BtleBikeSpeedAndCadence.h"
-#import "BtleHeartRateMonitor.h"
-#import "BtlePowerMeter.h"
-#import "BtleRadar.h"
+#import "CyclingPowerParser.h"
+#import "HeartRateParser.h"
 #import "LocationSensor.h"
 #import "Notifications.h"
 #import "Preferences.h"
+#import "RadarParser.h"
 #import "StaticSummaryViewController.h"
 #import "StringUtils.h"
 
@@ -962,7 +961,7 @@
 	@try
 	{
 		NSDictionary* heartRateData = [notification object];
-		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_HRM_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [heartRateData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
@@ -986,7 +985,7 @@
 	@try
 	{
 		NSDictionary* cadenceData = [notification object];
-		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_WSC_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [cadenceData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
@@ -1010,12 +1009,12 @@
 	@try
 	{
 		NSDictionary* powerData = [notification object];
-		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [powerData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
 		{
-			NSNumber* watts = [powerData objectForKey:@KEY_NAME_POWER];
+			NSNumber* watts = [powerData objectForKey:@KEY_NAME_CYCLING_POWER_WATTS];
 			self->lastPowerValue = [watts doubleValue];
 		}
 	}
@@ -1040,7 +1039,7 @@
 
 	@synchronized(self->threatImageViews)
 	{
-		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_POWER_PERIPHERAL_OBJ];
+		CBPeripheral* peripheral = [radarData objectForKey:@KEY_NAME_PERIPHERAL_OBJ];
 		NSString* idStr = [[peripheral identifier] UUIDString];
 
 		if ([Preferences shouldUsePeripheral:idStr])
