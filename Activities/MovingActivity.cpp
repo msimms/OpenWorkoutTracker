@@ -633,6 +633,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_SMOOTHED_DISTANCE_TRAVELED) == 0)
 	{
+		result.valid = false;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_PREVIOUS_DISTANCE_TRAVELED) == 0)
 	{

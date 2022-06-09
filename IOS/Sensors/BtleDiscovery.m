@@ -156,12 +156,14 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 /// Called when a sensor characteristic is updated.
 - (void)valueUpdated:(CBPeripheral*)peripheral withServiceId:(CBUUID*)serviceId withCharacteristicId:(CBUUID*)characteristicId withValue:(NSData*)value
 {
+	uint64_t currentTime = [self currentTimeInMs];
+
 	if ([serviceId isEqual:self->heartRateSvc])
 	{
 		uint16_t currentHeartRate = [HeartRateParser parse:value];
 		NSDictionary* heartRateData = [[NSDictionary alloc] initWithObjectsAndKeys:
 									   [NSNumber numberWithLong:currentHeartRate], @KEY_NAME_HEART_RATE,
-									   [NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_TIMESTAMP_MS,
+									   [NSNumber numberWithLongLong:currentTime], @KEY_NAME_TIMESTAMP_MS,
 									   peripheral, @KEY_NAME_PERIPHERAL_OBJ,
 									   nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_HRM object:heartRateData];
@@ -170,7 +172,9 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 	{
 		NSDictionary* footDict = [FootPodParser toDict:value];
 		NSMutableDictionary* footDict2 = [footDict mutableCopy];
+
 		[footDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+		[footDict2 setObject:[NSNumber numberWithLongLong:currentTime] forKey:@KEY_NAME_TIMESTAMP_MS];
 
 		uint32_t strideLength = [[footDict2 valueForKey:@KEY_NAME_STRIDE_LENGTH] unsignedIntValue];
 		uint32_t runDistance = [[footDict2 valueForKey:@KEY_NAME_RUN_DISTANCE] unsignedIntValue];
@@ -189,7 +193,9 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 	{
 		NSDictionary* cadenceDict = [CyclingCadenceParser toDict:value];
 		NSMutableDictionary* cadenceDict2 = [cadenceDict mutableCopy];
+
 		[cadenceDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+		[cadenceDict2 setObject:[NSNumber numberWithLongLong:currentTime] forKey:@KEY_NAME_TIMESTAMP_MS];
 
 		uint16_t currentWheelRevCount = [[cadenceDict2 valueForKey:@KEY_NAME_WHEEL_REV_COUNT] unsignedIntValue];
 		uint16_t currentCrankCount = [[cadenceDict2 valueForKey:@KEY_NAME_WHEEL_CRANK_COUNT] unsignedIntValue];
@@ -201,7 +207,7 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 		}
 		if (currentCrankCount && currentCrankTime)
 		{
-			[self->cadenceCalc update:[self currentTimeInMs]
+			[self->cadenceCalc update:currentTime
 					   withCrankCount:currentCrankCount
 						withCrankTime:currentCrankTime
 					   fromPeripheral:peripheral];
@@ -209,12 +215,11 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 	}
 	else if ([serviceId isEqual:self->cyclingPowerSvc])
 	{
-		uint64_t currentTime = [self currentTimeInMs];
-
 		NSDictionary* currentPower = [CyclingPowerParser toDict:value];
 		NSMutableDictionary* currentPower2 = [currentPower mutableCopy];
+
 		[currentPower2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
-		[currentPower2 setObject:[NSNumber numberWithLongLong:[self currentTimeInMs]] forKey:@KEY_NAME_TIMESTAMP_MS];
+		[currentPower2 setObject:[NSNumber numberWithLongLong:currentTime] forKey:@KEY_NAME_TIMESTAMP_MS];
 
 		uint16_t currentCrankCount = [[currentPower2 valueForKey:@KEY_NAME_CYCLING_POWER_CRANK_REVS] unsignedIntValue];
 		uint16_t currentCrankTime = [[currentPower2 valueForKey:@KEY_NAME_CYCLING_POWER_LAST_CRANK_TIME] unsignedIntValue];
@@ -234,7 +239,7 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 		float weightKg = [WeightParser toFloat:value];
 		NSDictionary* weightData = [[NSDictionary alloc] initWithObjectsAndKeys:
 									[NSNumber numberWithFloat:weightKg], @KEY_NAME_WEIGHT_KG,
-									[NSNumber numberWithLongLong:[self currentTimeInMs]], @KEY_NAME_TIMESTAMP_MS,
+									[NSNumber numberWithLongLong:currentTime], @KEY_NAME_TIMESTAMP_MS,
 									peripheral, @KEY_NAME_PERIPHERAL_OBJ,
 									nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_LIVE_WEIGHT_READING object:weightData];
@@ -245,6 +250,8 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 		NSMutableDictionary* radarDict2 = [radarDict mutableCopy];
 
 		[radarDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
+		[radarDict2 setObject:[NSNumber numberWithLongLong:currentTime] forKey:@KEY_NAME_TIMESTAMP_MS];
+
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RADAR object:radarDict2];
 	}
 }

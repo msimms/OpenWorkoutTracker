@@ -348,6 +348,13 @@
 		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_POWER];
 	}
 
+	attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_THREAT_COUNT);
+	if (attr.valid)
+	{
+		NSNumber* value = [[NSNumber alloc] initWithDouble:attr.value.doubleVal];
+		[broadcastData setObject:value forKey:@ACTIVITY_ATTRIBUTE_THREAT_COUNT];
+	}
+
 	NSError* error;
 	NSData* jsonData = [NSJSONSerialization dataWithJSONObject:broadcastData options:NSJSONWritingPrettyPrinted error:&error];
 	NSString* text = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
