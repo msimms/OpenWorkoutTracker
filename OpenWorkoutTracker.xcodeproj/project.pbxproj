@@ -170,6 +170,9 @@
 		27384FCA2778FBA9002BD39D /* BaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 27384FC92778FBA9002BD39D /* BaseTest.m */; };
 		27417B372355EC24000DFE00 /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		27417B452355EC84000DFE00 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 2797F14D19BFE3B7008F8672 /* UserProfile.m */; };
+		274DC70C285960C6005AA073 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2763C28452609008E707B /* SwimPlanGenerator.cpp */; };
+		274DC70D285960C7005AA073 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2763C28452609008E707B /* SwimPlanGenerator.cpp */; };
+		274DC70E285960C8005AA073 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2763C28452609008E707B /* SwimPlanGenerator.cpp */; };
 		274EF7CB26BCB0DA008AA465 /* Threat.png in Resources */ = {isa = PBXBuildFile; fileRef = 274EF7BE26BCB0DA008AA465 /* Threat.png */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		2753386726B9A6AF007169B6 /* Duathlon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2753385926B9A6AF007169B6 /* Duathlon.png */; };
@@ -706,6 +709,7 @@
 		27384FC72778F987002BD39D /* BaseTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTest.h; sourceTree = "<group>"; };
 		27384FC92778FBA9002BD39D /* BaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTest.m; sourceTree = "<group>"; };
 		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
+		274DC6FF285959A6005AA073 /* PlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlanGenerator.h; path = Activities/PlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		274EF7BE26BCB0DA008AA465 /* Threat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Threat.png; path = Images/Threat.png; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
@@ -1763,6 +1767,7 @@
 				27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */,
 				27F4240123A432A300F59F50 /* OpenWaterSwim.h */,
 				276E3B8F23B0FC3B00EAC341 /* PacePlan.h */,
+				274DC6FF285959A6005AA073 /* PlanGenerator.h */,
 				27F4240323A44C0E00F59F50 /* PoolSwim.cpp */,
 				27F4240423A44C0E00F59F50 /* PoolSwim.h */,
 				27C0843719BFD063007CE934 /* PullUp.cpp */,
@@ -2311,6 +2316,7 @@
 				27E3021F24F0A6E100EB5501 /* WorkoutFactory.cpp in Sources */,
 				270CF44C2391F05200584058 /* PushUpAnalyzer.h in Sources */,
 				270CF44D2391F05200584058 /* Run.cpp in Sources */,
+				274DC70C285960C6005AA073 /* SwimPlanGenerator.cpp in Sources */,
 				27F4241323A46A6400F59F50 /* Swim.cpp in Sources */,
 				270CF44E2391F05200584058 /* Run.h in Sources */,
 				273326AC2648E2290062545A /* FitFileWriter.cpp in Sources */,
@@ -2363,6 +2369,7 @@
 				2797F14E19BFE3B7008F8672 /* ActivityPreferences.m in Sources */,
 				27B7CD9C19BFD91C000383E3 /* LoginViewController.m in Sources */,
 				27C0846319BFD063007CE934 /* UnitMgr.cpp in Sources */,
+				274DC70E285960C8005AA073 /* SwimPlanGenerator.cpp in Sources */,
 				27F4240523A44C0E00F59F50 /* PoolSwim.cpp in Sources */,
 				27C0845219BFD063007CE934 /* ChinUpAnalyzer.cpp in Sources */,
 				27B7CDCB19BFD953000383E3 /* SpeedLine.m in Sources */,
@@ -2551,6 +2558,7 @@
 				27E3021E24F0A6E000EB5501 /* WorkoutFactory.cpp in Sources */,
 				27AAB9DA2389EC7B00C0A91F /* WatchAboutViewController.m in Sources */,
 				27DCF65522B72EFA009A23C2 /* XmlFileReader.cpp in Sources */,
+				274DC70D285960C7005AA073 /* SwimPlanGenerator.cpp in Sources */,
 				27DCF65622B72EFA009A23C2 /* XmlFileReader.h in Sources */,
 				27DCF65722B72EFA009A23C2 /* XmlFileWriter.cpp in Sources */,
 				2707A2F9259A140000A942C0 /* BtleDiscovery.m in Sources */,

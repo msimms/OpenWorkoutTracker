@@ -11,7 +11,14 @@ BikePlanGenerator::~BikePlanGenerator()
 {
 }
 
-std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
+/// @brief Returns TRUE if we can actually generate a plan with the given contraints.
+bool BikePlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inputs)
+{
+	return true;
+}
+
+/// @brief Generates the workouts for the next week, but doesn't schedule them.
+std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
 	std::vector<Workout*> workouts;
 	return workouts;

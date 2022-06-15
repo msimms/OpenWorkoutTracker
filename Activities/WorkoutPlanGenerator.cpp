@@ -13,6 +13,7 @@
 #include "Measure.h"
 #include "Run.h"
 #include "RunPlanGenerator.h"
+#include "SwimPlanGenerator.h"
 #include "TrainingPaceCalculator.h"
 #include "TrainingPhilosophyType.h"
 #include "UnitMgr.h"
@@ -30,7 +31,6 @@ WorkoutPlanGenerator::~WorkoutPlanGenerator()
 void WorkoutPlanGenerator::Reset()
 {
 	m_best5K = (double)0.0;
-	m_longestRunInFourWeeks = (double)0.0;
 	m_longestRunWeek1 = (double)0.0;
 	m_longestRunWeek2 = (double)0.0;
 	m_longestRunWeek3 = (double)0.0;
@@ -132,7 +132,6 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL, 5.0));
 
 	// Store all the inputs in a dictionary.
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_IN_FOUR_WEEKS, m_longestRunInFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_1, m_longestRunWeek1));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunWeek2));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
@@ -152,10 +151,12 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 {
 	RunPlanGenerator runGen;
 	BikePlanGenerator bikeGen;
+	SwimPlanGenerator swimGen;
 	TrainingPhilosophyType trainingIntensityDist = TRAINING_PHILOSOPHY_POLARIZED;
 
 	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
-	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs);
+	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs, trainingIntensityDist);
+	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> workouts;
 
 	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
@@ -188,11 +189,6 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 				{
 					UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
 					double activityDistance = attr.value.doubleVal * 1000.0; // km to meters
-
-					if (activityDistance > m_longestRunInFourWeeks)
-					{
-						m_longestRunInFourWeeks = activityDistance;
-					}
 
 					if (summary.startTime > week3CutoffTime)
 					{
@@ -264,7 +260,7 @@ void WorkoutPlanGenerator::CalculateRunTrainingPaces(std::map<std::string, doubl
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE, paces.at(SHORT_INTERVAL_RUN_PACE)));
 }
 
-// Adds the goal distances to the inputs.
+/// @brief Adds the goal distances to the inputs.
 void WorkoutPlanGenerator::CalculateGoalDistances(std::map<std::string, double>& inputs)
 {
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);

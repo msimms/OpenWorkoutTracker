@@ -14,6 +14,7 @@
 #include "WorkoutFactory.h"
 #include "WorkoutPlanInputs.h"
 
+#include <algorithm>
 #include <math.h>
 #include <numeric>
 #include <random>
@@ -47,8 +48,8 @@ double RunPlanGenerator::RoundDistance(double distance)
 	return float(ceil(distance / 100.0)) * 100.0;
 }
 
-// Given a distance, returns the nearest 'common' interval distance,
-// i.e., if given 407 meters, returns 400 meters, because no one runs 407 meter intervals.
+/// @brief Given a distance, returns the nearest 'common' interval distance,
+/// i.e., if given 407 meters, returns 400 meters, because no one runs 407 meter intervals.
 uint64_t RunPlanGenerator::NearestIntervalDistance(double distance, double minDistanceInMeters)
 {
 	if (distance < minDistanceInMeters)
@@ -77,8 +78,86 @@ uint64_t RunPlanGenerator::NearestIntervalDistance(double distance, double minDi
 	return METRIC_INTERVALS[numIntervals - 1];
 }
 
-// Resets all intensity distribution tracking variables.
-void RunPlanGenerator::ClearIntensityDistribution()
+/// @brief If the goal distance is a marathon then the longest run should be somewhere between 18 and 22 miles.
+/// The equation was derived by playing with trendlines in a spreadsheet.
+double RunPlanGenerator::MaxLongRunDistance(double goalDistance)
+{
+	return ((-0.002 * goalDistance) * (-0.002 * goalDistance)) + (0.7 * goalDistance) + 4.4;
+}
+
+/// @brief Assume the athlete can improve by 10%/week in maximum distance.
+double RunPlanGenerator::MaxAttainableDistance(double baseDistance, double numWeeks)
+{
+	double weeklyRate = 0.1;
+	return baseDistance + (pow(baseDistance * (1.0 + (weeklyRate / 52.0)), (52.0 * numWeeks)) - baseDistance);
+}
+
+/// @brief Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less.
+bool RunPlanGenerator::IsInTaper(double weeksUntilGoal, Goal goal)
+{
+	bool inTaper = false;
+
+	if (goal != GOAL_FITNESS)
+	{
+		if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
+			inTaper = true;
+		if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
+			inTaper = true;
+	}
+	return inTaper;
+}
+
+/// @brief Returns TRUE if we can actually generate a plan with the given contraints.
+bool RunPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inputs)
+{
+	// Inputs.
+	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_RUN_DISTANCE);
+	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
+	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
+	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1);
+	double longestRunWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_2);
+	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
+	double longestRunWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_4);
+	double longestRunInFourWeeks = std::max(std::max(longestRunWeek1, longestRunWeek2), std::max(longestRunWeek3, longestRunWeek4));
+
+	// The user does not have a race goal.
+	if (goal == GOAL_FITNESS)
+		return true;
+
+	// The user can already do the distance.
+	double distanceToGoal = goalDistance - longestRunInFourWeeks;
+	if (distanceToGoal < (double)0.0)
+		return true;
+
+	// Too late. The user should be in the taper.
+	bool shouldBeInTaper = this->IsInTaper(weeksUntilGoal, goal);
+	if (shouldBeInTaper)
+		return false;
+
+	// Can we get to the target distance, or close to it, in the time remaining.
+	double maxAttainableDistance = this->MaxAttainableDistance(longestRunInFourWeeks, weeksUntilGoal);
+	if (maxAttainableDistance < (double)0.1) // Sanity check
+		return false;
+	switch (goal)
+	{
+	case GOAL_FITNESS:
+		return true;
+	case GOAL_5K_RUN:
+	case GOAL_10K_RUN:
+	case GOAL_15K_RUN:
+	case GOAL_HALF_MARATHON_RUN:
+		return maxAttainableDistance >= goalDistance * 0.9;
+	case GOAL_MARATHON_RUN:
+		return maxAttainableDistance >= goalDistance * 0.75;
+	case GOAL_50K_RUN:
+	case GOAL_50_MILE_RUN:
+		return maxAttainableDistance >= goalDistance * 0.6;
+	}
+	return true;
+}
+
+/// @brief Resets all intensity distribution tracking variables.
+void RunPlanGenerator::ClearIntensityDistribution(void)
 {
 	// Distribution of distance spent in each intensity zone.
 	// 0 index is least intense.
@@ -97,7 +176,7 @@ void RunPlanGenerator::ClearIntensityDistribution()
 	this->m_cutoffPace2 = 0.0;
 }
 
-// Updates the variables used to track intensity distribution.
+/// @brief Updates the variables used to track intensity distribution.
 void RunPlanGenerator::UpdateIntensityDistribution(uint64_t seconds, double meters)
 {
 	double pace = 0.0;
@@ -128,8 +207,8 @@ void RunPlanGenerator::UpdateIntensityDistribution(uint64_t seconds, double mete
 	}
 }
 
-// How far are these workouts from the ideal intensity distribution?
-double RunPlanGenerator::CheckIntensityDistribution()
+/// @brief How far are these workouts from the ideal intensity distribution?
+double RunPlanGenerator::CheckIntensityDistribution(void)
 {
 	double totalMeters = (double)0.0;
 	double intensityDistributionPercent[NUM_TRAINING_ZONES];
@@ -147,7 +226,7 @@ double RunPlanGenerator::CheckIntensityDistribution()
 	return intensityDistributionScore;
 }
 
-// Utility function for creating an easy run of some random distance between min and max.
+/// @brief Utility function for creating an easy run of some random distance between min and max.
 Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance)
 {
 	// An easy run needs to be at least a couple of kilometers.
@@ -175,7 +254,7 @@ Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance,
 	return workout;
 }
 
-// Utility function for creating a tempo workout.
+/// @brief Utility function for creating a tempo workout.
 Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance)
 {
 	// Decide on the number of intervals and their distance.
@@ -212,7 +291,7 @@ Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunP
 	return workout;
 }
 
-// Utility function for creating a threshold workout.
+/// @brief Utility function for creating a threshold workout.
 Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance)
 {
 	// Decide on the number of intervals and their distance.
@@ -245,7 +324,7 @@ Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double 
 	return workout;
 }
 
-// Utility function for creating a speed/interval workout.
+/// @brief Utility function for creating a speed/interval workout.
 Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance)
 {
 	// Constants.
@@ -307,7 +386,7 @@ Workout* RunPlanGenerator::GenerateSpeedRun(double shortIntervalRunPace, double 
 	return workout;
 }
 
-// Utility function for creating a long run workout.
+/// @brief Utility function for creating a long run workout.
 Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance)
 {
 	// Long run should be 10% longer than the previous long run, within the bounds provided by min and max.
@@ -331,7 +410,7 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 	return workout;
 }
 
-// Utility function for creating a free run workout.
+/// @brief Utility function for creating a free run workout.
 Workout* RunPlanGenerator::GenerateFreeRun(double easyRunPace)
 {
 	// Roll the dice to figure out the distance.
@@ -353,7 +432,7 @@ Workout* RunPlanGenerator::GenerateFreeRun(double easyRunPace)
 	return workout;
 }
 
-// Utility function for creating a hill session.
+/// @brief Utility function for creating a hill session.
 Workout* RunPlanGenerator::GenerateHillRepeats(void)
 {
 	// Roll the dice to figure out the distance.
@@ -372,7 +451,7 @@ Workout* RunPlanGenerator::GenerateHillRepeats(void)
 	return workout;
 }
 
-// Utility function for creating a fartlek session.
+/// @brief Utility function for creating a fartlek session.
 Workout* RunPlanGenerator::GenerateFartlekRun(void)
 {
 	// Roll the dice to figure out the distance.
@@ -391,7 +470,7 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 	return workout;
 }
 
-// Returns the maximum distance for a single run during the taper.
+/// @brief Returns the maximum distance for a single run during the taper.
 double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 {
 	switch (goalDistance)
@@ -415,6 +494,7 @@ double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 	return 0.0;
 }
 
+/// @brief Generates the workouts for the next week, but doesn't schedule them.
 std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
 	std::vector<Workout*> workouts;
@@ -431,17 +511,20 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	double tempoRunPace = inputs.at(WORKOUT_INPUT_TEMPO_RUN_PACE);
 	double longRunPace = inputs.at(WORKOUT_INPUT_LONG_RUN_PACE);
 	double easyRunPace = inputs.at(WORKOUT_INPUT_EASY_RUN_PACE);
-	double longestRunInFourWeeks = inputs.at(WORKOUT_INPUT_LONGEST_RUN_IN_FOUR_WEEKS);
 	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1);
 	double longestRunWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_2);
 	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
 	double longestRunWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_4);
-	double totalIntensityWeek1 = 0.0;
-	double totalIntensityWeek2 = 0.0;
-	double totalIntensityWeek3 = 0.0;
+	double totalIntensityWeek1 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1);
+	double totalIntensityWeek2 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2);
+	double totalIntensityWeek3 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3);
+	double totalIntensityWeek4 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4);
 	double avgRunDistance = inputs.at(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS);
 	double numRuns = inputs.at(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS);
 	double expLevel = inputs.at(WORKOUT_INPUT_EXPERIENCE_LEVEL);
+
+	// Longest run in four weeks.
+	double longestRunInFourWeeks = std::max(std::max(longestRunWeek1, longestRunWeek2), std::max(longestRunWeek3, longestRunWeek4));
 
 	// Handle situation in which the user hasn't run in four weeks.
 	if (!RunPlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
@@ -466,9 +549,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	}
 
 	// If the long run has been increasing for the last three weeks then give the person a break.
-	if (RunPlanGenerator::ValidFloat(longestRunWeek1, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek2, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek3, 0.1))
+	if (RunPlanGenerator::ValidFloat(longestRunWeek1, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek2, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek3, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek4, 0.1))
 	{
-		if (longestRunWeek1 >= longestRunWeek2 && longestRunWeek2 >= longestRunWeek3)
+		if (longestRunWeek1 >= longestRunWeek2 && longestRunWeek2 >= longestRunWeek3 && longestRunWeek3 >= longestRunWeek4)
 			longestRunInFourWeeks *= 0.75;
 	}
 
@@ -478,29 +561,27 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 
 	// Are we in a taper?
 	// Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less
-	bool inTaper = false;
-	if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
-		inTaper = true;
-	if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
-		inTaper = true;
+	bool inTaper = this->IsInTaper(weeksUntilGoal, goal);
 
 	// Is it time for an easy week?
 	bool easyWeek = false;
 	if (!inTaper)
 	{
-		if (totalIntensityWeek1 and totalIntensityWeek2 and totalIntensityWeek3)
-			if (totalIntensityWeek1 >= totalIntensityWeek2 and totalIntensityWeek2 >= totalIntensityWeek3)
+		if (totalIntensityWeek1 && totalIntensityWeek2 && totalIntensityWeek3 && totalIntensityWeek4)
+		{
+			if (totalIntensityWeek1 >= totalIntensityWeek2 && totalIntensityWeek2 >= totalIntensityWeek3 && totalIntensityWeek3 >= totalIntensityWeek4)
 				easyWeek = true;
+		}
 	}
 
 	// Compute the longest run needed to accomplish the goal.
 	// If the goal distance is a marathon then the longest run should be somewhere between 18 and 22 miles.
 	// This equation was derived by playing with trendlines in a spreadsheet.
-	double maxLongRunDistance = 0.0;
+	double maxLongRunDistance;
 	if (inTaper)
 		maxLongRunDistance = this->MaxTaperDistance(goal);
 	else
-		maxLongRunDistance = ((-0.002 * goalDistance) *  (-0.002 * goalDistance)) + (0.7 * goalDistance) + 4.4;
+		maxLongRunDistance = this->MaxLongRunDistance(goalDistance);
 
 	// Handle situation in which the user is already meeting or exceeding the goal distance.
 	if (longestRunInFourWeeks >= maxLongRunDistance)

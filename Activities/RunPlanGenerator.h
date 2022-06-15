@@ -8,23 +8,19 @@
 #ifndef __RUNPLANGENERATOR__
 #define __RUNPLANGENERATOR__
 
-#include <map>
-#include <string>
-#include <vector>
-
 #include "Goal.h"
-#include "TrainingPhilosophyType.h"
-#include "Workout.h"
+#include "PlanGenerator.h"
 
 #define NUM_TRAINING_ZONES 3
 
-class RunPlanGenerator
+class RunPlanGenerator : PlanGenerator
 {
 public:
 	RunPlanGenerator();
 	virtual ~RunPlanGenerator();
 
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
+	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 	
 private:
 	double m_cutoffPace1;
@@ -37,9 +33,13 @@ private:
 	static double RoundDistance(double distance);
 	static uint64_t NearestIntervalDistance(double distance, double minDistanceInMeters);
 
-	void ClearIntensityDistribution();
+	double MaxLongRunDistance(double goalDistance);
+	double MaxAttainableDistance(double baseDistance, double numWeeks);
+	bool IsInTaper(double weeksUntilGoal, Goal goal);
+
+	void ClearIntensityDistribution(void);
 	void UpdateIntensityDistribution(uint64_t seconds, double meters);
-	double CheckIntensityDistribution();
+	double CheckIntensityDistribution(void);
 
 	Workout* GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
 	Workout* GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance);

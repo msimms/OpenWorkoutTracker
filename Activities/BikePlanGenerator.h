@@ -4,19 +4,16 @@
 #ifndef __BIKEPLANGENERATOR__
 #define __BIKEPLANGENERATOR__
 
-#include <map>
-#include <string>
-#include <vector>
+#include "PlanGenerator.h"
 
-#include "Workout.h"
-
-class BikePlanGenerator
+class BikePlanGenerator : PlanGenerator
 {
 public:
 	BikePlanGenerator();
 	virtual ~BikePlanGenerator();
 
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
+	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
+	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 };
 
 #endif

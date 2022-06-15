@@ -38,7 +38,6 @@ public:
 private:
 	User   m_user;            // tells us what we need to know about the user/athlete
 	double m_best5K;          // needed to compute training paces.
-	double m_longestRunInFourWeeks;
 	double m_longestRunWeek1; // longest run (in meters) for the most recent week
 	double m_longestRunWeek2; // longest run (in meters) for the 2nd most recent week
 	double m_longestRunWeek3; // longest run (in meters) for the 3rd most recent week

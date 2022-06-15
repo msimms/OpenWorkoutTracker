@@ -14,11 +14,18 @@
 #define WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE          "Functional Threshold Pace" // Pace that could be held for one hour, max effort
 #define WORKOUT_INPUT_LONG_RUN_PACE                      "Long Run Pace"
 #define WORKOUT_INPUT_EASY_RUN_PACE                      "Easy Run Pace"
-#define WORKOUT_INPUT_LONGEST_RUN_IN_FOUR_WEEKS          "Longest Run In Four Weeks"
-#define WORKOUT_INPUT_LONGEST_RUN_WEEK_1                 "Longest Run Week 1"
-#define WORKOUT_INPUT_LONGEST_RUN_WEEK_2                 "Longest Run Week 2"
-#define WORKOUT_INPUT_LONGEST_RUN_WEEK_3                 "Longest Run Week 3"
-#define WORKOUT_INPUT_LONGEST_RUN_WEEK_4                 "Longest Run Week 4"
+#define WORKOUT_INPUT_LONGEST_RUN_WEEK_1                 "Longest Run Week 1"        // Most recent week
+#define WORKOUT_INPUT_LONGEST_RUN_WEEK_2                 "Longest Run Week 2"        // Second most recent week
+#define WORKOUT_INPUT_LONGEST_RUN_WEEK_3                 "Longest Run Week 3"        // Third most recent week
+#define WORKOUT_INPUT_LONGEST_RUN_WEEK_4                 "Longest Run Week 4"        // Fourth most recent week
+#define WORKOUT_INPUT_LONGEST_RIDE_WEEK_1                "Longest Ride Week 1"       // Most recent week
+#define WORKOUT_INPUT_LONGEST_RIDE_WEEK_2                "Longest Ride Week 2"       // Second most recent week
+#define WORKOUT_INPUT_LONGEST_RIDE_WEEK_3                "Longest Ride Week 3"       // Third most recent week
+#define WORKOUT_INPUT_LONGEST_RIDE_WEEK_4                "Longest Ride Week 4"       // Fourth most recent week
+#define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1             "Total Intensity Week 1"    // Most recent week
+#define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2             "Total Intensity Week 2"    // Second most recent week
+#define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3             "Total Intensity Week 3"    // Third most recent week
+#define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4             "Total Intensity Week 4"    // Fourth most recent week
 #define WORKOUT_INPUT_AGE_YEARS                          "Age In Years"
 #define WORKOUT_INPUT_EXPERIENCE_LEVEL                   "Experience Level"          // Athlete's experience level with running (scale 1-10)
 #define WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL  "Structured Training Comfort Level" // Athlete's comfort level (i.e. experience) with doing intervals, long runs, etc. (scale 1-10)

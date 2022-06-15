@@ -4,11 +4,7 @@
 #ifndef __SWIMPLANGENERATOR__
 #define __SWIMPLANGENERATOR__
 
-#include <map>
-#include <string>
-#include <vector>
-
-#include "Workout.h"
+#include "PlanGenerator.h"
 
 class SwimPlanGenerator
 {
@@ -16,7 +12,8 @@ public:
 	SwimPlanGenerator();
 	virtual ~SwimPlanGenerator();
 
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
+	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
+	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 };
 
 #endif
