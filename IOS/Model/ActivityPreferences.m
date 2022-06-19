@@ -12,6 +12,22 @@
 #import "ActivityType.h"
 #import "Preferences.h"
 
+#define ACTIVITY_PREF_VIEW_TYPE                            "View Type"
+#define ACTIVITY_PREF_BACKGROUND_COLOR                     "Background Color"
+#define ACTIVITY_PREF_LABEL_COLOR                          "Label Color"
+#define ACTIVITY_PREF_TEXT_COLOR                           "Text Color"
+#define ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT              "Show Heart Rate Percent"
+#define ACTIVITY_PREF_START_STOP_BEEP                      "Start/Stop Beep"
+#define ACTIVITY_PREF_SPLIT_BEEP                           "Split Beep"
+#define ACTIVITY_PREF_SCREEN_AUTO_LOCK                     "Screen Auto-Locking"
+#define ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY "Allow Screen Presses During Activity"
+#define ACTIVITY_PREF_COUNTDOWN                            "Countdown Timer"
+#define ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY     "Horizontal Accuracy"
+#define ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY       "Vertical Accuracy"
+#define ACTIVITY_PREF_LOCATION_FILTER_OPTION               "Filter"
+#define ACTIVITY_PREF_ATTRIBUTES                           "Attributes"
+#define ACTIVITY_PREF_SHOW_THREAT_SPEED                    "Show Threat Speed"
+
 #define INTEGER_VALUE_NOT_SET -1
 #define DEFAULT_MIN_ACCURACY_METERS 50
 
@@ -395,7 +411,7 @@
 	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT];
 }
 
-- (void)setShowHeartRatePercent:(NSString*)activityType withBool:(BOOL)value
+- (void)setShowHeartRatePercent:(NSString*)activityType withValue:(BOOL)value
 {
 	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SHOW_HEART_RATE_PERCENT withBool:value];
 }
@@ -405,7 +421,7 @@
 	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_START_STOP_BEEP];
 }
 
-- (void)setStartStopBeepEnabled:(NSString*)activityType withBool:(BOOL)value
+- (void)setStartStopBeepEnabled:(NSString*)activityType withValue:(BOOL)value
 {
 	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_START_STOP_BEEP withBool:value];
 }
@@ -415,7 +431,7 @@
 	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP];
 }
 
-- (void)setSplitBeepEnabled:(NSString*)activityType withBool:(BOOL)value
+- (void)setSplitBeepEnabled:(NSString*)activityType withValue:(BOOL)value
 {
 	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SPLIT_BEEP withBool:value];
 }
@@ -435,7 +451,7 @@
 	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK];
 }
 
-- (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value
+- (void)setScreenAutoLocking:(NSString*)activityType withValue:(BOOL)value
 {
 	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_SCREEN_AUTO_LOCK withBool:value];
 }
@@ -445,7 +461,7 @@
 	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY];
 }
 
-- (void)setAllowScreenPressesDuringActivity:(NSString*)activityType withBool:(BOOL)value
+- (void)setAllowScreenPressesDuringActivity:(NSString*)activityType withValue:(BOOL)value
 {
 	[self writeValue: activityType withAttributeName:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY withBool:value];
 }
@@ -585,6 +601,16 @@
 	{
 		[Preferences setHasShownTreadmillHelp:TRUE];
 	}
+}
+
+- (BOOL)getShowThreatSpeed:(NSString*)activityType
+{
+	return [self readBoolValue:activityType withAttributeName:@ACTIVITY_PREF_SHOW_THREAT_SPEED];
+}
+
+- (void)setShowThreatSpeed:(NSString*)activityType withValue:(BOOL)value
+{
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_SHOW_THREAT_SPEED withBool:value];
 }
 
 @end

@@ -1031,6 +1031,7 @@
 - (void)radarUpdated:(NSNotification*)notification
 {
 	NSDictionary* radarData = [notification object];
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
 	if (!radarData)
 	{
@@ -1059,32 +1060,73 @@
 				[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 				[self->threatImageViews removeAllObjects];
 
-				// Add new threat images.
-				for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
+				if ([activityPrefs getShowThreatSpeed:self->activityType])
 				{
-					NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
+					// Our speed. Need this for computing the speed of the threats.
+					ActivityAttributeType ourSpeed = [appDelegate queryLiveActivityAttribute:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
 
-					// If we have distance information for this threat then draw it on the left side of the screen.
-					if ([radarData objectForKey:keyName] != nil)
+					// Add new threat images.
+					for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
 					{
-						// Y axis placement is determined by the object's distance from us.
-						NSNumber* threatDistance = [radarData objectForKey:keyName];
-						CGFloat imageY = ([threatDistance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
+						NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
 
-						// Create the view from the image.
-						UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
+						// If we have distance information for this threat then draw it on the left side of the screen.
+						if ([radarData objectForKey:keyName])
+						{
+							// Y axis placement is determined by the object's distance from us.
+							NSNumber* distance = [radarData objectForKey:keyName];
+							CGFloat imageY = ([distance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
 
-						// Handle dark mode.
-						[threatImageView setTintColor:[self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor]];
+							// Create the view from the image.
+							UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
 
-						// This defines the image's position on the screen.
-						threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
+							// Handle dark mode.
+							[threatImageView setTintColor:[self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor]];
 
-						// Add to the view.
-						[self.view addSubview:threatImageView];
+							// This defines the image's position on the screen.
+							threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
 
-						// Remember it so we can remove it later.
-						[self->threatImageViews addObject:threatImageView];
+							// Add to the view.
+							[self.view addSubview:threatImageView];
+
+							// Remember it so we can remove it later.
+							[self->threatImageViews addObject:threatImageView];
+
+							// Do we know the speed of the threat? If so, display it.
+							NSString* speedKeyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_SPEED, countNum];
+							NSNumber* relativeSpeed = [radarData objectForKey:speedKeyName];
+							if (relativeSpeed)
+							{
+								// Convert to the user's preferred unit system.
+								ActivityAttributeType relativeSpeedAttr;
+								relativeSpeedAttr.value.doubleVal = [relativeSpeed doubleValue] * 3.6; // convert from meters/sec to kph
+								relativeSpeedAttr.valueType = TYPE_DOUBLE;
+								relativeSpeedAttr.measureType = MEASURE_SPEED;
+								relativeSpeedAttr.unitSystem = UNIT_SYSTEM_METRIC;
+								relativeSpeedAttr.valid = true;
+								[appDelegate convertToPreferredUnits:&relativeSpeedAttr];
+								
+								// The threat's speed is our speed + the threat's speed relative to us.
+								double finalSpeed = ourSpeed.value.doubleVal + relativeSpeedAttr.value.doubleVal;
+
+								// Build the string that will be printed.
+								NSString* unitsStr = [StringUtils formatActivityMeasureType:relativeSpeedAttr.measureType];
+								NSString* threatLabelStr = [[NSString alloc] initWithFormat:@"%0.0lf %@", finalSpeed, unitsStr];
+
+								// Print the speed right below the image.
+								imageY += IMAGE_SIZE;
+
+								// Create the text view.
+								UILabel* threatLabel = [[UILabel alloc] initWithFrame: CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE * 3, IMAGE_SIZE)];
+								threatLabel.text = threatLabelStr;
+
+								// Add to the view.
+								[self.view addSubview:threatLabel];
+
+								// Remember it so we can remove it later.
+								[self->threatImageViews addObject:threatLabel];
+							}
+						}
 					}
 				}
 			}
@@ -1130,7 +1172,9 @@
 				NSString* paceStr;
 
 				if ([Preferences preferredUnitSystem] == UNIT_SYSTEM_US_CUSTOMARY)
+				{
 					pace = [appDelegate convertMinutesPerKmToMinutesPerMile:pace];
+				}
 				paceStr = [StringUtils formatSeconds:(uint32_t)pace];
 				msg = [[NSString alloc] initWithFormat:@"%lu %@ at %@", [segmentDuration unsignedLongValue], STR_SECONDS, paceStr];
 			}

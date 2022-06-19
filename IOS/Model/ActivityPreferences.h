@@ -24,8 +24,7 @@
 #define ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY       "Vertical Accuracy"
 #define ACTIVITY_PREF_LOCATION_FILTER_OPTION               "Filter"
 #define ACTIVITY_PREF_ATTRIBUTES                           "Attributes"
-
-#define ERROR_ATTRIBUTE_NOT_FOUND 255
+#define ACTIVITY_PREF_SHOW_THREAT_SPEED                    "Show Threat Speed"
 
 typedef enum LocationFilterOption
 {
@@ -77,22 +76,22 @@ typedef enum LocationFilterOption
 #endif
 
 - (BOOL)getShowHeartRatePercent:(NSString*)activityType;
-- (void)setShowHeartRatePercent:(NSString*)activityType withBool:(BOOL)value;
+- (void)setShowHeartRatePercent:(NSString*)activityType withValue:(BOOL)value;
 
 - (BOOL)getStartStopBeepEnabled:(NSString*)activityType;
-- (void)setStartStopBeepEnabled:(NSString*)activityType withBool:(BOOL)value;
+- (void)setStartStopBeepEnabled:(NSString*)activityType withValue:(BOOL)value;
 
 - (BOOL)getSplitBeepEnabled:(NSString*)activityType;
-- (void)setSplitBeepEnabled:(NSString*)activityType withBool:(BOOL)value;
+- (void)setSplitBeepEnabled:(NSString*)activityType withValue:(BOOL)value;
 
 - (NSArray*)getAttributeNames:(NSString*)activityType;
 - (void)setAttributeNames:(NSString*)activityType withAttributeNames:(NSMutableArray*)attributeNames;
 
 - (BOOL)getScreenAutoLocking:(NSString*)activityType;
-- (void)setScreenAutoLocking:(NSString*)activityType withBool:(BOOL)value;
+- (void)setScreenAutoLocking:(NSString*)activityType withValue:(BOOL)value;
 
 - (BOOL)getAllowScreenPressesDuringActivity:(NSString*)activityType;
-- (void)setAllowScreenPressesDuringActivity:(NSString*)activityType withBool:(BOOL)value;
+- (void)setAllowScreenPressesDuringActivity:(NSString*)activityType withValue:(BOOL)value;
 
 - (uint8_t)getCountdown:(NSString*)activityType;
 - (void)setCountdown:(NSString*)activityType withSeconds:(uint8_t)seconds;
@@ -108,5 +107,8 @@ typedef enum LocationFilterOption
 
 - (BOOL)hasShownHelp:(NSString*)activityType;
 - (void)markHasShownHelp:(NSString*)activityType;
+
+- (BOOL)getShowThreatSpeed:(NSString*)activityType;
+- (void)setShowThreatSpeed:(NSString*)activityType withValue:(BOOL)value;
 
 @end

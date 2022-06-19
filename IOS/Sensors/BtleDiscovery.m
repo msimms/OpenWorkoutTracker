@@ -40,12 +40,15 @@
 
 		self->connectToUnknownDevices = false;
 
-		self->heartRateSvc    = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_HEART_RATE]];
-		self->runningSCSvc    = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_RUNNING_SPEED_AND_CADENCE]];
-		self->cyclingSCSvc    = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_SPEED_AND_CADENCE]];
-		self->cyclingPowerSvc = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_POWER]];
-		self->weightSvc       = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_WEIGHT]];
-		self->radarSvc        = [CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_VARIA_RADAR];
+		self->heartRateSvc            = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_HEART_RATE]];
+		self->runningSCSvc            = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_RUNNING_SPEED_AND_CADENCE]];
+		self->cyclingSCSvc            = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_SPEED_AND_CADENCE]];
+		self->cyclingPowerSvc         = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_CYCLING_POWER]];
+		self->weightSvc               = [CBUUID UUIDWithString:[[NSString alloc] initWithFormat:@"%X", BT_SERVICE_WEIGHT]];
+		self->radarSvc                = [CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_VARIA_RADAR];
+		
+		self->threatDistances         = [[NSMutableDictionary alloc] init];
+		self->lastThreatUpdateTime    = 0;
 
 		NSArray* interestingServices = [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, weightSvc, radarSvc, nil];
 
@@ -84,8 +87,7 @@ CBUUID* intToCBUUID(uint16_t value)
 - (uint64_t)currentTimeInMs
 {
 	NSDate* now = [NSDate date];
-	uint64_t theTimeMs = (uint64_t)([now timeIntervalSince1970] * (double)1000.0);
-	return theTimeMs;
+	return (uint64_t)([now timeIntervalSince1970] * (double)1000.0);
 }
 
 #pragma mark timer methods
@@ -251,6 +253,42 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 
 		[radarDict2 setObject:peripheral forKey:@KEY_NAME_PERIPHERAL_OBJ];
 		[radarDict2 setObject:[NSNumber numberWithLongLong:currentTime] forKey:@KEY_NAME_TIMESTAMP_MS];
+
+		// Calculate the speed of each threat.
+		NSUInteger currentThreatTime = [[radarDict valueForKey:@KEY_NAME_RADAR_TIMESTAMP_MS] unsignedIntValue];
+		if (self->lastThreatUpdateTime > 0)
+		{
+			NSUInteger threatCount = [[radarDict valueForKey:@KEY_NAME_RADAR_THREAT_COUNT] unsignedIntValue];
+			
+			if (threatCount == 0)
+			{
+				[self->threatDistances removeAllObjects];
+			}
+			else
+			{
+				for (NSUInteger threatIndex = 1; threatIndex <= threatCount; ++threatIndex)
+				{
+					NSString* keyNameID = [[NSString alloc] initWithFormat:@"%@%lu", @KEY_NAME_RADAR_THREAT_ID, (unsigned long)threatIndex];
+					NSString* keyNameDistance = [[NSString alloc] initWithFormat:@"%@%lu", @KEY_NAME_RADAR_THREAT_DISTANCE, (unsigned long)threatIndex];
+
+					NSNumber* threatID = [radarDict valueForKey:keyNameID];
+					NSNumber* threatDistance = [radarDict valueForKey:keyNameDistance];
+					NSNumber* prevThreatDistance = [self->threatDistances objectForKey:threatID];
+
+					if (prevThreatDistance)
+					{
+						int64_t distance = [prevThreatDistance unsignedLongValue] - [threatDistance unsignedLongValue];
+						double time = (double)(currentThreatTime - self->lastThreatUpdateTime) / (double)1000.0;
+						double speed = (double)distance / time;
+
+						NSString* keyNameSpeed = [[NSString alloc] initWithFormat:@"%@%lu", @KEY_NAME_RADAR_SPEED, (unsigned long)threatIndex];
+						[radarDict2 setObject:[NSNumber numberWithDouble:speed] forKey:keyNameSpeed];
+					}
+					[self->threatDistances setObject:threatDistance forKey:threatID];
+				}
+			}
+		}
+		self->lastThreatUpdateTime = currentThreatTime;
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RADAR object:radarDict2];
 	}

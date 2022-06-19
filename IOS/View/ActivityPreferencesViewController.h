@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CommonViewController.h"
+#import "ActivityPreferences.h"
 
 @interface ActivityPreferencesViewController : CommonViewController <UIActionSheetDelegate>
 {
@@ -21,6 +22,8 @@
 	NSInteger selectedRow;
 
 	NSMutableArray* attributeNames;
+	
+	ActivityPreferences* prefs;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView* optionsTableView;
