@@ -511,11 +511,11 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	double tempoRunPace = inputs.at(WORKOUT_INPUT_TEMPO_RUN_PACE);
 	double longRunPace = inputs.at(WORKOUT_INPUT_LONG_RUN_PACE);
 	double easyRunPace = inputs.at(WORKOUT_INPUT_EASY_RUN_PACE);
-	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1);
+	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1); // Most recent week
 	double longestRunWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_2);
 	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
 	double longestRunWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_4);
-	double totalIntensityWeek1 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1);
+	double totalIntensityWeek1 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1); // Most recent week
 	double totalIntensityWeek2 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2);
 	double totalIntensityWeek3 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3);
 	double totalIntensityWeek4 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4);
@@ -567,7 +567,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	bool easyWeek = false;
 	if (!inTaper)
 	{
-		if (totalIntensityWeek1 && totalIntensityWeek2 && totalIntensityWeek3 && totalIntensityWeek4)
+		if (RunPlanGenerator::ValidFloat(totalIntensityWeek1, 0.1) && RunPlanGenerator::ValidFloat(totalIntensityWeek2, 0.1) && RunPlanGenerator::ValidFloat(totalIntensityWeek3, 0.1) && RunPlanGenerator::ValidFloat(totalIntensityWeek4, 0.1))
 		{
 			if (totalIntensityWeek1 >= totalIntensityWeek2 && totalIntensityWeek2 >= totalIntensityWeek3 && totalIntensityWeek3 >= totalIntensityWeek4)
 				easyWeek = true;
@@ -652,7 +652,8 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		workouts.push_back(tempoRunWorkout);
 
 		// The user cares about speed as well as completing the distance. Also note that we should add strikes to one of the other workouts.
-		if (goalType == GOAL_TYPE_SPEED)
+		// We shouldn't schedule any structured speed workouts unless the user is running at least 30km/week.
+		if (goalType == GOAL_TYPE_SPEED && longestRunWeek1 >= 30000)
 		{
 			// Decide which workout we're going to do.
 			std::default_random_engine generator;
