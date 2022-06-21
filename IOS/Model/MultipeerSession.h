@@ -12,12 +12,15 @@
 
 #if !OMIT_BROADCAST
 
-@interface MultipeerSession : NSObject<MCSessionDelegate>
+@interface MultipeerSession : NSObject<MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate>
 {
-	MCPeerID* peerID;
-	MCSession* session;
-	MCAdvertiserAssistant* advertiser;
+	MCPeerID*                  peerID;
+	MCSession*                 session;
+	MCNearbyServiceAdvertiser* advertiser;
+	MCNearbyServiceBrowser*    browser;
 }
+
+- (void)setupPeerAndSession;
 
 @end
 

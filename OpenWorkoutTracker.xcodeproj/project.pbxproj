@@ -173,6 +173,8 @@
 		274DC70C285960C6005AA073 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2763C28452609008E707B /* SwimPlanGenerator.cpp */; };
 		274DC70D285960C7005AA073 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2763C28452609008E707B /* SwimPlanGenerator.cpp */; };
 		274DC70E285960C8005AA073 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D2763C28452609008E707B /* SwimPlanGenerator.cpp */; };
+		274DC71F285CFBF1005AA073 /* NearbyInteractions.m in Sources */ = {isa = PBXBuildFile; fileRef = 274DC71E285CEA52005AA073 /* NearbyInteractions.m */; };
+		274DC72128624068005AA073 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 274DC72028624068005AA073 /* MultipeerConnectivity.framework */; };
 		274EF7CB26BCB0DA008AA465 /* Threat.png in Resources */ = {isa = PBXBuildFile; fileRef = 274EF7BE26BCB0DA008AA465 /* Threat.png */; };
 		275214C119BFDBB8006D9877 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 275214C019BFDBB8006D9877 /* main.m */; };
 		2753386726B9A6AF007169B6 /* Duathlon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2753385926B9A6AF007169B6 /* Duathlon.png */; };
@@ -205,7 +207,6 @@
 		276A05B827ACC68D00B030E1 /* NearbyInteraction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276A05AB27ACC68C00B030E1 /* NearbyInteraction.framework */; };
 		276A05BA27AD763D00B030E1 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 276A05B927AD763D00B030E1 /* libsqlite3.tbd */; };
 		276A05BC27AD765700B030E1 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 276A05BB27AD765700B030E1 /* libxml2.tbd */; };
-		276A05C127ADBEA800B030E1 /* NearbyInteractionsMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 276A05C027ADBEA800B030E1 /* NearbyInteractionsMgr.m */; };
 		276B57E919E21ABD006F47BB /* HealthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 276B57E819E21ABD006F47BB /* HealthManager.m */; };
 		276D5AE41A9FEDEB008F55AF /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE01A9FEDEB008F55AF /* UnitConverter.cpp */; };
 		276D5AEF1AA169AF008F55AF /* CloudPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 276D5AE61AA169AF008F55AF /* CloudPreferences.m */; };
@@ -710,6 +711,9 @@
 		27384FC92778FBA9002BD39D /* BaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTest.m; sourceTree = "<group>"; };
 		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
 		274DC6FF285959A6005AA073 /* PlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlanGenerator.h; path = Activities/PlanGenerator.h; sourceTree = SOURCE_ROOT; };
+		274DC711285CEA52005AA073 /* NearbyInteractions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NearbyInteractions.h; path = IOS/Sensors/NearbyInteractions.h; sourceTree = SOURCE_ROOT; };
+		274DC71E285CEA52005AA073 /* NearbyInteractions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NearbyInteractions.m; path = IOS/Sensors/NearbyInteractions.m; sourceTree = SOURCE_ROOT; };
+		274DC72028624068005AA073 /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
 		274EF7BE26BCB0DA008AA465 /* Threat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Threat.png; path = Images/Threat.png; sourceTree = SOURCE_ROOT; };
 		275214BF19BFDBB8006D9877 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "App-Prefix.pch"; path = "IOS/App-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		275214C019BFDBB8006D9877 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = IOS/main.m; sourceTree = SOURCE_ROOT; };
@@ -742,8 +746,6 @@
 		276A05AB27ACC68C00B030E1 /* NearbyInteraction.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NearbyInteraction.framework; path = System/Library/Frameworks/NearbyInteraction.framework; sourceTree = SDKROOT; };
 		276A05B927AD763D00B030E1 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		276A05BB27AD765700B030E1 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.3.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
-		276A05BF27ADBEA800B030E1 /* NearbyInteractionsMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NearbyInteractionsMgr.h; path = IOS/Model/NearbyInteractionsMgr.h; sourceTree = SOURCE_ROOT; };
-		276A05C027ADBEA800B030E1 /* NearbyInteractionsMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NearbyInteractionsMgr.m; path = IOS/Model/NearbyInteractionsMgr.m; sourceTree = SOURCE_ROOT; };
 		276B57E719E21ABD006F47BB /* HealthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HealthManager.h; path = IOS/Model/HealthManager.h; sourceTree = SOURCE_ROOT; };
 		276B57E819E21ABD006F47BB /* HealthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HealthManager.m; path = IOS/Model/HealthManager.m; sourceTree = SOURCE_ROOT; };
 		276C937B19BFDE3B00D96E7F /* App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "App-Info.plist"; path = "IOS/App-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -1141,6 +1143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				274DC72128624068005AA073 /* MultipeerConnectivity.framework in Frameworks */,
 				276A05B827ACC68D00B030E1 /* NearbyInteraction.framework in Frameworks */,
 				2707A325259A539D00A942C0 /* CorePlot.framework in Frameworks */,
 				27094210215ABD2200C3BCBE /* HealthKit.framework in Frameworks */,
@@ -1368,8 +1371,6 @@
 				2797F14319BFE3B7008F8672 /* MultipeerMessage.m */,
 				275E998E26E42EE400E9EC93 /* MultipeerSession.h */,
 				275E998926E42EA100E9EC93 /* MultipeerSession.m */,
-				276A05BF27ADBEA800B030E1 /* NearbyInteractionsMgr.h */,
-				276A05C027ADBEA800B030E1 /* NearbyInteractionsMgr.m */,
 				2797F14A19BFE3B7008F8672 /* Preferences.h */,
 				2797F14B19BFE3B7008F8672 /* Preferences.m */,
 				2797F14C19BFE3B7008F8672 /* UserProfile.h */,
@@ -1477,6 +1478,7 @@
 		27A3624E19BFB0E200F5A17F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				274DC72028624068005AA073 /* MultipeerConnectivity.framework */,
 				271B827C282BDAD4002F5D2C /* HealthKit.framework */,
 				276A05BB27AD765700B030E1 /* libxml2.tbd */,
 				276A05B927AD763D00B030E1 /* libsqlite3.tbd */,
@@ -1705,6 +1707,8 @@
 				2773EB381A74102F00B088B3 /* Discovery.h */,
 				27B7CDE819BFD99B000383E3 /* LocationSensor.h */,
 				27B7CDE919BFD99B000383E3 /* LocationSensor.m */,
+				274DC711285CEA52005AA073 /* NearbyInteractions.h */,
+				274DC71E285CEA52005AA073 /* NearbyInteractions.m */,
 				27B7CDEA19BFD99B000383E3 /* Sensor.h */,
 				27B7CDED19BFD99B000383E3 /* SensorMgr.h */,
 				27B7CDEE19BFD99B000383E3 /* SensorMgr.m */,
@@ -2439,6 +2443,7 @@
 				2707A356259ABE5100A942C0 /* GradeAdjustedPaceLine.m in Sources */,
 				2772FEB12503EF6000ED9F2A /* WorkoutDetailsViewController.m in Sources */,
 				27F6D0782300165100A248BE /* Double.cpp in Sources */,
+				274DC71F285CFBF1005AA073 /* NearbyInteractions.m in Sources */,
 				27B7CD9319BFD91C000383E3 /* HistoryViewController.m in Sources */,
 				27C0845E19BFD063007CE934 /* Run.cpp in Sources */,
 				27B7CD3D19BFD903000383E3 /* ActivityPreferencesViewController.m in Sources */,
@@ -2449,7 +2454,6 @@
 				27B7CD9A19BFD91C000383E3 /* LiveMapViewController.m in Sources */,
 				27C0845319BFD063007CE934 /* Cycling.cpp in Sources */,
 				276D5B021AA16A7D008F55AF /* Strava.m in Sources */,
-				276A05C127ADBEA800B030E1 /* NearbyInteractionsMgr.m in Sources */,
 				27B7CD9D19BFD91C000383E3 /* MapOverviewViewController.m in Sources */,
 				27B7CDF219BFD99B000383E3 /* Accelerometer.m in Sources */,
 				2772FEAC2503DFD300ED9F2A /* BikePlanGenerator.cpp in Sources */,

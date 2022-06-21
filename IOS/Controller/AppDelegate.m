@@ -574,6 +574,7 @@ void WeightHistoryCallback(time_t measurementTime, double measurementValue, void
 			if (!self->multipeerSession)
 			{
 				self->multipeerSession = [[MultipeerSession alloc] init];
+				[self->multipeerSession setupPeerAndSession];
 			}
 		}
 		else

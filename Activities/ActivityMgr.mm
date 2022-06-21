@@ -2258,6 +2258,7 @@ extern "C" {
 					case SENSOR_TYPE_LIGHT:
 					case SENSOR_TYPE_RADAR:
 					case SENSOR_TYPE_GOPRO:
+					case SENSOR_TYPE_NEARBY:
 						result = true;
 						break;
 					case NUM_SENSOR_TYPES:

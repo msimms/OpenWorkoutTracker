@@ -9,6 +9,8 @@
 
 #if !OMIT_BROADCAST
 
+#define SERVICE_TYPE "nearby-riders"
+
 @implementation MultipeerSession
 
 - (id)init
@@ -26,12 +28,24 @@
 {
 }
 
-- (void)setupPeerAndSessionWithDisplayName:(NSString*)displayName
+- (void)setupPeerAndSession
 {
-	self->peerID = [[MCPeerID alloc] initWithDisplayName:displayName];
-	self->session = [[MCSession alloc] initWithPeer:self->peerID];
+	self->peerID = [[MCPeerID alloc] initWithDisplayName:[[UIDevice currentDevice] name]];
+
+	self->session = [[MCSession alloc] initWithPeer:self->peerID securityIdentity:nil encryptionPreference:MCEncryptionOptional];
 	self->session.delegate = self;
+
+	self->advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self->peerID discoveryInfo:nil serviceType:@SERVICE_TYPE];
+	self->advertiser.delegate = self;
+
+	self->browser = [[MCNearbyServiceBrowser alloc] initWithPeer:self->peerID serviceType:@SERVICE_TYPE];
+	self->browser.delegate = self;
+
+	[self->advertiser startAdvertisingPeer];
+	[self->browser startBrowsingForPeers];
 }
+
+#pragma mark MCSessionDelegate methods
 
 - (void)session:(MCSession*)session peer:(MCPeerID*)peerID didChangeState:(MCSessionState)state
 {
@@ -46,11 +60,35 @@
 }
 
 - (void)session:(MCSession*)session didFinishReceivingResourceWithName:(NSString*)resourceName fromPeer:(MCPeerID*)peerID atURL:(NSURL*)localURL withError:(NSError*)error
-{	
+{
 }
 
 - (void)session:(MCSession*)session didReceiveStream:(NSInputStream*)stream withName:(NSString*)streamName fromPeer:(MCPeerID*)peerID
-{	
+{
+}
+
+#pragma mark MCNearbyServiceAdvertiserDelegate methods
+
+- (void)advertiser:(nonnull MCNearbyServiceAdvertiser*)advertiser didNotStartAdvertisingPeer:(NSError*)error
+{
+}
+
+- (void)advertiser:(nonnull MCNearbyServiceAdvertiser*)advertiser didReceiveInvitationFromPeer:(nonnull MCPeerID*)peerID withContext:(NSData*)context invitationHandler:(void (^)(BOOL accept, MCSession *session))invitationHandler
+{
+}
+
+#pragma mark
+
+- (void)browser:(nonnull MCNearbyServiceBrowser*)browser didNotStartBrowsingForPeers:(NSError*)error
+{
+}
+
+- (void)browser:(nonnull MCNearbyServiceBrowser*)browser foundPeer:(nonnull MCPeerID*)peerID withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info
+{
+}
+
+- (void)browser:(nonnull MCNearbyServiceBrowser*)browser lostPeer:(nonnull MCPeerID*)peerID
+{
 }
 
 @end

@@ -2225,6 +2225,8 @@ bool Database::CreateSensorReading(const std::string& activityId, const SensorRe
 			return CreateEventReading(activityId, reading);
 		case SENSOR_TYPE_GOPRO:
 			break;
+		case SENSOR_TYPE_NEARBY:
+			break;
 		case NUM_SENSOR_TYPES:
 			break;
 	}
@@ -2258,6 +2260,8 @@ bool Database::RetrieveSensorReadingsOfType(const std::string& activityId, Senso
 		case SENSOR_TYPE_RADAR:
 			break;
 		case SENSOR_TYPE_GOPRO:
+			break;
+		case SENSOR_TYPE_NEARBY:
 			break;
 		case NUM_SENSOR_TYPES:
 			break;

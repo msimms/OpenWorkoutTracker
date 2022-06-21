@@ -170,6 +170,8 @@ bool Activity::ProcessSensorReading(const SensorReading& reading)
 			break;
 		case SENSOR_TYPE_GOPRO:
 			break;
+		case SENSOR_TYPE_NEARBY:
+			break;
 		case NUM_SENSOR_TYPES:
 			break;
 	}

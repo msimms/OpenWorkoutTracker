@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_nearby-riders. _tcp</string>
+	</array>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.healthcare-fitness</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -39,12 +45,16 @@
 	<string>Height and weight can be read from the Health app to improve estimations of calories burned.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Calories burned during exercise can be written to the Health app.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app uses local network discovery to locate nearby riders when cycling.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This is required to monitor location-based activities.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This is required to monitor location-based activities when the application is in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This is required to monitor location-based activities.</string>
+	<key>NSNearbyInteractionUsageDescription</key>
+	<string>This app uses nearby interactions to interact with nearby riders when cycling.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.com.mjs-software.OpenWorkoutTracker</key>
