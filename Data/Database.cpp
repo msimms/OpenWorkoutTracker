@@ -1302,7 +1302,7 @@ bool Database::RetrieveActivities(ActivitySummaryList& activities)
 			summary.endTime = (time_t)sqlite3_column_int64(statement, 5);
 			summary.pActivity = NULL;
 
-			activities.push_back(summary);
+			activities.push_back(std::move(summary));
 		}
 
 		sqlite3_finalize(statement);

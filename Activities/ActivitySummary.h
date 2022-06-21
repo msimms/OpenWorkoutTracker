@@ -35,6 +35,47 @@ typedef struct ActivitySummary
 	SensorReadingList    powerReadings;            // List of power meter readings recorded as part of this activity
 	ActivityAttributeMap summaryAttributes;
 	Activity*            pActivity;                // Optional activity object
+
+	ActivitySummary()
+	{
+		this->startTime = 0;
+		this->endTime = 0;
+		this->pActivity = NULL;
+	}
+
+	ActivitySummary(const ActivitySummary& rhs)
+	{
+		this->activityId = rhs.activityId;
+		this->userId = rhs.userId;
+		this->startTime = rhs.startTime;
+		this->endTime = rhs.endTime;
+		this->type = rhs.type;
+		this->name = rhs.name;
+		this->locationPoints = rhs.locationPoints;
+		this->accelerometerReadings = rhs.accelerometerReadings;
+		this->heartRateMonitorReadings = rhs.heartRateMonitorReadings;
+		this->cadenceReadings = rhs.cadenceReadings;
+		this->powerReadings = rhs.powerReadings;
+		this->summaryAttributes = rhs.summaryAttributes;
+		this->pActivity = rhs.pActivity;
+	}
+
+	ActivitySummary(ActivitySummary&& rhs)
+	{
+		this->activityId = std::move(rhs.activityId);
+		this->userId = std::move(rhs.userId);
+		this->startTime = rhs.startTime;
+		this->endTime = rhs.endTime;
+		this->type = std::move(rhs.type);
+		this->name = std::move(rhs.name);
+		this->locationPoints = std::move(rhs.locationPoints);
+		this->accelerometerReadings = std::move(rhs.accelerometerReadings);
+		this->heartRateMonitorReadings = std::move(rhs.heartRateMonitorReadings);
+		this->cadenceReadings = std::move(rhs.cadenceReadings);
+		this->powerReadings = std::move(rhs.powerReadings);
+		this->summaryAttributes = std::move(rhs.summaryAttributes);
+		this->pActivity = rhs.pActivity;
+	}
 } ActivitySummary;
 
 typedef std::vector<ActivitySummary> ActivitySummaryList;
