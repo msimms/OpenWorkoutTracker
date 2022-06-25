@@ -48,7 +48,7 @@
 		self->radarSvc                = [CBUUID UUIDWithString:@CUSTOM_BT_SERVICE_VARIA_RADAR];
 		
 		self->threatDistances         = [[NSMutableDictionary alloc] init];
-		self->lastThreatUpdateTime    = 0;
+		self->lastThreatUpdateTimeMs  = 0;
 
 		NSArray* interestingServices = [NSArray arrayWithObjects:heartRateSvc, runningSCSvc, cyclingSCSvc, cyclingPowerSvc, weightSvc, radarSvc, nil];
 
@@ -184,8 +184,7 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 		if (strideLength)
 		{
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RUN_STRIDE_LENGTH object:footDict2];
-		}
-		
+		}		
 		if (runDistance)
 		{
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RUN_DISTANCE object:footDict2];
@@ -255,17 +254,20 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 		[radarDict2 setObject:[NSNumber numberWithLongLong:currentTime] forKey:@KEY_NAME_TIMESTAMP_MS];
 
 		// Calculate the speed of each threat.
-		NSUInteger currentThreatTime = [[radarDict valueForKey:@KEY_NAME_RADAR_TIMESTAMP_MS] unsignedIntValue];
-		if (self->lastThreatUpdateTime > 0)
+		uint64_t currentThreatTimeMs = [[radarDict valueForKey:@KEY_NAME_RADAR_TIMESTAMP_MS] unsignedLongLongValue];
+		if (self->lastThreatUpdateTimeMs > 0 && self->lastThreatUpdateTimeMs < currentThreatTimeMs - 250)
 		{
 			NSUInteger threatCount = [[radarDict valueForKey:@KEY_NAME_RADAR_THREAT_COUNT] unsignedIntValue];
 			
 			if (threatCount == 0)
 			{
 				[self->threatDistances removeAllObjects];
+				self->lastThreatUpdateTimeMs = 0;
 			}
 			else
 			{
+				double timeSinceLastUpdateSec = (double)(currentThreatTimeMs - self->lastThreatUpdateTimeMs) / (double)1000.0;
+
 				for (NSUInteger threatIndex = 1; threatIndex <= threatCount; ++threatIndex)
 				{
 					NSString* keyNameID = [[NSString alloc] initWithFormat:@"%@%lu", @KEY_NAME_RADAR_THREAT_ID, (unsigned long)threatIndex];
@@ -277,9 +279,8 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 
 					if (prevThreatDistance)
 					{
-						int64_t distance = [prevThreatDistance unsignedLongValue] - [threatDistance unsignedLongValue];
-						double time = (double)(currentThreatTime - self->lastThreatUpdateTime) / (double)1000.0;
-						double speed = (double)distance / time;
+						int64_t changingInDistanceMeters = [prevThreatDistance unsignedLongValue] - [threatDistance unsignedLongValue];
+						double speed = (double)changingInDistanceMeters / timeSinceLastUpdateSec;
 
 						NSString* keyNameSpeed = [[NSString alloc] initWithFormat:@"%@%lu", @KEY_NAME_RADAR_SPEED, (unsigned long)threatIndex];
 						[radarDict2 setObject:[NSNumber numberWithDouble:speed] forKey:keyNameSpeed];
@@ -288,7 +289,7 @@ void serviceDiscoveredFunc(CBPeripheral* peripheral, CBUUID* serviceId, void* cb
 				}
 			}
 		}
-		self->lastThreatUpdateTime = currentThreatTime;
+		self->lastThreatUpdateTimeMs = currentThreatTimeMs;
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_RADAR object:radarDict2];
 	}

@@ -1060,39 +1060,40 @@
 				[self->threatImageViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 				[self->threatImageViews removeAllObjects];
 
-				if ([activityPrefs getShowThreatSpeed:self->activityType])
+				// Our speed. Need this for computing the speed of the threats.
+				ActivityAttributeType ourSpeed = [appDelegate queryLiveActivityAttribute:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
+
+				// Add new threat images.
+				bool showThreatSpeed = [activityPrefs getShowThreatSpeed:self->activityType];
+				for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
 				{
-					// Our speed. Need this for computing the speed of the threats.
-					ActivityAttributeType ourSpeed = [appDelegate queryLiveActivityAttribute:@ACTIVITY_ATTRIBUTE_CURRENT_SPEED];
+					NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
 
-					// Add new threat images.
-					for (uint8_t countNum = 1; countNum <= self->lastThreatCount; ++countNum)
+					// If we have distance information for this threat then draw it on the left side of the screen.
+					if ([radarData objectForKey:keyName])
 					{
-						NSString* keyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_THREAT_DISTANCE, countNum];
+						// Y axis placement is determined by the object's distance from us.
+						NSNumber* distance = [radarData objectForKey:keyName];
+						CGFloat imageY = ([distance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
 
-						// If we have distance information for this threat then draw it on the left side of the screen.
-						if ([radarData objectForKey:keyName])
+						// Create the view from the image.
+						UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
+
+						// Handle dark mode.
+						[threatImageView setTintColor:[self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor]];
+
+						// This defines the image's position on the screen.
+						threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
+
+						// Add to the view.
+						[self.view addSubview:threatImageView];
+
+						// Remember it so we can remove it later.
+						[self->threatImageViews addObject:threatImageView];
+
+						// Do we know the speed of the threat? If so, display it - assuming that's something the user wants.
+						if (showThreatSpeed)
 						{
-							// Y axis placement is determined by the object's distance from us.
-							NSNumber* distance = [radarData objectForKey:keyName];
-							CGFloat imageY = ([distance intValue] / MAX_THREAT_DISTANCE_METERS) * (self.view.bounds.size.height - self.toolbar.bounds.size.height);
-
-							// Create the view from the image.
-							UIImageView* threatImageView = [[UIImageView alloc] initWithImage:self->threatImage];
-
-							// Handle dark mode.
-							[threatImageView setTintColor:[self isDarkModeEnabled] ? [UIColor whiteColor] : [UIColor blackColor]];
-
-							// This defines the image's position on the screen.
-							threatImageView.frame = CGRectMake(IMAGE_LEFT, imageY, IMAGE_SIZE, IMAGE_SIZE);
-
-							// Add to the view.
-							[self.view addSubview:threatImageView];
-
-							// Remember it so we can remove it later.
-							[self->threatImageViews addObject:threatImageView];
-
-							// Do we know the speed of the threat? If so, display it.
 							NSString* speedKeyName = [[NSString alloc] initWithFormat:@"%@%u", @KEY_NAME_RADAR_SPEED, countNum];
 							NSNumber* relativeSpeed = [radarData objectForKey:speedKeyName];
 							if (relativeSpeed)
@@ -1107,7 +1108,7 @@
 								[appDelegate convertToPreferredUnits:&relativeSpeedAttr];
 								
 								// The threat's speed is our speed + the threat's speed relative to us.
-								double finalSpeed = ourSpeed.value.doubleVal + relativeSpeedAttr.value.doubleVal;
+								double finalSpeed = ourSpeed.valid ? ourSpeed.value.doubleVal + relativeSpeedAttr.value.doubleVal : relativeSpeedAttr.value.doubleVal;
 
 								// Build the string that will be printed.
 								NSString* unitsStr = [StringUtils formatActivityMeasureType:relativeSpeedAttr.measureType];
