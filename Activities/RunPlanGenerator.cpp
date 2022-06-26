@@ -89,6 +89,8 @@ double RunPlanGenerator::MaxLongRunDistance(double goalDistance)
 double RunPlanGenerator::MaxAttainableDistance(double baseDistance, double numWeeks)
 {
 	double weeklyRate = 0.1;
+
+	// The calculation is basically the same as for compound interest.
 	return baseDistance + (pow(baseDistance * (1.0 + (weeklyRate / 52.0)), (52.0 * numWeeks)) - baseDistance);
 }
 
@@ -135,25 +137,11 @@ bool RunPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inpu
 		return false;
 
 	// Can we get to the target distance, or close to it, in the time remaining.
+	double maxDistanceNeeded = this->MaxLongRunDistance(goalDistance);
 	double maxAttainableDistance = this->MaxAttainableDistance(longestRunInFourWeeks, weeksUntilGoal);
 	if (maxAttainableDistance < (double)0.1) // Sanity check
 		return false;
-	switch (goal)
-	{
-	case GOAL_FITNESS:
-		return true;
-	case GOAL_5K_RUN:
-	case GOAL_10K_RUN:
-	case GOAL_15K_RUN:
-	case GOAL_HALF_MARATHON_RUN:
-		return maxAttainableDistance >= goalDistance * 0.9;
-	case GOAL_MARATHON_RUN:
-		return maxAttainableDistance >= goalDistance * 0.75;
-	case GOAL_50K_RUN:
-	case GOAL_50_MILE_RUN:
-		return maxAttainableDistance >= goalDistance * 0.6;
-	}
-	return true;
+	return maxAttainableDistance >= maxDistanceNeeded;
 }
 
 /// @brief Resets all intensity distribution tracking variables.
@@ -543,13 +531,20 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	}
 
 	// No pace data?
-	if (!(RunPlanGenerator::ValidFloat(shortIntervalRunPace, 0.1) && RunPlanGenerator::ValidFloat(speedRunPace, 0.1) && RunPlanGenerator::ValidFloat(tempoRunPace, 0.1) && RunPlanGenerator::ValidFloat(longRunPace, 0.1) && RunPlanGenerator::ValidFloat(easyRunPace, 0.1)))
+	if (!(RunPlanGenerator::ValidFloat(shortIntervalRunPace, 0.1) &&
+		  RunPlanGenerator::ValidFloat(speedRunPace, 0.1) &&
+		  RunPlanGenerator::ValidFloat(tempoRunPace, 0.1) &&
+		  RunPlanGenerator::ValidFloat(longRunPace, 0.1) &&
+		  RunPlanGenerator::ValidFloat(easyRunPace, 0.1)))
 	{
 		return workouts;
 	}
 
 	// If the long run has been increasing for the last three weeks then give the person a break.
-	if (RunPlanGenerator::ValidFloat(longestRunWeek1, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek2, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek3, 0.1) && RunPlanGenerator::ValidFloat(longestRunWeek4, 0.1))
+	if (RunPlanGenerator::ValidFloat(longestRunWeek1, 0.1) &&
+		RunPlanGenerator::ValidFloat(longestRunWeek2, 0.1) &&
+		RunPlanGenerator::ValidFloat(longestRunWeek3, 0.1) &&
+		RunPlanGenerator::ValidFloat(longestRunWeek4, 0.1))
 	{
 		if (longestRunWeek1 >= longestRunWeek2 && longestRunWeek2 >= longestRunWeek3 && longestRunWeek3 >= longestRunWeek4)
 			longestRunInFourWeeks *= 0.75;
@@ -567,7 +562,10 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	bool easyWeek = false;
 	if (!inTaper)
 	{
-		if (RunPlanGenerator::ValidFloat(totalIntensityWeek1, 0.1) && RunPlanGenerator::ValidFloat(totalIntensityWeek2, 0.1) && RunPlanGenerator::ValidFloat(totalIntensityWeek3, 0.1) && RunPlanGenerator::ValidFloat(totalIntensityWeek4, 0.1))
+		if (RunPlanGenerator::ValidFloat(totalIntensityWeek1, 0.1) &&
+			RunPlanGenerator::ValidFloat(totalIntensityWeek2, 0.1) &&
+			RunPlanGenerator::ValidFloat(totalIntensityWeek3, 0.1) &&
+			RunPlanGenerator::ValidFloat(totalIntensityWeek4, 0.1))
 		{
 			if (totalIntensityWeek1 >= totalIntensityWeek2 && totalIntensityWeek2 >= totalIntensityWeek3 && totalIntensityWeek3 >= totalIntensityWeek4)
 				easyWeek = true;
@@ -579,9 +577,16 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// This equation was derived by playing with trendlines in a spreadsheet.
 	double maxLongRunDistance;
 	if (inTaper)
+	{
 		maxLongRunDistance = this->MaxTaperDistance(goal);
+	}
 	else
-		maxLongRunDistance = this->MaxLongRunDistance(goalDistance);
+	{
+		double maxDistanceNeeded = this->MaxLongRunDistance(goalDistance);
+		double maxAttainableDistance = this->MaxAttainableDistance(longestRunInFourWeeks, weeksUntilGoal);
+		double stretchFactor = maxAttainableDistance / maxDistanceNeeded;  // Gives us an idea as to how much the user is ahead of schedule.
+		maxLongRunDistance = this->MaxLongRunDistance(goalDistance / stretchFactor);
+	}
 
 	// Handle situation in which the user is already meeting or exceeding the goal distance.
 	if (longestRunInFourWeeks >= maxLongRunDistance)

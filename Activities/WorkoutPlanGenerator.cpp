@@ -149,15 +149,22 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 
 std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
 {
-	RunPlanGenerator runGen;
-	BikePlanGenerator bikeGen;
 	SwimPlanGenerator swimGen;
+	BikePlanGenerator bikeGen;
+	RunPlanGenerator runGen;
 	TrainingPhilosophyType trainingIntensityDist = TRAINING_PHILOSOPHY_POLARIZED;
-
-	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
-	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs, trainingIntensityDist);
-	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> workouts;
+
+	if (!swimGen.IsWorkoutPlanPossible(inputs))
+		return workouts;
+	if (!bikeGen.IsWorkoutPlanPossible(inputs))
+		return workouts;
+	if (!runGen.IsWorkoutPlanPossible(inputs))
+		return workouts;
+
+	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkouts(inputs, trainingIntensityDist);
+	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs, trainingIntensityDist);
+	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
 
 	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
 	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());
