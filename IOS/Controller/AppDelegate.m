@@ -1227,38 +1227,35 @@ void startSensorCallback(SensorType type, void* context)
 			if ([responseStr length] > 0)
 			{
 				NSError* error = nil;
-				NSArray* sessionObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-				if (sessionObjects)
+				NSDictionary* sessionDict = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+				if (sessionDict)
 				{
-					for (NSDictionary* sessionDict in sessionObjects)
-					{
-						NSString* sessionCookieStr = [sessionDict objectForKey:@"cookie"];
-						NSNumber* sessionExpiry = [sessionDict objectForKey:@"expiry"];
+					NSString* sessionCookieStr = [sessionDict objectForKey:@"cookie"];
+					NSNumber* sessionExpiry = [sessionDict objectForKey:@"expiry"];
 
-						// Dictionary containing the cookie and the associated expiry date.
-						NSMutableDictionary* cookieProperties = [NSMutableDictionary dictionary];
-						[cookieProperties setObject:@SESSION_COOKIE_NAME forKey:NSHTTPCookieName];
-						[cookieProperties setObject:sessionCookieStr forKey:NSHTTPCookieValue];
-						[cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
-						[cookieProperties setObject:[Preferences broadcastHostName] forKey:NSHTTPCookieDomain];
-						NSDate* expiryDate = [[NSDate date] initWithTimeIntervalSince1970:[sessionExpiry unsignedIntValue]];
-						[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
-						[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];
+					// Dictionary containing the cookie and the associated expiry date.
+					NSMutableDictionary* cookieProperties = [NSMutableDictionary dictionary];
+					[cookieProperties setObject:@SESSION_COOKIE_NAME forKey:NSHTTPCookieName];
+					[cookieProperties setObject:sessionCookieStr forKey:NSHTTPCookieValue];
+					[cookieProperties setObject:@"/" forKey:NSHTTPCookiePath];
+					[cookieProperties setObject:[Preferences broadcastHostName] forKey:NSHTTPCookieDomain];
+					NSDate* expiryDate = [[NSDate date] initWithTimeIntervalSince1970:[sessionExpiry unsignedIntValue]];
+					[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
+					[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];
 
-						// Add the cookie to the local cookie store.
-						NSHTTPCookie* cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
-						[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+					// Add the cookie to the local cookie store.
+					NSHTTPCookie* cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+					[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
 
-						// Force sync - necessary in case of an abrupt shutdown.
-						[[NSUserDefaults standardUserDefaults] synchronize];
-					}
+					// Force sync - necessary in case of an abrupt shutdown.
+					[[NSUserDefaults standardUserDefaults] synchronize];
 				}
 			}
 
 			// Associate this device with the logged in user.
 			[self serverClaimDevice:[Preferences uuid]];
 			
-			// Request the most recent gear list and planned workout list.
+			// Request the most recent gear list, planned workout list, etc.
 			[self syncWithServer];
 		}
 	}
@@ -1278,6 +1275,7 @@ void startSensorCallback(SensorType type, void* context)
 		// The user is logged in, request the most recent gear list and planned workout list.
 		if (responseCode && [responseCode intValue] == 200)
 		{
+			// Request the most recent gear list, planned workout list, etc.
 			[self syncWithServer];
 		}
 	}
