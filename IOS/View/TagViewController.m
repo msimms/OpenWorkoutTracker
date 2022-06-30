@@ -138,14 +138,14 @@
 
 	switch (section)
 	{
-		case 0:
-			if (row < [self->tags count])
-			{
-				[content setText: [self->tags objectAtIndex:row]];
-			}
-			break;
-		default:
-			break;
+	case 0:
+		if (row < [self->tags count])
+		{
+			[content setText: [self->tags objectAtIndex:row]];
+		}
+		break;
+	default:
+		break;
 	}
 
 	[cell setContentConfiguration:content];

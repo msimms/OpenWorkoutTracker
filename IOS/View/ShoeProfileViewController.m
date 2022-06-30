@@ -121,14 +121,14 @@
     
     switch (self->mode)
     {
-        case SHOE_PROFILE_NEW:
-            saved = AddShoeProfile(shoeName, shoeDesc, 0, 0);
-            break;
-        case SHOE_PROFILE_UPDATE:
-            saved = UpdateShoeProfile(shoeId, shoeName, shoeDesc, 0, 0);
-            break;
-        default:
-            break;
+	case SHOE_PROFILE_NEW:
+		saved = AddShoeProfile(shoeName, shoeDesc, 0, 0);
+		break;
+	case SHOE_PROFILE_UPDATE:
+		saved = UpdateShoeProfile(shoeId, shoeName, shoeDesc, 0, 0);
+		break;
+	default:
+		break;
     }
     
     return saved;
@@ -146,26 +146,26 @@
 {
 	switch (self->mode)
 	{
-		case SHOE_PROFILE_NEW:
-			[self.navigationController popViewControllerAnimated:YES];
-			break;
-		case SHOE_PROFILE_UPDATE:
-			{
-				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_CAUTION
-																						 message:MSG_DELETE_QUESTION
-																				  preferredStyle:UIAlertControllerStyleAlert];
-				[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				}]];
-				[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					[appDelegate deleteShoeProfile:self->shoeId];
-					[self.navigationController popViewControllerAnimated:YES];
-				}]];
-				[self presentViewController:alertController animated:YES completion:nil];
-			}
-			break;
-		default:
-			break;
+	case SHOE_PROFILE_NEW:
+		[self.navigationController popViewControllerAnimated:YES];
+		break;
+	case SHOE_PROFILE_UPDATE:
+		{
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_CAUTION
+																					 message:MSG_DELETE_QUESTION
+																			  preferredStyle:UIAlertControllerStyleAlert];
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				[appDelegate deleteShoeProfile:self->shoeId];
+				[self.navigationController popViewControllerAnimated:YES];
+			}]];
+			[self presentViewController:alertController animated:YES completion:nil];
+		}
+		break;
+	default:
+		break;
 	}
 }
 

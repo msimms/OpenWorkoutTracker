@@ -123,10 +123,10 @@ typedef enum GearSections
 {
 	switch (section)
 	{
-		case SECTION_BIKES:
-			return STR_BICYCLES;
-		case SECTION_SHOES:
-			return STR_SHOES;
+	case SECTION_BIKES:
+		return STR_BICYCLES;
+	case SECTION_SHOES:
+		return STR_SHOES;
 	}
 	return @"";
 }
@@ -135,10 +135,10 @@ typedef enum GearSections
 {
 	switch (section)
 	{
-		case SECTION_BIKES:
-			return [self->bikeNames count];
-		case SECTION_SHOES:
-			return [self->shoeNames count];
+	case SECTION_BIKES:
+		return [self->bikeNames count];
+	case SECTION_SHOES:
+		return [self->shoeNames count];
 	}
 	return 0;
 }
@@ -161,12 +161,12 @@ typedef enum GearSections
 
 	switch (section)
 	{
-		case SECTION_BIKES:
-			[content setText:[self->bikeNames objectAtIndex:row]];
-			break;
-		case SECTION_SHOES:
-			[content setText:[self->shoeNames objectAtIndex:row]];
-			break;
+	case SECTION_BIKES:
+		[content setText:[self->bikeNames objectAtIndex:row]];
+		break;
+	case SECTION_SHOES:
+		[content setText:[self->shoeNames objectAtIndex:row]];
+		break;
 	}
 
 	[cell setContentConfiguration:content];
@@ -182,20 +182,20 @@ typedef enum GearSections
 
 		switch (section)
 		{
-			case SECTION_BIKES:
-				{
-					self->selectedBikeName = [self->bikeNames objectAtIndex:[indexPath row]];
-					uint64_t bikeId = [appDelegate getBikeIdFromName:self->selectedBikeName];
-					DeleteBikeProfile(bikeId);
-				}
-				break;
-			case SECTION_SHOES:
-				{
-					self->selectedShoeName = [self->shoeNames objectAtIndex:[indexPath row]];
-					uint64_t shoeId = [appDelegate getShoeIdFromName:self->selectedShoeName];
-					DeleteShoeProfile(shoeId);
-				}
-				break;
+		case SECTION_BIKES:
+			{
+				self->selectedBikeName = [self->bikeNames objectAtIndex:[indexPath row]];
+				uint64_t bikeId = [appDelegate getBikeIdFromName:self->selectedBikeName];
+				DeleteBikeProfile(bikeId);
+			}
+			break;
+		case SECTION_SHOES:
+			{
+				self->selectedShoeName = [self->shoeNames objectAtIndex:[indexPath row]];
+				uint64_t shoeId = [appDelegate getShoeIdFromName:self->selectedShoeName];
+				DeleteShoeProfile(shoeId);
+			}
+			break;
 		}
 
 		[self listGear];
@@ -209,10 +209,10 @@ typedef enum GearSections
 
 	switch (section)
 	{
-		case SECTION_BIKES:
-		case SECTION_SHOES:
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator | UITableViewCellEditingStyleDelete;
-			break;
+	case SECTION_BIKES:
+	case SECTION_SHOES:
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator | UITableViewCellEditingStyleDelete;
+		break;
 	}
 }
 

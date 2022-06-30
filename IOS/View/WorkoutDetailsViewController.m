@@ -295,15 +295,15 @@
 {
 	switch (fieldEnum)
 	{
-		case CPTScatterPlotFieldX:
-			return [[NSNumber alloc] initWithInt:(int)index];
-		case CPTScatterPlotFieldY:
-			{
-				double distanceInMeters = (double)index * 100.0; // convert back to meters
-				return [self paceAtDistance:distanceInMeters];
-			}
-		default:
-			break;
+	case CPTScatterPlotFieldX:
+		return [[NSNumber alloc] initWithInt:(int)index];
+	case CPTScatterPlotFieldY:
+		{
+			double distanceInMeters = (double)index * 100.0; // convert back to meters
+			return [self paceAtDistance:distanceInMeters];
+		}
+	default:
+		break;
 	}
 	return nil;
 }

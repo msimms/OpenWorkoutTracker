@@ -142,8 +142,8 @@
 {
 	switch (section)
 	{
-		case 0:
-			return [self->attributeNames count];
+	case 0:
+		return [self->attributeNames count];
 	}
 	return 0;
 }

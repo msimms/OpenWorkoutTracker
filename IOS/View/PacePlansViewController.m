@@ -133,8 +133,8 @@
 {
 	switch (section)
 	{
-		case 0:
-			return [self->planNamesAndIds count];
+	case 0:
+		return [self->planNamesAndIds count];
 	}
 	return 0;
 }
@@ -157,14 +157,14 @@
 
 	switch (section)
 	{
-		case 0:
-			{
-				NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:row];
-				[content setText:nameAndId[@"name"]];
-			}
-			break;
-		default:
-			break;
+	case 0:
+		{
+			NSDictionary* nameAndId = [self->planNamesAndIds objectAtIndex:row];
+			[content setText:nameAndId[@"name"]];
+		}
+		break;
+	default:
+		break;
 	}
 
 	[cell setContentConfiguration:content];

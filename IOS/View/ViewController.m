@@ -129,17 +129,17 @@
 
 	switch (viewType)
 	{
-		case ACTIVITY_VIEW_COMPLEX:
-			[self performSegueWithIdentifier:@SEQUE_TO_COMPLEX_VIEW sender:self];
-			break;
-		case ACTIVITY_VIEW_MAPPED:
-			[self performSegueWithIdentifier:@SEQUE_TO_MAPPED_VIEW sender:self];
-			break;
-		case ACTIVITY_VIEW_SIMPLE:
-			[self performSegueWithIdentifier:@SEQUE_TO_SIMPLE_VIEW sender:self];
-			break;
-		default:
-			break;
+	case ACTIVITY_VIEW_COMPLEX:
+		[self performSegueWithIdentifier:@SEQUE_TO_COMPLEX_VIEW sender:self];
+		break;
+	case ACTIVITY_VIEW_MAPPED:
+		[self performSegueWithIdentifier:@SEQUE_TO_MAPPED_VIEW sender:self];
+		break;
+	case ACTIVITY_VIEW_SIMPLE:
+		[self performSegueWithIdentifier:@SEQUE_TO_SIMPLE_VIEW sender:self];
+		break;
+	default:
+		break;
 	}
 }
 

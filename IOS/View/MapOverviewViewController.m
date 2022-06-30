@@ -44,35 +44,35 @@
 
 	switch (self->mode)
 	{
-		case MAP_OVERVIEW_BLANK:
-			break;
-		case MAP_OVERVIEW_ALL_STARTS:
-			[self showAllStarts];
-			break;
-		case MAP_OVERVIEW_RUN_STARTS:
-			[self showActivityStarts:@ACTIVITY_TYPE_RUNNING];
-			break;
-		case MAP_OVERVIEW_CYCLING_STARTS:
-			[self showActivityStarts:@ACTIVITY_TYPE_CYCLING];
-			break;
-		case MAP_OVERVIEW_HIKING_STARTS:
-			[self showActivityStarts:@ACTIVITY_TYPE_HIKING];
-			break;
-		case MAP_OVERVIEW_WALKING_STARTS:
-			[self showActivityStarts:@ACTIVITY_TYPE_WALKING];
-			break;
-		case MAP_OVERVIEW_SEGMENT_VIEW:
-			[self showSegments];
-			break;
-		case MAP_OVERVIEW_COMPLETE_ROUTE:
-			[self showCompleteRoute];
-			break;
-		case MAP_OVERVIEW_OVERLAY:
-			[self showOverlay];
-			break;
-		case MAP_OVERVIEW_HEAT:
-			[self showHeatMap];
-			break;
+	case MAP_OVERVIEW_BLANK:
+		break;
+	case MAP_OVERVIEW_ALL_STARTS:
+		[self showAllStarts];
+		break;
+	case MAP_OVERVIEW_RUN_STARTS:
+		[self showActivityStarts:@ACTIVITY_TYPE_RUNNING];
+		break;
+	case MAP_OVERVIEW_CYCLING_STARTS:
+		[self showActivityStarts:@ACTIVITY_TYPE_CYCLING];
+		break;
+	case MAP_OVERVIEW_HIKING_STARTS:
+		[self showActivityStarts:@ACTIVITY_TYPE_HIKING];
+		break;
+	case MAP_OVERVIEW_WALKING_STARTS:
+		[self showActivityStarts:@ACTIVITY_TYPE_WALKING];
+		break;
+	case MAP_OVERVIEW_SEGMENT_VIEW:
+		[self showSegments];
+		break;
+	case MAP_OVERVIEW_COMPLETE_ROUTE:
+		[self showCompleteRoute];
+		break;
+	case MAP_OVERVIEW_OVERLAY:
+		[self showOverlay];
+		break;
+	case MAP_OVERVIEW_HEAT:
+		[self showHeatMap];
+		break;
 	}
 }
 

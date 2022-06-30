@@ -232,24 +232,24 @@ typedef enum SettingsSections
 {
 	switch (section)
 	{
-		case SECTION_ALWAYS_SCAN:
-			break;
-		case SECTION_HRM:
-			return NAME_HRM;
-		case SECTION_CADENCE_WHEEL_SPEED:
-			return NAME_CADENCE_WHEEL_SPEED;
-		case SECTION_POWER_METER:
-			return NAME_POWER_METER;
-		case SECTION_FOOT_POD:
-			return NAME_FOOT_POD;
-		case SECTION_SCALE:
-			return NAME_SCALE;
-		case SECTION_LIGHT:
-			return NAME_LIGHT;
-		case SECTION_RADAR:
-			return NAME_RADAR;
-		case NUM_SETTINGS_SECTIONS:
-			break;
+	case SECTION_ALWAYS_SCAN:
+		break;
+	case SECTION_HRM:
+		return NAME_HRM;
+	case SECTION_CADENCE_WHEEL_SPEED:
+		return NAME_CADENCE_WHEEL_SPEED;
+	case SECTION_POWER_METER:
+		return NAME_POWER_METER;
+	case SECTION_FOOT_POD:
+		return NAME_FOOT_POD;
+	case SECTION_SCALE:
+		return NAME_SCALE;
+	case SECTION_LIGHT:
+		return NAME_LIGHT;
+	case SECTION_RADAR:
+		return NAME_RADAR;
+	case NUM_SETTINGS_SECTIONS:
+		break;
 	}
 	return @"";
 }
@@ -261,36 +261,36 @@ typedef enum SettingsSections
 
 	switch (section)
 	{
-		case SECTION_ALWAYS_SCAN:
-			return 1;
-		case SECTION_HRM:
-			self->connectedHRMs = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_HEART_RATE];
-			numRows = [self->connectedHRMs count];
-			break;
-		case SECTION_CADENCE_WHEEL_SPEED:
-			self->connectedCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
-			numRows = [self->connectedCadenceWheelSpeedSensors count];
-			break;
-		case SECTION_POWER_METER:
-			self->connectedPowerMeters = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_CYCLING_POWER];
-			numRows = [self->connectedPowerMeters count];
-			break;
-		case SECTION_FOOT_POD:
-			self->connectedFootPods = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
-			numRows = [self->connectedFootPods count];
-			break;
-		case SECTION_SCALE:
-			self->connectedScales = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_WEIGHT];
-			numRows = [self->connectedScales count];
-			break;
-		case SECTION_LIGHT:
-			self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_FLY6_LIGHT];
-			numRows = [self->connectedLights count];
-			break;
-		case SECTION_RADAR:
-			self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_VARIA_RADAR];
-			numRows = [self->connectedRadarUnits count];
-			break;
+	case SECTION_ALWAYS_SCAN:
+		return 1;
+	case SECTION_HRM:
+		self->connectedHRMs = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_HEART_RATE];
+		numRows = [self->connectedHRMs count];
+		break;
+	case SECTION_CADENCE_WHEEL_SPEED:
+		self->connectedCadenceWheelSpeedSensors = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_CYCLING_SPEED_AND_CADENCE];
+		numRows = [self->connectedCadenceWheelSpeedSensors count];
+		break;
+	case SECTION_POWER_METER:
+		self->connectedPowerMeters = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_CYCLING_POWER];
+		numRows = [self->connectedPowerMeters count];
+		break;
+	case SECTION_FOOT_POD:
+		self->connectedFootPods = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_RUNNING_SPEED_AND_CADENCE];
+		numRows = [self->connectedFootPods count];
+		break;
+	case SECTION_SCALE:
+		self->connectedScales = [appDelegate listDiscoveredBluetoothSensorsWithServiceId:BT_SERVICE_WEIGHT];
+		numRows = [self->connectedScales count];
+		break;
+	case SECTION_LIGHT:
+		self->connectedLights = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_FLY6_LIGHT];
+		numRows = [self->connectedLights count];
+		break;
+	case SECTION_RADAR:
+		self->connectedRadarUnits = [appDelegate listDiscoveredBluetoothSensorsWithCustomServiceId:@CUSTOM_BT_SERVICE_VARIA_RADAR];
+		numRows = [self->connectedRadarUnits count];
+		break;
 	}
 	if (numRows == 0)
 	{
@@ -319,38 +319,38 @@ typedef enum SettingsSections
 
 	switch (section)
 	{
-		case SECTION_ALWAYS_SCAN:
-			break;
-		case SECTION_HRM:
-			peripheralList = self->connectedHRMs;
-			contentList = self->currentValuesOfHRMs;
-			break;
-		case SECTION_CADENCE_WHEEL_SPEED:
-			peripheralList = self->connectedCadenceWheelSpeedSensors;
-			contentList = self->currentValuesOfCadenceWheelSpeedSensors;
-			break;
-		case SECTION_POWER_METER:
-			peripheralList = self->connectedPowerMeters;
-			contentList = self->currentValuesPowerMeters;
-			break;
-		case SECTION_FOOT_POD:
-			peripheralList = self->connectedFootPods;
-			break;
-		case SECTION_SCALE:
-			peripheralList = self->connectedScales;
-			contentList = self->currentValuesOfScales;
-			break;
-		case SECTION_LIGHT:
-			peripheralList = self->connectedLights;
-			break;
-		case SECTION_RADAR:
-			peripheralList = self->connectedRadarUnits;
-			contentList = self->currentValuesOfRadarUnits;
-			break;
-		case NUM_SETTINGS_SECTIONS:
-			break;
-		default:
-			break;
+	case SECTION_ALWAYS_SCAN:
+		break;
+	case SECTION_HRM:
+		peripheralList = self->connectedHRMs;
+		contentList = self->currentValuesOfHRMs;
+		break;
+	case SECTION_CADENCE_WHEEL_SPEED:
+		peripheralList = self->connectedCadenceWheelSpeedSensors;
+		contentList = self->currentValuesOfCadenceWheelSpeedSensors;
+		break;
+	case SECTION_POWER_METER:
+		peripheralList = self->connectedPowerMeters;
+		contentList = self->currentValuesPowerMeters;
+		break;
+	case SECTION_FOOT_POD:
+		peripheralList = self->connectedFootPods;
+		break;
+	case SECTION_SCALE:
+		peripheralList = self->connectedScales;
+		contentList = self->currentValuesOfScales;
+		break;
+	case SECTION_LIGHT:
+		peripheralList = self->connectedLights;
+		break;
+	case SECTION_RADAR:
+		peripheralList = self->connectedRadarUnits;
+		contentList = self->currentValuesOfRadarUnits;
+		break;
+	case NUM_SETTINGS_SECTIONS:
+		break;
+	default:
+		break;
 	}
 	
 	if (section == SECTION_ALWAYS_SCAN)

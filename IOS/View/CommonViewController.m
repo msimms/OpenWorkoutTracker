@@ -192,11 +192,11 @@
 {
 	switch (self.view.traitCollection.userInterfaceStyle)
 	{
-		case UIUserInterfaceStyleUnspecified:
-		case UIUserInterfaceStyleLight:
-			return false;
-		case UIUserInterfaceStyleDark:
-			return true;
+	case UIUserInterfaceStyleUnspecified:
+	case UIUserInterfaceStyleLight:
+		return false;
+	case UIUserInterfaceStyleDark:
+		return true;
 	}
 	return false;
 }

@@ -219,10 +219,10 @@ typedef enum ProfilePerformanceRows
 {
 	switch (section)
 	{
-		case SECTION_USER:
-			return STR_PROFILE;
-		case SECTION_FITNESS:
-			return STR_FITNESS;
+	case SECTION_USER:
+		return STR_PROFILE;
+	case SECTION_FITNESS:
+		return STR_FITNESS;
 	}
 	return @"";
 }
@@ -231,10 +231,10 @@ typedef enum ProfilePerformanceRows
 {
 	switch (section)
 	{
-		case SECTION_USER:
-			return NUM_PROFILE_USER_ROWS;
-		case SECTION_FITNESS:
-			return NUM_PROFILE_PERFORMANCE_ROWS;
+	case SECTION_USER:
+		return NUM_PROFILE_USER_ROWS;
+	case SECTION_FITNESS:
+		return NUM_PROFILE_PERFORMANCE_ROWS;
 	}
 	return 0;
 }
@@ -258,84 +258,84 @@ typedef enum ProfilePerformanceRows
 
 	switch (section)
 	{
-		case SECTION_USER:
+	case SECTION_USER:
+		{
+			switch (row)
 			{
-				switch (row)
+			case ROW_GENDER:
+				[content setText:STR_GENDER];
+				[content setSecondaryText:[StringUtils genderToStr:[appDelegate userGender]]];
+				break;
+			case ROW_BIRTHDATE:
 				{
-					case ROW_GENDER:
-						[content setText:STR_GENDER];
-						[content setSecondaryText:[StringUtils genderToStr:[appDelegate userGender]]];
-						break;
-					case ROW_BIRTHDATE:
-						{
-							struct tm birthDate = [appDelegate userBirthDate];
-							NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:mktime(&birthDate)];
+					struct tm birthDate = [appDelegate userBirthDate];
+					NSDate* dateObj = [[NSDate alloc] initWithTimeIntervalSince1970:mktime(&birthDate)];
 
-							UIDatePicker* birthdatePicker = [[UIDatePicker alloc]init];
-							birthdatePicker.datePickerMode = UIDatePickerModeDate;
-							birthdatePicker.clipsToBounds = YES;
-							[birthdatePicker setDate:dateObj];
+					UIDatePicker* birthdatePicker = [[UIDatePicker alloc]init];
+					birthdatePicker.datePickerMode = UIDatePickerModeDate;
+					birthdatePicker.clipsToBounds = YES;
+					[birthdatePicker setDate:dateObj];
 
-							[cell.accessoryView addSubview:birthdatePicker];
+					[cell.accessoryView addSubview:birthdatePicker];
 
-							[content setText:TITLE_BIRTHDATE];
-							[content setSecondaryText:[StringUtils formatDateFromTimeStruct:&birthDate]];
-						}
-						break;
-					case ROW_HEIGHT:
-						{
-							double height = [appDelegate userHeight];
-							[content setText:STR_HEIGHT];
-							[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.1f %@", height, [StringUtils formatActivityMeasureType:MEASURE_HEIGHT]]];
-						}
-						break;
-					case ROW_WEIGHT:
-						{
-							double weight = [appDelegate userWeight];
-							[content setText:STR_WEIGHT];
-							[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
-						}
-						break;
-					default:
-						break;
+					[content setText:TITLE_BIRTHDATE];
+					[content setSecondaryText:[StringUtils formatDateFromTimeStruct:&birthDate]];
 				}
+				break;
+			case ROW_HEIGHT:
+				{
+					double height = [appDelegate userHeight];
+					[content setText:STR_HEIGHT];
+					[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.1f %@", height, [StringUtils formatActivityMeasureType:MEASURE_HEIGHT]]];
+				}
+				break;
+			case ROW_WEIGHT:
+				{
+					double weight = [appDelegate userWeight];
+					[content setText:STR_WEIGHT];
+					[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.1f %@", weight, [StringUtils formatActivityMeasureType:MEASURE_WEIGHT]]];
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		case SECTION_FITNESS:
+		}
+		break;
+	case SECTION_FITNESS:
+		{
+			switch (row)
 			{
-				switch (row)
+			case ROW_ACTIVITY_LEVEL:
+				[content setText:ACTION_SHEET_TITLE_ACTIVITY_LEVEL];
+				[content setSecondaryText:[StringUtils activityLevelToStr:[appDelegate userActivityLevel]]];
+				break;
+			case ROW_FTP:
 				{
-					case ROW_ACTIVITY_LEVEL:
-						[content setText:ACTION_SHEET_TITLE_ACTIVITY_LEVEL];
-						[content setSecondaryText:[StringUtils activityLevelToStr:[appDelegate userActivityLevel]]];
-						break;
-					case ROW_FTP:
-						{
-							double declaredFtp = [appDelegate userSpecifiedFtp];
-							[content setText:STR_FTP];
+					double declaredFtp = [appDelegate userSpecifiedFtp];
+					[content setText:STR_FTP];
 
-							if (declaredFtp >= (double)1.0)
-							{
-								[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.0f %@", declaredFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
-							}
-							else
-							{
-								double estimatedFtp = [appDelegate userEstimatedFtp];
+					if (declaredFtp >= (double)1.0)
+					{
+						[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.0f %@", declaredFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
+					}
+					else
+					{
+						double estimatedFtp = [appDelegate userEstimatedFtp];
 
-								if (estimatedFtp >= (double)1.0)
-									[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.0f %@ (Estimated)", estimatedFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
-								else
-									[content setSecondaryText:[[NSString alloc] initWithFormat:STR_NOT_SET]];
-							}
-						}
-						break;
-					default:
-						break;
+						if (estimatedFtp >= (double)1.0)
+							[content setSecondaryText:[[NSString alloc] initWithFormat:@"%0.0f %@ (Estimated)", estimatedFtp, [StringUtils formatActivityMeasureType:MEASURE_POWER]]];
+						else
+							[content setSecondaryText:[[NSString alloc] initWithFormat:STR_NOT_SET]];
+					}
 				}
+				break;
+			default:
+				break;
 			}
-			break;
-		case NUM_PROFILE_SECTIONS:
-			break;
+		}
+		break;
+	case NUM_PROFILE_SECTIONS:
+		break;
 	}
 
 	[cell setContentConfiguration:content];
@@ -348,12 +348,12 @@ typedef enum ProfilePerformanceRows
 
 	switch (section)
 	{
-		case SECTION_USER:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_FITNESS:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
+	case SECTION_USER:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_FITNESS:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
 	}
 }
 
@@ -372,37 +372,37 @@ typedef enum ProfilePerformanceRows
 	{
 		switch (row)
 		{
-			case ROW_GENDER:
-				[self showGenderDialog];
-				break;
-			case ROW_BIRTHDATE:
-				[self showDatePicker];
-				break;
-			case ROW_HEIGHT:
-				[self showHeightDialog];
-				break;
-			case ROW_WEIGHT:
-				{
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																							 message:STR_WEIGHT
-																					  preferredStyle:UIAlertControllerStyleActionSheet];
+		case ROW_GENDER:
+			[self showGenderDialog];
+			break;
+		case ROW_BIRTHDATE:
+			[self showDatePicker];
+			break;
+		case ROW_HEIGHT:
+			[self showHeightDialog];
+			break;
+		case ROW_WEIGHT:
+			{
+				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																						 message:STR_WEIGHT
+																				  preferredStyle:UIAlertControllerStyleActionSheet];
 
-					// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_EDIT_WEIGHT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[self showWeightDialog];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_VIEW_WEIGHT_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE sender:self];
-					}]];
+				// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_EDIT_WEIGHT style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[self showWeightDialog];
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_VIEW_WEIGHT_HISTORY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW_FROM_PROFILE sender:self];
+				}]];
 
-					// Show the action sheet.
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
-				break;
-			case NUM_PROFILE_USER_ROWS:
-				break;
+				// Show the action sheet.
+				[self presentViewController:alertController animated:YES completion:nil];
+			}
+			break;
+		case NUM_PROFILE_USER_ROWS:
+			break;
 		}
 	}
 	else if (section == SECTION_FITNESS)
@@ -411,69 +411,69 @@ typedef enum ProfilePerformanceRows
 
 		switch (row)
 		{
-			case ROW_ACTIVITY_LEVEL:
-				{
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																							 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
-																					  preferredStyle:UIAlertControllerStyleAlert];
+		case ROW_ACTIVITY_LEVEL:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																						 message:ACTION_SHEET_TITLE_ACTIVITY_LEVEL
+																				  preferredStyle:UIAlertControllerStyleAlert];
 
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_SEDENTARY];
-						[self.profileTableView reloadData];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_LIGHT] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_LIGHT];
-						[self.profileTableView reloadData];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_MODERATE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_MODERATE];
-						[self.profileTableView reloadData];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_ACTIVE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_ACTIVE];
-						[self.profileTableView reloadData];
-					}]];
-					[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_EXTREME] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_EXTREME];
-						[self.profileTableView reloadData];
-					}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_SEDENTARY] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_SEDENTARY];
+					[self.profileTableView reloadData];
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_LIGHT] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_LIGHT];
+					[self.profileTableView reloadData];
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_MODERATE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_MODERATE];
+					[self.profileTableView reloadData];
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_ACTIVE] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_ACTIVE];
+					[self.profileTableView reloadData];
+				}]];
+				[alertController addAction:[UIAlertAction actionWithTitle:[StringUtils activityLevelToStr:ACTIVITY_LEVEL_EXTREME] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					[appDelegate setUserActivityLevel:ACTIVITY_LEVEL_EXTREME];
+					[self.profileTableView reloadData];
+				}]];
 
-					// Show the action sheet.
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
-				break;
-			case ROW_FTP:
-				{
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_FTP
-																							 message:ALERT_MSG_FTP
-																					  preferredStyle:UIAlertControllerStyleAlert];
-					
-					// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
-					}]];
-					[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-						textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userSpecifiedFtp]];
-						textField.keyboardType = UIKeyboardTypeNumberPad;
-					}];
-					[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-						UITextField* field = alertController.textFields.firstObject;
-						double ftp = [[field text] doubleValue];
+				// Show the action sheet.
+				[self presentViewController:alertController animated:YES completion:nil];
+			}
+			break;
+		case ROW_FTP:
+			{
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_FTP
+																						 message:ALERT_MSG_FTP
+																				  preferredStyle:UIAlertControllerStyleAlert];
+				
+				// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+				}]];
+				[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
+					textField.placeholder = [[NSString alloc] initWithFormat:@"%0.0f", [appDelegate userSpecifiedFtp]];
+					textField.keyboardType = UIKeyboardTypeNumberPad;
+				}];
+				[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+					UITextField* field = alertController.textFields.firstObject;
+					double ftp = [[field text] doubleValue];
 
-						if (ftp > (double)0.0)
-						{
-							[appDelegate setUserFtp:ftp];
-							[self.profileTableView reloadData];
-						}
-					}]];
+					if (ftp > (double)0.0)
+					{
+						[appDelegate setUserFtp:ftp];
+						[self.profileTableView reloadData];
+					}
+				}]];
 
-					// Show the action sheet.
-					[self presentViewController:alertController animated:YES completion:nil];
-				}
-				break;
-			case NUM_PROFILE_PERFORMANCE_ROWS:
-				break;
+				// Show the action sheet.
+				[self presentViewController:alertController animated:YES completion:nil];
+			}
+			break;
+		case NUM_PROFILE_PERFORMANCE_ROWS:
+			break;
 		}
 	}
 }

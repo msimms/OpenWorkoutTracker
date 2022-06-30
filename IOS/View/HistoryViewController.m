@@ -543,16 +543,16 @@
 {
 	switch (result)
 	{
-		case MFMailComposeResultCancelled:
-			break;
-		case MFMailComposeResultSaved:
-			break;
-		case MFMailComposeResultSent:
-			break;
-		case MFMailComposeResultFailed:
-			break;
-		default:
-			break;
+	case MFMailComposeResultCancelled:
+		break;
+	case MFMailComposeResultSaved:
+		break;
+	case MFMailComposeResultSent:
+		break;
+	case MFMailComposeResultFailed:
+		break;
+	default:
+		break;
 	}
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

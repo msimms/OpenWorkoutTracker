@@ -158,14 +158,14 @@ MapViewController* g_ptrToMapViewCtrl;
 {
 	switch (self.mapView.mapType)
 	{
-		case MKMapTypeHybrid:
-			self.mapView.mapType = MKMapTypeStandard;
-			break;
-		case MKMapTypeStandard:
-			self.mapView.mapType = MKMapTypeHybrid;
-			break;
-		default:
-			break;
+	case MKMapTypeHybrid:
+		self.mapView.mapType = MKMapTypeStandard;
+		break;
+	case MKMapTypeStandard:
+		self.mapView.mapType = MKMapTypeHybrid;
+		break;
+	default:
+		break;
 	}
 
 	[self.mapView removeAnnotations:mapView.annotations];
@@ -384,19 +384,19 @@ void KmlPlacemarkEnd(const char* name, void* context)
 	// Set the checkmarks.
 	switch (self->mapView.mapType)
 	{
-		case MKMapTypeStandard:
-			[self checkActionSheetButton:mapStd];
-			break;
-		case MKMapTypeSatellite:
-			[self checkActionSheetButton:mapSat];
-			break;
-		case MKMapTypeHybrid:
-			[self checkActionSheetButton:mapHybrid];
-			break;
-		case MKMapTypeSatelliteFlyover:
-		case MKMapTypeHybridFlyover:
-		case MKMapTypeMutedStandard:
-			break;
+	case MKMapTypeStandard:
+		[self checkActionSheetButton:mapStd];
+		break;
+	case MKMapTypeSatellite:
+		[self checkActionSheetButton:mapSat];
+		break;
+	case MKMapTypeHybrid:
+		[self checkActionSheetButton:mapHybrid];
+		break;
+	case MKMapTypeSatelliteFlyover:
+	case MKMapTypeHybridFlyover:
+	case MKMapTypeMutedStandard:
+		break;
 	}
 
 	// Show the action sheet.

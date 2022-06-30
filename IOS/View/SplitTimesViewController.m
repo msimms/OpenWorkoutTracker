@@ -210,10 +210,10 @@ typedef enum SectionType
 {
 	switch (section)
 	{
-		case SECTION_KMS:
-			return STR_KILOMETERS;
-		case SECTION_MILES:
-			return STR_MILES;
+	case SECTION_KMS:
+		return STR_KILOMETERS;
+	case SECTION_MILES:
+		return STR_MILES;
 	}
 	return @"";
 }
@@ -248,20 +248,20 @@ typedef enum SectionType
 
 	switch (section)
 	{
-		case SECTION_KMS:
-			{
-				SplitTime* arrayItem = [self->splitTimesKm objectAtIndex:row];
-				[content setText:arrayItem->label];
-				[content setSecondaryText:arrayItem->detail];
-			}
-			break;
-		case SECTION_MILES:
-			{
-				SplitTime* arrayItem = [self->splitTimesMile objectAtIndex:row];
-				[content setText:arrayItem->label];
-				[content setSecondaryText:arrayItem->detail];
-			}
-			break;
+	case SECTION_KMS:
+		{
+			SplitTime* arrayItem = [self->splitTimesKm objectAtIndex:row];
+			[content setText:arrayItem->label];
+			[content setSecondaryText:arrayItem->detail];
+		}
+		break;
+	case SECTION_MILES:
+		{
+			SplitTime* arrayItem = [self->splitTimesMile objectAtIndex:row];
+			[content setText:arrayItem->label];
+			[content setSecondaryText:arrayItem->detail];
+		}
+		break;
 	}
 
 	[cell setContentConfiguration:content];

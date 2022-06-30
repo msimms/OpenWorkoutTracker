@@ -151,16 +151,16 @@ typedef enum RadarSectionItems
 {
 	switch (section)
 	{
-		case SECTION_SCREEN:
-			return TITLE_SCREEN;
-		case SECTION_COLORS:
-			return TITLE_COLORS;
-		case SECTION_SOUNDS:
-			return TITLE_SOUNDS;
-		case SECTION_LOCATION:
-			return TITLE_LOCATION;
-		case SECTION_RADAR:
-			return TITLE_RADAR;
+	case SECTION_SCREEN:
+		return TITLE_SCREEN;
+	case SECTION_COLORS:
+		return TITLE_COLORS;
+	case SECTION_SOUNDS:
+		return TITLE_SOUNDS;
+	case SECTION_LOCATION:
+		return TITLE_LOCATION;
+	case SECTION_RADAR:
+		return TITLE_RADAR;
 	}
 	return @"";
 }
@@ -169,16 +169,16 @@ typedef enum RadarSectionItems
 {
 	switch (section)
 	{
-		case SECTION_SCREEN:
-			return NUM_SCREEN_ITEMS;
-		case SECTION_COLORS:
-			return NUM_COLOR_ITEMS;
-		case SECTION_SOUNDS:
-			return NUM_SOUND_ITEMS;
-		case SECTION_LOCATION:
-			return NUM_LOCATION_ITEMS;
-		case SECTION_RADAR:
-			return NUM_RADAR_ITEMS;
+	case SECTION_SCREEN:
+		return NUM_SCREEN_ITEMS;
+	case SECTION_COLORS:
+		return NUM_COLOR_ITEMS;
+	case SECTION_SOUNDS:
+		return NUM_SOUND_ITEMS;
+	case SECTION_LOCATION:
+		return NUM_LOCATION_ITEMS;
+	case SECTION_RADAR:
+		return NUM_RADAR_ITEMS;
 	}
 	return 0;
 }
@@ -203,126 +203,126 @@ typedef enum RadarSectionItems
 
 	switch (section)
 	{
-		case SECTION_SCREEN:
-			switch (row)
+	case SECTION_SCREEN:
+		switch (row)
+		{
+		case SCREEN_ITEM_LAYOUT:
+			[content setText:LABEL_LAYOUT];
+			switch ([self->prefs getDefaultViewForActivityType:activityType])
 			{
-				case SCREEN_ITEM_LAYOUT:
-					[content setText:LABEL_LAYOUT];
-					switch ([self->prefs getDefaultViewForActivityType:activityType])
-					{
-						case ACTIVITY_VIEW_COMPLEX:
-							[content setSecondaryText:LABEL_COMPLEX];
-							break;
-						case ACTIVITY_VIEW_MAPPED:
-							[content setSecondaryText:LABEL_MAPPED];
-							break;
-						case ACTIVITY_VIEW_SIMPLE:
-							[content setSecondaryText:LABEL_SIMPLE];
-							break;
-					}
+				case ACTIVITY_VIEW_COMPLEX:
+					[content setSecondaryText:LABEL_COMPLEX];
 					break;
-				case SCREEN_ITEM_AUTOLOCK:
-					[content setText:@ACTIVITY_PREF_SCREEN_AUTO_LOCK];
+				case ACTIVITY_VIEW_MAPPED:
+					[content setSecondaryText:LABEL_MAPPED];
 					break;
-				case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
-					[content setText:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY];
-					break;
-				case SCREEN_ITEM_COUNTDOWN_TIMER:
-					{
-						uint8_t value = [self->prefs getCountdown:activityType];
-						[content setText:@ACTIVITY_PREF_COUNTDOWN];
-						if (value > 0)
-							[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_SECONDS]];
-						else
-							[content setSecondaryText:LABEL_OFF];
-					}
-					break;
-				case SCREEN_ITEM_SHOW_HR_PERCENT:
-					[content setText:LABEL_SHOW_HR_PERCENT];
+				case ACTIVITY_VIEW_SIMPLE:
+					[content setSecondaryText:LABEL_SIMPLE];
 					break;
 			}
 			break;
-		case SECTION_COLORS:
-			switch (row)
+		case SCREEN_ITEM_AUTOLOCK:
+			[content setText:@ACTIVITY_PREF_SCREEN_AUTO_LOCK];
+			break;
+		case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
+			[content setText:@ACTIVITY_PREF_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY];
+			break;
+		case SCREEN_ITEM_COUNTDOWN_TIMER:
 			{
-				case COLOR_ITEM_BACKGROUND:
-					[content setText:@ACTIVITY_PREF_BACKGROUND_COLOR];
-					[content setSecondaryText:[self->prefs getBackgroundColorName:activityType]];
-					break;
-				case COLOR_ITEM_LABEL:
-					[content setText:@ACTIVITY_PREF_LABEL_COLOR];
-					[content setSecondaryText:[self->prefs getLabelColorName:activityType]];
-					break;
-				case COLOR_ITEM_TEXT:
-					[content setText:@ACTIVITY_PREF_TEXT_COLOR];
-					[content setSecondaryText:[self->prefs getTextColorName:activityType]];
-					break;
+				uint8_t value = [self->prefs getCountdown:activityType];
+				[content setText:@ACTIVITY_PREF_COUNTDOWN];
+				if (value > 0)
+					[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_SECONDS]];
+				else
+					[content setSecondaryText:LABEL_OFF];
 			}
 			break;
-		case SECTION_SOUNDS:
-			switch (row)
+		case SCREEN_ITEM_SHOW_HR_PERCENT:
+			[content setText:LABEL_SHOW_HR_PERCENT];
+			break;
+		}
+		break;
+	case SECTION_COLORS:
+		switch (row)
+		{
+		case COLOR_ITEM_BACKGROUND:
+			[content setText:@ACTIVITY_PREF_BACKGROUND_COLOR];
+			[content setSecondaryText:[self->prefs getBackgroundColorName:activityType]];
+			break;
+		case COLOR_ITEM_LABEL:
+			[content setText:@ACTIVITY_PREF_LABEL_COLOR];
+			[content setSecondaryText:[self->prefs getLabelColorName:activityType]];
+			break;
+		case COLOR_ITEM_TEXT:
+			[content setText:@ACTIVITY_PREF_TEXT_COLOR];
+			[content setSecondaryText:[self->prefs getTextColorName:activityType]];
+			break;
+		}
+		break;
+	case SECTION_SOUNDS:
+		switch (row)
+		{
+		case SOUND_ITEM_START_STOP_BEEP:
+			[content setText:@ACTIVITY_PREF_START_STOP_BEEP];
+			break;
+		case SOUND_ITEM_SPLIT_BEEP:
+			[content setText:@ACTIVITY_PREF_SPLIT_BEEP];
+			break;
+		}
+		break;
+	case SECTION_LOCATION:
+		switch (row)
+		{
+		case LOCATION_ITEM_HORIZONTAL_ACCURACY:
 			{
-				case SOUND_ITEM_START_STOP_BEEP:
-					[content setText:@ACTIVITY_PREF_START_STOP_BEEP];
-					break;
-				case SOUND_ITEM_SPLIT_BEEP:
-					[content setText:@ACTIVITY_PREF_SPLIT_BEEP];
-					break;
+				uint8_t value = [self->prefs getMinLocationHorizontalAccuracy:activityType];
+				[content setText:@ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY];
+				if (value > 0)
+					[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_METERS]];
+				else
+					[content setSecondaryText:LABEL_NO_FILTERING];
 			}
 			break;
-		case SECTION_LOCATION:
-			switch (row)
+		case LOCATION_ITEM_VERTICAL_ACCURACY:
 			{
-				case LOCATION_ITEM_HORIZONTAL_ACCURACY:
-					{
-						uint8_t value = [self->prefs getMinLocationHorizontalAccuracy:activityType];
-						[content setText:@ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY];
-						if (value > 0)
-							[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_METERS]];
-						else
-							[content setSecondaryText:LABEL_NO_FILTERING];
-					}
-					break;
-				case LOCATION_ITEM_VERTICAL_ACCURACY:
-					{
-						uint8_t value = [self->prefs getMinLocationVerticalAccuracy:activityType];
-						[content setText:@ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY];
-						if (value > 0)
-							[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_METERS]];
-						else
-							[content setSecondaryText:LABEL_NO_FILTERING];
-					}
-					break;
-				case LOCATION_ITEM_FILTER_OPTIONS:
-					{
-						LocationFilterOption option = [self->prefs getLocationFilterOption:activityType];
-						[content setText:@ACTIVITY_PREF_LOCATION_FILTER_OPTION];
-						switch (option)
-						{
-							case LOCATION_FILTER_WARN:
-								[content setSecondaryText:LABEL_DISPLAY_WARNING];
-								break;
-							case LOCATION_FILTER_DROP:
-								[content setSecondaryText:LABEL_DISCARD_LOCATION];
-								break;
-							default:
-								[content setSecondaryText:STR_ERROR];
-								break;
-						}
-					}
-					break;
+				uint8_t value = [self->prefs getMinLocationVerticalAccuracy:activityType];
+				[content setText:@ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY];
+				if (value > 0)
+					[content setSecondaryText:[NSString stringWithFormat:@"%d %@", value, LABEL_METERS]];
+				else
+					[content setSecondaryText:LABEL_NO_FILTERING];
 			}
 			break;
-		case SECTION_RADAR:
-			switch (row)
+		case LOCATION_ITEM_FILTER_OPTIONS:
 			{
-				case RADAR_ITEM_SHOW_SPEED:
-					[content setText:LABEL_SHOW_THREAT_SPEED];
-					break;
+				LocationFilterOption option = [self->prefs getLocationFilterOption:activityType];
+				[content setText:@ACTIVITY_PREF_LOCATION_FILTER_OPTION];
+				switch (option)
+				{
+					case LOCATION_FILTER_WARN:
+						[content setSecondaryText:LABEL_DISPLAY_WARNING];
+						break;
+					case LOCATION_FILTER_DROP:
+						[content setSecondaryText:LABEL_DISCARD_LOCATION];
+						break;
+					default:
+						[content setSecondaryText:STR_ERROR];
+						break;
+				}
 			}
 			break;
-		default:
+		}
+		break;
+	case SECTION_RADAR:
+		switch (row)
+		{
+		case RADAR_ITEM_SHOW_SPEED:
+			[content setText:LABEL_SHOW_THREAT_SPEED];
 			break;
+		}
+		break;
+	default:
+		break;
 	}
 
 	[cell setContentConfiguration:content];
@@ -338,92 +338,92 @@ typedef enum RadarSectionItems
 
 	switch (section)
 	{
-		case SECTION_SCREEN:
-			if (row == SCREEN_ITEM_LAYOUT)
-			{
-			}
-			else if (row == SCREEN_ITEM_AUTOLOCK)
-			{
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+	case SECTION_SCREEN:
+		if (row == SCREEN_ITEM_LAYOUT)
+		{
+		}
+		else if (row == SCREEN_ITEM_AUTOLOCK)
+		{
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[self->prefs getScreenAutoLocking:activityType]];
-				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
-			else if (row == SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY)
-			{
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+			[switchview setOn:[self->prefs getScreenAutoLocking:activityType]];
+			[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+		}
+		else if (row == SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY)
+		{
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[self->prefs getAllowScreenPressesDuringActivity:activityType]];
-				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
-			else if (row == SCREEN_ITEM_SHOW_HR_PERCENT)
-			{
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+			[switchview setOn:[self->prefs getAllowScreenPressesDuringActivity:activityType]];
+			[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+		}
+		else if (row == SCREEN_ITEM_SHOW_HR_PERCENT)
+		{
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[self->prefs getShowHeartRatePercent:activityType]];
-				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
-			else
-			{
-				cell.accessoryType = UITableViewCellAccessoryNone;
-				cell.accessoryView = nil;
-			}
-			break;
-		case SECTION_COLORS:
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+			[switchview setOn:[self->prefs getShowHeartRatePercent:activityType]];
+			[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+		}
+		else
+		{
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.accessoryView = nil;
-			break;
-		case SECTION_SOUNDS:
-			if (row == SOUND_ITEM_START_STOP_BEEP)
-			{
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+		}
+		break;
+	case SECTION_COLORS:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.accessoryView = nil;
+		break;
+	case SECTION_SOUNDS:
+		if (row == SOUND_ITEM_START_STOP_BEEP)
+		{
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[self->prefs getStartStopBeepEnabled:activityType]];
-				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
-			else if (row == SOUND_ITEM_SPLIT_BEEP)
-			{
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+			[switchview setOn:[self->prefs getStartStopBeepEnabled:activityType]];
+			[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+		}
+		else if (row == SOUND_ITEM_SPLIT_BEEP)
+		{
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[self->prefs getSplitBeepEnabled:activityType]];
-				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
-			else
-			{
-				cell.accessoryType = UITableViewCellAccessoryNone;
-				cell.accessoryView = nil;
-			}
-			break;
-		case SECTION_LOCATION:
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+			[switchview setOn:[self->prefs getSplitBeepEnabled:activityType]];
+			[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+		}
+		else
+		{
 			cell.accessoryType = UITableViewCellAccessoryNone;
 			cell.accessoryView = nil;
-			break;
-		case SECTION_RADAR:
-			{
-				NSString* activityType = [appDelegate getCurrentActivityType];
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+		}
+		break;
+	case SECTION_LOCATION:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.accessoryView = nil;
+		break;
+	case SECTION_RADAR:
+		{
+			NSString* activityType = [appDelegate getCurrentActivityType];
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
 
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-				[switchview setOn:[self->prefs getShowThreatSpeed:activityType]];
-				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-			}
-			break;
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+			[switchview setOn:[self->prefs getShowThreatSpeed:activityType]];
+			[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+		}
+		break;
 	}
 }
 
@@ -437,54 +437,54 @@ typedef enum RadarSectionItems
 
 	switch (section)
 	{
-		case SECTION_SCREEN:
-			switch (self->selectedRow)
-			{
-				case SCREEN_ITEM_LAYOUT:
-					title = LABEL_LAYOUT;
-					buttonNames = self->layoutStrings;
-					break;
-				case SCREEN_ITEM_AUTOLOCK:
-					break;
-				case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
-					break;
-				case SCREEN_ITEM_COUNTDOWN_TIMER:
-					title = TITLE_COUNTDOWN;
-					buttonNames = self->countdownStrings;
-					break;
-				case SCREEN_ITEM_SHOW_HR_PERCENT:
-					break;
-				default:
-					break;
-			}
+	case SECTION_SCREEN:
+		switch (self->selectedRow)
+		{
+		case SCREEN_ITEM_LAYOUT:
+			title = LABEL_LAYOUT;
+			buttonNames = self->layoutStrings;
 			break;
-		case SECTION_COLORS:
-			title = TITLE_COLOR;
-			buttonNames = self->colorMenuStrings;
+		case SCREEN_ITEM_AUTOLOCK:
 			break;
-		case SECTION_SOUNDS:
+		case SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
 			break;
-		case SECTION_LOCATION:
-			switch (self->selectedRow)
-			{
-				case LOCATION_ITEM_HORIZONTAL_ACCURACY:
-					title = TITLE_LOCATION_ACCURACY;
-					buttonNames = self->accuracySettings;
-					break;
-				case LOCATION_ITEM_VERTICAL_ACCURACY:
-					title = TITLE_LOCATION_ACCURACY;
-					buttonNames = self->accuracySettings;
-					break;
-				case LOCATION_ITEM_FILTER_OPTIONS:
-					title = TITLE_LOCATION_FILTER;
-					buttonNames = self->locationFilterOptions;
-					break;
-				default:
-					break;
-			}
+		case SCREEN_ITEM_COUNTDOWN_TIMER:
+			title = TITLE_COUNTDOWN;
+			buttonNames = self->countdownStrings;
 			break;
-		case SECTION_RADAR:
+		case SCREEN_ITEM_SHOW_HR_PERCENT:
 			break;
+		default:
+			break;
+		}
+		break;
+	case SECTION_COLORS:
+		title = TITLE_COLOR;
+		buttonNames = self->colorMenuStrings;
+		break;
+	case SECTION_SOUNDS:
+		break;
+	case SECTION_LOCATION:
+		switch (self->selectedRow)
+		{
+		case LOCATION_ITEM_HORIZONTAL_ACCURACY:
+			title = TITLE_LOCATION_ACCURACY;
+			buttonNames = self->accuracySettings;
+			break;
+		case LOCATION_ITEM_VERTICAL_ACCURACY:
+			title = TITLE_LOCATION_ACCURACY;
+			buttonNames = self->accuracySettings;
+			break;
+		case LOCATION_ITEM_FILTER_OPTIONS:
+			title = TITLE_LOCATION_FILTER;
+			buttonNames = self->locationFilterOptions;
+			break;
+		default:
+			break;
+		}
+		break;
+	case SECTION_RADAR:
+		break;
 	}
 
 	if (title != nil)
@@ -507,72 +507,72 @@ typedef enum RadarSectionItems
 				{
 					switch (self->selectedRow)
 					{
-						case ACTIVITY_VIEW_COMPLEX:
-							[self->prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_COMPLEX];
-							break;
-						case ACTIVITY_VIEW_MAPPED:
-							[self->prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_MAPPED];
-							break;
-						case ACTIVITY_VIEW_SIMPLE:
-							[self->prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_SIMPLE];
-							break;
+					case ACTIVITY_VIEW_COMPLEX:
+						[self->prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_COMPLEX];
+						break;
+					case ACTIVITY_VIEW_MAPPED:
+						[self->prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_MAPPED];
+						break;
+					case ACTIVITY_VIEW_SIMPLE:
+						[self->prefs setDefaultViewForActivityType:activityType withViewType:ACTIVITY_VIEW_SIMPLE];
+						break;
 					}
 				}
 				else if ([title isEqualToString:TITLE_COLOR])
 				{
 					switch (self->selectedRow)
 					{
-						case COLOR_ITEM_BACKGROUND:
-							[self->prefs setBackgroundColor:activityType withColorName:buttonName];
-							break;
-						case COLOR_ITEM_LABEL:
-							[self->prefs setLabelColor:activityType withColorName:buttonName];
-							break;
-						case COLOR_ITEM_TEXT:
-							[self->prefs setTextColor:activityType withColorName:buttonName];
-							break;
+					case COLOR_ITEM_BACKGROUND:
+						[self->prefs setBackgroundColor:activityType withColorName:buttonName];
+						break;
+					case COLOR_ITEM_LABEL:
+						[self->prefs setLabelColor:activityType withColorName:buttonName];
+						break;
+					case COLOR_ITEM_TEXT:
+						[self->prefs setTextColor:activityType withColorName:buttonName];
+						break;
 					}
 				}
 				else if ([title isEqualToString:TITLE_SOUNDS])
 				{
 					switch (self->selectedRow)
 					{
-						case SOUND_ITEM_START_STOP_BEEP:
-							[self->prefs setStartStopBeepEnabled:activityType withValue:[buttonName isEqualToString:LABEL_ENABLED]];
-							break;
-						case SOUND_ITEM_SPLIT_BEEP:
-							[self->prefs setSplitBeepEnabled:activityType withValue:[buttonName isEqualToString:LABEL_ENABLED]];
-							break;
+					case SOUND_ITEM_START_STOP_BEEP:
+						[self->prefs setStartStopBeepEnabled:activityType withValue:[buttonName isEqualToString:LABEL_ENABLED]];
+						break;
+					case SOUND_ITEM_SPLIT_BEEP:
+						[self->prefs setSplitBeepEnabled:activityType withValue:[buttonName isEqualToString:LABEL_ENABLED]];
+						break;
 					}
 				}
 				else if ([title isEqualToString:TITLE_LOCATION_ACCURACY])
 				{
 					switch (self->selectedRow)
 					{
-						case LOCATION_ITEM_HORIZONTAL_ACCURACY:
-							if ([buttonName isEqualToString:LABEL_NO_FILTERING])
-								[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:0];
-							else if ([buttonName isEqualToString:LABEL_5_METERS])
-								[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:5];
-							else if ([buttonName isEqualToString:LABEL_10_METERS])
-								[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:10];
-							else if ([buttonName isEqualToString:LABEL_20_METERS])
-								[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:20];
-							else if ([buttonName isEqualToString:LABEL_50_METERS])
-								[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:50];
-							break;
-						case LOCATION_ITEM_VERTICAL_ACCURACY:
-							if ([buttonName isEqualToString:LABEL_NO_FILTERING])
-								[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:0];
-							else if ([buttonName isEqualToString:LABEL_5_METERS])
-								[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:5];
-							else if ([buttonName isEqualToString:LABEL_10_METERS])
-								[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:10];
-							else if ([buttonName isEqualToString:LABEL_20_METERS])
-								[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:20];
-							else if ([buttonName isEqualToString:LABEL_50_METERS])
-								[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:50];
-							break;
+					case LOCATION_ITEM_HORIZONTAL_ACCURACY:
+						if ([buttonName isEqualToString:LABEL_NO_FILTERING])
+							[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:0];
+						else if ([buttonName isEqualToString:LABEL_5_METERS])
+							[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:5];
+						else if ([buttonName isEqualToString:LABEL_10_METERS])
+							[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:10];
+						else if ([buttonName isEqualToString:LABEL_20_METERS])
+							[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:20];
+						else if ([buttonName isEqualToString:LABEL_50_METERS])
+							[self->prefs setMinLocationHorizontalAccuracy:activityType withMeters:50];
+						break;
+					case LOCATION_ITEM_VERTICAL_ACCURACY:
+						if ([buttonName isEqualToString:LABEL_NO_FILTERING])
+							[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:0];
+						else if ([buttonName isEqualToString:LABEL_5_METERS])
+							[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:5];
+						else if ([buttonName isEqualToString:LABEL_10_METERS])
+							[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:10];
+						else if ([buttonName isEqualToString:LABEL_20_METERS])
+							[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:20];
+						else if ([buttonName isEqualToString:LABEL_50_METERS])
+							[self->prefs setMinLocationVerticalAccuracy:activityType withMeters:50];
+						break;
 					}
 				}
 				else if ([title isEqualToString:TITLE_LOCATION_FILTER])
@@ -618,26 +618,26 @@ typedef enum RadarSectionItems
 
 	switch (switchControl.tag)
 	{
-		case (SECTION_SCREEN * 100) + SCREEN_ITEM_LAYOUT:
-			break;
-		case (SECTION_SCREEN * 100) + SCREEN_ITEM_AUTOLOCK:
-			[self->prefs setScreenAutoLocking:activityType withValue:switchControl.isOn];
-			break;
-		case (SECTION_SCREEN * 100) + SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
-			[self->prefs setAllowScreenPressesDuringActivity:activityType withValue:switchControl.isOn];
-			break;
-		case (SECTION_SCREEN * 100) + SCREEN_ITEM_SHOW_HR_PERCENT:
-			[self->prefs setShowHeartRatePercent:activityType withValue:switchControl.isOn];
-			break;
-		case (SECTION_SOUNDS * 100) + SOUND_ITEM_START_STOP_BEEP:
-			[self->prefs setStartStopBeepEnabled:activityType withValue:switchControl.isOn];
-			break;
-		case (SECTION_SOUNDS * 100) + SOUND_ITEM_SPLIT_BEEP:
-			[self->prefs setSplitBeepEnabled:activityType withValue:switchControl.isOn];
-			break;
-		case (SECTION_RADAR * 100) + RADAR_ITEM_SHOW_SPEED:
-			[self->prefs setShowThreatSpeed:activityType withValue:switchControl.isOn];
-			break;
+	case (SECTION_SCREEN * 100) + SCREEN_ITEM_LAYOUT:
+		break;
+	case (SECTION_SCREEN * 100) + SCREEN_ITEM_AUTOLOCK:
+		[self->prefs setScreenAutoLocking:activityType withValue:switchControl.isOn];
+		break;
+	case (SECTION_SCREEN * 100) + SCREEN_ITEM_ALLOW_SCREEN_PRESSES_DURING_ACTIVITY:
+		[self->prefs setAllowScreenPressesDuringActivity:activityType withValue:switchControl.isOn];
+		break;
+	case (SECTION_SCREEN * 100) + SCREEN_ITEM_SHOW_HR_PERCENT:
+		[self->prefs setShowHeartRatePercent:activityType withValue:switchControl.isOn];
+		break;
+	case (SECTION_SOUNDS * 100) + SOUND_ITEM_START_STOP_BEEP:
+		[self->prefs setStartStopBeepEnabled:activityType withValue:switchControl.isOn];
+		break;
+	case (SECTION_SOUNDS * 100) + SOUND_ITEM_SPLIT_BEEP:
+		[self->prefs setSplitBeepEnabled:activityType withValue:switchControl.isOn];
+		break;
+	case (SECTION_RADAR * 100) + RADAR_ITEM_SHOW_SPEED:
+		[self->prefs setShowThreatSpeed:activityType withValue:switchControl.isOn];
+		break;
 	}
 }
 

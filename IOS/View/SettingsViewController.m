@@ -277,18 +277,18 @@ typedef enum SettingsRowsHealthKit
 {
 	switch (section)
 	{
-		case SECTION_UNITS:
-			return UNIT_TITLE;
-		case SECTION_HEALTHKIT:
-			return HEALTHKIT;
-		case SECTION_SERVICES:
-			if ([self numberOfServicesRows] > 0)
-			{
-				return CLOUD_SERVICES;
-			}
-			return @"";
-		case SECTION_BROADCAST:
-			return BROADCAST;
+	case SECTION_UNITS:
+		return UNIT_TITLE;
+	case SECTION_HEALTHKIT:
+		return HEALTHKIT;
+	case SECTION_SERVICES:
+		if ([self numberOfServicesRows] > 0)
+		{
+			return CLOUD_SERVICES;
+		}
+		return @"";
+	case SECTION_BROADCAST:
+		return BROADCAST;
 	}
 	return @"";
 }
@@ -299,28 +299,28 @@ typedef enum SettingsRowsHealthKit
 
 	switch (section)
 	{
-		case SECTION_UNITS:
-			numRows = NUM_SETTINGS_ROWS_UNITS;
-			break;
-		case SECTION_HEALTHKIT:
-			numRows = NUM_SETTINGS_ROWS_HEALTHKIT;
-			break;
-		case SECTION_SERVICES:
-			numRows = [self numberOfServicesRows];
-			break;
-		case SECTION_BROADCAST:
-			{
-				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	case SECTION_UNITS:
+		numRows = NUM_SETTINGS_ROWS_UNITS;
+		break;
+	case SECTION_HEALTHKIT:
+		numRows = NUM_SETTINGS_ROWS_HEALTHKIT;
+		break;
+	case SECTION_SERVICES:
+		numRows = [self numberOfServicesRows];
+		break;
+	case SECTION_BROADCAST:
+		{
+			AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
-				numRows = NUM_SETTINGS_ROWS_BROADCAST;
-				
-				// Hide the device ID line if debug is disabled.
-				if (![appDelegate isFeaturePresent:FEATURE_DEBUG])
-				{
-					numRows--;
-				}
+			numRows = NUM_SETTINGS_ROWS_BROADCAST;
+			
+			// Hide the device ID line if debug is disabled.
+			if (![appDelegate isFeaturePresent:FEATURE_DEBUG])
+			{
+				numRows--;
 			}
-			break;
+		}
+		break;
 	}
 	return numRows;
 }
@@ -344,157 +344,157 @@ typedef enum SettingsRowsHealthKit
 
 	switch (section)
 	{
-		case SECTION_UNITS:
-			switch (row)
+	case SECTION_UNITS:
+		switch (row)
+		{
+		case SETTINGS_ROW_UNIT:
+			[content setText:UNIT_TITLE];
+			switch ([Preferences preferredUnitSystem])
 			{
-				case SETTINGS_ROW_UNIT:
-					[content setText:UNIT_TITLE];
-					switch ([Preferences preferredUnitSystem])
-					{
-						case UNIT_SYSTEM_METRIC:
-							[content setSecondaryText:STR_METRIC];
-							break;
-						case UNIT_SYSTEM_US_CUSTOMARY:
-							[content setSecondaryText:STR_US_CUSTOMARY];
-							break;
-					}
-					break;
-			}
-			break;
-		case SECTION_HEALTHKIT:
-			{
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-
-				switch (row)
-				{
-					case SETTINGS_ROW_INTEGRATE_HEALTHKIT:
-						[content setText:READ_ACTIVITIES_FROM_HEALTHKIT];
-						[content setSecondaryText:@""];
-						[switchview setOn:[Preferences willIntegrateHealthKitActivities]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_HIDE_DUPLICATES:
-						[content setText:HIDE_DUPLICATES];
-						[content setSecondaryText:@""];
-						[switchview setOn:[Preferences hideHealthKitDuplicates]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-				}
-			}
-			break;
-		case SECTION_SERVICES:
-			{
-				if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
-				{
-					row++;
-				}
-				if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
-				{
-					row++;
-				}
-				if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
-				{
-					row++;
-				}
-
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-
-				cell.accessoryView = switchview;
-				[switchview setTag:(section * 100) + row];
-
-				switch (row)
-				{
-					case SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
-						[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER]];
-						[content setSecondaryText:@""];
-						[switchview setOn:[CloudPreferences usingRunKeeper]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_EXPORT_TO_STRAVA:
-						[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA]];
-						[content setSecondaryText:@""];
-						[switchview setOn:[CloudPreferences usingStrava]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_EXPORT_TO_DROPBOX:
-						[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX]];
-						[content setSecondaryText:@""];
-						[switchview setOn:[CloudPreferences usingDropbox]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_EXPORT_TO_ICLOUD:
-						[content setText:AUTO_SAVE_TO_ICLOUD_DRIVE];
-						[content setSecondaryText:@""];
-						[switchview setOn:[CloudPreferences usingiCloud]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-				}
-			}
-			break;
-		case SECTION_BROADCAST:
-			{
-				UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
-
-				// These rows don't get toggle switches.
-				if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
-					(row != SETTINGS_ROW_BROADCAST_HOST) &&
-					(row != SETTINGS_ROW_FRIENDS) &&
-					(row != SETTINGS_ROW_DEVICE_ID))
-				{
-					cell.accessoryView = switchview;
-					[switchview setTag:(section * 100) + row];
-				}
-				else
-				{
-					cell.accessoryView = NULL;
-				}
-
-				switch (row)
-				{
-					case SETTINGS_ROW_BROADCAST_ENABLED:
-						[content setText:BROADCAST_ENABLED];
-						[content setSecondaryText:@""];
-						[switchview setOn:[Preferences shouldBroadcastToServer]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_BROADCAST_RATE:
-						[content setText:BROADCAST_RATE];
-						[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS]];
-						break;
-					case SETTINGS_ROW_BROADCAST_PROTOCOL:
-						[content setText:BROADCAST_HTTPS];
-						[content setSecondaryText:@""];
-						bool usingHttps = [[Preferences broadcastProtocol] isEqualToString: @"https"];
-						[switchview setOn:usingHttps];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_BROADCAST_HOST:
-						[content setText:BROADCAST_HOST];
-						[content setSecondaryText:[Preferences broadcastHostName]];
-						break;
-					case SETTINGS_ROW_BROADCAST_SHOW_ICON:
-						[content setText:BROADCAST_SHOW_ICON];
-						[content setSecondaryText:@""];
-						[switchview setOn:[Preferences broadcastShowIcon]];
-						[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
-						break;
-					case SETTINGS_ROW_FRIENDS:
-						[content setText:FRIENDS];
-						[content setSecondaryText:@""];
-						break;
-					case SETTINGS_ROW_DEVICE_ID:
-						[content setText:DEVICE_ID];
-						[content setSecondaryText:[appDelegate getDeviceId]];
-						break;
-				}
+			case UNIT_SYSTEM_METRIC:
+				[content setSecondaryText:STR_METRIC];
+				break;
+			case UNIT_SYSTEM_US_CUSTOMARY:
+				[content setSecondaryText:STR_US_CUSTOMARY];
 				break;
 			}
 			break;
-		default:
+		}
+		break;
+	case SECTION_HEALTHKIT:
+		{
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+
+			switch (row)
+			{
+			case SETTINGS_ROW_INTEGRATE_HEALTHKIT:
+				[content setText:READ_ACTIVITIES_FROM_HEALTHKIT];
+				[content setSecondaryText:@""];
+				[switchview setOn:[Preferences willIntegrateHealthKitActivities]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_HIDE_DUPLICATES:
+				[content setText:HIDE_DUPLICATES];
+				[content setSecondaryText:@""];
+				[switchview setOn:[Preferences hideHealthKitDuplicates]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			}
+		}
+		break;
+	case SECTION_SERVICES:
+		{
+			if (![appDelegate isFeaturePresent:FEATURE_RUNKEEPER])
+			{
+				row++;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_STRAVA])
+			{
+				row++;
+			}
+			if (![appDelegate isFeaturePresent:FEATURE_DROPBOX])
+			{
+				row++;
+			}
+
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+
+			cell.accessoryView = switchview;
+			[switchview setTag:(section * 100) + row];
+
+			switch (row)
+			{
+			case SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
+				[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_RUNKEEPER]];
+				[content setSecondaryText:@""];
+				[switchview setOn:[CloudPreferences usingRunKeeper]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_EXPORT_TO_STRAVA:
+				[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_STRAVA]];
+				[content setSecondaryText:@""];
+				[switchview setOn:[CloudPreferences usingStrava]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_EXPORT_TO_DROPBOX:
+				[content setText:[appDelegate nameOfCloudService:CLOUD_SERVICE_DROPBOX]];
+				[content setSecondaryText:@""];
+				[switchview setOn:[CloudPreferences usingDropbox]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_EXPORT_TO_ICLOUD:
+				[content setText:AUTO_SAVE_TO_ICLOUD_DRIVE];
+				[content setSecondaryText:@""];
+				[switchview setOn:[CloudPreferences usingiCloud]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			}
+		}
+		break;
+	case SECTION_BROADCAST:
+		{
+			UISwitch* switchview = [[UISwitch alloc] initWithFrame:CGRectZero];
+
+			// These rows don't get toggle switches.
+			if ((row != SETTINGS_ROW_BROADCAST_RATE) &&
+				(row != SETTINGS_ROW_BROADCAST_HOST) &&
+				(row != SETTINGS_ROW_FRIENDS) &&
+				(row != SETTINGS_ROW_DEVICE_ID))
+			{
+				cell.accessoryView = switchview;
+				[switchview setTag:(section * 100) + row];
+			}
+			else
+			{
+				cell.accessoryView = NULL;
+			}
+
+			switch (row)
+			{
+			case SETTINGS_ROW_BROADCAST_ENABLED:
+				[content setText:BROADCAST_ENABLED];
+				[content setSecondaryText:@""];
+				[switchview setOn:[Preferences shouldBroadcastToServer]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_BROADCAST_RATE:
+				[content setText:BROADCAST_RATE];
+				[content setSecondaryText:[[NSString alloc] initWithFormat:@"%ld %@", (long)[Preferences broadcastRate], BROADCAST_UNITS]];
+				break;
+			case SETTINGS_ROW_BROADCAST_PROTOCOL:
+				[content setText:BROADCAST_HTTPS];
+				[content setSecondaryText:@""];
+				bool usingHttps = [[Preferences broadcastProtocol] isEqualToString: @"https"];
+				[switchview setOn:usingHttps];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_BROADCAST_HOST:
+				[content setText:BROADCAST_HOST];
+				[content setSecondaryText:[Preferences broadcastHostName]];
+				break;
+			case SETTINGS_ROW_BROADCAST_SHOW_ICON:
+				[content setText:BROADCAST_SHOW_ICON];
+				[content setSecondaryText:@""];
+				[switchview setOn:[Preferences broadcastShowIcon]];
+				[switchview addTarget:self action:@selector(switchToggled:) forControlEvents: UIControlEventTouchUpInside];
+				break;
+			case SETTINGS_ROW_FRIENDS:
+				[content setText:FRIENDS];
+				[content setSecondaryText:@""];
+				break;
+			case SETTINGS_ROW_DEVICE_ID:
+				[content setText:DEVICE_ID];
+				[content setSecondaryText:[appDelegate getDeviceId]];
+				break;
+			}
 			break;
+		}
+		break;
+	default:
+		break;
 	}
 
 	[cell setContentConfiguration:content];
@@ -508,24 +508,24 @@ typedef enum SettingsRowsHealthKit
 
 	switch (section)
 	{
-		case SECTION_UNITS:
-		case SECTION_SERVICES:
+	case SECTION_UNITS:
+	case SECTION_SERVICES:
+		break;
+	case SECTION_BROADCAST:
+		switch (row)
+		{
+		case SETTINGS_ROW_BROADCAST_ENABLED:
+		case SETTINGS_ROW_BROADCAST_RATE:
+		case SETTINGS_ROW_BROADCAST_PROTOCOL:
+		case SETTINGS_ROW_BROADCAST_HOST:
+		case SETTINGS_ROW_BROADCAST_SHOW_ICON:
 			break;
-		case SECTION_BROADCAST:
-			switch (row)
-			{
-				case SETTINGS_ROW_BROADCAST_ENABLED:
-				case SETTINGS_ROW_BROADCAST_RATE:
-				case SETTINGS_ROW_BROADCAST_PROTOCOL:
-				case SETTINGS_ROW_BROADCAST_HOST:
-				case SETTINGS_ROW_BROADCAST_SHOW_ICON:
-					break;
-				case SETTINGS_ROW_FRIENDS:
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					break;
-				case SETTINGS_ROW_DEVICE_ID:
-					break;
-			}
+		case SETTINGS_ROW_FRIENDS:
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			break;
+		case SETTINGS_ROW_DEVICE_ID:
+			break;
+		}
 	}
 }
 
@@ -536,38 +536,38 @@ typedef enum SettingsRowsHealthKit
 
 	switch (section)
 	{
-		case SECTION_UNITS:
-			switch (row)
-			{
-				case SETTINGS_ROW_UNIT:
-					[self showUnitsActionSheet];
-					break;
-			}
+	case SECTION_UNITS:
+		switch (row)
+		{
+		case SETTINGS_ROW_UNIT:
+			[self showUnitsActionSheet];
 			break;
-		case SECTION_SERVICES:
+		}
+		break;
+	case SECTION_SERVICES:
+		break;
+	case SECTION_BROADCAST:
+		switch (row)
+		{
+		case SETTINGS_ROW_BROADCAST_ENABLED:
 			break;
-		case SECTION_BROADCAST:
-			switch (row)
-			{
-				case SETTINGS_ROW_BROADCAST_ENABLED:
-					break;
-				case SETTINGS_ROW_BROADCAST_RATE:
-					[self showBroadcastRateDialog];
-					break;
-				case SETTINGS_ROW_BROADCAST_PROTOCOL:
-					break;
-				case SETTINGS_ROW_BROADCAST_HOST:
-					[self showBroadcastHostNameDialog];
-					break;
-				case SETTINGS_ROW_BROADCAST_SHOW_ICON:
-					break;
-				case SETTINGS_ROW_FRIENDS:
-					[self performSegueWithIdentifier:@SEGUE_TO_FRIENDS_VIEW sender:self];
-					break;
-				case SETTINGS_ROW_DEVICE_ID:
-					break;
-			}
+		case SETTINGS_ROW_BROADCAST_RATE:
+			[self showBroadcastRateDialog];
 			break;
+		case SETTINGS_ROW_BROADCAST_PROTOCOL:
+			break;
+		case SETTINGS_ROW_BROADCAST_HOST:
+			[self showBroadcastHostNameDialog];
+			break;
+		case SETTINGS_ROW_BROADCAST_SHOW_ICON:
+			break;
+		case SETTINGS_ROW_FRIENDS:
+			[self performSegueWithIdentifier:@SEGUE_TO_FRIENDS_VIEW sender:self];
+			break;
+		case SETTINGS_ROW_DEVICE_ID:
+			break;
+		}
+		break;
 	}
 }
 
@@ -580,46 +580,46 @@ typedef enum SettingsRowsHealthKit
 
 	switch (switchControl.tag)
 	{
-		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_INTEGRATE_HEALTHKIT:
-			[Preferences setWillIntegrateHealthKitActivities:switchControl.isOn];
-			break;
-		case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_HIDE_DUPLICATES:
-			[Preferences setHideHealthKitDuplicates:switchControl.isOn];
-			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
-			[CloudPreferences setUsingRunKeeper:switchControl.isOn];
-			if (switchControl.isOn)
-			{
-				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
-			}
-			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_STRAVA:
-			[CloudPreferences setUsingStrava:switchControl.isOn];
-			if (switchControl.isOn)
-			{
-				[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
-			}
-			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_DROPBOX:
-			[CloudPreferences setUsingDropbox:switchControl.isOn];
-			break;
-		case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_ICLOUD:
-			break;
-		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_ENABLED:
-			[Preferences setBroadcastToServer:switchControl.isOn];
-			[appDelegate configureBroadcasting];
-			if (switchControl.isOn)
-			{
-				[super showOneButtonAlert:STR_CAUTION withMsg:ALERT_TITLE_BROADCAST_WARN];
-			}
-			[self.settingsTableView reloadData];
-			break;
-		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_SHOW_ICON:
-			[Preferences setBroadcastShowIcon:switchControl.isOn];
-			break;
-		case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_PROTOCOL:
-			[Preferences setBroadcastProtocol:switchControl.isOn ? @"https" : @"http"];
-			break;
+	case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_INTEGRATE_HEALTHKIT:
+		[Preferences setWillIntegrateHealthKitActivities:switchControl.isOn];
+		break;
+	case (SECTION_HEALTHKIT * 100) + SETTINGS_ROW_HIDE_DUPLICATES:
+		[Preferences setHideHealthKitDuplicates:switchControl.isOn];
+		break;
+	case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_RUNKEEPER:
+		[CloudPreferences setUsingRunKeeper:switchControl.isOn];
+		if (switchControl.isOn)
+		{
+			[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
+		}
+		break;
+	case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_STRAVA:
+		[CloudPreferences setUsingStrava:switchControl.isOn];
+		if (switchControl.isOn)
+		{
+			[super showOneButtonAlert:ALERT_TITLE_NOT_IMPLEMENTED withMsg:ALERT_MSG_IMPLEMENTED];
+		}
+		break;
+	case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_DROPBOX:
+		[CloudPreferences setUsingDropbox:switchControl.isOn];
+		break;
+	case (SECTION_SERVICES * 100) + SETTINGS_ROW_EXPORT_TO_ICLOUD:
+		break;
+	case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_ENABLED:
+		[Preferences setBroadcastToServer:switchControl.isOn];
+		[appDelegate configureBroadcasting];
+		if (switchControl.isOn)
+		{
+			[super showOneButtonAlert:STR_CAUTION withMsg:ALERT_TITLE_BROADCAST_WARN];
+		}
+		[self.settingsTableView reloadData];
+		break;
+	case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_SHOW_ICON:
+		[Preferences setBroadcastShowIcon:switchControl.isOn];
+		break;
+	case (SECTION_BROADCAST * 100) + SETTINGS_ROW_BROADCAST_PROTOCOL:
+		[Preferences setBroadcastProtocol:switchControl.isOn ? @"https" : @"http"];
+		break;
 	}
 }
 

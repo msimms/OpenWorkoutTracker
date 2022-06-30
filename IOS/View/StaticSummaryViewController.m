@@ -376,39 +376,39 @@ typedef enum ExportFileTypeButtons
 
 			switch (sectionIndex)
 			{
-				case SECTION_NAME:
-					count = NUM_NAME_SECTION_ROWS;
-					break;
-				case SECTION_DESCRIPTION:
-					count = NUM_DESCRIPTION_SECTION_ROWS;
-					break;
-				case SECTION_START_AND_END_TIME:
-					count = [self->timeSection1RowNames count];
-					break;
-				case SECTION_LAP_AND_SPLIT_TIMES:
-					count = [self->timeSection2RowNames count];
-					break;
-				case SECTION_CHARTS:
-					count = [self->chartTitles count];
-					break;
-				case SECTION_ATTRIBUTES:
-					count = [self->attributeNames count];
-					break;
-				case SECTION_SUPERLATIVES:
-					count = [self->recordNames count];
-					break;
-				case SECTION_SYNC:
-					if ([appDelegate isFeatureEnabled:FEATURE_BROADCAST])
-						count = [self->syncedServices count] + [self->notSyncedServices count];
-					else
-						count = 0;
-					break;
-				case SECTION_INTERNAL:
-					if ([appDelegate isFeatureEnabled:FEATURE_DEBUG])
-						count = NUM_INTERNAL_SECTION_ROWS;
-					else
-						count = 0;
-					break;
+			case SECTION_NAME:
+				count = NUM_NAME_SECTION_ROWS;
+				break;
+			case SECTION_DESCRIPTION:
+				count = NUM_DESCRIPTION_SECTION_ROWS;
+				break;
+			case SECTION_START_AND_END_TIME:
+				count = [self->timeSection1RowNames count];
+				break;
+			case SECTION_LAP_AND_SPLIT_TIMES:
+				count = [self->timeSection2RowNames count];
+				break;
+			case SECTION_CHARTS:
+				count = [self->chartTitles count];
+				break;
+			case SECTION_ATTRIBUTES:
+				count = [self->attributeNames count];
+				break;
+			case SECTION_SUPERLATIVES:
+				count = [self->recordNames count];
+				break;
+			case SECTION_SYNC:
+				if ([appDelegate isFeatureEnabled:FEATURE_BROADCAST])
+					count = [self->syncedServices count] + [self->notSyncedServices count];
+				else
+					count = 0;
+				break;
+			case SECTION_INTERNAL:
+				if ([appDelegate isFeatureEnabled:FEATURE_DEBUG])
+					count = NUM_INTERNAL_SECTION_ROWS;
+				else
+					count = 0;
+				break;
 			}
 
 			if (count > 0)
@@ -907,51 +907,51 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
-		case SECTION_NAME:
-			[self getNewActivityName];
-			break;
-		case SECTION_DESCRIPTION:
-			[self getNewActivityDescription];
-			break;
-		case SECTION_START_AND_END_TIME:
-			break;
-		case SECTION_LAP_AND_SPLIT_TIMES:
-			if (row == ROW_SPLIT_TIMES)
-			{
-				[self performSegueWithIdentifier:@SEGUE_TO_SPLIT_TIMES_VIEW sender:self];
-			}
-			else if (row == ROW_LAP_TIMES)
-			{
-				[self performSegueWithIdentifier:@SEGUE_TO_LAP_TIMES_VIEW sender:self];
-			}
-			break;
-		case SECTION_CHARTS:
-			{
-				self->selectedChartIndex = row;
-				[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
-			}
-			break;
-		case SECTION_ATTRIBUTES:
-			break;
-		case SECTION_SUPERLATIVES:
-			if ([self superlativeHasSegue:cell])
-			{
-			}
-			break;
-		case SECTION_SYNC:
-			if (row < [self->syncedServices count])
-			{
-				NSString* serviceName = [self->syncedServices objectAtIndex:row];
-				[self handleSyncRequest:serviceName];
-			}
-			else
-			{
-				NSString* serviceName = [self->notSyncedServices objectAtIndex:(row - [self->syncedServices count])];
-				[self handleSyncRequest:serviceName];
-			}
-			break;
-		case SECTION_INTERNAL:
-			break;
+	case SECTION_NAME:
+		[self getNewActivityName];
+		break;
+	case SECTION_DESCRIPTION:
+		[self getNewActivityDescription];
+		break;
+	case SECTION_START_AND_END_TIME:
+		break;
+	case SECTION_LAP_AND_SPLIT_TIMES:
+		if (row == ROW_SPLIT_TIMES)
+		{
+			[self performSegueWithIdentifier:@SEGUE_TO_SPLIT_TIMES_VIEW sender:self];
+		}
+		else if (row == ROW_LAP_TIMES)
+		{
+			[self performSegueWithIdentifier:@SEGUE_TO_LAP_TIMES_VIEW sender:self];
+		}
+		break;
+	case SECTION_CHARTS:
+		{
+			self->selectedChartIndex = row;
+			[self performSegueWithIdentifier:@SEGUE_TO_CORE_PLOT_VIEW sender:self];
+		}
+		break;
+	case SECTION_ATTRIBUTES:
+		break;
+	case SECTION_SUPERLATIVES:
+		if ([self superlativeHasSegue:cell])
+		{
+		}
+		break;
+	case SECTION_SYNC:
+		if (row < [self->syncedServices count])
+		{
+			NSString* serviceName = [self->syncedServices objectAtIndex:row];
+			[self handleSyncRequest:serviceName];
+		}
+		else
+		{
+			NSString* serviceName = [self->notSyncedServices objectAtIndex:(row - [self->syncedServices count])];
+			[self handleSyncRequest:serviceName];
+		}
+		break;
+	case SECTION_INTERNAL:
+		break;
 	}
 }
 
@@ -973,24 +973,24 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
-		case SECTION_NAME:
-			return SECTION_TITLE_NAME;
-		case SECTION_DESCRIPTION:
-			return SECTION_TITLE_DESCRIPTION;
-		case SECTION_START_AND_END_TIME:
-			return SECTION_TITLE_START_AND_STOP;
-		case SECTION_LAP_AND_SPLIT_TIMES:
-			return SECTION_TITLE_LAP_AND_SPLIT;
-		case SECTION_CHARTS:
-			return SECTION_TITLE_CHARTS;
-		case SECTION_ATTRIBUTES:
-			return SECTION_TITLE_ATTRIBUTES;
-		case SECTION_SUPERLATIVES:
-			return SECTION_TITLE_SUPERLATIVES;
-		case SECTION_SYNC:
-			return SECTION_TITLE_SYNC;
-		case SECTION_INTERNAL:
-			return SECTION_TITLE_INTERNAL;
+	case SECTION_NAME:
+		return SECTION_TITLE_NAME;
+	case SECTION_DESCRIPTION:
+		return SECTION_TITLE_DESCRIPTION;
+	case SECTION_START_AND_END_TIME:
+		return SECTION_TITLE_START_AND_STOP;
+	case SECTION_LAP_AND_SPLIT_TIMES:
+		return SECTION_TITLE_LAP_AND_SPLIT;
+	case SECTION_CHARTS:
+		return SECTION_TITLE_CHARTS;
+	case SECTION_ATTRIBUTES:
+		return SECTION_TITLE_ATTRIBUTES;
+	case SECTION_SUPERLATIVES:
+		return SECTION_TITLE_SUPERLATIVES;
+	case SECTION_SYNC:
+		return SECTION_TITLE_SYNC;
+	case SECTION_INTERNAL:
+		return SECTION_TITLE_INTERNAL;
 	}
 	return @"";
 }
@@ -1001,24 +1001,24 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
-		case SECTION_NAME:
-			return NUM_NAME_SECTION_ROWS;
-		case SECTION_DESCRIPTION:
-			return NUM_DESCRIPTION_SECTION_ROWS;
-		case SECTION_START_AND_END_TIME:
-			return [self->timeSection1RowNames count];
-		case SECTION_LAP_AND_SPLIT_TIMES:
-			return [self->timeSection2RowNames count];			
-		case SECTION_CHARTS:
-			return [self->chartTitles count];
-		case SECTION_ATTRIBUTES:
-			return [self->attributeNames count];
-		case SECTION_SUPERLATIVES:
-			return [self->recordNames count];
-		case SECTION_SYNC:
-			return [self->syncedServices count] + [self->notSyncedServices count];
-		case SECTION_INTERNAL:
-			return NUM_INTERNAL_SECTION_ROWS;
+	case SECTION_NAME:
+		return NUM_NAME_SECTION_ROWS;
+	case SECTION_DESCRIPTION:
+		return NUM_DESCRIPTION_SECTION_ROWS;
+	case SECTION_START_AND_END_TIME:
+		return [self->timeSection1RowNames count];
+	case SECTION_LAP_AND_SPLIT_TIMES:
+		return [self->timeSection2RowNames count];
+	case SECTION_CHARTS:
+		return [self->chartTitles count];
+	case SECTION_ATTRIBUTES:
+		return [self->attributeNames count];
+	case SECTION_SUPERLATIVES:
+		return [self->recordNames count];
+	case SECTION_SYNC:
+		return [self->syncedServices count] + [self->notSyncedServices count];
+	case SECTION_INTERNAL:
+		return NUM_INTERNAL_SECTION_ROWS;
 	}
 	return 0;
 }
@@ -1043,140 +1043,140 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
-		case SECTION_NAME:
-			if (row == ROW_NAME)
-			{
-				[content setText:[appDelegate getActivityName:self->activityId]];
-				content.textProperties.numberOfLines = 0;
-				content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
-			}
+	case SECTION_NAME:
+		if (row == ROW_NAME)
+		{
+			[content setText:[appDelegate getActivityName:self->activityId]];
+			content.textProperties.numberOfLines = 0;
+			content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
+		}
+		break;
+	case SECTION_DESCRIPTION:
+		if (row == ROW_DESCRIPTION)
+		{
+			[content setText:[appDelegate getActivityDescription:self->activityId]];
+			content.textProperties.numberOfLines = 0;
+			content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
+		}
+		break;
+	case SECTION_START_AND_END_TIME:
+		switch (row)
+		{
+		case ROW_START_TIME:
+			[content setText:STR_STARTED];
+			if (startTime > 0)
+				[content setSecondaryText:[StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]]];
 			break;
-		case SECTION_DESCRIPTION:
-			if (row == ROW_DESCRIPTION)
-			{
-				[content setText:[appDelegate getActivityDescription:self->activityId]];
-				content.textProperties.numberOfLines = 0;
-				content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
-			}
+		case ROW_END_TIME:
+			[content setText:STR_FINISHED];
+			if (endTime > 0)
+				[content setSecondaryText:[StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]]];
 			break;
-		case SECTION_START_AND_END_TIME:
+		}
+		break;
+	case SECTION_LAP_AND_SPLIT_TIMES:
+		switch (row)
+		{
+		case ROW_SPLIT_TIMES:
+			[content setText:ROW_TITLE_SPLIT_TIMES];
+			break;
+		case ROW_LAP_TIMES:
+			[content setText:ROW_TITLE_LAP_TIMES];
+			break;
+		}
+		break;
+	case SECTION_CHARTS:
+		{
+			[content setText:NSLocalizedString([self->chartTitles objectAtIndex:row], nil)];
+		}
+		break;
+	case SECTION_ATTRIBUTES:
+		{
+			NSString* attributeName = [self->attributeNames objectAtIndex:row];
+			ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
+			if (attr.valid)
+			{
+				// Convert the units to the unit system the user prefers to use.
+				[appDelegate convertToPreferredUnits:&attr];
+
+				// Format the display strings.
+				NSString* valueStr = [StringUtils formatActivityViewType:attr];
+				NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
+
+				// Add the text to the table.
+				[content setText:NSLocalizedString(attributeName, nil)];
+				if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
+					[content setSecondaryText:[NSString stringWithFormat:@"%@ %@", valueStr, unitsStr]];
+				else
+					[content setSecondaryText:[NSString stringWithFormat:@"%@", valueStr]];
+			}
+			else
+			{
+				[content setText:NSLocalizedString(attributeName, nil)];
+			}
+		}
+		break;
+	case SECTION_SUPERLATIVES:
+		{
+			NSString* attributeName = [self->recordNames objectAtIndex:row];
+			ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+
+			if (attr.valid)
+			{
+				// Format the display strings.
+				NSString* valueStr = [StringUtils formatActivityViewType:attr];
+				NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
+
+				// Add the text to the table.
+				[content setText:NSLocalizedString(attributeName, nil)];
+				if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
+					[content setSecondaryText:[NSString stringWithFormat:@"%@ %@", valueStr, unitsStr]];
+				else
+					[content setSecondaryText:[NSString stringWithFormat:@"%@", valueStr]];
+			}
+			else
+			{
+				[content setText:NSLocalizedString(attributeName, nil)];
+			}
+		}
+		break;
+	case SECTION_SYNC:
+		{
+			if (row < [self->syncedServices count])
+			{
+				[content setText:NSLocalizedString([self->syncedServices objectAtIndex:row], nil)];
+				[content setSecondaryText:NSLocalizedString(STR_SYNCHED, nil)];
+			}
+			else
+			{
+				[content setText:NSLocalizedString([self->notSyncedServices objectAtIndex:row - [self->syncedServices count]], nil)];
+				[content setSecondaryText:NSLocalizedString(STR_NOT_SYNCHED, nil)];
+			}
+		}
+		break;
+	case SECTION_INTERNAL:
+		{
 			switch (row)
 			{
-				case ROW_START_TIME:
-					[content setText:STR_STARTED];
-					if (startTime > 0)
-						[content setSecondaryText:[StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:startTime]]];
-					break;
-				case ROW_END_TIME:
-					[content setText:STR_FINISHED];
-					if (endTime > 0)
-						[content setSecondaryText:[StringUtils formatDateAndTime:[NSDate dateWithTimeIntervalSince1970:endTime]]];
-					break;
-			}
-			break;
-		case SECTION_LAP_AND_SPLIT_TIMES:
-			switch (row)
-			{
-				case ROW_SPLIT_TIMES:
-					[content setText:ROW_TITLE_SPLIT_TIMES];
-					break;
-				case ROW_LAP_TIMES:
-					[content setText:ROW_TITLE_LAP_TIMES];
-					break;
-			}
-			break;
-		case SECTION_CHARTS:
-			{
-				[content setText:NSLocalizedString([self->chartTitles objectAtIndex:row], nil)];
-			}
-			break;
-		case SECTION_ATTRIBUTES:
-			{
-				NSString* attributeName = [self->attributeNames objectAtIndex:row];
-				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
+			case ROW_ACTIVITY_ID:
+				[content setText:NSLocalizedString(@"Activity ID", nil)];
+				[content setSecondaryText:self->activityId];
+				break;
+			case ROW_ACTIVITY_HASH:
+				{
+					NSString* hash = [appDelegate getActivityHash:self->activityId];
 
-				if (attr.valid)
-				{
-					// Convert the units to the unit system the user prefers to use.
-					[appDelegate convertToPreferredUnits:&attr];
-
-					// Format the display strings.
-					NSString* valueStr = [StringUtils formatActivityViewType:attr];
-					NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
-
-					// Add the text to the table.
-					[content setText:NSLocalizedString(attributeName, nil)];
-					if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
-						[content setSecondaryText:[NSString stringWithFormat:@"%@ %@", valueStr, unitsStr]];
-					else
-						[content setSecondaryText:[NSString stringWithFormat:@"%@", valueStr]];
+					[content setText:NSLocalizedString(@"Activity Hash", nil)];
+					if ([hash length] > 0)
+						[content setSecondaryText:hash];
 				}
-				else
-				{
-					[content setText:NSLocalizedString(attributeName, nil)];
-				}
+				break;
 			}
-			break;
-		case SECTION_SUPERLATIVES:
-			{
-				NSString* attributeName = [self->recordNames objectAtIndex:row];
-				ActivityAttributeType attr = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
-
-				if (attr.valid)
-				{
-					// Format the display strings.
-					NSString* valueStr = [StringUtils formatActivityViewType:attr];
-					NSString* unitsStr = [StringUtils formatActivityMeasureType:attr.measureType];
-
-					// Add the text to the table.
-					[content setText:NSLocalizedString(attributeName, nil)];
-					if ((unitsStr != nil) && ([valueStr isEqualToString:@VALUE_NOT_SET_STR] == false))
-						[content setSecondaryText:[NSString stringWithFormat:@"%@ %@", valueStr, unitsStr]];
-					else
-						[content setSecondaryText:[NSString stringWithFormat:@"%@", valueStr]];
-				}
-				else
-				{
-					[content setText:NSLocalizedString(attributeName, nil)];
-				}
-			}
-			break;
-		case SECTION_SYNC:
-			{
-				if (row < [self->syncedServices count])
-				{
-					[content setText:NSLocalizedString([self->syncedServices objectAtIndex:row], nil)];
-					[content setSecondaryText:NSLocalizedString(STR_SYNCHED, nil)];
-				}
-				else
-				{
-					[content setText:NSLocalizedString([self->notSyncedServices objectAtIndex:row - [self->syncedServices count]], nil)];
-					[content setSecondaryText:NSLocalizedString(STR_NOT_SYNCHED, nil)];
-				}
-			}
-			break;
-		case SECTION_INTERNAL:
-			{
-				switch (row)
-				{
-				case ROW_ACTIVITY_ID:
-					[content setText:NSLocalizedString(@"Activity ID", nil)];
-					[content setSecondaryText:self->activityId];
-					break;
-				case ROW_ACTIVITY_HASH:
-					{
-						NSString* hash = [appDelegate getActivityHash:self->activityId];
-
-						[content setText:NSLocalizedString(@"Activity Hash", nil)];
-						if ([hash length] > 0)
-							[content setSecondaryText:hash];
-					}
-					break;
-				}
-			}
-			break;
-		default:
-			break;
+		}
+		break;
+	default:
+		break;
 	}
 
 	[cell setContentConfiguration:content];
@@ -1190,33 +1190,33 @@ typedef enum ExportFileTypeButtons
 
 	switch (actualSection)
 	{
-		case SECTION_NAME:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_DESCRIPTION:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_START_AND_END_TIME:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_LAP_AND_SPLIT_TIMES:
-			cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
-			break;
-		case SECTION_CHARTS:
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			break;
-		case SECTION_ATTRIBUTES:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_SUPERLATIVES:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_SYNC:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
-		case SECTION_INTERNAL:
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			break;
+	case SECTION_NAME:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_DESCRIPTION:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_START_AND_END_TIME:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_LAP_AND_SPLIT_TIMES:
+		cell.accessoryType =  UITableViewCellAccessoryDisclosureIndicator;
+		break;
+	case SECTION_CHARTS:
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		break;
+	case SECTION_ATTRIBUTES:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_SUPERLATIVES:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_SYNC:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
+	case SECTION_INTERNAL:
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		break;
 	}
 }
 
@@ -1241,16 +1241,16 @@ typedef enum ExportFileTypeButtons
 {
 	switch (result)
 	{
-		case MFMailComposeResultCancelled:
-			break;
-		case MFMailComposeResultSaved:
-			break;
-		case MFMailComposeResultSent:
-			break;
-		case MFMailComposeResultFailed:
-			break;
-		default:
-			break;
+	case MFMailComposeResultCancelled:
+		break;
+	case MFMailComposeResultSaved:
+		break;
+	case MFMailComposeResultSent:
+		break;
+	case MFMailComposeResultFailed:
+		break;
+	default:
+		break;
 	}
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

@@ -161,13 +161,13 @@
 {
 	switch ([Preferences preferredUnitSystem])
 	{
-		case UNIT_SYSTEM_METRIC:
-			diameterMm /= (double)10.0;
-			break;
-		case UNIT_SYSTEM_US_CUSTOMARY:
-			diameterMm /= (double)10.0;
-			diameterMm /= (double)CENTIMETERS_PER_INCH;
-			break;
+	case UNIT_SYSTEM_METRIC:
+		diameterMm /= (double)10.0;
+		break;
+	case UNIT_SYSTEM_US_CUSTOMARY:
+		diameterMm /= (double)10.0;
+		diameterMm /= (double)CENTIMETERS_PER_INCH;
+		break;
 	}
 	
 	self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", diameterMm];
@@ -190,26 +190,26 @@
 
 			switch ([Preferences preferredUnitSystem])
 			{
-				case UNIT_SYSTEM_METRIC:
-					if (weightKg < (double)1.0)
-						self->weightTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
-					else
-						self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg];
-					if (wheelCircumferenceMm < (double)1.0)
-						self->wheelSizeTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
-					else
-						self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter];
-					break;
-				case UNIT_SYSTEM_US_CUSTOMARY:
-					if (weightKg < (double)1.0)
-						self->weightTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
-					else
-						self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg * POUNDS_PER_KILOGRAM];
-					if (wheelCircumferenceMm < (double)1.0)
-						self->wheelSizeTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
-					else
-						self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter / (CENTIMETERS_PER_INCH * 10)];
-					break;
+			case UNIT_SYSTEM_METRIC:
+				if (weightKg < (double)1.0)
+					self->weightTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+				else
+					self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg];
+				if (wheelCircumferenceMm < (double)1.0)
+					self->wheelSizeTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+				else
+					self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter];
+				break;
+			case UNIT_SYSTEM_US_CUSTOMARY:
+				if (weightKg < (double)1.0)
+					self->weightTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+				else
+					self->weightTextField.text = [NSString stringWithFormat:@"%0.1f", weightKg * POUNDS_PER_KILOGRAM];
+				if (wheelCircumferenceMm < (double)1.0)
+					self->wheelSizeTextField.text = [[NSString alloc] initWithFormat:STR_NOT_SET];
+				else
+					self->wheelSizeTextField.text = [NSString stringWithFormat:@"%0.1f", wheelDiameter / (CENTIMETERS_PER_INCH * 10)];
+				break;
 			}
 
 			if (bikeName)
@@ -225,14 +225,14 @@
 
 	switch ([Preferences preferredUnitSystem])
 	{
-		case UNIT_SYSTEM_METRIC:
-			self->weightUnitsLabel.text = UNITS_KILOGRAMS;
-			self->wheelSizeUnitsLabel.text = UNITS_MILIMETERS;
-			break;
-		case UNIT_SYSTEM_US_CUSTOMARY:
-			self->weightUnitsLabel.text = UNITS_POUNDS;
-			self->wheelSizeUnitsLabel.text = UNITS_INCHES;
-			break;
+	case UNIT_SYSTEM_METRIC:
+		self->weightUnitsLabel.text = UNITS_KILOGRAMS;
+		self->wheelSizeUnitsLabel.text = UNITS_MILIMETERS;
+		break;
+	case UNIT_SYSTEM_US_CUSTOMARY:
+		self->weightUnitsLabel.text = UNITS_POUNDS;
+		self->wheelSizeUnitsLabel.text = UNITS_INCHES;
+		break;
 	}
 }
 
@@ -251,25 +251,25 @@
 	// Everything is stored in metric.
 	switch ([Preferences preferredUnitSystem])
     {
-        case UNIT_SYSTEM_METRIC:
-            break;
-        case UNIT_SYSTEM_US_CUSTOMARY:
-            wheelSize *= CENTIMETERS_PER_INCH;
-            wheelSize *= 10;
-			weight /= POUNDS_PER_KILOGRAM;
-            break;
+	case UNIT_SYSTEM_METRIC:
+		break;
+	case UNIT_SYSTEM_US_CUSTOMARY:
+		wheelSize *= CENTIMETERS_PER_INCH;
+		wheelSize *= 10;
+		weight /= POUNDS_PER_KILOGRAM;
+		break;
     }
 
 	switch (self->mode)
     {
-        case BIKE_PROFILE_NEW:
-            saved = [appDelegate addBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
-            break;
-        case BIKE_PROFILE_UPDATE:
-            saved = [appDelegate updateBikeProfile:bikeId withName:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
-            break;
-        default:
-            break;
+	case BIKE_PROFILE_NEW:
+		saved = [appDelegate addBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
+		break;
+	case BIKE_PROFILE_UPDATE:
+		saved = [appDelegate updateBikeProfile:bikeId withName:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
+		break;
+	default:
+		break;
     }
     
     return saved;
@@ -292,26 +292,26 @@
 {
 	switch (self->mode)
 	{
-		case BIKE_PROFILE_NEW:
-			[self.navigationController popViewControllerAnimated:YES];
-			break;
-		case BIKE_PROFILE_UPDATE:
-			{
-				UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_CAUTION
-																						 message:MSG_DELETE_QUESTION
-																				  preferredStyle:UIAlertControllerStyleAlert];
-				[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				}]];
-				[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-					AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-					[appDelegate deleteBikeProfile:self->bikeId];
-					[self.navigationController popViewControllerAnimated:YES];
-				}]];
-				[self presentViewController:alertController animated:YES completion:nil];
-			}
-			break;
-		default:
-			break;
+	case BIKE_PROFILE_NEW:
+		[self.navigationController popViewControllerAnimated:YES];
+		break;
+	case BIKE_PROFILE_UPDATE:
+		{
+			UIAlertController* alertController = [UIAlertController alertControllerWithTitle:STR_CAUTION
+																					 message:MSG_DELETE_QUESTION
+																			  preferredStyle:UIAlertControllerStyleAlert];
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+				[appDelegate deleteBikeProfile:self->bikeId];
+				[self.navigationController popViewControllerAnimated:YES];
+			}]];
+			[self presentViewController:alertController animated:YES completion:nil];
+		}
+		break;
+	default:
+		break;
 	}
 }
 

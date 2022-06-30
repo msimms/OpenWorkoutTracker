@@ -427,19 +427,19 @@
 	}
 	switch (self->mapView.mapType)
 	{
-		case MKMapTypeStandard:
-			[self checkActionSheetButton:mapStd];
-			break;
-		case MKMapTypeSatellite:
-			[self checkActionSheetButton:mapSat];
-			break;
-		case MKMapTypeHybrid:
-			[self checkActionSheetButton:mapHybrid];
-			break;
-		case MKMapTypeSatelliteFlyover:
-		case MKMapTypeHybridFlyover:
-		case MKMapTypeMutedStandard:
-			break;
+	case MKMapTypeStandard:
+		[self checkActionSheetButton:mapStd];
+		break;
+	case MKMapTypeSatellite:
+		[self checkActionSheetButton:mapSat];
+		break;
+	case MKMapTypeHybrid:
+		[self checkActionSheetButton:mapHybrid];
+		break;
+	case MKMapTypeSatelliteFlyover:
+	case MKMapTypeHybridFlyover:
+	case MKMapTypeMutedStandard:
+		break;
 	}
 
 	// Show the action sheet.

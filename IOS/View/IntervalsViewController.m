@@ -160,8 +160,8 @@
 {
 	switch (section)
 	{
-		case 0:
-			return [self->workoutNamesAndIds count];
+	case 0:
+		return [self->workoutNamesAndIds count];
 	}
 	return 0;
 }
@@ -184,13 +184,13 @@
 
 	switch (section)
 	{
-		case 0:
-			{
-				cell.textLabel.text = nameAndId[@"name"];
-			}
-			break;
-		default:
-			break;
+	case 0:
+		{
+			cell.textLabel.text = nameAndId[@"name"];
+		}
+		break;
+	default:
+		break;
 	}
 
 	// Load the image that goes with the activity.
