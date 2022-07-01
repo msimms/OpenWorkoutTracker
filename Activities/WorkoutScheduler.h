@@ -8,6 +8,7 @@
 #ifndef __WORKOUTSCHEDULER__
 #define __WORKOUTSCHEDULER__
 
+#include "DayType.h"
 #include "Workout.h"
 
 #define DAYS_PER_WEEK 7
@@ -21,7 +22,7 @@ public:
 	WorkoutScheduler();
 	virtual ~WorkoutScheduler();
 
-	void ScheduleWorkouts(Workout* workouts[], size_t numWorkouts, time_t startTime);
+	void ScheduleWorkouts(Workout* workouts[], size_t numWorkouts, time_t startTime, DayType preferredLongRunDay);
 
 private:
 	double ScoreSchedule(Workout* week[DAYS_PER_WEEK]);

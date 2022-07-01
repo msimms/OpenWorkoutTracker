@@ -22,6 +22,10 @@
 #define WORKOUT_INPUT_LONGEST_RIDE_WEEK_2                "Longest Ride Week 2"       // Second most recent week
 #define WORKOUT_INPUT_LONGEST_RIDE_WEEK_3                "Longest Ride Week 3"       // Third most recent week
 #define WORKOUT_INPUT_LONGEST_RIDE_WEEK_4                "Longest Ride Week 4"       // Fourth most recent week
+#define WORKOUT_INPUT_LONGEST_SWIM_WEEK_1                "Longest Swim Week 1"       // Most recent week
+#define WORKOUT_INPUT_LONGEST_SWIM_WEEK_2                "Longest Swim Week 2"       // Second most recent week
+#define WORKOUT_INPUT_LONGEST_SWIM_WEEK_3                "Longest Swim Week 3"       // Third most recent week
+#define WORKOUT_INPUT_LONGEST_SWIM_WEEK_4                "Longest Swim Week 4"       // Fourth most recent week
 #define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1             "Total Intensity Week 1"    // Most recent week
 #define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2             "Total Intensity Week 2"    // Second most recent week
 #define WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3             "Total Intensity Week 3"    // Third most recent week

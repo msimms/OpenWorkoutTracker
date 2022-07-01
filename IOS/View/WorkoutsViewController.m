@@ -18,6 +18,7 @@
 typedef enum WorkoutsSections
 {
 	SECTION_GOAL = 0,
+	SECTION_PREFS,
 	SECTION_WORKOUTS,
 	NUM_WORKOUTS_SECTIONS
 } WorkoutsSections;
@@ -29,14 +30,34 @@ typedef enum WorkoutsGoalRows
 	NUM_WORKOUTS_GOAL_ROWS
 } WorkoutsGoalRows;
 
-#define BUTTON_TITLE_FITNESS           NSLocalizedString(@"Fitness", nil)
-#define BUTTON_TITLE_5K_RUN            NSLocalizedString(@"5K Run", nil)
-#define BUTTON_TITLE_10K_RUN           NSLocalizedString(@"10K Run", nil)
-#define BUTTON_TITLE_15K_RUN           NSLocalizedString(@"15K Run", nil)
-#define BUTTON_TITLE_HALF_MARATHON_RUN NSLocalizedString(@"Half Marathon", nil)
-#define BUTTON_TITLE_MARATHON_RUN      NSLocalizedString(@"Marathon", nil)
-#define BUTTON_TITLE_50K_RUN           NSLocalizedString(@"50K Run", nil)
-#define BUTTON_TITLE_50_MILE_RUN       NSLocalizedString(@"50 Mile Run", nil)
+typedef enum WorkoutsPrefsRows
+{
+	ROW_PREFS_LONG_RUN_DAY = 0,
+	ROW_PREFS_INCLUDE_BIKE_RIDES,
+	ROW_PREFS_INCLUDE_SWIMS,
+	NUM_WORKOUTS_PREFS_ROWS
+} WorkoutsPrefsRows;
+
+#define BUTTON_TITLE_FITNESS                      NSLocalizedString(@"Fitness", nil)
+#define BUTTON_TITLE_5K_RUN                       NSLocalizedString(@"5K Run", nil)
+#define BUTTON_TITLE_10K_RUN                      NSLocalizedString(@"10K Run", nil)
+#define BUTTON_TITLE_15K_RUN                      NSLocalizedString(@"15K Run", nil)
+#define BUTTON_TITLE_HALF_MARATHON_RUN            NSLocalizedString(@"Half Marathon", nil)
+#define BUTTON_TITLE_MARATHON_RUN                 NSLocalizedString(@"Marathon", nil)
+#define BUTTON_TITLE_50K_RUN                      NSLocalizedString(@"50K Run", nil)
+#define BUTTON_TITLE_50_MILE_RUN                  NSLocalizedString(@"50 Mile Run", nil)
+#define BUTTON_TITLE_SPRINT_TRIATHLON             NSLocalizedString(@"Sprint Triathlon", nil)
+#define BUTTON_TITLE_OLYMPIC_TRIATHLON            NSLocalizedString(@"Olympic Triathlon", nil)
+#define BUTTON_TITLE_HALF_IRON_DISTANCE_TRIATHLON NSLocalizedString(@"Half Iron Distance Triathlon", nil)
+#define BUTTON_TITLE_IRON_DISTANCE_TRIATHLON      NSLocalizedString(@"Iron Distance Triathlon", nil)
+
+#define STR_PREFERRED_LONG_RUN_DAY                NSLocalizedString(@"Long Run Day", nil)
+#define STR_INCLUDE_BIKE_RIDES                    NSLocalizedString(@"Cycling", nil)
+#define STR_INCLUDE_SWIMS                         NSLocalizedString(@"Swims", nil)
+
+#define ERROR_NO_GOAL_DATE                        NSLocalizedString(@"A goal date has not been specified.", nil)
+#define ERROR_BIKE_TRAINING_NEEDED                NSLocalizedString(@"Bike training is required for a triathlon.", nil)
+#define ERROR_SWIM_TRAINING_NEEDED                NSLocalizedString(@"Swim training is required for a triathlon.", nil)
 
 @interface WorkoutsViewController ()
 
@@ -124,6 +145,14 @@ typedef enum WorkoutsGoalRows
 		return BUTTON_TITLE_50K_RUN;
 	case GOAL_50_MILE_RUN:
 		return BUTTON_TITLE_50_MILE_RUN;
+	case GOAL_SPRINT_TRIATHLON:
+		return BUTTON_TITLE_SPRINT_TRIATHLON;
+	case GOAL_OLYMPIC_TRIATHLON:
+		return BUTTON_TITLE_OLYMPIC_TRIATHLON;
+	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
+		return BUTTON_TITLE_HALF_IRON_DISTANCE_TRIATHLON;
+	case GOAL_IRON_DISTANCE_TRIATHLON:
+		return BUTTON_TITLE_IRON_DISTANCE_TRIATHLON;
 	}
 }
 
@@ -134,6 +163,8 @@ typedef enum WorkoutsGoalRows
 	NSDate* newDate = [self.datePicker date];
 
 	[Preferences setWorkoutGoalDate:[newDate timeIntervalSince1970]];
+	[self.datePicker setHidden:TRUE];
+	[self.workoutsView reloadData];
 }
 
 #pragma mark button handlers
@@ -149,27 +180,59 @@ typedef enum WorkoutsGoalRows
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_FITNESS style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_FITNESS];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_5K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_5K_RUN];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_10K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_10K_RUN];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_15K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_15K_RUN];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_HALF_MARATHON_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_HALF_MARATHON_RUN];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_MARATHON_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_MARATHON_RUN];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_50K_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_50K_RUN];
+		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_50_MILE_RUN style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutGoal:GOAL_50_MILE_RUN];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_SPRINT_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
+		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutGoal:GOAL_SPRINT_TRIATHLON];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_OLYMPIC_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
+		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutGoal:GOAL_OLYMPIC_TRIATHLON];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_HALF_IRON_DISTANCE_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
+		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutGoal:GOAL_HALF_IRON_DISTANCE_TRIATHLON];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_IRON_DISTANCE_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
+		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutGoal:GOAL_IRON_DISTANCE_TRIATHLON];
+		[self.workoutsView reloadData];
 	}]];
 
 	// Show the action sheet.
@@ -196,11 +259,115 @@ typedef enum WorkoutsGoalRows
 	}
 }
 
+- (void)selectLongRunDay
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_LONG_RUN
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_MONDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_MONDAY];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_TUESDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_TUESDAY];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_WEDNESDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_WEDNESDAY];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_THURSDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_THURSDAY];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_FRIDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_FRIDAY];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_SATURDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_SATURDAY];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_SUNDAY style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutLongRunDay:DAY_TIME_SUNDAY];
+		[self.workoutsView reloadData];
+	}]];
+
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)selectWillAllowBikeRides
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_INCLUDE_BIKE_RIDES
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeBikeRides:FALSE];
+		[self.workoutsView reloadData];
+	}]];
+
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)selectWillAllowSwims
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_INCLUDE_SWIMS
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeSwims:FALSE];
+		[self.workoutsView reloadData];
+	}]];
+
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
 #pragma mark button handlers
 
 - (IBAction)onGenerateWorkouts:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	// Sanity checks
+	Goal workoutGoal = [Preferences workoutGoal];
+	if (workoutGoal != GOAL_FITNESS && [Preferences workoutGoalDate] == 0)
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:ERROR_NO_GOAL_DATE];
+		return;
+	}
+	if (workoutGoal >= GOAL_SPRINT_TRIATHLON && workoutGoal <= GOAL_IRON_DISTANCE_TRIATHLON && ![Preferences workoutsCanIncludeSwims])
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:ERROR_SWIM_TRAINING_NEEDED];
+		return;
+	}
+	if (workoutGoal >= GOAL_SPRINT_TRIATHLON && workoutGoal <= GOAL_IRON_DISTANCE_TRIATHLON && ![Preferences workoutsCanIncludeBikeRides])
+	{
+		[super showOneButtonAlert:STR_ERROR withMsg:ERROR_BIKE_TRAINING_NEEDED];
+		return;
+	}
 
 	if ([appDelegate generateWorkouts])
 	{
@@ -233,10 +400,12 @@ typedef enum WorkoutsGoalRows
 {
 	switch (section)
 	{
-		case SECTION_GOAL:
-			return STR_GOAL;
-		case SECTION_WORKOUTS:
-			return STR_SUGGESTED_WORKOUTS;
+	case SECTION_GOAL:
+		return STR_GOAL;
+	case SECTION_PREFS:
+		return STR_PREFS;
+	case SECTION_WORKOUTS:
+		return STR_SUGGESTED_WORKOUTS;
 	}
 	return @"";
 }
@@ -245,10 +414,12 @@ typedef enum WorkoutsGoalRows
 {
 	switch (section)
 	{
-		case SECTION_GOAL:
-			return NUM_WORKOUTS_GOAL_ROWS;
-		case SECTION_WORKOUTS:
-			return [self->plannedWorkouts count];
+	case SECTION_GOAL:
+		return NUM_WORKOUTS_GOAL_ROWS;
+	case SECTION_PREFS:
+		return NUM_WORKOUTS_PREFS_ROWS;
+	case SECTION_WORKOUTS:
+		return [self->plannedWorkouts count];
 	}
 	return 0;
 }
@@ -275,122 +446,156 @@ typedef enum WorkoutsGoalRows
 		[self.datePicker setHidden:TRUE];
 	}
 
+	// Clear out any previous images.
+	[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
 	switch (section)
 	{
-		case SECTION_GOAL:
-			switch (row)
-			{
-				case ROW_GOAL:
-					cell.textLabel.text = STR_GOAL;
-					cell.detailTextLabel.text = [self workoutGoalToString:[Preferences workoutGoal]];
-					break;
-				case ROW_GOAL_DATE:
-					{
-						time_t goalDate = [Preferences workoutGoalDate];
-						cell.textLabel.text = STR_GOAL_DATE;
-						
-						if (goalDate == 0)
-							cell.detailTextLabel.text = STR_NOT_SET;
-						else
-							cell.detailTextLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:goalDate]];
-					}
-					break;
-			}
-			displayDisclosureIndicator = false;
+	case SECTION_GOAL:
+		switch (row)
+		{
+		case ROW_GOAL:
+			cell.textLabel.text = STR_GOAL;
+			cell.detailTextLabel.text = [self workoutGoalToString:[Preferences workoutGoal]];
 			break;
-		case SECTION_WORKOUTS:
+		case ROW_GOAL_DATE:
 			{
-				NSDictionary* workoutDetails = [self->plannedWorkouts objectAtIndex:row];
-				WorkoutType workoutType = (WorkoutType)([workoutDetails[@PARAM_WORKOUT_WORKOUT_TYPE] integerValue]);
-				time_t scheduledTime = (time_t)([workoutDetails[@PARAM_WORKOUT_SCHEDULED_TIME] integerValue]);
-				NSString* workoutSport = workoutDetails[@PARAM_WORKOUT_SPORT_TYPE];
-
-				// Convert the workout type to a string.
-				switch (workoutType)
-				{
-				case WORKOUT_TYPE_REST:
-					cell.detailTextLabel.text = STR_REST;
-					displayDisclosureIndicator = false;
-					break;
-				case WORKOUT_TYPE_EVENT:
-					cell.detailTextLabel.text = STR_EVENT;
-					break;
-				case WORKOUT_TYPE_SPEED_RUN:
-					cell.detailTextLabel.text = STR_SPEED_RUN;
-					break;
-				case WORKOUT_TYPE_THRESHOLD_RUN:
-					cell.detailTextLabel.text = STR_THRESHOLD_RUN;
-					break;
-				case WORKOUT_TYPE_TEMPO_RUN:
-					cell.detailTextLabel.text = STR_TEMPO_RUN;
-					break;
-				case WORKOUT_TYPE_EASY_RUN:
-					cell.detailTextLabel.text = STR_EASY_RUN;
-					break;
-				case WORKOUT_TYPE_LONG_RUN:
-					cell.detailTextLabel.text = STR_LONG_RUN;
-					break;
-				case WORKOUT_TYPE_FREE_RUN:
-					cell.detailTextLabel.text = STR_FREE_RUN;
-					break;
-				case WORKOUT_TYPE_HILL_REPEATS:
-					cell.detailTextLabel.text = STR_HILL_REPEATS;
-					break;
-				case WORKOUT_TYPE_FARTLEK_RUN:
-					cell.detailTextLabel.text = STR_FARTLEK_SESSION;
-					break;
-				case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
-					cell.detailTextLabel.text = STR_MIDDLE_DISTANCE_RUN;
-					break;
-				case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
-					cell.detailTextLabel.text = STR_INTERVAL_RIDE;
-					break;
-				case WORKOUT_TYPE_TEMPO_RIDE:
-					cell.detailTextLabel.text = STR_TEMPO_RIDE;
-					break;
-				case WORKOUT_TYPE_EASY_RIDE:
-					cell.detailTextLabel.text = STR_EASY_RIDE;
-					break;
-				case WORKOUT_TYPE_SWEET_SPOT_RIDE:
-					cell.detailTextLabel.text = STR_SWEET_SPOT_RIDE;
-					break;
-				case WORKOUT_TYPE_OPEN_WATER_SWIM:
-					cell.detailTextLabel.text = STR_OPEN_WATER_SWIM;
-					break;
-				case WORKOUT_TYPE_POOL_WATER_SWIM:
-					cell.detailTextLabel.text = STR_POOL_SWIM;
-					break;
-				}
-
-				// Append the scheduled time, if it is set.
-				if (scheduledTime > 0)
-				{
-					cell.textLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
-				}
-
-				// Load the image.
-				UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
-				if (workoutType == WORKOUT_TYPE_REST)
-					imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Rest" ofType:@"png"]];
+				time_t goalDate = [Preferences workoutGoalDate];
+				cell.textLabel.text = STR_GOAL_DATE;
+				
+				if (goalDate == 0)
+					cell.detailTextLabel.text = STR_NOT_SET;
 				else
-					imageView.image = [self activityTypeToIcon:workoutSport];
-
-				// If dark mode is enabled, invert the image.
-				if ([self isDarkModeEnabled])
-				{
-					imageView.image = [ImageUtils invertImage2:imageView.image];
-				}
-
-				// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
-				[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-				[cell.contentView addSubview:imageView];
+					cell.detailTextLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:goalDate]];
 			}
 			break;
+		}
+		displayDisclosureIndicator = false;
+		break;
+	case SECTION_PREFS:
+		switch (row)
+		{
+		case ROW_PREFS_LONG_RUN_DAY:
+			cell.textLabel.text = STR_PREFERRED_LONG_RUN_DAY;
+			cell.detailTextLabel.text = [StringUtils dayToStr:[Preferences workoutLongRunDay]];
+			break;
+		case ROW_PREFS_INCLUDE_BIKE_RIDES:
+			cell.textLabel.text = STR_INCLUDE_BIKE_RIDES;
+			cell.detailTextLabel.text = [StringUtils boolToStr:[Preferences workoutsCanIncludeBikeRides]];
+			break;
+		case ROW_PREFS_INCLUDE_SWIMS:
+			cell.textLabel.text = STR_INCLUDE_SWIMS;
+			cell.detailTextLabel.text = [StringUtils boolToStr:[Preferences workoutsCanIncludeSwims]];
+			break;
+		}
+		displayDisclosureIndicator = false;
+		break;
+	case SECTION_WORKOUTS:
+		{
+			NSDictionary* workoutDetails = [self->plannedWorkouts objectAtIndex:row];
+			WorkoutType workoutType = (WorkoutType)([workoutDetails[@PARAM_WORKOUT_WORKOUT_TYPE] integerValue]);
+			time_t scheduledTime = (time_t)([workoutDetails[@PARAM_WORKOUT_SCHEDULED_TIME] integerValue]);
+			NSString* workoutSport = workoutDetails[@PARAM_WORKOUT_SPORT_TYPE];
+
+			// Convert the workout type to a string.
+			switch (workoutType)
+			{
+			case WORKOUT_TYPE_REST:
+				cell.detailTextLabel.text = STR_REST;
+				displayDisclosureIndicator = false;
+				break;
+			case WORKOUT_TYPE_EVENT:
+				cell.detailTextLabel.text = STR_EVENT;
+				break;
+			case WORKOUT_TYPE_SPEED_RUN:
+				cell.detailTextLabel.text = STR_SPEED_RUN;
+				break;
+			case WORKOUT_TYPE_THRESHOLD_RUN:
+				cell.detailTextLabel.text = STR_THRESHOLD_RUN;
+				break;
+			case WORKOUT_TYPE_TEMPO_RUN:
+				cell.detailTextLabel.text = STR_TEMPO_RUN;
+				break;
+			case WORKOUT_TYPE_EASY_RUN:
+				cell.detailTextLabel.text = STR_EASY_RUN;
+				break;
+			case WORKOUT_TYPE_LONG_RUN:
+				cell.detailTextLabel.text = STR_LONG_RUN;
+				break;
+			case WORKOUT_TYPE_FREE_RUN:
+				cell.detailTextLabel.text = STR_FREE_RUN;
+				break;
+			case WORKOUT_TYPE_HILL_REPEATS:
+				cell.detailTextLabel.text = STR_HILL_REPEATS;
+				break;
+			case WORKOUT_TYPE_FARTLEK_RUN:
+				cell.detailTextLabel.text = STR_FARTLEK_SESSION;
+				break;
+			case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
+				cell.detailTextLabel.text = STR_MIDDLE_DISTANCE_RUN;
+				break;
+			case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
+				cell.detailTextLabel.text = STR_INTERVAL_RIDE;
+				break;
+			case WORKOUT_TYPE_TEMPO_RIDE:
+				cell.detailTextLabel.text = STR_TEMPO_RIDE;
+				break;
+			case WORKOUT_TYPE_EASY_RIDE:
+				cell.detailTextLabel.text = STR_EASY_RIDE;
+				break;
+			case WORKOUT_TYPE_SWEET_SPOT_RIDE:
+				cell.detailTextLabel.text = STR_SWEET_SPOT_RIDE;
+				break;
+			case WORKOUT_TYPE_OPEN_WATER_SWIM:
+				cell.detailTextLabel.text = STR_OPEN_WATER_SWIM;
+				break;
+			case WORKOUT_TYPE_POOL_SWIM:
+				cell.detailTextLabel.text = STR_POOL_SWIM;
+				break;
+			case WORKOUT_TYPE_TECHNIQUE_SWIM:
+				cell.detailTextLabel.text = STR_TECHNIQUE_SWIM;
+				break;
+			}
+
+			// Append the scheduled time, if it is set.
+			if (scheduledTime > 0)
+			{
+				cell.textLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
+			}
+			else
+			{
+				cell.textLabel.text = @"";
+			}
+
+			// Load the image.
+			UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 6, 32, 32)];
+			if (workoutType == WORKOUT_TYPE_REST)
+				imageView.image = [UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"Rest" ofType:@"png"]];
+			else
+				imageView.image = [self activityTypeToIcon:workoutSport];
+
+			// If dark mode is enabled, invert the image.
+			if ([self isDarkModeEnabled])
+			{
+				imageView.image = [ImageUtils invertImage2:imageView.image];
+			}
+
+			// Add the image. Since this is not a UITableViewCellStyleDefault style cell, we'll have to add a subview.
+			[[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+			[cell.contentView addSubview:imageView];
+		}
+		break;
 	}
 
 	cell.selectionStyle = UITableViewCellSelectionStyleGray;
 	if (displayDisclosureIndicator)
+	{
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	}
+	else
+	{
+		cell.accessoryType = UITableViewCellAccessoryNone;
+	}
 	return cell;
 }
 
@@ -405,21 +610,35 @@ typedef enum WorkoutsGoalRows
 
 	switch (section)
 	{
-		case SECTION_GOAL:
-			switch (row)
-			{
-				case ROW_GOAL:
-					[self selectGoal];
-					break;
-				case ROW_GOAL_DATE:
-					[self selectGoalDate];
-					break;
-			}
+	case SECTION_GOAL:
+		switch (row)
+		{
+		case ROW_GOAL:
+			[self selectGoal];
 			break;
-		case SECTION_WORKOUTS:
-			self->selectedWorkoutDetails = [self->plannedWorkouts objectAtIndex:row];
-			[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
+		case ROW_GOAL_DATE:
+			[self selectGoalDate];
 			break;
+		}
+		break;
+	case SECTION_PREFS:
+		switch (row)
+		{
+		case ROW_PREFS_LONG_RUN_DAY:
+			[self selectLongRunDay];
+			break;
+		case ROW_PREFS_INCLUDE_BIKE_RIDES:
+			[self selectWillAllowBikeRides];
+			break;
+		case ROW_PREFS_INCLUDE_SWIMS:
+			[self selectWillAllowSwims];
+			break;
+		}
+		break;
+	case SECTION_WORKOUTS:
+		self->selectedWorkoutDetails = [self->plannedWorkouts objectAtIndex:row];
+		[self performSegueWithIdentifier:@SEGUE_TO_WORKOUT_DETAILS_VIEW sender:self];
+		break;
 	}
 }
 

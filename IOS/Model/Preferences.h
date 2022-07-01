@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "DayType.h"
 #import "Goal.h"
 #import "GoalType.h"
 #import "UnitSystem.h"
@@ -54,9 +55,12 @@
 + (Goal)workoutGoal;
 + (GoalType)workoutGoalType;
 + (time_t)workoutGoalDate;
-+ (time_t)lastServerSyncTime;
++ (DayType)workoutLongRunDay;
++ (BOOL)workoutsCanIncludeBikeRides;
++ (BOOL)workoutsCanIncludeSwims;
 + (uint16_t)poolLength;
 + (UnitSystem)poolLengthUnits;
++ (time_t)lastServerSyncTime;
 
 #pragma mark set methods
 
@@ -84,9 +88,12 @@
 + (void)setWorkoutGoal:(Goal)value;
 + (void)setWorkoutGoalType:(GoalType)value;
 + (void)setWorkoutGoalDate:(time_t)value;
-+ (void)setLastServerSyncTime:(time_t)value;
++ (void)setWorkoutLongRunDay:(DayType)value;
++ (void)setWorkoutsCanIncludeBikeRides:(BOOL)value;
++ (void)setWorkoutsCanIncludeSwims:(BOOL)value;
 + (void)setPoolLength:(uint16_t)poolLength;
 + (void)setPoolLengthUnits:(UnitSystem)poolLengthUnits;
++ (void)setLastServerSyncTime:(time_t)value;
 
 #pragma mark methods for managing the list of accessories
 

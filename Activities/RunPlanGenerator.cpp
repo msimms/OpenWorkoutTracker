@@ -86,12 +86,20 @@ double RunPlanGenerator::MaxLongRunDistance(double goalDistance)
 }
 
 /// @brief Assume the athlete can improve by 10%/week in maximum distance.
-double RunPlanGenerator::MaxAttainableDistance(double baseDistance, double numWeeks)
+double RunPlanGenerator::MaxAttainableDistance(double baseDistanceMeters, double numWeeks)
 {
 	double weeklyRate = 0.1;
+	
+	// To keep the calculation from going out of range, scale the input from meters to kms.
+	double baseDistanceKm = baseDistanceMeters / 1000.0;
+
+	// Check for zero. Assume the athlete can run at least one kilometer.
+	if (!ValidFloat(baseDistanceKm, 0.01))
+		baseDistanceKm = 1.0;
 
 	// The calculation is basically the same as for compound interest.
-	return baseDistance + (pow(baseDistance * (1.0 + (weeklyRate / 52.0)), (52.0 * numWeeks)) - baseDistance);
+	// Be sure to scale back up to meters.
+	return (baseDistanceKm + (pow(baseDistanceKm * (1.0 + (weeklyRate / 52.0)), (52.0 * numWeeks)) - baseDistanceKm)) * 1000.0;
 }
 
 /// @brief Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less.
@@ -463,21 +471,29 @@ double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 {
 	switch (goalDistance)
 	{
-		case GOAL_FITNESS:
-		case GOAL_5K_RUN:
-			return 5000;
-		case GOAL_10K_RUN:
-			return 10000;
-		case GOAL_15K_RUN:
-			return 0.9 * 15000;
-		case GOAL_HALF_MARATHON_RUN:
-			return 0.75 * METERS_PER_HALF_MARATHON;
-		case GOAL_MARATHON_RUN:
-			return METERS_PER_HALF_MARATHON;
-		case GOAL_50K_RUN:
-			return METERS_PER_HALF_MARATHON;
-		case GOAL_50_MILE_RUN:
-			return METERS_PER_HALF_MARATHON;
+	case GOAL_FITNESS:
+	case GOAL_5K_RUN:
+		return 5000;
+	case GOAL_10K_RUN:
+		return 10000;
+	case GOAL_15K_RUN:
+		return 0.9 * 15000;
+	case GOAL_HALF_MARATHON_RUN:
+		return 0.75 * METERS_PER_HALF_MARATHON;
+	case GOAL_MARATHON_RUN:
+		return METERS_PER_HALF_MARATHON;
+	case GOAL_50K_RUN:
+		return METERS_PER_HALF_MARATHON;
+	case GOAL_50_MILE_RUN:
+		return METERS_PER_HALF_MARATHON;
+	case GOAL_SPRINT_TRIATHLON:
+		return 5000;
+	case GOAL_OLYMPIC_TRIATHLON:
+		return 10000;
+	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
+		return 0.75 * METERS_PER_HALF_MARATHON;
+	case GOAL_IRON_DISTANCE_TRIATHLON:
+		return METERS_PER_HALF_MARATHON;
 	}
 	return 0.0;
 }
@@ -525,6 +541,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Handle situation in which the user hasn't run *much* in the last four weeks.
 	if (numRuns < 4)
 	{
+		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		return workouts;
@@ -620,15 +637,15 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	{
 		switch (trainingPhilosophy)
 		{
-			case TRAINING_PHILOSOPHY_POLARIZED:
-				m_trainingIntensityDistribution[i] = TID_POLARIZED[i];
-				break;
-			case TRAINING_PHILOSOPHY_PYRAMIDAL:
-				m_trainingIntensityDistribution[i] = TID_PYRAMIDAL[i];
-				break;
-			case TRAINING_PHILOSOPHY_THRESHOLD:
-				m_trainingIntensityDistribution[i] = TID_THRESHOLD[i];
-				break;
+		case TRAINING_PHILOSOPHY_POLARIZED:
+			m_trainingIntensityDistribution[i] = TID_POLARIZED[i];
+			break;
+		case TRAINING_PHILOSOPHY_PYRAMIDAL:
+			m_trainingIntensityDistribution[i] = TID_PYRAMIDAL[i];
+			break;
+		case TRAINING_PHILOSOPHY_THRESHOLD:
+			m_trainingIntensityDistribution[i] = TID_THRESHOLD[i];
+			break;
 		}
 	}
 

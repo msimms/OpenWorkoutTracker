@@ -2534,7 +2534,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 </connections>
                             </tableView>
                             <datePicker hidden="YES" contentMode="center" highlighted="YES" selected="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="center" datePickerMode="date" style="inline" id="9ha-6Z-5KJ">
-                                <rect key="frame" x="0.0" y="426" width="414" height="44"/>
+                                <rect key="frame" x="50" y="450" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             </datePicker>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9P9-KK-ntB">

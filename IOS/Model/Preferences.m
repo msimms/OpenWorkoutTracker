@@ -36,9 +36,13 @@
 #define PREF_NAME_WORKOUT_GOAL                         "Workout Goal"
 #define PREF_NAME_WORKOUT_GOAL_TYPE                    "Workout Goal Type"
 #define PREF_NAME_WORKOUT_GOAL_DATE                    "Workout Goal Date"
-#define PREF_NAME_LAST_SERVER_SYNC_TIME                "Last Server Sync Time"
+#define PREF_NAME_WORKOUT_LONG_RUN_DAY                 "Workout Long Run Day"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES      "Workouts Can Include Bike Rides"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_SWIMS           "Workouts Can Include Swims"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING         "Workouts Can Include Running"
 #define PREF_NAME_POOL_LENGTH                          "Pool Length"
 #define PREF_NAME_POOL_LENGTH_UNITS                    "Pool Length Units"
+#define PREF_NAME_LAST_SERVER_SYNC_TIME                "Last Server Sync Time"
 
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
@@ -280,10 +284,25 @@
 	return (time_t)goalDate;
 }
 
-+ (time_t)lastServerSyncTime
++ (DayType)workoutLongRunDay
 {
-	NSInteger syncTime = [self readNumericValue:@PREF_NAME_LAST_SERVER_SYNC_TIME];
-	return (time_t)syncTime;
+	NSInteger dayType = [self readNumericValue:@PREF_NAME_WORKOUT_LONG_RUN_DAY];
+	return (DayType)dayType;
+}
+
++ (BOOL)workoutsCanIncludeBikeRides
+{
+	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES];
+}
+
++ (BOOL)workoutsCanIncludeSwims
+{
+	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_SWIMS];
+}
+
++ (BOOL)workoutsCanIncludeRunning
+{
+	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING];
 }
 
 + (uint16_t)poolLength
@@ -296,6 +315,12 @@
 {
 	NSInteger poolLengthUnits = [self readNumericValue:@PREF_NAME_POOL_LENGTH_UNITS];
 	return (UnitSystem)poolLengthUnits;
+}
+
++ (time_t)lastServerSyncTime
+{
+	NSInteger syncTime = [self readNumericValue:@PREF_NAME_LAST_SERVER_SYNC_TIME];
+	return (time_t)syncTime;
 }
 
 #pragma mark set methods
@@ -432,9 +457,24 @@
 	[self writeIntValue:@PREF_NAME_WORKOUT_GOAL_DATE withValue:(NSInteger)value];
 }
 
-+ (void)setLastServerSyncTime:(time_t)value
++ (void)setWorkoutLongRunDay:(DayType)value
 {
-	[self writeIntValue:@PREF_NAME_LAST_SERVER_SYNC_TIME withValue:(NSInteger)value];
+	[self writeIntValue:@PREF_NAME_WORKOUT_LONG_RUN_DAY withValue:(NSInteger)value];
+}
+
++ (void)setWorkoutsCanIncludeBikeRides:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES withValue:value];
+}
+
++ (void)setWorkoutsCanIncludeSwims:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_SWIMS withValue:value];
+}
+
++ (void)setWorkoutsCanIncludeRunning:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING withValue:value];
 }
 
 + (void)setPoolLength:(uint16_t)poolLength
@@ -445,6 +485,11 @@
 + (void)setPoolLengthUnits:(UnitSystem)poolLengthUnits
 {
 	[self writeIntValue:@PREF_NAME_POOL_LENGTH_UNITS withValue:(NSInteger)poolLengthUnits];
+}
+
++ (void)setLastServerSyncTime:(time_t)value
+{
+	[self writeIntValue:@PREF_NAME_LAST_SERVER_SYNC_TIME withValue:(NSInteger)value];
 }
 
 #pragma mark methods for managing the list of accessories

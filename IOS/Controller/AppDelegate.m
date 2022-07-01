@@ -1407,8 +1407,8 @@ void startSensorCallback(SensorType type, void* context)
 					// Add the cooldown.
 					if (cooldown && [cooldown count] > 0)
 					{
-						NSNumber* pace = [warmup objectForKey:@PARAM_INTERVAL_PACE];
-						NSNumber* duration = [warmup objectForKey:@PARAM_INTERVAL_DURATION];
+						NSNumber* pace = [cooldown objectForKey:@PARAM_INTERVAL_PACE];
+						NSNumber* duration = [cooldown objectForKey:@PARAM_INTERVAL_DURATION];
 						double distance = [pace doubleValue] * [duration doubleValue];
 
 						AddWorkoutInterval([workoutId UTF8String], 1, [pace doubleValue], distance, 0.0, 0.0);
@@ -3167,9 +3167,13 @@ void attributeNameCallback(const char* name, void* context)
 	Goal goal = [Preferences workoutGoal];
 	GoalType goalType = [Preferences workoutGoalType];
 	time_t goalDate = [Preferences workoutGoalDate];
+	DayType preferredLongRunDay = [Preferences workoutLongRunDay];
+	bool allowSwims = [Preferences workoutsCanIncludeSwims];
+	bool allowBikeRides = [Preferences workoutsCanIncludeBikeRides];
+	bool allowRuns = true;
 
 	// Run the algorithm.
-	return GenerateWorkouts(goal, goalType, goalDate);
+	return GenerateWorkouts(goal, goalType, goalDate, preferredLongRunDay, allowSwims, allowBikeRides, allowRuns);
 }
 
 /// @brief Retrieve planned workouts from the database.

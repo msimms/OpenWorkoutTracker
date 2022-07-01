@@ -2150,120 +2150,120 @@ extern "C" {
 			{
 				switch (sensor)
 				{
-					case SENSOR_TYPE_UNKNOWN:
-						break;
-					case SENSOR_TYPE_ACCELEROMETER:
-						if (summary.accelerometerReadings.size() == 0)
+				case SENSOR_TYPE_UNKNOWN:
+					break;
+				case SENSOR_TYPE_ACCELEROMETER:
+					if (summary.accelerometerReadings.size() == 0)
+					{
+						if (g_pDatabase->RetrieveActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings))
 						{
-							if (g_pDatabase->RetrieveActivityAccelerometerReadings(summary.activityId, summary.accelerometerReadings))
+							for (auto iter = summary.accelerometerReadings.begin(); iter != summary.accelerometerReadings.end(); ++iter)
 							{
-								for (auto iter = summary.accelerometerReadings.begin(); iter != summary.accelerometerReadings.end(); ++iter)
-								{
-									summary.pActivity->ProcessSensorReading((*iter));
-									if (callback)
-										callback(summary.activityId.c_str(), context);
-								}
-								result = true;
+								summary.pActivity->ProcessSensorReading((*iter));
+								if (callback)
+									callback(summary.activityId.c_str(), context);
 							}
-						}
-						else
-						{
 							result = true;
 						}
-						break;
-					case SENSOR_TYPE_LOCATION:
-						if (summary.locationPoints.size() == 0)
-						{
-							if (g_pDatabase->RetrieveActivityPositionReadings(summary.activityId, summary.locationPoints))
-							{
-								for (auto iter = summary.locationPoints.begin(); iter != summary.locationPoints.end(); ++iter)
-								{
-									summary.pActivity->ProcessSensorReading((*iter));
-									if (callback)
-										callback(summary.activityId.c_str(), context);
-								}
-								result = true;
-							}
-						}
-						else
-						{
-							result = true;
-						}
-						break;
-					case SENSOR_TYPE_HEART_RATE:
-						if (summary.heartRateMonitorReadings.size() == 0)
-						{
-							if (g_pDatabase->RetrieveActivityHeartRateMonitorReadings(summary.activityId, summary.heartRateMonitorReadings))
-							{
-								for (auto iter = summary.heartRateMonitorReadings.begin(); iter != summary.heartRateMonitorReadings.end(); ++iter)
-								{
-									const SensorReading& reading = (*iter);
-									summary.pActivity->ProcessSensorReading(reading);
-									if (callback)
-										callback(summary.activityId.c_str(), context);
-								}
-								result = true;
-							}
-						}
-						else
-						{
-							result = true;
-						}
-						break;
-					case SENSOR_TYPE_CADENCE:
-						if (summary.cadenceReadings.size() == 0)
-						{
-							if (g_pDatabase->RetrieveActivityCadenceReadings(summary.activityId, summary.cadenceReadings))
-							{
-								for (auto iter = summary.cadenceReadings.begin(); iter != summary.cadenceReadings.end(); ++iter)
-								{
-									const SensorReading& reading = (*iter);
-									summary.pActivity->ProcessSensorReading(reading);
-									if (callback)
-										callback(summary.activityId.c_str(), context);
-								}
-								result = true;
-							}
-						}
-						else
-						{
-							result = true;
-						}
-						break;
-					case SENSOR_TYPE_WHEEL_SPEED:
+					}
+					else
+					{
 						result = true;
-						break;
-					case SENSOR_TYPE_POWER:
-						if (summary.powerReadings.size() == 0)
+					}
+					break;
+				case SENSOR_TYPE_LOCATION:
+					if (summary.locationPoints.size() == 0)
+					{
+						if (g_pDatabase->RetrieveActivityPositionReadings(summary.activityId, summary.locationPoints))
 						{
-							if (g_pDatabase->RetrieveActivityPowerMeterReadings(summary.activityId, summary.powerReadings))
+							for (auto iter = summary.locationPoints.begin(); iter != summary.locationPoints.end(); ++iter)
 							{
-								for (auto iter = summary.powerReadings.begin(); iter != summary.powerReadings.end(); ++iter)
-								{
-									const SensorReading& reading = (*iter);
-									summary.pActivity->ProcessSensorReading(reading);
-									if (callback)
-										callback(summary.activityId.c_str(), context);
-								}
-								result = true;
+								summary.pActivity->ProcessSensorReading((*iter));
+								if (callback)
+									callback(summary.activityId.c_str(), context);
 							}
-						}
-						else
-						{
 							result = true;
 						}
-						break;
-					case SENSOR_TYPE_FOOT_POD:
-					case SENSOR_TYPE_SCALE:
-					case SENSOR_TYPE_LIGHT:
-					case SENSOR_TYPE_RADAR:
-					case SENSOR_TYPE_GOPRO:
-					case SENSOR_TYPE_NEARBY:
+					}
+					else
+					{
 						result = true;
-						break;
-					case NUM_SENSOR_TYPES:
-						result = false;
-						break;
+					}
+					break;
+				case SENSOR_TYPE_HEART_RATE:
+					if (summary.heartRateMonitorReadings.size() == 0)
+					{
+						if (g_pDatabase->RetrieveActivityHeartRateMonitorReadings(summary.activityId, summary.heartRateMonitorReadings))
+						{
+							for (auto iter = summary.heartRateMonitorReadings.begin(); iter != summary.heartRateMonitorReadings.end(); ++iter)
+							{
+								const SensorReading& reading = (*iter);
+								summary.pActivity->ProcessSensorReading(reading);
+								if (callback)
+									callback(summary.activityId.c_str(), context);
+							}
+							result = true;
+						}
+					}
+					else
+					{
+						result = true;
+					}
+					break;
+				case SENSOR_TYPE_CADENCE:
+					if (summary.cadenceReadings.size() == 0)
+					{
+						if (g_pDatabase->RetrieveActivityCadenceReadings(summary.activityId, summary.cadenceReadings))
+						{
+							for (auto iter = summary.cadenceReadings.begin(); iter != summary.cadenceReadings.end(); ++iter)
+							{
+								const SensorReading& reading = (*iter);
+								summary.pActivity->ProcessSensorReading(reading);
+								if (callback)
+									callback(summary.activityId.c_str(), context);
+							}
+							result = true;
+						}
+					}
+					else
+					{
+						result = true;
+					}
+					break;
+				case SENSOR_TYPE_WHEEL_SPEED:
+					result = true;
+					break;
+				case SENSOR_TYPE_POWER:
+					if (summary.powerReadings.size() == 0)
+					{
+						if (g_pDatabase->RetrieveActivityPowerMeterReadings(summary.activityId, summary.powerReadings))
+						{
+							for (auto iter = summary.powerReadings.begin(); iter != summary.powerReadings.end(); ++iter)
+							{
+								const SensorReading& reading = (*iter);
+								summary.pActivity->ProcessSensorReading(reading);
+								if (callback)
+									callback(summary.activityId.c_str(), context);
+							}
+							result = true;
+						}
+					}
+					else
+					{
+						result = true;
+					}
+					break;
+				case SENSOR_TYPE_FOOT_POD:
+				case SENSOR_TYPE_SCALE:
+				case SENSOR_TYPE_LIGHT:
+				case SENSOR_TYPE_RADAR:
+				case SENSOR_TYPE_GOPRO:
+				case SENSOR_TYPE_NEARBY:
+					result = true;
+					break;
+				case NUM_SENSOR_TYPES:
+					result = false;
+					break;
 				}
 			}
 		}
@@ -2913,7 +2913,7 @@ extern "C" {
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate)
+	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool allowSwims, bool allowBikeRides, bool allowRuns)
 	{
 		bool result = false;
 
@@ -2925,7 +2925,7 @@ extern "C" {
 			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate);
 
 			// Generate new workouts.
-			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
+			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs, allowSwims, allowBikeRides, allowRuns);
 
 			// Delete old workouts.
 			result = g_pDatabase->DeleteAllWorkouts();
@@ -3180,7 +3180,9 @@ extern "C" {
 		if (temp.compare("Open Water Swim") == 0)
 			return WORKOUT_TYPE_OPEN_WATER_SWIM;
 		if (temp.compare("Pool Swim") == 0)
-			return WORKOUT_TYPE_POOL_WATER_SWIM;
+			return WORKOUT_TYPE_POOL_SWIM;
+		if (temp.compare("Technique Swim") == 0)
+			return WORKOUT_TYPE_TECHNIQUE_SWIM;
 		return WORKOUT_TYPE_REST;
 	}
 
@@ -3935,17 +3937,17 @@ extern "C" {
 				{
 					switch (result.valueType)
 					{
-						case TYPE_DOUBLE:
-							result.value.doubleVal += currentResult.value.doubleVal;
-							break;
-						case TYPE_INTEGER:
-							result.value.intVal    += currentResult.value.intVal;
-							break;
-						case TYPE_TIME:
-							result.value.timeVal   += currentResult.value.timeVal;
-							break;
-						case TYPE_NOT_SET:
-							break;
+					case TYPE_DOUBLE:
+						result.value.doubleVal += currentResult.value.doubleVal;
+						break;
+					case TYPE_INTEGER:
+						result.value.intVal    += currentResult.value.intVal;
+						break;
+					case TYPE_TIME:
+						result.value.timeVal   += currentResult.value.timeVal;
+						break;
+					case TYPE_NOT_SET:
+						break;
 					}
 				}
 			}
@@ -3986,17 +3988,17 @@ extern "C" {
 					{
 						switch (result.valueType)
 						{
-							case TYPE_DOUBLE:
-								result.value.doubleVal += currentResult.value.doubleVal;
-								break;
-							case TYPE_INTEGER:
-								result.value.intVal    += currentResult.value.intVal;
-								break;
-							case TYPE_TIME:
-								result.value.timeVal   += currentResult.value.timeVal;
-								break;
-							case TYPE_NOT_SET:
-								break;
+						case TYPE_DOUBLE:
+							result.value.doubleVal += currentResult.value.doubleVal;
+							break;
+						case TYPE_INTEGER:
+							result.value.intVal    += currentResult.value.intVal;
+							break;
+						case TYPE_TIME:
+							result.value.timeVal   += currentResult.value.timeVal;
+							break;
+						case TYPE_NOT_SET:
+							break;
 						}
 					}
 				}
@@ -4045,53 +4047,53 @@ extern "C" {
 					{
 						switch (result.valueType)
 						{
-							case TYPE_DOUBLE:
-								if (smallestIsBest)
-								{
-									if (result.value.doubleVal > currentResult.value.doubleVal)
-									{
-										result = currentResult;
-										activityId = summary.activityId;
-									}
-								}
-								else if (result.value.doubleVal < currentResult.value.doubleVal)
+						case TYPE_DOUBLE:
+							if (smallestIsBest)
+							{
+								if (result.value.doubleVal > currentResult.value.doubleVal)
 								{
 									result = currentResult;
 									activityId = summary.activityId;
 								}
-								break;
-							case TYPE_INTEGER:
-								if (smallestIsBest)
-								{
-									if (result.value.intVal > currentResult.value.intVal)
-									{
-										result = currentResult;
-										activityId = summary.activityId;
-									}
-								}
-								else if (result.value.intVal < currentResult.value.intVal)
-								{
-									result = currentResult;
-									activityId = summary.activityId;
-								}
-								break;
-							case TYPE_TIME:
-								if (smallestIsBest)
-								{
-									if (result.value.timeVal > currentResult.value.timeVal)
-									{
-										result = currentResult;
-										activityId = summary.activityId;
-									}
-								}
-								else if (result.value.timeVal < currentResult.value.timeVal)
+							}
+							else if (result.value.doubleVal < currentResult.value.doubleVal)
+							{
+								result = currentResult;
+								activityId = summary.activityId;
+							}
+							break;
+						case TYPE_INTEGER:
+							if (smallestIsBest)
+							{
+								if (result.value.intVal > currentResult.value.intVal)
 								{
 									result = currentResult;
 									activityId = summary.activityId;
 								}
-								break;
-							case TYPE_NOT_SET:
-								break;
+							}
+							else if (result.value.intVal < currentResult.value.intVal)
+							{
+								result = currentResult;
+								activityId = summary.activityId;
+							}
+							break;
+						case TYPE_TIME:
+							if (smallestIsBest)
+							{
+								if (result.value.timeVal > currentResult.value.timeVal)
+								{
+									result = currentResult;
+									activityId = summary.activityId;
+								}
+							}
+							else if (result.value.timeVal < currentResult.value.timeVal)
+							{
+								result = currentResult;
+								activityId = summary.activityId;
+							}
+							break;
+						case TYPE_NOT_SET:
+							break;
 						}
 					}
 				}

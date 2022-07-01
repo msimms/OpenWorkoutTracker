@@ -19,7 +19,10 @@ public:
 	RunPlanGenerator();
 	virtual ~RunPlanGenerator();
 
+	/// @brief Utility function for creating a technique swim.
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
+
+	/// @brief Generates the workouts for the next week, but doesn't schedule them.
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 	
 private:

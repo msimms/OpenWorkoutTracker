@@ -22,7 +22,8 @@ typedef enum WorkoutType
 	WORKOUT_TYPE_EASY_RIDE,           // A bike ride at an easy pace/power
 	WORKOUT_TYPE_SWEET_SPOT_RIDE,     // A bike ride with intervals just below threshold power
 	WORKOUT_TYPE_OPEN_WATER_SWIM,
-	WORKOUT_TYPE_POOL_WATER_SWIM,
+	WORKOUT_TYPE_POOL_SWIM,
+	WORKOUT_TYPE_TECHNIQUE_SWIM,
 } WorkoutType;
 
 #endif

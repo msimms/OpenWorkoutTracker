@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "ActivityAttributeType.h"
 #import "ActivityLevel.h"
+#import "DayType.h"
 #import "Gender.h"
 
 #import <time.h>
@@ -23,6 +24,8 @@
 + (NSString*)formatDateFromTimeStruct:(const struct tm*)date;
 + (NSString*)formatSeconds:(uint64_t)seconds;
 + (NSString*)activityLevelToStr:(ActivityLevel)level;
++ (NSString*)boolToStr:(BOOL)value;
++ (NSString*)dayToStr:(DayType)day;
 + (NSString*)genderToStr:(Gender)gender;
 + (NSString*)bytesToHexStr:(NSData*)data;
 + (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds;

@@ -6,14 +6,22 @@
 
 #include "PlanGenerator.h"
 
-class SwimPlanGenerator
+class SwimPlanGenerator : PlanGenerator
 {
 public:
 	SwimPlanGenerator();
 	virtual ~SwimPlanGenerator();
 
+	/// @brief Utility function for creating a technique swim.
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
+
+	/// @brief Generates the workouts for the next week, but doesn't schedule them.
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+
+private:
+	Workout* GenerateOpenWaterSwim();
+	Workout* GeneratePoolSwim();
+	Workout* GenerateTechniqueSwim();
 };
 
 #endif

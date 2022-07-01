@@ -16,6 +16,7 @@
 #include "SwimPlanGenerator.h"
 #include "TrainingPaceCalculator.h"
 #include "TrainingPhilosophyType.h"
+#include "UnitConversionFactors.h"
 #include "UnitMgr.h"
 #include "WorkoutPlanInputs.h"
 
@@ -136,6 +137,18 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunWeek2));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_4, m_longestRunWeek4));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_1, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_2, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_3, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_4, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_1, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_2, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_3, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_4, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4, 0.0));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
@@ -147,7 +160,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	return inputs;
 }
 
-std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
+std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, bool allowSwims, bool allowBikeRides, bool allowRuns)
 {
 	SwimPlanGenerator swimGen;
 	BikePlanGenerator bikeGen;
@@ -155,19 +168,29 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 	TrainingPhilosophyType trainingIntensityDist = TRAINING_PHILOSOPHY_POLARIZED;
 	std::vector<Workout*> workouts;
 
-	if (!swimGen.IsWorkoutPlanPossible(inputs))
-		return workouts;
-	if (!bikeGen.IsWorkoutPlanPossible(inputs))
-		return workouts;
-	if (!runGen.IsWorkoutPlanPossible(inputs))
-		return workouts;
+	if (allowSwims)
+	{
+		if (!swimGen.IsWorkoutPlanPossible(inputs))
+			return workouts;
+	}
+	if (allowBikeRides)
+	{
+		if (!bikeGen.IsWorkoutPlanPossible(inputs))
+			return workouts;
+	}
+	if (allowRuns)
+	{
+		if (!runGen.IsWorkoutPlanPossible(inputs))
+			return workouts;
+	}
 
 	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
 
-	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
+	workouts.insert(workouts.end(), swimWorkouts.begin(), swimWorkouts.end());
 	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());
+	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
 
 	return workouts;
 }
@@ -278,29 +301,49 @@ void WorkoutPlanGenerator::CalculateGoalDistances(std::map<std::string, double>&
 
 	switch (goal)
 	{
-		case GOAL_FITNESS:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
-			break;
-		case GOAL_5K_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
-			break;
-		case GOAL_10K_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 10000.0;
-			break;
-		case GOAL_15K_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 15000.0;
-			break;
-		case GOAL_HALF_MARATHON_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_HALF_MARATHON;
-			break;
-		case GOAL_MARATHON_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_MARATHON;
-			break;
-		case GOAL_50K_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 50000.0;
-			break;
-		case GOAL_50_MILE_RUN:
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_50_MILE;
-			break;
+	case GOAL_FITNESS:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+		break;
+	case GOAL_5K_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+		break;
+	case GOAL_10K_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 10000.0;
+		break;
+	case GOAL_15K_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 15000.0;
+		break;
+	case GOAL_HALF_MARATHON_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_HALF_MARATHON;
+		break;
+	case GOAL_MARATHON_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_MARATHON;
+		break;
+	case GOAL_50K_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 50000.0;
+		break;
+	case GOAL_50_MILE_RUN:
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_50_MILE;
+		break;
+	case GOAL_SPRINT_TRIATHLON:
+		inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = 500.0;
+		inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = 20000.0;
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+		break;
+	case GOAL_OLYMPIC_TRIATHLON:
+		inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = 1500.0;
+		inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = 40000.0;
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 10000.0;
+		break;
+	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
+		inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = 1.2 * METERS_PER_MILE;
+		inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = 56.0 * METERS_PER_MILE;
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_HALF_MARATHON;
+		break;
+	case GOAL_IRON_DISTANCE_TRIATHLON:
+		inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = 2.4 * METERS_PER_MILE;
+		inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = 112.0 * METERS_PER_MILE;
+		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = METERS_PER_MARATHON;
+		break;
 	}
 }

@@ -10,6 +10,7 @@
 "15K Run" = "15K Run";
 "50K Run" = "50K Run";
 "50 Mile Run" = "50 Mile Run";
+"A goal date has not been specified." = "A goal date has not been specified.";
 "About" = "About";
 "Active" = "Active";
 "Activity Level" = "Activity Level";
@@ -130,6 +131,7 @@
 "Finished" = "Finished";
 "Fitness" = "Fitness";
 "Fix Repetition Count" = "Fix Repetition Count";
+"Friday" = "Friday";
 "Friends" = "Friends";
 "ft" = "ft";
 "Gap to Target Pace" = "Gap to Target Pace";
@@ -140,6 +142,7 @@
 "GPX File" = "GPX File";
 "Grade Adjusted Pace" = "Grade Adjusted Pace";
 "Gradient" = "Gradient";
+"Half Iron Distance Triathlon" = "Half Iron Distance Triathlon";
 "Half Marathon" = "Half Marathon";
 "HealthKit permissions were not granted. This will limit the application's functionality." = "HealthKit permissions were not granted. This will limit the application's functionality.";
 "HealthKit is unavailable." = "HealthKit is unavailable.";
@@ -170,12 +173,14 @@
 "Intervals" = "Intervals";
 "Invalid or no input." = "Invalid or no input.";
 "Invite" = "Invite";
+"Iron Distance Triathlon" = "Iron Distance Triathlon";
 "kgs" = "kgs";
 "Kilometers" = "Kilometers";
 "Lap" = "Lap";
 "Lap and Split Times" = "Lap and Split Times";
 "Lap Times" = "Lap Times";
 "Layout" = "Layout";
+"Long Run Day" = "Long Run Day";
 "lbs" = "lbs";
 "Light" = "Light";
 "Location" = "Location";
@@ -203,6 +208,7 @@
 "mins/km" = "mins/km";
 "mins/mile" = "mins/mile";
 "Moderate" = "Moderate";
+"Monday" = "Monday";
 "More" = "More";
 "Mountain Biking" = "Mountain Biking";
 "Moving Pace" = "Moving Pace";
@@ -224,6 +230,7 @@
 "On" = "On";
 "Off" = "Off";
 "Ok" = "Ok";
+"Olympic Triathlon" = "Olympic Triathlon";
 "Open Water Swimming" = "Open Water Swimming";
 "Overlay" = "Overlay";
 "Overview" = "Overview";
@@ -241,6 +248,7 @@
 "Power" = "Power";
 "Power Meter" = "Power Meter";
 "Power Zone" = "Power Zone";
+"Preferences" = "Preferences";
 "Previous" = "Previous";
 "Profile" = "Profile";
 "Pull Up" = "Pull Up";
@@ -263,6 +271,7 @@
 "Running" = "Running";
 "Running Speed and Cadence" = "Running Speed and Cadence";
 "Satellite View" = "Satellite View";
+"Saturday" = "Saturday";
 "Save" = "Save";
 "Save Files to iCloud Drive" = "Save Files to iCloud Drive";
 "Scale" = "Scale";
@@ -284,6 +293,7 @@
 "Sounds" = "Sounds";
 "Speed" = "Speed";
 "Split Times" = "Split Times";
+"Sprint Triathlon" = "Sprint Triathlon";
 "Squat" = "Squat";
 "Standard View" = "Standard View";
 "Start" = "Start";
@@ -301,12 +311,15 @@
 "Successful login." = "Successful login.";
 "Suggested Workouts" = "Suggested Workouts";
 "Summary" = "Summary";
+"Sunday" = "Sunday";
 "Superlatives" = "Superlatives";
+"Swims" = "Swims";
 "Synchronization" = "Synchronization";
 "Synched" = "Synched";
 "Tag" = "Tag";
 "Tags" = "Tags";
 "TCX File" = "TCX File";
+"Technique Swim" = "Technique Swim";
 "The data file is attached." = "The data file is attached.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "There are risks with exercise. Do not start an exercise program without consulting your doctor.";
 "There are no lap times to display." = "There are no lap times to display.";
@@ -318,6 +331,7 @@
 "This feature is not implemented." = "This feature is not implemented.";
 "This will delete all of your data. Do you wish to continue? This cannot be undone." = "This will delete all of your data. Do you wish to continue? This cannot be undone.";
 "Threat(s)" = "Threat(s)";
+"Thursday" = "Thursday";
 "Time" = "Time";
 "Time in Motion" = "Time In Motion";
 "Time Interval" = "Time Interval";
@@ -332,6 +346,7 @@
 "Treadmill running requires the use of a Bluetooth foot pod." = "Treadmill running requires the use of a Bluetooth foot pod.";
 "Triathlon" = "Triathlon";
 "Trim" = "Trim";
+"Tuesday" = "Tuesday";
 "Update" = "Update";
 "Update Rate" = "Update Rate";
 "Unimplemented Feature" = "Unimplemented Feature";
@@ -347,6 +362,7 @@
 "Walking" = "Walking";
 "watts" = "watts";
 "Web" = "Web";
+"Wednesday" = "Wednesday";
 "Weight" = "Weight";
 "Weight:" = "Weight:";
 "What is the host name of the broadcast server?" = "What is the host name of the broadcast server?";

@@ -69,7 +69,7 @@ typedef enum ProfilePerformanceRows
 
 	[self.datePicker setHidden:TRUE];
 	[self.datePicker setDatePickerMode:UIDatePickerModeDate];
-	[self.datePicker addTarget:self action:@selector(updateLabel:) forControlEvents:UIControlEventValueChanged];
+	[self.datePicker addTarget:self action:@selector(updateBirthDate:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (BOOL)shouldAutorotate
@@ -107,7 +107,7 @@ typedef enum ProfilePerformanceRows
 
 #pragma mark methods for getting the result from the UIPickerView
 
-- (void)updateLabel:(id)sender
+- (void)updateBirthDate:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	NSDate* newDate = [self.datePicker date];

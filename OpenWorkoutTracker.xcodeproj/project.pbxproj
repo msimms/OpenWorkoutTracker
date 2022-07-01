@@ -710,6 +710,7 @@
 		27384FC72778F987002BD39D /* BaseTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTest.h; sourceTree = "<group>"; };
 		27384FC92778FBA9002BD39D /* BaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTest.m; sourceTree = "<group>"; };
 		273F732B25AF274000484A29 /* SyncDestination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = SOURCE_ROOT; };
+		2740B17B286E4378007B6285 /* DayType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DayType.h; path = Activities/DayType.h; sourceTree = SOURCE_ROOT; };
 		274DC6FF285959A6005AA073 /* PlanGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlanGenerator.h; path = Activities/PlanGenerator.h; sourceTree = SOURCE_ROOT; };
 		274DC711285CEA52005AA073 /* NearbyInteractions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NearbyInteractions.h; path = IOS/Sensors/NearbyInteractions.h; sourceTree = SOURCE_ROOT; };
 		274DC71E285CEA52005AA073 /* NearbyInteractions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NearbyInteractions.m; path = IOS/Sensors/NearbyInteractions.m; sourceTree = SOURCE_ROOT; };
@@ -1747,6 +1748,7 @@
 				27C0842219BFD063007CE934 /* ChinUpAnalyzer.h */,
 				27C0842319BFD063007CE934 /* Cycling.cpp */,
 				27C0842419BFD063007CE934 /* Cycling.h */,
+				2740B17B286E4378007B6285 /* DayType.h */,
 				27CF010824D1E87A00263CEC /* FtpCalculator.cpp */,
 				27CF011724D1E87A00263CEC /* FtpCalculator.h */,
 				2772147F272B510F0032DF85 /* Goal.h */,

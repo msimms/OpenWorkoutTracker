@@ -10,6 +10,7 @@
 "15K Run" = "Carrera de 15 km";
 "50K Run" = "Carrera de 50 km";
 "50 Mile Run" = "Carrera de 50 millas";
+"A goal date has not been specified." = "No se ha especificado una fecha objetivo.";
 "About" = "Sobre";
 "Active" = "Activo";
 "Activity Level" = "Nivel de Actividad";
@@ -130,6 +131,7 @@
 "Finished" = "Terminado";
 "Fitness" = "Aptitud";
 "Fix Repetition Count" = "Fijar el Número de los Repetición";
+"Friday" = "Viernes";
 "Friends" = "Amigos";
 "ft" = "pies (de altura)";
 "Gap to Target Pace" = "Brecha para el Ritmo Objetivo";
@@ -140,6 +142,7 @@
 "GPX File" = "GPX Archivo";
 "Grade Adjusted Pace" = "Ritmo Ajustado por Grado";
 "Gradient" = "Inclination";
+"Half Iron Distance Triathlon" = "Triatlón Distancia Medio Hierro";
 "Half Marathon" = "Medio Maratón";
 "HealthKit permissions were not granted. This will limit the application's functionality." = "No se otorgaron permisos de HealthKit. Esto limitará la funcionalidad de la aplicación.";
 "HealthKit is unavailable." = "HealthKit no está disponible.";
@@ -170,12 +173,14 @@
 "Intervals" = "Intervalos";
 "Invalid or no input." = "Entrada no válida o no.";
 "Invite" = "Invitar";
+"Iron Distance Triathlon" = "Triatlón Distancia Hierro";
 "kgs" = "kgs";
 "Kilometers" = "Kilómetros";
 "Lap" = "Vuelta";
 "Lap and Split Times" = "Tiempos de Vueltas y Parciales";
 "Lap Times" = "Tiempos de Vueltas";
 "Layout" = "Disposición";
+"Long Run Day" = "Día de Carrera Larga";
 "lbs" = "lbs";
 "Light" = "Leve";
 "Location" = "Posición";
@@ -203,6 +208,7 @@
 "mins/km" = "mins/km";
 "mins/mile" = "mins/milla";
 "Moderate" = "Moderado";
+"Monday" = "Lunes";
 "More" = "Más";
 "Mountain Biking" = "Ciclismo de Montaña";
 "Moving Pace" = "Ritmo en Movimiento";
@@ -224,6 +230,7 @@
 "On" = "En";
 "Off" = "Apagado";
 "Ok" = "Bueno";
+"Olympic Triathlon" = "Triatlón Olímpico";
 "Open Water Swimming" = "Natación en Aguas Abiertas";
 "Overlay" = "Superposición";
 "Overview" = "Visión de Conjunto";
@@ -241,6 +248,7 @@
 "Power" = "Energía";
 "Power Meter" = "Medidor de Energía";
 "Power Zone" = "Zona de Energía";
+"Preferences" = "Preferencias";
 "Previous" = "Previo";
 "Profile" = "Perfil";
 "Pull Up" = "La Tracción";
@@ -263,6 +271,7 @@
 "Running" = "Corriendo";
 "Running Speed and Cadence" = "Velocidad y Cadencia de Corriendo";
 "Satellite View" = "Satélite Vista";
+"Saturday" = "Sábado";
 "Save" = "Guardar";
 "Save Files to iCloud Drive" = "Guardar Archivos en iCloud Drive";
 "Scale" = "Escala";
@@ -284,6 +293,7 @@
 "Sounds" = "Sonidos";
 "Speed" = "Velocidad";
 "Split Times" = "Tiempos Parciales";
+"Sprint Triathlon" = "Triatlón Sprint";
 "Squat" = "Sentadillas";
 "Standard View" = "Estándar Vista";
 "Start" = "Comienzo";
@@ -301,12 +311,15 @@
 "Successful login." = "Acceso exitoso.";
 "Suggested Workouts" = "Entrenamientos Sugeridos";
 "Summary" = "Sumario";
+"Sunday" = "Domingo";
 "Superlatives" = "Superlativos";
+"Swims" = "Nadar";
 "Synched" = "Sincronizado";
 "Synchronization" = "Sincronización";
 "Tag" = "Etiqueta";
 "Tags" = "Etiquetas";
 "TCX File" = "TCX Archivo";
+"Technique Swim" = "Técnica Natación";
 "The data file is attached." = "Se adjunta el archivo.";
 "There are risks with exercise. Do not start an exercise program without consulting your doctor." = "Hay riesgos con el ejercicio. No comience un programa de ejercicios sin consultar a su médico.";
 "There are no lap times to display." = "No hay tiempos de vueltaa para mostrar.";
@@ -318,6 +331,7 @@
 "This feature is not implemented." = "Esta función no está implementada.";
 "This will delete all of your data. Do you wish to continue? This cannot be undone." = "Esto eliminará todos sus datos. ¿Desea continuar? Esto no se puede deshacer.";
 "Threat(s)" = "Amenaza(s)";
+"Thursday" = "Jueves";
 "Time" = "Tiempo";
 "Time in Motion" = "Tiempo En Movimiento";
 "Time Interval" = "Intervalo de Tiempo";
@@ -332,6 +346,7 @@
 "Treadmill running requires the use of a Bluetooth foot pod." = "Correr Cinta de correr requiere el uso de un podómetro Bluetooth.";
 "Triathlon" = "Triatlón";
 "Trim" = "Recortar";
+"Tuesday" = "Martes";
 "Update" = "Actualizar";
 "Update Rate" = "Frecuencia de Actualización";
 "Unimplemented Feature" = "Característica No Está Implementada";
@@ -347,6 +362,7 @@
 "Walking" = "Caminar";
 "watts" = "vatios";
 "Web" = "El Internet";
+"Wednesday" = "Miércoles";
 "Weight" = "Peso";
 "Weight:" = "Peso:";
 "What is the host name of the broadcast server?" = "¿Cuál es el nombre de host del servidor de emisión?";

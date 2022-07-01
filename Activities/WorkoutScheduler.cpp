@@ -133,31 +133,27 @@ void WorkoutScheduler::RandomScheduler(Workout* workouts[], size_t numWorkouts, 
 }
 
 // Organizes the workouts into a schedule for the next week. Implements a very basic constraint solving algorithm.
-void WorkoutScheduler::ScheduleWorkouts(Workout* workouts[], size_t numWorkouts, time_t startTime)
+void WorkoutScheduler::ScheduleWorkouts(Workout* workouts[], size_t numWorkouts, time_t startTime, DayType preferredLongRunDay)
 {
 	// This will server as our calendar for next week.
 	Workout* week[DAYS_PER_WEEK] = { NULL };
 
 	// When does the user want to do long runs?
-	/*size_t preferred_long_run_day = self.user_mgr.retrieve_user_setting(Keys.PREFERRED_LONG_RUN_DAY_KEY);
-	if (preferred_long_run_day is not None)
+	for (size_t workoutIndex = 0; workoutIndex < numWorkouts; ++workoutIndex)
 	{
-		for (size_t workoutIndex = 0; workoutIndex < numWorkouts; ++workoutIndex)
+		// Long runs have a user defined constraint.
+		if (workouts[workoutIndex]->GetType() == WORKOUT_TYPE_LONG_RUN)
 		{
-			// Long runs have a user defined constraint.
-			if (workout->GetType() == Keys.WORKOUT_TYPE_LONG_RUN)
-	 		{
-				# Convert the day name to an index and ignore case.
-				try:
-					dayIndex = [x.lower() for x in InputChecker.days_of_week].index(preferred_long_run_day);
-				except:
-					dayIndex = InputChecker.days_of_week[-1]; // Default to the last day, Sunday.
-				workout->SetScheduledTime(startTime + datetime.timedelta(days=dayIndex));
-				week[dayIndex] = workout;
-				break;
-	 		}
-	 	}
-	}*/
+			// Convert the day name to an index and ignore case.
+			/*try:
+				dayIndex = [x.lower() for x in InputChecker.days_of_week].index(preferred_long_run_day);
+			except:
+				dayIndex = InputChecker.days_of_week[-1]; // Default to the last day, Sunday.
+			workout->SetScheduledTime(startTime + datetime.timedelta(days=dayIndex));
+			week[dayIndex] = workout;
+			break;*/
+		}
+	}
 
 	// Assign workouts to days. Keep track of the one with the best score.
 	// Start with a simple deterministic algorithm and then try to beat it.
