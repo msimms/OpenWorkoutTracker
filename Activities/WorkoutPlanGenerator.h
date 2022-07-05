@@ -39,21 +39,20 @@ public:
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, bool allowSwims, bool allowBikeRides, bool allowRuns);
 
 private:
-	User   m_user;            // tells us what we need to know about the user/athlete
-	double m_best5K;          // needed to compute training paces.
-	double m_longestRunWeek1; // longest run (in meters) for the most recent week
-	double m_longestRunWeek2; // longest run (in meters) for the 2nd most recent week
-	double m_longestRunWeek3; // longest run (in meters) for the 3rd most recent week
-	double m_longestRunWeek4; // longest run (in meters) for the 4th most recent week
-	size_t m_numRunsWeek1;
-	size_t m_numRunsWeek2;
-	size_t m_numRunsWeek3;
-	size_t m_numRunsWeek4;
+	User   m_user;                      // Tells us what we need to know about the user/athlete
+	double m_best5K;                    // Needed to compute training paces.
+	double m_longestRunsByWeek[4];      // Longest run for each of the recent four weeks
+	double m_longestRidesByWeek[4];     // Longest bike rides for each of the recent four weeks
+	double m_longestSwimsByWeek[4];     // Longest swims for each of the recent four weeks
+	double m_runIntensityByWeek[4];     // Total training intensity for each of the recent four weeks
+	double m_cyclingIntensityByWeek[4]; // Total training intensity for each of the recent four weeks
+	double m_swimIntensityByWeek[4];    // Total training intensity for each of the recent four weeks
+	size_t m_numRunsWeek[4];
 	double m_avgCyclingDistanceFourWeeks;
 	double m_avgRunningDistanceFourWeeks;
-	size_t m_bikeCount;       // for average bike distance
-	size_t m_runCount;        // for average run distance
-	
+	size_t m_bikeCount;                 // For average bike distance
+	size_t m_runCount;                  // For average run distance
+
 	std::map<std::string, ActivitySummary> m_additionalActivitySummaries; // populated by InsertAdditionalAttributesForWorkoutGeneration
 
 	void Reset();

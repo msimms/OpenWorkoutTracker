@@ -33,8 +33,16 @@ Workout* GeneratePoolSwim()
 	return NULL;
 }
 
+/// @brief Utility function for creating an aerobic-focused swim.
+Workout* SwimPlanGenerator::GenerateAerobicSwim(void)
+{
+	// Create the workout object.
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_POOL_SWIM, ACTIVITY_TYPE_POOL_SWIMMING);
+	return workout;
+}
+
 /// @brief Utility function for creating a technique swim.
-Workout* SwimPlanGenerator::GenerateTechniqueSwim()
+Workout* SwimPlanGenerator::GenerateTechniqueSwim(void)
 {
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TECHNIQUE_SWIM, ACTIVITY_TYPE_POOL_SWIMMING);

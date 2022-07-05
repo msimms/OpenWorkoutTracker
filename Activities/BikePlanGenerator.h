@@ -17,6 +17,12 @@ public:
 
 	/// @brief Generates the workouts for the next week, but doesn't schedule them.
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+
+private:
+	Workout* GenerateIntervalRide(void);
+	Workout* GenerateTempoRide(void);
+	Workout* GenerateEasyRide(void);
+	Workout* GenerateSweetSpotRide(void);
 };
 
 #endif

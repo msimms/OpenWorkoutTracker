@@ -11,6 +11,7 @@
 #include "Cycling.h"
 #include "FtpCalculator.h"
 #include "Measure.h"
+#include "PoolSwim.h"
 #include "Run.h"
 #include "RunPlanGenerator.h"
 #include "SwimPlanGenerator.h"
@@ -32,14 +33,16 @@ WorkoutPlanGenerator::~WorkoutPlanGenerator()
 void WorkoutPlanGenerator::Reset()
 {
 	m_best5K = (double)0.0;
-	m_longestRunWeek1 = (double)0.0;
-	m_longestRunWeek2 = (double)0.0;
-	m_longestRunWeek3 = (double)0.0;
-	m_longestRunWeek4 = (double)0.0;
-	m_numRunsWeek1 = 0;
-	m_numRunsWeek2 = 0;
-	m_numRunsWeek3 = 0;
-	m_numRunsWeek4 = 0;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		m_longestRunsByWeek[i] = 0.0;
+		m_longestRidesByWeek[i] = 0.0;
+		m_longestSwimsByWeek[i] = 0.0;
+		m_runIntensityByWeek[i] = 0.0;
+		m_cyclingIntensityByWeek[i] = 0.0;
+		m_swimIntensityByWeek[i] = 0.0;
+		m_numRunsWeek[i] = 0;
+	}
 	m_avgCyclingDistanceFourWeeks = (double)0.0;
 	m_avgRunningDistanceFourWeeks = (double)0.0;
 	m_bikeCount = 0;
@@ -66,6 +69,9 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	std::map<std::string, double> inputs;
 	time_t now = time(NULL);
 	double weeksUntilGoal = (double)0.0;
+	
+	// Make sure we don't have any leftover values from the last run.
+	this->Reset();
 
 	// Need the user's goals.
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL, goal));
@@ -133,22 +139,22 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL, 5.0));
 
 	// Store all the inputs in a dictionary.
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_1, m_longestRunWeek1));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunWeek2));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunWeek3));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_4, m_longestRunWeek4));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_1, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_2, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_3, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_4, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_1, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_2, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_3, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_4, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3, 0.0));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4, 0.0));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_1, m_longestRunsByWeek[0]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_2, m_longestRunsByWeek[1]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_3, m_longestRunsByWeek[2]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RUN_WEEK_4, m_longestRunsByWeek[3]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_1, m_longestRidesByWeek[0]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_2, m_longestRidesByWeek[1]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_3, m_longestRidesByWeek[2]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_RIDE_WEEK_4, m_longestRidesByWeek[3]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_1, m_longestSwimsByWeek[0]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_2, m_longestSwimsByWeek[1]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_3, m_longestSwimsByWeek[2]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONGEST_SWIM_WEEK_4, m_longestSwimsByWeek[3]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_1, m_runIntensityByWeek[0] + m_cyclingIntensityByWeek[0] + m_swimIntensityByWeek[0]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2, m_runIntensityByWeek[1] + m_cyclingIntensityByWeek[1] + m_swimIntensityByWeek[1]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3, m_runIntensityByWeek[2] + m_cyclingIntensityByWeek[2] + m_swimIntensityByWeek[2]));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4, m_runIntensityByWeek[3] + m_cyclingIntensityByWeek[3] + m_swimIntensityByWeek[3]));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
@@ -222,37 +228,32 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 
 					if (summary.startTime > week3CutoffTime)
 					{
-						if (activityDistance > m_longestRunWeek4)
-							m_longestRunWeek4 = activityDistance;
-						++m_numRunsWeek4;
+						if (activityDistance > m_longestRunsByWeek[3])
+							m_longestRunsByWeek[3] = activityDistance;
+						m_numRunsWeek[3] = m_numRunsWeek[3] + 1;
 					}
 					else if ((summary.startTime > week2CutoffTime) && (summary.startTime < week3CutoffTime))
 					{
-						if (activityDistance > m_longestRunWeek3)
-							m_longestRunWeek3 = activityDistance;
-						++m_numRunsWeek3;
+						if (activityDistance > m_longestRunsByWeek[2])
+							m_longestRunsByWeek[2] = activityDistance;
+						m_numRunsWeek[2] = m_numRunsWeek[2] + 1;
 					}
 					else if ((summary.startTime > week1CutoffTime) && (summary.startTime < week2CutoffTime))
 					{
-						if (activityDistance > m_longestRunWeek2)
-							m_longestRunWeek2 = activityDistance;
-						++m_numRunsWeek2;
+						if (activityDistance > m_longestRunsByWeek[1])
+							m_longestRunsByWeek[1] = activityDistance;
+						m_numRunsWeek[1] = m_numRunsWeek[1] + 1;
 					}
 					else
 					{
-						if (activityDistance > m_longestRunWeek1)
-							m_longestRunWeek1 = activityDistance;
-						++m_numRunsWeek1;
+						if (activityDistance > m_longestRunsByWeek[0])
+							m_longestRunsByWeek[0] = activityDistance;
+						m_numRunsWeek[0] = m_numRunsWeek[0] + 1;
 					}
 
 					m_avgRunningDistanceFourWeeks += activityDistance;
 					++m_runCount;
 				}
-			}
-
-			// Examine bike activity.
-			if (summary.type.compare(Cycling::Type()) == 0)
-			{
 			}
 		}
 
@@ -272,6 +273,11 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 					++m_bikeCount;
 				}
 			}
+		}
+
+		// Examine swimming activity.
+		else if (summary.type.compare(PoolSwim::Type()) == 0)
+		{
 		}
 	}
 }
