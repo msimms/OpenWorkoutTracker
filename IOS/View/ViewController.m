@@ -163,10 +163,10 @@
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 	}]];
 
-	for (NSString* name in self->activityTypes)
+	for (NSString* type in self->activityTypes)
 	{
-		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(name, nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-			[self startActivity:name];
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(type, nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[self startActivity:type];
 		}]];
 	}
 

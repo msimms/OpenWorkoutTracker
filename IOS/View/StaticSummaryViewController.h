@@ -37,8 +37,6 @@
 	NSMutableArray* notSyncedServices; // Names of services to which the activity has not been synced
 	NSArray* chartTitles;
 
-	NSInteger attributeIndex;
-
 	NSString* exportedFileName; // Name of the exported file
 	NSString* selectedExportService; // Describes where the user wants to save the file: "Email", "iCloud", etc.
 	NSInteger selectedChartIndex;

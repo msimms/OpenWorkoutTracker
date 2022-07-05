@@ -247,7 +247,7 @@ extern "C" {
 	// Functions for managing the activity name.
 	//
 
-	bool CreateActivityName(const char* const activityId, const char* const name)
+	bool UpdateActivityName(const char* const activityId, const char* const name)
 	{
 		// Sanity checks.
 		if (activityId == NULL)
@@ -301,10 +301,40 @@ extern "C" {
 	}
 
 	//
+	// Functions for managing the activity type.
+	//
+
+	bool UpdateActivityType(const char* const activityId, const char* const type)
+	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (type == NULL)
+		{
+			return false;
+		}
+		
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->UpdateActivityType(activityId, type);
+		}
+		
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
+	//
 	// Functions for managing the activity description.
 	//
 
-	bool CreateActivityDescription(const char* const activityId, const char* const description)
+	bool UpdateActivityDescription(const char* const activityId, const char* const description)
 	{
 		// Sanity checks.
 		if (activityId == NULL)

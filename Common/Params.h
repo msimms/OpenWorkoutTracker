@@ -65,5 +65,6 @@
 
 // Activities
 #define PARAM_ACTIVITY_NAME                   "name"
+#define PARAM_ACTIVITY_TYPE                   "type"
 #define PARAM_ACTIVITY_DESCRIPTION            "description"
 #define PARAM_ACTIVITY_TAGS                   "tags"

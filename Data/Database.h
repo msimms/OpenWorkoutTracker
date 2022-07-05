@@ -114,6 +114,8 @@ public:
 	bool RetrieveActivityName(const std::string& activityId, std::string& name);
 	bool UpdateActivityName(const std::string& activityId, const std::string& name);
 
+	bool UpdateActivityType(const std::string& activityId, const std::string& activityType);
+
 	bool RetrieveActivityDescription(const std::string& activityId, std::string& description);
 	bool UpdateActivityDescription(const std::string& activityId, const std::string& description);
 

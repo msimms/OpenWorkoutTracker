@@ -39,11 +39,14 @@ extern "C" {
 	bool CloseDatabase(void);
 
 	// Functions for managing the activity name.
-	bool CreateActivityName(const char* const activityId, const char* const name);
+	bool UpdateActivityName(const char* const activityId, const char* const name);
 	char* RetrieveActivityName(const char* const activityId);
 
+	// Functions for managing the activity type.
+	bool UpdateActivityType(const char* const activityId, const char* const type);
+
 	// Functions for managing the activity description.
-	bool CreateActivityDescription(const char* const activityId, const char* const description);
+	bool UpdateActivityDescription(const char* const activityId, const char* const description);
 	char* RetrieveActivityDescription(const char* const activityId);
 
 	// Functions for managing tags.

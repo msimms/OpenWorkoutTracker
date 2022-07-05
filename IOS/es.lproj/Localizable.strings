@@ -14,6 +14,7 @@
 "About" = "Sobre";
 "Active" = "Activo";
 "Activity Level" = "Nivel de Actividad";
+"Activity Type" = "Tipo de Actividad";
 "Add Bike Profile" = "Añadir un Perfil de Bicicleta";
 "Add a New Interval" = "Añadir un Intervalo Nuevo";
 "Additional Weight" = "Peso Additional";
@@ -50,6 +51,7 @@
 "Calories" = "Calorías";
 "Cancel" = "Cancelar";
 "Caution" = "Precaución";
+"Change Activity Type" = "Cambiar Tipo de Actividad";
 "Charts" = "Gráficos";
 "Clear Wheel Diameter" = "Reajustar el Diámetro de la Rueda";
 "Cloud Services" = "Servicios en la Nube";

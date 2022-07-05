@@ -25,49 +25,51 @@
 #import "StringUtils.h"
 #import "TagViewController.h"
 
-#define ROW_TITLE_SPLIT_TIMES            NSLocalizedString(@"Split Times", nil)
-#define ROW_TITLE_LAP_TIMES              NSLocalizedString(@"Lap Times", nil)
+#define ROW_TITLE_SPLIT_TIMES             NSLocalizedString(@"Split Times", nil)
+#define ROW_TITLE_LAP_TIMES               NSLocalizedString(@"Lap Times", nil)
 
-#define SECTION_TITLE_NAME               NSLocalizedString(@"Name", nil)
-#define SECTION_TITLE_DESCRIPTION        NSLocalizedString(@"Description", nil)
-#define SECTION_TITLE_START_AND_STOP     NSLocalizedString(@"Start and Finish", nil)
-#define SECTION_TITLE_LAP_AND_SPLIT      NSLocalizedString(@"Lap and Split Times", nil)
-#define SECTION_TITLE_CHARTS             NSLocalizedString(@"Charts", nil)
-#define SECTION_TITLE_ATTRIBUTES         NSLocalizedString(@"Summary", nil)
-#define SECTION_TITLE_SUPERLATIVES       NSLocalizedString(@"Superlatives", nil)
-#define SECTION_TITLE_SYNC               NSLocalizedString(@"Synchronization", nil)
-#define SECTION_TITLE_INTERNAL           NSLocalizedString(@"Internal", nil)
+#define SECTION_TITLE_NAME                NSLocalizedString(@"Name", nil)
+#define SECTION_TITLE_DESCRIPTION         NSLocalizedString(@"Description", nil)
+#define SECTION_TITLE_START_AND_STOP      NSLocalizedString(@"Start and Finish", nil)
+#define SECTION_TITLE_LAP_AND_SPLIT       NSLocalizedString(@"Lap and Split Times", nil)
+#define SECTION_TITLE_CHARTS              NSLocalizedString(@"Charts", nil)
+#define SECTION_TITLE_ATTRIBUTES          NSLocalizedString(@"Summary", nil)
+#define SECTION_TITLE_SUPERLATIVES        NSLocalizedString(@"Superlatives", nil)
+#define SECTION_TITLE_SYNC                NSLocalizedString(@"Synchronization", nil)
+#define SECTION_TITLE_INTERNAL            NSLocalizedString(@"Internal", nil)
 
-#define ACTION_SHEET_BUTTON_GPX          NSLocalizedString(@"GPX File", nil)
-#define ACTION_SHEET_BUTTON_TCX          NSLocalizedString(@"TCX File", nil)
-#define ACTION_SHEET_BUTTON_FIT          NSLocalizedString(@"FIT File", nil)
-#define ACTION_SHEET_BUTTON_CSV          NSLocalizedString(@"CSV File", nil)
+#define ACTION_SHEET_BUTTON_GPX           NSLocalizedString(@"GPX File", nil)
+#define ACTION_SHEET_BUTTON_TCX           NSLocalizedString(@"TCX File", nil)
+#define ACTION_SHEET_BUTTON_FIT           NSLocalizedString(@"FIT File", nil)
+#define ACTION_SHEET_BUTTON_CSV           NSLocalizedString(@"CSV File", nil)
 
-#define ACTION_SHEET_TRIM_FIRST_1        NSLocalizedString(@"Delete 1st Second", nil)
-#define ACTION_SHEET_TRIM_FIRST_5        NSLocalizedString(@"Delete 1st Five Seconds", nil)
-#define ACTION_SHEET_TRIM_FIRST_30       NSLocalizedString(@"Delete 1st Thirty Seconds", nil)
-#define ACTION_SHEET_TRIM_SECOND_1       NSLocalizedString(@"Delete Last Second", nil)
-#define ACTION_SHEET_TRIM_SECOND_5       NSLocalizedString(@"Delete Last Five Seconds", nil)
-#define ACTION_SHEET_TRIM_SECOND_30      NSLocalizedString(@"Delete Last Thirty Seconds", nil)
-#define ACTION_SHEET_FIX_REPS            NSLocalizedString(@"Fix Repetition Count", nil)
+#define ACTION_SHEET_TRIM_FIRST_1         NSLocalizedString(@"Delete 1st Second", nil)
+#define ACTION_SHEET_TRIM_FIRST_5         NSLocalizedString(@"Delete 1st Five Seconds", nil)
+#define ACTION_SHEET_TRIM_FIRST_30        NSLocalizedString(@"Delete 1st Thirty Seconds", nil)
+#define ACTION_SHEET_TRIM_SECOND_1        NSLocalizedString(@"Delete Last Second", nil)
+#define ACTION_SHEET_TRIM_SECOND_5        NSLocalizedString(@"Delete Last Five Seconds", nil)
+#define ACTION_SHEET_TRIM_SECOND_30       NSLocalizedString(@"Delete Last Thirty Seconds", nil)
+#define ACTION_SHEET_FIX_REPS             NSLocalizedString(@"Fix Repetition Count", nil)
+#define ACTION_SHEET_CHANGE_ACTIVITY_TYPE NSLocalizedString(@"Change Activity Type", nil)
 
-#define ACTION_SHEET_TITLE_EXPORT        NSLocalizedString(@"Export using", nil)
-#define ACTION_SHEET_TITLE_FILE_FORMAT   NSLocalizedString(@"Export as", nil)
-#define ACTION_SHEET_TITLE_EDIT          NSLocalizedString(@"Edit", nil)
-#define ACTION_SHEET_TITLE_ACTIVITY_NAME NSLocalizedString(@"Activity Name", nil)
-#define ACTION_SHEET_TITLE_ACTIVITY_DESC NSLocalizedString(@"Activity Description", nil)
+#define ACTION_SHEET_TITLE_EXPORT         NSLocalizedString(@"Export using", nil)
+#define ACTION_SHEET_TITLE_FILE_FORMAT    NSLocalizedString(@"Export as", nil)
+#define ACTION_SHEET_TITLE_EDIT           NSLocalizedString(@"Edit", nil)
+#define ACTION_SHEET_TITLE_ACTIVITY_NAME  NSLocalizedString(@"Activity Name", nil)
+#define ACTION_SHEET_TITLE_ACTIVITY_TYPE  NSLocalizedString(@"Activity Type", nil)
+#define ACTION_SHEET_TITLE_ACTIVITY_DESC  NSLocalizedString(@"Activity Description", nil)
 
-#define START_PIN_NAME                   NSLocalizedString(@"Start", nil)
-#define FINISH_PIN_NAME                  NSLocalizedString(@"Finish", nil)
+#define START_PIN_NAME                    NSLocalizedString(@"Start", nil)
+#define FINISH_PIN_NAME                   NSLocalizedString(@"Finish", nil)
 
-#define MSG_DELETE_QUESTION              NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
-#define MSG_FIX_REPS                     NSLocalizedString(@"Enter the correct number of repetitions", nil)
-#define MSG_EXPORT_QUESTION              NSLocalizedString(@"Do you want to export the actvity?", nil)
-#define MSG_LOAD_FAILED                  NSLocalizedString(@"Failed to load the activity.", nil)
-#define MSG_ENTER_A_NEW_ACTIVITY_NAME    NSLocalizedString(@"Enter a new activity name.", nil)
-#define MSG_ENTER_A_NEW_ACTIVITY_DESC    NSLocalizedString(@"Enter a new activity description.", nil)
+#define MSG_DELETE_QUESTION               NSLocalizedString(@"Are you sure you want to delete this workout?", nil)
+#define MSG_FIX_REPS                      NSLocalizedString(@"Enter the correct number of repetitions", nil)
+#define MSG_EXPORT_QUESTION               NSLocalizedString(@"Do you want to export the actvity?", nil)
+#define MSG_LOAD_FAILED                   NSLocalizedString(@"Failed to load the activity.", nil)
+#define MSG_ENTER_A_NEW_ACTIVITY_NAME     NSLocalizedString(@"Enter a new activity name.", nil)
+#define MSG_ENTER_A_NEW_ACTIVITY_DESC     NSLocalizedString(@"Enter a new activity description.", nil)
 
-#define EMAIL_TITLE                      NSLocalizedString(@"Workout Data", nil)
+#define EMAIL_TITLE                       NSLocalizedString(@"Workout Data", nil)
 
 typedef enum Time1Rows
 {
@@ -145,7 +147,6 @@ typedef enum ExportFileTypeButtons
 	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 	if (self)
 	{
-		self->attributeIndex = 0;
 		self->selectedChartIndex = 0;
 		self->activityId = nil;
 
@@ -698,6 +699,32 @@ typedef enum ExportFileTypeButtons
 	}
 }
 
+- (void)changeActivityType
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+	// Display the list of activities from which the user may choose.
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:ACTION_SHEET_TITLE_ACTIVITY_TYPE
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	
+	for (NSString* type in [appDelegate getActivityTypes])
+	{
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(type, nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+			[appDelegate updateActivityType:self->activityId withName:type];
+			[self redraw];
+			[self.summaryTableView reloadData];
+		}]];
+	}
+	
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
 - (IBAction)onEdit:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -772,6 +799,10 @@ typedef enum ExportFileTypeButtons
 		}]];
 	}
 
+	[alertController addAction:[UIAlertAction actionWithTitle:ACTION_SHEET_CHANGE_ACTIVITY_TYPE style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[self changeActivityType];
+	}]];
+
 	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
@@ -845,7 +876,7 @@ typedef enum ExportFileTypeButtons
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		UITextField* field = alertController.textFields.firstObject;
 
-		[appDelegate setActivityName:self->activityId withName:[field text]];
+		[appDelegate updateActivityName:self->activityId withName:[field text]];
 		[self.summaryTableView reloadData];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
@@ -870,7 +901,7 @@ typedef enum ExportFileTypeButtons
 		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 		UITextField* field = alertController.textFields.firstObject;
 
-		[appDelegate setActivityDescription:self->activityId withName:[field text]];
+		[appDelegate updateActivityDescription:self->activityId withName:[field text]];
 		[self.summaryTableView reloadData];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];

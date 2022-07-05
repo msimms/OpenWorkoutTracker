@@ -1949,7 +1949,7 @@
                                             <action selector="onTag:" destination="xf7-Mc-VJA" id="Eih-xi-7sD"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem image="scissors" catalog="system" id="beB-Zg-cNd">
+                                    <barButtonItem image="pencil" catalog="system" id="beB-Zg-cNd">
                                         <connections>
                                             <action selector="onEdit:" destination="xf7-Mc-VJA" id="fez-hZ-mFp"/>
                                         </connections>
@@ -2987,16 +2987,16 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Background1.png" width="640" height="1136"/>
-        <image name="bicycle" catalog="system" width="128" height="78"/>
-        <image name="bicycle.circle" catalog="system" width="128" height="121"/>
-        <image name="doc.circle" catalog="system" width="128" height="121"/>
-        <image name="house" catalog="system" width="128" height="106"/>
-        <image name="line.3.horizontal" catalog="system" width="128" height="64"/>
-        <image name="map" catalog="system" width="128" height="110"/>
-        <image name="scalemass" catalog="system" width="128" height="119"/>
-        <image name="scissors" catalog="system" width="128" height="92"/>
-        <image name="stopwatch" catalog="system" width="121" height="128"/>
-        <image name="tag" catalog="system" width="128" height="119"/>
+        <image name="bicycle" catalog="system" width="32" height="32"/>
+        <image name="bicycle.circle" catalog="system" width="32" height="32"/>
+        <image name="doc.circle" catalog="system" width="32" height="32"/>
+        <image name="house" catalog="system" width="32" height="32"/>
+        <image name="line.3.horizontal" catalog="system" width="32" height="32"/>
+        <image name="map" catalog="system" width="32" height="32"/>
+        <image name="pencil" catalog="system" width="32" height="32"/>
+        <image name="scalemass" catalog="system" width="32" height="32"/>
+        <image name="stopwatch" catalog="system" width="32" height="32"/>
+        <image name="tag" catalog="system" width="32" height="32"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

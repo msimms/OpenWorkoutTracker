@@ -23,6 +23,7 @@
 + (BOOL)serverClaimDevice:(NSString*)deviceId;
 + (BOOL)serverSetUserWeight:(NSNumber*)weightKg withTimestamp:(NSNumber*)timestamp;
 + (BOOL)serverSetActivityName:(NSString*)activityId withName:(NSString*)name;
++ (BOOL)serverSetActivityType:(NSString*)activityId withName:(NSString*)type;
 + (BOOL)serverSetActivityDescription:(NSString*)activityId withDescription:(NSString*)description;
 + (BOOL)serverRequestUpdatesSince:(time_t)ts;
 + (BOOL)serverHasActivity:(NSString*)activityId withHash:(NSString*)activityHash;

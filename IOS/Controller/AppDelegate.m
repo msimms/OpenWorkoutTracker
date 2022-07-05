@@ -1548,11 +1548,11 @@ void startSensorCallback(SensorType type, void* context)
 			// If we were sent the activity name, description, or tags then update it in the database.
 			if (activityId && activityName)
 			{
-				CreateActivityName([activityId UTF8String], [activityName UTF8String]);
+				UpdateActivityName([activityId UTF8String], [activityName UTF8String]);
 			}
 			if (activityId && activityDesc)
 			{
-				CreateActivityDescription([activityId UTF8String], [activityDesc UTF8String]);
+				UpdateActivityDescription([activityId UTF8String], [activityDesc UTF8String]);
 			}
 			if (tags)
 			{
@@ -2710,9 +2710,9 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 #pragma mark methods for managing the activity name
 
-- (BOOL)setActivityName:(NSString*)activityId withName:(NSString*)name
+- (BOOL)updateActivityName:(NSString*)activityId withName:(NSString*)name
 {
-	if (CreateActivityName([activityId UTF8String], [name UTF8String]))
+	if (UpdateActivityName([activityId UTF8String], [name UTF8String]))
 	{
 		return [ApiClient serverSetActivityName:activityId withName:name];
 	}
@@ -2732,11 +2732,22 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return result;
 }
 
+#pragma mark methods for managing the activity type
+
+- (BOOL)updateActivityType:(NSString*)activityId withName:(NSString*)type
+{
+	if (UpdateActivityType([activityId UTF8String], [type UTF8String]))
+	{
+		return [ApiClient serverSetActivityName:activityId withName:type];
+	}
+	return FALSE;
+}
+
 #pragma mark methods for managing the activity description
 
-- (BOOL)setActivityDescription:(NSString*)activityId withName:(NSString*)description
+- (BOOL)updateActivityDescription:(NSString*)activityId withName:(NSString*)description
 {
-	if (CreateActivityDescription([activityId UTF8String], [description UTF8String]))
+	if (UpdateActivityDescription([activityId UTF8String], [description UTF8String]))
 	{
 		[ApiClient serverSetActivityDescription:activityId withDescription:description];
 		return TRUE;

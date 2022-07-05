@@ -1469,6 +1469,21 @@ bool Database::UpdateActivityName(const std::string& activityId, const std::stri
 	return result;
 }
 
+bool Database::UpdateActivityType(const std::string& activityId, const std::string& activityType)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "update activity set type = ? where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, activityType.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
 bool Database::RetrieveActivityDescription(const std::string& activityId, std::string& description)
 {
 	bool result = false;

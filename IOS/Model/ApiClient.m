@@ -438,6 +438,25 @@
 #endif
 }
 
+// Sends the new activity type to the server.
++ (BOOL)serverSetActivityType:(NSString*)activityId withName:(NSString*)type
+{
+#if OMIT_BROADCAST
+	return FALSE;
+#else
+	NSMutableDictionary* postDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									 activityId, @PARAM_ACTIVITY_ID,
+									 type, @PARAM_ACTIVITY_TYPE,
+									 nil];
+	NSError* error;
+	NSData* postData = [NSJSONSerialization dataWithJSONObject:postDict options:NSJSONWritingPrettyPrinted error:&error];
+	NSMutableData* mutablePostData = [[NSMutableData alloc] initWithData:postData];
+	
+	NSString* urlStr = [NSString stringWithFormat:@"%@://%@/%@", [Preferences broadcastProtocol], [Preferences broadcastHostName], @REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL];
+	return [self makeRequest:urlStr withMethod:@"POST" withPostData:mutablePostData];
+#endif
+}
+
 // Sends the new activity description to the server.
 + (BOOL)serverSetActivityDescription:(NSString*)activityId withDescription:(NSString*)description
 {
