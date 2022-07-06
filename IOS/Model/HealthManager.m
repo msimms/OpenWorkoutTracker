@@ -522,6 +522,14 @@
 	dispatch_group_wait(self->queryGroup, DISPATCH_TIME_FOREVER);
 }
 
+- (bool)timeRangesOverlapWithStartRange1:(time_t)startRange1 withEndRange1:(time_t)endRange1 withStartRange2:(time_t)startRange2 withEndRange2:(time_t)endRange2
+{
+	return ((startRange1 >= startRange2 && startRange1 < endRange2) ||
+			(endRange1 >= startRange2 && endRange1 < endRange2) ||
+			(startRange2 >= startRange1 && startRange2 < endRange1) ||
+			(endRange2 >= startRange1 && endRange2 < endRange1));
+}
+
 /// @brief Searches the HealthKit activity list for duplicates and removes them, keeping the first in the list.
 - (void)removeDuplicateActivities
 {
@@ -562,8 +570,7 @@
 					time_t workoutEndTime2 = [workout2.endDate timeIntervalSince1970];
 
 					// Is either the start time or the end time of the first activity within the bounds of the second activity?
-					if ((workoutStartTime1 >= workoutStartTime2 && workoutStartTime1 < workoutEndTime2) ||
-						(workoutEndTime1 > workoutStartTime2 && workoutEndTime1 <= workoutEndTime2))
+					if ([self timeRangesOverlapWithStartRange1:workoutStartTime1 withEndRange1:workoutEndTime1 withStartRange2:workoutStartTime2 withEndRange2:workoutEndTime2])
 					{
 						[itemsToRemove addObject:activityId2];
 					}
@@ -590,8 +597,7 @@
 			time_t workoutEndTime = [workout.endDate timeIntervalSince1970];
 
 			// Is either the start time or the end time of the first activity within the bounds of the second activity?
-			if ((startTime >= workoutStartTime && startTime < workoutEndTime) ||
-				(endTime > workoutStartTime && endTime <= workoutEndTime))
+			if ([self timeRangesOverlapWithStartRange1:startTime withEndRange1:endTime withStartRange2:workoutStartTime withEndRange2:workoutEndTime])
 			{
 				[itemsToRemove addObject:activityId];
 			}

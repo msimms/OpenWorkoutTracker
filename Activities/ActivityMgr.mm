@@ -2518,7 +2518,7 @@ extern "C" {
 	// Functions for accessing historical data.
 	//
 
-	void GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime)
+	bool GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime)
 	{
 		if (activityIndex < g_historicalActivityList.size())
 		{
@@ -2526,7 +2526,9 @@ extern "C" {
 				(*startTime) = g_historicalActivityList.at(activityIndex).startTime;
 			if (endTime)
 				(*endTime) = g_historicalActivityList.at(activityIndex).endTime;
+			return true;
 		}
+		return false;
 	}
 
 	void FixHistoricalActivityEndTime(size_t activityIndex)

@@ -1812,8 +1812,10 @@ void startSensorCallback(SensorType type, void* context)
 		time_t startTime = 0;
 		time_t endTime = 0;
 
-		GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime);
-		[self->healthMgr removeActivitiesThatOverlapWithStartTime:startTime withEndTime:endTime];
+		if (GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime))
+		{
+			[self->healthMgr removeActivitiesThatOverlapWithStartTime:startTime withEndTime:endTime];
+		}
 	}
 }
 
