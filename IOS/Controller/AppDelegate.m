@@ -3181,12 +3181,12 @@ void attributeNameCallback(const char* name, void* context)
 	GoalType goalType = [Preferences workoutGoalType];
 	time_t goalDate = [Preferences workoutGoalDate];
 	DayType preferredLongRunDay = [Preferences workoutLongRunDay];
-	bool allowSwims = [Preferences workoutsCanIncludeSwims];
-	bool allowBikeRides = [Preferences workoutsCanIncludeBikeRides];
-	bool allowRuns = true;
+	bool hasSwimmingPoolAccess = [Preferences workoutsCanIncludePoolSwims];
+	bool hasOpenWaterSwimAccess = [Preferences workoutsCanIncludeOpenWaterSwims];
+	bool hasBicycle = [Preferences workoutsCanIncludeBikeRides];
 
 	// Run the algorithm.
-	return GenerateWorkouts(goal, goalType, goalDate, preferredLongRunDay, allowSwims, allowBikeRides, allowRuns);
+	return GenerateWorkouts(goal, goalType, goalDate, preferredLongRunDay, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
 }
 
 /// @brief Retrieve planned workouts from the database.

@@ -19,7 +19,8 @@ public:
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 private:
-	Workout* GenerateIntervalRide(void);
+	Workout* GenerateHillRide(void);
+	Workout* GenerateIntervalSession(double goalDistance, double thresholdPower);
 	Workout* GenerateTempoRide(void);
 	Workout* GenerateEasyRide(void);
 	Workout* GenerateSweetSpotRide(void);

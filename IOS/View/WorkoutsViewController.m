@@ -34,7 +34,8 @@ typedef enum WorkoutsPrefsRows
 {
 	ROW_PREFS_LONG_RUN_DAY = 0,
 	ROW_PREFS_INCLUDE_BIKE_RIDES,
-	ROW_PREFS_INCLUDE_SWIMS,
+	ROW_PREFS_INCLUDE_POOL_SWIMS,
+	ROW_PREFS_INCLUDE_OPEN_WATER_SWIMS,
 	NUM_WORKOUTS_PREFS_ROWS
 } WorkoutsPrefsRows;
 
@@ -53,7 +54,8 @@ typedef enum WorkoutsPrefsRows
 
 #define STR_PREFERRED_LONG_RUN_DAY                NSLocalizedString(@"Long Run Day", nil)
 #define STR_INCLUDE_BIKE_RIDES                    NSLocalizedString(@"Cycling", nil)
-#define STR_INCLUDE_SWIMS                         NSLocalizedString(@"Swims", nil)
+#define STR_INCLUDE_POOL_SWIMS                    NSLocalizedString(@"Pool Swims", nil)
+#define STR_INCLUDE_OPEN_WATER_SWIMS              NSLocalizedString(@"Open Water Swims", nil)
 
 #define ERROR_NO_GOAL_DATE                        NSLocalizedString(@"A goal date has not been specified.", nil)
 #define ERROR_BIKE_TRAINING_NEEDED                NSLocalizedString(@"Bike training is required for a triathlon.", nil)
@@ -212,25 +214,25 @@ typedef enum WorkoutsPrefsRows
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_SPRINT_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
-		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutsCanIncludePoolSwims:TRUE];
 		[Preferences setWorkoutGoal:GOAL_SPRINT_TRIATHLON];
 		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_OLYMPIC_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
-		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutsCanIncludePoolSwims:TRUE];
 		[Preferences setWorkoutGoal:GOAL_OLYMPIC_TRIATHLON];
 		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_HALF_IRON_DISTANCE_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
-		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutsCanIncludePoolSwims:TRUE];
 		[Preferences setWorkoutGoal:GOAL_HALF_IRON_DISTANCE_TRIATHLON];
 		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:BUTTON_TITLE_IRON_DISTANCE_TRIATHLON style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 		[Preferences setWorkoutsCanIncludeBikeRides:TRUE];
-		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutsCanIncludePoolSwims:TRUE];
 		[Preferences setWorkoutGoal:GOAL_IRON_DISTANCE_TRIATHLON];
 		[self.workoutsView reloadData];
 	}]];
@@ -323,24 +325,46 @@ typedef enum WorkoutsPrefsRows
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)selectWillAllowSwims
+- (void)selectWillAllowPoolSwims
 {
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
-																			 message:STR_INCLUDE_SWIMS
+																			 message:STR_INCLUDE_POOL_SWIMS
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
 
 	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		[Preferences setWorkoutsCanIncludeSwims:TRUE];
+		[Preferences setWorkoutsCanIncludePoolSwims:TRUE];
 		[self.workoutsView reloadData];
 	}]];
 	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		[Preferences setWorkoutsCanIncludeSwims:FALSE];
+		[Preferences setWorkoutsCanIncludePoolSwims:FALSE];
 		[self.workoutsView reloadData];
 	}]];
 
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)selectWillAllowOpenWaterSwims
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_INCLUDE_OPEN_WATER_SWIMS
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_YES style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeOpenWaterSwims:TRUE];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_NO style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutsCanIncludeOpenWaterSwims:FALSE];
+		[self.workoutsView reloadData];
+	}]];
+	
 	// Show the action sheet.
 	[self presentViewController:alertController animated:YES completion:nil];
 }
@@ -358,7 +382,7 @@ typedef enum WorkoutsPrefsRows
 		[super showOneButtonAlert:STR_ERROR withMsg:ERROR_NO_GOAL_DATE];
 		return;
 	}
-	if (workoutGoal >= GOAL_SPRINT_TRIATHLON && workoutGoal <= GOAL_IRON_DISTANCE_TRIATHLON && ![Preferences workoutsCanIncludeSwims])
+	if (workoutGoal >= GOAL_SPRINT_TRIATHLON && workoutGoal <= GOAL_IRON_DISTANCE_TRIATHLON && !([Preferences workoutsCanIncludePoolSwims] || [Preferences workoutsCanIncludeOpenWaterSwims]))
 	{
 		[super showOneButtonAlert:STR_ERROR withMsg:ERROR_SWIM_TRAINING_NEEDED];
 		return;
@@ -483,9 +507,13 @@ typedef enum WorkoutsPrefsRows
 			cell.textLabel.text = STR_INCLUDE_BIKE_RIDES;
 			cell.detailTextLabel.text = [StringUtils boolToStr:[Preferences workoutsCanIncludeBikeRides]];
 			break;
-		case ROW_PREFS_INCLUDE_SWIMS:
-			cell.textLabel.text = STR_INCLUDE_SWIMS;
-			cell.detailTextLabel.text = [StringUtils boolToStr:[Preferences workoutsCanIncludeSwims]];
+		case ROW_PREFS_INCLUDE_POOL_SWIMS:
+			cell.textLabel.text = STR_INCLUDE_POOL_SWIMS;
+			cell.detailTextLabel.text = [StringUtils boolToStr:[Preferences workoutsCanIncludePoolSwims]];
+			break;
+		case ROW_PREFS_INCLUDE_OPEN_WATER_SWIMS:
+			cell.textLabel.text = STR_INCLUDE_OPEN_WATER_SWIMS;
+			cell.detailTextLabel.text = [StringUtils boolToStr:[Preferences workoutsCanIncludeOpenWaterSwims]];
 			break;
 		}
 		displayDisclosureIndicator = false;
@@ -533,6 +561,9 @@ typedef enum WorkoutsPrefsRows
 				break;
 			case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
 				cell.detailTextLabel.text = STR_MIDDLE_DISTANCE_RUN;
+				break;
+			case WORKOUT_TYPE_HILL_RIDE:
+				cell.detailTextLabel.text = STR_HILL_RIDE;
 				break;
 			case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
 				cell.detailTextLabel.text = STR_INTERVAL_RIDE;
@@ -630,8 +661,11 @@ typedef enum WorkoutsPrefsRows
 		case ROW_PREFS_INCLUDE_BIKE_RIDES:
 			[self selectWillAllowBikeRides];
 			break;
-		case ROW_PREFS_INCLUDE_SWIMS:
-			[self selectWillAllowSwims];
+		case ROW_PREFS_INCLUDE_POOL_SWIMS:
+			[self selectWillAllowPoolSwims];
+			break;
+		case ROW_PREFS_INCLUDE_OPEN_WATER_SWIMS:
+			[self selectWillAllowOpenWaterSwims];
 			break;
 		}
 		break;

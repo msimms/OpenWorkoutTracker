@@ -97,6 +97,7 @@
 #define STR_HILL_REPEATS          NSLocalizedString(@"Hill Repeats", nil)
 #define STR_FARTLEK_SESSION       NSLocalizedString(@"Fartlek Session", nil)
 #define STR_MIDDLE_DISTANCE_RUN   NSLocalizedString(@"Middle Distance Run", nil)
+#define STR_HILL_RIDE             NSLocalizedString(@"Hill Ride", nil)
 #define STR_INTERVAL_RIDE         NSLocalizedString(@"Interval Ride", nil)
 #define STR_TEMPO_RIDE            NSLocalizedString(@"Tempo Ride", nil)
 #define STR_EASY_RIDE             NSLocalizedString(@"Easy Ride", nil)

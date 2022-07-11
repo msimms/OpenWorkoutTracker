@@ -33,10 +33,10 @@ public:
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 
 	/// @brief Looks through the user's activities and generates the inputs that will feed the workout generation algorithm.
-	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate);
+	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
 
 	/// @brief Generates a list of suggested workouts for the next week. Workouts are not in any particular order.
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, bool allowSwims, bool allowBikeRides, bool allowRuns);
+	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 
 private:
 	User   m_user;                      // Tells us what we need to know about the user/athlete

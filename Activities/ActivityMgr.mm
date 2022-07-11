@@ -2945,7 +2945,7 @@ extern "C" {
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool allowSwims, bool allowBikeRides, bool allowRuns)
+	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle)
 	{
 		bool result = false;
 
@@ -2954,10 +2954,10 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			// Calculate inputs from activities in the database.
-			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate);
+			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
 
 			// Generate new workouts.
-			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs, allowSwims, allowBikeRides, allowRuns);
+			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
 
 			// Delete old workouts.
 			result = g_pDatabase->DeleteAllWorkouts();
@@ -3205,6 +3205,8 @@ extern "C" {
 			return WORKOUT_TYPE_FARTLEK_RUN;
 		if (temp.compare("Middle Distance Run") == 0)
 			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN;
+		if (temp.compare("Hill Ride") == 0)
+			return WORKOUT_TYPE_HILL_RIDE;
 		if (temp.compare("Interval Ride") == 0)
 			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE;
 		if (temp.compare("Tempo Ride") == 0)

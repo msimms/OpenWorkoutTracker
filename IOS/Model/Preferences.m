@@ -11,38 +11,39 @@
 /// The names of the preferences as stored in the plist file.
 ///
 
-#define PREF_NAME_UUID                                 "UUID"
-#define PREF_NAME_UNITS                                "Units"
-#define PREF_NAME_AUTOSCALE_MAP                        "Autoscale Map"
-#define PREF_NAME_SCAN_FOR_SENSORS                     "Scan for Sensors"
-#define PREF_NAME_BROADCAST_TO_SERVER                  "Broadcast Global"
-#define PREF_NAME_BROADCAST_USER_NAME                  "Broadcast User Name"
-#define PREF_NAME_BROADCAST_RATE                       "Broadcast Rate"
-#define PREF_NAME_BROADCAST_PROTOCOL                   "Broadcast Protocol"
-#define PREF_NAME_BROADCAST_HOST_NAME                  "Broadcast Host Name"
-#define PREF_NAME_BROADCAST_SHOW_ICON                  "Broadcast Show Icon"
-#define PREF_NAME_ALWAYS_CONNECT                       "Always Connect"
-#define PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES "Will Integrate HealthKit Activities"
-#define PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES           "Hide HealthKit Duplicates"
-#define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG         "Has Shown First Time Use Message"
-#define PREF_NAME_HAS_SHOWN_PULL_UP_HELP               "Has Shown Pull Up Help"
-#define PREF_NAME_HAS_SHOWN_PUSH_UP_HELP               "Has Shown Push Up Help"
-#define PREF_NAME_HAS_SHOWN_RUNNING_HELP               "Has Shown Running Help"
-#define PREF_NAME_HAS_SHOWN_CYCLING_HELP               "Has Shown Cycling Help"
-#define PREF_NAME_HAS_SHOWN_SQUAT_HELP                 "Has Shown Squat Help"
-#define PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP       "Has Shown Stationary Bike Help"
-#define PREF_NAME_HAS_SHOWN_TREADMILL_HELP             "Has Shown Treadmill Help"
-#define PREF_NAME_USE_WATCH_HEART_RATE                 "Use Watch Heart Rate"
-#define PREF_NAME_WORKOUT_GOAL                         "Workout Goal"
-#define PREF_NAME_WORKOUT_GOAL_TYPE                    "Workout Goal Type"
-#define PREF_NAME_WORKOUT_GOAL_DATE                    "Workout Goal Date"
-#define PREF_NAME_WORKOUT_LONG_RUN_DAY                 "Workout Long Run Day"
-#define PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES      "Workouts Can Include Bike Rides"
-#define PREF_NAME_WORKOUTS_CAN_INCLUDE_SWIMS           "Workouts Can Include Swims"
-#define PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING         "Workouts Can Include Running"
-#define PREF_NAME_POOL_LENGTH                          "Pool Length"
-#define PREF_NAME_POOL_LENGTH_UNITS                    "Pool Length Units"
-#define PREF_NAME_LAST_SERVER_SYNC_TIME                "Last Server Sync Time"
+#define PREF_NAME_UUID                                  "UUID"
+#define PREF_NAME_UNITS                                 "Units"
+#define PREF_NAME_AUTOSCALE_MAP                         "Autoscale Map"
+#define PREF_NAME_SCAN_FOR_SENSORS                      "Scan for Sensors"
+#define PREF_NAME_BROADCAST_TO_SERVER                   "Broadcast Global"
+#define PREF_NAME_BROADCAST_USER_NAME                   "Broadcast User Name"
+#define PREF_NAME_BROADCAST_RATE                        "Broadcast Rate"
+#define PREF_NAME_BROADCAST_PROTOCOL                    "Broadcast Protocol"
+#define PREF_NAME_BROADCAST_HOST_NAME                   "Broadcast Host Name"
+#define PREF_NAME_BROADCAST_SHOW_ICON                   "Broadcast Show Icon"
+#define PREF_NAME_ALWAYS_CONNECT                        "Always Connect"
+#define PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES  "Will Integrate HealthKit Activities"
+#define PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES            "Hide HealthKit Duplicates"
+#define PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG          "Has Shown First Time Use Message"
+#define PREF_NAME_HAS_SHOWN_PULL_UP_HELP                "Has Shown Pull Up Help"
+#define PREF_NAME_HAS_SHOWN_PUSH_UP_HELP                "Has Shown Push Up Help"
+#define PREF_NAME_HAS_SHOWN_RUNNING_HELP                "Has Shown Running Help"
+#define PREF_NAME_HAS_SHOWN_CYCLING_HELP                "Has Shown Cycling Help"
+#define PREF_NAME_HAS_SHOWN_SQUAT_HELP                  "Has Shown Squat Help"
+#define PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP        "Has Shown Stationary Bike Help"
+#define PREF_NAME_HAS_SHOWN_TREADMILL_HELP              "Has Shown Treadmill Help"
+#define PREF_NAME_USE_WATCH_HEART_RATE                  "Use Watch Heart Rate"
+#define PREF_NAME_WORKOUT_GOAL                          "Workout Goal"
+#define PREF_NAME_WORKOUT_GOAL_TYPE                     "Workout Goal Type"
+#define PREF_NAME_WORKOUT_GOAL_DATE                     "Workout Goal Date"
+#define PREF_NAME_WORKOUT_LONG_RUN_DAY                  "Workout Long Run Day"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_POOL_SWIMS       "Workouts Can Include Pool Swims"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_OPEN_WATER_SWIMS "Workouts Can Include Open Water Swims"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES       "Workouts Can Include Bike Rides"
+#define PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING          "Workouts Can Include Running"
+#define PREF_NAME_POOL_LENGTH                           "Pool Length"
+#define PREF_NAME_POOL_LENGTH_UNITS                     "Pool Length Units"
+#define PREF_NAME_LAST_SERVER_SYNC_TIME                 "Last Server Sync Time"
 
 #define PREF_NAME_METRIC       "units_metric"
 #define PREF_NAME_US_CUSTOMARY "units_us_customary"
@@ -290,14 +291,19 @@
 	return (DayType)dayType;
 }
 
++ (BOOL)workoutsCanIncludePoolSwims
+{
+	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_POOL_SWIMS];
+}
+
++ (BOOL)workoutsCanIncludeOpenWaterSwims
+{
+	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_OPEN_WATER_SWIMS];
+}
+
 + (BOOL)workoutsCanIncludeBikeRides
 {
 	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES];
-}
-
-+ (BOOL)workoutsCanIncludeSwims
-{
-	return [self readBooleanValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_SWIMS];
 }
 
 + (BOOL)workoutsCanIncludeRunning
@@ -462,14 +468,19 @@
 	[self writeIntValue:@PREF_NAME_WORKOUT_LONG_RUN_DAY withValue:(NSInteger)value];
 }
 
++ (void)setWorkoutsCanIncludePoolSwims:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_POOL_SWIMS withValue:value];
+}
+
++ (void)setWorkoutsCanIncludeOpenWaterSwims:(BOOL)value
+{
+	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_OPEN_WATER_SWIMS withValue:value];
+}
+
 + (void)setWorkoutsCanIncludeBikeRides:(BOOL)value
 {
 	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_BIKE_RIDES withValue:value];
-}
-
-+ (void)setWorkoutsCanIncludeSwims:(BOOL)value
-{
-	[self writeBoolValue:@PREF_NAME_WORKOUTS_CAN_INCLUDE_SWIMS withValue:value];
 }
 
 + (void)setWorkoutsCanIncludeRunning:(BOOL)value

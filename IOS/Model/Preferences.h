@@ -56,8 +56,10 @@
 + (GoalType)workoutGoalType;
 + (time_t)workoutGoalDate;
 + (DayType)workoutLongRunDay;
++ (BOOL)workoutsCanIncludeRunning;
++ (BOOL)workoutsCanIncludePoolSwims;
++ (BOOL)workoutsCanIncludeOpenWaterSwims;
 + (BOOL)workoutsCanIncludeBikeRides;
-+ (BOOL)workoutsCanIncludeSwims;
 + (uint16_t)poolLength;
 + (UnitSystem)poolLengthUnits;
 + (time_t)lastServerSyncTime;
@@ -89,8 +91,10 @@
 + (void)setWorkoutGoalType:(GoalType)value;
 + (void)setWorkoutGoalDate:(time_t)value;
 + (void)setWorkoutLongRunDay:(DayType)value;
++ (void)setWorkoutsCanIncludePoolSwims:(BOOL)value;
++ (void)setWorkoutsCanIncludeOpenWaterSwims:(BOOL)value;
 + (void)setWorkoutsCanIncludeBikeRides:(BOOL)value;
-+ (void)setWorkoutsCanIncludeSwims:(BOOL)value;
++ (void)setWorkoutsCanIncludeRunning:(BOOL)value;
 + (void)setPoolLength:(uint16_t)poolLength;
 + (void)setPoolLengthUnits:(UnitSystem)poolLengthUnits;
 + (void)setLastServerSyncTime:(time_t)value;

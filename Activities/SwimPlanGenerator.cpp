@@ -18,7 +18,14 @@ SwimPlanGenerator::~SwimPlanGenerator()
 /// @brief Returns TRUE if we can actually generate a plan with the given contraints.
 bool SwimPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inputs)
 {
-	return true;
+	// If we're not planning to do any swimming then of course it's possible.
+	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_SWIM_DISTANCE);
+	if (goalDistance < 0.1)
+		return true;
+
+	bool hasSwimmingPoolAccess = inputs.at(WORKOUT_INPUT_HAS_SWIMMING_POOL_ACCESS);
+	bool hasOpenWaterSwimAccess = inputs.at(WORKOUT_INPUT_HAS_OPEN_WATER_SWIM_ACCESS);
+	return (hasSwimmingPoolAccess || hasOpenWaterSwimAccess);
 }
 
 /// @brief Utility function for creating an open water swim.
@@ -54,13 +61,25 @@ std::vector<Workout*> SwimPlanGenerator::GenerateWorkouts(std::map<std::string, 
 {
 	std::vector<Workout*> workouts;
 
-	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_SWIM_DISTANCE);
+	// Extract the necessary inputs.
+	//double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_SWIM_DISTANCE);
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
+	bool hasSwimmingPoolAccess = inputs.at(WORKOUT_INPUT_HAS_SWIMMING_POOL_ACCESS);
+	bool hasOpenWaterSwimAccess = inputs.at(WORKOUT_INPUT_HAS_OPEN_WATER_SWIM_ACCESS);
 
+	// If the user has access to a pool then include one technique swim each week.
+	if (!(hasSwimmingPoolAccess || hasOpenWaterSwimAccess))
+		return workouts;
+	else if (hasSwimmingPoolAccess)
+		workouts.push_back(GenerateTechniqueSwim());
+	else if (hasOpenWaterSwimAccess)
+		workouts.push_back(GenerateAerobicSwim());
+
+	// Add the remaining inputs.
 	switch (goal)
 	{
 	case GOAL_FITNESS:
-		workouts.push_back(GenerateTechniqueSwim());
+		workouts.push_back(GenerateAerobicSwim());
 		break;
 	case GOAL_5K_RUN:
 	case GOAL_10K_RUN:
@@ -72,11 +91,12 @@ std::vector<Workout*> SwimPlanGenerator::GenerateWorkouts(std::map<std::string, 
 		break;
 	case GOAL_SPRINT_TRIATHLON:
 	case GOAL_OLYMPIC_TRIATHLON:
-		workouts.push_back(GenerateTechniqueSwim());
+		workouts.push_back(GenerateAerobicSwim());
 		break;
 	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
 	case GOAL_IRON_DISTANCE_TRIATHLON:
-		workouts.push_back(GenerateTechniqueSwim());
+		workouts.push_back(GenerateAerobicSwim());
+		workouts.push_back(GenerateAerobicSwim());
 		break;
 	}
 

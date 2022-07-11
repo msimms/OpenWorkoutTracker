@@ -64,7 +64,7 @@ void WorkoutPlanGenerator::InsertAdditionalAttributesForWorkoutGeneration(const 
 	m_additionalActivitySummaries.insert(std::make_pair(tempActivityId, activitySummary));
 }
 
-std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate)
+std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle)
 {
 	std::map<std::string, double> inputs;
 	time_t now = time(NULL);
@@ -72,6 +72,10 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	
 	// Make sure we don't have any leftover values from the last run.
 	this->Reset();
+
+	//
+	// Goals
+	//
 
 	// Need the user's goals.
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL, goal));
@@ -133,6 +137,11 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	// Compute the user's age in years.
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AGE_YEARS, m_user.GetAgeInYears()));
 
+	// Facility access.
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_HAS_SWIMMING_POOL_ACCESS, (int)hasSwimmingPoolAccess));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_HAS_OPEN_WATER_SWIM_ACCESS, (int)hasOpenWaterSwimAccess));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_HAS_BICYCLE, (int)hasBicycle));
+
 	// Get the experience/comfort level for the user.
 	// This is meant to give us an idea as to how quickly we can ramp up the intensity.
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EXPERIENCE_LEVEL, 5.0));
@@ -166,7 +175,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	return inputs;
 }
 
-std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, bool allowSwims, bool allowBikeRides, bool allowRuns)
+std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
 {
 	SwimPlanGenerator swimGen;
 	BikePlanGenerator bikeGen;
@@ -174,21 +183,12 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 	TrainingPhilosophyType trainingIntensityDist = TRAINING_PHILOSOPHY_POLARIZED;
 	std::vector<Workout*> workouts;
 
-	if (allowSwims)
-	{
-		if (!swimGen.IsWorkoutPlanPossible(inputs))
-			return workouts;
-	}
-	if (allowBikeRides)
-	{
-		if (!bikeGen.IsWorkoutPlanPossible(inputs))
-			return workouts;
-	}
-	if (allowRuns)
-	{
-		if (!runGen.IsWorkoutPlanPossible(inputs))
-			return workouts;
-	}
+	if (!swimGen.IsWorkoutPlanPossible(inputs))
+		return workouts;
+	if (!bikeGen.IsWorkoutPlanPossible(inputs))
+		return workouts;
+	if (!runGen.IsWorkoutPlanPossible(inputs))
+		return workouts;
 
 	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkouts(inputs, trainingIntensityDist);
 	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs, trainingIntensityDist);
@@ -301,14 +301,25 @@ void WorkoutPlanGenerator::CalculateGoalDistances(std::map<std::string, double>&
 {
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 
+	// Initialize
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_SWIM_DISTANCE, 0.0));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_BIKE_DISTANCE, 0.0));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_RUN_DISTANCE, 0.0));
 
+	// Distances for each event. For general fitness, set goals similar to a sprint tri, depending on available resources.
 	switch (goal)
 	{
 	case GOAL_FITNESS:
-		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+		{
+			bool hasSwimmingPoolAccess = inputs.at(WORKOUT_INPUT_HAS_SWIMMING_POOL_ACCESS);
+			bool hasBicycle = inputs.at(WORKOUT_INPUT_HAS_BICYCLE);
+
+			if (hasSwimmingPoolAccess)
+				inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = 500.0;
+			if (hasBicycle)
+				inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = 20000.0;
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+		}
 		break;
 	case GOAL_5K_RUN:
 		inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;

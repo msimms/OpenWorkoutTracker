@@ -56,7 +56,7 @@ void Workout::AddCooldown(uint64_t seconds)
 }
 
 // Appends an interval to the workout.
-void Workout::AddInterval(uint8_t repeat, double distance, double pace, double recoveryDistance, double recoveryPace)
+void Workout::AddDistanceInterval(uint8_t repeat, double intervalDistance, double intervalPace, double recoveryDistance, double recoveryPace)
 {
 	WorkoutInterval interval;
 
@@ -64,11 +64,33 @@ void Workout::AddInterval(uint8_t repeat, double distance, double pace, double r
 	interval.m_duration = 0.0;
 	interval.m_powerLow = 0.0;
 	interval.m_powerHigh = 0.0;
-	interval.m_distance = distance;
-	interval.m_pace = pace;
+	interval.m_distance = intervalDistance;
+	interval.m_pace = intervalPace;
 	if (repeat > 1)
 	{
 		interval.m_recoveryDistance = recoveryDistance;
+		interval.m_recoveryPace = recoveryPace;
+	}
+	else
+	{
+		interval.m_recoveryDistance = 0.0;
+		interval.m_recoveryPace = 0.0;
+	}
+	this->m_intervals.push_back(interval);
+}
+void Workout::AddTimeInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPace, uint16_t recoverySeconds, double recoveryPace)
+{
+	WorkoutInterval interval;
+	
+	interval.m_repeat = repeat;
+	interval.m_duration = intervalSeconds;
+	interval.m_powerLow = 0.0;
+	interval.m_powerHigh = 0.0;
+	interval.m_distance = 0.0;
+	interval.m_pace = intervalPace;
+	if (repeat > 1)
+	{
+		interval.m_recoveryDistance = 0.0;
 		interval.m_recoveryPace = recoveryPace;
 	}
 	else
@@ -129,12 +151,19 @@ double Workout::CalculateDuration() const
 
 	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
 	{
-		if (interval->m_distance > 0 && interval->m_pace > 0.0)
+		// Duration of the interval.
+		if (interval->m_duration > 0.01)
+		{
+			workoutDurationSecs += (interval->m_repeat * interval->m_duration);
+		}
+		else if (interval->m_distance > 0.01 && interval->m_pace > 0.01)
 		{
 			double intervalDurationSecs = interval->m_repeat * CalculateIntervalDuration(interval->m_distance, interval->m_pace);
 			workoutDurationSecs += intervalDurationSecs;
 		}
-		if (interval->m_recoveryDistance > 0 && interval->m_recoveryPace > 0.0)
+
+		// Duration of the recovery.
+		if (interval->m_recoveryDistance > 0.01 && interval->m_recoveryPace > 0.01)
 		{
 			double intervalDurationSecs = interval->m_repeat * CalculateIntervalDuration(interval->m_recoveryDistance, interval->m_recoveryPace);
 			workoutDurationSecs += intervalDurationSecs;
