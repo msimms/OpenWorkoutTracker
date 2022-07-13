@@ -37,15 +37,17 @@
 #define WORKOUT_INPUT_EXPERIENCE_LEVEL                   "Experience Level"           // Athlete's experience level with running (scale 1-10)
 #define WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL  "Structured Training Comfort Level" // Athlete's comfort level (i.e. experience) with doing intervals, long runs, etc. (scale 1-10)
 #define WORKOUT_INPUT_GOAL                               "Goal"
-#define WORKOUT_INPUT_GOAL_TYPE                          "Goal Type"
+#define WORKOUT_INPUT_GOAL_TYPE                          "Goal Type"                  // Fitness oriented or competition oriented
 #define WORKOUT_INPUT_GOAL_SWIM_DISTANCE                 "Goal Swim Distance"         // In meters
 #define WORKOUT_INPUT_GOAL_BIKE_DISTANCE                 "Goal Bike Distance"         // In meters
 #define WORKOUT_INPUT_GOAL_RUN_DISTANCE                  "Goal Run Distance"          // In meters
 #define WORKOUT_INPUT_WEEKS_UNTIL_GOAL                   "Weeks Until Goal"
 #define WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS "Average Running Distance (Last 4 Weeks)"
 #define WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS "Average Cycling Distance (Last 4 Weeks)"
+#define WORKOUT_INPUT_AVG_CYCLING_DURATION_IN_FOUR_WEEKS "Average Cycling Duration (Last 4 Weeks)"
 #define WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS          "Number of Rides (Last 4 Weeks)"
 #define WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS           "Number of Runs (Last 4 Weeks)"
+#define WORKOUT_INPUT_NUM_SWIMS_LAST_FOUR_WEEKS          "Number of Swims (Last 4 Weeks)"
 #define WORKOUT_INPUT_THRESHOLD_POWER                    "FTP"
 
 #endif

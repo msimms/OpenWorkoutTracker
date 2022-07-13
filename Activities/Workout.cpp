@@ -100,6 +100,20 @@ void Workout::AddTimeInterval(uint8_t repeat, uint16_t intervalSeconds, double i
 	}
 	this->m_intervals.push_back(interval);
 }
+void Workout::AddTimeAndPowerInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPower, uint16_t recoverySeconds, double recoveryPower)
+{
+	WorkoutInterval interval;
+	
+	interval.m_repeat = repeat;
+	interval.m_duration = intervalSeconds;
+	interval.m_powerLow = recoveryPower;
+	interval.m_powerHigh = intervalPower;
+	interval.m_distance = 0.0;
+	interval.m_pace = 0.0;
+	interval.m_recoveryDistance = 0.0;
+	interval.m_recoveryPace = 0.0;
+	this->m_intervals.push_back(interval);
+}
 void Workout::AddInterval(const WorkoutInterval& interval)
 {
 	this->m_intervals.push_back(interval);

@@ -42,11 +42,14 @@ void WorkoutPlanGenerator::Reset()
 		m_cyclingIntensityByWeek[i] = 0.0;
 		m_swimIntensityByWeek[i] = 0.0;
 		m_numRunsWeek[i] = 0;
+		m_numBikesWeek[i] = 0;
 	}
-	m_avgCyclingDistanceFourWeeks = (double)0.0;
 	m_avgRunningDistanceFourWeeks = (double)0.0;
-	m_bikeCount = 0;
+	m_avgCyclingDistanceFourWeeks = (double)0.0;
+	m_avgCyclingDurationFourWeeks = (double)0.0;
 	m_runCount = 0;
+	m_bikeCount = 0;
+	m_swimCount = 0;
 }
 
 void WorkoutPlanGenerator::InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
@@ -164,10 +167,12 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_2, m_runIntensityByWeek[1] + m_cyclingIntensityByWeek[1] + m_swimIntensityByWeek[1]));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_3, m_runIntensityByWeek[2] + m_cyclingIntensityByWeek[2] + m_swimIntensityByWeek[2]));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4, m_runIntensityByWeek[3] + m_cyclingIntensityByWeek[3] + m_swimIntensityByWeek[3]));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DURATION_IN_FOUR_WEEKS, m_avgCyclingDurationFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS, m_runCount));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_SWIMS_LAST_FOUR_WEEKS, m_swimCount));
 
 	// Append the goal distances.
 	this->CalculateGoalDistances(inputs);
@@ -209,7 +214,7 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 	time_t week4CutoffTime = now - (4.0 * SECS_PER_WEEK); // last four weeks
 	time_t week3CutoffTime = now - (3.0 * SECS_PER_WEEK); // last three weeks
 	time_t week2CutoffTime = now - (2.0 * SECS_PER_WEEK); // last two weeks
-	time_t week1CutoffTime = now - SECS_PER_WEEK; // last week
+	time_t week1CutoffTime = now - (SECS_PER_WEEK); // last week
 
 	// Only consider activities within the last four weeks.
 	if (summary.startTime > week4CutoffTime)
@@ -260,6 +265,7 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 		// Examine cycling activity.
 		else if (summary.type.compare(Cycling::Type()) == 0)
 		{
+			// Distance
 			if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED) != summary.summaryAttributes.end())
 			{
 				ActivityAttributeType attr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
@@ -269,8 +275,43 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 					UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
 					double activityDistance = attr.value.doubleVal * 1000.0; // km to meters
 
+					if (summary.startTime > week3CutoffTime)
+					{
+						if (activityDistance > m_longestRidesByWeek[3])
+							m_longestRidesByWeek[3] = activityDistance;
+						m_numBikesWeek[3] = m_numBikesWeek[3] + 1;
+					}
+					else if ((summary.startTime > week2CutoffTime) && (summary.startTime < week3CutoffTime))
+					{
+						if (activityDistance > m_longestRidesByWeek[2])
+							m_longestRidesByWeek[2] = activityDistance;
+						m_numBikesWeek[2] = m_numBikesWeek[2] + 1;
+					}
+					else if ((summary.startTime > week1CutoffTime) && (summary.startTime < week2CutoffTime))
+					{
+						if (activityDistance > m_longestRidesByWeek[1])
+							m_longestRidesByWeek[1] = activityDistance;
+						m_numBikesWeek[1] = m_numBikesWeek[1] + 1;
+					}
+					else
+					{
+						if (activityDistance > m_longestRidesByWeek[0])
+							m_longestRidesByWeek[0] = activityDistance;
+						m_numBikesWeek[0] = m_numBikesWeek[0] + 1;
+					}
+
 					m_avgCyclingDistanceFourWeeks += activityDistance;
 					++m_bikeCount;
+				}
+			}
+
+			// Time
+			if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_MOVING_TIME) != summary.summaryAttributes.end())
+			{
+				ActivityAttributeType attr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_MOVING_TIME);
+				
+				if (attr.valid)
+				{
 				}
 			}
 		}

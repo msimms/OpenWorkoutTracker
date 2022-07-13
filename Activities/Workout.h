@@ -49,6 +49,7 @@ public:
 	void AddCooldown(uint64_t seconds);
 	void AddDistanceInterval(uint8_t repeat, double intervalDistance, double intervalPace, double recoveryDistance, double recoveryPace);
 	void AddTimeInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPace, uint16_t recoverySeconds, double recoveryPace);
+	void AddTimeAndPowerInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPower, uint16_t recoverySeconds, double recoveryPower);
 	void AddInterval(const WorkoutInterval& interval);
 
 	double CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMinute);

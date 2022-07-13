@@ -234,7 +234,7 @@ Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance,
 		maxRunDistance = 2000;
 
 	// Roll the dice to figure out the distance.
-	std::default_random_engine generator;
+	std::default_random_engine generator(std::random_device{}());
 	std::uniform_int_distribution<uint64_t> distribution(minRunDistance, maxRunDistance);
 	uint64_t runDistance = distribution(generator);
 	uint64_t intervalDistanceMeters = (runDistance / 10) * 10; // Get rid of the least significant digit
@@ -336,13 +336,13 @@ Workout* RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, 
 	// Build a collection of possible run interval sessions, sorted by target distance. Order is { min reps, max reps, distance in meters }.
 	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][3] = { { 4, 8, 100 }, { 4, 8, 200 }, { 4, 8, 400 }, { 4, 8, 600 }, { 2, 8, 800 }, { 2, 6, 1000 }, { 2, 4, 1600 } };
 
+	// Warmup and cooldown duration.
 	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
-	std::default_random_engine generator;
-
 	// Select the workout.
-	std::normal_distribution<size_t> workoutDistribution(0, NUM_POSSIBLE_WORKOUTS - 1);
+	std::default_random_engine generator;
+	std::uniform_int_distribution<size_t> workoutDistribution(0, NUM_POSSIBLE_WORKOUTS - 1);
 	size_t selectedIntervalWorkoutIndex = workoutDistribution(generator);
 	uint16_t* selectedIntervalWorkout = POSSIBLE_WORKOUTS[selectedIntervalWorkoutIndex];
 
