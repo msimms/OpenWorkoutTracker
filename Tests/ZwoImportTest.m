@@ -68,7 +68,7 @@
 				// For debugging.
 				printf("Testing %s\n", [destFileName UTF8String]);
 
-				XCTAssert(ImportZwoFile([destFileName UTF8String], [intervalId UTF8String], "Test Workout"));
+				XCTAssert(ImportZwoFile([destFileName UTF8String], [intervalId UTF8String]));
 
 				// Clean up.
 				XCTAssert(DeleteIntervalWorkout([intervalId UTF8String]));

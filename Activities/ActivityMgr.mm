@@ -3055,22 +3055,6 @@ extern "C" {
 		return result;
 	}
 
-	// InitializeWorkoutList should be called before calling this.
-	size_t ConvertWorkoutIdToIndex(const char* const workoutId)
-	{
-		size_t index = 0;
-
-		for (auto iter = g_workouts.begin(); iter != g_workouts.end(); ++iter)
-		{
-			if ((*iter).GetId().compare(workoutId) == 0)
-			{
-				return index;
-			}
-			++index;
-		}
-		return WORKOUT_INDEX_UNKNOWN;
-	}
-
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime)
 	{
 		bool result = false;
@@ -4145,10 +4129,10 @@ extern "C" {
 	// Functions for importing ZWO files.
 	//
 
-	bool ImportZwoFile(const char* const fileName, const char* const workoutId, const char* const workoutName)
+	bool ImportZwoFile(const char* const fileName, const char* const workoutId)
 	{
 		WorkoutImporter importer;
-		return importer.ImportZwoFile(fileName, workoutId, workoutName, g_pDatabase);
+		return importer.ImportZwoFile(fileName, workoutId, g_pDatabase);
 	}
 
 	//

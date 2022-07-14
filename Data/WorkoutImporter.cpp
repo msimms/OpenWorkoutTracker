@@ -16,7 +16,7 @@ WorkoutImporter::~WorkoutImporter()
 {
 }
 
-bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::string& workoutId, const std::string& workoutName, Database* pDatabase)
+bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::string& workoutId, Database* pDatabase)
 {
 	if (!pDatabase)
 	{

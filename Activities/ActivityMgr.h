@@ -205,7 +205,6 @@ extern "C" {
 	// Functions for managing workout generation.
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
-	size_t ConvertWorkoutIdToIndex(const char* const workoutId);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime);
 	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance);
 	bool DeleteWorkout(const char* const workoutId);
@@ -283,7 +282,7 @@ extern "C" {
 	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, char** const pActivityId);
 
 	// Functions for importing ZWO files.
-	bool ImportZwoFile(const char* const fileName, const char* const workoutId, const char* const workoutName);
+	bool ImportZwoFile(const char* const fileName, const char* const workoutId);
 
 	// Functions for importing KML files.
 	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, CoordinateCallback coordinateCallback, void* context);
