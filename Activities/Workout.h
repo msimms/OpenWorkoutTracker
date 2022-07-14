@@ -12,8 +12,8 @@ typedef struct WorkoutInterval
 {
 	uint8_t m_repeat; // number of times this interval is to be repeated
 	double m_duration; // duration (in seconds)
-	double m_powerLow; // min power (in watts)
-	double m_powerHigh; // max power (in watts)
+	double m_powerLow; // min power (in % of threshold power)
+	double m_powerHigh; // max power (in % of threshold power)
 	double m_distance; // interval distance (in meters)
 	double m_pace; // interval pace (in meters/minute)
 	double m_recoveryDistance; // recovery distance (in meters)
@@ -49,7 +49,7 @@ public:
 	void AddCooldown(uint64_t seconds);
 	void AddDistanceInterval(uint8_t repeat, double intervalDistance, double intervalPace, double recoveryDistance, double recoveryPace);
 	void AddTimeInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPace, uint16_t recoverySeconds, double recoveryPace);
-	void AddTimeAndPowerInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPower, uint16_t recoverySeconds, double recoveryPower);
+	void AddTimeAndPowerInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPowerIntensity, uint16_t recoverySeconds, double recoveryPowerIntensity);
 	void AddInterval(const WorkoutInterval& interval);
 
 	double CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMinute);

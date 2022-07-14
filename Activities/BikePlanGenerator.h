@@ -20,7 +20,7 @@ public:
 
 private:
 	Workout* GenerateHillRide(void);
-	Workout* GenerateIntervalSession(double goalDistance, double thresholdPower);
+	Workout* GenerateIntervalSession(double goalDistance);
 	Workout* GenerateTempoRide(void);
 	Workout* GenerateEasyAerobicRide(void);
 	Workout* GenerateSweetSpotRide(void);

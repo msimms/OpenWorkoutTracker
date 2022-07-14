@@ -3034,8 +3034,10 @@ extern "C" {
 				tempParams.insert(std::make_pair("duration", FormatDouble(interval.m_duration)));
 				tempParams.insert(std::make_pair("distance", FormatDouble(interval.m_distance)));
 				tempParams.insert(std::make_pair("pace", FormatDouble(interval.m_pace)));
+				tempParams.insert(std::make_pair("power", FormatDouble(interval.m_powerHigh)));
 				tempParams.insert(std::make_pair("recovery distance", FormatDouble(interval.m_recoveryDistance)));
 				tempParams.insert(std::make_pair("recovery pace", FormatDouble(interval.m_recoveryPace)));
+				tempParams.insert(std::make_pair("recovery power", FormatDouble(interval.m_powerLow)));
 
 				std::string tempStr = MapToJsonStr(tempParams);
 				workoutJson.insert(workoutJson.size() - 1, tempStr);

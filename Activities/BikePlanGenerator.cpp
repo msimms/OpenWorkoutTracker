@@ -42,7 +42,7 @@ Workout* BikePlanGenerator::GenerateHillRide(void)
 }
 
 /// @brief Utility function for creating an interval workout.
-Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance, double thresholdPower)
+Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 {
 	// Constants.
 	const uint8_t NUM_REPS_INDEX = 0;
@@ -78,15 +78,13 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance, double 
 	uint16_t intervalReps = selectedIntervalWorkout[NUM_REPS_INDEX];
 	uint16_t intervalSeconds = selectedIntervalWorkout[SECONDS_HARD_INDEX];
 	uint16_t restSeconds = intervalSeconds / 2;
-	double intervalPower = ((double)selectedIntervalWorkout[PERCENTAGE_FTP_INDEX] / (double)100.0) * thresholdPower;
-	double restPower = thresholdPower * 0.4;
 
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_INTERVAL_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
-		workout->AddTimeAndPowerInterval(intervalReps, intervalSeconds, intervalPower, restSeconds, restPower);
+		workout->AddTimeAndPowerInterval(intervalReps, intervalSeconds, (double)selectedIntervalWorkout[PERCENTAGE_FTP_INDEX], restSeconds, 0.4);
 		workout->AddCooldown(cooldownDuration);
 	}
 
@@ -139,7 +137,7 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 	{
 	case GOAL_FITNESS:
 		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance, thresholdPower));
+		workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
 	case GOAL_5K_RUN:
 	case GOAL_10K_RUN:
@@ -152,19 +150,19 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 		break;
 	case GOAL_SPRINT_TRIATHLON:
 		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance, thresholdPower));
+		workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
 	case GOAL_OLYMPIC_TRIATHLON:
 		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance, thresholdPower));
+		workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
 	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
 		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance, thresholdPower));
+		workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
 	case GOAL_IRON_DISTANCE_TRIATHLON:
 		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance, thresholdPower));
+		workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
 	}
 

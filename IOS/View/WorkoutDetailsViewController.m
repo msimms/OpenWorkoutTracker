@@ -252,6 +252,7 @@
 	for (NSDictionary* interval in intervals)
 	{
 		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
+
 		double intervalDistance = [interval[@"distance"] doubleValue];
 		double recoveryDistance = [interval[@"recoveryDistance"] doubleValue];
 
