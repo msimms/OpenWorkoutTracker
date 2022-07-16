@@ -3018,7 +3018,7 @@ extern "C" {
 			params.insert(std::make_pair("sport type", workout.GetSport()));
 			params.insert(std::make_pair("type", FormatInt((uint64_t)workout.GetType())));
 			params.insert(std::make_pair("num intervals", FormatInt((uint64_t)workout.GetIntervals().size())));
-			params.insert(std::make_pair("duration", FormatDouble(workout.CalculateDuration())));
+			params.insert(std::make_pair("duration", FormatInt((uint64_t)workout.CalculateDuration())));
 			params.insert(std::make_pair("distance", FormatDouble(workout.CalculateDistance())));
 			params.insert(std::make_pair("scheduled time", FormatInt((uint64_t)workout.GetScheduledTime())));
 
@@ -3035,6 +3035,7 @@ extern "C" {
 				tempParams.insert(std::make_pair("distance", FormatDouble(interval.m_distance)));
 				tempParams.insert(std::make_pair("pace", FormatDouble(interval.m_pace)));
 				tempParams.insert(std::make_pair("power", FormatDouble(interval.m_powerHigh)));
+				tempParams.insert(std::make_pair("recovery duration", FormatInt((uint64_t)interval.m_recoveryDuration)));
 				tempParams.insert(std::make_pair("recovery distance", FormatDouble(interval.m_recoveryDistance)));
 				tempParams.insert(std::make_pair("recovery pace", FormatDouble(interval.m_recoveryPace)));
 				tempParams.insert(std::make_pair("recovery power", FormatDouble(interval.m_powerLow)));

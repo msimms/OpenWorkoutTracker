@@ -21,6 +21,9 @@
 	double maxX;
 	double minY;
 	double maxY;
+
+	bool distanceGraph; // TRUE if the X axis represents distance, FALSE if it represents time
+	bool paceGraph; // TRUE if the Y axis represents pace or speed, FALSE if it represents power
 }
 
 - (IBAction)onExport:(id)sender;

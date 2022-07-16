@@ -23,7 +23,7 @@ Workout::~Workout()
 {
 }
 
-// Defines the workout warmup.
+/// Defines the workout warmup.
 void Workout::AddWarmup(uint64_t seconds)
 {
 	WorkoutInterval warmup;
@@ -34,51 +34,55 @@ void Workout::AddWarmup(uint64_t seconds)
 	warmup.m_powerHigh = 0.75;
 	warmup.m_distance = 0.0;
 	warmup.m_pace = 0.0;
+	warmup.m_recoveryDuration = 0;
 	warmup.m_recoveryDistance = 0.0;
 	warmup.m_recoveryPace = 0.0;
 	this->m_intervals.push_back(warmup);
 }
 
-// Defines the workout cooldown.
+/// Defines the workout cooldown.
 void Workout::AddCooldown(uint64_t seconds)
 {
 	WorkoutInterval cooldown;
 
 	cooldown.m_repeat = 1.0;
 	cooldown.m_duration = seconds;
-	cooldown.m_powerLow = 0.75;
+	cooldown.m_powerLow = 0.25;
 	cooldown.m_powerHigh = 0.25;
 	cooldown.m_distance = 0.0;
 	cooldown.m_pace = 0.0;
+	cooldown.m_recoveryDuration = 0;
 	cooldown.m_recoveryDistance = 0.0;
 	cooldown.m_recoveryPace = 0.0;
 	this->m_intervals.push_back(cooldown);
 }
 
-// Appends an interval to the workout.
+/// Appends an interval to the workout.
 void Workout::AddDistanceInterval(uint8_t repeat, double intervalDistance, double intervalPace, double recoveryDistance, double recoveryPace)
 {
 	WorkoutInterval interval;
 
 	interval.m_repeat = repeat;
-	interval.m_duration = 0.0;
+	interval.m_duration = 0;
 	interval.m_powerLow = 0.0;
 	interval.m_powerHigh = 0.0;
 	interval.m_distance = intervalDistance;
 	interval.m_pace = intervalPace;
 	if (repeat > 1)
 	{
+		interval.m_recoveryDuration = 0;
 		interval.m_recoveryDistance = recoveryDistance;
 		interval.m_recoveryPace = recoveryPace;
 	}
 	else
 	{
+		interval.m_recoveryDuration = 0;
 		interval.m_recoveryDistance = 0.0;
 		interval.m_recoveryPace = 0.0;
 	}
 	this->m_intervals.push_back(interval);
 }
-void Workout::AddTimeInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPace, uint16_t recoverySeconds, double recoveryPace)
+void Workout::AddTimeInterval(uint8_t repeat, uint64_t intervalSeconds, double intervalPace, uint64_t recoverySeconds, double recoveryPace)
 {
 	WorkoutInterval interval;
 	
@@ -90,17 +94,19 @@ void Workout::AddTimeInterval(uint8_t repeat, uint16_t intervalSeconds, double i
 	interval.m_pace = intervalPace;
 	if (repeat > 1)
 	{
+		interval.m_recoveryDuration = recoverySeconds;
 		interval.m_recoveryDistance = 0.0;
 		interval.m_recoveryPace = recoveryPace;
 	}
 	else
 	{
+		interval.m_recoveryDuration = 0;
 		interval.m_recoveryDistance = 0.0;
 		interval.m_recoveryPace = 0.0;
 	}
 	this->m_intervals.push_back(interval);
 }
-void Workout::AddTimeAndPowerInterval(uint8_t repeat, uint16_t intervalSeconds, double intervalPowerIntensity, uint16_t recoverySeconds, double recoveryPowerIntensity)
+void Workout::AddTimeAndPowerInterval(uint8_t repeat, uint64_t intervalSeconds, double intervalPowerIntensity, uint64_t recoverySeconds, double recoveryPowerIntensity)
 {
 	WorkoutInterval interval;
 	
@@ -110,6 +116,7 @@ void Workout::AddTimeAndPowerInterval(uint8_t repeat, uint16_t intervalSeconds, 
 	interval.m_powerHigh = intervalPowerIntensity;
 	interval.m_distance = 0.0;
 	interval.m_pace = 0.0;
+	interval.m_recoveryDuration = recoverySeconds;
 	interval.m_recoveryDistance = 0.0;
 	interval.m_recoveryPace = 0.0;
 	this->m_intervals.push_back(interval);
@@ -119,14 +126,14 @@ void Workout::AddInterval(const WorkoutInterval& interval)
 	this->m_intervals.push_back(interval);
 }
 
-// Utility function for calculating the number of seconds for an interval.
+/// Utility function for calculating the number of seconds for an interval.
 double Workout::CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const
 {
 	return intervalMeters / (intervalPaceMetersPerMinute / 60.0);
 }
 
-// Computes the estimated training stress for this workout.
-// May be overridden by child classes, depending on the type of workout.
+/// Computes the estimated training stress for this workout.
+/// May be overridden by child classes, depending on the type of workout.
 double Workout::CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMinute)
 {
 	double workoutDurationSecs = 0.0;
@@ -159,14 +166,15 @@ double Workout::CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMi
 	return m_estimatedIntensityScore;
 }
 
-double Workout::CalculateDuration() const
+/// Calculates the duration of the workout, in seconds.
+uint64_t Workout::CalculateDuration() const
 {
-	double workoutDurationSecs = 0.0;
+	uint64_t workoutDurationSecs = 0;
 
 	for (auto interval = m_intervals.begin(); interval != m_intervals.end(); ++interval)
 	{
 		// Duration of the interval.
-		if (interval->m_duration > 0.01)
+		if (interval->m_duration > 0)
 		{
 			workoutDurationSecs += (interval->m_repeat * interval->m_duration);
 		}
@@ -177,7 +185,11 @@ double Workout::CalculateDuration() const
 		}
 
 		// Duration of the recovery.
-		if (interval->m_recoveryDistance > 0.01 && interval->m_recoveryPace > 0.01)
+		if (interval->m_recoveryDuration > 0)
+		{
+			workoutDurationSecs += ((interval->m_repeat - 1) * interval->m_recoveryDuration);
+		}
+		else if (interval->m_recoveryDistance > 0.01 && interval->m_recoveryPace > 0.01)
 		{
 			double intervalDurationSecs = interval->m_repeat * CalculateIntervalDuration(interval->m_recoveryDistance, interval->m_recoveryPace);
 			workoutDurationSecs += intervalDurationSecs;
@@ -186,6 +198,7 @@ double Workout::CalculateDuration() const
 	return workoutDurationSecs;
 }
 
+/// Calculates the distance of the workout, in meters.
 double Workout::CalculateDistance() const
 {
 	double workoutDistanceMeters = 0.0;

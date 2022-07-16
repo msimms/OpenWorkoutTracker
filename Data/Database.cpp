@@ -171,8 +171,19 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("workout_interval"))
 	{
-		sql = "create table workout_interval (id integer primary key, workout_id text, repeat integer, duration double, power_low double, power_high double, distance double, pace double, recovery_distance double, recovery_pace double)";
+		sql = "create table workout_interval (id integer primary key, workout_id text, repeat integer, duration big int, power_low double, power_high double, distance double, pace double, recovery_duration big int, recovery_distance double, recovery_pace double)";
 		queries.push_back(sql);
+	}
+	else
+	{
+		if (!DoesTableHaveColumn("workout_interval", "recovery_duration"))
+		{
+			sql = "drop table workout_interval";
+			queries.push_back(sql);
+
+			sql = "create table workout_interval (id integer primary key, workout_id text, repeat integer, duration big int, power_low double, power_high double, distance double, pace double, recovery_duration big int, recovery_distance double, recovery_pace double)";
+			queries.push_back(sql);
+		}
 	}
 	if (!DoesTableExist("pace_plan"))
 	{
@@ -952,18 +963,19 @@ bool Database::CreateWorkoutInterval(const Workout& workout, const WorkoutInterv
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into workout_interval values (NULL,?,?,?,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into workout_interval values (NULL,?,?,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(statement, 2, interval.m_repeat);
-		sqlite3_bind_double(statement, 3, interval.m_duration);
+		sqlite3_bind_int64(statement, 3, interval.m_duration);
 		sqlite3_bind_double(statement, 4, interval.m_powerLow);
 		sqlite3_bind_double(statement, 5, interval.m_powerHigh);
 		sqlite3_bind_double(statement, 6, interval.m_distance);
 		sqlite3_bind_double(statement, 7, interval.m_pace);
-		sqlite3_bind_double(statement, 8, interval.m_recoveryDistance);
-		sqlite3_bind_double(statement, 9, interval.m_recoveryPace);
+		sqlite3_bind_int64(statement, 8, interval.m_recoveryDuration);
+		sqlite3_bind_double(statement, 9, interval.m_recoveryDistance);
+		sqlite3_bind_double(statement, 10, interval.m_recoveryPace);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -975,7 +987,7 @@ bool Database::RetrieveWorkoutIntervals(Workout& workout)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select repeat, duration, power_low, power_high, distance, pace, recovery_distance, recovery_pace from workout_interval where workout_id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select repeat, duration, power_low, power_high, distance, pace, recovery_duration, recovery_distance, recovery_pace from workout_interval where workout_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT);
 
@@ -984,13 +996,14 @@ bool Database::RetrieveWorkoutIntervals(Workout& workout)
 			WorkoutInterval interval;
 
 			interval.m_repeat = (uint8_t)sqlite3_column_int(statement, 0);
-			interval.m_duration = (double)sqlite3_column_double(statement, 1);
+			interval.m_duration = (uint64_t)sqlite3_column_int64(statement, 1);
 			interval.m_powerLow = (double)sqlite3_column_double(statement, 2);
 			interval.m_powerHigh = (double)sqlite3_column_double(statement, 3);
 			interval.m_distance = (double)sqlite3_column_double(statement, 4);
 			interval.m_pace = (double)sqlite3_column_double(statement, 5);
-			interval.m_recoveryDistance = (double)sqlite3_column_double(statement, 6);
-			interval.m_recoveryPace = (double)sqlite3_column_double(statement, 7);
+			interval.m_recoveryDuration = (uint64_t)sqlite3_column_int64(statement, 6);
+			interval.m_recoveryDistance = (double)sqlite3_column_double(statement, 7);
+			interval.m_recoveryPace = (double)sqlite3_column_double(statement, 8);
 
 			workout.AddInterval(interval);
 		}

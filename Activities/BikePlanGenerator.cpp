@@ -77,14 +77,16 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 	// Fetch the details for this workout.
 	uint16_t intervalReps = selectedIntervalWorkout[NUM_REPS_INDEX];
 	uint16_t intervalSeconds = selectedIntervalWorkout[SECONDS_HARD_INDEX];
+	double intervalPower = (double)selectedIntervalWorkout[PERCENTAGE_FTP_INDEX] / 100.0;
 	uint16_t restSeconds = intervalSeconds / 2;
+	double restPower = (double)0.4;
 
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_INTERVAL_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
-		workout->AddTimeAndPowerInterval(intervalReps, intervalSeconds, (double)selectedIntervalWorkout[PERCENTAGE_FTP_INDEX], restSeconds, 0.4);
+		workout->AddTimeAndPowerInterval(intervalReps, intervalSeconds, intervalPower, restSeconds, restPower);
 		workout->AddCooldown(cooldownDuration);
 	}
 
@@ -125,7 +127,6 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 	GoalType goalType = (GoalType)inputs.at(WORKOUT_INPUT_GOAL_TYPE);
 	bool hasBicycle = inputs.at(WORKOUT_INPUT_HAS_BICYCLE);
-	double thresholdPower = inputs.at(WORKOUT_INPUT_THRESHOLD_POWER);
 
 	// The user doesn't have a bicycle, so return.
 	if (!hasBicycle)

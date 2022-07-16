@@ -30,6 +30,8 @@
 	[super viewDidLoad];
 
 	self.title = STR_WORKOUT;
+	self->distanceGraph = true;
+	self->paceGraph = true;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,23 +87,49 @@
 	CPTXYAxis* y          = axisSet.yAxis;
 
 	// Axis min and max values.
-	self->minX = (double)0.0;
-	self->maxX = (double)1.0; // distance, in 100s of meters
-	self->minY = (double)0.0; // minimum intensity/pace
-	self->maxY = (double)10.0; // maximum intensity/pace
+	self->minX = (double)0.0;  // x axis will always start at zero (meters or seconds)
+	self->maxX = (double)1.0;  // distance, in 100s of meters or time in seconds
+	self->minY = (double)0.0;  // minimum pace/power
+	self->maxY = (double)10.0; // maximum pace/power
 	if (self->workoutDetails)
 	{
-		self->maxX = (double)([self->workoutDetails[@"distance"] doubleValue] / 100.0);
-		x.title = @"Distance";
+		double workoutDistance = [self->workoutDetails[@"distance"] doubleValue] / 100.0;
+		uint64_t workoutDuration = (uint64_t)[self->workoutDetails[@"duration"] integerValue];
 
+		// Are we going to use distance or time for the x axis?
+		self->distanceGraph = workoutDistance > workoutDuration;
+		self->maxX = self->distanceGraph ? workoutDuration : workoutDuration;
+		x.title = self->distanceGraph ? STR_DISTANCE : STR_TIME;
+
+		// Find the maximum y axis value:
 		NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
 		for (NSDictionary* interval in intervals)
 		{
 			double pace = (double)([interval[@"pace"] doubleValue]);
+			double power = (double)([interval[@"power"] doubleValue]) * 100.0;
 
-			if (pace > self->maxY)
-				self->maxY = pace;
+			if (power > (double)0.1)
+			{
+				self->paceGraph = false;
+			}
+			if (self->paceGraph)
+			{
+				if (pace > self->maxY)
+				{
+					self->maxY = pace;
+				}
+			}
+			else if (power > self->maxY)
+			{
+				self->maxY = power;
+			}
 		}
+	}
+
+	// Need to show something.
+	if (self->maxX < 1.0)
+	{
+		self->maxX = 10.0;
 	}
 
 	// Setup plot space.
@@ -131,7 +159,7 @@
 	x.titleTextStyle        = axisTitleStyle;
 	x.titleOffset           = 5.0f;
     y.orthogonalPosition    = @(self->minX);
-	y.title                 = @"Pace";
+	y.title                 = self->paceGraph ? STR_PACE : STR_POWER;
 	y.delegate              = self;
 	y.labelingPolicy        = CPTAxisLabelingPolicyNone;
 	y.titleTextStyle        = axisTitleStyle;
@@ -241,9 +269,9 @@
 	self->workoutDetails = details;
 }
 
-#pragma mark 
+#pragma mark methods for calculating the y axis value when given the x axis value
 
-- (NSNumber*)paceAtDistance:(double)distanceInMeters
+- (NSNumber*)yValueAtDistance:(double)distanceInMeters
 {
 	NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
 	double currentDistanceInMeters = (double)0.0;
@@ -252,11 +280,10 @@
 	for (NSDictionary* interval in intervals)
 	{
 		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
-
 		double intervalDistance = [interval[@"distance"] doubleValue];
-		double recoveryDistance = [interval[@"recoveryDistance"] doubleValue];
+		double recoveryDistance = [interval[@"recovery distance"] doubleValue];
 
-		// For each time this interval is repeated.
+		// For each time this interval is repeated:
 		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)
 		{
 			// Main interval.
@@ -265,6 +292,8 @@
 			{
 				NSNumber* pace = interval[@"pace"];
 
+				// Zero doesn't make for a very nice graph so draw something.
+				// This might happen if drawing a workout in which pace was not specified.
 				if ([pace doubleValue] < (double)0.1)
 				{
 					return [[NSNumber alloc] initWithDouble:self->maxY * 0.25];
@@ -285,6 +314,42 @@
 	return [[NSNumber alloc] initWithDouble:0.0];
 }
 
+- (NSNumber*)yValueAtTime:(uint64_t)currentTime
+{
+	NSDictionary* intervals = [self->workoutDetails objectForKey:@"intervals"];
+	uint64_t tempTime = 0;
+
+	// Which interval are we in when at the given distance?
+	for (NSDictionary* interval in intervals)
+	{
+		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
+		uint64_t intervalDuration = (uint64_t)[interval[@"duration"] integerValue];
+		uint64_t recoveryDuration = (uint64_t)[interval[@"recovery duration"] integerValue];
+		double intervalPower = [interval[@"power"] doubleValue] * 100.0;
+		double recoveryPower = [interval[@"recovery power"] doubleValue] * 100.0;
+
+		// For each time this interval is repeated:
+		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)
+		{
+			// Main interval.
+			tempTime += intervalDuration;
+			if (tempTime >= currentTime)
+			{
+				return [[NSNumber alloc] initWithDouble:intervalPower];
+			}
+
+			// Recovery interval.
+			tempTime += recoveryDuration;
+			if (tempTime >= currentTime)
+			{
+				return [[NSNumber alloc] initWithDouble:recoveryPower];
+			}
+		}
+	}
+
+	return [[NSNumber alloc] initWithDouble:0.0];
+}
+
 #pragma mark CPTPlotDataSource methods
 
 - (NSUInteger)numberOfRecordsForPlot:(CPTPlot*)plot
@@ -300,8 +365,12 @@
 		return [[NSNumber alloc] initWithInt:(int)index];
 	case CPTScatterPlotFieldY:
 		{
-			double distanceInMeters = (double)index * 100.0; // convert back to meters
-			return [self paceAtDistance:distanceInMeters];
+			if (self->distanceGraph)
+			{
+				double distanceInMeters = (double)index * 100.0; // convert back to meters
+				return [self yValueAtDistance:distanceInMeters];
+			}
+			return [self yValueAtTime:(uint64_t)index];
 		}
 	default:
 		break;
