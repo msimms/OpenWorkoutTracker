@@ -556,6 +556,9 @@ typedef enum WorkoutsPrefsRows
 			case WORKOUT_TYPE_HILL_REPEATS:
 				cell.detailTextLabel.text = STR_HILL_REPEATS;
 				break;
+			case WORKOUT_TYPE_PROGRESSION_RUN:
+				cell.detailTextLabel.text = STR_FARTLEK_SESSION;
+				break;
 			case WORKOUT_TYPE_FARTLEK_RUN:
 				cell.detailTextLabel.text = STR_FARTLEK_SESSION;
 				break;

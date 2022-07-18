@@ -4,6 +4,7 @@
 #import "WorkoutDetailsViewController.h"
 #import "AppDelegate.h"
 #import "AppStrings.h"
+#import "Params.h"
 #import "Segues.h"
 
 #define ACTION_SHEET_BUTTON_ZWO NSLocalizedString(@"ZWO File", nil)
@@ -151,7 +152,7 @@
 
 	// Axis configuration.
 	double spreadX          = self->maxX - self->minX;
-	double xHashSpacing     = spreadX / [workoutDetails[@"num intervals"] integerValue];
+	double xHashSpacing     = spreadX / [workoutDetails[@PARAM_WORKOUT_NUM_INTERVALS] integerValue];
     x.orthogonalPosition    = @(self->minY);
 	x.majorIntervalLength   = @(xHashSpacing);
 	x.minorTicksPerInterval = 0;
@@ -279,9 +280,9 @@
 	// Which interval are we in when at the given distance?
 	for (NSDictionary* interval in intervals)
 	{
-		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
-		double intervalDistance = [interval[@"distance"] doubleValue];
-		double recoveryDistance = [interval[@"recovery distance"] doubleValue];
+		NSUInteger numRepeats = (NSUInteger)([interval[@PARAM_INTERVAL_REPEAT] integerValue]);
+		double intervalDistance = [interval[@PARAM_INTERVAL_DISTANCE] doubleValue];
+		double recoveryDistance = [interval[@PARAM_INTERVAL_RECOVERY_DISTANCE] doubleValue];
 
 		// For each time this interval is repeated:
 		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)
@@ -290,7 +291,7 @@
 			currentDistanceInMeters += intervalDistance;
 			if (currentDistanceInMeters >= distanceInMeters)
 			{
-				NSNumber* pace = interval[@"pace"];
+				NSNumber* pace = interval[@PARAM_INTERVAL_PACE];
 
 				// Zero doesn't make for a very nice graph so draw something.
 				// This might happen if drawing a workout in which pace was not specified.
@@ -305,7 +306,7 @@
 			currentDistanceInMeters += recoveryDistance;
 			if (currentDistanceInMeters >= distanceInMeters)
 			{
-				return interval[@"recovery pace"];
+				return interval[@PARAM_INTERVAL_RECOVERY_PACE];
 			}
 		}
 	}
@@ -322,11 +323,11 @@
 	// Which interval are we in when at the given distance?
 	for (NSDictionary* interval in intervals)
 	{
-		NSUInteger numRepeats = (NSUInteger)([interval[@"repeat"] integerValue]);
-		uint64_t intervalDuration = (uint64_t)[interval[@"duration"] integerValue];
-		uint64_t recoveryDuration = (uint64_t)[interval[@"recovery duration"] integerValue];
-		double intervalPower = [interval[@"power"] doubleValue] * 100.0;
-		double recoveryPower = [interval[@"recovery power"] doubleValue] * 100.0;
+		NSUInteger numRepeats = (NSUInteger)([interval[@PARAM_INTERVAL_REPEAT] integerValue]);
+		uint64_t intervalDuration = (uint64_t)[interval[@PARAM_INTERVAL_DURATION] integerValue];
+		uint64_t recoveryDuration = (uint64_t)[interval[@PARAM_INTERVAL_RECOVERY_DURATION] integerValue];
+		double intervalPower = [interval[@PARAM_INTERVAL_POWER] doubleValue] * 100.0;
+		double recoveryPower = [interval[@PARAM_INTERVAL_RECOVERY_POWER] doubleValue] * 100.0;
 
 		// For each time this interval is repeated:
 		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)

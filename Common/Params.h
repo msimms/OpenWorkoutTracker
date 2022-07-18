@@ -35,24 +35,30 @@
 
 // Workouts
 #define PARAM_WORKOUT_ID                      "workout_id"
+#define PARAM_WORKOUT_NUM_INTERVALS           "num intervals"
 #define PARAM_WORKOUT_WORKOUT_TYPE            "type"
 #define PARAM_WORKOUT_SPORT_TYPE              "sport type"
 #define PARAM_WORKOUT_URL                     "url"
 #define PARAM_WORKOUT_SCHEDULED_TIME          "scheduled time"
 #define PARAM_WORKOUT_ESTIMATED_STRAIN        "estimated strain score"
+#define PARAM_WORKOUT_DURATION                "duration"
+#define PARAM_WORKOUT_DISTANCE                "distance"
 #define PARAM_WORKOUT_WARMUP                  "warmup"
 #define PARAM_WORKOUT_COOLDOWN                "cooldown"
 #define PARAM_WORKOUT_INTERVALS               "intervals"
 
-// Intervals
-#define PARAM_INTERVAL_REPEAT                 "Repeat"
-#define PARAM_INTERVAL_PACE                   "Pace"
-#define PARAM_INTERVAL_DURATION               "Duration"
-#define PARAM_INTERVAL_DISTANCE               "Distance"
-#define PARAM_INTERVAL_RECOVERY_PACE          "Recovery Pace"
-#define PARAM_INTERVAL_RECOVERY_DISTANCE      "Recovery Distance"
+// Workout Interval
+#define PARAM_INTERVAL_REPEAT                 "repeat"
+#define PARAM_INTERVAL_DURATION               "duration"
+#define PARAM_INTERVAL_DISTANCE               "distance"
+#define PARAM_INTERVAL_PACE                   "pace"
+#define PARAM_INTERVAL_POWER                  "power"
+#define PARAM_INTERVAL_RECOVERY_DURATION      "recovery duration"
+#define PARAM_INTERVAL_RECOVERY_DISTANCE      "recovery distance"
+#define PARAM_INTERVAL_RECOVERY_PACE          "recovery pace"
+#define PARAM_INTERVAL_RECOVERY_POWER         "recovery power"
 
-// Pace plans
+// Pace Plans
 #define PARAM_PACE_PLAN_ID                    "id"
 #define PARAM_PACE_PLAN_NAME                  "name"
 #define PARAM_PACE_PLAN_TARGET_PACE           "target pace"

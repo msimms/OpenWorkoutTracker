@@ -16,6 +16,7 @@
 #include "Distance.h"
 #include "HeatMapGenerator.h"
 #include "IntervalWorkout.h"
+#include "Params.h"
 #include "WorkoutImporter.h"
 #include "WorkoutPlanGenerator.h"
 
@@ -3015,12 +3016,12 @@ extern "C" {
 			std::string workoutJson;
 
 			params.insert(std::make_pair("id", workout.GetId()));
-			params.insert(std::make_pair("sport type", workout.GetSport()));
-			params.insert(std::make_pair("type", FormatInt((uint64_t)workout.GetType())));
-			params.insert(std::make_pair("num intervals", FormatInt((uint64_t)workout.GetIntervals().size())));
-			params.insert(std::make_pair("duration", FormatInt((uint64_t)workout.CalculateDuration())));
-			params.insert(std::make_pair("distance", FormatDouble(workout.CalculateDistance())));
-			params.insert(std::make_pair("scheduled time", FormatInt((uint64_t)workout.GetScheduledTime())));
+			params.insert(std::make_pair(PARAM_WORKOUT_SPORT_TYPE, workout.GetSport()));
+			params.insert(std::make_pair(PARAM_WORKOUT_WORKOUT_TYPE, FormatInt((uint64_t)workout.GetType())));
+			params.insert(std::make_pair(PARAM_WORKOUT_NUM_INTERVALS, FormatInt((uint64_t)workout.GetIntervals().size())));
+			params.insert(std::make_pair(PARAM_WORKOUT_DURATION, FormatInt((uint64_t)workout.CalculateDuration())));
+			params.insert(std::make_pair(PARAM_WORKOUT_DISTANCE, FormatDouble(workout.CalculateDistance())));
+			params.insert(std::make_pair(PARAM_WORKOUT_SCHEDULED_TIME, FormatInt((uint64_t)workout.GetScheduledTime())));
 
 			workoutJson = MapToJsonStr(params);
 			workoutJson.insert(workoutJson.size() - 1, ", \"intervals\": [");
@@ -3030,15 +3031,15 @@ extern "C" {
 				const WorkoutInterval& interval = (*interIter);
 				std::map<std::string, std::string> tempParams;
 
-				tempParams.insert(std::make_pair("repeat", FormatInt((uint64_t)interval.m_repeat)));
-				tempParams.insert(std::make_pair("duration", FormatDouble(interval.m_duration)));
-				tempParams.insert(std::make_pair("distance", FormatDouble(interval.m_distance)));
-				tempParams.insert(std::make_pair("pace", FormatDouble(interval.m_pace)));
-				tempParams.insert(std::make_pair("power", FormatDouble(interval.m_powerHigh)));
-				tempParams.insert(std::make_pair("recovery duration", FormatInt((uint64_t)interval.m_recoveryDuration)));
-				tempParams.insert(std::make_pair("recovery distance", FormatDouble(interval.m_recoveryDistance)));
-				tempParams.insert(std::make_pair("recovery pace", FormatDouble(interval.m_recoveryPace)));
-				tempParams.insert(std::make_pair("recovery power", FormatDouble(interval.m_powerLow)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_REPEAT, FormatInt((uint64_t)interval.m_repeat)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_DURATION, FormatDouble(interval.m_duration)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_DISTANCE, FormatDouble(interval.m_distance)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_PACE, FormatDouble(interval.m_pace)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_POWER, FormatDouble(interval.m_powerHigh)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_DURATION, FormatInt((uint64_t)interval.m_recoveryDuration)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_DISTANCE, FormatDouble(interval.m_recoveryDistance)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_PACE, FormatDouble(interval.m_recoveryPace)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_POWER, FormatDouble(interval.m_powerLow)));
 
 				std::string tempStr = MapToJsonStr(tempParams);
 				workoutJson.insert(workoutJson.size() - 1, tempStr);
@@ -3170,39 +3171,45 @@ extern "C" {
 	{
 		std::string temp = workoutTypeStr;
 
-		if (temp.compare("Rest") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_REST) == 0)
 			return WORKOUT_TYPE_REST;
-		if (temp.compare("Event") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_EVENT) == 0)
 			return WORKOUT_TYPE_EVENT;
-		if (temp.compare("Speed Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_SPEED_RUN) == 0)
 			return WORKOUT_TYPE_SPEED_RUN;
-		if (temp.compare("Threshold Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_THRESHOLD_RUN) == 0)
 			return WORKOUT_TYPE_THRESHOLD_RUN;
-		if (temp.compare("Tempo Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_TEMPO_RUN) == 0)
 			return WORKOUT_TYPE_TEMPO_RUN;
-		if (temp.compare("Easy Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_EASY_RUN) == 0)
 			return WORKOUT_TYPE_EASY_RUN;
-		if (temp.compare("Long Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_LONG_RUN) == 0)
 			return WORKOUT_TYPE_LONG_RUN;
-		if (temp.compare("Free Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_FREE_RUN) == 0)
 			return WORKOUT_TYPE_FREE_RUN;
-		if (temp.compare("Hill Repeats") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_HILL_REPEATS) == 0)
 			return WORKOUT_TYPE_HILL_REPEATS;
-		if (temp.compare("Fartlek Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_PROGRESSION_RUN) == 0)
+			return WORKOUT_TYPE_PROGRESSION_RUN;
+		if (temp.compare(WORKOUT_TYPE_STR_FARTLEK_RUN) == 0)
 			return WORKOUT_TYPE_FARTLEK_RUN;
-		if (temp.compare("Middle Distance Run") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN) == 0)
 			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN;
-		if (temp.compare("Hill Ride") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_HILL_RIDE) == 0)
 			return WORKOUT_TYPE_HILL_RIDE;
-		if (temp.compare("Interval Ride") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE) == 0)
 			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE;
-		if (temp.compare("Tempo Ride") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_TEMPO_RIDE) == 0)
 			return WORKOUT_TYPE_TEMPO_RIDE;
-		if (temp.compare("Open Water Swim") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_EASY_RIDE) == 0)
+			return WORKOUT_TYPE_EASY_RIDE;
+		if (temp.compare(WORKOUT_TYPE_STR_SWEET_SPOT_RIDE) == 0)
+			return WORKOUT_TYPE_SWEET_SPOT_RIDE;
+		if (temp.compare(WORKOUT_TYPE_STR_OPEN_WATER_SWIM) == 0)
 			return WORKOUT_TYPE_OPEN_WATER_SWIM;
-		if (temp.compare("Pool Swim") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_POOL_SWIM) == 0)
 			return WORKOUT_TYPE_POOL_SWIM;
-		if (temp.compare("Technique Swim") == 0)
+		if (temp.compare(WORKOUT_TYPE_STR_TECHNIQUE_SWIM) == 0)
 			return WORKOUT_TYPE_TECHNIQUE_SWIM;
 		return WORKOUT_TYPE_REST;
 	}

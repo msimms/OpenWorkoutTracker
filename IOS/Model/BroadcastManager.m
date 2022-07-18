@@ -162,7 +162,7 @@
 	[self->locationCache removeAllObjects];
 	[postData appendData:[[NSString stringWithFormat:@"]"] dataUsingEncoding:NSASCIIStringEncoding]];
 
-	// Write cached acclerometer data to the JSON string.
+	// Write cached accelerometer data to the JSON string.
 	[postData appendData:[[NSString stringWithFormat:@", \"accelerometer\": ["] dataUsingEncoding:NSASCIIStringEncoding]];
 	size_t numAccelObjsBeingSent = 0;
 	for (NSString* text in self->accelerometerCache)

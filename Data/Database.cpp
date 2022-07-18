@@ -894,7 +894,7 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select workout_id, type, sport, estimated_stress, scheduled_time from workout", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select workout_id, type, sport, estimated_stress, scheduled_time from workout order by scheduled_time", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
