@@ -27,6 +27,7 @@ typedef enum WorkoutsGoalRows
 {
 	ROW_GOAL = 0,
 	ROW_GOAL_DATE,
+	ROW_GOAL_TYPE,
 	NUM_WORKOUTS_GOAL_ROWS
 } WorkoutsGoalRows;
 
@@ -51,6 +52,9 @@ typedef enum WorkoutsPrefsRows
 #define BUTTON_TITLE_OLYMPIC_TRIATHLON            NSLocalizedString(@"Olympic Triathlon", nil)
 #define BUTTON_TITLE_HALF_IRON_DISTANCE_TRIATHLON NSLocalizedString(@"Half Iron Distance Triathlon", nil)
 #define BUTTON_TITLE_IRON_DISTANCE_TRIATHLON      NSLocalizedString(@"Iron Distance Triathlon", nil)
+
+#define STR_COMPLETION                            NSLocalizedString(@"Completion", nil)
+#define STR_SPEED                                 NSLocalizedString(@"Speed", nil)
 
 #define STR_PREFERRED_LONG_RUN_DAY                NSLocalizedString(@"Long Run Day", nil)
 #define STR_INCLUDE_BIKE_RIDES                    NSLocalizedString(@"Cycling", nil)
@@ -259,6 +263,28 @@ typedef enum WorkoutsPrefsRows
 	{
 		[self.datePicker setHidden:TRUE];
 	}
+}
+
+- (void)selectGoalType
+{
+	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:STR_GOAL_TYPE
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	
+	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_COMPLETION style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoalType:GOAL_TYPE_COMPLETION];
+		[self.workoutsView reloadData];
+	}]];
+	[alertController addAction:[UIAlertAction actionWithTitle:STR_SPEED style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+		[Preferences setWorkoutGoalType:GOAL_TYPE_SPEED];
+		[self.workoutsView reloadData];
+	}]];
+	
+	// Show the action sheet.
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)selectLongRunDay
@@ -493,6 +519,22 @@ typedef enum WorkoutsPrefsRows
 					cell.detailTextLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:goalDate]];
 			}
 			break;
+		case ROW_GOAL_TYPE:
+			{
+				GoalType goalType = [Preferences workoutGoalType];
+				cell.textLabel.text = STR_GOAL_DATE;
+
+				switch (goalType)
+				{
+				case GOAL_TYPE_COMPLETION:
+					cell.detailTextLabel.text = STR_COMPLETION;
+					break;
+				case GOAL_TYPE_SPEED:
+					cell.detailTextLabel.text = STR_SPEED;
+					break;
+				}
+			}
+			break;
 		}
 		displayDisclosureIndicator = false;
 		break;
@@ -652,6 +694,9 @@ typedef enum WorkoutsPrefsRows
 			break;
 		case ROW_GOAL_DATE:
 			[self selectGoalDate];
+			break;
+		case ROW_GOAL_TYPE:
+			[self selectGoalType];
 			break;
 		}
 		break;

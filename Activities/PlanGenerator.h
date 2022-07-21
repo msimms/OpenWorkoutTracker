@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "Goal.h"
 #include "TrainingPhilosophyType.h"
 #include "Workout.h"
 
@@ -19,6 +20,9 @@ public:
 
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs) = 0;
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy) = 0;
+
+protected:
+	bool IsInTaper(double weeksUntilGoal, Goal goal);
 };
 
 #endif

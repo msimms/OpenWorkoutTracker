@@ -93,27 +93,51 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 	return workout;
 }
 
-/// @brief Utility function for creating a tempo ride.
-Workout* BikePlanGenerator::GenerateTempoRide(void)
-{
-	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RIDE, ACTIVITY_TYPE_CYCLING);
-	return workout;
-}
-
 /// @brief Utility function for creating an easy ride.
-Workout* BikePlanGenerator::GenerateEasyAerobicRide(void)
+/// Aerobic rides are typically around 55-75% FTP.
+Workout* BikePlanGenerator::GenerateEasyAerobicRide(double avgRideDuration)
 {
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RIDE, ACTIVITY_TYPE_CYCLING);
+	if (workout)
+	{
+	}
+	return workout;
+}
+
+/// @brief Utility function for creating a tempo ride.
+/// Tempo rides are typically around 75-85% FTP.
+Workout* BikePlanGenerator::GenerateTempoRide(void)
+{
+	// Warmup and cooldown duration.
+	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
+	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
+
+	// Create the workout object.
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RIDE, ACTIVITY_TYPE_CYCLING);
+	if (workout)
+	{
+		workout->AddWarmup(warmupDuration);
+		workout->AddCooldown(cooldownDuration);
+	}
 	return workout;
 }
 
 /// @brief Utility function for creating a sweet spot ride.
+/// Sweet spot rides are typically around 85-95% FTP.
 Workout* BikePlanGenerator::GenerateSweetSpotRide(void)
 {
+	// Warmup and cooldown duration.
+	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
+	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
+
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SWEET_SPOT_RIDE, ACTIVITY_TYPE_CYCLING);
+	if (workout)
+	{
+		workout->AddWarmup(warmupDuration);
+		workout->AddCooldown(cooldownDuration);
+	}
 	return workout;
 }
 
@@ -126,6 +150,12 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_BIKE_DISTANCE);
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 	GoalType goalType = (GoalType)inputs.at(WORKOUT_INPUT_GOAL_TYPE);
+	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
+	double longestRideWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_1); // Most recent week
+	double longestRideWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_2);
+	double longestRideWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_3);
+	double longestRideWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_4);
+	double avgRideDuration = inputs.at(WORKOUT_INPUT_AVG_CYCLING_DURATION_IN_FOUR_WEEKS);
 	bool hasBicycle = inputs.at(WORKOUT_INPUT_HAS_BICYCLE);
 
 	// The user doesn't have a bicycle, so return.
@@ -134,36 +164,58 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 		return workouts;
 	}
 
+	// Longest run in four weeks.
+	double longestRideInFourWeeks = std::max(std::max(longestRideWeek1, longestRideWeek2), std::max(longestRideWeek3, longestRideWeek4));
+
+	// Are we in a taper?
+	bool inTaper = this->IsInTaper(weeksUntilGoal, goal);
+
 	switch (goal)
 	{
+	// General fitness
 	case GOAL_FITNESS:
-		workouts.push_back(GenerateEasyAerobicRide());
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
 		workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
+
+	// Cross training to support medium distance running
 	case GOAL_5K_RUN:
 	case GOAL_10K_RUN:
 	case GOAL_15K_RUN:
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		break;
+
+	// Cross training to support long distance running
 	case GOAL_HALF_MARATHON_RUN:
 	case GOAL_MARATHON_RUN:
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		break;
+
+	// Cross training to support ultra distance running
 	case GOAL_50K_RUN:
 	case GOAL_50_MILE_RUN:
-		workouts.push_back(GenerateEasyAerobicRide());
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
 		break;
+
+	// Short distance triathlons
 	case GOAL_SPRINT_TRIATHLON:
-		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance));
-		break;
 	case GOAL_OLYMPIC_TRIATHLON:
-		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance));
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		if (inTaper || goalType == GOAL_TYPE_COMPLETION)
+			workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		else
+			workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
+
+	// Long distance triathlons
 	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
-		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance));
-		break;
 	case GOAL_IRON_DISTANCE_TRIATHLON:
-		workouts.push_back(GenerateEasyAerobicRide());
-		workouts.push_back(GenerateIntervalSession(goalDistance));
+		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		if (inTaper || goalType == GOAL_TYPE_COMPLETION)
+			workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		else
+			workouts.push_back(GenerateIntervalSession(goalDistance));
 		break;
 	}
 

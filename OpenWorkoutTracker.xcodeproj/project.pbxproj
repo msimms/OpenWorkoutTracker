@@ -505,6 +505,9 @@
 		27E3021E24F0A6E000EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
 		27E3021F24F0A6E100EB5501 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E3020C24F0976D00EB5501 /* WorkoutFactory.cpp */; };
 		27E3022424F593C100EB5501 /* WorkoutsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27E3022324F593C100EB5501 /* WorkoutsViewController.m */; };
+		27E6893C2888822800755424 /* PlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E6892F288881A000755424 /* PlanGenerator.cpp */; };
+		27E6893D2888822900755424 /* PlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E6892F288881A000755424 /* PlanGenerator.cpp */; };
+		27E6893E2888822A00755424 /* PlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27E6892F288881A000755424 /* PlanGenerator.cpp */; };
 		27EAAB31244A39C7000FBFA0 /* GearViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB22244A39C7000FBFA0 /* GearViewController.m */; };
 		27EAAB34244D16BA000FBFA0 /* ShoeProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB33244D16BA000FBFA0 /* ShoeProfileViewController.m */; };
 		27EAAB48244F786B000FBFA0 /* ApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EAAB46244F786B000FBFA0 /* ApiClient.m */; };
@@ -1100,6 +1103,7 @@
 		27E3022024F2FA7100EB5501 /* GoalType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoalType.h; path = Activities/GoalType.h; sourceTree = SOURCE_ROOT; };
 		27E3022224F593C100EB5501 /* WorkoutsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutsViewController.h; path = IOS/View/WorkoutsViewController.h; sourceTree = SOURCE_ROOT; };
 		27E3022324F593C100EB5501 /* WorkoutsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WorkoutsViewController.m; path = IOS/View/WorkoutsViewController.m; sourceTree = SOURCE_ROOT; };
+		27E6892F288881A000755424 /* PlanGenerator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PlanGenerator.cpp; path = Activities/PlanGenerator.cpp; sourceTree = SOURCE_ROOT; };
 		27EA8F772159833600E3FB75 /* AppStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppStrings.h; path = IOS/View/AppStrings.h; sourceTree = SOURCE_ROOT; };
 		27EAAB22244A39C7000FBFA0 /* GearViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GearViewController.m; path = IOS/View/GearViewController.m; sourceTree = SOURCE_ROOT; };
 		27EAAB30244A39C7000FBFA0 /* GearViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GearViewController.h; path = IOS/View/GearViewController.h; sourceTree = SOURCE_ROOT; };
@@ -1773,6 +1777,7 @@
 				27F4240023A432A300F59F50 /* OpenWaterSwim.cpp */,
 				27F4240123A432A300F59F50 /* OpenWaterSwim.h */,
 				276E3B8F23B0FC3B00EAC341 /* PacePlan.h */,
+				27E6892F288881A000755424 /* PlanGenerator.cpp */,
 				274DC6FF285959A6005AA073 /* PlanGenerator.h */,
 				27F4240323A44C0E00F59F50 /* PoolSwim.cpp */,
 				27F4240423A44C0E00F59F50 /* PoolSwim.h */,
@@ -2257,6 +2262,7 @@
 				270CF48A2391F0BB00584058 /* ZwoFileReader.h in Sources */,
 				27CF012124D7A68000263CEC /* Workout.cpp in Sources */,
 				270CF48B2391F0BB00584058 /* ZwoTags.h in Sources */,
+				27E6893C2888822800755424 /* PlanGenerator.cpp in Sources */,
 				270CF46A2391F0B200584058 /* Database.cpp in Sources */,
 				270CF46B2391F0B200584058 /* Database.h in Sources */,
 				270CF46C2391F0B200584058 /* DataExporter.cpp in Sources */,
@@ -2452,6 +2458,7 @@
 				27B7CDA219BFD91C000383E3 /* Pin.m in Sources */,
 				27B7CDC419BFD953000383E3 /* CadenceLine.m in Sources */,
 				27B7CDC519BFD953000383E3 /* ChartLine.m in Sources */,
+				27E6893E2888822A00755424 /* PlanGenerator.cpp in Sources */,
 				275CAC7425DF2B48000727AE /* ExportUtils.m in Sources */,
 				27B7CD9A19BFD91C000383E3 /* LiveMapViewController.m in Sources */,
 				27C0845319BFD063007CE934 /* Cycling.cpp in Sources */,
@@ -2622,6 +2629,7 @@
 				27DCF68522C29577009A23C2 /* Accelerometer.m in Sources */,
 				27DCF60D22B71628009A23C2 /* GForceAnalyzerFactory.cpp in Sources */,
 				27DCF60E22B71628009A23C2 /* GForceAnalyzerFactory.h in Sources */,
+				27E6893D2888822900755424 /* PlanGenerator.cpp in Sources */,
 				27FB32A02707D95900C66AC2 /* Peaks.cpp in Sources */,
 				27F3E7AC25BCFF41001D3CCE /* CloudPreferences.m in Sources */,
 				27DCF60F22B71628009A23C2 /* Hike.cpp in Sources */,

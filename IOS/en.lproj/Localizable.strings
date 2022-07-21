@@ -141,6 +141,7 @@
 "Gender" = "Biological Gender";
 "Goal" = "Goal";
 "Goal Date" = "Goal Date";
+"Goal Type" = "Goal Type";
 "GPX File" = "GPX File";
 "Grade Adjusted Pace" = "Grade Adjusted Pace";
 "Gradient" = "Gradient";
@@ -234,6 +235,7 @@
 "Ok" = "Ok";
 "Olympic Triathlon" = "Olympic Triathlon";
 "Open Water Swimming" = "Open Water Swimming";
+"Open Water Swims" = "Open Water Swims";
 "Overlay" = "Overlay";
 "Overview" = "Overview";
 "Pace" = "Pace";
@@ -246,6 +248,7 @@
 "Please specify a URL." = "Please specify a URL.";
 "Pool Length" = "Pool Length";
 "Poor Location Data" = "Poor Location Data";
+"Pool Swims" = "Pool Swims";
 "Position" = "Position";
 "Power" = "Power";
 "Power Meter" = "Power Meter";

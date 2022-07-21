@@ -40,6 +40,7 @@
 #define STR_GENERATE              NSLocalizedString(@"Generate", nil)
 #define STR_GOAL                  NSLocalizedString(@"Goal", nil)
 #define STR_GOAL_DATE             NSLocalizedString(@"Goal Date", nil)
+#define STR_GOAL_TYPE             NSLocalizedString(@"Goal Type", nil)
 #define STR_HEIGHT                NSLocalizedString(@"Height", nil)
 #define STR_HOME                  NSLocalizedString(@"Home", nil)
 #define STR_INFO                  NSLocalizedString(@"Info", nil)

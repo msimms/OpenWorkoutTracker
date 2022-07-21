@@ -102,21 +102,6 @@ double RunPlanGenerator::MaxAttainableDistance(double baseDistanceMeters, double
 	return (baseDistanceKm + (pow(baseDistanceKm * (1.0 + (WEEKLY_RATE / 52.0)), (52.0 * numWeeks)) - baseDistanceKm)) * 1000.0;
 }
 
-/// @brief Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less.
-bool RunPlanGenerator::IsInTaper(double weeksUntilGoal, Goal goal)
-{
-	bool inTaper = false;
-
-	if (goal != GOAL_FITNESS)
-	{
-		if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
-			inTaper = true;
-		if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
-			inTaper = true;
-	}
-	return inTaper;
-}
-
 /// @brief Returns TRUE if we can actually generate a plan with the given contraints.
 bool RunPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inputs)
 {
@@ -662,8 +647,8 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		// Keep track of the number of easy miles/kms and the number of hard miles/kms we're expecting the user to run so we can balance the two.
 		this->ClearIntensityDistribution();
 
-		// Add a long run.
-		if (!inTaper)
+		// Add a long run. No need for a long run if the goal is general fitness.
+		if (!inTaper && goal != GOAL_FITNESS)
 		{
 			Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
 			workouts.push_back(longRunWorkout);
@@ -727,6 +712,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		if (validTotalItensity)
 		{
 			double intensityDistributionScore = this->CheckIntensityDistribution();
+
 			if (iterCount == 0 || intensityDistributionScore < bestIntensityDistributionScore)
 			{
 				for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
@@ -743,7 +729,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 
 		// Exit conditions:
 		if (iterCount >= 6)
+		{
 			done = true;
+		}
 	}
 
 	// Calculate the total stress for each workout.

@@ -38,7 +38,6 @@ private:
 
 	double MaxLongRunDistance(double goalDistance);
 	double MaxAttainableDistance(double baseDistance, double numWeeks);
-	bool IsInTaper(double weeksUntilGoal, Goal goal);
 
 	void ClearIntensityDistribution(void);
 	void UpdateIntensityDistribution(uint64_t seconds, double meters);
