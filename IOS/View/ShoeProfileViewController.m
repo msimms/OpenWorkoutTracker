@@ -45,9 +45,6 @@
 
 	[self.nameLabel setText:LABEL_NAME];
 	[self.descLabel setText:LABEL_DESCRIPTION];
-
-	[self->nameTextField setDelegate:self];
-	[self->descTextField setDelegate:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -114,8 +111,8 @@
 		return false;
 	}
 
-    const char* shoeName = [[self.nameTextField text] UTF8String];
-    const char* shoeDesc = [[self.descTextField text] UTF8String];
+    const char* shoeName = [[self->nameTextField text] UTF8String];
+    const char* shoeDesc = [[self->descTextField text] UTF8String];
 
     bool saved = false;
     
@@ -125,7 +122,7 @@
 		saved = AddShoeProfile(shoeName, shoeDesc, 0, 0);
 		break;
 	case SHOE_PROFILE_UPDATE:
-		saved = UpdateShoeProfile(shoeId, shoeName, shoeDesc, 0, 0);
+		saved = UpdateShoeProfile(self->shoeId, shoeName, shoeDesc, 0, 0);
 		break;
 	default:
 		break;
@@ -135,12 +132,6 @@
 }
 
 #pragma mark button handlers
-
-- (IBAction)onSave:(id)sender
-{
-	[self save];
-	[self.navigationController popViewControllerAnimated:YES];
-}
 
 - (IBAction)onDelete:(id)sender
 {

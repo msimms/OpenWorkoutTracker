@@ -1296,6 +1296,7 @@ extern "C" {
 		{
 			Shoes shoes;
 
+			shoes.id = shoeId;
 			shoes.name = name;
 			shoes.description = description;
 			shoes.timeAdded = timeAdded;

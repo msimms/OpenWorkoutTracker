@@ -546,18 +546,18 @@ bool Database::RetrieveShoe(uint64_t shoeId, Shoes& shoes)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, description, time_added, time_retired, last_updated_time from shoe where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select name, description, time_added, time_retired, last_updated_time from shoe where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, shoeId);
 
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			shoes.id = shoeId;
-			shoes.name.append((const char*)sqlite3_column_text(statement, 2));
-			shoes.description.append((const char*)sqlite3_column_text(statement, 3));
-			shoes.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
-			shoes.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
-			shoes.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 6);
+			shoes.name.append((const char*)sqlite3_column_text(statement, 1));
+			shoes.description.append((const char*)sqlite3_column_text(statement, 2));
+			shoes.timeAdded = (time_t)sqlite3_column_int64(statement, 3);
+			shoes.timeRetired = (time_t)sqlite3_column_int64(statement, 4);
+			shoes.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 5);
 			result = true;
 		}
 		sqlite3_finalize(statement);
@@ -579,9 +579,9 @@ bool Database::RetrieveAllShoes(std::vector<Shoes>& allShoes)
 			shoes.id = sqlite3_column_int64(statement, 0);
 			shoes.name.append((const char*)sqlite3_column_text(statement, 1));
 			shoes.description.append((const char*)sqlite3_column_text(statement, 2));
-			shoes.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
-			shoes.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
-			shoes.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 6);
+			shoes.timeAdded = (time_t)sqlite3_column_int64(statement, 3);
+			shoes.timeRetired = (time_t)sqlite3_column_int64(statement, 4);
+			shoes.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 5);
 
 			allShoes.push_back(shoes);
 		}

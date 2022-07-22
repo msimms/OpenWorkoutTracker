@@ -13,7 +13,7 @@ typedef enum BikeProfileViewMode
 	BIKE_PROFILE_UPDATE
 } BikeProfileViewMode;
 
-@interface BikeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
+@interface BikeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate>
 {
 	IBOutlet UIBarButtonItem* wheelSizeButton;
 	IBOutlet UIBarButtonItem* saveButton;
@@ -31,15 +31,13 @@ typedef enum BikeProfileViewMode
 	BikeProfileViewMode mode;
 }
 
-- (IBAction)onWheelSize:(id)sender;
-- (IBAction)onSave:(id)sender;
+- (void)wheelDiameterTap:(UITapGestureRecognizer*)recognizer;
+
 - (IBAction)onDelete:(id)sender;
 
 - (void)setBikeId:(uint64_t)newBikeId;
 - (void)setMode:(BikeProfileViewMode)newMode;
 
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* wheelSizeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem* saveButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
 @property (nonatomic, retain) IBOutlet UITextField* nameTextField;
 @property (nonatomic, retain) IBOutlet UITextField* weightTextField;

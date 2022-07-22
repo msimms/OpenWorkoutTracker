@@ -700,17 +700,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8eE-42-8Mw">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem title="Wheel Size" id="kYC-Hp-SS2">
-                                        <connections>
-                                            <action selector="onWheelSize:" destination="nMS-ks-hnh" id="Gdx-IC-MVn"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="tUO-fK-udb"/>
-                                    <barButtonItem systemItem="save" id="iac-ss-GGD">
-                                        <connections>
-                                            <action selector="onSave:" destination="nMS-ks-hnh" id="MCf-Dx-BvZ"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem systemItem="trash" id="D6E-9d-cRX">
                                         <connections>
                                             <action selector="onDelete:" destination="nMS-ks-hnh" id="xAG-YB-Pn1"/>
@@ -753,7 +743,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="jpK-Fj-dH3">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="jpK-Fj-dH3">
                                 <rect key="frame" x="21" y="321" width="261" height="34"/>
                                 <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -808,12 +798,10 @@
                         <outlet property="nameLabel" destination="p0P-kX-EM3" id="fgb-D4-ha4"/>
                         <outlet property="nameTextField" destination="Rac-m7-0mq" id="poW-th-0z4"/>
                         <outlet property="navItem" destination="nXg-ca-QOe" id="bVa-Jt-0cb"/>
-                        <outlet property="saveButton" destination="iac-ss-GGD" id="5cu-3m-vWU"/>
                         <outlet property="toolbar" destination="8eE-42-8Mw" id="DjL-KO-ZHq"/>
                         <outlet property="weightLabel" destination="Dro-in-ghc" id="0JG-Ei-8JL"/>
                         <outlet property="weightTextField" destination="4fI-Zz-gnh" id="nOK-hR-oOa"/>
                         <outlet property="weightUnitsLabel" destination="c05-uh-Xln" id="zAi-LH-07v"/>
-                        <outlet property="wheelSizeButton" destination="kYC-Hp-SS2" id="U68-Xl-HBo"/>
                         <outlet property="wheelSizeLabel" destination="H1W-n5-nzY" id="61F-kZ-sMW"/>
                         <outlet property="wheelSizeTextField" destination="jpK-Fj-dH3" id="nsB-oa-29M"/>
                         <outlet property="wheelSizeUnitsLabel" destination="ebM-eo-HlB" id="ZWY-t3-a9c"/>
@@ -2838,11 +2826,6 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pb4-or-lV6"/>
-                                    <barButtonItem systemItem="save" id="6aa-cT-lXN">
-                                        <connections>
-                                            <action selector="onSave:" destination="Q0h-1D-Oup" id="gPs-xl-cpD"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem systemItem="trash" id="k65-MD-wuI">
                                         <connections>
                                             <action selector="onDelete:" destination="Q0h-1D-Oup" id="feg-rV-0L6"/>
@@ -2872,27 +2855,25 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="c6d-yt-GNs" userLabel="Description Text Field">
-                                <rect key="frame" x="20" y="234" width="374" height="34"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="NUk-V0-VhM">
+                                <rect key="frame" x="20" y="234" width="370" height="128"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                            </textField>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Vjy-QC-Ycg"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
-                            <constraint firstItem="c6d-yt-GNs" firstAttribute="top" secondItem="Lg4-yJ-jgB" secondAttribute="bottom" constant="8" id="0hT-ES-NGF"/>
                             <constraint firstItem="Vjy-QC-Ycg" firstAttribute="trailing" secondItem="5hL-aM-lJh" secondAttribute="trailing" constant="24" id="8kG-n9-LKm"/>
                             <constraint firstItem="5hL-aM-lJh" firstAttribute="leading" secondItem="1Uf-ao-Gb0" secondAttribute="leading" id="8o2-KT-H10"/>
                             <constraint firstItem="Lg4-yJ-jgB" firstAttribute="top" secondItem="1Uf-ao-Gb0" secondAttribute="bottom" constant="21" id="Be9-eT-Fk5"/>
                             <constraint firstItem="o9I-wr-kdf" firstAttribute="bottom" secondItem="Vjy-QC-Ycg" secondAttribute="bottom" id="Cpq-Z2-bCk"/>
-                            <constraint firstItem="Vjy-QC-Ycg" firstAttribute="trailing" secondItem="c6d-yt-GNs" secondAttribute="trailing" constant="20" id="Gis-CM-sYa"/>
                             <constraint firstItem="1Uf-ao-Gb0" firstAttribute="centerX" secondItem="Pu0-xb-oc2" secondAttribute="centerX" id="MWj-9p-Znh"/>
                             <constraint firstItem="1Uf-ao-Gb0" firstAttribute="top" secondItem="5hL-aM-lJh" secondAttribute="bottom" constant="8" id="PGs-Jw-E3L"/>
                             <constraint firstItem="5hL-aM-lJh" firstAttribute="leading" secondItem="Vjy-QC-Ycg" secondAttribute="leading" constant="20" id="QwG-ap-3SI"/>
-                            <constraint firstItem="Lg4-yJ-jgB" firstAttribute="leading" secondItem="c6d-yt-GNs" secondAttribute="leading" id="UYQ-bw-gcK"/>
                             <constraint firstItem="o9I-wr-kdf" firstAttribute="leading" secondItem="Vjy-QC-Ycg" secondAttribute="leading" id="W1R-Rt-swB"/>
                             <constraint firstItem="5hL-aM-lJh" firstAttribute="top" secondItem="Vjy-QC-Ycg" secondAttribute="top" constant="37" id="hgS-MA-MKC"/>
                             <constraint firstItem="1Uf-ao-Gb0" firstAttribute="leading" secondItem="Lg4-yJ-jgB" secondAttribute="leading" id="iZQ-EV-UBo"/>
@@ -2904,17 +2885,16 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
                     <connections>
                         <outlet property="deleteButton" destination="k65-MD-wuI" id="NG9-uD-bB9"/>
                         <outlet property="descLabel" destination="Lg4-yJ-jgB" id="OxW-QJ-NdL"/>
-                        <outlet property="descTextField" destination="c6d-yt-GNs" id="V6s-2J-e5m"/>
+                        <outlet property="descTextField" destination="NUk-V0-VhM" id="87u-6x-mVZ"/>
                         <outlet property="nameLabel" destination="5hL-aM-lJh" id="lbX-F1-AD4"/>
                         <outlet property="nameTextField" destination="1Uf-ao-Gb0" id="2gv-00-v1G"/>
                         <outlet property="navItem" destination="1Sr-Ad-0gj" id="p6d-tL-ubh"/>
-                        <outlet property="saveButton" destination="6aa-cT-lXN" id="Wce-df-Rkk"/>
                         <outlet property="toolbar" destination="o9I-wr-kdf" id="SaX-Hq-RsG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hzH-Uu-ckl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-943.20000000000005" y="2992.6108374384239"/>
+            <point key="canvasLocation" x="-943.47826086956525" y="2991.9642857142858"/>
         </scene>
         <!--Segment-->
         <scene sceneID="TJo-XU-45p">
@@ -2999,6 +2979,9 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="tag" catalog="system" width="32" height="32"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

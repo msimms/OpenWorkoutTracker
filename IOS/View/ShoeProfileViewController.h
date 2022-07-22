@@ -13,12 +13,11 @@ typedef enum ShoeProfileViewMode
 	SHOE_PROFILE_UPDATE
 } ShoeProfileViewMode;
 
-@interface ShoeProfileViewController : CommonViewController <UITextFieldDelegate, UIActionSheetDelegate>
+@interface ShoeProfileViewController : CommonViewController <UIActionSheetDelegate>
 {
-	IBOutlet UIBarButtonItem* saveButton;
 	IBOutlet UIBarButtonItem* deleteButton;
 	IBOutlet UITextField* nameTextField;
-	IBOutlet UITextField* descTextField;
+	IBOutlet UITextView* descTextField;
 	IBOutlet UILabel* nameLabel;
 	IBOutlet UILabel* descLabel;
 
@@ -26,7 +25,6 @@ typedef enum ShoeProfileViewMode
 	ShoeProfileViewMode mode;
 }
 
-- (IBAction)onSave:(id)sender;
 - (IBAction)onDelete:(id)sender;
 
 - (void)setShoeId:(uint64_t)newShoeId;
@@ -35,7 +33,7 @@ typedef enum ShoeProfileViewMode
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* saveButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* deleteButton;
 @property (nonatomic, retain) IBOutlet UITextField* nameTextField;
-@property (nonatomic, retain) IBOutlet UITextField* descTextField;
+@property (nonatomic, retain) IBOutlet UITextView* descTextField;
 @property (nonatomic, retain) IBOutlet UILabel* nameLabel;
 @property (nonatomic, retain) IBOutlet UILabel* descLabel;
 

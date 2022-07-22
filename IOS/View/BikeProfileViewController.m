@@ -45,8 +45,6 @@
 
 @implementation BikeProfileViewController
 
-@synthesize wheelSizeButton;
-@synthesize saveButton;
 @synthesize deleteButton;
 @synthesize nameTextField;
 @synthesize weightTextField;
@@ -75,6 +73,13 @@
 
 	[self->nameTextField setDelegate:self];
 	[self->weightTextField setDelegate:self];
+	
+	// Touch gesture recognizer for the wheel size edit.
+	UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wheelDiameterTap:)];
+	[tap setNumberOfTapsRequired:1];
+	tap.delegate = self;
+	[self->wheelSizeTextField addGestureRecognizer:tap];
+	self->wheelSizeTextField.userInteractionEnabled = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -260,6 +265,7 @@
 		break;
     }
 
+	// Is this a new bike or are we updating an existing bike profile?
 	switch (self->mode)
     {
 	case BIKE_PROFILE_NEW:
@@ -275,18 +281,40 @@
     return saved;
 }
 
-#pragma mark button handlers
+#pragma mark UITextFieldDelegate methods
 
-- (IBAction)onWheelSize:(id)sender
+- (BOOL)textFieldShouldReturn:(UITextField*)textField
+{
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField
+{
+	return YES;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField*)textField
+{
+	return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField*)textField
+{
+}
+
+- (void)textFieldDidEndEditing:(UITextField*)textField
+{
+}
+
+#pragma mark tap gesture handlers
+
+- (void)wheelDiameterTap:(UITapGestureRecognizer*)recognizer
 {
 	[self showWheelDiameterSheet];
 }
 
-- (IBAction)onSave:(id)sender
-{
-	[self save];
-	[self.navigationController popViewControllerAnimated:YES];
-}
+#pragma mark button handlers
 
 - (IBAction)onDelete:(id)sender
 {
@@ -313,14 +341,6 @@
 	default:
 		break;
 	}
-}
-
-#pragma mark UITextFieldDelegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField*)textField
-{
-	[textField resignFirstResponder];
-	return NO;
 }
 
 #pragma mark accessor methods
