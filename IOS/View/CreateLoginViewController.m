@@ -42,13 +42,24 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createLoginProcessed:) name:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createLoginProcessed:) name:@NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED object:nil];
 	[self.spinner stopAnimating];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)shouldAutorotate

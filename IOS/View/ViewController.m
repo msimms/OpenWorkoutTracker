@@ -67,6 +67,17 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationInitialized:) name:@NOTIFICATION_NAME_APPLICATION_INITIALIZED object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+
+	self.navigationController.navigationBarHidden = TRUE;
+	
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate freeHistoricalActivityList];
+	[appDelegate destroyCurrentActivity];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -79,17 +90,6 @@
 	}
 
 	[self stopSpinner:self.spinner];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-	[super viewWillAppear:animated];
-
-	self.navigationController.navigationBarHidden = TRUE;
-	
-	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	[appDelegate freeHistoricalActivityList];
-	[appDelegate destroyCurrentActivity];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

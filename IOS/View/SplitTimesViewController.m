@@ -71,6 +71,11 @@ typedef enum SectionType
 	self.title = STR_SPLIT_TIMES;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];

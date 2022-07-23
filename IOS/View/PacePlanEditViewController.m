@@ -43,6 +43,11 @@ typedef enum PickerRows
 	[super viewDidLoad];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];

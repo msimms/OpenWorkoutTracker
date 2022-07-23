@@ -42,19 +42,22 @@
 	[self.autoScaleButton setTitle:STR_AUTOSCALE];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
 	[UIApplication sharedApplication].idleTimerDisabled = FALSE;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdated:) name:@NOTIFICATION_NAME_LOCATION object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)shouldAutorotate

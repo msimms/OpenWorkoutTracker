@@ -80,14 +80,11 @@
 
 	self->selectedActivityId = nil;
 	self->searching = false;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedWatchActivity:) name:@NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY object:nil];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -101,6 +98,14 @@
 	[self.historyTableView reloadData];
 
 	[self stopSpinner:self.spinner];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedWatchActivity:) name:@NOTIFICATION_NAME_RECEIVED_WATCH_ACTIVITY object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)shouldAutorotate

@@ -94,12 +94,16 @@ typedef enum WorkoutsPrefsRows
 	[self updateWorkoutNames];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
+	[super viewDidAppear:animated];
 	[self updateWorkoutNames];
 	[self.workoutsView reloadData];
-
-	[super viewDidAppear:animated];
 }
 
 - (BOOL)shouldAutorotate

@@ -30,10 +30,20 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userListUpdated:) name:@NOTIFICATION_NAME_FRIENDS_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(requestToFollowResult:) name:@NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT object:nil];
-
+	
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate serverListFriends];
 }
@@ -86,8 +96,12 @@
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
 	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
 
+	// Valid response was received?
 	if (responseCode && [responseCode intValue] == 200)
 	{
+		NSError* error = nil;
+		NSArray* userObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
+
 		@synchronized(self->users)
 		{
 		}
@@ -96,7 +110,7 @@
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:responseStr];
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_REQUEST_FAILED];
 	}
 }
 
@@ -111,7 +125,7 @@
 	}
 	else
 	{
-		[super showOneButtonAlert:STR_ERROR withMsg:responseStr];
+		[super showOneButtonAlert:STR_ERROR withMsg:STR_REQUEST_FAILED];
 	}
 }
 

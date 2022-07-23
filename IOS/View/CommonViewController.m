@@ -14,12 +14,17 @@
 @synthesize navItem;
 @synthesize toolbar;
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-	[super viewDidAppear:animated];
+	[super viewWillAppear:animated];
 
 	[self initializeNavButtonColor];
 	[self initializeToolbarButtonColor];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
 	
 	self->spinCount = 0;
 }

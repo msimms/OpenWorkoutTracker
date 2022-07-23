@@ -82,6 +82,11 @@ typedef enum SettingsSections
 	}
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	self->currentValuesOfHRMs = [[NSMutableDictionary alloc] init];

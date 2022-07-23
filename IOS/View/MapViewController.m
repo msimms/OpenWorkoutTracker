@@ -95,6 +95,11 @@ MapViewController* g_ptrToMapViewCtrl;
 	self->lines = [[NSMutableArray alloc] init];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];

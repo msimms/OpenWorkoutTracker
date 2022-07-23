@@ -423,7 +423,8 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s8e-Qn-gby">
                                 <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                                 <items>
-                                    <barButtonItem title="Request to Friend" id="zsC-p8-eRR">
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="rOY-hE-Xvc"/>
+                                    <barButtonItem systemItem="add" id="zsC-p8-eRR">
                                         <connections>
                                             <action selector="onRequestToFollow:" destination="D1T-Mz-I8j" id="M8v-4N-txl"/>
                                         </connections>
@@ -457,6 +458,7 @@
                     <navigationItem key="navigationItem" title="Friends" id="pjJ-W1-Kl2"/>
                     <connections>
                         <outlet property="navItem" destination="pjJ-W1-Kl2" id="wu1-nx-1Ne"/>
+                        <outlet property="toolbar" destination="s8e-Qn-gby" id="v4U-RS-FoR"/>
                         <outlet property="usersTableView" destination="cYA-ES-4As" id="WAQ-8d-xcG"/>
                     </connections>
                 </viewController>
