@@ -640,7 +640,10 @@ typedef enum WorkoutsPrefsRows
 			// Append the scheduled time, if it is set.
 			if (scheduledTime > 0)
 			{
-				cell.textLabel.text = [StringUtils formatDate:[NSDate dateWithTimeIntervalSince1970:scheduledTime]];
+				NSDate* scheduledDateUtc = [NSDate dateWithTimeIntervalSince1970:scheduledTime];
+				time_t offset = [[NSTimeZone systemTimeZone] secondsFromGMT];
+				NSDate* scheduledDate = [NSDate dateWithTimeInterval:-offset sinceDate:scheduledDateUtc];
+				cell.textLabel.text = [StringUtils formatDate:scheduledDate];
 			}
 			else
 			{

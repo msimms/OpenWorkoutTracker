@@ -3084,7 +3084,7 @@ extern "C" {
 		return result;
 	}
 
-	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance)
+	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, uint64_t duration, double recoveryPace, double recoveryDistance, uint64_t recoveryDuration)
 	{
 		bool result = false;
 
@@ -3098,13 +3098,14 @@ extern "C" {
 			{
 				WorkoutInterval interval;
 				interval.m_repeat = repeat;
-				interval.m_duration = 0.0;
+				interval.m_duration = duration;
 				interval.m_powerLow = 0.0;
 				interval.m_powerHigh = 0.0;
 				interval.m_distance = distance;
 				interval.m_pace = pace;
 				interval.m_recoveryDistance = recoveryDistance;
 				interval.m_recoveryPace = recoveryPace;
+				interval.m_recoveryDuration = recoveryDuration;
 
 				result = g_pDatabase->CreateWorkoutInterval(workout, interval);
 			}
@@ -3112,6 +3113,37 @@ extern "C" {
 
 		g_dbLock.unlock();
 
+		return result;
+	}
+
+	bool AddWorkoutIntervalByDuration(const char* const workoutId, double pace, uint64_t duration)
+	{
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			Workout workout;
+			
+			if (g_pDatabase->RetrieveWorkout(workoutId, workout))
+			{
+				WorkoutInterval interval;
+				interval.m_repeat = 1;
+				interval.m_duration = duration;
+				interval.m_powerLow = 0.0;
+				interval.m_powerHigh = 0.0;
+				interval.m_distance = 0.0;
+				interval.m_pace = pace;
+				interval.m_recoveryDistance = 0.0;
+				interval.m_recoveryPace = 0.0;
+				
+				result = g_pDatabase->CreateWorkoutInterval(workout, interval);
+			}
+		}
+		
+		g_dbLock.unlock();
+		
 		return result;
 	}
 

@@ -1352,6 +1352,42 @@ void startSensorCallback(SensorType type, void* context)
 	}
 }
 
+- (void)parsePlannedWorkoutIntervalObject:(NSDictionary*)intervalObj forWorkoutId:(NSString*)workoutId
+{
+	NSNumber* repeatObj = [intervalObj objectForKey:@PARAM_INTERVAL_REPEAT];
+	NSNumber* paceObj = [intervalObj objectForKey:@PARAM_INTERVAL_PACE];
+	NSNumber* distanceObj = [intervalObj objectForKey:@PARAM_INTERVAL_DISTANCE];
+	NSNumber* durationObj = [intervalObj objectForKey:@PARAM_INTERVAL_DURATION];
+	NSNumber* recoveryPaceObj = [intervalObj objectForKey:@PARAM_INTERVAL_RECOVERY_PACE];
+	NSNumber* recoveryDistanceObj = [intervalObj objectForKey:@PARAM_INTERVAL_RECOVERY_DISTANCE];
+	NSNumber* recoveryDurationObj = [intervalObj objectForKey:@PARAM_INTERVAL_RECOVERY_DURATION];
+
+	uint8_t repeat = 1;
+	double pace = 0.0;
+	double distance = 0.0;
+	uint64_t duration = 0;
+	double recoveryPace = 0.0;
+	double recoveryDistance = 0.0;
+	uint64_t recoveryDuration = 0;
+
+	if (repeatObj && ![repeatObj isKindOfClass:[NSNull class]])
+		repeat = [repeatObj intValue];
+	if (paceObj && ![paceObj isKindOfClass:[NSNull class]])
+		pace = [paceObj doubleValue];
+	if (distanceObj && ![distanceObj isKindOfClass:[NSNull class]])
+		distance = [distanceObj doubleValue];
+	if (durationObj && ![durationObj isKindOfClass:[NSNull class]])
+		duration = [durationObj unsignedLongLongValue];
+	if (recoveryPaceObj && ![recoveryPaceObj isKindOfClass:[NSNull class]])
+		recoveryPace = [recoveryPaceObj doubleValue];
+	if (recoveryDistanceObj && ![recoveryDistanceObj isKindOfClass:[NSNull class]])
+		recoveryDistance = [recoveryDistanceObj doubleValue];
+	if (recoveryDurationObj && ![recoveryDurationObj isKindOfClass:[NSNull class]])
+		recoveryDuration = [recoveryDurationObj unsignedLongLongValue];
+
+	AddWorkoutInterval([workoutId UTF8String], repeat, pace, distance, duration, recoveryPace, recoveryDistance, recoveryDuration);
+}
+
 /// @brief Called when the server responds to a request for the workouts planned for the user.
 - (void)plannedWorkoutsUpdated:(NSNotification*)notification
 {
@@ -1389,40 +1425,26 @@ void startSensorCallback(SensorType type, void* context)
 					WorkoutType workoutType = WorkoutTypeStrToEnum([workoutTypeStr UTF8String]);
 
 					// Create the workout.
-					if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedIntensityScore doubleValue], [scheduledTime intValue]))
+					if (CreateWorkout([workoutId UTF8String], workoutType, [sportType UTF8String], [estimatedIntensityScore doubleValue], [scheduledTime unsignedLongLongValue]))
 					{
 						NSArray* intervals = [workoutDict objectForKey:@PARAM_WORKOUT_INTERVALS];
 
 						// Add the warmup.
 						if (warmup && [warmup count] > 0)
 						{
-							NSNumber* pace = [warmup objectForKey:@PARAM_INTERVAL_PACE];
-							NSNumber* duration = [warmup objectForKey:@PARAM_INTERVAL_DURATION];
-							double distance = [pace doubleValue] * [duration doubleValue];
-
-							AddWorkoutInterval([workoutId UTF8String], 1, [pace doubleValue], distance, 0.0, 0.0);
+							[self parsePlannedWorkoutIntervalObject:warmup forWorkoutId:workoutId];
 						}
 
 						// Add the intervals.
 						for (NSDictionary* interval in intervals)
 						{
-							NSNumber* repeat = [interval objectForKey:@PARAM_INTERVAL_REPEAT];
-							NSNumber* pace = [interval objectForKey:@PARAM_INTERVAL_PACE];
-							NSNumber* distance = [interval objectForKey:@PARAM_INTERVAL_DISTANCE];
-							NSNumber* recoveryPace = [interval objectForKey:@PARAM_INTERVAL_RECOVERY_PACE];
-							NSNumber* recoveryDistance = [interval objectForKey:@PARAM_INTERVAL_RECOVERY_DISTANCE];
-
-							AddWorkoutInterval([workoutId UTF8String], [repeat intValue], [pace doubleValue], [distance doubleValue], [recoveryPace doubleValue], [recoveryDistance doubleValue]);
+							[self parsePlannedWorkoutIntervalObject:interval forWorkoutId:workoutId];
 						}
 
 						// Add the cooldown.
 						if (cooldown && [cooldown count] > 0)
 						{
-							NSNumber* pace = [cooldown objectForKey:@PARAM_INTERVAL_PACE];
-							NSNumber* duration = [cooldown objectForKey:@PARAM_INTERVAL_DURATION];
-							double distance = [pace doubleValue] * [duration doubleValue];
-
-							AddWorkoutInterval([workoutId UTF8String], 1, [pace doubleValue], distance, 0.0, 0.0);
+							[self parsePlannedWorkoutIntervalObject:cooldown forWorkoutId:workoutId];
 						}
 					}
 				}
@@ -3236,7 +3258,9 @@ void attributeNameCallback(const char* name, void* context)
 			NSMutableDictionary* workoutDict = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
 
 			if (workoutDict)
+			{
 				[workoutData addObject:workoutDict];
+			}
 			free((void*)workoutJson);
 		}
 	}

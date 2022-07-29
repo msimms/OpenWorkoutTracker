@@ -206,7 +206,7 @@ extern "C" {
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime);
-	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, double recoveryPace, double recoveryDistance);
+	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, uint64_t duration, double recoveryPace, double recoveryDistance, uint64_t recoveryDuration);
 	bool DeleteWorkout(const char* const workoutId);
 	bool DeleteAllWorkouts(void);
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);
