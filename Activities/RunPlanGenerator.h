@@ -29,8 +29,7 @@ private:
 	double m_cutoffPace1;
 	double m_cutoffPace2;
 	double m_trainingIntensityDistribution[NUM_TRAINING_ZONES];  // Ideal distribution of intensity across training zones
-	double m_intensityDistributionMeters[NUM_TRAINING_ZONES];    // Distribution of distance spent in each intensity zone
-	uint64_t m_intensityDistributionSeconds[NUM_TRAINING_ZONES]; // Distribution of time spent in each intensity zone
+	uint8_t m_intensityDistributionWorkouts[NUM_TRAINING_ZONES]; // Distribution of the number of workouts in each intensity zone
 
 	static bool ValidFloat(double num, double minValue);
 	static double RoundDistance(double distance);
@@ -40,7 +39,6 @@ private:
 	double MaxAttainableDistance(double baseDistance, double numWeeks);
 
 	void ClearIntensityDistribution(void);
-	void UpdateIntensityDistribution(uint64_t seconds, double meters);
 	double CheckIntensityDistribution(void);
 
 	Workout* GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
