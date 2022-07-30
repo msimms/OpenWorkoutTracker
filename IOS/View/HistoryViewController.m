@@ -80,6 +80,10 @@
 
 	self->selectedActivityId = nil;
 	self->searching = false;
+
+	// Pull-to-refresh control
+	self.historyTableView.refreshControl = [[UIRefreshControl alloc] init];
+	[self.historyTableView.refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -133,6 +137,15 @@
 			[summaryVC setActivityId:self->selectedActivityId];
 		}
 	}
+}
+
+- (void)refreshTable
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.historyTableView.refreshControl beginRefreshing];
+		[self.historyTableView reloadData];
+		[self.historyTableView.refreshControl endRefreshing];
+	});
 }
 
 #pragma mark update notification
