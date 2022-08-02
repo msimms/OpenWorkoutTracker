@@ -24,6 +24,8 @@ private:
 	Workout* GenerateEasyAerobicRide(double avgRideDuration);
 	Workout* GenerateTempoRide(void);
 	Workout* GenerateSweetSpotRide(void);
+
+	uint8_t RoundDistance(uint8_t number, uint8_t nearest);
 };
 
 #endif

@@ -21,6 +21,11 @@ BikePlanGenerator::~BikePlanGenerator()
 {
 }
 
+uint8_t BikePlanGenerator::RoundDistance(uint8_t number, uint8_t nearest)
+{
+	return nearest * round(number / nearest);
+}
+
 /// @brief Returns TRUE if we can actually generate a plan with the given contraints.
 bool BikePlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inputs)
 {
@@ -101,6 +106,13 @@ Workout* BikePlanGenerator::GenerateEasyAerobicRide(double avgRideDuration)
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
+		// Select the power (% of FTP). Round to the nearest 5 watts
+		std::default_random_engine generator(std::random_device{}());
+		std::uniform_int_distribution<uint8_t> powerDistribution(55, 75);
+		uint8_t intervalPower = powerDistribution(generator);
+		intervalPower = RoundDistance(intervalPower, 5);
+
+		workout->AddTimeAndPowerInterval(1, avgRideDuration, intervalPower, 0, 0);
 	}
 	return workout;
 }
@@ -117,7 +129,18 @@ Workout* BikePlanGenerator::GenerateTempoRide(void)
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
+		// Select the power (% of FTP). Round to the nearest 5 watts
+		std::default_random_engine generator(std::random_device{}());
+		std::uniform_int_distribution<uint8_t> powerDistribution(75, 85);
+		uint8_t intervalPower = powerDistribution(generator);
+		intervalPower = RoundDistance(intervalPower, 5);
+
+		// Interval duration.
+		std::uniform_int_distribution<uint64_t> intervalDistribution(2, 4);
+		uint64_t numIntervalSeconds = intervalDistribution(generator) * 5 * 60;
+
 		workout->AddWarmup(warmupDuration);
+		workout->AddTimeAndPowerInterval(1, numIntervalSeconds, intervalPower, 0, 0);
 		workout->AddCooldown(cooldownDuration);
 	}
 	return workout;
@@ -135,7 +158,18 @@ Workout* BikePlanGenerator::GenerateSweetSpotRide(void)
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SWEET_SPOT_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
+		// Select the power (% of FTP). Round to the nearest 5 watts
+		std::default_random_engine generator(std::random_device{}());
+		std::uniform_int_distribution<uint8_t> powerDistribution(85, 95);
+		uint8_t intervalPower = powerDistribution(generator);
+		intervalPower = RoundDistance(intervalPower, 5);
+
+		// Interval duration.
+		std::uniform_int_distribution<uint64_t> intervalDistribution(2, 4);
+		uint64_t numIntervalSeconds = intervalDistribution(generator) * 5 * 60;
+
 		workout->AddWarmup(warmupDuration);
+		workout->AddTimeAndPowerInterval(1, numIntervalSeconds, intervalPower, 0, 0);
 		workout->AddCooldown(cooldownDuration);
 	}
 	return workout;
