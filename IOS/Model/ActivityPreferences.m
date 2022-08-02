@@ -24,7 +24,6 @@
 #define ACTIVITY_PREF_COUNTDOWN                            "Countdown Timer"
 #define ACTIVITY_PREF_MIN_LOCATION_HORIZONTAL_ACCURACY     "Horizontal Accuracy"
 #define ACTIVITY_PREF_MIN_LOCATION_VERTICAL_ACCURACY       "Vertical Accuracy"
-#define ACTIVITY_PREF_LOCATION_FILTER_OPTION               "Filter"
 #define ACTIVITY_PREF_ATTRIBUTES                           "Attributes"
 #define ACTIVITY_PREF_SHOW_THREAT_SPEED                    "Show Threat Speed"
 
@@ -522,7 +521,7 @@
 
 - (LocationFilterOption)getLocationFilterOption:(NSString*)activityType
 {
-	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_LOCATION_FILTER_OPTION];
+	NSInteger value = [self readIntegerValue:activityType withAttributeName:@ACTIVITY_PREF_BAD_LOCATION_FILTER_OPTION];
 
 	if (value == INTEGER_VALUE_NOT_SET)
 		return LOCATION_FILTER_DROP;
@@ -531,7 +530,7 @@
 
 - (void)setLocationFilterOption:(NSString*)activityType withOption:(LocationFilterOption)option
 {
-	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_LOCATION_FILTER_OPTION withInteger:(int)option];
+	[self writeValue:activityType withAttributeName:@ACTIVITY_PREF_BAD_LOCATION_FILTER_OPTION withInteger:(int)option];
 }
 
 - (BOOL)hasShownHelp:(NSString*)activityType

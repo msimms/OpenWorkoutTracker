@@ -296,7 +296,7 @@ typedef enum RadarSectionItems
 		case LOCATION_ITEM_FILTER_OPTIONS:
 			{
 				LocationFilterOption option = [self->prefs getLocationFilterOption:activityType];
-				[content setText:@ACTIVITY_PREF_LOCATION_FILTER_OPTION];
+				[content setText:@ACTIVITY_PREF_BAD_LOCATION_FILTER_OPTION];
 				switch (option)
 				{
 					case LOCATION_FILTER_WARN:
