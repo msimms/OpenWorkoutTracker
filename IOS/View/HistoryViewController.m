@@ -352,7 +352,7 @@
 	cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 
 	// Load the image that goes with the activity.
-	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 9, 32, 32)];
+	UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(12, 20, 32, 32)];
 	imageView.image = [self activityTypeToIcon:activityType];
 
 	// If dark mode is enabled, invert the image.
