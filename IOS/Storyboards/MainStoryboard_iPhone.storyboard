@@ -850,6 +850,11 @@
                                             <action selector="onBike:" destination="0n6-g5-UTs" id="1Nn-vx-8sb"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Shoe" image="gear.circle" catalog="system" id="6B8-uh-8Tl">
+                                        <connections>
+                                            <action selector="onShoe:" destination="0n6-g5-UTs" id="L8b-z4-cfQ"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Intervals" image="doc.circle" catalog="system" id="oiz-6O-Wrp">
                                         <connections>
                                             <action selector="onPlan:" destination="0n6-g5-UTs" id="Lj8-wL-1fj"/>
@@ -1192,6 +1197,7 @@
                         <outlet property="navItem" destination="uwA-vG-wXj" id="O91-tw-Ax6"/>
                         <outlet property="planButton" destination="oiz-6O-Wrp" id="zvW-Bp-hX9"/>
                         <outlet property="rightSwipe" destination="9y9-X4-WqX" id="Kbe-h1-VZn"/>
+                        <outlet property="shoeButton" destination="6B8-uh-8Tl" id="mz0-Pb-aUg"/>
                         <outlet property="startStopButton" destination="Zqe-eo-52i" id="5WQ-5A-2Rl"/>
                         <outlet property="title_Large" destination="9W6-Sq-nCV" id="ErC-hk-oeJ"/>
                         <outlet property="title_r2c1" destination="6ur-8Y-wdU" id="jrv-eq-9qZ"/>
@@ -1292,6 +1298,11 @@
                                     <barButtonItem title="Bike" image="bicycle.circle" catalog="system" id="KdQ-Ib-2W3">
                                         <connections>
                                             <action selector="onBike:" destination="pMk-kM-n8i" id="llP-Uv-ebH"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Shoe" image="gear.circle" catalog="system" id="Mk8-zv-mDP">
+                                        <connections>
+                                            <action selector="onShoe:" destination="pMk-kM-n8i" id="F3i-u4-kWI"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Intervals" image="doc.circle" catalog="system" id="PNs-eK-OM5">
@@ -1532,6 +1543,7 @@
                         <outlet property="navItem" destination="sdv-7e-4LU" id="o4h-SQ-4Ee"/>
                         <outlet property="planButton" destination="PNs-eK-OM5" id="Pj2-L7-fIe"/>
                         <outlet property="rightSwipe" destination="aZp-cG-pmV" id="cuD-MA-D8h"/>
+                        <outlet property="shoeButton" destination="Mk8-zv-mDP" id="g8w-vF-iub"/>
                         <outlet property="startStopButton" destination="s0a-k9-ORr" id="TR0-2h-tKJ"/>
                         <outlet property="title1" destination="jAL-db-HXU" id="4ot-kR-enB"/>
                         <outlet property="title2" destination="r5V-3T-s5T" id="iVQ-kX-PBX"/>
@@ -1580,6 +1592,11 @@
                                     <barButtonItem title="Bike" image="bicycle.circle" catalog="system" id="CGf-Kq-SDA">
                                         <connections>
                                             <action selector="onBike:" destination="hC7-Vx-aYi" id="Pol-7b-07E"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Shoe" image="gear.circle" catalog="system" id="Ibb-Sr-RLs">
+                                        <connections>
+                                            <action selector="onShoe:" destination="hC7-Vx-aYi" id="Ybs-sB-f0l"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem title="Intervals" image="doc.circle" catalog="system" id="ji6-6p-aBX">
@@ -1781,6 +1798,7 @@
                         <outlet property="navItem" destination="zFq-xI-Fl3" id="rzP-QT-l7j"/>
                         <outlet property="planButton" destination="ji6-6p-aBX" id="X8B-Ih-USk"/>
                         <outlet property="rightSwipe" destination="To0-02-FdF" id="HpB-on-FAY"/>
+                        <outlet property="shoeButton" destination="Ibb-Sr-RLs" id="lfy-XQ-8kl"/>
                         <outlet property="startStopButton" destination="cqS-Tg-XEP" id="9R6-8D-aDg"/>
                         <outlet property="title1" destination="IsL-dv-F2Z" id="9yF-rh-R1e"/>
                         <outlet property="title2" destination="NI6-gV-Fnn" id="M4j-bw-1KM"/>
@@ -1929,6 +1947,11 @@
                                             <action selector="onMapType:" destination="xf7-Mc-VJA" id="dnq-lU-rKC"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem title="Shoe" image="gearshape" catalog="system" id="7eS-Jt-LEE">
+                                        <connections>
+                                            <action selector="onShoe:" destination="xf7-Mc-VJA" id="IGL-Ed-vwa"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Bike" image="bicycle" catalog="system" id="RsU-GE-HQE">
                                         <connections>
                                             <action selector="onBike:" destination="xf7-Mc-VJA" id="A6z-rU-Cuh"/>
@@ -1981,6 +2004,7 @@
                         <outlet property="mapButton" destination="2o1-zv-u06" id="Pbw-4b-mZc"/>
                         <outlet property="mapView" destination="jPf-SE-mfk" id="HZB-lx-KDS"/>
                         <outlet property="navItem" destination="tMM-Bs-yS7" id="AwI-W0-Mez"/>
+                        <outlet property="shoeButton" destination="7eS-Jt-LEE" id="m25-zR-Ulg"/>
                         <outlet property="spinner" destination="1ax-kD-CMV" id="d1h-gM-m7n"/>
                         <outlet property="summaryTableView" destination="M6E-Tx-gxb" id="7DR-Ah-880"/>
                         <outlet property="tableTopConstraint" destination="vMk-p6-Ib3" id="W28-Kd-fHF"/>
@@ -2962,7 +2986,7 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ksp-tA-xd6"/>
-        <segue reference="Zfp-Rg-OxX"/>
+        <segue reference="zxl-cL-SNo"/>
         <segue reference="fz0-Br-1wA"/>
         <segue reference="kzb-01-qIL"/>
         <segue reference="YOw-2o-8H3"/>
@@ -2972,6 +2996,8 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
         <image name="bicycle" catalog="system" width="32" height="32"/>
         <image name="bicycle.circle" catalog="system" width="32" height="32"/>
         <image name="doc.circle" catalog="system" width="32" height="32"/>
+        <image name="gear.circle" catalog="system" width="32" height="32"/>
+        <image name="gearshape" catalog="system" width="32" height="32"/>
         <image name="house" catalog="system" width="32" height="32"/>
         <image name="line.3.horizontal" catalog="system" width="32" height="32"/>
         <image name="map" catalog="system" width="32" height="32"/>

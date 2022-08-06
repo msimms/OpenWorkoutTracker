@@ -23,6 +23,7 @@
 	IBOutlet UIBarButtonItem* editButton;
 	IBOutlet UIBarButtonItem* mapButton;
 	IBOutlet UIBarButtonItem* bikeButton;
+	IBOutlet UIBarButtonItem* shoeButton;
 	IBOutlet UIBarButtonItem* tagsButton;
 	IBOutlet UIActivityIndicatorView* spinner;
 
@@ -64,6 +65,7 @@
 - (IBAction)onEdit:(id)sender;
 - (IBAction)onTag:(id)sender;
 - (IBAction)onBike:(id)sender;
+- (IBAction)onShoe:(id)sender;
 - (IBAction)onHome:(id)sender;
 
 - (void)setActivityId:(NSString*)activityId;
@@ -75,6 +77,7 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* editButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* mapButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* bikeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* shoeButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem* tagsButton;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 

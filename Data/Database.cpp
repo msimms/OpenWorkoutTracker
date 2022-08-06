@@ -154,6 +154,11 @@ bool Database::CreateTables()
 		sql = "create table bike_activity (id integer primary key, bike_id integer, activity_id text)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("shoe_activity"))
+	{
+		sql = "create table shoe_activity (id integer primary key, shoe_id integer, activity_id text)";
+		queries.push_back(sql);
+	}
 	if (!DoesTableExist("interval_workout"))
 	{
 		sql = "create table interval_workout (id integer primary key, workout_id test, name text, sport text, last_updated_time big int)";
@@ -369,6 +374,8 @@ bool Database::Reset()
 	sql = "delete from shoe";
 	queries.push_back(sql);
 	sql = "delete from bike_activity";
+	queries.push_back(sql);
+	sql = "delete from shoe_activity";
 	queries.push_back(sql);
 	sql = "delete from interval_workout";
 	queries.push_back(sql);
@@ -668,6 +675,56 @@ bool Database::UpdateBikeActivity(uint64_t bikeId, const std::string& activityId
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_double(statement, 1, bikeId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::CreateShoeActivity(uint64_t shoeId, const std::string& activityId)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "insert into shoe_activity values (NULL,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_double(statement, 1, shoeId);
+		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrieveShoeActivity(const std::string& activityId, uint64_t& shoeId)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select shoe_id from shoe_activity where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT);
+		
+		if (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			shoeId = sqlite3_column_int64(statement, 0);
+			result = true;
+		}
+		
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::UpdateShoeActivity(uint64_t shoeId, const std::string& activityId)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "update shoe_activity set shoe_id = ? where activity_id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_double(statement, 1, shoeId);
 		sqlite3_bind_text(statement, 2, activityId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);

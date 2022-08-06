@@ -142,6 +142,7 @@
 - (BOOL)isActivityOrphaned:(size_t*)activityIndex;
 - (BOOL)isActivityPaused;
 - (BOOL)isCyclingActivity;
+- (BOOL)isFootBasedActivity;
 - (BOOL)isMovingActivity;
 
 // methods for loading and editing historical activities
@@ -194,8 +195,11 @@
 
 // methods for managing shoes
 
-- (BOOL)initializeShoeList;
+- (BOOL)initializeShoeProfileList;
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired;
+- (NSString*)getShoeNameForActivity:(NSString*)activityId;
+- (void)setShoeForCurrentActivity:(NSString*)shoeName;
+- (void)setShoeForActivityId:(NSString*)shoeName withActivityId:(NSString*)activityId;
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName;
 - (BOOL)deleteShoeProfile:(uint64_t)shoeId;
 

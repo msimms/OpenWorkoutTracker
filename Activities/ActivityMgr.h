@@ -90,12 +90,15 @@ extern "C" {
 	uint64_t GetBikeIdFromName(const char* const name);
 
 	// Functions for managing shoes.
-	bool InitializeShoeList(void);
+	bool InitializeShoeProfileList(void);
 	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool DeleteShoeProfile(uint64_t shoeId);
 	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description);
 	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description);
+	bool GetShoeProfileByName(const char* const name, uint64_t* shoeId);
+	bool GetActivityShoeProfile(const char* const activityId, uint64_t* shoeId);
+	void CreateOrUpdateActivityShoeProfile(const char* const activityId, uint64_t shoeId);
 	uint64_t GetShoeIdFromName(const char* const name);
 
 	// Functions for managing the currently set interval workout.
@@ -250,6 +253,7 @@ extern "C" {
 	bool IsMovingActivity(void);
 	bool IsLiftingActivity(void);
 	bool IsCyclingActivity(void);
+	bool IsFootBasedActivity(void);
 	bool IsSwimmingActivity(void);
 
 	// Functions for importing/exporting activities.

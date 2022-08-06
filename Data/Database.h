@@ -55,11 +55,17 @@ public:
 	bool UpdateShoe(Shoes& shoes);
 	bool DeleteShoe(uint64_t shoeId);
 
-	// Methods for associating bikes to activities.
+	// Methods for associating bikes with activities.
 	
 	bool CreateBikeActivity(uint64_t bikeId, const std::string& activityId);
 	bool RetrieveBikeActivity(const std::string& activityId, uint64_t& bikeId);
 	bool UpdateBikeActivity(uint64_t bikeId, const std::string& activityId);
+
+	// Methods for associating shoes with activities.
+	
+	bool CreateShoeActivity(uint64_t shoeId, const std::string& activityId);
+	bool RetrieveShoeActivity(const std::string& activityId, uint64_t& shoeId);
+	bool UpdateShoeActivity(uint64_t shoeId, const std::string& activityId);
 
 	// Methods for interval workouts.
 	

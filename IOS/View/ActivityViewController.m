@@ -61,6 +61,7 @@
 @synthesize moreButton;
 @synthesize customizeButton;
 @synthesize bikeButton;
+@synthesize shoeButton;
 @synthesize planButton;
 @synthesize lapButton;
 @synthesize autoStartButton;
@@ -513,6 +514,7 @@
 	[self->moreButton setTintColor:buttonColor];
 	[self->customizeButton setTintColor:buttonColor];
 	[self->bikeButton setTintColor:buttonColor];
+	[self->shoeButton setTintColor:buttonColor];
 	[self->planButton setTintColor:buttonColor];
 	[self->lapButton setTintColor:buttonColor];
 	[self->startStopButton setTintColor:buttonColor];
@@ -560,8 +562,10 @@
 
 	// Organize the stopped toolbar.
 	BOOL isCyclingActivity = [appDelegate isCyclingActivity];
+	BOOL isFootBasedActivity = [appDelegate isFootBasedActivity];
 	BOOL isMovingActivity = [appDelegate isMovingActivity];
 	size_t numBikes = [[appDelegate getBikeNames] count];
+	size_t numShoes = [[appDelegate getShoeNames] count];
 	self->stoppedToolbar = [NSMutableArray arrayWithArray:self.toolbar.items];
 	if (self->stoppedToolbar)
 	{
@@ -575,6 +579,10 @@
 		if (!isCyclingActivity || (numBikes == 0))
 		{
 			[self->stoppedToolbar removeObjectIdenticalTo:self.bikeButton];
+		}
+		if (!isFootBasedActivity || (numShoes == 0))
+		{
+			[self->stoppedToolbar removeObjectIdenticalTo:self.shoeButton];
 		}
 		if (isMovingActivity)
 		{
@@ -593,6 +601,7 @@
 		[self->startedToolbar removeObjectIdenticalTo:self.planButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.autoStartButton];
 		[self->startedToolbar removeObjectIdenticalTo:self.bikeButton];
+		[self->startedToolbar removeObjectIdenticalTo:self.shoeButton];
 
 		if (isMovingActivity)
 		{
@@ -845,6 +854,43 @@
 			}
 		}
 
+		// Show the action sheet.
+		[self presentViewController:alertController animated:YES completion:nil];
+	}
+}
+
+- (IBAction)onShoe:(id)sender
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSMutableArray* shoeNames = [appDelegate getShoeNames];
+	
+	if ([shoeNames count] > 0)
+	{
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																				 message:STR_SHOES
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {}]];
+		
+		// Add an option for each pair of shoes.
+		for (NSString* name in shoeNames)
+		{
+			UIAlertAction* button = [UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				self->shoeName = name;
+				[appDelegate setShoeForCurrentActivity:self->shoeName];
+			}];
+			[alertController addAction:button];
+			
+			if (self->shoeName)
+			{
+				if ([name caseInsensitiveCompare:self->shoeName] == NSOrderedSame)
+				{
+					[self checkActionSheetButton:button];
+				}
+			}
+		}
+		
 		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}

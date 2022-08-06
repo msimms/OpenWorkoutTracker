@@ -17,6 +17,7 @@
 	IBOutlet UIBarButtonItem*  moreButton;
 	IBOutlet UIBarButtonItem*  customizeButton;
 	IBOutlet UIBarButtonItem*  bikeButton;
+	IBOutlet UIBarButtonItem*  shoeButton;
 	IBOutlet UIBarButtonItem*  lapButton;
 	IBOutlet UIBarButtonItem*  autoStartButton;
 	IBOutlet UIBarButtonItem*  startStopButton;
@@ -53,6 +54,7 @@
 	NSString*                  activityType;             // Current activity type, cached here for performance reasons
 	NSString*                  activityId;               // Current activity id
 	NSString*                  bikeName;                 // The name of the bicycle that ia associated with this activity, if any
+	NSString*                  shoeName;                 // The name of the shoe that ia associated with this activity, if any
 	bool                       autoStartCoordinateSet;   // TRUE if we have a meaningful value in 'autoStartCoordinate'
 	Coordinate                 autoStartCoordinate;      // Location reference for the autostart on move feature
 	NSInteger                  tappedButtonIndex;        // Indicates which attribute was pressed
@@ -92,6 +94,7 @@
 - (IBAction)onLap:(id)sender;
 - (IBAction)onCustomize:(id)sender;
 - (IBAction)onBike:(id)sender;
+- (IBAction)onShoe:(id)sender;
 - (IBAction)onPlan:(id)sender;
 - (IBAction)onSummary:(id)sender;
 
@@ -101,14 +104,15 @@
 - (void)powerUpdated:(NSNotification*)notification;
 - (void)radarUpdated:(NSNotification*)notification;
 
-@property (nonatomic, retain) IBOutlet UILabel*          messagesLabel;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  moreButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  customizeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  bikeButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  planButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  lapButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  autoStartButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  startStopButton;
-@property (nonatomic, retain) IBOutlet UIBarButtonItem*  weightButton;
+@property (nonatomic, retain) IBOutlet UILabel*         messagesLabel;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* moreButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* customizeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* bikeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* shoeButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* planButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* lapButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* autoStartButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* startStopButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem* weightButton;
 
 @end

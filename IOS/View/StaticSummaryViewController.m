@@ -136,6 +136,7 @@ typedef enum ExportFileTypeButtons
 @synthesize editButton;
 @synthesize mapButton;
 @synthesize bikeButton;
+@synthesize shoeButton;
 @synthesize tagsButton;
 @synthesize spinner;
 
@@ -850,6 +851,44 @@ typedef enum ExportFileTypeButtons
 			}
 		}
 
+		// Show the action sheet.
+		[self presentViewController:alertController animated:YES completion:nil];
+	}
+}
+
+- (IBAction)onShoe:(id)sender
+{
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	NSString* selectedShoeName = [appDelegate getShoeNameForActivity:activityId];
+	NSMutableArray* shoeNames = [appDelegate getShoeNames];
+	
+	if ([shoeNames count] > 0)
+	{
+		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
+																				 message:STR_SHOES
+																		  preferredStyle:UIAlertControllerStyleActionSheet];
+		
+		// Add a cancel option. Add the cancel option to the top so that it's easy to find.
+		[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
+		}]];
+		
+		// Add an option for each pair of shoes.
+		for (NSString* shoeName in shoeNames)
+		{
+			UIAlertAction* button = [UIAlertAction actionWithTitle:shoeName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
+				[appDelegate setShoeForActivityId:shoeName withActivityId:self->activityId];
+			}];
+			[alertController addAction:button];
+			
+			if (selectedShoeName)
+			{
+				if ([shoeName caseInsensitiveCompare:selectedShoeName] == NSOrderedSame)
+				{
+					[self checkActionSheetButton:button];
+				}
+			}
+		}
+		
 		// Show the action sheet.
 		[self presentViewController:alertController animated:YES completion:nil];
 	}

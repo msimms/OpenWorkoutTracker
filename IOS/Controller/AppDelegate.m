@@ -1300,7 +1300,7 @@ void startSensorCallback(SensorType type, void* context)
 			NSArray* gearObjects = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
 			
 			[self initializeBikeProfileList];
-			[self initializeShoeList];
+			[self initializeShoeProfileList];
 
 			// Valid JSON?
 			if (gearObjects)
@@ -1845,6 +1845,11 @@ void startSensorCallback(SensorType type, void* context)
 	return IsCyclingActivity();
 }
 
+- (BOOL)isFootBasedActivity
+{
+	return IsFootBasedActivity();
+}
+
 - (BOOL)isMovingActivity
 {
 	return IsMovingActivity();
@@ -2330,13 +2335,13 @@ void startSensorCallback(SensorType type, void* context)
 
 	if (bikeId > 0)
 	{
-		char* tempBikeName = NULL;
+		char* tempName = NULL;
 
-		GetBikeProfileById(bikeId, &tempBikeName, NULL, NULL);
-		if (tempBikeName)
+		GetBikeProfileById(bikeId, &tempName, NULL, NULL);
+		if (tempName)
 		{
-			bikeName = [[NSString alloc] initWithFormat:@"%s", tempBikeName];
-			free((void*)tempBikeName);
+			bikeName = [[NSString alloc] initWithFormat:@"%s", tempName];
+			free((void*)tempName);
 		}
 	}
 	return bikeName;
@@ -2378,14 +2383,56 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for managing shoes
 
-- (BOOL)initializeShoeList
+- (BOOL)initializeShoeProfileList
 {
-	return InitializeShoeList();
+	return InitializeShoeProfileList();
 }
 
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
 	return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
+}
+
+- (NSString*)getShoeNameForActivity:(NSString*)activityId
+{
+	NSString* shoeName = nil;
+	uint64_t shoeId = 0;
+	
+	InitializeShoeProfileList();
+	GetActivityShoeProfile([activityId UTF8String], &shoeId);
+	
+	if (shoeId > 0)
+	{
+		char* tempName = NULL;
+		
+		GetShoeProfileById(shoeId, &tempName, NULL);
+		if (tempName)
+		{
+			shoeName = [[NSString alloc] initWithFormat:@"%s", tempName];
+			free((void*)tempName);
+		}
+	}
+	return shoeName;
+}
+
+- (void)setShoeForCurrentActivity:(NSString*)shoeName
+{
+	uint64_t shoeId = 0;
+	
+	if (GetShoeProfileByName([shoeName UTF8String], &shoeId))
+	{
+		CreateOrUpdateActivityShoeProfile(GetCurrentActivityId(), shoeId);
+	}
+}
+
+- (void)setShoeForActivityId:(NSString*)shoeName withActivityId:(NSString*)activityId
+{
+	uint64_t shoeId = 0;
+	
+	if (GetShoeProfileByName([shoeName UTF8String], &shoeId))
+	{
+		CreateOrUpdateActivityShoeProfile([activityId UTF8String], shoeId);
+	}
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
@@ -2833,6 +2880,7 @@ void tagCallback(const char* name, void* context)
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
+
 	if (names)
 	{
 		RetrieveTags([activityId UTF8String], tagCallback, (__bridge void*)names);
@@ -2870,7 +2918,7 @@ void tagCallback(const char* name, void* context)
 
 	if (names)
 	{
-		if (InitializeShoeList())
+		if (InitializeShoeProfileList())
 		{
 			size_t shoeIndex = 0;
 			uint64_t shoeId = 0;

@@ -1080,7 +1080,8 @@ extern "C" {
 		{
 			const Bike& bike = g_bikes.at(bikeIndex);
 
-			(*bikeId) = bike.id;
+			if (bikeId)
+				(*bikeId) = bike.id;
 			if (name)
 				(*name) = strdup(bike.name.c_str());
 			if (weightKg)
@@ -1220,7 +1221,7 @@ extern "C" {
 	// Functions for managing shoes.
 	//
 
-	bool InitializeShoeList(void)
+	bool InitializeShoeProfileList(void)
 	{
 		bool result = false;
 
@@ -1270,7 +1271,7 @@ extern "C" {
 				
 				if (result)
 				{
-					result = InitializeShoeList();
+					result = InitializeShoeProfileList();
 				}
 			}
 		}
@@ -1308,7 +1309,7 @@ extern "C" {
 
 			if (result)
 			{
-				result = InitializeShoeList();
+				result = InitializeShoeProfileList();
 			}
 		}
 
@@ -1327,7 +1328,7 @@ extern "C" {
 
 			if (result)
 			{
-				result = InitializeShoeList();
+				result = InitializeShoeProfileList();
 			}
 		}
 
@@ -1342,8 +1343,10 @@ extern "C" {
 
 			if (shoes.id == shoeId)
 			{
-				(*name) = strdup(shoes.name.c_str());
-				(*description) = strdup(shoes.description.c_str());
+				if (name)
+					(*name) = strdup(shoes.name.c_str());
+				if (description)
+					(*description) = strdup(shoes.description.c_str());
 				return true;
 			}
 		}
@@ -1356,12 +1359,86 @@ extern "C" {
 		{
 			const Shoes& shoes = g_shoes.at(shoeIndex);
 
-			(*shoeId) = shoes.id;
-			(*name) = strdup(shoes.name.c_str());
-			(*description) = strdup(shoes.description.c_str());
+			if (shoeId)
+				(*shoeId) = shoes.id;
+			if (name)
+				(*name) = strdup(shoes.name.c_str());
+			if (description)
+				(*description) = strdup(shoes.description.c_str());
 			return true;
 		}
 		return false;
+	}
+
+	bool GetShoeProfileByName(const char* const name, uint64_t* shoeId)
+	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return false;
+		}
+		
+		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
+		{
+			const Shoes& shoe = (*iter);
+			
+			if (shoe.name.compare(name) == 0)
+			{
+				if (shoeId)
+					(*shoeId) = shoe.id;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool GetActivityShoeProfile(const char* const activityId, uint64_t* shoeId)
+	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->RetrieveShoeActivity(activityId, (*shoeId));
+		}
+		
+		g_dbLock.unlock();
+		
+		return false;
+	}
+
+	void CreateOrUpdateActivityShoeProfile(const char* const activityId, uint64_t shoeId)
+	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return;
+		}
+
+		g_dbLock.lock();
+
+		if (g_pDatabase)
+		{
+			uint64_t temp;
+
+			if (g_pDatabase->RetrieveShoeActivity(activityId, temp))
+			{
+				g_pDatabase->UpdateShoeActivity(shoeId, activityId);
+			}
+			else
+			{
+				g_pDatabase->CreateShoeActivity(shoeId, activityId);
+			}
+		}
+
+		g_dbLock.unlock();
 	}
 
 	uint64_t GetShoeIdFromName(const char* const name)
@@ -3626,6 +3703,16 @@ extern "C" {
 		{
 			Cycling* pCycling = dynamic_cast<Cycling*>(g_pCurrentActivity);
 			return pCycling != NULL;
+		}
+		return false;
+	}
+
+	bool IsFootBasedActivity()
+	{
+		if (g_pCurrentActivity)
+		{
+			Walk* pWalk = dynamic_cast<Walk*>(g_pCurrentActivity);
+			return pWalk != NULL;
 		}
 		return false;
 	}
