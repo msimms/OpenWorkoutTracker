@@ -990,9 +990,9 @@
 		27B7CDEA19BFD99B000383E3 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = IOS/Sensors/Sensor.h; sourceTree = SOURCE_ROOT; };
 		27B7CDED19BFD99B000383E3 /* SensorMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorMgr.h; path = IOS/Sensors/SensorMgr.h; sourceTree = SOURCE_ROOT; };
 		27B7CDEE19BFD99B000383E3 /* SensorMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SensorMgr.m; path = IOS/Sensors/SensorMgr.m; sourceTree = SOURCE_ROOT; };
-		27B7CDEF19BFD99B000383E3 /* SensorReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorReading.h; path = IOS/Sensors/SensorReading.h; sourceTree = SOURCE_ROOT; };
-		27B7CDF019BFD99B000383E3 /* SensorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStyle.h; path = IOS/Sensors/SensorStyle.h; sourceTree = SOURCE_ROOT; };
-		27B7CDF119BFD99B000383E3 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = IOS/Sensors/SensorType.h; sourceTree = SOURCE_ROOT; };
+		27B7CDEF19BFD99B000383E3 /* SensorReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorReading.h; path = Sensors/SensorReading.h; sourceTree = SOURCE_ROOT; };
+		27B7CDF019BFD99B000383E3 /* SensorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStyle.h; path = Sensors/SensorStyle.h; sourceTree = SOURCE_ROOT; };
+		27B7CDF119BFD99B000383E3 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = Sensors/SensorType.h; sourceTree = SOURCE_ROOT; };
 		27B7CDFC19BFD9AD000383E3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		27C044FC19F8622B00E32E96 /* ComplexScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComplexScreen.png; path = Images/ComplexScreen.png; sourceTree = SOURCE_ROOT; };
 		27C081FC2383780700BEB105 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -1515,7 +1515,8 @@
 				2797F17219BFE47A008F8672 /* FileLib */,
 				27D2764F2846E5C4008E707B /* LibBluetooth */,
 				27047166216D98F200EE47FF /* LibMath */,
-				27B7CDD719BFD987000383E3 /* Sensors */,
+				27E6894D28A2CC8100755424 /* Sensors */,
+				27B7CDD719BFD987000383E3 /* Sensors iOS */,
 				27FB32902707D40400C66AC2 /* PeakFinder */,
 				27B7CD2519BFD887000383E3 /* Units */,
 				2797F13919BFE2B0008F8672 /* Utilities */,
@@ -1696,7 +1697,7 @@
 			name = "Chart Overlays";
 			sourceTree = "<group>";
 		};
-		27B7CDD719BFD987000383E3 /* Sensors */ = {
+		27B7CDD719BFD987000383E3 /* Sensors iOS */ = {
 			isa = PBXGroup;
 			children = (
 				27B7CDD819BFD99B000383E3 /* Accelerometer.h */,
@@ -1717,11 +1718,8 @@
 				27B7CDEA19BFD99B000383E3 /* Sensor.h */,
 				27B7CDED19BFD99B000383E3 /* SensorMgr.h */,
 				27B7CDEE19BFD99B000383E3 /* SensorMgr.m */,
-				27B7CDEF19BFD99B000383E3 /* SensorReading.h */,
-				27B7CDF019BFD99B000383E3 /* SensorStyle.h */,
-				27B7CDF119BFD99B000383E3 /* SensorType.h */,
 			);
-			name = Sensors;
+			name = "Sensors iOS";
 			sourceTree = "<group>";
 		};
 		27C0841119BFD051007CE934 /* Activities */ = {
@@ -1903,6 +1901,16 @@
 				27DCF5DB22B193B8009A23C2 /* PushNotificationPayload.apns */,
 			);
 			path = "Watch Extension";
+			sourceTree = "<group>";
+		};
+		27E6894D28A2CC8100755424 /* Sensors */ = {
+			isa = PBXGroup;
+			children = (
+				27B7CDEF19BFD99B000383E3 /* SensorReading.h */,
+				27B7CDF019BFD99B000383E3 /* SensorStyle.h */,
+				27B7CDF119BFD99B000383E3 /* SensorType.h */,
+			);
+			path = Sensors;
 			sourceTree = "<group>";
 		};
 		27EAAB36244E0A9F000FBFA0 /* Shoes */ = {

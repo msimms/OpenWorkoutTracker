@@ -26,6 +26,7 @@ DerivedData
 android/local.properties
 android/.idea/caches
 android/.idea/libraries
+android/.idea/misc.xml
 android/.idea/modules.xml
 android/.idea/workspace.xml
 android/.idea/navEditor.xml
