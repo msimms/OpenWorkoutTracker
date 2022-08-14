@@ -76,7 +76,6 @@
 	self.title = TITLE;
 
 	[self.exportButton setTitle:BUTTON_TITLE_EXPORT];
-	[self startSpinner:self.spinner withDispatch:FALSE];
 
 	self->selectedActivityId = nil;
 	self->searching = false;
@@ -94,6 +93,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+
+	[self startSpinner:self.spinner withDispatch:FALSE];
 
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate initializeHistoricalActivityList];

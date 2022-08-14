@@ -48,6 +48,7 @@ typedef enum Sections
 
 @implementation StatisticsViewController
 
+@synthesize statTableView;
 @synthesize spinner;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil
@@ -66,14 +67,6 @@ typedef enum Sections
 	[super viewDidLoad];
 
 	self.title = STR_SUMMARY;
-
-	[self startSpinner:self.spinner withDispatch:FALSE];
-
-	InitializeHistoricalActivityList();
-	CreateAllHistoricalActivityObjects();
-	LoadAllHistoricalActivitySummaryData();
-	
-	[self buildAttributeDictionary];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -84,6 +77,16 @@ typedef enum Sections
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+
+	[self startSpinner:self.spinner withDispatch:FALSE];
+	
+	InitializeHistoricalActivityList();
+	CreateAllHistoricalActivityObjects();
+	LoadAllHistoricalActivitySummaryData();
+	
+	[self buildAttributeDictionary];
+	[self.statTableView reloadData];
+
 	[self stopSpinner:self.spinner];
 }
 

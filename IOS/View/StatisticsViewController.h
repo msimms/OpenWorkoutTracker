@@ -12,6 +12,7 @@
 
 @interface StatisticsViewController : CommonViewController
 {
+	IBOutlet UITableView* statTableView;
 	IBOutlet UIActivityIndicatorView* spinner;
 
 	NSMutableDictionary*  attributeDictionary;
@@ -25,6 +26,7 @@
 - (void)buildAttributeDictionary;
 - (void)showSegmentsMap:(NSString*)activityId withAttribute:(ActivityAttributeType)value withString:(NSString*)title;
 
+@property (nonatomic, retain) IBOutlet UITableView* statTableView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView* spinner;
 
 @end
