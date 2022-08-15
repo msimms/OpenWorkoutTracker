@@ -144,6 +144,10 @@
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self.historyTableView.refreshControl beginRefreshing];
+		
+		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+		[appDelegate syncWithServer];
+
 		[self.historyTableView reloadData];
 		[self.historyTableView.refreshControl endRefreshing];
 	});

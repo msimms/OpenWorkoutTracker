@@ -1192,25 +1192,6 @@ void startSensorCallback(SensorType type, void* context)
 
 #pragma mark methods for handling responses from the server
 
-/// @brief Request the latest of everything from the server.  Also, send the server anything it is missing as well.
-- (void)syncWithServer
-{
-	// Rate limit the server synchronizations. Let's not be spammy.
-	time_t lastServerSync = [Preferences lastServerSyncTime];
-	if (time(NULL) - lastServerSync > 60)
-	{
-		[self serverListGear];
-		[self serverListPlannedWorkouts];
-		[self serverListIntervalWorkouts];
-		[self serverListPacePlans];
-		[self sendUserDetailsToServer];
-		[self sendMissingActivitiesToServer];
-		[self sendPacePlans:MSG_DESTINATION_WEB replyHandler:nil];
-		[ApiClient serverRequestUpdatesSince:lastServerSync];
-		[Preferences setLastServerSyncTime:time(NULL)];
-	}
-}
-
 /// @brief Called when the server responds to the user attempting to log in.
 - (void)loginProcessed:(NSNotification*)notification
 {
@@ -3459,6 +3440,26 @@ void attributeNameCallback(const char* name, void* context)
 }
 
 #pragma mark server api client methods
+
+/// @brief Request the latest of everything from the server.  Also, send the server anything it is missing as well.
+- (void)syncWithServer
+{
+	// Rate limit the server synchronizations. Let's not be spammy.
+	time_t lastServerSync = [Preferences lastServerSyncTime];
+	if (time(NULL) - lastServerSync > 60)
+	{
+		[self serverListGear];
+		[self serverListPlannedWorkouts];
+		[self serverListIntervalWorkouts];
+		[self serverListPacePlans];
+		[self sendUserDetailsToServer];
+		[self sendMissingActivitiesToServer];
+		[self sendPacePlans:MSG_DESTINATION_WEB replyHandler:nil];
+
+		[ApiClient serverRequestUpdatesSince:lastServerSync];
+		[Preferences setLastServerSyncTime:time(NULL)];
+	}
+}
 
 - (BOOL)serverLogin:(NSString*)username withPassword:(NSString*)password
 {

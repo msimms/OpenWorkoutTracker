@@ -312,6 +312,7 @@
 // These methods are used to interact with the server. The app should still function, in all but the obvious ways,
 // if server communications are disabled (which should be the default).
 
+- (void)syncWithServer;
 - (BOOL)serverLogin:(NSString*)username withPassword:(NSString*)password;
 - (BOOL)serverCreateLogin:(NSString*)username withPassword:(NSString*)password1 withConfirmation:(NSString*)password2 withRealName:(NSString*)realname;
 - (BOOL)serverIsLoggedIn;
