@@ -3,7 +3,10 @@
 
 #include "BenchPressAnalyzer.h"
 #include "AxisName.h"
+
+#ifndef __ANDROID__
 #import <TargetConditionals.h>
+#endif
 
 BenchPressAnalyzer::BenchPressAnalyzer()
 {
