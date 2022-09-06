@@ -49,10 +49,6 @@ typedef enum SettingsSections
 	NUM_SETTINGS_SECTIONS
 } SettingsSections;
 
-@interface SensorsViewController ()
-
-@end
-
 @implementation SensorsViewController
 
 @synthesize peripheralTableView;

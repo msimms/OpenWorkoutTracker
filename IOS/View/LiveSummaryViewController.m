@@ -14,10 +14,6 @@
 
 #define TITLE NSLocalizedString(@"Summary", nil)
 
-@interface LiveSummaryViewController ()
-
-@end
-
 @implementation LiveSummaryViewController
 
 @synthesize attrTableView;

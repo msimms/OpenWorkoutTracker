@@ -12,10 +12,6 @@
 #import "AppStrings.h"
 #import "StringUtils.h"
 
-@interface ComplexActivityViewController ()
-
-@end
-
 @implementation ComplexActivityViewController
 
 @synthesize leftSwipe;

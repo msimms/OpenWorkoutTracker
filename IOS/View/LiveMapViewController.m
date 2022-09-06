@@ -11,10 +11,6 @@
 #import "LocationSensor.h"
 #import "StringUtils.h"
 
-@interface LiveMapViewController ()
-
-@end
-
 @implementation LiveMapViewController
 
 @synthesize swipe;

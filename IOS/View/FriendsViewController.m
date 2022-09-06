@@ -13,10 +13,6 @@
 #define ALERT_TITLE_REQUEST NSLocalizedString(@"Request", nil)
 #define ALERT_MSG_REQUEST   NSLocalizedString(@"Enter the email address of the person you would like to friend", nil)
 
-@interface FriendsViewController ()
-
-@end
-
 @implementation FriendsViewController
 
 @synthesize usersTableView;

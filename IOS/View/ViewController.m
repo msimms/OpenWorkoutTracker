@@ -36,10 +36,6 @@
 #define TITLE_IN_PROGRESS            NSLocalizedString(@"Workout In Progress", nil)
 #define MSG_FIRST_TIME_USING         NSLocalizedString(@"There are risks with exercise. Do not start an exercise program without consulting your doctor.", nil)
 
-@interface ViewController ()
-
-@end
-
 @implementation ViewController
 
 @synthesize startWorkoutButton;

@@ -51,11 +51,6 @@
 
 @end
 
-
-@interface HistoryViewController ()
-
-@end
-
 @implementation HistoryViewController
 
 @synthesize searchBar;

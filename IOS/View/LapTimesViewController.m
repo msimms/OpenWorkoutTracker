@@ -36,10 +36,6 @@
 
 @end
 
-@interface LapTimesViewController ()
-
-@end
-
 @implementation LapTimesViewController
 
 @synthesize lapTimesTableView;

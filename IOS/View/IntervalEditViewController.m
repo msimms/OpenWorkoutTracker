@@ -46,10 +46,6 @@
 
 #define DEFAULT_PACE 50
 
-@interface IntervalEditViewController ()
-
-@end
-
 @implementation IntervalEditViewController
 
 @synthesize intervalTableView;

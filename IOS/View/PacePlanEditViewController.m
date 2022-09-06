@@ -17,10 +17,6 @@ typedef enum PickerRows
 	NUM_PICKER_ROWS
 } PickerRows;
 
-@interface PacePlanEditViewController ()
-
-@end
-
 @implementation PacePlanEditViewController
 
 @synthesize nameTextField;

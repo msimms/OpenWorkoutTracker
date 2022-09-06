@@ -16,10 +16,6 @@
 
 #define STR_NOT_DATA NSLocalizedString(@"There is no data to display.", nil)
 
-@interface CorePlotViewController ()
-
-@end
-
 @implementation CorePlotViewController
 
 @synthesize chartView;

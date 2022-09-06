@@ -46,10 +46,6 @@ typedef enum ProfilePerformanceRows
 #define STR_EDIT_WEIGHT                   NSLocalizedString(@"Edit Weight", nil)
 #define STR_VIEW_WEIGHT_HISTORY           NSLocalizedString(@"View Weight History", nil)
 
-@interface ProfileViewController ()
-
-@end
-
 @implementation ProfileViewController
 
 @synthesize profileTableView;

@@ -11,10 +11,6 @@
 #define ALERT_TITLE_NEW_PACE_PLAN NSLocalizedString(@"New Pace Plan", nil)
 #define ALERT_MSG_NEW_PACE_PLAN   NSLocalizedString(@"Name this pace plan", nil)
 
-@interface PacePlansViewController ()
-
-@end
-
 @implementation PacePlansViewController
 
 @synthesize planTableView;

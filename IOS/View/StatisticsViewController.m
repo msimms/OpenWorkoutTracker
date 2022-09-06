@@ -41,11 +41,6 @@ typedef enum Sections
 
 @end
 
-
-@interface StatisticsViewController ()
-
-@end
-
 @implementation StatisticsViewController
 
 @synthesize statTableView;

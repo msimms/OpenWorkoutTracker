@@ -82,10 +82,6 @@ typedef enum SettingsRowsHealthKit
 #define ALERT_MSG_NAME                 NSLocalizedString(@"", nil)
 #define ALERT_MSG_RATE                 NSLocalizedString(@"1", nil)
 
-@interface SettingsViewController ()
-
-@end
-
 @implementation SettingsViewController
 
 @synthesize settingsTableView;

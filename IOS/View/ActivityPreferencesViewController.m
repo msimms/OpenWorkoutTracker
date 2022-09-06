@@ -103,10 +103,6 @@ typedef enum RadarSectionItems
 	NUM_RADAR_ITEMS
 } RadarSectionItems;
 
-@interface ActivityPreferencesViewController ()
-
-@end
-
 @implementation ActivityPreferencesViewController
 
 @synthesize optionsTableView;

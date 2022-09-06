@@ -9,10 +9,6 @@
 #import "AppDelegate.h"
 #import "AppStrings.h"
 
-@interface TagViewController ()
-
-@end
-
 @implementation TagViewController
 
 @synthesize tagTableView;

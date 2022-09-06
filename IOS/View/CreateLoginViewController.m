@@ -21,10 +21,6 @@
 #define MSG_404                    NSLocalizedString(@"There was an error contacting the web service.", nil)
 #define MSG_SUCCESSFUL_LOGIN       NSLocalizedString(@"Successful login.", nil)
 
-@interface CreateLoginViewController ()
-
-@end
-
 @implementation CreateLoginViewController
 
 @synthesize usernameTextField;

@@ -42,10 +42,6 @@ typedef enum SectionType
 
 @end
 
-@interface SplitTimesViewController ()
-
-@end
-
 @implementation SplitTimesViewController
 
 @synthesize splitTimesTableView;

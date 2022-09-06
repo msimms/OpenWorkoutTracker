@@ -51,10 +51,6 @@
 #define DEVICE_TYPE_HEART_RATE        "heart rate monitor"
 #define DEVICE_TYPE_CADENCE           "cadence sensor"
 
-@interface ActivityViewController ()
-
-@end
-
 @implementation ActivityViewController
 
 @synthesize messagesLabel;

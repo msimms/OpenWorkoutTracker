@@ -12,10 +12,6 @@
 #define EMAIL_TITLE             NSLocalizedString(@"Workout Data", nil)
 #define EMAIL_CONTENTS          NSLocalizedString(@"The data file is attached.", nil)
 
-@interface WorkoutDetailsViewController ()
-
-@end
-
 @implementation WorkoutDetailsViewController
 
 @synthesize chartView;

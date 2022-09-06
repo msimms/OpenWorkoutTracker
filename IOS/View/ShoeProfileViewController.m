@@ -18,10 +18,6 @@
 
 #define MSG_DELETE_QUESTION NSLocalizedString(@"Are you sure you want to delete this shoe profile?", nil)
 
-@interface ShoeProfileViewController ()
-
-@end
-
 @implementation ShoeProfileViewController
 
 @synthesize saveButton;

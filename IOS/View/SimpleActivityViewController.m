@@ -12,10 +12,6 @@
 #import "AppStrings.h"
 #import "StringUtils.h"
 
-@interface SimpleActivityViewController ()
-
-@end
-
 @implementation SimpleActivityViewController
 
 @synthesize leftSwipe;

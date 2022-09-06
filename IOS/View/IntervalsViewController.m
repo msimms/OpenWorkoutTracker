@@ -17,10 +17,6 @@
 #define ALERT_MSG_NEW_INTERVAL_SPORT NSLocalizedString(@"Create an interval for which sport?", nil)
 #define ALERT_MSG_NEW_INTERVAL       NSLocalizedString(@"Name this interval workout", nil)
 
-@interface IntervalsViewController ()
-
-@end
-
 @implementation IntervalsViewController
 
 @synthesize intervalTableView;

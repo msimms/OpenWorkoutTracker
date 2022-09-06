@@ -7,10 +7,6 @@
 
 #import "AboutViewController.h"
 
-@interface AboutViewController ()
-
-@end
-
 @implementation AboutViewController
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil

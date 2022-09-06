@@ -64,11 +64,6 @@ MapViewController* g_ptrToMapViewCtrl;
 
 @end
 
-
-@interface MapViewController ()
-
-@end
-
 @implementation MapViewController
 
 @synthesize mapView;

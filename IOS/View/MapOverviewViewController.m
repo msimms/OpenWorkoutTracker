@@ -19,10 +19,6 @@
 #define PIN_TITLE_START            NSLocalizedString(@"Start", nil)
 #define PIN_TITLE_END              NSLocalizedString(@"End", nil)
 
-@interface MapOverviewViewController ()
-
-@end
-
 @implementation MapOverviewViewController
 
 - (id)initWithNibName:(NSString*)nibNameOrNil bundle:(NSBundle*)nibBundleOrNil

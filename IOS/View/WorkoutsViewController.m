@@ -65,10 +65,6 @@ typedef enum WorkoutsPrefsRows
 #define ERROR_BIKE_TRAINING_NEEDED                NSLocalizedString(@"Bike training is required for a triathlon.", nil)
 #define ERROR_SWIM_TRAINING_NEEDED                NSLocalizedString(@"Swim training is required for a triathlon.", nil)
 
-@interface WorkoutsViewController ()
-
-@end
-
 @implementation WorkoutsViewController
 
 @synthesize workoutsView;

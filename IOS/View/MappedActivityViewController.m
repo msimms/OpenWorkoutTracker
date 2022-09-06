@@ -20,10 +20,6 @@
 #define OPTION_SATELLITE_VIEW           NSLocalizedString(@"Satellite View", nil)
 #define OPTION_HYBRID_VIEW              NSLocalizedString(@"Hybrid View", nil)
 
-@interface MappedActivityViewController ()
-
-@end
-
 @implementation MappedActivityViewController
 
 @synthesize mapButton;

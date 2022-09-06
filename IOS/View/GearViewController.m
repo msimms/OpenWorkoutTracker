@@ -20,10 +20,6 @@ typedef enum GearSections
 
 #define MSG_SELECT_GEAR_TYPE    NSLocalizedString(@"Which type of gear?", nil)
 
-@interface GearViewController ()
-
-@end
-
 @implementation GearViewController
 
 @synthesize gearTableView;

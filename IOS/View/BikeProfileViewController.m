@@ -39,10 +39,6 @@
 #define MSG_CLEAR_WHEEL_SIZE             NSLocalizedString(@"Are you sure you want to clear the wheel diameter?", nil)
 #define MSG_FAILED_TO_COMPUTE_WHEEL_SIZE NSLocalizedString(@"Could not compute the wheel diameter.", nil)
 
-@interface BikeProfileViewController ()
-
-@end
-
 @implementation BikeProfileViewController
 
 @synthesize deleteButton;
