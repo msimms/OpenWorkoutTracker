@@ -2827,7 +2827,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 
 #pragma mark methods for managing the activity description
 
-- (BOOL)updateActivityDescription:(NSString*)activityId withName:(NSString*)description
+- (BOOL)updateActivityDescription:(NSString*)activityId withDescription:(NSString*)description
 {
 	if (UpdateActivityDescription([activityId UTF8String], [description UTF8String]))
 	{

@@ -238,7 +238,7 @@
 
 // methods for managing the activity description
 
-- (BOOL)updateActivityDescription:(NSString*)activityId withName:(NSString*)description;
+- (BOOL)updateActivityDescription:(NSString*)activityId withDescription:(NSString*)description;
 - (NSString*)getActivityDescription:(NSString*)activityId;
 
 // accessor methods

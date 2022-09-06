@@ -15,6 +15,7 @@
 #import "Defines.h"
 #import "ElevationLine.h"
 #import "LapTimesViewController.h"
+#import "LargeAlertController.h"
 #import "LineFactory.h"
 #import "Notifications.h"
 #import "OverlayFactory.h"
@@ -28,8 +29,6 @@
 #define ROW_TITLE_SPLIT_TIMES             NSLocalizedString(@"Split Times", nil)
 #define ROW_TITLE_LAP_TIMES               NSLocalizedString(@"Lap Times", nil)
 
-#define SECTION_TITLE_NAME                NSLocalizedString(@"Name", nil)
-#define SECTION_TITLE_DESCRIPTION         NSLocalizedString(@"Description", nil)
 #define SECTION_TITLE_START_AND_STOP      NSLocalizedString(@"Start and Finish", nil)
 #define SECTION_TITLE_LAP_AND_SPLIT       NSLocalizedString(@"Lap and Split Times", nil)
 #define SECTION_TITLE_CHARTS              NSLocalizedString(@"Charts", nil)
@@ -55,9 +54,7 @@
 #define ACTION_SHEET_TITLE_EXPORT         NSLocalizedString(@"Export using", nil)
 #define ACTION_SHEET_TITLE_FILE_FORMAT    NSLocalizedString(@"Export as", nil)
 #define ACTION_SHEET_TITLE_EDIT           NSLocalizedString(@"Edit", nil)
-#define ACTION_SHEET_TITLE_ACTIVITY_NAME  NSLocalizedString(@"Activity Name", nil)
 #define ACTION_SHEET_TITLE_ACTIVITY_TYPE  NSLocalizedString(@"Activity Type", nil)
-#define ACTION_SHEET_TITLE_ACTIVITY_DESC  NSLocalizedString(@"Activity Description", nil)
 
 #define START_PIN_NAME                    NSLocalizedString(@"Start", nil)
 #define FINISH_PIN_NAME                   NSLocalizedString(@"Finish", nil)
@@ -123,10 +120,6 @@ typedef enum ExportFileTypeButtons
 	EXPORT_BUTTON_CSV,
 	EXPORT_BUTTON_CANCEL
 } ExportFileTypeButtons;
-
-@interface StaticSummaryViewController ()
-
-@end
 
 @implementation StaticSummaryViewController
 
@@ -903,52 +896,32 @@ typedef enum ExportFileTypeButtons
 
 - (void)getNewActivityName
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ACTION_SHEET_TITLE_ACTIVITY_NAME
-																			 message:MSG_ENTER_A_NEW_ACTIVITY_NAME
-																	  preferredStyle:UIAlertControllerStyleAlert];
-
-	// Default text.
-	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		textField.placeholder = [appDelegate getActivityName:self->activityId];
-	}];
-
-	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		UITextField* field = alertController.textFields.firstObject;
-
-		[appDelegate updateActivityName:self->activityId withName:[field text]];
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	LargeAlertController* largeAlert = [[LargeAlertController alloc] init];
+	
+	largeAlert->title = STR_NAME;
+	largeAlert->subtitle = MSG_ENTER_A_NEW_ACTIVITY_NAME;
+	largeAlert->defaultText = [appDelegate getActivityName:self->activityId];
+	largeAlert->completionHandler = ^(NSString* text) {
+		[appDelegate updateActivityName:self->activityId withName:text];
 		[self.summaryTableView reloadData];
-	}]];
-	[self presentViewController:alertController animated:YES completion:nil];
+	};
+	[self presentViewController:largeAlert animated:YES completion:nil];
 }
 
 - (void)getNewActivityDescription
 {
-	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:ACTION_SHEET_TITLE_ACTIVITY_DESC
-																			 message:MSG_ENTER_A_NEW_ACTIVITY_DESC
-																	  preferredStyle:UIAlertControllerStyleAlert];
+	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+	LargeAlertController* largeAlert = [[LargeAlertController alloc] init];
 
-	// Default text.
-	[alertController addTextFieldWithConfigurationHandler:^(UITextField* textField) {
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		textField.placeholder = [appDelegate getActivityDescription:self->activityId];
-	}];
-
-	// Add a cancel option. Add the cancel option to the top so that it's easy to find.
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_CANCEL style:UIAlertActionStyleCancel handler:^(UIAlertAction* action) {
-	}]];
-	[alertController addAction:[UIAlertAction actionWithTitle:STR_OK style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-		AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-		UITextField* field = alertController.textFields.firstObject;
-
-		[appDelegate updateActivityDescription:self->activityId withName:[field text]];
+	largeAlert->title = STR_DESCRIPTION;
+	largeAlert->subtitle = MSG_ENTER_A_NEW_ACTIVITY_DESC;
+	largeAlert->defaultText = [appDelegate getActivityDescription:self->activityId];
+	largeAlert->completionHandler = ^(NSString* text) {
+		[appDelegate updateActivityDescription:self->activityId withDescription:text];
 		[self.summaryTableView reloadData];
-	}]];
-	[self presentViewController:alertController animated:YES completion:nil];
+	};
+	[self presentViewController:largeAlert animated:YES completion:nil];
 }
 
 #pragma mark called when the user selects a row
@@ -1049,9 +1022,9 @@ typedef enum ExportFileTypeButtons
 	switch (actualSection)
 	{
 	case SECTION_NAME:
-		return SECTION_TITLE_NAME;
+		return STR_NAME;
 	case SECTION_DESCRIPTION:
-		return SECTION_TITLE_DESCRIPTION;
+		return STR_DESCRIPTION;
 	case SECTION_START_AND_END_TIME:
 		return SECTION_TITLE_START_AND_STOP;
 	case SECTION_LAP_AND_SPLIT_TIMES:
@@ -1123,6 +1096,7 @@ typedef enum ExportFileTypeButtons
 		{
 			[content setText:[appDelegate getActivityName:self->activityId]];
 			content.textProperties.numberOfLines = 0;
+			content.textProperties.adjustsFontSizeToFitWidth = TRUE;
 			content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
 		}
 		break;
@@ -1131,7 +1105,8 @@ typedef enum ExportFileTypeButtons
 		{
 			[content setText:[appDelegate getActivityDescription:self->activityId]];
 			content.textProperties.numberOfLines = 0;
-			content.textProperties.lineBreakMode = NSLineBreakByTruncatingTail;
+			content.textProperties.adjustsFontSizeToFitWidth = TRUE;
+			content.textProperties.lineBreakMode = NSLineBreakByWordWrapping;
 		}
 		break;
 	case SECTION_START_AND_END_TIME:
