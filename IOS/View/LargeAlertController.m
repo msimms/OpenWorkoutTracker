@@ -8,21 +8,51 @@
 
 - (void)loadView
 {
-	self.view = [[UIView alloc] init];
+	CGRect textViewRect = CGRectMake(0, 0, 300, 1024);
+
+	self.view = [[UIView alloc] initWithFrame:textViewRect];
 	self.view.backgroundColor = [UIColor systemGray5Color];
 
-	UIStackView* stackView = [[UIStackView alloc] init];
+	UIStackView* stackView = [[UIStackView alloc] initWithFrame:textViewRect];
 	stackView.translatesAutoresizingMaskIntoConstraints = NO;
 	stackView.axis = UILayoutConstraintAxisVertical;
 
-	NSLayoutConstraint* c = [NSLayoutConstraint constraintWithItem:self.view
-														 attribute:NSLayoutAttributeCenterX
-														 relatedBy:NSLayoutRelationEqual
-															toItem:stackView
-														 attribute:NSLayoutAttributeCenterX
-														multiplier:1
-														  constant:0];
-	[self.view addConstraint:c];
+	NSLayoutConstraint* c1 = [NSLayoutConstraint constraintWithItem:self.view
+														  attribute:NSLayoutAttributeCenterX
+														  relatedBy:NSLayoutRelationEqual
+															 toItem:stackView
+														  attribute:NSLayoutAttributeCenterX
+														 multiplier:1
+														   constant:0];
+
+	NSLayoutConstraint* c2 = [NSLayoutConstraint constraintWithItem:self.view
+														  attribute:NSLayoutAttributeLeftMargin
+														  relatedBy:NSLayoutRelationEqual
+															 toItem:stackView
+														  attribute:NSLayoutAttributeLeftMargin
+														 multiplier:1
+														   constant:-16];
+
+	NSLayoutConstraint* c3 = [NSLayoutConstraint constraintWithItem:self.view
+														  attribute:NSLayoutAttributeRightMargin
+														  relatedBy:NSLayoutRelationEqual
+															 toItem:stackView
+														  attribute:NSLayoutAttributeRightMargin
+														 multiplier:1
+														   constant:-16];
+
+	NSLayoutConstraint* c4 = [NSLayoutConstraint constraintWithItem:self.view
+														  attribute:NSLayoutAttributeTopMargin
+														  relatedBy:NSLayoutRelationEqual
+															 toItem:stackView
+														  attribute:NSLayoutAttributeTopMargin
+														 multiplier:1
+														   constant:-16];
+
+	[self.view addConstraint:c1];
+	[self.view addConstraint:c2];
+	[self.view addConstraint:c3];
+	[self.view addConstraint:c4];
 
 	BOOL usingDarkMode = [self isDarkModeEnabled];
 
@@ -43,21 +73,22 @@
 	descriptionLabel.font = [UIFont fontWithName:@"Helvetica" size:15];
 
 	// Large text edit
-	self->textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, stackView.bounds.size.width, stackView.bounds.size.height)];
+	self->textView = [[UITextView alloc] initWithFrame:textViewRect];
 	self->textView.delegate = self;
 	self->textView.backgroundColor = [UIColor whiteColor];
 	self->textView.text = self->defaultText;
 	self->textView.textAlignment = NSTextAlignmentLeft;
+	self->textView.translatesAutoresizingMaskIntoConstraints = NO;
 	self->textView.center = self.view.center;
 	self->textView.font = [UIFont fontWithName:@"Helvetica" size:15];
 	self->textView.textColor = [UIColor blackColor];
 	self->textView.scrollEnabled = NO;
+	self->textView.userInteractionEnabled = YES;
 	self->textView.editable = YES;
 	self->textView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
 	self->textView.keyboardType = UIKeyboardTypeDefault;
 	self->textView.textContainer.lineBreakMode = NSLineBreakByWordWrapping;
 	self->textView.textContainer.maximumNumberOfLines = 10;
-	[self->textView setContentSize:CGSizeMake(self.view.bounds.size.width * 0.9, self.view.bounds.size.height * 0.7)];
 
 	// Cancel button
 	UIButton* cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -151,11 +182,12 @@
 {
 }
 
-- (void)textViewDidChange:(UITextView *)textView
+- (void)textViewDidChange:(UITextView*)textView
 {
 	CGFloat fixedWidth = textView.frame.size.width;
 	CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
 	CGRect newFrame = textView.frame;
+
 	newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
 	textView.frame = newFrame;
 }
