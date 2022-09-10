@@ -184,10 +184,10 @@ double RunPlanGenerator::CheckIntensityDistribution(void)
 Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance)
 {
 	// An easy run needs to be at least a couple of kilometers.
-	if (minRunDistance < 2000)
-		minRunDistance = 2000;
-	if (maxRunDistance < 2000)
-		maxRunDistance = 2000;
+	if (minRunDistance < 3000)
+		minRunDistance = 3000;
+	if (maxRunDistance < 3000)
+		maxRunDistance = 3000;
 
 	// Roll the dice to figure out the distance.
 	std::default_random_engine generator(std::random_device{}());
