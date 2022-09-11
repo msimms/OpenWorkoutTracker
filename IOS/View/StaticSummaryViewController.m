@@ -814,11 +814,26 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onBike:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* selectedBikeName = [appDelegate getBikeNameForActivity:activityId];
-	NSMutableArray* bikeNames = [appDelegate getBikeNames];
+	NSArray* bikeNames = [appDelegate getBikeNames];
 
 	if ([bikeNames count] > 0)
 	{
+		NSString* selectedBikeName;
+		NSArray* tags = [appDelegate getTagsForActivity:self->activityId];
+		
+		// Find any existing selection.
+		for (NSString* bikeName in bikeNames)
+		{
+			for (NSString* tag in tags)
+			{
+				if ([tag caseInsensitiveCompare:bikeName] == NSOrderedSame)
+				{
+					selectedBikeName = tag;
+					break;
+				}
+			}
+		}
+
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:STR_BIKE
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -831,10 +846,11 @@ typedef enum ExportFileTypeButtons
 		for (NSString* bikeName in bikeNames)
 		{
 			UIAlertAction* button = [UIAlertAction actionWithTitle:bikeName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				[appDelegate setBikeForActivityId:bikeName withActivityId:self->activityId];
+				[appDelegate createTag:bikeName forActivityId:self->activityId];
 			}];
 			[alertController addAction:button];
 
+			// Check the existing selection, if any.
 			if (selectedBikeName)
 			{
 				if ([bikeName caseInsensitiveCompare:selectedBikeName] == NSOrderedSame)
@@ -852,11 +868,26 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onShoe:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSString* selectedShoeName = [appDelegate getShoeNameForActivity:activityId];
 	NSMutableArray* shoeNames = [appDelegate getShoeNames];
 	
 	if ([shoeNames count] > 0)
 	{
+		NSString* selectedShoeName;
+		NSArray* tags = [appDelegate getTagsForActivity:self->activityId];
+		
+		// Find any existing selection.
+		for (NSString* shoeName in shoeNames)
+		{
+			for (NSString* tag in tags)
+			{
+				if ([tag caseInsensitiveCompare:shoeName] == NSOrderedSame)
+				{
+					selectedShoeName = tag;
+					break;
+				}
+			}
+		}
+
 		UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																				 message:STR_SHOES
 																		  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -869,10 +900,11 @@ typedef enum ExportFileTypeButtons
 		for (NSString* shoeName in shoeNames)
 		{
 			UIAlertAction* button = [UIAlertAction actionWithTitle:shoeName style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
-				[appDelegate setShoeForActivityId:shoeName withActivityId:self->activityId];
+				[appDelegate createTag:shoeName forActivityId:self->activityId];
 			}];
 			[alertController addAction:button];
 			
+			// Check the existing selection, if any.
 			if (selectedShoeName)
 			{
 				if ([shoeName caseInsensitiveCompare:selectedShoeName] == NSOrderedSame)

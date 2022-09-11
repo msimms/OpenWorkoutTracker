@@ -635,16 +635,16 @@
 - (void)doStart
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	BOOL started = FALSE;
-
-	if (self->bikeName)
-		started = [appDelegate startActivityWithBikeName:self->bikeName];
-	else
-		started = [appDelegate startActivity];
+	BOOL started = [appDelegate startActivity];
 
 	if (started)
 	{
 		self->activityId = [appDelegate getCurrentActivityId];
+
+		if (self->bikeName)
+		{
+			[appDelegate createTag:self->bikeName forActivityId:self->activityId];
+		}
 
 		if ([self->activityPrefs getStartStopBeepEnabled:self->activityType])
 		{
@@ -837,7 +837,7 @@
 		{
 			UIAlertAction* button = [UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->bikeName = name;
-				[appDelegate setBikeForCurrentActivity:self->bikeName];
+				[appDelegate createTag:self->bikeName forActivityId:self->activityId];
 			}];
 			[alertController addAction:button];
 
@@ -874,7 +874,7 @@
 		{
 			UIAlertAction* button = [UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->shoeName = name;
-				[appDelegate setShoeForCurrentActivity:self->shoeName];
+				[appDelegate createTag:self->shoeName forActivityId:self->activityId];
 			}];
 			[alertController addAction:button];
 			

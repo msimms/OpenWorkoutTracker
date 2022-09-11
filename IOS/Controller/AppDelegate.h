@@ -121,7 +121,6 @@
 // methods for starting and stopping activities, etc.
 
 - (BOOL)startActivity;
-- (BOOL)startActivityWithBikeName:(NSString*)bikeName;
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
 - (BOOL)startNewLap;
@@ -185,11 +184,7 @@
 - (BOOL)initializeBikeProfileList;
 - (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm;
 - (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm;
-- (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId;
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm;
-- (NSString*)getBikeNameForActivity:(NSString*)activityId;
-- (void)setBikeForCurrentActivity:(NSString*)bikeName;
-- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId;
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName;
 - (BOOL)deleteBikeProfile:(uint64_t)bikeId;
 
@@ -197,9 +192,6 @@
 
 - (BOOL)initializeShoeProfileList;
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired;
-- (NSString*)getShoeNameForActivity:(NSString*)activityId;
-- (void)setShoeForCurrentActivity:(NSString*)shoeName;
-- (void)setShoeForActivityId:(NSString*)shoeName withActivityId:(NSString*)activityId;
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName;
 - (BOOL)deleteShoeProfile:(uint64_t)shoeId;
 

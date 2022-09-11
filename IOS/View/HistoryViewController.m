@@ -294,14 +294,7 @@
 
 	NSString* activityId = [self getActivityId:indexPath];
 	NSString* activityType = [appDelegate getHistoricalActivityType:activityId];
-	NSString* bikeName = [appDelegate getBikeNameForActivity:activityId];
 	NSString* allTagsStr = @"";
-
-	// If a bike was specified then add that tag to the list of tags.
-	if (bikeName)
-	{
-		allTagsStr = [allTagsStr stringByAppendingFormat:@"%@", bikeName];
-	}
 
 	// Append any other tags that were associated with this activity.
 	NSMutableArray* tags = [appDelegate getTagsForActivity:activityId];

@@ -64,7 +64,6 @@
 // methods for starting and stopping activities, etc.
 
 - (BOOL)startActivity;
-- (BOOL)startActivityWithBikeName:(NSString*)bikeName;
 - (BOOL)stopActivity;
 - (BOOL)pauseActivity;
 - (BOOL)deleteActivity:(NSString*)activityId;

@@ -319,17 +319,6 @@ void startSensorCallback(SensorType type, void* context)
 	return result;
 }
 
-- (BOOL)startActivityWithBikeName:(NSString*)bikeName
-{
-	BOOL result = [self startActivity];
-
-	if (result)
-	{
-		SetCurrentBicycle([bikeName UTF8String]);
-	}
-	return result;
-}
-
 - (BOOL)stopActivity
 {
 	BOOL result = StopCurrentActivity();

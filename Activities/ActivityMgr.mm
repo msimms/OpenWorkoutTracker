@@ -402,6 +402,10 @@ extern "C" {
 		{
 			return false;
 		}
+		if (HasTag(activityId, tag))
+		{
+			return true;
+		}
 
 		bool result = false;
 
@@ -1010,21 +1014,35 @@ extern "C" {
 
 				g_historicalActivityLock.lock();
 
+				// Go through each activity that was done with this bike and total up the distances and wheel revolutions
+				// so we can use that to estimate the wheel circumference.
 				for (auto activityIter = g_historicalActivityList.begin(); activityIter != g_historicalActivityList.end(); ++activityIter)
 				{
 					const ActivitySummary& summary = (*activityIter);
-					uint64_t summaryBikeId = 0;
 
-					if (g_pDatabase->RetrieveBikeActivity(summary.activityId, summaryBikeId))
+					std::vector<std::string> tags;
+					if (g_pDatabase->RetrieveTags(summary.activityId, tags))
 					{
-						if (bikeId == summaryBikeId)
+						bool usesBikeInQuestion = false;
+
+						// Find the bike that was associated with this activity.
+						for (auto tagsIter = tags.begin(); tagsIter != tags.end(); ++tagsIter)
+						{
+							if ((*tagsIter).compare(bikeName) == 0)
+							{
+								usesBikeInQuestion = true;
+								break;
+							}
+						}
+
+						if (usesBikeInQuestion)
 						{
 							ActivityAttributeType revs = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS)->second;
 							ActivityAttributeType distance = summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)->second;
 
 							if (revs.valid && distance.valid)
 							{
-								double distanceMm = UnitConverter::MilesToKilometers(distance.value.doubleVal) * 1000000;	// Convert to millimeters
+								double distanceMm = UnitConverter::MilesToKilometers(distance.value.doubleVal) * 1000000; // Convert to millimeters
 								double wheelCircumference = distanceMm / (double)revs.value.intVal;
 
 								circumferenceTotalMm += wheelCircumference;
@@ -1117,84 +1135,6 @@ extern "C" {
 			}
 		}
 		return false;
-	}
-
-	bool GetActivityBikeProfile(const char* const activityId, uint64_t* bikeId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return false;
-		}
-
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			result = g_pDatabase->RetrieveBikeActivity(activityId, (*bikeId));
-		}
-
-		g_dbLock.unlock();
-
-		return false;
-	}
-
-	void CreateOrUpdateActivityBikeProfile(const char* const activityId, uint64_t bikeId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return;
-		}
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			uint64_t temp;
-
-			if (g_pDatabase->RetrieveBikeActivity(activityId, temp))
-			{
-				g_pDatabase->UpdateBikeActivity(bikeId, activityId);
-			}
-			else
-			{
-				g_pDatabase->CreateBikeActivity(bikeId, activityId);
-			}
-		}
-
-		g_dbLock.unlock();
-	}
-
-	void SetCurrentBicycle(const char* const name)
-	{
-		// Sanity checks.
-		if (name == NULL)
-		{
-			return;
-		}
-
-		if (g_pCurrentActivity)
-		{
-			for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
-			{
-				const Bike& bike = (*iter);
-
-				if (bike.name.compare(name) == 0)
-				{
-					CreateOrUpdateActivityBikeProfile(g_pCurrentActivity->GetIdCStr(), bike.id);
-
-					Cycling* pCycling = dynamic_cast<Cycling*>(g_pCurrentActivity);
-					if (pCycling)
-					{
-						pCycling->SetBikeProfile(bike);
-					}
-					break;
-				}
-			}
-		}
 	}
 
 	uint64_t GetBikeIdFromName(const char* const name)
@@ -1390,55 +1330,6 @@ extern "C" {
 			}
 		}
 		return false;
-	}
-
-	bool GetActivityShoeProfile(const char* const activityId, uint64_t* shoeId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return false;
-		}
-		
-		bool result = false;
-		
-		g_dbLock.lock();
-		
-		if (g_pDatabase)
-		{
-			result = g_pDatabase->RetrieveShoeActivity(activityId, (*shoeId));
-		}
-		
-		g_dbLock.unlock();
-		
-		return false;
-	}
-
-	void CreateOrUpdateActivityShoeProfile(const char* const activityId, uint64_t shoeId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return;
-		}
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			uint64_t temp;
-
-			if (g_pDatabase->RetrieveShoeActivity(activityId, temp))
-			{
-				g_pDatabase->UpdateShoeActivity(shoeId, activityId);
-			}
-			else
-			{
-				g_pDatabase->CreateShoeActivity(shoeId, activityId);
-			}
-		}
-
-		g_dbLock.unlock();
 	}
 
 	uint64_t GetShoeIdFromName(const char* const name)

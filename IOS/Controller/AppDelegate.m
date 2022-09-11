@@ -1685,17 +1685,6 @@ void startSensorCallback(SensorType type, void* context)
 	return result;
 }
 
-- (BOOL)startActivityWithBikeName:(NSString*)bikeName
-{
-	BOOL result = [self startActivity];
-
-	if (result)
-	{
-		SetCurrentBicycle([bikeName UTF8String]);
-	}
-	return result;
-}
-
 - (BOOL)stopActivity
 {
 	BOOL result = FALSE;
@@ -2296,60 +2285,9 @@ void startSensorCallback(SensorType type, void* context)
 	return UpdateBikeProfile(bikeId, [name UTF8String], weightKg, wheelCircumferenceMm);
 }
 
-- (BOOL)getBikeProfileForActivity:(NSString*)activityId withBikeId:(uint64_t*)bikeId
-{
-	return GetActivityBikeProfile([activityId UTF8String], bikeId);
-}
-
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm
 {
 	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm);
-}
-
-- (NSString*)getBikeNameForActivity:(NSString*)activityId
-{
-	NSString* bikeName = nil;
-	uint64_t bikeId = 0;
-
-	InitializeBikeProfileList();
-	GetActivityBikeProfile([activityId UTF8String], &bikeId);
-
-	if (bikeId > 0)
-	{
-		char* tempName = NULL;
-
-		GetBikeProfileById(bikeId, &tempName, NULL, NULL);
-		if (tempName)
-		{
-			bikeName = [[NSString alloc] initWithFormat:@"%s", tempName];
-			free((void*)tempName);
-		}
-	}
-	return bikeName;
-}
-
-- (void)setBikeForCurrentActivity:(NSString*)bikeName
-{
-	uint64_t bikeId = 0;
-	double weightKg = (double)0.0;
-	double wheelSize = (double)0.0;
-
-	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
-	{
-		CreateOrUpdateActivityBikeProfile(GetCurrentActivityId(), bikeId);
-	}
-}
-
-- (void)setBikeForActivityId:(NSString*)bikeName withActivityId:(NSString*)activityId
-{
-	uint64_t bikeId = 0;
-	double weightKg = (double)0.0;
-	double wheelSize = (double)0.0;
-	
-	if (GetBikeProfileByName([bikeName UTF8String], &bikeId, &weightKg, &wheelSize))
-	{
-		CreateOrUpdateActivityBikeProfile([activityId UTF8String], bikeId);
-	}
 }
 
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName
@@ -2372,48 +2310,6 @@ void startSensorCallback(SensorType type, void* context)
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
 	return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
-}
-
-- (NSString*)getShoeNameForActivity:(NSString*)activityId
-{
-	NSString* shoeName = nil;
-	uint64_t shoeId = 0;
-	
-	InitializeShoeProfileList();
-	GetActivityShoeProfile([activityId UTF8String], &shoeId);
-	
-	if (shoeId > 0)
-	{
-		char* tempName = NULL;
-		
-		GetShoeProfileById(shoeId, &tempName, NULL);
-		if (tempName)
-		{
-			shoeName = [[NSString alloc] initWithFormat:@"%s", tempName];
-			free((void*)tempName);
-		}
-	}
-	return shoeName;
-}
-
-- (void)setShoeForCurrentActivity:(NSString*)shoeName
-{
-	uint64_t shoeId = 0;
-	
-	if (GetShoeProfileByName([shoeName UTF8String], &shoeId))
-	{
-		CreateOrUpdateActivityShoeProfile(GetCurrentActivityId(), shoeId);
-	}
-}
-
-- (void)setShoeForActivityId:(NSString*)shoeName withActivityId:(NSString*)activityId
-{
-	uint64_t shoeId = 0;
-	
-	if (GetShoeProfileByName([shoeName UTF8String], &shoeId))
-	{
-		CreateOrUpdateActivityShoeProfile([activityId UTF8String], shoeId);
-	}
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
