@@ -170,15 +170,32 @@ typedef enum ExportFileTypeButtons
 	{
 		NSString* activityType = [appDelegate getHistoricalActivityType:self->activityId];
 
+		// Remove the bike button if this isn't a bike activity or we don't have any bikes.
 		if (!([activityType isEqualToString:@ACTIVITY_TYPE_CYCLING] ||
 			  [activityType isEqualToString:@ACTIVITY_TYPE_MOUNTAIN_BIKING] ||
-			  [activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE]))
+			  [activityType isEqualToString:@ACTIVITY_TYPE_STATIONARY_BIKE] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_TRIATHLON] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_DUATHLON]))
 		{
 			[self->movingToolbar removeObjectIdenticalTo:self.bikeButton];
 		}
 		else if ([[appDelegate getBikeNames] count] == 0)
 		{
 			[self->movingToolbar removeObjectIdenticalTo:self.bikeButton];
+		}
+
+		// Remove the bike button if this isn't a foot-based activity or we don't have any shoes.
+		if (!([activityType isEqualToString:@ACTIVITY_TYPE_RUNNING] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_WALKING] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_TREADMILL] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_TRIATHLON] ||
+			  [activityType isEqualToString:@ACTIVITY_TYPE_DUATHLON]))
+		{
+			[self->movingToolbar removeObjectIdenticalTo:self.shoeButton];
+		}
+		else if ([[appDelegate getShoeNames] count] == 0)
+		{
+			[self->movingToolbar removeObjectIdenticalTo:self.shoeButton];
 		}
 	}
 
