@@ -9,4 +9,4 @@
 	url = https://github.com/msimms/PeakFinder
 [submodule "LibBluetooth"]
 	path = LibBluetooth
-	url = git@github.com:msimms/LibBluetooth.git
+	url = https://github.com/msimms/LibBluetooth
