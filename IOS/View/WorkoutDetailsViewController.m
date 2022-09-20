@@ -224,7 +224,7 @@
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)showCloudSheet:(NSMutableArray*)fileExportServices
+- (void)showCloudSheet:(NSArray*)fileExportServices
 {	
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_EXPORT
@@ -251,7 +251,7 @@
 - (IBAction)onExport:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
+	NSArray* fileExportServices = [appDelegate getEnabledFileExportServices];
 
 	if ([fileExportServices count] == 1)
 	{

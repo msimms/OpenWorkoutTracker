@@ -1294,30 +1294,34 @@ void startSensorCallback(SensorType type, void* context)
 					NSNumber* addTime = [gearDict objectForKey:@PARAM_ADD_TIME];
 					NSNumber* retireTime = [gearDict objectForKey:@PARAM_RETIRE_TIME];
 
-					// Don't bother listing items that have been retired.
-					if ([retireTime intValue] == 0)
+					if ([gearType isEqualToString:@"shoes"])
 					{
-						if ([gearType isEqualToString:@"shoes"])
-						{
-							// Do we already have shoes with this name?
-							uint64_t gearId = [self getShoeIdFromName:gearName];
+						// Do we already have shoes with this name?
+						uint64_t gearId = [self getShoeIdFromName:gearName];
 
-							// If not, add it.
-							if (gearId == (uint64_t)-1)
-							{
-								[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];
-							}
+						// If not, add it.
+						if (gearId == (uint64_t)-1)
+						{
+							[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];
 						}
-						else if ([gearType isEqualToString:@"bike"])
+						else
 						{
-							// Do we already have shoes with this name?
-							uint64_t gearId = [self getBikeIdFromName:gearName];
+							[self updateShoeProfile:gearId withName:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];
+						}
+					}
+					else if ([gearType isEqualToString:@"bike"])
+					{
+						// Do we already have shoes with this name?
+						uint64_t gearId = [self getBikeIdFromName:gearName];
 
-							// If not, add it.
-							if (gearId == (uint64_t)-1)
-							{
-								[self addBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0];
-							}
+						// If not, add it.
+						if (gearId == (uint64_t)-1)
+						{
+							[self addBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0 withTimeRetired:[retireTime intValue]];
+						}
+						else
+						{
+							[self updateBikeProfile:gearId withName:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0 withTimeRetired:[retireTime intValue]];
 						}
 					}
 				}
@@ -2275,19 +2279,19 @@ void startSensorCallback(SensorType type, void* context)
 	return InitializeBikeProfileList();
 }
 
-- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm
+- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
 {
-	return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm);
+	return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm, timeRetired);
 }
 
-- (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm
+- (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
 {
-	return UpdateBikeProfile(bikeId, [name UTF8String], weightKg, wheelCircumferenceMm);
+	return UpdateBikeProfile(bikeId, [name UTF8String], weightKg, wheelCircumferenceMm, timeRetired);
 }
 
-- (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm
+- (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm withTimeRetired:(time_t*)timeRetired
 {
-	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm);
+	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm, timeRetired);
 }
 
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName
@@ -2310,6 +2314,11 @@ void startSensorCallback(SensorType type, void* context)
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
 	return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
+}
+
+- (BOOL)updateShoeProfile:(uint64_t)bikeId withName:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
+{
+	return UpdateShoeProfile(bikeId, [name UTF8String], [description UTF8String], timeAdded, timeRetired);
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
@@ -2635,21 +2644,7 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	}
 }
 
-- (NSMutableArray*)getEnabledFileImportCloudServices
-{
-	NSMutableArray* services = [[NSMutableArray alloc] init];
-
-	if (services)
-	{
-		if ([self isFeatureEnabled:FEATURE_DROPBOX])
-		{
-			[services addObject:[self->cloudMgr nameOf:CLOUD_SERVICE_DROPBOX]];
-		}
-	}
-	return services;
-}
-
-- (NSMutableArray*)getEnabledFileExportCloudServices
+- (NSArray*)getEnabledFileExportCloudServices
 {
 	NSMutableArray* services = [[NSMutableArray alloc] init];
 
@@ -2675,9 +2670,9 @@ void unsynchedActivitiesCallback(const char* const activityId, void* context)
 	return services;
 }
 
-- (NSMutableArray*)getEnabledFileExportServices
+- (NSArray*)getEnabledFileExportServices
 {
-	NSMutableArray* services = [self getEnabledFileExportCloudServices];
+	NSMutableArray* services = [[self getEnabledFileExportCloudServices] copy];
 
 	if (services)
 	{
@@ -2765,7 +2760,7 @@ void tagCallback(const char* name, void* context)
 	return names;
 }
 
-- (NSMutableArray*)getBikeNames
+- (NSArray*)getBikeNames
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 
@@ -2778,18 +2773,23 @@ void tagCallback(const char* name, void* context)
 			uint64_t bikeId = 0;
 			double weightKg = (double)0.0;
 			double wheelCircumference = (double)0.0;
-
-			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference))
+			time_t timeRetired = (time_t)0;
+			
+			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference, &timeRetired))
 			{
 				[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
 				free((void*)bikeName);
 			}
 		}
 	}
-	return names;
+	
+	// Make sure the list is unique - this doesn't handle differences in case however.
+	NSSet* uniqueNames = [NSSet setWithArray:names];
+	NSArray* result = [[NSMutableArray alloc] initWithArray:[uniqueNames allObjects]];
+	return result;
 }
 
-- (NSMutableArray*)getShoeNames
+- (NSArray*)getShoeNames
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 
@@ -2810,7 +2810,11 @@ void tagCallback(const char* name, void* context)
 			}
 		}
 	}
-	return names;
+
+	// Make sure the list is unique - this doesn't handle differences in case however.
+	NSSet* uniqueNames = [NSSet setWithArray:names];
+	NSArray* result = [[NSMutableArray alloc] initWithArray:[uniqueNames allObjects]];
+	return result;
 }
 
 - (NSMutableArray*)getIntervalWorkoutNamesAndIds
@@ -2879,7 +2883,7 @@ void activityTypeCallback(const char* type, void* context)
 	[types addObject:[[NSString alloc] initWithUTF8String:type]];
 }
 
-- (NSMutableArray*)getActivityTypes
+- (NSArray*)getActivityTypes
 {
 	NSMutableArray* types = [[NSMutableArray alloc] init];
 
@@ -2896,7 +2900,7 @@ void attributeNameCallback(const char* name, void* context)
 	[names addObject:[[NSString alloc] initWithUTF8String:name]];
 }
 
-- (NSMutableArray*)getCurrentActivityAttributes
+- (NSArray*)getCurrentActivityAttributes
 {
 	NSMutableArray* names = [[NSMutableArray alloc] init];
 
@@ -2907,7 +2911,7 @@ void attributeNameCallback(const char* name, void* context)
 	return names;
 }
 
-- (NSMutableArray*)getHistoricalActivityAttributes:(NSString*)activityId
+- (NSArray*)getHistoricalActivityAttributes:(NSString*)activityId
 {
 	NSMutableArray* attributes = [[NSMutableArray alloc] init];
 	size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);

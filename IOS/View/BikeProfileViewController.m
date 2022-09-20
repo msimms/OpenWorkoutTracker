@@ -181,8 +181,9 @@
 		char* bikeName = nil;
 		double weightKg = (double)0.0;
 		double wheelCircumferenceMm = (double)0.0;
+		time_t timeRetired = (time_t)0;
 
-		if (GetBikeProfileById(self->bikeId, &bikeName, &weightKg, &wheelCircumferenceMm))
+		if (GetBikeProfileById(self->bikeId, &bikeName, &weightKg, &wheelCircumferenceMm, &timeRetired))
 		{
 			self->nameTextField.text = [[NSString alloc] initWithUTF8String:bikeName];
 			self.title = self->nameTextField.text;
@@ -265,10 +266,10 @@
 	switch (self->mode)
     {
 	case BIKE_PROFILE_NEW:
-		saved = [appDelegate addBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
+		saved = [appDelegate addBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize withTimeRetired:0];
 		break;
 	case BIKE_PROFILE_UPDATE:
-		saved = [appDelegate updateBikeProfile:bikeId withName:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize];
+		saved = [appDelegate updateBikeProfile:bikeId withName:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize withTimeRetired:0];
 		break;
 	default:
 		break;

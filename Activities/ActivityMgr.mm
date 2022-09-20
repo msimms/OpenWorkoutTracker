@@ -905,7 +905,7 @@ extern "C" {
 		return result;
 	}
 
-	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm)
+	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -926,7 +926,7 @@ extern "C" {
 				bike.weightKg = weightKg;
 				bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
 				bike.timeAdded = time(NULL);
-				bike.timeRetired = 0;
+				bike.timeRetired = timeRetired;
 				bike.lastUpdatedTime = time(NULL);
 
 				g_dbLock.lock();
@@ -943,7 +943,7 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm)
+	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -960,6 +960,7 @@ extern "C" {
 			bike.name = name;
 			bike.weightKg = weightKg;
 			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
+			bike.timeRetired = timeRetired;
 
 			g_dbLock.lock();
 			result = g_pDatabase->UpdateBike(bike);
@@ -1004,8 +1005,9 @@ extern "C" {
 			char* bikeName = NULL;
 			double weightKg = (double)0.0;
 			double wheelCircumferenceMm = (double)0.0;
+			time_t timeRetired = (time_t)0;
 
-			if (GetBikeProfileById(bikeId, &bikeName, &weightKg, &wheelCircumferenceMm))
+			if (GetBikeProfileById(bikeId, &bikeName, &weightKg, &wheelCircumferenceMm, &timeRetired))
 			{
 				double circumferenceTotalMm = (double)0.0;
 				uint64_t numSamples = 0;
@@ -1057,7 +1059,7 @@ extern "C" {
 				if (numSamples > 0)
 				{
 					wheelCircumferenceMm = circumferenceTotalMm / numSamples;
-					result = UpdateBikeProfile(bikeId, bikeName, weightKg, wheelCircumferenceMm);
+					result = UpdateBikeProfile(bikeId, bikeName, weightKg, wheelCircumferenceMm, timeRetired);
 				}
 			}
 
@@ -1072,7 +1074,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm)
+	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired)
 	{
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
@@ -1086,13 +1088,15 @@ extern "C" {
 					(*weightKg) = bike.weightKg;
 				if (wheelCircumferenceMm)
 					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+				if (timeRetired)
+					(*timeRetired) = bike.timeRetired;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm)
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired)
 	{
 		if (bikeIndex < g_bikes.size())
 		{
@@ -1106,12 +1110,14 @@ extern "C" {
 				(*weightKg) = bike.weightKg;
 			if (wheelCircumferenceMm)
 				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+			if (timeRetired)
+				(*timeRetired) = bike.timeRetired;
 			return true;
 		}
 		return false;
 	}
 
-	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm)
+	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -1131,6 +1137,8 @@ extern "C" {
 					(*weightKg) = bike.weightKg;
 				if (wheelCircumferenceMm)
 					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+				if (timeRetired)
+					(*timeRetired) = bike.timeRetired;
 				return true;
 			}
 		}

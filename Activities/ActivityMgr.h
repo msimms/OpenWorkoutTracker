@@ -77,13 +77,13 @@ extern "C" {
 
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);
-	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm);
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm);
+	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
+	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
 	bool DeleteBikeProfile(uint64_t bikeId);
 	bool ComputeWheelCircumference(uint64_t bikeId);
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm);
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm);
-	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm);
+	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired);
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired);
+	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired);
 	uint64_t GetBikeIdFromName(const char* const name);
 
 	// Functions for managing shoes.

@@ -218,7 +218,7 @@
 - (void)showAttributesMenu
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* allAttributeNames = [appDelegate getCurrentActivityAttributes];  // All possible attributes for this activity type
+	NSArray* allAttributeNames = [appDelegate getCurrentActivityAttributes];  // All possible attributes for this activity type
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:STR_ATTRIBUTES
 																	  preferredStyle:UIAlertControllerStyleActionSheet];
@@ -821,7 +821,7 @@
 - (IBAction)onBike:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* bikeNames = [appDelegate getBikeNames];
+	NSArray* bikeNames = [appDelegate getBikeNames];
 
 	if ([bikeNames count] > 0)
 	{
@@ -858,7 +858,7 @@
 - (IBAction)onShoe:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* shoeNames = [appDelegate getShoeNames];
+	NSArray* shoeNames = [appDelegate getShoeNames];
 	
 	if ([shoeNames count] > 0)
 	{
@@ -895,8 +895,8 @@
 - (IBAction)onPlan:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
-	NSMutableArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
+	NSArray* workoutNamesAndIds = [appDelegate getIntervalWorkoutNamesAndIds];
+	NSArray* pacePlanNamesAndIds = [appDelegate getPacePlanNamesAndIds];
 	NSString* currentWorkoutId = [appDelegate getCurrentIntervalWorkoutId];
 	NSString* currentPacePlanId = [appDelegate getCurrentPacePlanId];
 

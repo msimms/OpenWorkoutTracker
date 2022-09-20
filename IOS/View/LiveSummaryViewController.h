@@ -17,7 +17,7 @@
 	IBOutlet UISwipeGestureRecognizer* leftSwipe;
 	IBOutlet UISwipeGestureRecognizer* rightSwipe;
 	
-	NSMutableArray* attributeNames;
+	NSArray* attributeNames;
 }
 
 - (IBAction)onMap:(id)sender;

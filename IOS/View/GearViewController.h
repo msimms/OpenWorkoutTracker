@@ -11,8 +11,8 @@
 
 @interface GearViewController : CommonViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
-	NSMutableArray*     bikeNames;
-	NSMutableArray*     shoeNames;
+	NSArray*            bikeNames;
+	NSArray*            shoeNames;
 	BikeProfileViewMode bikeViewMode;
 	ShoeProfileViewMode shoeViewMode;
 	NSString*           selectedBikeName;

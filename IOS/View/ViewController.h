@@ -19,10 +19,10 @@
 	IBOutlet UIButton* aboutButton;
 	IBOutlet UIActivityIndicatorView* spinner;
 
-	NSMutableArray* activityTypes;
-	NSString*       newActivityType;
-	NSString*       orphanedActivityType;
-	size_t          orphanedActivityIndex;
+	NSArray*  activityTypes;
+	NSString* newActivityType;
+	NSString* orphanedActivityType;
+	size_t    orphanedActivityIndex;
 }
 
 - (IBAction)onNewActivity:(id)sender;

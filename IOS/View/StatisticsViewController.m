@@ -131,7 +131,7 @@ typedef enum Sections
 
 			if (activityAttributes)
 			{
-				NSMutableArray* activityTypes = [appDelegate getActivityTypes];
+				NSArray* activityTypes = [appDelegate getActivityTypes];
 
 				if (activityTypes)
 				{

@@ -182,9 +182,9 @@
 // methods for managing bike profiles
 
 - (BOOL)initializeBikeProfileList;
-- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm;
-- (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm;
-- (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm;
+- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm withTimeRetired:(time_t)timeRetired;
+- (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm withTimeRetired:(time_t)timeRetired;
+- (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm withTimeRetired:(time_t*)timeRetired;
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName;
 - (BOOL)deleteBikeProfile:(uint64_t)bikeId;
 
@@ -192,6 +192,7 @@
 
 - (BOOL)initializeShoeProfileList;
 - (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired;
+- (BOOL)updateShoeProfile:(uint64_t)bikeId withName:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired;
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName;
 - (BOOL)deleteShoeProfile:(uint64_t)shoeId;
 
@@ -236,16 +237,15 @@
 // accessor methods
 
 - (NSMutableArray*)getTagsForActivity:(NSString*)activityId;
-- (NSMutableArray*)getBikeNames;
-- (NSMutableArray*)getShoeNames;
+- (NSArray*)getBikeNames;
+- (NSArray*)getShoeNames;
 - (NSMutableArray*)getIntervalWorkoutNamesAndIds;
 - (NSMutableArray*)getPacePlanNamesAndIds;
-- (NSMutableArray*)getEnabledFileImportCloudServices;
-- (NSMutableArray*)getEnabledFileExportCloudServices;
-- (NSMutableArray*)getEnabledFileExportServices;
-- (NSMutableArray*)getActivityTypes;
-- (NSMutableArray*)getCurrentActivityAttributes;
-- (NSMutableArray*)getHistoricalActivityAttributes:(NSString*)activityId;
+- (NSArray*)getEnabledFileExportCloudServices;
+- (NSArray*)getEnabledFileExportServices;
+- (NSArray*)getActivityTypes;
+- (NSArray*)getCurrentActivityAttributes;
+- (NSArray*)getHistoricalActivityAttributes:(NSString*)activityId;
 
 - (NSString*)getCurrentActivityType;
 - (NSString*)getHistoricalActivityTypeForIndex:(NSInteger)activityIndex;

@@ -556,7 +556,7 @@ typedef enum ExportFileTypeButtons
 	[self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)showCloudSheet:(NSMutableArray*)fileExportServices
+- (void)showCloudSheet:(NSArray*)fileExportServices
 {	
 	UIAlertController* alertController = [UIAlertController alertControllerWithTitle:nil
 																			 message:ACTION_SHEET_TITLE_EXPORT
@@ -702,7 +702,7 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onExport:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* fileExportServices = [appDelegate getEnabledFileExportServices];
+	NSArray* fileExportServices = [appDelegate getEnabledFileExportServices];
 
 	if ([fileExportServices count] == 1)
 	{
@@ -885,7 +885,7 @@ typedef enum ExportFileTypeButtons
 - (IBAction)onShoe:(id)sender
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* shoeNames = [appDelegate getShoeNames];
+	NSArray* shoeNames = [appDelegate getShoeNames];
 	
 	if ([shoeNames count] > 0)
 	{
