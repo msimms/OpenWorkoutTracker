@@ -153,6 +153,7 @@
 - (void)receivedWatchActivity:(NSNotification*)notification
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
+		[self buildDictionary];
 		[self.historyTableView reloadData];
 	});
 }
@@ -297,7 +298,7 @@
 	NSString* allTagsStr = @"";
 
 	// Append any other tags that were associated with this activity.
-	NSMutableArray* tags = [appDelegate getTagsForActivity:activityId];
+	NSArray* tags = [appDelegate getTagsForActivity:activityId];
 	for (NSString* tag in tags)
 	{
 		if ([allTagsStr length] > 0)
@@ -406,7 +407,7 @@
 - (BOOL)showActivityList
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* activityTypes = [appDelegate getActivityTypes];
+	NSArray* activityTypes = [appDelegate getActivityTypes];
 
 	if ([activityTypes count] > 0)
 	{
@@ -423,7 +424,7 @@
 			[alertController addAction:[UIAlertAction actionWithTitle:type style:UIAlertActionStyleDefault handler:^(UIAlertAction* action) {
 				self->selectedExportActivity = type;
 				
-				NSMutableArray* exportServices = [appDelegate getEnabledFileExportServices];
+				NSArray* exportServices = [appDelegate getEnabledFileExportServices];
 
 				if ([exportServices count] == 1)
 				{
@@ -446,7 +447,7 @@
 - (BOOL)showFileExportSheet
 {
 	AppDelegate* appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-	NSMutableArray* fileSites = [appDelegate getEnabledFileExportServices];
+	NSArray* fileSites = [appDelegate getEnabledFileExportServices];
 
 	if ([fileSites count] > 0)
 	{
