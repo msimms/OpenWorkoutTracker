@@ -28,6 +28,9 @@ public:
 	static double MetersToFeet(double m);
 	static double FeetToMeters(double ft);
 
+	static double CentimetersToInches(double cm);
+	static double InchesToCentimeters(double inches);
+
 	static double KilogramsToPounds(double kgs);
 	static double PoundsToKilograms(double lbs);
 };

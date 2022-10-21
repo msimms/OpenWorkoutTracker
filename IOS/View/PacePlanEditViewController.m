@@ -55,7 +55,7 @@ typedef enum PickerRows
 	UnitSystem targetPaceUnits = UNIT_SYSTEM_METRIC;
 
 	// Retrieve the plan details from the database.
-	if ([appDelegate getPacePlanDetails:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin withTargetDistanceUnits:&targetDistanceUnits withTargetPaceUnits:&targetPaceUnits])
+	if ([appDelegate retrievePacePlan:self->selectedPlanId withPlanName:&planName withTargetPace:&targetPaceMin withTargetDistance:&targetDistance withSplits:&splitsMin withTargetDistanceUnits:&targetDistanceUnits withTargetPaceUnits:&targetPaceUnits])
 	{
 		if (planName != nil)
 			nameTextField.text = planName;
@@ -153,7 +153,7 @@ typedef enum PickerRows
 	}
 
 	// Update the data.
-	if ([appDelegate updatePacePlanDetails:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withSplits:splitsMin withTargetDistanceUnits:targetDistanceUnits withTargetPaceUnits:targetPaceUnits])
+	if ([appDelegate updatePacePlan:selectedPlanId withPlanName:nameTextField.text withTargetPace:targetPaceMin withTargetDistance:targetDistance withSplits:splitsMin withTargetDistanceUnits:targetDistanceUnits withTargetPaceUnits:targetPaceUnits])
 	{
 		[self.navigationController popViewControllerAnimated:TRUE];
 	}

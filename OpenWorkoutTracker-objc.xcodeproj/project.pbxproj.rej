@@ -1,0 +1,55 @@
+diff a/OpenWorkoutTracker-objc.xcodeproj/project.pbxproj b/OpenWorkoutTracker-objc.xcodeproj/project.pbxproj	(rejected hunks)
+@@ -2974,7 +2974,7 @@
+ 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+ 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
+ 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
+-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
++				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -2999,7 +2999,7 @@
+ 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+ 				GCC_PREFIX_HEADER = "$(SRCROOT)/IOS/App-Prefix.pch";
+ 				INFOPLIST_FILE = "$(SRCROOT)/IOS/App-Info.plist";
+-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
++				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -3040,7 +3040,7 @@
+ 				SDKROOT = watchos;
+ 				SKIP_INSTALL = YES;
+ 				TARGETED_DEVICE_FAMILY = 4;
+-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
++				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -3073,7 +3073,7 @@
+ 				SDKROOT = watchos;
+ 				SKIP_INSTALL = YES;
+ 				TARGETED_DEVICE_FAMILY = 4;
+-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
++				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+ 			};
+ 			name = Release;
+ 		};
+@@ -3107,7 +3107,7 @@
+ 				SDKROOT = watchos;
+ 				SKIP_INSTALL = YES;
+ 				TARGETED_DEVICE_FAMILY = 4;
+-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
++				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -3142,7 +3142,7 @@
+ 				SDKROOT = watchos;
+ 				SKIP_INSTALL = YES;
+ 				TARGETED_DEVICE_FAMILY = 4;
+-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
++				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+ 			};
+ 			name = Release;
+ 		};

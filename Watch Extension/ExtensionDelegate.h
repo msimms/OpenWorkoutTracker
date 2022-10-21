@@ -94,7 +94,6 @@
 - (void)getHistoricalActivityStartAndEndTime:(NSInteger)activityIndex withStartTime:(time_t*)startTime withEndTime:(time_t*)endTime;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityIndex:(NSInteger)activityIndex;
 - (ActivityAttributeType)queryHistoricalActivityAttribute:(const char* const)attributeName forActivityId:(NSString*)activityId;
-- (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId;
 - (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId;
 - (NSString*)getActivityIdFromActivityIndex:(NSInteger)activityIndex;
 

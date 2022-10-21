@@ -10,6 +10,7 @@
 
 #include "DayType.h"
 #include "Workout.h"
+#include <vector>
 
 #define DAYS_PER_WEEK 7
 
@@ -22,14 +23,15 @@ public:
 	WorkoutScheduler();
 	virtual ~WorkoutScheduler();
 
-	void ScheduleWorkouts(Workout* workouts[], size_t numWorkouts, time_t startTime, DayType preferredLongRunDay);
+	time_t TimestampOfNextDayOfWeek(DayType firstDayOfWeek);
+	void ScheduleWorkouts(std::vector<Workout*> workouts, time_t startTime, DayType preferredLongRunDay);
 
 private:
 	double ScoreSchedule(Workout* week[DAYS_PER_WEEK]);
-	size_t CountNumDaysSet(size_t possibleDays[DAYS_PER_WEEK]);
-	void ListSchedulableDays(Workout* week[DAYS_PER_WEEK], size_t possibleDays[DAYS_PER_WEEK]);
-	void DeterministicScheduler(Workout* workouts[], size_t numWorkouts, Workout* week[DAYS_PER_WEEK], time_t startTime);
-	void RandomScheduler(Workout* workouts[], size_t numWorkouts, Workout* week[DAYS_PER_WEEK], time_t startTime);
+	size_t CountNumDaysSet(uint8_t possibleDays[DAYS_PER_WEEK]);
+	void ListSchedulableDays(Workout* week[DAYS_PER_WEEK], uint8_t possibleDays[DAYS_PER_WEEK]);
+	void DeterministicScheduler(std::vector<Workout*> workouts, Workout* week[DAYS_PER_WEEK], time_t startTime);
+	void RandomScheduler(std::vector<Workout*> workouts, Workout* week[DAYS_PER_WEEK], time_t startTime);
 };
 
 #endif

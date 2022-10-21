@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="20037" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="21225" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="20006"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="21040"/>
     </dependencies>
     <scenes>
         <!--WatchAboutViewController-->
@@ -204,21 +203,6 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="973" y="759"/>
-        </scene>
-        <!--Static Notification Interface Controller-->
-        <scene sceneID="80C-Bo-uTA">
-            <objects>
-                <notificationController id="cEA-Zu-qAF" customClass="NotificationController">
-                    <items>
-                        <label alignment="left" text="Alert Label" id="8hf-A4-kVH"/>
-                    </items>
-                    <notificationCategory key="notificationCategory" id="hyb-H2-A6f"/>
-                    <connections>
-                        <outlet property="notificationAlertLabel" destination="8hf-A4-kVH" id="dcJ-zW-KUR"/>
-                    </connections>
-                </notificationController>
-            </objects>
-            <point key="canvasLocation" x="283" y="759"/>
         </scene>
         <!--WatchHistoryViewController-->
         <scene sceneID="AHC-4j-swK">

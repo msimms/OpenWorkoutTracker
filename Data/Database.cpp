@@ -131,13 +131,21 @@ bool Database::CreateTables()
 
 	if (!DoesTableExist("bike"))
 	{
-		sql = "create table bike (id integer primary key, name text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int, last_updated_time big int)";
+		sql = "create table bike (id integer primary key, name text, description text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int, last_updated_time big int)";
 		queries.push_back(sql);
 	}
-	else if (!DoesTableHaveColumn("bike", "last_updated_time"))
+	else
 	{
-		sql = "alter table bike add column last_updated_time big int";
-		queries.push_back(sql);
+		if (!DoesTableHaveColumn("bike", "description"))
+		{
+			sql = "alter table bike add column description text";
+			queries.push_back(sql);
+		}
+		if (!DoesTableHaveColumn("bike", "last_updated_time"))
+		{
+			sql = "alter table bike add column last_updated_time big int";
+			queries.push_back(sql);
+		}
 	}
 	if (!DoesTableExist("shoe"))
 	{
@@ -182,11 +190,16 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("pace_plan"))
 	{
-		sql = "create table pace_plan (id integer primary key, plan_id text, name text, target_pace double, target_distance double, splits double, route text, display_units_distance integer, display_units_pace integer, last_updated_time big int)";
+		sql = "create table pace_plan (id integer primary key, plan_id text, name text, description text, target_pace double, target_distance double, splits double, route text, display_units_distance integer, display_units_pace integer, last_updated_time big int)";
 		queries.push_back(sql);
 	}
 	else
 	{
+		if (!DoesTableHaveColumn("pace_plan", "description"))
+		{
+			sql = "alter table pace_plan add column description text";
+			queries.push_back(sql);
+		}
 		if (!DoesTableHaveColumn("pace_plan", "display_units_distance"))
 		{
 			sql = "alter table pace_plan add column display_units_distance integer";
@@ -202,11 +215,6 @@ bool Database::CreateTables()
 			sql = "alter table pace_plan add column last_updated_time big int";
 			queries.push_back(sql);
 		}
-	}
-	if (!DoesTableExist("custom_activity"))
-	{
-		sql = "create table custom_activity (id integer primary key, name text, type integer)";
-		queries.push_back(sql);
 	}
 	if (!DoesTableExist("activity"))
 	{
@@ -373,8 +381,6 @@ bool Database::Reset()
 	queries.push_back(sql);
 	sql = "delete from pace_plan";
 	queries.push_back(sql);
-	sql = "delete from custom_activity";
-	queries.push_back(sql);
 	sql = "delete from activity";
 	queries.push_back(sql);
 	sql = "delete from lap";
@@ -414,15 +420,16 @@ bool Database::CreateBike(const Bike& bike)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into bike values (NULL,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into bike values (NULL,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, bike.name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 2, bike.weightKg);
-		sqlite3_bind_double(statement, 3, bike.computedWheelCircumferenceMm);
-		sqlite3_bind_int64(statement, 4, bike.timeAdded);
-		sqlite3_bind_int64(statement, 5, bike.timeRetired);
-		sqlite3_bind_int64(statement, 6, bike.lastUpdatedTime);
+		sqlite3_bind_text(statement, 2, bike.description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 3, bike.weightKg);
+		sqlite3_bind_double(statement, 4, bike.computedWheelCircumferenceMm);
+		sqlite3_bind_int64(statement, 5, bike.timeAdded);
+		sqlite3_bind_int64(statement, 6, bike.timeRetired);
+		sqlite3_bind_int64(statement, 7, bike.lastUpdatedTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -434,7 +441,7 @@ bool Database::RetrieveBike(uint64_t bikeId, Bike& bike)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, weight_kg, wheel_circumference_mm, time_added, time_retired, last_updated_time from bike where id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, description, weight_kg, wheel_circumference_mm, time_added, time_retired, last_updated_time from bike where id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, bikeId);
 
@@ -442,11 +449,12 @@ bool Database::RetrieveBike(uint64_t bikeId, Bike& bike)
 		{
 			bike.id = sqlite3_column_int64(statement, 0);
 			bike.name.append((const char*)sqlite3_column_text(statement, 1));
-			bike.weightKg = sqlite3_column_double(statement, 2);
-			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 3);
-			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
-			bike.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
-			bike.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 6);
+			bike.description.append((const char*)sqlite3_column_text(statement, 2));
+			bike.weightKg = sqlite3_column_double(statement, 3);
+			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 4);
+			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 5);
+			bike.timeRetired = (time_t)sqlite3_column_int64(statement, 6);
+			bike.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 7);
 			result = true;
 		}
 		sqlite3_finalize(statement);
@@ -459,7 +467,7 @@ bool Database::RetrieveBikes(std::vector<Bike>& bikes)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select id, name, weight_kg, wheel_circumference_mm, time_added, time_retired, last_updated_time from bike order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, name, description, weight_kg, wheel_circumference_mm, time_added, time_retired, last_updated_time from bike order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -467,11 +475,12 @@ bool Database::RetrieveBikes(std::vector<Bike>& bikes)
 			
 			bike.id = sqlite3_column_int64(statement, 0);
 			bike.name.append((const char*)sqlite3_column_text(statement, 1));
-			bike.weightKg = sqlite3_column_double(statement, 2);
-			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 3);
-			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 4);
-			bike.timeRetired = (time_t)sqlite3_column_int64(statement, 5);
-			bike.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 6);
+			bike.description.append((const char*)sqlite3_column_text(statement, 2));
+			bike.weightKg = sqlite3_column_double(statement, 3);
+			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 4);
+			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 5);
+			bike.timeRetired = (time_t)sqlite3_column_int64(statement, 6);
+			bike.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 7);
 
 			bikes.push_back(bike);
 		}
@@ -486,16 +495,17 @@ bool Database::UpdateBike(const Bike& bike)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "update bike set weight_kg = ?, wheel_circumference_mm = ?, name = ?, time_added = ?, time_retired = ?, last_updated_time = ? where id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update bike set weight_kg = ?, wheel_circumference_mm = ?, name = ?, description = ?, time_added = ?, time_retired = ?, last_updated_time = ? where id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_double(statement, 1, bike.weightKg);
 		sqlite3_bind_double(statement, 2, bike.computedWheelCircumferenceMm);
 		sqlite3_bind_text(statement, 3, bike.name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 4, bike.timeAdded);
-		sqlite3_bind_int64(statement, 5, bike.timeRetired);
-		sqlite3_bind_int64(statement, 6, bike.lastUpdatedTime);
-		sqlite3_bind_int64(statement, 7, bike.id);
+		sqlite3_bind_text(statement, 4, bike.description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 5, bike.timeAdded);
+		sqlite3_bind_int64(statement, 6, bike.timeRetired);
+		sqlite3_bind_int64(statement, 7, bike.lastUpdatedTime);
+		sqlite3_bind_int64(statement, 8, bike.id);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -988,18 +998,19 @@ bool Database::CreatePacePlan(const PacePlan& plan)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?,?,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into pace_plan values (NULL,?,?,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, plan.name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 3, plan.targetPaceInMinKm);
-		sqlite3_bind_double(statement, 4, plan.targetDistanceInKms);
-		sqlite3_bind_double(statement, 5, plan.splits);
-		sqlite3_bind_text(statement, 6, plan.route.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(statement, 7, plan.displayUnitsDistance);
-		sqlite3_bind_int(statement, 8, plan.displayUnitsPace);
-		sqlite3_bind_int64(statement, 9, plan.lastUpdatedTime);
+		sqlite3_bind_text(statement, 3, plan.description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 4, plan.targetPaceInMinKm);
+		sqlite3_bind_double(statement, 5, plan.targetDistanceInKms);
+		sqlite3_bind_double(statement, 6, plan.splits);
+		sqlite3_bind_text(statement, 7, plan.route.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(statement, 8, plan.displayUnitsDistance);
+		sqlite3_bind_int(statement, 9, plan.displayUnitsPace);
+		sqlite3_bind_int64(statement, 10, plan.lastUpdatedTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}	
@@ -1011,7 +1022,7 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, target_pace, target_distance, splits, route, display_units_distance, display_units_pace, last_updated_time from pace_plan", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, description, target_pace, target_distance, splits, route, display_units_distance, display_units_pace, last_updated_time from pace_plan", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -1019,13 +1030,14 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 
 			plan.planId.append((const char*)sqlite3_column_text(statement, 0));
 			plan.name.append((const char*)sqlite3_column_text(statement, 1));
-			plan.targetPaceInMinKm = sqlite3_column_double(statement, 2);
-			plan.targetDistanceInKms = sqlite3_column_double(statement, 3);
-			plan.splits = sqlite3_column_double(statement, 4);
-			plan.route.append((const char*)sqlite3_column_text(statement, 5));
-			plan.displayUnitsDistance = (UnitSystem)sqlite3_column_int(statement, 6);
-			plan.displayUnitsPace = (UnitSystem)sqlite3_column_int(statement, 7);
-			plan.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 8);
+			plan.description.append((const char*)sqlite3_column_text(statement, 2));
+			plan.targetPaceInMinKm = sqlite3_column_double(statement, 3);
+			plan.targetDistanceInKms = sqlite3_column_double(statement, 4);
+			plan.splits = sqlite3_column_double(statement, 5);
+			plan.route.append((const char*)sqlite3_column_text(statement, 6));
+			plan.displayUnitsDistance = (UnitSystem)sqlite3_column_int(statement, 7);
+			plan.displayUnitsPace = (UnitSystem)sqlite3_column_int(statement, 8);
+			plan.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 9);
 
 			plans.push_back(plan);
 		}
@@ -1040,17 +1052,18 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, target_pace = ?, target_distance = ?, splits = ?, display_units_distance = ?, display_units_pace = ?, last_updated_time = ? where plan_id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, description = ?, target_pace = ?, target_distance = ?, splits = ?, display_units_distance = ?, display_units_pace = ?, last_updated_time = ? where plan_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, plan.name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 2, plan.targetPaceInMinKm);
-		sqlite3_bind_double(statement, 3, plan.targetDistanceInKms);
-		sqlite3_bind_double(statement, 4, plan.splits);
-		sqlite3_bind_int(statement, 5, plan.displayUnitsDistance);
-		sqlite3_bind_int(statement, 6, plan.displayUnitsPace);
-		sqlite3_bind_int64(statement, 7, plan.lastUpdatedTime);
-		sqlite3_bind_text(statement, 8, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, plan.description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 3, plan.targetPaceInMinKm);
+		sqlite3_bind_double(statement, 4, plan.targetDistanceInKms);
+		sqlite3_bind_double(statement, 5, plan.splits);
+		sqlite3_bind_int(statement, 6, plan.displayUnitsDistance);
+		sqlite3_bind_int(statement, 7, plan.displayUnitsPace);
+		sqlite3_bind_int64(statement, 8, plan.lastUpdatedTime);
+		sqlite3_bind_text(statement, 9, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -1065,34 +1078,6 @@ bool Database::DeletePacePlan(const std::string& planId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, planId.c_str(), -1, SQLITE_TRANSIENT);
-		result = sqlite3_step(statement);
-		sqlite3_finalize(statement);
-	}
-	return result == SQLITE_DONE;
-}
-
-bool Database::CreateCustomActivity(const std::string& activityType, ActivityViewType viewType)
-{
-	sqlite3_stmt* statement = NULL;
-
-	int result = sqlite3_prepare_v2(m_pDb, "insert into custom_activity values (NULL,?)", -1, &statement, 0);
-	if (result == SQLITE_OK)
-	{
-		sqlite3_bind_text(statement, 1, activityType.c_str(), -1, SQLITE_TRANSIENT);
-		result = sqlite3_step(statement);
-		sqlite3_finalize(statement);
-	}
-	return result == SQLITE_DONE;
-}
-
-bool Database::DeleteCustomActivity(const std::string& activityType)
-{
-	sqlite3_stmt* statement = NULL;
-	
-	int result = sqlite3_prepare_v2(m_pDb, "delete from custom_activity where name = ?", -1, &statement, 0);
-	if (result == SQLITE_OK)
-	{
-		sqlite3_bind_text(statement, 1, activityType.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

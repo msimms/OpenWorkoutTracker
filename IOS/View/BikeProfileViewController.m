@@ -179,11 +179,13 @@
 	if (self->bikeId > 0)
 	{
 		char* bikeName = nil;
+		char* description = nil;
 		double weightKg = (double)0.0;
 		double wheelCircumferenceMm = (double)0.0;
+		time_t timeAdded = (time_t)0;
 		time_t timeRetired = (time_t)0;
 
-		if (GetBikeProfileById(self->bikeId, &bikeName, &weightKg, &wheelCircumferenceMm, &timeRetired))
+		if (GetBikeProfileById(self->bikeId, &bikeName, &description, &weightKg, &wheelCircumferenceMm, &timeAdded, &timeRetired))
 		{
 			self->nameTextField.text = [[NSString alloc] initWithUTF8String:bikeName];
 			self.title = self->nameTextField.text;
@@ -217,6 +219,10 @@
 			if (bikeName)
 			{
 				free((void*)bikeName);
+			}
+			if (description)
+			{
+				free((void*)description);
 			}
 		}
 	}

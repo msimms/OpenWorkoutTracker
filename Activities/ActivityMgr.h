@@ -24,6 +24,8 @@
 #include "UnitSystem.h"
 #include "WorkoutType.h"
 
+#include <stdbool.h>
+
 #define ACTIVITY_INDEX_UNKNOWN (size_t)-1
 #define WORKOUT_INDEX_UNKNOWN (size_t)-1
 
@@ -34,7 +36,7 @@ extern "C" {
 	// Functions for managing the database.
 	bool Initialize(const char* const dbFileName);
 	bool DeleteActivityFromDatabase(const char* const activityId);
-	bool IsActivityInDatabase(const char* activityId);
+	bool IsActivityInDatabase(const char* const activityId);
 	bool ResetDatabase(void);
 	bool CloseDatabase(void);
 
@@ -77,13 +79,12 @@ extern "C" {
 
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);
-	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
+	bool AddBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
+	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
 	bool DeleteBikeProfile(uint64_t bikeId);
 	bool ComputeWheelCircumference(uint64_t bikeId);
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired);
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired);
-	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired);
+	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired);
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired);
 	uint64_t GetBikeIdFromName(const char* const name);
 
 	// Functions for managing shoes.
@@ -91,9 +92,8 @@ extern "C" {
 	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
 	bool DeleteShoeProfile(uint64_t shoeId);
-	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description);
-	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description);
-	bool GetShoeProfileByName(const char* const name, uint64_t* shoeId);
+	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired);
+	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired);
 	uint64_t GetShoeIdFromName(const char* const name);
 
 	// Functions for managing the currently set interval workout.
@@ -122,8 +122,8 @@ extern "C" {
 	bool InitializePacePlanList(void);
 	char* RetrievePacePlanAsJSON(size_t planIndex);
 	bool CreateNewPacePlan(const char* const planName, const char* const planId);
-	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime);
-	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime);
+	bool RetrievePacePlan(const char* const planId, char** const name, char** const description, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime);
+	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime);
 	bool DeletePacePlan(const char* planId);
 
 	// Functions for managing the currently set pace plan.
@@ -139,18 +139,16 @@ extern "C" {
 
 	// Functions for loading history.
 	void InitializeHistoricalActivityList(void);
+	void LoadHistoricalActivity(const char* const activityId);
 	bool HistoricalActivityListIsInitialized(void);
 	bool CreateHistoricalActivityObject(size_t activityIndex);
-	bool CreateHistoricalActivityObjectById(const char* activityId);
 	bool CreateAllHistoricalActivityObjects(void);
 	bool LoadHistoricalActivityLapData(size_t activityIndex);
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context);
 	bool LoadAllHistoricalActivitySensorData(size_t activityIndex);
-	bool LoadAllHistoricalActivitySensorDataById(const char* activityId);
 	bool LoadAllHistoricalActivitySummaryData(void);
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex);
 	bool SaveHistoricalActivitySummaryData(size_t activityIndex);
-	bool SaveHistoricalActivitySummaryDataById(const char* activityId);
 
 	// Functions for unloading history.
 	void FreeHistoricalActivityList(void);
@@ -165,18 +163,22 @@ extern "C" {
 	char* GetHistoricalActivityName(size_t activityIndex);
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex);
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
-	ActivityAttributeType QueryHistoricalActivityAttributeById(const char* activityId, const char* const attributeName);
 	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex);
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex);
 	size_t GetNumHistoricalActivities(void);
 	size_t GetNumHistoricalActivitiesByType(const char* const activityType);
 	void SetHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName, ActivityAttributeType attributeValue);
 	bool IsHistoricalActivityFootBased(size_t activityIndex);
+	bool IsHistoricalActivityMovingActivity(size_t activityIndex);
+	bool IsHistoricalActivityLiftingActivity(size_t activityIndex);
 
 	// Functions for accessing historical location data.
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
-	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context);
 	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate);
+
+	// Functions for accessing historical sensor data.
+	size_t GetNumHistoricalSensorPoints(size_t activityIndex, SensorType sensorType);
+	bool GetHistoricalActivitySensorPoint(size_t activityIndex, SensorType sensorType, size_t pointIndex, time_t* const pointTime, double* const pointValue);
 
 	// Functions for listing locations from the current activity.
 	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate);
@@ -215,10 +217,6 @@ extern "C" {
 	void ConvertToBroadcastUnits(ActivityAttributeType* value);
 	void ConvertToCustomaryUnits(ActivityAttributeType* value);
 	void ConvertToPreferredUntis(ActivityAttributeType* value);
-
-	// Functions for creating and destroying custom activity types.
-	void CreateCustomActivity(const char* const name, ActivityViewType viewType);
-	void DestroyCustomActivity(const char* const name);
 
 	// Functions for creating and destroying the current activity.
 	void CreateActivityObject(const char* const activityType);

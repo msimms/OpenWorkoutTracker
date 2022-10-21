@@ -19,6 +19,7 @@
 #include "Params.h"
 #include "WorkoutImporter.h"
 #include "WorkoutPlanGenerator.h"
+#include "WorkoutScheduler.h"
 
 #include "Cycling.h"
 #include "FtpCalculator.h"
@@ -74,6 +75,11 @@ std::string EscapeString(const std::string& s)
 	return newS;
 }
 
+std::string EscapeAndQuoteString(const std::string& s)
+{
+	return "\"" + EscapeString(s) + "\"";
+}
+
 std::string MapToJsonStr(const std::map<std::string, std::string>& data)
 {
 	std::string json = "{";
@@ -84,12 +90,11 @@ std::string MapToJsonStr(const std::map<std::string, std::string>& data)
 		if (!first)
 			json += ", ";
 		first = false;
-
+		
 		json += "\"";
 		json += EscapeString(iter->first);
-		json += "\": \"";
-		json += EscapeString(iter->second);
-		json += "\"";
+		json += "\": ";
+		json += iter->second;
 	}
 	json += "}";
 	return json;
@@ -189,7 +194,7 @@ extern "C" {
 		return deleted;
 	}
 
-	bool IsActivityInDatabase(const char* activityId)
+	bool IsActivityInDatabase(const char* const activityId)
 	{
 		// Sanity checks.
 		if (activityId == NULL)
@@ -877,6 +882,7 @@ extern "C" {
 		if (g_pCurrentActivity && g_pCurrentActivity->GetType().compare(ACTIVITY_TYPE_POOL_SWIMMING) == 0)
 		{
 			PoolSwim* pPoolActivity = dynamic_cast<PoolSwim*>(g_pCurrentActivity);
+
 			if (pPoolActivity)
 			{
 				pPoolActivity->SetPoolLength(poolLength, units);
@@ -905,7 +911,7 @@ extern "C" {
 		return result;
 	}
 
-	bool AddBikeProfile(const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
+	bool AddBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -923,6 +929,7 @@ extern "C" {
 			{
 				Bike bike;
 				bike.name = name;
+				bike.description = description;
 				bike.weightKg = weightKg;
 				bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
 				bike.timeAdded = time(NULL);
@@ -943,7 +950,7 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
+	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -958,6 +965,7 @@ extern "C" {
 			Bike bike;
 			bike.id = bikeId;
 			bike.name = name;
+			bike.description = description;
 			bike.weightKg = weightKg;
 			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
 			bike.timeRetired = timeRetired;
@@ -1003,11 +1011,13 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			char* bikeName = NULL;
+			char* description = NULL;
 			double weightKg = (double)0.0;
 			double wheelCircumferenceMm = (double)0.0;
+			time_t timeAdded = (time_t)0;
 			time_t timeRetired = (time_t)0;
 
-			if (GetBikeProfileById(bikeId, &bikeName, &weightKg, &wheelCircumferenceMm, &timeRetired))
+			if (GetBikeProfileById(bikeId, &bikeName, &description, &weightKg, &wheelCircumferenceMm, &timeAdded, &timeRetired))
 			{
 				double circumferenceTotalMm = (double)0.0;
 				uint64_t numSamples = 0;
@@ -1059,7 +1069,7 @@ extern "C" {
 				if (numSamples > 0)
 				{
 					wheelCircumferenceMm = circumferenceTotalMm / numSamples;
-					result = UpdateBikeProfile(bikeId, bikeName, weightKg, wheelCircumferenceMm, timeRetired);
+					result = UpdateBikeProfile(bikeId, bikeName, description, weightKg, wheelCircumferenceMm, timeRetired);
 				}
 			}
 
@@ -1074,7 +1084,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired)
+	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired)
 	{
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
@@ -1084,10 +1094,14 @@ extern "C" {
 			{
 				if (name)
 					(*name) = strdup(bike.name.c_str());
+				if (description)
+					(*description) = strdup(bike.description.c_str());
 				if (weightKg)
 					(*weightKg) = bike.weightKg;
 				if (wheelCircumferenceMm)
 					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+				if (timeAdded)
+					(*timeAdded) = bike.timeAdded;
 				if (timeRetired)
 					(*timeRetired) = bike.timeRetired;
 				return true;
@@ -1096,7 +1110,7 @@ extern "C" {
 		return false;
 	}
 
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired)
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired)
 	{
 		if (bikeIndex < g_bikes.size())
 		{
@@ -1106,41 +1120,17 @@ extern "C" {
 				(*bikeId) = bike.id;
 			if (name)
 				(*name) = strdup(bike.name.c_str());
+			if (description)
+				(*description) = strdup(bike.description.c_str());
 			if (weightKg)
 				(*weightKg) = bike.weightKg;
 			if (wheelCircumferenceMm)
 				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+			if (timeAdded)
+				(*timeAdded) = bike.timeAdded;
 			if (timeRetired)
 				(*timeRetired) = bike.timeRetired;
 			return true;
-		}
-		return false;
-	}
-
-	bool GetBikeProfileByName(const char* const name, uint64_t* bikeId, double* weightKg, double* wheelCircumferenceMm, time_t* timeRetired)
-	{
-		// Sanity checks.
-		if (name == NULL)
-		{
-			return false;
-		}
-
-		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
-		{
-			const Bike& bike = (*iter);
-
-			if (bike.name.compare(name) == 0)
-			{
-				if (bikeId)
-					(*bikeId) = bike.id;
-				if (weightKg)
-					(*weightKg) = bike.weightKg;
-				if (wheelCircumferenceMm)
-					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
-				if (timeRetired)
-					(*timeRetired) = bike.timeRetired;
-				return true;
-			}
 		}
 		return false;
 	}
@@ -1283,7 +1273,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description)
+	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired)
 	{
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
 		{
@@ -1295,13 +1285,17 @@ extern "C" {
 					(*name) = strdup(shoes.name.c_str());
 				if (description)
 					(*description) = strdup(shoes.description.c_str());
+				if (timeAdded)
+					(*timeAdded) = shoes.timeAdded;
+				if (timeRetired)
+					(*timeRetired) = shoes.timeRetired;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description)
+	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired)
 	{
 		if (shoeIndex < g_shoes.size())
 		{
@@ -1313,29 +1307,11 @@ extern "C" {
 				(*name) = strdup(shoes.name.c_str());
 			if (description)
 				(*description) = strdup(shoes.description.c_str());
+			if (timeAdded)
+				(*timeAdded) = shoes.timeAdded;
+			if (timeRetired)
+				(*timeRetired) = shoes.timeRetired;
 			return true;
-		}
-		return false;
-	}
-
-	bool GetShoeProfileByName(const char* const name, uint64_t* shoeId)
-	{
-		// Sanity checks.
-		if (name == NULL)
-		{
-			return false;
-		}
-		
-		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
-		{
-			const Shoes& shoe = (*iter);
-			
-			if (shoe.name.compare(name) == 0)
-			{
-				if (shoeId)
-					(*shoeId) = shoe.id;
-				return true;
-			}
 		}
 		return false;
 	}
@@ -1486,9 +1462,9 @@ extern "C" {
 			const IntervalWorkout& workout = g_intervalWorkouts.at(workoutIndex);
 			std::map<std::string, std::string> params;
 
-			params.insert(std::make_pair("id", workout.workoutId));
-			params.insert(std::make_pair("name", workout.name));
-			params.insert(std::make_pair("sport", workout.sport));
+			params.insert(std::make_pair("id", EscapeAndQuoteString(workout.workoutId)));
+			params.insert(std::make_pair("name", EscapeAndQuoteString(workout.name)));
+			params.insert(std::make_pair("sport", EscapeAndQuoteString(workout.sport)));
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;
@@ -1756,14 +1732,14 @@ extern "C" {
 			const PacePlan& plan = g_pacePlans.at(planIndex);
 			std::map<std::string, std::string> params;
 
-			params.insert(std::make_pair("id", plan.planId));
-			params.insert(std::make_pair("name", plan.name));
+			params.insert(std::make_pair("id", EscapeAndQuoteString(plan.planId)));
+			params.insert(std::make_pair("name", EscapeAndQuoteString(plan.name)));
 			params.insert(std::make_pair("target pace", FormatDouble(plan.targetPaceInMinKm)));
 			params.insert(std::make_pair("target distance", FormatDouble(plan.targetDistanceInKms)));
 			params.insert(std::make_pair("display units pace", FormatDouble(plan.displayUnitsPace)));
 			params.insert(std::make_pair("display units distance", FormatDouble(plan.displayUnitsDistance)));
 			params.insert(std::make_pair("splits", FormatDouble(plan.splits)));
-			params.insert(std::make_pair("route", plan.route));
+			params.insert(std::make_pair("route", EscapeAndQuoteString(plan.route)));
 			params.insert(std::make_pair("last updated", FormatInt(plan.lastUpdatedTime)));
 			return strdup(MapToJsonStr(params).c_str());
 		}
@@ -1807,7 +1783,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetPacePlanDetails(const char* const planId, char** const name, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime)
+	bool RetrievePacePlan(const char* const planId, char** const name, char** const description, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (planId == NULL)
@@ -1823,6 +1799,8 @@ extern "C" {
 			{
 				if (name)
 					(*name) = strdup(pacePlan.name.c_str());
+				if (description)
+					(*description) = strdup(pacePlan.description.c_str());
 				if (targetPaceInMinKm)
 					(*targetPaceInMinKm) = pacePlan.targetPaceInMinKm;
 				if (targetDistanceInKms)
@@ -1841,7 +1819,7 @@ extern "C" {
 		return false;
 	}
 
-	bool UpdatePacePlanDetails(const char* const planId, const char* const name, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime)
+	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (planId == NULL)
@@ -1866,6 +1844,7 @@ extern "C" {
 				if (pacePlan.planId.compare(planId) == 0)
 				{
 					pacePlan.name = name;
+					pacePlan.description = description;
 					pacePlan.targetPaceInMinKm = targetPaceInMinKm;
 					pacePlan.targetDistanceInKms = targetDistanceInKms;
 					pacePlan.splits = splits;
@@ -2025,6 +2004,7 @@ extern "C" {
 	// Functions for loading history.
 	//
 
+	/// Loads summaries for all historical activities
 	void InitializeHistoricalActivityList()
 	{
 		FreeHistoricalActivityList();
@@ -2034,7 +2014,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			// Get the activity list out of the database.
+			// Get the activities from of the database.
 			if (g_pDatabase->RetrieveActivities(g_historicalActivityList))
 			{
 				for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
@@ -2048,6 +2028,36 @@ extern "C" {
 					// object and recomputing everything.
 					g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
 				}
+			}
+		}
+
+		g_dbLock.unlock();
+		g_historicalActivityLock.unlock();
+	}
+
+	/// Loads a single historical activity summary
+	void LoadHistoricalActivity(const char* const activityId)
+	{
+		FreeHistoricalActivityList();
+		
+		g_historicalActivityLock.lock();
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			ActivitySummary summary;
+
+			// Get the activity from of the database.
+			if (g_pDatabase->RetrieveActivity(activityId, summary))
+			{
+				g_historicalActivityList.push_back(summary);
+
+				// Build the activity id to index hash map.
+				g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, 0));
+				
+				// Load cached summary data because this is quicker than recreated the activity
+				// object and recomputing everything.
+				g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
 			}
 		}
 
@@ -2303,7 +2313,7 @@ extern "C" {
 						result = false;
 					}
 				}
-				
+
 				summary.pActivity->OnFinishedLoadingSensorData();
 			}
 			else
@@ -2317,17 +2327,6 @@ extern "C" {
 		}
 
 		return result;
-	}
-
-	bool LoadAllHistoricalActivitySensorDataById(const char* activityId)
-	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
-
-		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
-		{
-			return LoadAllHistoricalActivitySensorData(activityIndex);
-		}
-		return false;
 	}
 
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex)
@@ -2352,10 +2351,10 @@ extern "C" {
 						
 						summary.pActivity->SetActivityAttribute(attributeName, value);
 					}
-					
-					result = true;
 				}
 			}
+
+			result = true;
 		}
 
 		g_dbLock.unlock();
@@ -2412,17 +2411,6 @@ extern "C" {
 		return result;
 	}
 
-	bool SaveHistoricalActivitySummaryDataById(const char* activityId)
-	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
-
-		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
-		{
-			return SaveHistoricalActivitySummaryData(activityIndex);
-		}
-		return false;
-	}
-
 	//
 	// Functions for unloading history.
 	//
@@ -2457,6 +2445,8 @@ extern "C" {
 
 	void FreeHistoricalActivityObject(size_t activityIndex)
 	{
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2467,10 +2457,14 @@ extern "C" {
 				summary.pActivity = NULL;
 			}
 		}
+
+		g_historicalActivityLock.unlock();
 	}
 
 	void FreeHistoricalActivitySensorData(size_t activityIndex)
 	{
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2481,15 +2475,21 @@ extern "C" {
 			summary.cadenceReadings.clear();
 			summary.powerReadings.clear();
 		}
+
+		g_historicalActivityLock.unlock();
 	}
 
 	void FreeHistoricalActivitySummaryData(size_t activityIndex)
 	{
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			summary.summaryAttributes.clear();
 		}
+
+		g_historicalActivityLock.unlock();
 	}
 
 	//
@@ -2509,6 +2509,8 @@ extern "C" {
 		return false;
 	}
 
+	// Finds the most recent sensor reading and uses it as the end time for the activity.
+	// This is useful if the activity was not ended properly (app crash, phone reboot, etc.)
 	void FixHistoricalActivityEndTime(size_t activityIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())
@@ -2598,12 +2600,6 @@ extern "C" {
 		return result;
 	}
 
-	ActivityAttributeType QueryHistoricalActivityAttributeById(const char* activityId, const char* const pAttributeName)
-	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
-		return QueryHistoricalActivityAttribute(activityIndex, pAttributeName);
-	}
-
 	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex)
 	{
 		size_t result = 0;
@@ -2690,6 +2686,36 @@ extern "C" {
 		return false;
 	}
 
+	bool IsHistoricalActivityMovingActivity(size_t activityIndex)
+	{
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+			
+			if (summary.pActivity)
+			{
+				MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(summary.pActivity);
+				return pMovingActivity != NULL;
+			}
+		}
+		return false;
+	}
+
+	bool IsHistoricalActivityLiftingActivity(size_t activityIndex)
+	{
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+			
+			if (summary.pActivity)
+			{
+				LiftingActivity* pLiftingActivity = dynamic_cast<LiftingActivity*>(summary.pActivity);
+				return pLiftingActivity != NULL;
+			}
+		}
+		return false;
+	}
+
 	//
 	// Functions for accessing historical routes.
 	//
@@ -2703,24 +2729,6 @@ extern "C" {
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			result = summary.locationPoints.size();
 		}
-		return result;
-	}
-
-	// Added this function as a performance optimization for when you just need the location data and don't need
-	// to recreate the entire Activity object, etc. Useful on the Apple Watch since it isn't very powerful.
-	bool LoadHistoricalActivityPoints(const char* activityId, CoordinateCallback coordinateCallback, void* context)
-	{
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			result = g_pDatabase->RetrieveActivityPositionReadings(activityId, coordinateCallback, context);
-		}
-
-		g_dbLock.unlock();
-
 		return result;
 	}
 
@@ -2743,6 +2751,111 @@ extern "C" {
 					coordinate->altitude   = reading.reading.at(ACTIVITY_ATTRIBUTE_ALTITUDE);
 					coordinate->time       = reading.time;
 					result = true;
+				}
+			}
+		}
+		return result;
+	}
+
+	//
+	// Functions for accessing historical sensor data.
+	//
+
+	size_t GetNumHistoricalSensorPoints(size_t activityIndex, SensorType sensorType)
+	{
+		size_t result = 0;
+		
+		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
+			switch (sensorType)
+			{
+			case SENSOR_TYPE_UNKNOWN:
+				break;
+			case SENSOR_TYPE_ACCELEROMETER:
+				result = summary.accelerometerReadings.size();
+				break;
+			case SENSOR_TYPE_LOCATION:
+				result = summary.locationPoints.size();
+				break;
+			case SENSOR_TYPE_HEART_RATE:
+				result = summary.heartRateMonitorReadings.size();
+				break;
+			case SENSOR_TYPE_CADENCE:
+				result = summary.cadenceReadings.size();
+				break;
+			case SENSOR_TYPE_WHEEL_SPEED:
+				break;
+			case SENSOR_TYPE_POWER:
+				result = summary.powerReadings.size();
+				break;
+			case SENSOR_TYPE_FOOT_POD:
+			case SENSOR_TYPE_SCALE:
+			case SENSOR_TYPE_LIGHT:
+			case SENSOR_TYPE_RADAR:
+			case SENSOR_TYPE_GOPRO:
+			case SENSOR_TYPE_NEARBY:
+				break;
+			case NUM_SENSOR_TYPES:
+				break;
+			}
+		}
+		return result;
+	}
+
+	bool GetHistoricalActivitySensorPoint(size_t activityIndex, SensorType sensorType, size_t pointIndex, time_t* const pointTime, double* const pointValue)
+	{
+		bool result = false;
+		
+		if (pointValue != NULL)
+		{
+			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+			{
+				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+				
+				switch (sensorType)
+				{
+				case SENSOR_TYPE_UNKNOWN:
+					break;
+				case SENSOR_TYPE_ACCELEROMETER:
+				case SENSOR_TYPE_LOCATION:
+					break;
+				case SENSOR_TYPE_HEART_RATE:
+					if (pointIndex < summary.heartRateMonitorReadings.size())
+					{
+						SensorReading& reading = summary.heartRateMonitorReadings.at(pointIndex);
+						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
+						result = true;
+					}
+					break;
+				case SENSOR_TYPE_CADENCE:
+					if (pointIndex < summary.cadenceReadings.size())
+					{
+						SensorReading& reading = summary.cadenceReadings.at(pointIndex);
+						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
+						result = true;
+					}
+					break;
+				case SENSOR_TYPE_WHEEL_SPEED:
+					break;
+				case SENSOR_TYPE_POWER:
+					if (pointIndex < summary.powerReadings.size())
+					{
+						SensorReading& reading = summary.powerReadings.at(pointIndex);
+						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
+						result = true;
+					}
+					break;
+				case SENSOR_TYPE_FOOT_POD:
+				case SENSOR_TYPE_SCALE:
+				case SENSOR_TYPE_LIGHT:
+				case SENSOR_TYPE_RADAR:
+				case SENSOR_TYPE_GOPRO:
+				case SENSOR_TYPE_NEARBY:
+					break;
+				case NUM_SENSOR_TYPES:
+					break;
 				}
 			}
 		}
@@ -2937,6 +3050,10 @@ extern "C" {
 			// Generate new workouts.
 			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
 
+			// Schedule the workouts.
+			WorkoutScheduler scheduler;
+			scheduler.ScheduleWorkouts(plannedWorkouts, scheduler.TimestampOfNextDayOfWeek(DAY_TYPE_MONDAY), preferredLongRunDay);
+
 			// Delete old workouts.
 			result = g_pDatabase->DeleteAllWorkouts();
 
@@ -2992,8 +3109,8 @@ extern "C" {
 			std::map<std::string, std::string> params;
 			std::string workoutJson;
 
-			params.insert(std::make_pair("id", workout.GetId()));
-			params.insert(std::make_pair(PARAM_WORKOUT_SPORT_TYPE, workout.GetSport()));
+			params.insert(std::make_pair(PARAM_WORKOUT_ID, EscapeAndQuoteString(workout.GetId())));
+			params.insert(std::make_pair(PARAM_WORKOUT_SPORT_TYPE, EscapeAndQuoteString(workout.GetSport())));
 			params.insert(std::make_pair(PARAM_WORKOUT_WORKOUT_TYPE, FormatInt((uint64_t)workout.GetType())));
 			params.insert(std::make_pair(PARAM_WORKOUT_NUM_INTERVALS, FormatInt((uint64_t)workout.GetIntervals().size())));
 			params.insert(std::make_pair(PARAM_WORKOUT_DURATION, FormatInt((uint64_t)workout.CalculateDuration())));
@@ -3255,44 +3372,6 @@ extern "C" {
 	void ConvertToPreferredUntis(ActivityAttributeType* value)
 	{
 		UnitMgr::ConvertActivityAttributeToPreferredUnits(*value);
-	}
-
-	//
-	// Functions for creating and destroying custom activity types.
-	//
-
-	void CreateCustomActivity(const char* const name, ActivityViewType viewType)
-	{
-		if (!name)
-		{
-			return;
-		}
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			g_pDatabase->CreateCustomActivity(name, viewType);
-		}
-
-		g_dbLock.unlock();
-	}
-
-	void DestroyCustomActivity(const char* const name)
-	{
-		if (!name)
-		{
-			return;
-		}
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			g_pDatabase->DeleteCustomActivity(name);
-		}
-
-		g_dbLock.unlock();
 	}
 
 	//
@@ -3761,7 +3840,7 @@ extern "C" {
 	{
 		bool processed = false;
 
-		if (IsActivityInProgress())
+		if (IsActivityInProgressAndNotPaused())
 		{
 			processed = g_pCurrentActivity->ProcessSensorReading(reading);
 

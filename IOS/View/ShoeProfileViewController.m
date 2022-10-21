@@ -77,7 +77,7 @@
 		char* shoeName = nil;
 		char* shoeDesc = nil;
 
-		if (GetShoeProfileById(self->shoeId, &shoeName, &shoeDesc))
+		if (GetShoeProfileById(self->shoeId, &shoeName, &shoeDesc, NULL, NULL))
 		{
 			self->nameTextField.text = [[NSString alloc] initWithUTF8String:shoeName];
 			self->descTextField.text = [[NSString alloc] initWithUTF8String:shoeDesc];

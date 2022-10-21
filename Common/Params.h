@@ -40,7 +40,7 @@
 #define PARAM_WORKOUT_SPORT_TYPE              "sport type"
 #define PARAM_WORKOUT_URL                     "url"
 #define PARAM_WORKOUT_SCHEDULED_TIME          "scheduled time"
-#define PARAM_WORKOUT_ESTIMATED_STRAIN        "estimated strain score"
+#define PARAM_WORKOUT_ESTIMATED_INTENSITY     "estimated intensity score"
 #define PARAM_WORKOUT_DURATION                "duration"
 #define PARAM_WORKOUT_DISTANCE                "distance"
 #define PARAM_WORKOUT_WARMUP                  "warmup"

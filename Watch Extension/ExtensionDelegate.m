@@ -484,13 +484,6 @@ void HistoricalActivityLocationLoadCallback(Coordinate coordinate, void* context
 	[locationData addObject:locations];
 }
 
-- (NSArray*)getHistoricalActivityLocationData:(NSString*)activityId
-{
-	NSMutableArray* locationData = [[NSMutableArray alloc] init];
-	LoadHistoricalActivityPoints([activityId UTF8String], HistoricalActivityLocationLoadCallback, (__bridge void*)locationData);
-	return locationData;
-}
-
 - (NSInteger)getActivityIndexFromActivityId:(NSString*)activityId
 {
 	return ConvertActivityIdToActivityIndex([activityId UTF8String]);
@@ -965,11 +958,11 @@ void attributeNameCallback(const char* name, void* context)
 {
 	if (InitializePacePlanList())
 	{
-		if (!GetPacePlanDetails([planId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+		if (!RetrievePacePlan([planId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL))
 		{
 			CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 		}
-		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits, time(NULL));
+		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], "", targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits, time(NULL));
 	}
 }
 

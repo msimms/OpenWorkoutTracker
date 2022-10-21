@@ -53,6 +53,16 @@ double UnitConverter::FeetToMeters(double ft)
 	return ft * (double)METERS_PER_FOOT;
 }
 
+double UnitConverter::CentimetersToInches(double cm)
+{
+	return cm / (double)CENTIMETERS_PER_INCH;
+}
+
+double UnitConverter::InchesToCentimeters(double inches)
+{
+	return inches * (double)CENTIMETERS_PER_INCH;
+}
+
 double UnitConverter::KilogramsToPounds(double kgs)
 {
 	return kgs * (double)POUNDS_PER_KILOGRAM;

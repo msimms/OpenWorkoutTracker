@@ -1401,7 +1401,7 @@ void startSensorCallback(SensorType type, void* context)
 					NSString* workoutId = [workoutDict objectForKey:@PARAM_WORKOUT_ID];
 					NSString* workoutTypeStr = [workoutDict objectForKey:@PARAM_WORKOUT_WORKOUT_TYPE];
 					NSString* sportType = [workoutDict objectForKey:@PARAM_WORKOUT_SPORT_TYPE];
-					NSNumber* estimatedIntensityScore = [workoutDict objectForKey:@PARAM_WORKOUT_ESTIMATED_STRAIN];
+					NSNumber* estimatedIntensityScore = [workoutDict objectForKey:@PARAM_WORKOUT_ESTIMATED_INTENSITY];
 					NSNumber* scheduledTime = [workoutDict objectForKey:@PARAM_WORKOUT_SCHEDULED_TIME];
 					NSDictionary* warmup = [workoutDict objectForKey:@PARAM_WORKOUT_WARMUP];
 					NSDictionary* cooldown = [workoutDict objectForKey:@PARAM_WORKOUT_COOLDOWN];
@@ -1487,11 +1487,11 @@ void startSensorCallback(SensorType type, void* context)
 
 					time_t existingLastUpdatedTime = 0;
 
-					if (GetPacePlanDetails([newPlanId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL, &existingLastUpdatedTime))
+					if (RetrievePacePlan([newPlanId UTF8String], NULL, NULL, NULL, NULL, NULL, NULL, NULL, &existingLastUpdatedTime))
 					{
 						if ([newLastUpdatedTime intValue] > existingLastUpdatedTime)
 						{
-							if (!UpdatePacePlanDetails([newPlanId UTF8String], [newPlanName UTF8String], [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
+							if (!UpdatePacePlan([newPlanId UTF8String], [newPlanName UTF8String], "", [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
 							{
 								NSLog(@"Failed to update a pace plan.");
 							}
@@ -1501,7 +1501,7 @@ void startSensorCallback(SensorType type, void* context)
 					{
 						if (CreateNewPacePlan([newPlanName UTF8String], [newPlanId UTF8String]))
 						{
-							if (!UpdatePacePlanDetails([newPlanId UTF8String], [newPlanName UTF8String], [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
+							if (!UpdatePacePlan([newPlanId UTF8String], [newPlanName UTF8String], "", [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
 							{
 								NSLog(@"Failed to update a pace plan.");
 							}
@@ -2281,17 +2281,17 @@ void startSensorCallback(SensorType type, void* context)
 
 - (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
 {
-	return AddBikeProfile([name UTF8String], weightKg, wheelCircumferenceMm, timeRetired);
+	return AddBikeProfile([name UTF8String], NULL, weightKg, wheelCircumferenceMm, timeRetired);
 }
 
 - (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
 {
-	return UpdateBikeProfile(bikeId, [name UTF8String], weightKg, wheelCircumferenceMm, timeRetired);
+	return UpdateBikeProfile(bikeId, [name UTF8String], NULL, weightKg, wheelCircumferenceMm, timeRetired);
 }
 
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm withTimeRetired:(time_t*)timeRetired
 {
-	return GetBikeProfileById(bikeId, name, weightKg, wheelCircumferenceMm, timeRetired);
+	return GetBikeProfileById(bikeId, name, NULL, weightKg, wheelCircumferenceMm, NULL, timeRetired);
 }
 
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName
@@ -2800,13 +2800,11 @@ void tagCallback(const char* name, void* context)
 			size_t shoeIndex = 0;
 			uint64_t shoeId = 0;
 			char* shoeName = NULL;
-			char* shoeDescription = NULL;
 
-			while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, &shoeDescription))
+			while (GetShoeProfileByIndex(shoeIndex++, &shoeId, &shoeName, NULL, NULL, NULL))
 			{
 				[names addObject:[[NSString alloc] initWithUTF8String:shoeName]];
 				free((void*)shoeName);
-				free((void*)shoeDescription);
 			}
 		}
 	}
@@ -3053,11 +3051,11 @@ void attributeNameCallback(const char* name, void* context)
 	return CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 }
 
-- (BOOL)getPacePlanDetails:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits
+- (BOOL)retrievePacePlan:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits
 {
 	char* tempName = NULL;
 	time_t lastUpdatedTime = 0;
-	BOOL result = GetPacePlanDetails([planId UTF8String], &tempName, targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, &lastUpdatedTime);
+	BOOL result = RetrievePacePlan([planId UTF8String], &tempName, NULL, targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, &lastUpdatedTime);
 
 	if (tempName)
 	{
@@ -3099,9 +3097,9 @@ void attributeNameCallback(const char* name, void* context)
 	return result;
 }
 
-- (BOOL)updatePacePlanDetails:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits
+- (BOOL)updatePacePlan:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits
 {
-	return UpdatePacePlanDetails([planId UTF8String], [name UTF8String], targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, time(NULL));
+	return UpdatePacePlan([planId UTF8String], [name UTF8String], "", targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, time(NULL));
 }
 
 - (BOOL)setCurrentPacePlan:(NSString*)planId

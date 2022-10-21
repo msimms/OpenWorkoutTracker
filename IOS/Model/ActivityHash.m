@@ -29,9 +29,10 @@ NSString* NumToFloatStringForHashing(NSNumber* num)
 
 void LocationDataHashCallback(const char* activityId, void* context)
 {
-	ActivityAttributeType latValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_LATITUDE);
-	ActivityAttributeType lonValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_LONGITUDE);
-	ActivityAttributeType altValue = QueryHistoricalActivityAttributeById(activityId, ACTIVITY_ATTRIBUTE_ALTITUDE);
+	size_t activityIndex = ConvertActivityIdToActivityIndex(activityId)
+	ActivityAttributeType latValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_LATITUDE);
+	ActivityAttributeType lonValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_LONGITUDE);
+	ActivityAttributeType altValue = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_ALTITUDE);
 
 	if (latValue.valid && lonValue.valid && altValue.valid)
 	{

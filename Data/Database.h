@@ -87,11 +87,6 @@ public:
 	bool UpdatePacePlan(const PacePlan& plan);
 	bool DeletePacePlan(const std::string& planId);
 
-	// Methods for managing custom activities.
-
-	bool CreateCustomActivity(const std::string& activityType, ActivityViewType viewType);
-	bool DeleteCustomActivity(const std::string& activityType);
-
 	// Methods for managing activities.
 
 	bool StartActivity(const std::string& activityId, const std::string& userId, const std::string& activityType, const std::string& activityDescription, time_t startTime);

@@ -133,6 +133,9 @@ void UnitMgr::ConvertActivityAttributeToMetric(ActivityAttributeType& value)
 					value.unitSystem = UNIT_SYSTEM_METRIC;
 					break;
 				case MEASURE_HEIGHT:
+					value.value.doubleVal = UnitConverter::InchesToCentimeters(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+					break;
 				case MEASURE_ALTITUDE:
 					value.value.doubleVal = UnitConverter::FeetToMeters(value.value.doubleVal);
 					value.unitSystem = UNIT_SYSTEM_METRIC;
@@ -181,6 +184,9 @@ void UnitMgr::ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& va
 					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 					break;
 				case MEASURE_HEIGHT:
+					value.value.doubleVal = UnitConverter::CentimetersToInches(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+					break;
 				case MEASURE_ALTITUDE:
 					value.value.doubleVal = UnitConverter::MetersToFeet(value.value.doubleVal);
 					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;

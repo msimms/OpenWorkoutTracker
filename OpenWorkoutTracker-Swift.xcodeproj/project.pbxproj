@@ -1,0 +1,2059 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2704224528F84C6400FD02D4 /* ActivityPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */; };
+		2704224728F850A900FD02D4 /* WorkoutDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */; };
+		2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224828FB7B0E00FD02D4 /* LineGraphView.swift */; };
+		2704224B28FB7B2900FD02D4 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224A28FB7B2900FD02D4 /* BarChartView.swift */; };
+		2704224D28FCDDF600FD02D4 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224C28FCDDF600FD02D4 /* LoginView.swift */; };
+		2704224F28FCDE1B00FD02D4 /* CreateLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */; };
+		2704225128FDEE0200FD02D4 /* SensorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225028FDEE0200FD02D4 /* SensorChartView.swift */; };
+		270422562902409C00FD02D4 /* TagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270422552902409C00FD02D4 /* TagsView.swift */; };
+		2740DF5C28E4600800293B71 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5528E4600800293B71 /* HistoryView.swift */; };
+		2740DF5D28E4600800293B71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5628E4600800293B71 /* ActivityView.swift */; };
+		2740DF6028E4600800293B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5928E4600800293B71 /* SettingsView.swift */; };
+		2740DF6128E4600800293B71 /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */; };
+		2740DF6228E4600800293B71 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5B28E4600800293B71 /* AboutView.swift */; };
+		2740DFCD28E460E200293B71 /* TrainingPaceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6628E460E000293B71 /* TrainingPaceCalculator.cpp */; };
+		2740DFCE28E460E200293B71 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6728E460E000293B71 /* WorkoutFactory.cpp */; };
+		2740DFCF28E460E200293B71 /* PushUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6A28E460E000293B71 /* PushUp.cpp */; };
+		2740DFD028E460E200293B71 /* PushUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6B28E460E000293B71 /* PushUpAnalyzer.cpp */; };
+		2740DFD128E460E200293B71 /* MovingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6F28E460E000293B71 /* MovingActivity.cpp */; };
+		2740DFD228E460E200293B71 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7028E460E000293B71 /* WorkoutPlanGenerator.cpp */; };
+		2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7128E460E000293B71 /* IntensityCalculator.cpp */; };
+		2740DFD428E460E200293B71 /* PullUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7328E460E000293B71 /* PullUpAnalyzer.cpp */; };
+		2740DFD528E460E200293B71 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7428E460E000293B71 /* WorkoutScheduler.cpp */; };
+		2740DFD628E460E200293B71 /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7628E460E000293B71 /* FtpCalculator.cpp */; };
+		2740DFD728E460E200293B71 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7928E460E000293B71 /* UnitMgr.cpp */; };
+		2740DFD828E460E200293B71 /* Cycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8028E460E000293B71 /* Cycling.cpp */; };
+		2740DFD928E460E200293B71 /* PlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8228E460E100293B71 /* PlanGenerator.cpp */; };
+		2740DFDA28E460E200293B71 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8328E460E100293B71 /* Treadmill.cpp */; };
+		2740DFDB28E460E200293B71 /* PullUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8528E460E100293B71 /* PullUp.cpp */; };
+		2740DFDC28E460E200293B71 /* SquatAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8728E460E100293B71 /* SquatAnalyzer.cpp */; };
+		2740DFDD28E460E200293B71 /* GForceAnalyzerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8A28E460E100293B71 /* GForceAnalyzerFactory.cpp */; };
+		2740DFDE28E460E200293B71 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8C28E460E100293B71 /* ActivityMgr.mm */; };
+		2740DFDF28E460E200293B71 /* Squat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8F28E460E100293B71 /* Squat.cpp */; };
+		2740DFE028E460E200293B71 /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF9628E460E100293B71 /* VO2MaxCalculator.cpp */; };
+		2740DFE128E460E200293B71 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF9728E460E100293B71 /* Activity.cpp */; };
+		2740DFE328E460E200293B71 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF9D28E460E100293B71 /* OpenWaterSwim.cpp */; };
+		2740DFE428E460E200293B71 /* ActivityFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA028E460E100293B71 /* ActivityFactory.cpp */; };
+		2740DFE528E460E200293B71 /* StationaryCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA228E460E100293B71 /* StationaryCycling.cpp */; };
+		2740DFE628E460E200293B71 /* BenchPress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA328E460E100293B71 /* BenchPress.cpp */; };
+		2740DFE728E460E200293B71 /* BenchPressAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA728E460E100293B71 /* BenchPressAnalyzer.cpp */; };
+		2740DFE828E460E200293B71 /* Hike.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA928E460E100293B71 /* Hike.cpp */; };
+		2740DFE928E460E200293B71 /* Triathlon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFAA28E460E100293B71 /* Triathlon.cpp */; };
+		2740DFEA28E460E200293B71 /* Swim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFAB28E460E100293B71 /* Swim.cpp */; };
+		2740DFEB28E460E200293B71 /* Workout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFAE28E460E100293B71 /* Workout.cpp */; };
+		2740DFEC28E460E200293B71 /* Walk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB128E460E100293B71 /* Walk.cpp */; };
+		2740DFED28E460E200293B71 /* MountainBiking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB228E460E100293B71 /* MountainBiking.cpp */; };
+		2740DFEE28E460E200293B71 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB528E460E200293B71 /* Run.cpp */; };
+		2740DFEF28E460E200293B71 /* ChinUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB828E460E200293B71 /* ChinUp.cpp */; };
+		2740DFF028E460E200293B71 /* ChinUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFBA28E460E200293B71 /* ChinUpAnalyzer.cpp */; };
+		2740DFF128E460E200293B71 /* LiftingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFBB28E460E200293B71 /* LiftingActivity.cpp */; };
+		2740DFF228E460E200293B71 /* BikePlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC228E460E200293B71 /* BikePlanGenerator.cpp */; };
+		2740DFF328E460E200293B71 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC328E460E200293B71 /* PoolSwim.cpp */; };
+		2740DFF428E460E200293B71 /* RunPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC528E460E200293B71 /* RunPlanGenerator.cpp */; };
+		2740DFF528E460E200293B71 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC828E460E200293B71 /* SwimPlanGenerator.cpp */; };
+		2740DFF628E460E200293B71 /* GForceAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFCC28E460E200293B71 /* GForceAnalyzer.cpp */; };
+		2740DFFF28E4CD0B00293B71 /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFFC28E4CD0B00293B71 /* UnitConverter.cpp */; };
+		2740E00828E4CDA500293B71 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E00528E4CDA500293B71 /* User.cpp */; };
+		2740E02D28E4CE1C00293B71 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01028E4CE1B00293B71 /* XmlFileWriter.cpp */; };
+		2740E02E28E4CE1C00293B71 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01328E4CE1B00293B71 /* File.cpp */; };
+		2740E02F28E4CE1C00293B71 /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01428E4CE1B00293B71 /* ZwoFileReader.cpp */; };
+		2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01628E4CE1B00293B71 /* TcxFileReader.cpp */; };
+		2740E03128E4CE1C00293B71 /* FitFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01728E4CE1B00293B71 /* FitFileWriter.cpp */; };
+		2740E03228E4CE1C00293B71 /* KmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01B28E4CE1B00293B71 /* KmlFileReader.cpp */; };
+		2740E03328E4CE1C00293B71 /* TcxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01C28E4CE1B00293B71 /* TcxFileWriter.cpp */; };
+		2740E03428E4CE1C00293B71 /* GpxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01D28E4CE1B00293B71 /* GpxFileWriter.cpp */; };
+		2740E03528E4CE1C00293B71 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02128E4CE1B00293B71 /* XmlFileReader.cpp */; };
+		2740E03628E4CE1C00293B71 /* TextFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02628E4CE1B00293B71 /* TextFileReader.cpp */; };
+		2740E03728E4CE1C00293B71 /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02728E4CE1B00293B71 /* ZwoFileWriter.cpp */; };
+		2740E03828E4CE1C00293B71 /* CsvFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02928E4CE1B00293B71 /* CsvFileWriter.cpp */; };
+		2740E03928E4CE1C00293B71 /* GpxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02B28E4CE1B00293B71 /* GpxFileReader.cpp */; };
+		2740E04628E4CFFD00293B71 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E03D28E4CFFD00293B71 /* KMeans.cpp */; };
+		2740E04728E4CFFD00293B71 /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04128E4CFFD00293B71 /* Double.cpp */; };
+		2740E04828E4CFFD00293B71 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04228E4CFFD00293B71 /* Signals.cpp */; };
+		2740E04928E4CFFD00293B71 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04428E4CFFD00293B71 /* Statistics.cpp */; };
+		2740E04A28E4CFFD00293B71 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04528E4CFFD00293B71 /* Distance.cpp */; };
+		2740E05628E4D0C700293B71 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04C28E4D0C700293B71 /* Database.cpp */; };
+		2740E05728E4D0C700293B71 /* HeatMapGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04F28E4D0C700293B71 /* HeatMapGenerator.cpp */; };
+		2740E05828E4D0C700293B71 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E05128E4D0C700293B71 /* WorkoutImporter.cpp */; };
+		2740E05928E4D0C700293B71 /* DataImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E05328E4D0C700293B71 /* DataImporter.cpp */; };
+		2740E05A28E4D0C700293B71 /* DataExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E05428E4D0C700293B71 /* DataExporter.cpp */; };
+		2740E06528E4D98300293B71 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E06328E4D98300293B71 /* Peaks.cpp */; };
+		2740E06828E4DA1000293B71 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2740E06728E4DA0100293B71 /* libsqlite3.0.tbd */; };
+		2740E06A28E4DA2000293B71 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2740E06928E4DA1A00293B71 /* libxml2.2.tbd */; };
+		2740E06D28E4E5BA00293B71 /* LiveActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E06B28E4E54500293B71 /* LiveActivityVM.swift */; };
+		2740E07228E4E75000293B71 /* ActivitiesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D931F28E38FE7003B077C /* ActivitiesVM.swift */; };
+		2740E07328E4E75300293B71 /* LiveActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E06B28E4E54500293B71 /* LiveActivityVM.swift */; };
+		2740E07B28E5DEC500293B71 /* HeartRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07728E5DEC500293B71 /* HeartRateService.swift */; };
+		2740E07C28E5DEC500293B71 /* BluetoothServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07828E5DEC500293B71 /* BluetoothServices.swift */; };
+		2740E07D28E5DEC500293B71 /* CyclingPowerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07928E5DEC500293B71 /* CyclingPowerService.swift */; };
+		2740E07E28E5DEC500293B71 /* BluetoothScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07A28E5DEC500293B71 /* BluetoothScanner.swift */; };
+		2740E08328E60CFA00293B71 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E08228E60CFA00293B71 /* ProfileView.swift */; };
+		2740E08928E629CE00293B71 /* GearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E08828E629CE00293B71 /* GearView.swift */; };
+		2740E08C28E6316E00293B71 /* WorkoutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E08B28E6316E00293B71 /* WorkoutsView.swift */; };
+		2740E08F28E6318000293B71 /* PacePlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E08E28E6318000293B71 /* PacePlansView.swift */; };
+		2740E09228E6319700293B71 /* IntervalSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09128E6319700293B71 /* IntervalSessionsView.swift */; };
+		2740E09528E631A000293B71 /* SensorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09428E631A000293B71 /* SensorsView.swift */; };
+		2740E09828E632CE00293B71 /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09728E632CE00293B71 /* StatisticsView.swift */; };
+		2740E09C28E6344400293B71 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09B28E6344400293B71 /* Preferences.swift */; };
+		2740E09D28E6344400293B71 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09B28E6344400293B71 /* Preferences.swift */; };
+		2740E09F28E643FD00293B71 /* ActivityPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09E28E643FD00293B71 /* ActivityPreferences.swift */; };
+		2740E0A028E643FD00293B71 /* ActivityPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E09E28E643FD00293B71 /* ActivityPreferences.swift */; };
+		2740E0A228E6441C00293B71 /* BroadcastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A128E6441C00293B71 /* BroadcastManager.swift */; };
+		2740E0A328E6441C00293B71 /* BroadcastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A128E6441C00293B71 /* BroadcastManager.swift */; };
+		2740E0A528E644EE00293B71 /* SensorMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A428E644EE00293B71 /* SensorMgr.swift */; };
+		2740E0A628E644EE00293B71 /* SensorMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A428E644EE00293B71 /* SensorMgr.swift */; };
+		2740E0A828E645C300293B71 /* WorkoutsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A728E645C300293B71 /* WorkoutsVM.swift */; };
+		2740E0AB28E6757300293B71 /* IntervalSessionsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */; };
+		2740E0AD28E6758500293B71 /* PacePlansVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AC28E6758500293B71 /* PacePlansVM.swift */; };
+		2740E0AF28E67C0600293B71 /* GearVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AE28E67C0600293B71 /* GearVM.swift */; };
+		2740E0B028E7023800293B71 /* Activity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF9728E460E100293B71 /* Activity.cpp */; };
+		2740E0B128E7028C00293B71 /* PushUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6A28E460E000293B71 /* PushUp.cpp */; };
+		2740E0B228E7028C00293B71 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7428E460E000293B71 /* WorkoutScheduler.cpp */; };
+		2740E0B328E7028C00293B71 /* IntensityCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7128E460E000293B71 /* IntensityCalculator.cpp */; };
+		2740E0B428E7028C00293B71 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB528E460E200293B71 /* Run.cpp */; };
+		2740E0B528E7028C00293B71 /* WorkoutFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6728E460E000293B71 /* WorkoutFactory.cpp */; };
+		2740E0B628E7028C00293B71 /* Squat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8F28E460E100293B71 /* Squat.cpp */; };
+		2740E0B728E7028C00293B71 /* PlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8228E460E100293B71 /* PlanGenerator.cpp */; };
+		2740E0B828E7028C00293B71 /* GForceAnalyzerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8A28E460E100293B71 /* GForceAnalyzerFactory.cpp */; };
+		2740E0B928E7028C00293B71 /* GForceAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFCC28E460E200293B71 /* GForceAnalyzer.cpp */; };
+		2740E0BA28E7028C00293B71 /* LiftingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFBB28E460E200293B71 /* LiftingActivity.cpp */; };
+		2740E0BB28E7028C00293B71 /* VO2MaxCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF9628E460E100293B71 /* VO2MaxCalculator.cpp */; };
+		2740E0BC28E7028C00293B71 /* ChinUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFBA28E460E200293B71 /* ChinUpAnalyzer.cpp */; };
+		2740E0BD28E7028C00293B71 /* PoolSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC328E460E200293B71 /* PoolSwim.cpp */; };
+		2740E0BE28E7028C00293B71 /* Hike.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA928E460E100293B71 /* Hike.cpp */; };
+		2740E0BF28E7028C00293B71 /* PushUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6B28E460E000293B71 /* PushUpAnalyzer.cpp */; };
+		2740E0C028E7028C00293B71 /* PullUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8528E460E100293B71 /* PullUp.cpp */; };
+		2740E0C128E7028C00293B71 /* TrainingPaceCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6628E460E000293B71 /* TrainingPaceCalculator.cpp */; };
+		2740E0C228E7028C00293B71 /* UnitMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7928E460E000293B71 /* UnitMgr.cpp */; };
+		2740E0C328E7028C00293B71 /* BikePlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC228E460E200293B71 /* BikePlanGenerator.cpp */; };
+		2740E0C428E7028C00293B71 /* ActivityFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA028E460E100293B71 /* ActivityFactory.cpp */; };
+		2740E0C528E7028C00293B71 /* Swim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFAB28E460E100293B71 /* Swim.cpp */; };
+		2740E0C628E7028C00293B71 /* PullUpAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7328E460E000293B71 /* PullUpAnalyzer.cpp */; };
+		2740E0C728E7028C00293B71 /* WorkoutPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7028E460E000293B71 /* WorkoutPlanGenerator.cpp */; };
+		2740E0C828E7028C00293B71 /* SwimPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC828E460E200293B71 /* SwimPlanGenerator.cpp */; };
+		2740E0C928E7028C00293B71 /* OpenWaterSwim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF9D28E460E100293B71 /* OpenWaterSwim.cpp */; };
+		2740E0CA28E7028C00293B71 /* ChinUp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB828E460E200293B71 /* ChinUp.cpp */; };
+		2740E0CB28E7028C00293B71 /* MountainBiking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB228E460E100293B71 /* MountainBiking.cpp */; };
+		2740E0CC28E7028C00293B71 /* Triathlon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFAA28E460E100293B71 /* Triathlon.cpp */; };
+		2740E0CD28E7028C00293B71 /* Workout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFAE28E460E100293B71 /* Workout.cpp */; };
+		2740E0CE28E7028C00293B71 /* FtpCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7628E460E000293B71 /* FtpCalculator.cpp */; };
+		2740E0CF28E7028C00293B71 /* BenchPressAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA728E460E100293B71 /* BenchPressAnalyzer.cpp */; };
+		2740E0D028E7028C00293B71 /* StationaryCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA228E460E100293B71 /* StationaryCycling.cpp */; };
+		2740E0D128E7028C00293B71 /* MovingActivity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF6F28E460E000293B71 /* MovingActivity.cpp */; };
+		2740E0D228E7028C00293B71 /* SquatAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8728E460E100293B71 /* SquatAnalyzer.cpp */; };
+		2740E0D328E7028C00293B71 /* RunPlanGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFC528E460E200293B71 /* RunPlanGenerator.cpp */; };
+		2740E0D428E7028C00293B71 /* Treadmill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8328E460E100293B71 /* Treadmill.cpp */; };
+		2740E0D528E7028C00293B71 /* Walk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFB128E460E100293B71 /* Walk.cpp */; };
+		2740E0D628E7028C00293B71 /* BenchPress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFA328E460E100293B71 /* BenchPress.cpp */; };
+		2740E0D728E7028C00293B71 /* ActivityMgr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8C28E460E100293B71 /* ActivityMgr.mm */; };
+		2740E0D828E7028C00293B71 /* Cycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF8028E460E000293B71 /* Cycling.cpp */; };
+		2740E0D928E7029900293B71 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04C28E4D0C700293B71 /* Database.cpp */; };
+		2740E0DA28E7029900293B71 /* DataExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E05428E4D0C700293B71 /* DataExporter.cpp */; };
+		2740E0DB28E7029900293B71 /* DataImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E05328E4D0C700293B71 /* DataImporter.cpp */; };
+		2740E0DC28E7029900293B71 /* HeatMapGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04F28E4D0C700293B71 /* HeatMapGenerator.cpp */; };
+		2740E0DD28E7029900293B71 /* WorkoutImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E05128E4D0C700293B71 /* WorkoutImporter.cpp */; };
+		2740E0DE28E702AD00293B71 /* TcxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01628E4CE1B00293B71 /* TcxFileReader.cpp */; };
+		2740E0DF28E702AD00293B71 /* XmlFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01028E4CE1B00293B71 /* XmlFileWriter.cpp */; };
+		2740E0E028E702AD00293B71 /* ZwoFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01428E4CE1B00293B71 /* ZwoFileReader.cpp */; };
+		2740E0E128E702AD00293B71 /* CsvFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02928E4CE1B00293B71 /* CsvFileWriter.cpp */; };
+		2740E0E228E702AD00293B71 /* GpxFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02B28E4CE1B00293B71 /* GpxFileReader.cpp */; };
+		2740E0E328E702AD00293B71 /* TextFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02628E4CE1B00293B71 /* TextFileReader.cpp */; };
+		2740E0E428E702AD00293B71 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01328E4CE1B00293B71 /* File.cpp */; };
+		2740E0E528E702AD00293B71 /* GpxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01D28E4CE1B00293B71 /* GpxFileWriter.cpp */; };
+		2740E0E628E702AD00293B71 /* XmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02128E4CE1B00293B71 /* XmlFileReader.cpp */; };
+		2740E0E728E702AD00293B71 /* FitFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01728E4CE1B00293B71 /* FitFileWriter.cpp */; };
+		2740E0E828E702AD00293B71 /* ZwoFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E02728E4CE1B00293B71 /* ZwoFileWriter.cpp */; };
+		2740E0E928E702AD00293B71 /* KmlFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01B28E4CE1B00293B71 /* KmlFileReader.cpp */; };
+		2740E0EA28E702AD00293B71 /* TcxFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E01C28E4CE1B00293B71 /* TcxFileWriter.cpp */; };
+		2740E0EB28E702C600293B71 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04528E4CFFD00293B71 /* Distance.cpp */; };
+		2740E0EC28E702C600293B71 /* Double.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04128E4CFFD00293B71 /* Double.cpp */; };
+		2740E0ED28E702C600293B71 /* Statistics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04428E4CFFD00293B71 /* Statistics.cpp */; };
+		2740E0EE28E702C600293B71 /* KMeans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E03D28E4CFFD00293B71 /* KMeans.cpp */; };
+		2740E0EF28E702C600293B71 /* Signals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E04228E4CFFD00293B71 /* Signals.cpp */; };
+		2740E0F028E702CD00293B71 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E00528E4CDA500293B71 /* User.cpp */; };
+		2740E0F128E702D300293B71 /* UnitConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFFC28E4CD0B00293B71 /* UnitConverter.cpp */; };
+		2740E0F228E702DD00293B71 /* Peaks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740E06328E4D98300293B71 /* Peaks.cpp */; };
+		2740E0F428E7032000293B71 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2740E0F328E7031700293B71 /* libsqlite3.0.tbd */; };
+		2740E0F628E7032C00293B71 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2740E0F528E7032700293B71 /* libxml2.2.tbd */; };
+		2740E0FB28E90CE300293B71 /* CommonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0FA28E90CE300293B71 /* CommonApp.swift */; };
+		2740E0FD28E913BF00293B71 /* CommonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0FA28E90CE300293B71 /* CommonApp.swift */; };
+		2740E10028EB41D300293B71 /* BluetoothScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07A28E5DEC500293B71 /* BluetoothScanner.swift */; };
+		2740E10128EB41D600293B71 /* BluetoothServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07828E5DEC500293B71 /* BluetoothServices.swift */; };
+		2740E10228EB41D800293B71 /* CyclingPowerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07928E5DEC500293B71 /* CyclingPowerService.swift */; };
+		2740E10328EB41DB00293B71 /* HeartRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07728E5DEC500293B71 /* HeartRateService.swift */; };
+		2740E10828EB5ABF00293B71 /* LocationSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E10728EB5ABF00293B71 /* LocationSensor.swift */; };
+		2740E10928EB5ABF00293B71 /* LocationSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E10728EB5ABF00293B71 /* LocationSensor.swift */; };
+		2740E10B28EB5AD600293B71 /* Accelerometer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E10A28EB5AD600293B71 /* Accelerometer.swift */; };
+		2740E10C28EB5AD600293B71 /* Accelerometer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E10A28EB5AD600293B71 /* Accelerometer.swift */; };
+		2740E10E28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E10D28EB5B4C00293B71 /* CyclingCadenceService.swift */; };
+		2740E10F28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E10D28EB5B4C00293B71 /* CyclingCadenceService.swift */; };
+		2740E11428EDFEB700293B71 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11328EDFEB700293B71 /* NumbersOnly.swift */; };
+		2740E11628EF758500293B71 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11528EF758500293B71 /* ProfileVM.swift */; };
+		2740E11828F0DCC200293B71 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11728F0DCC200293B71 /* HealthManager.swift */; };
+		2740E11928F0DCC200293B71 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11728F0DCC200293B71 /* HealthManager.swift */; };
+		2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AC28E6758500293B71 /* PacePlansVM.swift */; };
+		2740E11B28F0E5EC00293B71 /* IntervalSessionsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */; };
+		2740E11D28F0E81400293B71 /* NewPacePlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11C28F0E81400293B71 /* NewPacePlanView.swift */; };
+		2740E12028F0E83000293B71 /* NewIntervalSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11F28F0E83000293B71 /* NewIntervalSessionView.swift */; };
+		2740E12228F233A200293B71 /* StoredActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12128F233A200293B71 /* StoredActivityVM.swift */; };
+		2740E12328F233A200293B71 /* StoredActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12128F233A200293B71 /* StoredActivityVM.swift */; };
+		2740E12528F2D3F000293B71 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12428F2D3F000293B71 /* ApiClient.swift */; };
+		2740E12628F2D3F000293B71 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12428F2D3F000293B71 /* ApiClient.swift */; };
+		2740E12828F4425A00293B71 /* EditShoesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12728F4425A00293B71 /* EditShoesView.swift */; };
+		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
+		278D92C428E38F17003B077C /* PhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C328E38F17003B077C /* PhoneApp.swift */; };
+		278D92C628E38F17003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C528E38F17003B077C /* ContentView.swift */; };
+		278D92C828E38F18003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92C728E38F18003B077C /* Assets.xcassets */; };
+		278D92CB28E38F18003B077C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92CA28E38F18003B077C /* Preview Assets.xcassets */; };
+		278D92D528E38F18003B077C /* OpenWorkoutTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92D428E38F18003B077C /* OpenWorkoutTrackerTests.swift */; };
+		278D92DF28E38F18003B077C /* OpenWorkoutTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92DE28E38F18003B077C /* OpenWorkoutTrackerUITests.swift */; };
+		278D92E128E38F18003B077C /* OpenWorkoutTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92E028E38F18003B077C /* OpenWorkoutTrackerUITestsLaunchTests.swift */; };
+		278D92E728E38F18003B077C /* OpenWorkoutTracker Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 278D92E628E38F18003B077C /* OpenWorkoutTracker Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		278D92EE28E38F18003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92ED28E38F18003B077C /* ContentView.swift */; };
+		278D92F028E38F19003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92EF28E38F19003B077C /* Assets.xcassets */; };
+		278D92F328E38F19003B077C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92F228E38F19003B077C /* Preview Assets.xcassets */; };
+		278D92FD28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92FC28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift */; };
+		278D930728E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D930628E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift */; };
+		278D930928E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D930828E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift */; };
+		278D932628E38FE7003B077C /* ActivitiesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D931F28E38FE7003B077C /* ActivitiesVM.swift */; };
+		278D932728E38FE7003B077C /* WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932028E38FE7003B077C /* WatchApp.swift */; };
+		278D932828E38FE7003B077C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932128E38FE7003B077C /* AboutView.swift */; };
+		278D932928E38FE7003B077C /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932228E38FE7003B077C /* ActivityView.swift */; };
+		278D932A28E38FE7003B077C /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932328E38FE7003B077C /* HistoryView.swift */; };
+		278D932B28E38FE7003B077C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932428E38FE7003B077C /* SettingsView.swift */; };
+		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		278D92D128E38F18003B077C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 278D92BF28E38F17003B077C;
+			remoteInfo = OpenWorkoutTracker;
+		};
+		278D92DB28E38F18003B077C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 278D92BF28E38F17003B077C;
+			remoteInfo = OpenWorkoutTracker;
+		};
+		278D92E828E38F18003B077C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 278D92E528E38F18003B077C;
+			remoteInfo = "OpenWorkoutTracker Watch App";
+		};
+		278D92F928E38F19003B077C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 278D92E528E38F18003B077C;
+			remoteInfo = "OpenWorkoutTracker Watch App";
+		};
+		278D930328E38F19003B077C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 278D92E528E38F18003B077C;
+			remoteInfo = "OpenWorkoutTracker Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		278D930F28E38F19003B077C /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				278D92E728E38F18003B077C /* OpenWorkoutTracker Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPreferencesView.swift; sourceTree = "<group>"; };
+		2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailsView.swift; sourceTree = "<group>"; };
+		2704224828FB7B0E00FD02D4 /* LineGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraphView.swift; sourceTree = "<group>"; };
+		2704224A28FB7B2900FD02D4 /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
+		2704224C28FCDDF600FD02D4 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLoginView.swift; sourceTree = "<group>"; };
+		2704225028FDEE0200FD02D4 /* SensorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
+		270422552902409C00FD02D4 /* TagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsView.swift; sourceTree = "<group>"; };
+		2740DF5528E4600800293B71 /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		2740DF5628E4600800293B71 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		2740DF5928E4600800293B71 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
+		2740DF5B28E4600800293B71 /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		2740DF6628E460E000293B71 /* TrainingPaceCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrainingPaceCalculator.cpp; path = Activities/TrainingPaceCalculator.cpp; sourceTree = "<group>"; };
+		2740DF6728E460E000293B71 /* WorkoutFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutFactory.cpp; path = Activities/WorkoutFactory.cpp; sourceTree = "<group>"; };
+		2740DF6828E460E000293B71 /* IntensityCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntensityCalculator.h; path = Activities/IntensityCalculator.h; sourceTree = "<group>"; };
+		2740DF6928E460E000293B71 /* ActivityFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityFactory.h; path = Activities/ActivityFactory.h; sourceTree = "<group>"; };
+		2740DF6A28E460E000293B71 /* PushUp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PushUp.cpp; path = Activities/PushUp.cpp; sourceTree = "<group>"; };
+		2740DF6B28E460E000293B71 /* PushUpAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PushUpAnalyzer.cpp; path = Activities/PushUpAnalyzer.cpp; sourceTree = "<group>"; };
+		2740DF6C28E460E000293B71 /* LiftingActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiftingActivity.h; path = Activities/LiftingActivity.h; sourceTree = "<group>"; };
+		2740DF6D28E460E000293B71 /* Squat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Squat.h; path = Activities/Squat.h; sourceTree = "<group>"; };
+		2740DF6E28E460E000293B71 /* ChinUpAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChinUpAnalyzer.h; path = Activities/ChinUpAnalyzer.h; sourceTree = "<group>"; };
+		2740DF6F28E460E000293B71 /* MovingActivity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovingActivity.cpp; path = Activities/MovingActivity.cpp; sourceTree = "<group>"; };
+		2740DF7028E460E000293B71 /* WorkoutPlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutPlanGenerator.cpp; path = Activities/WorkoutPlanGenerator.cpp; sourceTree = "<group>"; };
+		2740DF7128E460E000293B71 /* IntensityCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IntensityCalculator.cpp; path = Activities/IntensityCalculator.cpp; sourceTree = "<group>"; };
+		2740DF7228E460E000293B71 /* PoolSwim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoolSwim.h; path = Activities/PoolSwim.h; sourceTree = "<group>"; };
+		2740DF7328E460E000293B71 /* PullUpAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PullUpAnalyzer.cpp; path = Activities/PullUpAnalyzer.cpp; sourceTree = "<group>"; };
+		2740DF7428E460E000293B71 /* WorkoutScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutScheduler.cpp; path = Activities/WorkoutScheduler.cpp; sourceTree = "<group>"; };
+		2740DF7528E460E000293B71 /* Hike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hike.h; path = Activities/Hike.h; sourceTree = "<group>"; };
+		2740DF7628E460E000293B71 /* FtpCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FtpCalculator.cpp; path = Activities/FtpCalculator.cpp; sourceTree = "<group>"; };
+		2740DF7728E460E000293B71 /* PullUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PullUp.h; path = Activities/PullUp.h; sourceTree = "<group>"; };
+		2740DF7828E460E000293B71 /* Workout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Workout.h; path = Activities/Workout.h; sourceTree = "<group>"; };
+		2740DF7928E460E000293B71 /* UnitMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitMgr.cpp; path = Activities/UnitMgr.cpp; sourceTree = "<group>"; };
+		2740DF7A28E460E000293B71 /* Run.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Run.h; path = Activities/Run.h; sourceTree = "<group>"; };
+		2740DF7B28E460E000293B71 /* ActivityAttributeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityAttributeType.h; path = Activities/ActivityAttributeType.h; sourceTree = "<group>"; };
+		2740DF7C28E460E000293B71 /* PullUpAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PullUpAnalyzer.h; path = Activities/PullUpAnalyzer.h; sourceTree = "<group>"; };
+		2740DF7D28E460E000293B71 /* IntervalWorkout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalWorkout.h; path = Activities/IntervalWorkout.h; sourceTree = "<group>"; };
+		2740DF7E28E460E000293B71 /* SegmentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentType.h; path = Activities/SegmentType.h; sourceTree = "<group>"; };
+		2740DF7F28E460E000293B71 /* BikePlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BikePlanGenerator.h; path = Activities/BikePlanGenerator.h; sourceTree = "<group>"; };
+		2740DF8028E460E000293B71 /* Cycling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cycling.cpp; path = Activities/Cycling.cpp; sourceTree = "<group>"; };
+		2740DF8128E460E000293B71 /* WorkoutType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutType.h; path = Activities/WorkoutType.h; sourceTree = "<group>"; };
+		2740DF8228E460E100293B71 /* PlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlanGenerator.cpp; path = Activities/PlanGenerator.cpp; sourceTree = "<group>"; };
+		2740DF8328E460E100293B71 /* Treadmill.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Treadmill.cpp; path = Activities/Treadmill.cpp; sourceTree = "<group>"; };
+		2740DF8428E460E100293B71 /* StationaryCycling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StationaryCycling.h; path = Activities/StationaryCycling.h; sourceTree = "<group>"; };
+		2740DF8528E460E100293B71 /* PullUp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PullUp.cpp; path = Activities/PullUp.cpp; sourceTree = "<group>"; };
+		2740DF8628E460E100293B71 /* PushUpAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushUpAnalyzer.h; path = Activities/PushUpAnalyzer.h; sourceTree = "<group>"; };
+		2740DF8728E460E100293B71 /* SquatAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SquatAnalyzer.cpp; path = Activities/SquatAnalyzer.cpp; sourceTree = "<group>"; };
+		2740DF8828E460E100293B71 /* TrainingPaceCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrainingPaceCalculator.h; path = Activities/TrainingPaceCalculator.h; sourceTree = "<group>"; };
+		2740DF8928E460E100293B71 /* PlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanGenerator.h; path = Activities/PlanGenerator.h; sourceTree = "<group>"; };
+		2740DF8A28E460E100293B71 /* GForceAnalyzerFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GForceAnalyzerFactory.cpp; path = Activities/GForceAnalyzerFactory.cpp; sourceTree = "<group>"; };
+		2740DF8B28E460E100293B71 /* ActivityType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityType.h; path = Activities/ActivityType.h; sourceTree = "<group>"; };
+		2740DF8C28E460E100293B71 /* ActivityMgr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ActivityMgr.mm; path = Activities/ActivityMgr.mm; sourceTree = "<group>"; };
+		2740DF8D28E460E100293B71 /* GForceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GForceAnalyzer.h; path = Activities/GForceAnalyzer.h; sourceTree = "<group>"; };
+		2740DF8E28E460E100293B71 /* Swim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Swim.h; path = Activities/Swim.h; sourceTree = "<group>"; };
+		2740DF8F28E460E100293B71 /* Squat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Squat.cpp; path = Activities/Squat.cpp; sourceTree = "<group>"; };
+		2740DF9028E460E100293B71 /* Goal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Goal.h; path = Activities/Goal.h; sourceTree = "<group>"; };
+		2740DF9128E460E100293B71 /* MountainBiking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MountainBiking.h; path = Activities/MountainBiking.h; sourceTree = "<group>"; };
+		2740DF9228E460E100293B71 /* BenchPress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchPress.h; path = Activities/BenchPress.h; sourceTree = "<group>"; };
+		2740DF9328E460E100293B71 /* SquatAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SquatAnalyzer.h; path = Activities/SquatAnalyzer.h; sourceTree = "<group>"; };
+		2740DF9428E460E100293B71 /* UnitMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitMgr.h; path = Activities/UnitMgr.h; sourceTree = "<group>"; };
+		2740DF9528E460E100293B71 /* GoalType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoalType.h; path = Activities/GoalType.h; sourceTree = "<group>"; };
+		2740DF9628E460E100293B71 /* VO2MaxCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VO2MaxCalculator.cpp; path = Activities/VO2MaxCalculator.cpp; sourceTree = "<group>"; };
+		2740DF9728E460E100293B71 /* Activity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Activity.cpp; path = Activities/Activity.cpp; sourceTree = "<group>"; };
+		2740DF9828E460E100293B71 /* OpenWaterSwim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenWaterSwim.h; path = Activities/OpenWaterSwim.h; sourceTree = "<group>"; };
+		2740DF9A28E460E100293B71 /* Walk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Walk.h; path = Activities/Walk.h; sourceTree = "<group>"; };
+		2740DF9B28E460E100293B71 /* Callbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Callbacks.h; path = Activities/Callbacks.h; sourceTree = "<group>"; };
+		2740DF9C28E460E100293B71 /* Measure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Measure.h; path = Activities/Measure.h; sourceTree = "<group>"; };
+		2740DF9D28E460E100293B71 /* OpenWaterSwim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenWaterSwim.cpp; path = Activities/OpenWaterSwim.cpp; sourceTree = "<group>"; };
+		2740DF9E28E460E100293B71 /* Treadmill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Treadmill.h; path = Activities/Treadmill.h; sourceTree = "<group>"; };
+		2740DF9F28E460E100293B71 /* SwimPlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SwimPlanGenerator.h; path = Activities/SwimPlanGenerator.h; sourceTree = "<group>"; };
+		2740DFA028E460E100293B71 /* ActivityFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActivityFactory.cpp; path = Activities/ActivityFactory.cpp; sourceTree = "<group>"; };
+		2740DFA128E460E100293B71 /* ChinUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChinUp.h; path = Activities/ChinUp.h; sourceTree = "<group>"; };
+		2740DFA228E460E100293B71 /* StationaryCycling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StationaryCycling.cpp; path = Activities/StationaryCycling.cpp; sourceTree = "<group>"; };
+		2740DFA328E460E100293B71 /* BenchPress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BenchPress.cpp; path = Activities/BenchPress.cpp; sourceTree = "<group>"; };
+		2740DFA428E460E100293B71 /* PacePlan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PacePlan.h; path = Activities/PacePlan.h; sourceTree = "<group>"; };
+		2740DFA528E460E100293B71 /* WorkoutPlanInputs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanInputs.h; path = Activities/WorkoutPlanInputs.h; sourceTree = "<group>"; };
+		2740DFA628E460E100293B71 /* ActivityViewType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityViewType.h; path = Activities/ActivityViewType.h; sourceTree = "<group>"; };
+		2740DFA728E460E100293B71 /* BenchPressAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BenchPressAnalyzer.cpp; path = Activities/BenchPressAnalyzer.cpp; sourceTree = "<group>"; };
+		2740DFA828E460E100293B71 /* VO2MaxCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VO2MaxCalculator.h; path = Activities/VO2MaxCalculator.h; sourceTree = "<group>"; };
+		2740DFA928E460E100293B71 /* Hike.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hike.cpp; path = Activities/Hike.cpp; sourceTree = "<group>"; };
+		2740DFAA28E460E100293B71 /* Triathlon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Triathlon.cpp; path = Activities/Triathlon.cpp; sourceTree = "<group>"; };
+		2740DFAB28E460E100293B71 /* Swim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Swim.cpp; path = Activities/Swim.cpp; sourceTree = "<group>"; };
+		2740DFAC28E460E100293B71 /* ActivityMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityMgr.h; path = Activities/ActivityMgr.h; sourceTree = "<group>"; };
+		2740DFAD28E460E100293B71 /* WorkoutScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutScheduler.h; path = Activities/WorkoutScheduler.h; sourceTree = "<group>"; };
+		2740DFAE28E460E100293B71 /* Workout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Workout.cpp; path = Activities/Workout.cpp; sourceTree = "<group>"; };
+		2740DFAF28E460E100293B71 /* TrainingPaceType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrainingPaceType.h; path = Activities/TrainingPaceType.h; sourceTree = "<group>"; };
+		2740DFB028E460E100293B71 /* ActivitySummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivitySummary.h; path = Activities/ActivitySummary.h; sourceTree = "<group>"; };
+		2740DFB128E460E100293B71 /* Walk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Walk.cpp; path = Activities/Walk.cpp; sourceTree = "<group>"; };
+		2740DFB228E460E100293B71 /* MountainBiking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MountainBiking.cpp; path = Activities/MountainBiking.cpp; sourceTree = "<group>"; };
+		2740DFB328E460E100293B71 /* RunPlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunPlanGenerator.h; path = Activities/RunPlanGenerator.h; sourceTree = "<group>"; };
+		2740DFB428E460E200293B71 /* DayType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DayType.h; path = Activities/DayType.h; sourceTree = "<group>"; };
+		2740DFB528E460E200293B71 /* Run.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Run.cpp; path = Activities/Run.cpp; sourceTree = "<group>"; };
+		2740DFB628E460E200293B71 /* GForceAnalyzerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GForceAnalyzerFactory.h; path = Activities/GForceAnalyzerFactory.h; sourceTree = "<group>"; };
+		2740DFB728E460E200293B71 /* Activity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Activity.h; path = Activities/Activity.h; sourceTree = "<group>"; };
+		2740DFB828E460E200293B71 /* ChinUp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChinUp.cpp; path = Activities/ChinUp.cpp; sourceTree = "<group>"; };
+		2740DFB928E460E200293B71 /* AxisName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AxisName.h; path = Activities/AxisName.h; sourceTree = "<group>"; };
+		2740DFBA28E460E200293B71 /* ChinUpAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ChinUpAnalyzer.cpp; path = Activities/ChinUpAnalyzer.cpp; sourceTree = "<group>"; };
+		2740DFBB28E460E200293B71 /* LiftingActivity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LiftingActivity.cpp; path = Activities/LiftingActivity.cpp; sourceTree = "<group>"; };
+		2740DFBC28E460E200293B71 /* TrainingPhilosophyType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrainingPhilosophyType.h; path = Activities/TrainingPhilosophyType.h; sourceTree = "<group>"; };
+		2740DFBD28E460E200293B71 /* Triathlon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triathlon.h; path = Activities/Triathlon.h; sourceTree = "<group>"; };
+		2740DFBE28E460E200293B71 /* FtpCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FtpCalculator.h; path = Activities/FtpCalculator.h; sourceTree = "<group>"; };
+		2740DFBF28E460E200293B71 /* MovingActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovingActivity.h; path = Activities/MovingActivity.h; sourceTree = "<group>"; };
+		2740DFC028E460E200293B71 /* ActivityAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityAttribute.h; path = Activities/ActivityAttribute.h; sourceTree = "<group>"; };
+		2740DFC128E460E200293B71 /* PushUp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PushUp.h; path = Activities/PushUp.h; sourceTree = "<group>"; };
+		2740DFC228E460E200293B71 /* BikePlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BikePlanGenerator.cpp; path = Activities/BikePlanGenerator.cpp; sourceTree = "<group>"; };
+		2740DFC328E460E200293B71 /* PoolSwim.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoolSwim.cpp; path = Activities/PoolSwim.cpp; sourceTree = "<group>"; };
+		2740DFC428E460E200293B71 /* SyncDestination.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SyncDestination.h; path = Activities/SyncDestination.h; sourceTree = "<group>"; };
+		2740DFC528E460E200293B71 /* RunPlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RunPlanGenerator.cpp; path = Activities/RunPlanGenerator.cpp; sourceTree = "<group>"; };
+		2740DFC628E460E200293B71 /* WorkoutPlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutPlanGenerator.h; path = Activities/WorkoutPlanGenerator.h; sourceTree = "<group>"; };
+		2740DFC728E460E200293B71 /* BenchPressAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchPressAnalyzer.h; path = Activities/BenchPressAnalyzer.h; sourceTree = "<group>"; };
+		2740DFC828E460E200293B71 /* SwimPlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SwimPlanGenerator.cpp; path = Activities/SwimPlanGenerator.cpp; sourceTree = "<group>"; };
+		2740DFC928E460E200293B71 /* WorkoutFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutFactory.h; path = Activities/WorkoutFactory.h; sourceTree = "<group>"; };
+		2740DFCA28E460E200293B71 /* IntervalWorkoutSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalWorkoutSegment.h; path = Activities/IntervalWorkoutSegment.h; sourceTree = "<group>"; };
+		2740DFCB28E460E200293B71 /* Cycling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cycling.h; path = Activities/Cycling.h; sourceTree = "<group>"; };
+		2740DFCC28E460E200293B71 /* GForceAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GForceAnalyzer.cpp; path = Activities/GForceAnalyzer.cpp; sourceTree = "<group>"; };
+		2740DFFA28E4CD0B00293B71 /* UnitConversionFactors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitConversionFactors.h; path = Units/UnitConversionFactors.h; sourceTree = "<group>"; };
+		2740DFFB28E4CD0B00293B71 /* Coordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Coordinate.h; path = Units/Coordinate.h; sourceTree = "<group>"; };
+		2740DFFC28E4CD0B00293B71 /* UnitConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitConverter.cpp; path = Units/UnitConverter.cpp; sourceTree = "<group>"; };
+		2740DFFD28E4CD0B00293B71 /* UnitConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitConverter.h; path = Units/UnitConverter.h; sourceTree = "<group>"; };
+		2740DFFE28E4CD0B00293B71 /* UnitSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitSystem.h; path = Units/UnitSystem.h; sourceTree = "<group>"; };
+		2740E00028E4CD2600293B71 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Shoes/Shoes.h; sourceTree = "<group>"; };
+		2740E00128E4CD3B00293B71 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Bike/Bike.h; sourceTree = "<group>"; };
+		2740E00328E4CDA500293B71 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = User/User.h; sourceTree = "<group>"; };
+		2740E00428E4CDA500293B71 /* ActivityLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityLevel.h; path = User/ActivityLevel.h; sourceTree = "<group>"; };
+		2740E00528E4CDA500293B71 /* User.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = User.cpp; path = User/User.cpp; sourceTree = "<group>"; };
+		2740E00628E4CDA500293B71 /* Gender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gender.h; path = User/Gender.h; sourceTree = "<group>"; };
+		2740E00728E4CDA500293B71 /* BmrFormula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BmrFormula.h; path = User/BmrFormula.h; sourceTree = "<group>"; };
+		2740E00A28E4CDE800293B71 /* SensorStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorStyle.h; path = Sensors/SensorStyle.h; sourceTree = "<group>"; };
+		2740E00B28E4CDE800293B71 /* SensorReading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorReading.h; path = Sensors/SensorReading.h; sourceTree = "<group>"; };
+		2740E00C28E4CDE800293B71 /* SensorType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SensorType.h; path = Sensors/SensorType.h; sourceTree = "<group>"; };
+		2740E00E28E4CE1B00293B71 /* TcxFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TcxFileWriter.h; path = FileLib/TcxFileWriter.h; sourceTree = "<group>"; };
+		2740E00F28E4CE1B00293B71 /* ZwoTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTypes.h; path = FileLib/ZwoTypes.h; sourceTree = "<group>"; };
+		2740E01028E4CE1B00293B71 /* XmlFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XmlFileWriter.cpp; path = FileLib/XmlFileWriter.cpp; sourceTree = "<group>"; };
+		2740E01128E4CE1B00293B71 /* FitFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FitFileWriter.h; path = FileLib/FitFileWriter.h; sourceTree = "<group>"; };
+		2740E01228E4CE1B00293B71 /* TcxTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TcxTags.h; path = FileLib/TcxTags.h; sourceTree = "<group>"; };
+		2740E01328E4CE1B00293B71 /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = File.cpp; path = FileLib/File.cpp; sourceTree = "<group>"; };
+		2740E01428E4CE1B00293B71 /* ZwoFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZwoFileReader.cpp; path = FileLib/ZwoFileReader.cpp; sourceTree = "<group>"; };
+		2740E01528E4CE1B00293B71 /* KmlFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KmlFileReader.h; path = FileLib/KmlFileReader.h; sourceTree = "<group>"; };
+		2740E01628E4CE1B00293B71 /* TcxFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TcxFileReader.cpp; path = FileLib/TcxFileReader.cpp; sourceTree = "<group>"; };
+		2740E01728E4CE1B00293B71 /* FitFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FitFileWriter.cpp; path = FileLib/FitFileWriter.cpp; sourceTree = "<group>"; };
+		2740E01828E4CE1B00293B71 /* XmlFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XmlFileReader.h; path = FileLib/XmlFileReader.h; sourceTree = "<group>"; };
+		2740E01928E4CE1B00293B71 /* FileFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileFormat.h; path = FileLib/FileFormat.h; sourceTree = "<group>"; };
+		2740E01A28E4CE1B00293B71 /* CsvFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CsvFileWriter.h; path = FileLib/CsvFileWriter.h; sourceTree = "<group>"; };
+		2740E01B28E4CE1B00293B71 /* KmlFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KmlFileReader.cpp; path = FileLib/KmlFileReader.cpp; sourceTree = "<group>"; };
+		2740E01C28E4CE1B00293B71 /* TcxFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TcxFileWriter.cpp; path = FileLib/TcxFileWriter.cpp; sourceTree = "<group>"; };
+		2740E01D28E4CE1B00293B71 /* GpxFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GpxFileWriter.cpp; path = FileLib/GpxFileWriter.cpp; sourceTree = "<group>"; };
+		2740E01E28E4CE1B00293B71 /* XmlFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XmlFileWriter.h; path = FileLib/XmlFileWriter.h; sourceTree = "<group>"; };
+		2740E01F28E4CE1B00293B71 /* GpxFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GpxFileReader.h; path = FileLib/GpxFileReader.h; sourceTree = "<group>"; };
+		2740E02028E4CE1B00293B71 /* TextFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFileReader.h; path = FileLib/TextFileReader.h; sourceTree = "<group>"; };
+		2740E02128E4CE1B00293B71 /* XmlFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = XmlFileReader.cpp; path = FileLib/XmlFileReader.cpp; sourceTree = "<group>"; };
+		2740E02228E4CE1B00293B71 /* ZwoFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileReader.h; path = FileLib/ZwoFileReader.h; sourceTree = "<group>"; };
+		2740E02328E4CE1B00293B71 /* GpxTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GpxTags.h; path = FileLib/GpxTags.h; sourceTree = "<group>"; };
+		2740E02428E4CE1B00293B71 /* GpxFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GpxFileWriter.h; path = FileLib/GpxFileWriter.h; sourceTree = "<group>"; };
+		2740E02528E4CE1B00293B71 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = File.h; path = FileLib/File.h; sourceTree = "<group>"; };
+		2740E02628E4CE1B00293B71 /* TextFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextFileReader.cpp; path = FileLib/TextFileReader.cpp; sourceTree = "<group>"; };
+		2740E02728E4CE1B00293B71 /* ZwoFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZwoFileWriter.cpp; path = FileLib/ZwoFileWriter.cpp; sourceTree = "<group>"; };
+		2740E02828E4CE1B00293B71 /* ZwoFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoFileWriter.h; path = FileLib/ZwoFileWriter.h; sourceTree = "<group>"; };
+		2740E02928E4CE1B00293B71 /* CsvFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CsvFileWriter.cpp; path = FileLib/CsvFileWriter.cpp; sourceTree = "<group>"; };
+		2740E02A28E4CE1B00293B71 /* TcxFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TcxFileReader.h; path = FileLib/TcxFileReader.h; sourceTree = "<group>"; };
+		2740E02B28E4CE1B00293B71 /* GpxFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GpxFileReader.cpp; path = FileLib/GpxFileReader.cpp; sourceTree = "<group>"; };
+		2740E02C28E4CE1B00293B71 /* ZwoTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZwoTags.h; path = FileLib/ZwoTags.h; sourceTree = "<group>"; };
+		2740E03C28E4CFFD00293B71 /* Distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Distance.h; path = LibMath/cpp/Distance.h; sourceTree = "<group>"; };
+		2740E03D28E4CFFD00293B71 /* KMeans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KMeans.cpp; path = LibMath/cpp/KMeans.cpp; sourceTree = "<group>"; };
+		2740E03E28E4CFFD00293B71 /* Statistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Statistics.h; path = LibMath/cpp/Statistics.h; sourceTree = "<group>"; };
+		2740E03F28E4CFFD00293B71 /* Double.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Double.h; path = LibMath/cpp/Double.h; sourceTree = "<group>"; };
+		2740E04028E4CFFD00293B71 /* KMeans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KMeans.h; path = LibMath/cpp/KMeans.h; sourceTree = "<group>"; };
+		2740E04128E4CFFD00293B71 /* Double.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Double.cpp; path = LibMath/cpp/Double.cpp; sourceTree = "<group>"; };
+		2740E04228E4CFFD00293B71 /* Signals.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Signals.cpp; path = LibMath/cpp/Signals.cpp; sourceTree = "<group>"; };
+		2740E04328E4CFFD00293B71 /* Signals.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Signals.h; path = LibMath/cpp/Signals.h; sourceTree = "<group>"; };
+		2740E04428E4CFFD00293B71 /* Statistics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Statistics.cpp; path = LibMath/cpp/Statistics.cpp; sourceTree = "<group>"; };
+		2740E04528E4CFFD00293B71 /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = LibMath/cpp/Distance.cpp; sourceTree = "<group>"; };
+		2740E04C28E4D0C700293B71 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Database.cpp; path = Data/Database.cpp; sourceTree = "<group>"; };
+		2740E04D28E4D0C700293B71 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Database.h; path = Data/Database.h; sourceTree = "<group>"; };
+		2740E04E28E4D0C700293B71 /* DataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataImporter.h; path = Data/DataImporter.h; sourceTree = "<group>"; };
+		2740E04F28E4D0C700293B71 /* HeatMapGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HeatMapGenerator.cpp; path = Data/HeatMapGenerator.cpp; sourceTree = "<group>"; };
+		2740E05028E4D0C700293B71 /* HeatMapGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeatMapGenerator.h; path = Data/HeatMapGenerator.h; sourceTree = "<group>"; };
+		2740E05128E4D0C700293B71 /* WorkoutImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutImporter.cpp; path = Data/WorkoutImporter.cpp; sourceTree = "<group>"; };
+		2740E05228E4D0C700293B71 /* WorkoutImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutImporter.h; path = Data/WorkoutImporter.h; sourceTree = "<group>"; };
+		2740E05328E4D0C700293B71 /* DataImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataImporter.cpp; path = Data/DataImporter.cpp; sourceTree = "<group>"; };
+		2740E05428E4D0C700293B71 /* DataExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataExporter.cpp; path = Data/DataExporter.cpp; sourceTree = "<group>"; };
+		2740E05528E4D0C700293B71 /* DataExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataExporter.h; path = Data/DataExporter.h; sourceTree = "<group>"; };
+		2740E05C28E4D93700293B71 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Defines.h; path = Common/Defines.h; sourceTree = "<group>"; };
+		2740E05D28E4D93700293B71 /* WatchMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WatchMessages.h; path = Common/WatchMessages.h; sourceTree = "<group>"; };
+		2740E05E28E4D93700293B71 /* Urls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Urls.h; path = Common/Urls.h; sourceTree = "<group>"; };
+		2740E05F28E4D93700293B71 /* Cookies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cookies.h; path = Common/Cookies.h; sourceTree = "<group>"; };
+		2740E06028E4D93700293B71 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notifications.h; path = Common/Notifications.h; sourceTree = "<group>"; };
+		2740E06128E4D93700293B71 /* Params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Params.h; path = Common/Params.h; sourceTree = "<group>"; };
+		2740E06328E4D98300293B71 /* Peaks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Peaks.cpp; path = PeakFinder/cpp/Peaks.cpp; sourceTree = "<group>"; };
+		2740E06428E4D98300293B71 /* Peaks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Peaks.h; path = PeakFinder/cpp/Peaks.h; sourceTree = "<group>"; };
+		2740E06728E4DA0100293B71 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.0.sdk/usr/lib/libsqlite3.0.tbd; sourceTree = DEVELOPER_DIR; };
+		2740E06928E4DA1A00293B71 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.0.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
+		2740E06B28E4E54500293B71 /* LiveActivityVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveActivityVM.swift; sourceTree = "<group>"; };
+		2740E07528E4F77400293B71 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		2740E07728E5DEC500293B71 /* HeartRateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HeartRateService.swift; path = LibBluetooth/mac/Source_Swift/HeartRateService.swift; sourceTree = "<group>"; };
+		2740E07828E5DEC500293B71 /* BluetoothServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BluetoothServices.swift; path = LibBluetooth/mac/Source_Swift/BluetoothServices.swift; sourceTree = "<group>"; };
+		2740E07928E5DEC500293B71 /* CyclingPowerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CyclingPowerService.swift; path = LibBluetooth/mac/Source_Swift/CyclingPowerService.swift; sourceTree = "<group>"; };
+		2740E07A28E5DEC500293B71 /* BluetoothScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BluetoothScanner.swift; path = LibBluetooth/mac/Source_Swift/BluetoothScanner.swift; sourceTree = "<group>"; };
+		2740E08228E60CFA00293B71 /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		2740E08828E629CE00293B71 /* GearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearView.swift; sourceTree = "<group>"; };
+		2740E08B28E6316E00293B71 /* WorkoutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutsView.swift; sourceTree = "<group>"; };
+		2740E08E28E6318000293B71 /* PacePlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacePlansView.swift; sourceTree = "<group>"; };
+		2740E09128E6319700293B71 /* IntervalSessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalSessionsView.swift; sourceTree = "<group>"; };
+		2740E09428E631A000293B71 /* SensorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorsView.swift; sourceTree = "<group>"; };
+		2740E09728E632CE00293B71 /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		2740E09B28E6344400293B71 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preferences.swift; path = IOS/Model/Preferences.swift; sourceTree = "<group>"; };
+		2740E09E28E643FD00293B71 /* ActivityPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ActivityPreferences.swift; path = IOS/Model/ActivityPreferences.swift; sourceTree = "<group>"; };
+		2740E0A128E6441C00293B71 /* BroadcastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BroadcastManager.swift; path = IOS/Model/BroadcastManager.swift; sourceTree = "<group>"; };
+		2740E0A428E644EE00293B71 /* SensorMgr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SensorMgr.swift; path = IOS/Sensors/SensorMgr.swift; sourceTree = "<group>"; };
+		2740E0A728E645C300293B71 /* WorkoutsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutsVM.swift; sourceTree = "<group>"; };
+		2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalSessionsVM.swift; sourceTree = "<group>"; };
+		2740E0AC28E6758500293B71 /* PacePlansVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacePlansVM.swift; sourceTree = "<group>"; };
+		2740E0AE28E67C0600293B71 /* GearVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearVM.swift; sourceTree = "<group>"; };
+		2740E0F328E7031700293B71 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS9.0.sdk/usr/lib/libsqlite3.0.tbd; sourceTree = DEVELOPER_DIR; };
+		2740E0F528E7032700293B71 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS9.0.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
+		2740E0FA28E90CE300293B71 /* CommonApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CommonApp.swift; path = IOS/Controller/CommonApp.swift; sourceTree = "<group>"; };
+		2740E10728EB5ABF00293B71 /* LocationSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationSensor.swift; path = IOS/Sensors/LocationSensor.swift; sourceTree = "<group>"; };
+		2740E10A28EB5AD600293B71 /* Accelerometer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Accelerometer.swift; path = IOS/Sensors/Accelerometer.swift; sourceTree = "<group>"; };
+		2740E10D28EB5B4C00293B71 /* CyclingCadenceService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CyclingCadenceService.swift; path = LibBluetooth/mac/Source_Swift/CyclingCadenceService.swift; sourceTree = "<group>"; };
+		2740E11028EB908400293B71 /* OpenWorkoutTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenWorkoutTracker.entitlements; sourceTree = "<group>"; };
+		2740E11128EB90DB00293B71 /* OpenWorkoutTracker-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "OpenWorkoutTracker-Info.plist"; sourceTree = "<group>"; };
+		2740E11228EB97B800293B71 /* OpenWorkoutTracker-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "OpenWorkoutTracker-Watch-App-Info.plist"; sourceTree = "<group>"; };
+		2740E11328EDFEB700293B71 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
+		2740E11528EF758500293B71 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
+		2740E11728F0DCC200293B71 /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HealthManager.swift; path = IOS/Model/HealthManager.swift; sourceTree = "<group>"; };
+		2740E11C28F0E81400293B71 /* NewPacePlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPacePlanView.swift; sourceTree = "<group>"; };
+		2740E11F28F0E83000293B71 /* NewIntervalSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIntervalSessionView.swift; sourceTree = "<group>"; };
+		2740E12128F233A200293B71 /* StoredActivityVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredActivityVM.swift; sourceTree = "<group>"; };
+		2740E12428F2D3F000293B71 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApiClient.swift; path = IOS/Model/ApiClient.swift; sourceTree = "<group>"; };
+		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
+		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
+		278D92C028E38F17003B077C /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		278D92C328E38F17003B077C /* PhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneApp.swift; sourceTree = "<group>"; };
+		278D92C528E38F17003B077C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		278D92C728E38F18003B077C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		278D92CA28E38F18003B077C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		278D92D028E38F18003B077C /* OpenWorkoutTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWorkoutTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		278D92D428E38F18003B077C /* OpenWorkoutTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTrackerTests.swift; sourceTree = "<group>"; };
+		278D92DA28E38F18003B077C /* OpenWorkoutTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenWorkoutTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		278D92DE28E38F18003B077C /* OpenWorkoutTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTrackerUITests.swift; sourceTree = "<group>"; };
+		278D92E028E38F18003B077C /* OpenWorkoutTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		278D92E628E38F18003B077C /* OpenWorkoutTracker Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OpenWorkoutTracker Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		278D92ED28E38F18003B077C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		278D92EF28E38F19003B077C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		278D92F228E38F19003B077C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		278D92F828E38F19003B077C /* OpenWorkoutTracker Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OpenWorkoutTracker Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		278D92FC28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTracker_Watch_AppTests.swift; sourceTree = "<group>"; };
+		278D930228E38F19003B077C /* OpenWorkoutTracker Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OpenWorkoutTracker Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		278D930628E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTracker_Watch_AppUITests.swift; sourceTree = "<group>"; };
+		278D930828E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		278D931F28E38FE7003B077C /* ActivitiesVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivitiesVM.swift; sourceTree = "<group>"; };
+		278D932028E38FE7003B077C /* WatchApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchApp.swift; sourceTree = "<group>"; };
+		278D932128E38FE7003B077C /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		278D932228E38FE7003B077C /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		278D932328E38FE7003B077C /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		278D932428E38FE7003B077C /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		278D932528E38FE7003B077C /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		278D92BD28E38F17003B077C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2740E06828E4DA1000293B71 /* libsqlite3.0.tbd in Frameworks */,
+				2740E06A28E4DA2000293B71 /* libxml2.2.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92CD28E38F18003B077C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92D728E38F18003B077C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92E328E38F18003B077C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2740E0F428E7032000293B71 /* libsqlite3.0.tbd in Frameworks */,
+				2740E0F628E7032C00293B71 /* libxml2.2.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92F528E38F19003B077C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92FF28E38F19003B077C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2740DF6428E460A000293B71 /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+				2740DF9728E460E100293B71 /* Activity.cpp */,
+				2740DFB728E460E200293B71 /* Activity.h */,
+				2740DFC028E460E200293B71 /* ActivityAttribute.h */,
+				2740DF7B28E460E000293B71 /* ActivityAttributeType.h */,
+				2740DFA028E460E100293B71 /* ActivityFactory.cpp */,
+				2740DF6928E460E000293B71 /* ActivityFactory.h */,
+				2740DFAC28E460E100293B71 /* ActivityMgr.h */,
+				2740DF8C28E460E100293B71 /* ActivityMgr.mm */,
+				2740DFB028E460E100293B71 /* ActivitySummary.h */,
+				2740DF8B28E460E100293B71 /* ActivityType.h */,
+				2740DFA628E460E100293B71 /* ActivityViewType.h */,
+				2740DFB928E460E200293B71 /* AxisName.h */,
+				2740DFA328E460E100293B71 /* BenchPress.cpp */,
+				2740DF9228E460E100293B71 /* BenchPress.h */,
+				2740DFA728E460E100293B71 /* BenchPressAnalyzer.cpp */,
+				2740DFC728E460E200293B71 /* BenchPressAnalyzer.h */,
+				2740DFC228E460E200293B71 /* BikePlanGenerator.cpp */,
+				2740DF7F28E460E000293B71 /* BikePlanGenerator.h */,
+				2740DF9B28E460E100293B71 /* Callbacks.h */,
+				2740DFB828E460E200293B71 /* ChinUp.cpp */,
+				2740DFA128E460E100293B71 /* ChinUp.h */,
+				2740DFBA28E460E200293B71 /* ChinUpAnalyzer.cpp */,
+				2740DF6E28E460E000293B71 /* ChinUpAnalyzer.h */,
+				2740DF8028E460E000293B71 /* Cycling.cpp */,
+				2740DFCB28E460E200293B71 /* Cycling.h */,
+				2740DFB428E460E200293B71 /* DayType.h */,
+				2740DF7628E460E000293B71 /* FtpCalculator.cpp */,
+				2740DFBE28E460E200293B71 /* FtpCalculator.h */,
+				2740DFCC28E460E200293B71 /* GForceAnalyzer.cpp */,
+				2740DF8D28E460E100293B71 /* GForceAnalyzer.h */,
+				2740DF8A28E460E100293B71 /* GForceAnalyzerFactory.cpp */,
+				2740DFB628E460E200293B71 /* GForceAnalyzerFactory.h */,
+				2740DF9028E460E100293B71 /* Goal.h */,
+				2740DF9528E460E100293B71 /* GoalType.h */,
+				2740DFA928E460E100293B71 /* Hike.cpp */,
+				2740DF7528E460E000293B71 /* Hike.h */,
+				2740DF7128E460E000293B71 /* IntensityCalculator.cpp */,
+				2740DF6828E460E000293B71 /* IntensityCalculator.h */,
+				2740DF7D28E460E000293B71 /* IntervalWorkout.h */,
+				2740DFCA28E460E200293B71 /* IntervalWorkoutSegment.h */,
+				2740DFBB28E460E200293B71 /* LiftingActivity.cpp */,
+				2740DF6C28E460E000293B71 /* LiftingActivity.h */,
+				2740DF9C28E460E100293B71 /* Measure.h */,
+				2740DFB228E460E100293B71 /* MountainBiking.cpp */,
+				2740DF9128E460E100293B71 /* MountainBiking.h */,
+				2740DF6F28E460E000293B71 /* MovingActivity.cpp */,
+				2740DFBF28E460E200293B71 /* MovingActivity.h */,
+				2740DF9D28E460E100293B71 /* OpenWaterSwim.cpp */,
+				2740DF9828E460E100293B71 /* OpenWaterSwim.h */,
+				2740DFA428E460E100293B71 /* PacePlan.h */,
+				2740DF8228E460E100293B71 /* PlanGenerator.cpp */,
+				2740DF8928E460E100293B71 /* PlanGenerator.h */,
+				2740DFC328E460E200293B71 /* PoolSwim.cpp */,
+				2740DF7228E460E000293B71 /* PoolSwim.h */,
+				2740DF8528E460E100293B71 /* PullUp.cpp */,
+				2740DF7728E460E000293B71 /* PullUp.h */,
+				2740DF7328E460E000293B71 /* PullUpAnalyzer.cpp */,
+				2740DF7C28E460E000293B71 /* PullUpAnalyzer.h */,
+				2740DF6A28E460E000293B71 /* PushUp.cpp */,
+				2740DFC128E460E200293B71 /* PushUp.h */,
+				2740DF6B28E460E000293B71 /* PushUpAnalyzer.cpp */,
+				2740DF8628E460E100293B71 /* PushUpAnalyzer.h */,
+				2740DFB528E460E200293B71 /* Run.cpp */,
+				2740DF7A28E460E000293B71 /* Run.h */,
+				2740DFC528E460E200293B71 /* RunPlanGenerator.cpp */,
+				2740DFB328E460E100293B71 /* RunPlanGenerator.h */,
+				2740DF7E28E460E000293B71 /* SegmentType.h */,
+				2740DF8F28E460E100293B71 /* Squat.cpp */,
+				2740DF6D28E460E000293B71 /* Squat.h */,
+				2740DF8728E460E100293B71 /* SquatAnalyzer.cpp */,
+				2740DF9328E460E100293B71 /* SquatAnalyzer.h */,
+				2740DFA228E460E100293B71 /* StationaryCycling.cpp */,
+				2740DF8428E460E100293B71 /* StationaryCycling.h */,
+				2740DFAB28E460E100293B71 /* Swim.cpp */,
+				2740DF8E28E460E100293B71 /* Swim.h */,
+				2740DFC828E460E200293B71 /* SwimPlanGenerator.cpp */,
+				2740DF9F28E460E100293B71 /* SwimPlanGenerator.h */,
+				2740DFC428E460E200293B71 /* SyncDestination.h */,
+				2740DF6628E460E000293B71 /* TrainingPaceCalculator.cpp */,
+				2740DF8828E460E100293B71 /* TrainingPaceCalculator.h */,
+				2740DFAF28E460E100293B71 /* TrainingPaceType.h */,
+				2740DFBC28E460E200293B71 /* TrainingPhilosophyType.h */,
+				2740DF8328E460E100293B71 /* Treadmill.cpp */,
+				2740DF9E28E460E100293B71 /* Treadmill.h */,
+				2740DFAA28E460E100293B71 /* Triathlon.cpp */,
+				2740DFBD28E460E200293B71 /* Triathlon.h */,
+				2740DF7928E460E000293B71 /* UnitMgr.cpp */,
+				2740DF9428E460E100293B71 /* UnitMgr.h */,
+				2740DF9628E460E100293B71 /* VO2MaxCalculator.cpp */,
+				2740DFA828E460E100293B71 /* VO2MaxCalculator.h */,
+				2740DFB128E460E100293B71 /* Walk.cpp */,
+				2740DF9A28E460E100293B71 /* Walk.h */,
+				2740DFAE28E460E100293B71 /* Workout.cpp */,
+				2740DF7828E460E000293B71 /* Workout.h */,
+				2740DF6728E460E000293B71 /* WorkoutFactory.cpp */,
+				2740DFC928E460E200293B71 /* WorkoutFactory.h */,
+				2740DF7028E460E000293B71 /* WorkoutPlanGenerator.cpp */,
+				2740DFC628E460E200293B71 /* WorkoutPlanGenerator.h */,
+				2740DFA528E460E100293B71 /* WorkoutPlanInputs.h */,
+				2740DF7428E460E000293B71 /* WorkoutScheduler.cpp */,
+				2740DFAD28E460E100293B71 /* WorkoutScheduler.h */,
+				2740DF8128E460E000293B71 /* WorkoutType.h */,
+			);
+			name = Backend;
+			sourceTree = "<group>";
+		};
+		2740DFF728E4CCD000293B71 /* Bike */ = {
+			isa = PBXGroup;
+			children = (
+				2740E00128E4CD3B00293B71 /* Bike.h */,
+			);
+			name = Bike;
+			sourceTree = "<group>";
+		};
+		2740DFF828E4CCED00293B71 /* Shoes */ = {
+			isa = PBXGroup;
+			children = (
+				2740E00028E4CD2600293B71 /* Shoes.h */,
+			);
+			name = Shoes;
+			sourceTree = "<group>";
+		};
+		2740DFF928E4CCFC00293B71 /* Units */ = {
+			isa = PBXGroup;
+			children = (
+				2740DFFB28E4CD0B00293B71 /* Coordinate.h */,
+				2740DFFA28E4CD0B00293B71 /* UnitConversionFactors.h */,
+				2740DFFC28E4CD0B00293B71 /* UnitConverter.cpp */,
+				2740DFFD28E4CD0B00293B71 /* UnitConverter.h */,
+				2740DFFE28E4CD0B00293B71 /* UnitSystem.h */,
+			);
+			name = Units;
+			sourceTree = "<group>";
+		};
+		2740E00228E4CD7C00293B71 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				2740E00428E4CDA500293B71 /* ActivityLevel.h */,
+				2740E00728E4CDA500293B71 /* BmrFormula.h */,
+				2740E00628E4CDA500293B71 /* Gender.h */,
+				2740E00528E4CDA500293B71 /* User.cpp */,
+				2740E00328E4CDA500293B71 /* User.h */,
+			);
+			name = User;
+			sourceTree = "<group>";
+		};
+		2740E00928E4CDBA00293B71 /* Sensors */ = {
+			isa = PBXGroup;
+			children = (
+				2740E00B28E4CDE800293B71 /* SensorReading.h */,
+				2740E00A28E4CDE800293B71 /* SensorStyle.h */,
+				2740E00C28E4CDE800293B71 /* SensorType.h */,
+			);
+			name = Sensors;
+			sourceTree = "<group>";
+		};
+		2740E00D28E4CE0D00293B71 /* FileLib */ = {
+			isa = PBXGroup;
+			children = (
+				2740E02928E4CE1B00293B71 /* CsvFileWriter.cpp */,
+				2740E01A28E4CE1B00293B71 /* CsvFileWriter.h */,
+				2740E01328E4CE1B00293B71 /* File.cpp */,
+				2740E02528E4CE1B00293B71 /* File.h */,
+				2740E01928E4CE1B00293B71 /* FileFormat.h */,
+				2740E01728E4CE1B00293B71 /* FitFileWriter.cpp */,
+				2740E01128E4CE1B00293B71 /* FitFileWriter.h */,
+				2740E02B28E4CE1B00293B71 /* GpxFileReader.cpp */,
+				2740E01F28E4CE1B00293B71 /* GpxFileReader.h */,
+				2740E01D28E4CE1B00293B71 /* GpxFileWriter.cpp */,
+				2740E02428E4CE1B00293B71 /* GpxFileWriter.h */,
+				2740E02328E4CE1B00293B71 /* GpxTags.h */,
+				2740E01B28E4CE1B00293B71 /* KmlFileReader.cpp */,
+				2740E01528E4CE1B00293B71 /* KmlFileReader.h */,
+				2740E01628E4CE1B00293B71 /* TcxFileReader.cpp */,
+				2740E02A28E4CE1B00293B71 /* TcxFileReader.h */,
+				2740E01C28E4CE1B00293B71 /* TcxFileWriter.cpp */,
+				2740E00E28E4CE1B00293B71 /* TcxFileWriter.h */,
+				2740E01228E4CE1B00293B71 /* TcxTags.h */,
+				2740E02628E4CE1B00293B71 /* TextFileReader.cpp */,
+				2740E02028E4CE1B00293B71 /* TextFileReader.h */,
+				2740E02128E4CE1B00293B71 /* XmlFileReader.cpp */,
+				2740E01828E4CE1B00293B71 /* XmlFileReader.h */,
+				2740E01028E4CE1B00293B71 /* XmlFileWriter.cpp */,
+				2740E01E28E4CE1B00293B71 /* XmlFileWriter.h */,
+				2740E01428E4CE1B00293B71 /* ZwoFileReader.cpp */,
+				2740E02228E4CE1B00293B71 /* ZwoFileReader.h */,
+				2740E02728E4CE1B00293B71 /* ZwoFileWriter.cpp */,
+				2740E02828E4CE1B00293B71 /* ZwoFileWriter.h */,
+				2740E02C28E4CE1B00293B71 /* ZwoTags.h */,
+				2740E00F28E4CE1B00293B71 /* ZwoTypes.h */,
+			);
+			name = FileLib;
+			sourceTree = "<group>";
+		};
+		2740E03A28E4CF9800293B71 /* LibMath */ = {
+			isa = PBXGroup;
+			children = (
+				2740E04528E4CFFD00293B71 /* Distance.cpp */,
+				2740E03C28E4CFFD00293B71 /* Distance.h */,
+				2740E04128E4CFFD00293B71 /* Double.cpp */,
+				2740E03F28E4CFFD00293B71 /* Double.h */,
+				2740E03D28E4CFFD00293B71 /* KMeans.cpp */,
+				2740E04028E4CFFD00293B71 /* KMeans.h */,
+				2740E04228E4CFFD00293B71 /* Signals.cpp */,
+				2740E04328E4CFFD00293B71 /* Signals.h */,
+				2740E04428E4CFFD00293B71 /* Statistics.cpp */,
+				2740E03E28E4CFFD00293B71 /* Statistics.h */,
+			);
+			name = LibMath;
+			sourceTree = "<group>";
+		};
+		2740E04B28E4D0AB00293B71 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				2740E04C28E4D0C700293B71 /* Database.cpp */,
+				2740E04D28E4D0C700293B71 /* Database.h */,
+				2740E05428E4D0C700293B71 /* DataExporter.cpp */,
+				2740E05528E4D0C700293B71 /* DataExporter.h */,
+				2740E05328E4D0C700293B71 /* DataImporter.cpp */,
+				2740E04E28E4D0C700293B71 /* DataImporter.h */,
+				2740E04F28E4D0C700293B71 /* HeatMapGenerator.cpp */,
+				2740E05028E4D0C700293B71 /* HeatMapGenerator.h */,
+				2740E05128E4D0C700293B71 /* WorkoutImporter.cpp */,
+				2740E05228E4D0C700293B71 /* WorkoutImporter.h */,
+			);
+			name = Database;
+			sourceTree = "<group>";
+		};
+		2740E05B28E4D92900293B71 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2740E05F28E4D93700293B71 /* Cookies.h */,
+				2740E05C28E4D93700293B71 /* Defines.h */,
+				2740E06028E4D93700293B71 /* Notifications.h */,
+				2740E06128E4D93700293B71 /* Params.h */,
+				2740E05E28E4D93700293B71 /* Urls.h */,
+				2740E05D28E4D93700293B71 /* WatchMessages.h */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		2740E06228E4D96E00293B71 /* PeakFinder */ = {
+			isa = PBXGroup;
+			children = (
+				2740E06328E4D98300293B71 /* Peaks.cpp */,
+				2740E06428E4D98300293B71 /* Peaks.h */,
+			);
+			name = PeakFinder;
+			sourceTree = "<group>";
+		};
+		2740E06628E4DA0100293B71 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2740E0F528E7032700293B71 /* libxml2.2.tbd */,
+				2740E0F328E7031700293B71 /* libsqlite3.0.tbd */,
+				2740E06928E4DA1A00293B71 /* libxml2.2.tbd */,
+				2740E06728E4DA0100293B71 /* libsqlite3.0.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2740E07128E4E6D000293B71 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				278D931F28E38FE7003B077C /* ActivitiesVM.swift */,
+				2740E0AE28E67C0600293B71 /* GearVM.swift */,
+				2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */,
+				2740E06B28E4E54500293B71 /* LiveActivityVM.swift */,
+				2740E0AC28E6758500293B71 /* PacePlansVM.swift */,
+				2740E11528EF758500293B71 /* ProfileVM.swift */,
+				2740E12128F233A200293B71 /* StoredActivityVM.swift */,
+				2740E0A728E645C300293B71 /* WorkoutsVM.swift */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
+		2740E07628E5DE9C00293B71 /* LibBluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				2740E07A28E5DEC500293B71 /* BluetoothScanner.swift */,
+				2740E07828E5DEC500293B71 /* BluetoothServices.swift */,
+				2740E10D28EB5B4C00293B71 /* CyclingCadenceService.swift */,
+				2740E07928E5DEC500293B71 /* CyclingPowerService.swift */,
+				2740E07728E5DEC500293B71 /* HeartRateService.swift */,
+			);
+			name = LibBluetooth;
+			sourceTree = "<group>";
+		};
+		2740E09A28E633E800293B71 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2740E10A28EB5AD600293B71 /* Accelerometer.swift */,
+				2740E09E28E643FD00293B71 /* ActivityPreferences.swift */,
+				2740E12428F2D3F000293B71 /* ApiClient.swift */,
+				2740E0A128E6441C00293B71 /* BroadcastManager.swift */,
+				2740E11728F0DCC200293B71 /* HealthManager.swift */,
+				2740E10728EB5ABF00293B71 /* LocationSensor.swift */,
+				2740E09B28E6344400293B71 /* Preferences.swift */,
+				2740E0A428E644EE00293B71 /* SensorMgr.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		2740E0FC28E90CF100293B71 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2740E0FA28E90CE300293B71 /* CommonApp.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		278D92B728E38F17003B077C = {
+			isa = PBXGroup;
+			children = (
+				2740E11228EB97B800293B71 /* OpenWorkoutTracker-Watch-App-Info.plist */,
+				2740E11128EB90DB00293B71 /* OpenWorkoutTracker-Info.plist */,
+				2740E11028EB908400293B71 /* OpenWorkoutTracker.entitlements */,
+				2740E07528E4F77400293B71 /* Bridging-Header.h */,
+				2740DF6428E460A000293B71 /* Backend */,
+				2740DFF728E4CCD000293B71 /* Bike */,
+				2740E05B28E4D92900293B71 /* Common */,
+				2740E0FC28E90CF100293B71 /* Controller */,
+				2740E04B28E4D0AB00293B71 /* Database */,
+				2740E00D28E4CE0D00293B71 /* FileLib */,
+				2740E07628E5DE9C00293B71 /* LibBluetooth */,
+				2740E03A28E4CF9800293B71 /* LibMath */,
+				2740E09A28E633E800293B71 /* Model */,
+				2740E06228E4D96E00293B71 /* PeakFinder */,
+				2740E00928E4CDBA00293B71 /* Sensors */,
+				2740DFF828E4CCED00293B71 /* Shoes */,
+				2740DFF928E4CCFC00293B71 /* Units */,
+				2740E00228E4CD7C00293B71 /* User */,
+				278D92C228E38F17003B077C /* iPhone App */,
+				278D92D328E38F18003B077C /* Tests */,
+				278D92DD28E38F18003B077C /* UITests */,
+				2740E07128E4E6D000293B71 /* View Models */,
+				278D92EA28E38F18003B077C /* Watch App */,
+				278D92FB28E38F19003B077C /* Watch AppTests */,
+				278D930528E38F19003B077C /* Watch AppUITests */,
+				278D92C128E38F17003B077C /* Products */,
+				2740E06628E4DA0100293B71 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		278D92C128E38F17003B077C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				278D92C028E38F17003B077C /* OpenWorkoutTracker.app */,
+				278D92D028E38F18003B077C /* OpenWorkoutTrackerTests.xctest */,
+				278D92DA28E38F18003B077C /* OpenWorkoutTrackerUITests.xctest */,
+				278D92E628E38F18003B077C /* OpenWorkoutTracker Watch App.app */,
+				278D92F828E38F19003B077C /* OpenWorkoutTracker Watch AppTests.xctest */,
+				278D930228E38F19003B077C /* OpenWorkoutTracker Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		278D92C228E38F17003B077C /* iPhone App */ = {
+			isa = PBXGroup;
+			children = (
+				2740DF5B28E4600800293B71 /* AboutView.swift */,
+				2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */,
+				2740DF5628E4600800293B71 /* ActivityView.swift */,
+				2704224A28FB7B2900FD02D4 /* BarChartView.swift */,
+				278D92C528E38F17003B077C /* ContentView.swift */,
+				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
+				2740E12928F4427C00293B71 /* EditBikeView.swift */,
+				2740E12728F4425A00293B71 /* EditShoesView.swift */,
+				2740E08828E629CE00293B71 /* GearView.swift */,
+				2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */,
+				2740DF5528E4600800293B71 /* HistoryView.swift */,
+				2740E09128E6319700293B71 /* IntervalSessionsView.swift */,
+				2704224828FB7B0E00FD02D4 /* LineGraphView.swift */,
+				2704224C28FCDDF600FD02D4 /* LoginView.swift */,
+				2740E11F28F0E83000293B71 /* NewIntervalSessionView.swift */,
+				2740E11C28F0E81400293B71 /* NewPacePlanView.swift */,
+				2740E11328EDFEB700293B71 /* NumbersOnly.swift */,
+				2740E08E28E6318000293B71 /* PacePlansView.swift */,
+				278D92C328E38F17003B077C /* PhoneApp.swift */,
+				2740E08228E60CFA00293B71 /* ProfileView.swift */,
+				2704225028FDEE0200FD02D4 /* SensorChartView.swift */,
+				2740E09428E631A000293B71 /* SensorsView.swift */,
+				2740DF5928E4600800293B71 /* SettingsView.swift */,
+				2740E09728E632CE00293B71 /* StatisticsView.swift */,
+				270422552902409C00FD02D4 /* TagsView.swift */,
+				2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */,
+				2740E08B28E6316E00293B71 /* WorkoutsView.swift */,
+				278D92C728E38F18003B077C /* Assets.xcassets */,
+				278D92C928E38F18003B077C /* Preview Content */,
+			);
+			path = "iPhone App";
+			sourceTree = "<group>";
+		};
+		278D92C928E38F18003B077C /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				278D92CA28E38F18003B077C /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		278D92D328E38F18003B077C /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				278D92D428E38F18003B077C /* OpenWorkoutTrackerTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		278D92DD28E38F18003B077C /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				278D92DE28E38F18003B077C /* OpenWorkoutTrackerUITests.swift */,
+				278D92E028E38F18003B077C /* OpenWorkoutTrackerUITestsLaunchTests.swift */,
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		278D92EA28E38F18003B077C /* Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				278D932128E38FE7003B077C /* AboutView.swift */,
+				278D932228E38FE7003B077C /* ActivityView.swift */,
+				278D92ED28E38F18003B077C /* ContentView.swift */,
+				278D932528E38FE7003B077C /* HistoryDetailsView.swift */,
+				278D932328E38FE7003B077C /* HistoryView.swift */,
+				278D932428E38FE7003B077C /* SettingsView.swift */,
+				278D932028E38FE7003B077C /* WatchApp.swift */,
+				278D92EF28E38F19003B077C /* Assets.xcassets */,
+				278D92F128E38F19003B077C /* Preview Content */,
+			);
+			path = "Watch App";
+			sourceTree = "<group>";
+		};
+		278D92F128E38F19003B077C /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				278D92F228E38F19003B077C /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		278D92FB28E38F19003B077C /* Watch AppTests */ = {
+			isa = PBXGroup;
+			children = (
+				278D92FC28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift */,
+			);
+			path = "Watch AppTests";
+			sourceTree = "<group>";
+		};
+		278D930528E38F19003B077C /* Watch AppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				278D930628E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift */,
+				278D930828E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift */,
+			);
+			path = "Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		278D92BF28E38F17003B077C /* OpenWorkoutTracker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278D931028E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker" */;
+			buildPhases = (
+				278D92BC28E38F17003B077C /* Sources */,
+				278D92BD28E38F17003B077C /* Frameworks */,
+				278D92BE28E38F17003B077C /* Resources */,
+				278D930F28E38F19003B077C /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				278D92E928E38F18003B077C /* PBXTargetDependency */,
+			);
+			name = OpenWorkoutTracker;
+			productName = OpenWorkoutTracker;
+			productReference = 278D92C028E38F17003B077C /* OpenWorkoutTracker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		278D92CF28E38F18003B077C /* OpenWorkoutTrackerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278D931328E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerTests" */;
+			buildPhases = (
+				278D92CC28E38F18003B077C /* Sources */,
+				278D92CD28E38F18003B077C /* Frameworks */,
+				278D92CE28E38F18003B077C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				278D92D228E38F18003B077C /* PBXTargetDependency */,
+			);
+			name = OpenWorkoutTrackerTests;
+			productName = OpenWorkoutTrackerTests;
+			productReference = 278D92D028E38F18003B077C /* OpenWorkoutTrackerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		278D92D928E38F18003B077C /* OpenWorkoutTrackerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278D931628E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerUITests" */;
+			buildPhases = (
+				278D92D628E38F18003B077C /* Sources */,
+				278D92D728E38F18003B077C /* Frameworks */,
+				278D92D828E38F18003B077C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				278D92DC28E38F18003B077C /* PBXTargetDependency */,
+			);
+			name = OpenWorkoutTrackerUITests;
+			productName = OpenWorkoutTrackerUITests;
+			productReference = 278D92DA28E38F18003B077C /* OpenWorkoutTrackerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278D930C28E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker Watch App" */;
+			buildPhases = (
+				278D92E228E38F18003B077C /* Sources */,
+				278D92E328E38F18003B077C /* Frameworks */,
+				278D92E428E38F18003B077C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OpenWorkoutTracker Watch App";
+			productName = "OpenWorkoutTracker Watch App";
+			productReference = 278D92E628E38F18003B077C /* OpenWorkoutTracker Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		278D92F728E38F19003B077C /* OpenWorkoutTracker Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278D931928E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker Watch AppTests" */;
+			buildPhases = (
+				278D92F428E38F19003B077C /* Sources */,
+				278D92F528E38F19003B077C /* Frameworks */,
+				278D92F628E38F19003B077C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				278D92FA28E38F19003B077C /* PBXTargetDependency */,
+			);
+			name = "OpenWorkoutTracker Watch AppTests";
+			productName = "OpenWorkoutTracker Watch AppTests";
+			productReference = 278D92F828E38F19003B077C /* OpenWorkoutTracker Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		278D930128E38F19003B077C /* OpenWorkoutTracker Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 278D931C28E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker Watch AppUITests" */;
+			buildPhases = (
+				278D92FE28E38F19003B077C /* Sources */,
+				278D92FF28E38F19003B077C /* Frameworks */,
+				278D930028E38F19003B077C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				278D930428E38F19003B077C /* PBXTargetDependency */,
+			);
+			name = "OpenWorkoutTracker Watch AppUITests";
+			productName = "OpenWorkoutTracker Watch AppUITests";
+			productReference = 278D930228E38F19003B077C /* OpenWorkoutTracker Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		278D92B828E38F17003B077C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1400;
+				LastUpgradeCheck = 1400;
+				TargetAttributes = {
+					278D92BF28E38F17003B077C = {
+						CreatedOnToolsVersion = 14.0;
+						LastSwiftMigration = 1400;
+					};
+					278D92CF28E38F18003B077C = {
+						CreatedOnToolsVersion = 14.0;
+						TestTargetID = 278D92BF28E38F17003B077C;
+					};
+					278D92D928E38F18003B077C = {
+						CreatedOnToolsVersion = 14.0;
+						TestTargetID = 278D92BF28E38F17003B077C;
+					};
+					278D92E528E38F18003B077C = {
+						CreatedOnToolsVersion = 14.0;
+					};
+					278D92F728E38F19003B077C = {
+						CreatedOnToolsVersion = 14.0;
+						TestTargetID = 278D92E528E38F18003B077C;
+					};
+					278D930128E38F19003B077C = {
+						CreatedOnToolsVersion = 14.0;
+						TestTargetID = 278D92E528E38F18003B077C;
+					};
+				};
+			};
+			buildConfigurationList = 278D92BB28E38F17003B077C /* Build configuration list for PBXProject "OpenWorkoutTracker-Swift" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 278D92B728E38F17003B077C;
+			productRefGroup = 278D92C128E38F17003B077C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				278D92BF28E38F17003B077C /* OpenWorkoutTracker */,
+				278D92CF28E38F18003B077C /* OpenWorkoutTrackerTests */,
+				278D92D928E38F18003B077C /* OpenWorkoutTrackerUITests */,
+				278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */,
+				278D92F728E38F19003B077C /* OpenWorkoutTracker Watch AppTests */,
+				278D930128E38F19003B077C /* OpenWorkoutTracker Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		278D92BE28E38F17003B077C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278D92CB28E38F18003B077C /* Preview Assets.xcassets in Resources */,
+				278D92C828E38F18003B077C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92CE28E38F18003B077C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92D828E38F18003B077C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92E428E38F18003B077C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278D92F328E38F19003B077C /* Preview Assets.xcassets in Resources */,
+				278D92F028E38F19003B077C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92F628E38F19003B077C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D930028E38F19003B077C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		278D92BC28E38F17003B077C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2740DFDF28E460E200293B71 /* Squat.cpp in Sources */,
+				2740DFD128E460E200293B71 /* MovingActivity.cpp in Sources */,
+				2740E11628EF758500293B71 /* ProfileVM.swift in Sources */,
+				2740E06528E4D98300293B71 /* Peaks.cpp in Sources */,
+				2740DFD228E460E200293B71 /* WorkoutPlanGenerator.cpp in Sources */,
+				2740E12028F0E83000293B71 /* NewIntervalSessionView.swift in Sources */,
+				2740DFD828E460E200293B71 /* Cycling.cpp in Sources */,
+				2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */,
+				2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */,
+				2740DFE028E460E200293B71 /* VO2MaxCalculator.cpp in Sources */,
+				2740E12528F2D3F000293B71 /* ApiClient.swift in Sources */,
+				2740E04A28E4CFFD00293B71 /* Distance.cpp in Sources */,
+				2740DFF128E460E200293B71 /* LiftingActivity.cpp in Sources */,
+				2740E03228E4CE1C00293B71 /* KmlFileReader.cpp in Sources */,
+				2740DFFF28E4CD0B00293B71 /* UnitConverter.cpp in Sources */,
+				2740DF6028E4600800293B71 /* SettingsView.swift in Sources */,
+				2740E04628E4CFFD00293B71 /* KMeans.cpp in Sources */,
+				2740DFD428E460E200293B71 /* PullUpAnalyzer.cpp in Sources */,
+				2740E11428EDFEB700293B71 /* NumbersOnly.swift in Sources */,
+				2740DFDB28E460E200293B71 /* PullUp.cpp in Sources */,
+				2740DFE628E460E200293B71 /* BenchPress.cpp in Sources */,
+				2740DFF528E460E200293B71 /* SwimPlanGenerator.cpp in Sources */,
+				2740DFE728E460E200293B71 /* BenchPressAnalyzer.cpp in Sources */,
+				270422562902409C00FD02D4 /* TagsView.swift in Sources */,
+				2740DFD028E460E200293B71 /* PushUpAnalyzer.cpp in Sources */,
+				2740E04828E4CFFD00293B71 /* Signals.cpp in Sources */,
+				2740DFF628E460E200293B71 /* GForceAnalyzer.cpp in Sources */,
+				2740DFEA28E460E200293B71 /* Swim.cpp in Sources */,
+				2740DFE428E460E200293B71 /* ActivityFactory.cpp in Sources */,
+				278D92C628E38F17003B077C /* ContentView.swift in Sources */,
+				2740DFF328E460E200293B71 /* PoolSwim.cpp in Sources */,
+				2740E08C28E6316E00293B71 /* WorkoutsView.swift in Sources */,
+				2740E0AD28E6758500293B71 /* PacePlansVM.swift in Sources */,
+				2740E03928E4CE1C00293B71 /* GpxFileReader.cpp in Sources */,
+				2740E08928E629CE00293B71 /* GearView.swift in Sources */,
+				2740E11828F0DCC200293B71 /* HealthManager.swift in Sources */,
+				2740E05A28E4D0C700293B71 /* DataExporter.cpp in Sources */,
+				2740E03128E4CE1C00293B71 /* FitFileWriter.cpp in Sources */,
+				2740DF5D28E4600800293B71 /* ActivityView.swift in Sources */,
+				2740DFF028E460E200293B71 /* ChinUpAnalyzer.cpp in Sources */,
+				2740DFE128E460E200293B71 /* Activity.cpp in Sources */,
+				2740E07228E4E75000293B71 /* ActivitiesVM.swift in Sources */,
+				2740DFEB28E460E200293B71 /* Workout.cpp in Sources */,
+				2740E07E28E5DEC500293B71 /* BluetoothScanner.swift in Sources */,
+				2740DFCE28E460E200293B71 /* WorkoutFactory.cpp in Sources */,
+				2740DFDC28E460E200293B71 /* SquatAnalyzer.cpp in Sources */,
+				2740E07328E4E75300293B71 /* LiveActivityVM.swift in Sources */,
+				2740DFE828E460E200293B71 /* Hike.cpp in Sources */,
+				2740E0AF28E67C0600293B71 /* GearVM.swift in Sources */,
+				2740E11D28F0E81400293B71 /* NewPacePlanView.swift in Sources */,
+				2740E02E28E4CE1C00293B71 /* File.cpp in Sources */,
+				2740E07B28E5DEC500293B71 /* HeartRateService.swift in Sources */,
+				2740E03728E4CE1C00293B71 /* ZwoFileWriter.cpp in Sources */,
+				2740DFD628E460E200293B71 /* FtpCalculator.cpp in Sources */,
+				2740DFD728E460E200293B71 /* UnitMgr.cpp in Sources */,
+				2740E0A528E644EE00293B71 /* SensorMgr.swift in Sources */,
+				2740DFE328E460E200293B71 /* OpenWaterSwim.cpp in Sources */,
+				2740E03428E4CE1C00293B71 /* GpxFileWriter.cpp in Sources */,
+				2740DFEC28E460E200293B71 /* Walk.cpp in Sources */,
+				2740E0AB28E6757300293B71 /* IntervalSessionsVM.swift in Sources */,
+				2740DFE528E460E200293B71 /* StationaryCycling.cpp in Sources */,
+				2740DFDD28E460E200293B71 /* GForceAnalyzerFactory.cpp in Sources */,
+				2740E12228F233A200293B71 /* StoredActivityVM.swift in Sources */,
+				2740DFEE28E460E200293B71 /* Run.cpp in Sources */,
+				2740DFCD28E460E200293B71 /* TrainingPaceCalculator.cpp in Sources */,
+				2704224F28FCDE1B00FD02D4 /* CreateLoginView.swift in Sources */,
+				2740DFF228E460E200293B71 /* BikePlanGenerator.cpp in Sources */,
+				2740DFEF28E460E200293B71 /* ChinUp.cpp in Sources */,
+				2704225128FDEE0200FD02D4 /* SensorChartView.swift in Sources */,
+				2740E03828E4CE1C00293B71 /* CsvFileWriter.cpp in Sources */,
+				2740E08328E60CFA00293B71 /* ProfileView.swift in Sources */,
+				2740E12828F4425A00293B71 /* EditShoesView.swift in Sources */,
+				2740E08F28E6318000293B71 /* PacePlansView.swift in Sources */,
+				2740E10E28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */,
+				2740E07C28E5DEC500293B71 /* BluetoothServices.swift in Sources */,
+				2740E04728E4CFFD00293B71 /* Double.cpp in Sources */,
+				2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */,
+				2740E03628E4CE1C00293B71 /* TextFileReader.cpp in Sources */,
+				2740E05628E4D0C700293B71 /* Database.cpp in Sources */,
+				2740E09C28E6344400293B71 /* Preferences.swift in Sources */,
+				2740E10B28EB5AD600293B71 /* Accelerometer.swift in Sources */,
+				2740DF6228E4600800293B71 /* AboutView.swift in Sources */,
+				2704224528F84C6400FD02D4 /* ActivityPreferencesView.swift in Sources */,
+				2740E09228E6319700293B71 /* IntervalSessionsView.swift in Sources */,
+				2740DFDA28E460E200293B71 /* Treadmill.cpp in Sources */,
+				2740DFE928E460E200293B71 /* Triathlon.cpp in Sources */,
+				2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */,
+				2740DFCF28E460E200293B71 /* PushUp.cpp in Sources */,
+				2740DFDE28E460E200293B71 /* ActivityMgr.mm in Sources */,
+				2740E07D28E5DEC500293B71 /* CyclingPowerService.swift in Sources */,
+				2740E03328E4CE1C00293B71 /* TcxFileWriter.cpp in Sources */,
+				2740DF5C28E4600800293B71 /* HistoryView.swift in Sources */,
+				2740E03528E4CE1C00293B71 /* XmlFileReader.cpp in Sources */,
+				2740DFD928E460E200293B71 /* PlanGenerator.cpp in Sources */,
+				2740E09528E631A000293B71 /* SensorsView.swift in Sources */,
+				2740E09F28E643FD00293B71 /* ActivityPreferences.swift in Sources */,
+				2740E02D28E4CE1C00293B71 /* XmlFileWriter.cpp in Sources */,
+				2740E05928E4D0C700293B71 /* DataImporter.cpp in Sources */,
+				2704224B28FB7B2900FD02D4 /* BarChartView.swift in Sources */,
+				2740DFED28E460E200293B71 /* MountainBiking.cpp in Sources */,
+				2740E0A828E645C300293B71 /* WorkoutsVM.swift in Sources */,
+				2740E0FD28E913BF00293B71 /* CommonApp.swift in Sources */,
+				2704224728F850A900FD02D4 /* WorkoutDetailsView.swift in Sources */,
+				2704224D28FCDDF600FD02D4 /* LoginView.swift in Sources */,
+				2740DFF428E460E200293B71 /* RunPlanGenerator.cpp in Sources */,
+				2740E04928E4CFFD00293B71 /* Statistics.cpp in Sources */,
+				2740E00828E4CDA500293B71 /* User.cpp in Sources */,
+				2740DFD528E460E200293B71 /* WorkoutScheduler.cpp in Sources */,
+				2740E05828E4D0C700293B71 /* WorkoutImporter.cpp in Sources */,
+				2740E05728E4D0C700293B71 /* HeatMapGenerator.cpp in Sources */,
+				2740E02F28E4CE1C00293B71 /* ZwoFileReader.cpp in Sources */,
+				2740E10828EB5ABF00293B71 /* LocationSensor.swift in Sources */,
+				2740E09828E632CE00293B71 /* StatisticsView.swift in Sources */,
+				2740E0A228E6441C00293B71 /* BroadcastManager.swift in Sources */,
+				2740DF6128E4600800293B71 /* HistoryDetailsView.swift in Sources */,
+				278D92C428E38F17003B077C /* PhoneApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92CC28E38F18003B077C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278D92D528E38F18003B077C /* OpenWorkoutTrackerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92D628E38F18003B077C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278D92DF28E38F18003B077C /* OpenWorkoutTrackerUITests.swift in Sources */,
+				278D92E128E38F18003B077C /* OpenWorkoutTrackerUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92E228E38F18003B077C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2740E0C828E7028C00293B71 /* SwimPlanGenerator.cpp in Sources */,
+				2740E0BC28E7028C00293B71 /* ChinUpAnalyzer.cpp in Sources */,
+				2740E0DB28E7029900293B71 /* DataImporter.cpp in Sources */,
+				2740E0B328E7028C00293B71 /* IntensityCalculator.cpp in Sources */,
+				2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */,
+				2740E0E228E702AD00293B71 /* GpxFileReader.cpp in Sources */,
+				2740E0C228E7028C00293B71 /* UnitMgr.cpp in Sources */,
+				2740E0C628E7028C00293B71 /* PullUpAnalyzer.cpp in Sources */,
+				278D932A28E38FE7003B077C /* HistoryView.swift in Sources */,
+				2740E0D328E7028C00293B71 /* RunPlanGenerator.cpp in Sources */,
+				2740E0ED28E702C600293B71 /* Statistics.cpp in Sources */,
+				2740E0E428E702AD00293B71 /* File.cpp in Sources */,
+				278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */,
+				2740E0B528E7028C00293B71 /* WorkoutFactory.cpp in Sources */,
+				2740E0E728E702AD00293B71 /* FitFileWriter.cpp in Sources */,
+				2740E0F228E702DD00293B71 /* Peaks.cpp in Sources */,
+				2740E0BF28E7028C00293B71 /* PushUpAnalyzer.cpp in Sources */,
+				278D932B28E38FE7003B077C /* SettingsView.swift in Sources */,
+				2740E0BE28E7028C00293B71 /* Hike.cpp in Sources */,
+				2740E06D28E4E5BA00293B71 /* LiveActivityVM.swift in Sources */,
+				2740E0BB28E7028C00293B71 /* VO2MaxCalculator.cpp in Sources */,
+				2740E09D28E6344400293B71 /* Preferences.swift in Sources */,
+				2740E0CE28E7028C00293B71 /* FtpCalculator.cpp in Sources */,
+				2740E0C028E7028C00293B71 /* PullUp.cpp in Sources */,
+				2740E0A028E643FD00293B71 /* ActivityPreferences.swift in Sources */,
+				2740E0D528E7028C00293B71 /* Walk.cpp in Sources */,
+				2740E12328F233A200293B71 /* StoredActivityVM.swift in Sources */,
+				2740E0EB28E702C600293B71 /* Distance.cpp in Sources */,
+				278D92EE28E38F18003B077C /* ContentView.swift in Sources */,
+				2740E0EE28E702C600293B71 /* KMeans.cpp in Sources */,
+				2740E0DA28E7029900293B71 /* DataExporter.cpp in Sources */,
+				2740E0C128E7028C00293B71 /* TrainingPaceCalculator.cpp in Sources */,
+				2740E0CA28E7028C00293B71 /* ChinUp.cpp in Sources */,
+				2740E0DE28E702AD00293B71 /* TcxFileReader.cpp in Sources */,
+				2740E10128EB41D600293B71 /* BluetoothServices.swift in Sources */,
+				2740E0DF28E702AD00293B71 /* XmlFileWriter.cpp in Sources */,
+				2740E10328EB41DB00293B71 /* HeartRateService.swift in Sources */,
+				2740E0EC28E702C600293B71 /* Double.cpp in Sources */,
+				2740E11B28F0E5EC00293B71 /* IntervalSessionsVM.swift in Sources */,
+				278D932728E38FE7003B077C /* WatchApp.swift in Sources */,
+				2740E0C428E7028C00293B71 /* ActivityFactory.cpp in Sources */,
+				2740E0D228E7028C00293B71 /* SquatAnalyzer.cpp in Sources */,
+				2740E0B728E7028C00293B71 /* PlanGenerator.cpp in Sources */,
+				2740E0D028E7028C00293B71 /* StationaryCycling.cpp in Sources */,
+				2740E0B028E7023800293B71 /* Activity.cpp in Sources */,
+				2740E10C28EB5AD600293B71 /* Accelerometer.swift in Sources */,
+				2740E0D128E7028C00293B71 /* MovingActivity.cpp in Sources */,
+				2740E0D428E7028C00293B71 /* Treadmill.cpp in Sources */,
+				2740E0D728E7028C00293B71 /* ActivityMgr.mm in Sources */,
+				2740E0EA28E702AD00293B71 /* TcxFileWriter.cpp in Sources */,
+				2740E0B828E7028C00293B71 /* GForceAnalyzerFactory.cpp in Sources */,
+				2740E0A628E644EE00293B71 /* SensorMgr.swift in Sources */,
+				2740E0C328E7028C00293B71 /* BikePlanGenerator.cpp in Sources */,
+				2740E0BA28E7028C00293B71 /* LiftingActivity.cpp in Sources */,
+				2740E0E928E702AD00293B71 /* KmlFileReader.cpp in Sources */,
+				2740E0F028E702CD00293B71 /* User.cpp in Sources */,
+				2740E0D828E7028C00293B71 /* Cycling.cpp in Sources */,
+				2740E0C528E7028C00293B71 /* Swim.cpp in Sources */,
+				2740E0C928E7028C00293B71 /* OpenWaterSwim.cpp in Sources */,
+				2740E0E828E702AD00293B71 /* ZwoFileWriter.cpp in Sources */,
+				2740E0B628E7028C00293B71 /* Squat.cpp in Sources */,
+				2740E0A328E6441C00293B71 /* BroadcastManager.swift in Sources */,
+				2740E0B128E7028C00293B71 /* PushUp.cpp in Sources */,
+				278D932628E38FE7003B077C /* ActivitiesVM.swift in Sources */,
+				278D932828E38FE7003B077C /* AboutView.swift in Sources */,
+				2740E0D928E7029900293B71 /* Database.cpp in Sources */,
+				2740E0EF28E702C600293B71 /* Signals.cpp in Sources */,
+				2740E0B428E7028C00293B71 /* Run.cpp in Sources */,
+				2740E0C728E7028C00293B71 /* WorkoutPlanGenerator.cpp in Sources */,
+				2740E0FB28E90CE300293B71 /* CommonApp.swift in Sources */,
+				2740E0E328E702AD00293B71 /* TextFileReader.cpp in Sources */,
+				2740E0DC28E7029900293B71 /* HeatMapGenerator.cpp in Sources */,
+				2740E0E628E702AD00293B71 /* XmlFileReader.cpp in Sources */,
+				2740E0E128E702AD00293B71 /* CsvFileWriter.cpp in Sources */,
+				2740E0DD28E7029900293B71 /* WorkoutImporter.cpp in Sources */,
+				278D932928E38FE7003B077C /* ActivityView.swift in Sources */,
+				2740E0D628E7028C00293B71 /* BenchPress.cpp in Sources */,
+				2740E12628F2D3F000293B71 /* ApiClient.swift in Sources */,
+				2740E0CC28E7028C00293B71 /* Triathlon.cpp in Sources */,
+				2740E0CF28E7028C00293B71 /* BenchPressAnalyzer.cpp in Sources */,
+				2740E10028EB41D300293B71 /* BluetoothScanner.swift in Sources */,
+				2740E10928EB5ABF00293B71 /* LocationSensor.swift in Sources */,
+				2740E0CB28E7028C00293B71 /* MountainBiking.cpp in Sources */,
+				2740E11928F0DCC200293B71 /* HealthManager.swift in Sources */,
+				2740E0BD28E7028C00293B71 /* PoolSwim.cpp in Sources */,
+				2740E0B928E7028C00293B71 /* GForceAnalyzer.cpp in Sources */,
+				2740E0CD28E7028C00293B71 /* Workout.cpp in Sources */,
+				2740E0E528E702AD00293B71 /* GpxFileWriter.cpp in Sources */,
+				2740E10F28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */,
+				2740E0B228E7028C00293B71 /* WorkoutScheduler.cpp in Sources */,
+				2740E0E028E702AD00293B71 /* ZwoFileReader.cpp in Sources */,
+				2740E0F128E702D300293B71 /* UnitConverter.cpp in Sources */,
+				2740E10228EB41D800293B71 /* CyclingPowerService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92F428E38F19003B077C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278D92FD28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		278D92FE28E38F19003B077C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				278D930728E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift in Sources */,
+				278D930928E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		278D92D228E38F18003B077C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 278D92BF28E38F17003B077C /* OpenWorkoutTracker */;
+			targetProxy = 278D92D128E38F18003B077C /* PBXContainerItemProxy */;
+		};
+		278D92DC28E38F18003B077C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 278D92BF28E38F17003B077C /* OpenWorkoutTracker */;
+			targetProxy = 278D92DB28E38F18003B077C /* PBXContainerItemProxy */;
+		};
+		278D92E928E38F18003B077C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */;
+			targetProxy = 278D92E828E38F18003B077C /* PBXContainerItemProxy */;
+		};
+		278D92FA28E38F19003B077C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */;
+			targetProxy = 278D92F928E38F19003B077C /* PBXContainerItemProxy */;
+		};
+		278D930428E38F19003B077C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */;
+			targetProxy = 278D930328E38F19003B077C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		278D930A28E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		278D930B28E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		278D930D28E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = F42C985T48;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "OpenWorkoutTracker-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mjs-software.OpenWorkoutTracker";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		278D930E28E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = F42C985T48;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "OpenWorkoutTracker-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mjs-software.OpenWorkoutTracker";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+		278D931128E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = OpenWorkoutTracker.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iPhone App/Preview Content\"";
+				DEVELOPMENT_TEAM = F42C985T48;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "OpenWorkoutTracker-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		278D931228E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = OpenWorkoutTracker.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iPhone App/Preview Content\"";
+				DEVELOPMENT_TEAM = F42C985T48;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "OpenWorkoutTracker-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		278D931428E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTrackerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWorkoutTracker";
+			};
+			name = Debug;
+		};
+		278D931528E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTrackerTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWorkoutTracker";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		278D931728E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTrackerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OpenWorkoutTracker;
+			};
+			name = Debug;
+		};
+		278D931828E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTrackerUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = OpenWorkoutTracker;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		278D931A28E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWorkoutTracker Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		278D931B28E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWorkoutTracker Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+		278D931D28E38F19003B077C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "OpenWorkoutTracker Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		278D931E28E38F19003B077C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "OpenWorkoutTracker Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		278D92BB28E38F17003B077C /* Build configuration list for PBXProject "OpenWorkoutTracker-Swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D930A28E38F19003B077C /* Debug */,
+				278D930B28E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278D930C28E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D930D28E38F19003B077C /* Debug */,
+				278D930E28E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278D931028E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D931128E38F19003B077C /* Debug */,
+				278D931228E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278D931328E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D931428E38F19003B077C /* Debug */,
+				278D931528E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278D931628E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTrackerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D931728E38F19003B077C /* Debug */,
+				278D931828E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278D931928E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D931A28E38F19003B077C /* Debug */,
+				278D931B28E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		278D931C28E38F19003B077C /* Build configuration list for PBXNativeTarget "OpenWorkoutTracker Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				278D931D28E38F19003B077C /* Debug */,
+				278D931E28E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 278D92B828E38F17003B077C /* Project object */;
+}

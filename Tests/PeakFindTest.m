@@ -88,14 +88,15 @@
 
 					// Refresh the database metadata.
 					InitializeHistoricalActivityList();
-					XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
-					XCTAssert(SaveHistoricalActivitySummaryDataById([activityId UTF8String]));
-					XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
+					size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+					XCTAssert(CreateHistoricalActivityObject(activityIndex));
+					XCTAssert(SaveHistoricalActivitySummaryData(activityIndex));
+					XCTAssert(LoadAllHistoricalActivitySensorData(activityIndex));
 
 					// For debugging.
 					[super printActivityAttributes:activityId];
 
-					ActivityAttributeType numReps = QueryHistoricalActivityAttributeById([activityId UTF8String], ACTIVITY_ATTRIBUTE_REPS);
+					ActivityAttributeType numReps = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_REPS);
 					XCTAssert(numReps.value.intVal > 0);
 					
 					// Clean up.

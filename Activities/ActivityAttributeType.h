@@ -9,6 +9,7 @@
 #define __ACTIVITY_ATTRIBUTE_TYPE__
 
 #include <time.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "UnitSystem.h"

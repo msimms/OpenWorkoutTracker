@@ -65,8 +65,9 @@
 				XCTAssert(ImportActivityFromFile([destFileName UTF8String], ACTIVITY_TYPE_RUNNING, [activityId UTF8String]));
 
 				InitializeHistoricalActivityList();
-				XCTAssert(CreateHistoricalActivityObjectById([activityId UTF8String]));
-				XCTAssert(LoadAllHistoricalActivitySensorDataById([activityId UTF8String]));
+				size_t activityIndex = ConvertActivityIdToActivityIndex([activityId UTF8String]);
+				XCTAssert(CreateHistoricalActivityObject(activityIndex));
+				XCTAssert(LoadAllHistoricalActivitySensorData(activityIndex));
 				XCTAssert(ExportActivityFromDatabase([activityId UTF8String], FILE_FIT, [[tempUrl resourceSpecifier] UTF8String]));
 				XCTAssert(DeleteActivityFromDatabase([activityId UTF8String]));
 

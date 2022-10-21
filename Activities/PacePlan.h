@@ -16,6 +16,7 @@ typedef struct PacePlan
 {
 	std::string  planId;               // unique identifier
 	std::string  name;                 // name
+	std::string  description;          // description
 	double       targetPaceInMinKm;    // target pace (in min/km)
 	double       targetDistanceInKms;  // target distance (in kilometers)
 	double       splits;               // desired splits (in min/km)
