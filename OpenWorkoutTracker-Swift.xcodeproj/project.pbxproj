@@ -15,6 +15,8 @@
 		2704224F28FCDE1B00FD02D4 /* CreateLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */; };
 		2704225128FDEE0200FD02D4 /* SensorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225028FDEE0200FD02D4 /* SensorChartView.swift */; };
 		270422562902409C00FD02D4 /* TagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270422552902409C00FD02D4 /* TagsView.swift */; };
+		2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
+		2704225C2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
 		2740DF5C28E4600800293B71 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5528E4600800293B71 /* HistoryView.swift */; };
 		2740DF5D28E4600800293B71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5628E4600800293B71 /* ActivityView.swift */; };
 		2740DF6028E4600800293B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5928E4600800293B71 /* SettingsView.swift */; };
@@ -90,7 +92,7 @@
 		2740E06828E4DA1000293B71 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2740E06728E4DA0100293B71 /* libsqlite3.0.tbd */; };
 		2740E06A28E4DA2000293B71 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2740E06928E4DA1A00293B71 /* libxml2.2.tbd */; };
 		2740E06D28E4E5BA00293B71 /* LiveActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E06B28E4E54500293B71 /* LiveActivityVM.swift */; };
-		2740E07228E4E75000293B71 /* ActivitiesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D931F28E38FE7003B077C /* ActivitiesVM.swift */; };
+		2740E07228E4E75000293B71 /* HistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D931F28E38FE7003B077C /* HistoryVM.swift */; };
 		2740E07328E4E75300293B71 /* LiveActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E06B28E4E54500293B71 /* LiveActivityVM.swift */; };
 		2740E07B28E5DEC500293B71 /* HeartRateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07728E5DEC500293B71 /* HeartRateService.swift */; };
 		2740E07C28E5DEC500293B71 /* BluetoothServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E07828E5DEC500293B71 /* BluetoothServices.swift */; };
@@ -224,13 +226,14 @@
 		278D92FD28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92FC28E38F19003B077C /* OpenWorkoutTracker_Watch_AppTests.swift */; };
 		278D930728E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D930628E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift */; };
 		278D930928E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D930828E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift */; };
-		278D932628E38FE7003B077C /* ActivitiesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D931F28E38FE7003B077C /* ActivitiesVM.swift */; };
+		278D932628E38FE7003B077C /* HistoryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D931F28E38FE7003B077C /* HistoryVM.swift */; };
 		278D932728E38FE7003B077C /* WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932028E38FE7003B077C /* WatchApp.swift */; };
 		278D932828E38FE7003B077C /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932128E38FE7003B077C /* AboutView.swift */; };
 		278D932928E38FE7003B077C /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932228E38FE7003B077C /* ActivityView.swift */; };
 		278D932A28E38FE7003B077C /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932328E38FE7003B077C /* HistoryView.swift */; };
 		278D932B28E38FE7003B077C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932428E38FE7003B077C /* SettingsView.swift */; };
 		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
+		27F1979B290722BF006FEAD9 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F19799290722A9006FEAD9 /* ComplicationViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -294,6 +297,7 @@
 		2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLoginView.swift; sourceTree = "<group>"; };
 		2704225028FDEE0200FD02D4 /* SensorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
 		270422552902409C00FD02D4 /* TagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsView.swift; sourceTree = "<group>"; };
+		2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CyclingRadarService.swift; path = LibBluetooth/mac/Source_Swift/CyclingRadarService.swift; sourceTree = "<group>"; };
 		2740DF5528E4600800293B71 /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		2740DF5628E4600800293B71 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		2740DF5928E4600800293B71 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -535,13 +539,14 @@
 		278D930228E38F19003B077C /* OpenWorkoutTracker Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OpenWorkoutTracker Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		278D930628E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTracker_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		278D930828E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		278D931F28E38FE7003B077C /* ActivitiesVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivitiesVM.swift; sourceTree = "<group>"; };
+		278D931F28E38FE7003B077C /* HistoryVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryVM.swift; sourceTree = "<group>"; };
 		278D932028E38FE7003B077C /* WatchApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchApp.swift; sourceTree = "<group>"; };
 		278D932128E38FE7003B077C /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		278D932228E38FE7003B077C /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		278D932328E38FE7003B077C /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		278D932428E38FE7003B077C /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		278D932528E38FE7003B077C /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
+		27F19799290722A9006FEAD9 /* ComplicationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -861,8 +866,8 @@
 		2740E07128E4E6D000293B71 /* View Models */ = {
 			isa = PBXGroup;
 			children = (
-				278D931F28E38FE7003B077C /* ActivitiesVM.swift */,
 				2740E0AE28E67C0600293B71 /* GearVM.swift */,
+				278D931F28E38FE7003B077C /* HistoryVM.swift */,
 				2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */,
 				2740E06B28E4E54500293B71 /* LiveActivityVM.swift */,
 				2740E0AC28E6758500293B71 /* PacePlansVM.swift */,
@@ -880,6 +885,7 @@
 				2740E07828E5DEC500293B71 /* BluetoothServices.swift */,
 				2740E10D28EB5B4C00293B71 /* CyclingCadenceService.swift */,
 				2740E07928E5DEC500293B71 /* CyclingPowerService.swift */,
+				2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */,
 				2740E07728E5DEC500293B71 /* HeartRateService.swift */,
 			);
 			name = LibBluetooth;
@@ -1020,6 +1026,7 @@
 			children = (
 				278D932128E38FE7003B077C /* AboutView.swift */,
 				278D932228E38FE7003B077C /* ActivityView.swift */,
+				27F19799290722A9006FEAD9 /* ComplicationViews.swift */,
 				278D92ED28E38F18003B077C /* ContentView.swift */,
 				278D932528E38FE7003B077C /* HistoryDetailsView.swift */,
 				278D932328E38FE7003B077C /* HistoryView.swift */,
@@ -1320,7 +1327,7 @@
 				2740DF5D28E4600800293B71 /* ActivityView.swift in Sources */,
 				2740DFF028E460E200293B71 /* ChinUpAnalyzer.cpp in Sources */,
 				2740DFE128E460E200293B71 /* Activity.cpp in Sources */,
-				2740E07228E4E75000293B71 /* ActivitiesVM.swift in Sources */,
+				2740E07228E4E75000293B71 /* HistoryVM.swift in Sources */,
 				2740DFEB28E460E200293B71 /* Workout.cpp in Sources */,
 				2740E07E28E5DEC500293B71 /* BluetoothScanner.swift in Sources */,
 				2740DFCE28E460E200293B71 /* WorkoutFactory.cpp in Sources */,
@@ -1355,6 +1362,7 @@
 				2740E10E28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */,
 				2740E07C28E5DEC500293B71 /* BluetoothServices.swift in Sources */,
 				2740E04728E4CFFD00293B71 /* Double.cpp in Sources */,
+				2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */,
 				2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */,
 				2740E03628E4CE1C00293B71 /* TextFileReader.cpp in Sources */,
 				2740E05628E4D0C700293B71 /* Database.cpp in Sources */,
@@ -1451,6 +1459,7 @@
 				2740E0EE28E702C600293B71 /* KMeans.cpp in Sources */,
 				2740E0DA28E7029900293B71 /* DataExporter.cpp in Sources */,
 				2740E0C128E7028C00293B71 /* TrainingPaceCalculator.cpp in Sources */,
+				2704225C2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */,
 				2740E0CA28E7028C00293B71 /* ChinUp.cpp in Sources */,
 				2740E0DE28E702AD00293B71 /* TcxFileReader.cpp in Sources */,
 				2740E10128EB41D600293B71 /* BluetoothServices.swift in Sources */,
@@ -1482,7 +1491,7 @@
 				2740E0B628E7028C00293B71 /* Squat.cpp in Sources */,
 				2740E0A328E6441C00293B71 /* BroadcastManager.swift in Sources */,
 				2740E0B128E7028C00293B71 /* PushUp.cpp in Sources */,
-				278D932628E38FE7003B077C /* ActivitiesVM.swift in Sources */,
+				278D932628E38FE7003B077C /* HistoryVM.swift in Sources */,
 				278D932828E38FE7003B077C /* AboutView.swift in Sources */,
 				2740E0D928E7029900293B71 /* Database.cpp in Sources */,
 				2740E0EF28E702C600293B71 /* Signals.cpp in Sources */,
@@ -1512,6 +1521,7 @@
 				2740E0E028E702AD00293B71 /* ZwoFileReader.cpp in Sources */,
 				2740E0F128E702D300293B71 /* UnitConverter.cpp in Sources */,
 				2740E10228EB41D800293B71 /* CyclingPowerService.swift in Sources */,
+				27F1979B290722BF006FEAD9 /* ComplicationViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1754,6 +1764,7 @@
 				INFOPLIST_FILE = "OpenWorkoutTracker-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
@@ -1795,6 +1806,7 @@
 				INFOPLIST_FILE = "OpenWorkoutTracker-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";

@@ -475,7 +475,8 @@ bool Database::RetrieveBikes(std::vector<Bike>& bikes)
 			
 			bike.id = sqlite3_column_int64(statement, 0);
 			bike.name.append((const char*)sqlite3_column_text(statement, 1));
-			bike.description.append((const char*)sqlite3_column_text(statement, 2));
+			if (sqlite3_column_text(statement, 2)) // old versions of the database don't have this field
+				bike.description.append((const char*)sqlite3_column_text(statement, 2));
 			bike.weightKg = sqlite3_column_double(statement, 3);
 			bike.computedWheelCircumferenceMm = sqlite3_column_double(statement, 4);
 			bike.timeAdded = (time_t)sqlite3_column_int64(statement, 5);

@@ -17,8 +17,6 @@ struct HistoryDetailsView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: StoredActivityVM
-	@State private var name: String = ""
-	@State private var description: String = ""
 	@State private var showingDeleteConfirmation: Bool = false
 	@State private var showingTrimSelection: Bool = false
 	@State private var showingActivityTypeSelection: Bool = false
@@ -47,15 +45,15 @@ struct HistoryDetailsView: View {
 			VStack(alignment: .leading) {
 				Text("Name")
 					.bold()
-				TextField("Name", text: $name)
-					.onChange(of: name) { value in
-						showingUpdateNameError = !self.activityVM.updateActivityName(name: self.name)
+				TextField("Name", text: self.$activityVM.name)
+					.onChange(of: self.activityVM.name) { value in
+						showingUpdateNameError = !self.activityVM.updateActivityName()
 					}
 				Text("Description")
 					.bold()
-				TextField("Description", text: $description, axis: .vertical)
-					.onChange(of: description) { value in
-						showingUpdateDescriptionError = !self.activityVM.updateActivityDescription(description: self.description)
+				TextField("Description", text: self.$activityVM.description, axis: .vertical)
+					.onChange(of: self.activityVM.description) { value in
+						showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
 					}
 					.lineLimit(2...10)
 			}
@@ -158,7 +156,7 @@ struct HistoryDetailsView: View {
 						}
 					}
 					.confirmationDialog("New Activity Type", isPresented: $showingActivityTypeSelection, titleVisibility: .visible) {
-						ForEach(ActivitiesVM.getActivityTypes(), id: \.self) { item in
+						ForEach(HistoryVM.getActivityTypes(), id: \.self) { item in
 							Button(item) {
 								UpdateActivityType(self.activityVM.activityId, item)
 							}

@@ -6,20 +6,22 @@
 import Foundation
 import MapKit
 
-let VALUE_NOT_SET_STR = "--"
+let VALUE_NOT_SET_STR: String = "--"
+let COUNTDOWN_SECS: UInt = 4 // one more than 3 to handle the edge condition
 
 struct AttributeNameCallbackType {
 	var names: Array<String>
 }
 
-func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>)
-{
+func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let attributeName = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
 	let typedPointer = context!.bindMemory(to: AttributeNameCallbackType.self, capacity: 1)
 	typedPointer.pointee.names.append(attributeName)
 }
 
 class LiveActivityVM : ObservableObject {
+	@Published var currentMessage: String = ""
+
 	@Published var title1: String = "Title"
 	@Published var title2: String = "Title"
 	@Published var title3: String = "Title"
@@ -56,6 +58,7 @@ class LiveActivityVM : ObservableObject {
 	var isInProgress: Bool = false
 	var isPaused: Bool = false
 	var isStopped: Bool = false // Has been stopped (after being started)
+	var countdownSecsRemaining: UInt = 0
 
 	var locationTrack: Array<CLLocationCoordinate2D> = []
 	var currentLat: Double = 0.0
@@ -69,9 +72,11 @@ class LiveActivityVM : ObservableObject {
 	private var activityAttributePrefs: Array<String> = []
 	private var timer: Timer = Timer()
 	private var activityId: String = ""
+	private var activityType: String = ""
 
 	init (activityType: String) {
 		self.create(activityType: activityType)
+		self.activityType = activityType
 	}
 	
 	func create(activityType: String) {
@@ -111,10 +116,22 @@ class LiveActivityVM : ObservableObject {
 
 				let distance = DistanceBetweenCoordinates(currentCoordinate, self.autoStartCoordinate)
 				if distance > MIN_AUTOSTART_DISTANCE {
-					self.start()
+					if !self.doStart() {
+						NSLog("Failed to start the activity after enough movement to trigger an autostart.")
+					}
 				}
 			}
 
+			// Countdown?
+			else if self.countdownSecsRemaining > 0 {
+				self.countdownSecsRemaining -= 1
+				if self.countdownSecsRemaining == 0 {
+					if !self.doStart() {
+						NSLog("Failed to start the activity after the countdown timer expired.")
+					}
+				}
+			}
+			
 			// Split beep?
 			
 			// Update the location and route.
@@ -190,7 +207,7 @@ class LiveActivityVM : ObservableObject {
 		}
 	}
 	
-	/// Enables (or disables) auto start.
+	/// @brief Enables (or disables) auto start.
 	func setAutoStart() -> Bool {
 		let currentState = IsAutoStartEnabled()
 		self.autoStartEnabled = !currentState
@@ -205,16 +222,27 @@ class LiveActivityVM : ObservableObject {
 		return self.autoStartEnabled
 	}
 
-	/// Starts the activity.
-	func start() {
+	/// @brief Helper function for starting an activity..
+	func doStart() -> Bool {
 		if StartActivity(activityId) {
 			self.isInProgress = true
 			self.isPaused = false
 			self.autoStartEnabled = false
+			return true
 		}
+		return false
 	}
 
-	/// Stops the activity.
+	/// @brief Starts the activity. Called from the UI.
+	func start() -> Bool {
+		if ActivityPreferences.getCountdown(activityType: self.activityType) {
+			self.countdownSecsRemaining = COUNTDOWN_SECS
+			return true
+		}
+		return doStart()
+	}
+
+	/// @brief Stops the activity.
 	func stop() -> String {
 		if StopCurrentActivity() {
 
@@ -235,12 +263,12 @@ class LiveActivityVM : ObservableObject {
 		return self.activityId
 	}
 
-	/// Pauses the activity.
+	/// @brief Pauses the activity.
 	func pause() {
 		self.isPaused = PauseCurrentActivity()
 	}
 
-	/// Starts a new lap.
+	/// @brief Starts a new lap.
 	func lap() {
 		StartNewLap()
 	}
@@ -260,7 +288,7 @@ class LiveActivityVM : ObservableObject {
 		return activityId
 	}
 
-	/// Lists all the attributes that are applicable to the current activity.
+	/// @brief Lists all the attributes that are applicable to the current activity.
 	func getActivityAttributeNames() -> Array<String> {
 		let pointer = UnsafeMutablePointer<AttributeNameCallbackType>.allocate(capacity: 1)
 
@@ -281,10 +309,10 @@ class LiveActivityVM : ObservableObject {
 		self.activityAttributePrefs.insert(attributeName, at: position)
 
 		let activityPrefs = ActivityPreferences()
-		activityPrefs.setActivityLayout(activityType: self.getCurrentActivityType(), layout: self.activityAttributePrefs)
+		activityPrefs.setActivityLayout(activityType: self.activityType, layout: self.activityAttributePrefs)
 	}
 
-	/// Utility function for formatting things like Elapsed Time, etc.
+	/// @brief Utility function for formatting things like Elapsed Time, etc.
 	static func formatSeconds(numSeconds: time_t) -> String {
 		let SECS_PER_DAY  = 86400
 		let SECS_PER_HOUR = 3600
@@ -308,7 +336,7 @@ class LiveActivityVM : ObservableObject {
 		return String(format: "%02d:%02d", minutes, seconds)
 	}
 
-	/// Utility function for converting an activity attribute structure to something human readable.
+	/// @brief Utility function for converting an activity attribute structure to something human readable.
 	static func formatActivityValue(attribute: ActivityAttributeType) -> String {
 		if attribute.valid {
 			switch attribute.valueType {
@@ -349,7 +377,7 @@ class LiveActivityVM : ObservableObject {
 		}
 	}
 
-	/// Utility function for formatting unit strings.
+	/// @brief Utility function for formatting unit strings.
 	static func formatActivityMeasureType(measureType: ActivityAttributeMeasureType) -> String {
 		switch measureType {
 		case MEASURE_NOT_SET:

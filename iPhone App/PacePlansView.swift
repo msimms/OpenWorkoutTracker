@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct PacePlansView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@StateObject private var pacePlansVM = PacePlansVM()
 	@State private var showingNewView: Bool = false
 
@@ -27,6 +28,7 @@ struct PacePlansView: View {
 			}
 			ToolbarItem(placement: .bottomBar) {
 				NavigationLink("+", destination: NewPacePlanView())
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 			}
 		}
 	}

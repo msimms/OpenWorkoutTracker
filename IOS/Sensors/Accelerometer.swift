@@ -25,11 +25,22 @@ class Accelerometer {
 #else
 			self.motionManager.accelerometerUpdateInterval = 0.1
 #endif
-			
-			self.motionManager.startAccelerometerUpdates()
+
+			self.motionManager.startAccelerometerUpdates(to: OperationQueue.main, withHandler: { accelerometerData, error in
+				let rawData = self.motionManager.accelerometerData
+				let now = UInt64(Date().timeIntervalSince1970)
+				let theTimeMs = now * 1000
+				var accelData: Dictionary<String, Double> = [:]
+				accelData[KEY_NAME_ACCEL_X] = rawData?.acceleration.x
+				accelData[KEY_NAME_ACCEL_Y] = rawData?.acceleration.y
+				accelData[KEY_NAME_ACCEL_Z] = rawData?.acceleration.z
+				accelData[KEY_NAME_ACCELEROMETER_TIMESTAMP_MS] = Double(theTimeMs)
+				let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACCELEROMETER), object: accelData)
+				NotificationCenter.default.post(notification)
+			})
 		}
 	}
-	
+
 	func stop() {
 		if self.motionManager.isAccelerometerAvailable {
 			self.motionManager.stopAccelerometerUpdates()

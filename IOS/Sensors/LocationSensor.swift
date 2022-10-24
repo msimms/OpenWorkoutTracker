@@ -54,9 +54,21 @@ class LocationSensor : NSObject, CLLocationManagerDelegate {
 				}
 			}
 
+			// Write to the database, maybe.
 			if processLocation {
 				ProcessLocationReading(latitude, longitude, alt, horizontalAccuracy, verticalAccuracy, UInt64(theTimeMs))
 			}
+
+			// Inform any subscribers.
+			var locData: Dictionary<String, Double> = [:]
+			locData[KEY_NAME_LATITUDE] = latitude
+			locData[KEY_NAME_LONGITUDE] = longitude
+			locData[KEY_NAME_ALTITUDE] = alt
+			locData[KEY_NAME_HORIZONTAL_ACCURACY] = horizontalAccuracy
+			locData[KEY_NAME_VERTICAL_ACCURACY] = verticalAccuracy
+			locData[KEY_NAME_LOCATION_TIMESTAMP_MS] = Double(theTimeMs)
+			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOCATION), object: locData)
+			NotificationCenter.default.post(notification)
 
 			self.currentLocation = location
 		}

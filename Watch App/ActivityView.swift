@@ -7,7 +7,7 @@ import SwiftUI
 
 struct ActivityView: View {
 	@Environment(\.dismiss) var dismiss
-	@StateObject var activity: LiveActivityVM
+	@StateObject var activityVM: LiveActivityVM
 	@StateObject private var pacePlansVM = PacePlansVM()
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
 	@State private var showingStopSelection: Bool = false
@@ -17,96 +17,112 @@ struct ActivityView: View {
 	var activityType: String
 
 	var body: some View {
-		VStack(alignment: .center) {
-			// Top item
-			HStack() {
-				Text(activity.value1).font(.system(size: 48))
-			}
-
-			// Minor items
-			HStack() {
-				Text(activity.value2).font(.system(size: 24))
-				VStack() {
-					Text(activity.title2).font(.system(size: 12))
-					Text(activity.units2).font(.system(size: 12))
+		ScrollView() {
+			VStack(alignment: .center) {
+				// Top item
+				HStack() {
+					Text(self.activityVM.value1).font(.system(size: 48))
 				}
-			}
-			HStack() {
-				Text(activity.value3).font(.system(size: 24))
-				VStack() {
-					Text(activity.title3).font(.system(size: 12))
-					Text(activity.units3).font(.system(size: 12))
+				
+				// Countdown timer
+				if self.activityVM.countdownSecsRemaining > 0 {
+					Image(systemName: String(format: "%u.circle.fill", self.activityVM.countdownSecsRemaining))
+						.resizable()
+						.frame(width: 128.0, height: 128.0)
 				}
-			}
-
-			// Start/Stop/Cancel
-			HStack() {
-				Button {
-					self.dismiss()
-				} label: {
-					Text("Cancel")
-				}
-				Button {
-					if self.activity.isPaused {
-						self.activity.pause()
+				
+				// Normal view
+				else {
+					// Minor items
+					HStack() {
+						Text(self.activityVM.value2).font(.system(size: 24))
+						VStack() {
+							Text(self.activityVM.title2).font(.system(size: 12))
+							Text(self.activityVM.units2).font(.system(size: 12))
+						}
 					}
-					else if self.activity.isInProgress {
-						self.showingStopSelection = true
+					HStack() {
+						Text(self.activityVM.value3).font(.system(size: 24))
+						VStack() {
+							Text(self.activityVM.title3).font(.system(size: 12))
+							Text(self.activityVM.units3).font(.system(size: 12))
+						}
 					}
-					else {
-						self.activity.start()
-					}
-				} label: {
-					Label(self.activity.isInProgress ? "Stop" : "Start", systemImage: self.activity.isInProgress ? "stop" : "play")
-				}
-				.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
-					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: ACTIVITY_INDEX_UNKNOWN, activityId: self.activity.stop()))) {
-						Text("Stop")
-					}
-					Button {
-						self.activity.pause()
-					} label: {
-						Label("Pause", systemImage: "pause")
-					}
-				}
-			}
-			
-			HStack() {
-				// Interval sessions
-				Button {
-					self.showingIntervalSessionSelection = true
-				} label: {
-					Text("Intervals")
-				}
-				.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
-					ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
+					
+					// Start/Stop/Cancel
+					HStack() {
 						Button {
-							SetCurrentIntervalWorkout(item.id.uuidString)
+							self.dismiss()
 						} label: {
-							Text(item.name)
+							Text("Cancel")
+						}
+						Button {
+							if self.activityVM.isPaused {
+								self.activityVM.pause()
+							}
+							else if self.activityVM.isInProgress {
+								self.showingStopSelection = true
+							}
+							else if !self.activityVM.start() {
+								NSLog("Error starting when the Start button was manually pressed.")
+							}
+						} label: {
+							Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? "stop" : "play")
+						}
+						.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
+							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: ACTIVITY_INDEX_UNKNOWN, activityId: self.activityVM.stop(), name: "", description: ""))) {
+								Text("Stop")
+							}
+							Button {
+								self.activityVM.pause()
+							} label: {
+								Label("Pause", systemImage: "pause")
+							}
+						}
+					}
+					
+					HStack() {
+						// Interval sessions
+						if self.intervalSessionsVM.intervalSessions.count > 0 {
+							Button {
+								self.showingIntervalSessionSelection = true
+							} label: {
+								Text("Intervals")
+							}
+							.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
+								ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
+									Button {
+										SetCurrentIntervalWorkout(item.id.uuidString)
+									} label: {
+										Text(item.name)
+									}
+								}
+							}
+							.opacity(self.activityVM.isInProgress ? 0 : 1)
+						}
+						
+						// Pace plans
+						if self.pacePlansVM.pacePlans.count > 0 {
+							Button {
+								self.showingPacePlanSelection = true
+							} label: {
+								Text("Pace Plan")
+							}
+							.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
+								ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
+									Button {
+										SetCurrentPacePlan(item.id.uuidString)
+									} label: {
+										Text(item.name)
+									}
+								}
+							}
+							.opacity(self.activityVM.isInProgress ? 0 : 1)
 						}
 					}
 				}
-				.opacity(self.activity.isInProgress ? 0 : 1)
-
-				// Pace plans
-				Button {
-					self.showingPacePlanSelection = true
-				} label: {
-					Text("Pace Plan")
-				}
-				.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
-					ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
-						Button {
-							SetCurrentPacePlan(item.id.uuidString)
-						} label: {
-							Text(item.name)
-						}
-					}
-				}
-				.opacity(self.activity.isInProgress ? 0 : 1)
 			}
 		}
-		.navigationTitle(activityType)
+		.navigationTitle(self.activityType)
     }
 }

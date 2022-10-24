@@ -7,4 +7,6 @@
 #include "ActivityType.h"
 #include "ActivityViewType.h"
 #include "AxisName.h"
+#include "Notifications.h"
 #include "Params.h"
+#include "Urls.h"

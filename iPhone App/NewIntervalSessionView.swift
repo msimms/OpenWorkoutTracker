@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct NewIntervalSessionView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
 	@State private var session: IntervalSession = IntervalSession()
 	@State private var name: String = ""

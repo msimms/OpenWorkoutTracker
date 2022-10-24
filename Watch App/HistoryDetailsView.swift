@@ -12,36 +12,37 @@ struct HistoryDetailsView: View {
 	@StateObject var activityVM: StoredActivityVM
 
 	var body: some View {
-		VStack(alignment: .center) {
-			// Map
-			Map(
-				coordinateRegion: .constant(
-					MKCoordinateRegion(
-						center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
-						span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+		ScrollView() {
+			VStack(alignment: .center) {
+				// Map
+				Map(
+					coordinateRegion: .constant(
+						MKCoordinateRegion(
+							center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
+							span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+						)
 					)
 				)
-			)
-			.ignoresSafeArea()
-			.frame(height: 100)
-			.padding(5)
-
-			// Attributes Summary
-			List(self.activityVM.getActivityAttributes(), id: \.self) { item in
-				HStack() {
-					Text(item)
-					Spacer()
-					Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+				.frame(height: 100)
+				.padding(5)
+				
+				// Attributes Summary
+				List(self.activityVM.getActivityAttributes(), id: \.self) { item in
+					VStack() {
+						Text(item)
+							.bold()
+						Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+					}
 				}
+				.listStyle(.plain)
+				
+				// Close button
+				Button("Close") {
+					self.dismiss()
+				}
+				.bold()
+				.foregroundColor(colorScheme == .dark ? .white : .black)
 			}
-			.listStyle(.plain)
-
-			// Close button
-			Button("Close") {
-				self.dismiss()
-			}
-			.bold()
-			.foregroundColor(colorScheme == .dark ? .white : .black)
 		}
 	}
 }

@@ -1,5 +1,5 @@
 //
-//  ActivitiesVM.swift
+//  HistoryVM.swift
 //  Created by Michael Simms on 9/23/22.
 //
 
@@ -9,8 +9,7 @@ struct ActivityTypeCallbackType {
 	var names: Array<String>
 }
 
-func activityTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>)
-{
+func activityTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let activityType = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
 	let typedPointer = context!.bindMemory(to: ActivityTypeCallbackType.self, capacity: 1)
 	typedPointer.pointee.names.append(activityType)
@@ -21,6 +20,7 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
 		case index
 		case id
 		case name
+		case description
 		case type
 		case startTime
 		case endTime
@@ -29,6 +29,7 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
 	var index: Int = ACTIVITY_INDEX_UNKNOWN
 	var id: String = ""
 	var name: String = ""
+	var description: String = ""
 	var type: String = ""
 	var startTime: Date = Date()
 	var endTime: Date = Date()
@@ -50,7 +51,7 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
 	}
 }
 
-class ActivitiesVM : ObservableObject {
+class HistoryVM : ObservableObject {
 	@Published var historicalActivities: Array<ActivitySummary> = []
 
 	init() {
@@ -79,6 +80,9 @@ class ActivitiesVM : ObservableObject {
 
 			var activityIndex = 0
 			var done = false
+
+			// Minor performance optimization, since we know how many items will be in the list.
+			self.historicalActivities.reserveCapacity(GetNumHistoricalActivities())
 
 			while !done {
 
@@ -111,21 +115,14 @@ class ActivitiesVM : ObservableObject {
 						let activityName = String(cString: activityNamePtr!.assumingMemoryBound(to: CChar.self))
 						let activityType = String(cString: activityTypePtr!.assumingMemoryBound(to: CChar.self))
 
-						for c in activityId {
-							summary.id.append(c)
-						}
-						for c in activityName {
-							summary.name.append(c)
-						}
-						for c in activityType {
-							summary.type.append(c)
-						}
-
+						summary.id = activityId
+						summary.name = activityName
+						summary.type = activityType
 						summary.index = activityIndex
 						summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime))
 						summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime))
 
-						self.historicalActivities.append(summary)
+						self.historicalActivities.insert(summary, at: 0)
 
 						activityIndex += 1
 					}

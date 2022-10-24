@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct GearView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@StateObject var gearVM: GearVM = GearVM()
 	@State private var showingAddSelection: Bool = false
 
@@ -60,6 +61,7 @@ struct GearView: View {
 					} label: {
 						Label("+", systemImage: "plus")
 					}
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 				}
 				.confirmationDialog("What would you like to add?", isPresented: $showingAddSelection, titleVisibility: .visible) {
 					NavigationLink("Bicycle", destination: EditBikeView())

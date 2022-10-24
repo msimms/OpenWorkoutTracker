@@ -8,7 +8,7 @@ import SwiftUI
 struct HistoryView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
-	@StateObject private var activitiesVM = ActivitiesVM()
+	@StateObject private var historyVM = HistoryVM()
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -19,14 +19,16 @@ struct HistoryView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
-			if self.activitiesVM.historicalActivities.count > 0 {
-				List(self.activitiesVM.historicalActivities, id: \.self) { item in
-					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: item.index, activityId: item.id))) {
-						VStack() {
-							Text(item.name)
-								.bold()
+			if self.historyVM.historicalActivities.count > 0 {
+				List(self.historyVM.historicalActivities, id: \.self) { item in
+					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: item.index, activityId: item.id, name: item.name, description: item.description))) {
+						VStack(alignment: .leading) {
+							if item.name.count > 0 {
+								Text(item.name)
+									.bold()
+							}
 							HStack() {
-								Image(systemName: ActivitiesVM.imageNameForActivityType(activityType: item.type))
+								Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
 								Text(item.type)
 									.bold()
 								Spacer()

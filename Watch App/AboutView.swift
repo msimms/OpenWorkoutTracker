@@ -6,13 +6,15 @@
 import SwiftUI
 
 struct AboutView: View {
-    var body: some View {
-        Text("Copyright (c) 2022 by MJ Simms Software, LLC")
-    }
-}
+	@Environment(\.dismiss) var dismiss
 
-struct AboutView_Previews: PreviewProvider {
-    static var previews: some View {
-        AboutView()
+	var body: some View {
+		VStack(alignment: .center) {
+			Text("Copyright (c) 2022 by MJ Simms Software, LLC")
+			Button("Close") {
+				self.dismiss()
+			}
+			.bold()
+		}
     }
 }

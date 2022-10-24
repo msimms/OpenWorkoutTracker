@@ -27,6 +27,7 @@ struct ActivityView: View {
 	@State private var showingActivityAttributeSelection7: Bool = false
 	@State private var showingActivityAttributeSelection8: Bool = false
 	@State private var showingActivityAttributeSelection9: Bool = false
+	@State private var showingStartError: Bool = false
 	var sensorMgr = SensorMgr.shared
 	var broadcastMgr = BroadcastManager.shared
 	var activityType: String = ""
@@ -56,18 +57,23 @@ struct ActivityView: View {
 					// Radar threat display.
 					VStack(alignment: .leading) {
 						GeometryReader { (geometry) in
-							ForEach(self.sensorMgr.threatSummary, id: \.self) { item in
-								let imageY = (item.distance / MAX_THREAT_DISTANCE_METERS) * (geometry.size.height - geometry.size.height)
+							ForEach(self.sensorMgr.radarMeasurements, id: \.self) { measurement in
+								let imageY = (Double(measurement.threatMeters) / MAX_THREAT_DISTANCE_METERS) * geometry.size.height
 
 								Image(systemName: "car.fill")
+									.resizable()
+									.frame(width: 32.0, height: 32.0)
 									.offset(x: 2, y: imageY)
 							}
 						}
 					}
-					.frame(width: self.sensorMgr.radarConnected ? 25 : 0)
+					.frame(width: self.sensorMgr.radarConnected ? 24 : 0)
 					
 					// Main display.
 					VStack(alignment: .center) {
+						
+						// Messages
+						Text(self.activityVM.currentMessage)
 						
 						// Main value
 						VStack(alignment: .center) {
@@ -90,8 +96,15 @@ struct ActivityView: View {
 						}
 						.padding(20)
 						
+						// Countdown timer
+						if self.activityVM.countdownSecsRemaining > 0 {
+							Image(systemName: String(format: "%u.circle.fill", self.activityVM.countdownSecsRemaining))
+								.resizable()
+								.frame(width: 256.0, height: 256.0)
+						}
+
 						// Complex view
-						if self.activityVM.viewType == ACTIVITY_VIEW_COMPLEX {
+						else if self.activityVM.viewType == ACTIVITY_VIEW_COMPLEX {
 							let labelColor = ActivityPreferences.getLabelColor(activityType: self.activityType)
 							let textColor = ActivityPreferences.getTextColor(activityType: self.activityType)
 							
@@ -361,14 +374,24 @@ struct ActivityView: View {
 				// Connectivity icons
 				HStack() {
 					Image(systemName: "car.circle")
+						.resizable()
+						.frame(width: 32.0, height: 32.0)
 						.opacity(self.sensorMgr.radarConnected ? 1 : 0)
 					Image(systemName: "bolt.circle")
+						.resizable()
+						.frame(width: 32.0, height: 32.0)
 						.opacity(self.sensorMgr.powerConnected ? 1 : 0)
 					Image(systemName: "heart.circle")
+						.resizable()
+						.frame(width: 32.0, height: 32.0)
 						.opacity(self.sensorMgr.heartRateConnected ? 1 : 0)
 					Image(systemName: "c.circle")
+						.resizable()
+						.frame(width: 32.0, height: 32.0)
 						.opacity(self.sensorMgr.cadenceConnected ? 1 : 0)
 				}
+				
+				Spacer()
 			}
 		}
 		.toolbar {
@@ -380,6 +403,7 @@ struct ActivityView: View {
 							Image(systemName: "line.3.horizontal.decrease.circle")
 						}
 					}
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.opacity(self.activityVM.isInProgress ? 0 : 1)
 					.help("View preferences")
 
@@ -389,44 +413,51 @@ struct ActivityView: View {
 					} label: {
 						Label("Lap", systemImage: "stopwatch")
 					}
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.opacity(self.activityVM.isInProgress ? 1 : 0)
 					.help("Lap")
 
 					// Interval Session selection button
-					Button {
-						self.showingIntervalSessionSelection = true
-					} label: {
-						Label("Intervals", systemImage: "stopwatch")
-					}
-					.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
-						ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
-							Button {
-								SetCurrentIntervalWorkout(item.id.uuidString)
-							} label: {
-								Text(item.name)
+					if self.intervalSessionsVM.intervalSessions.count > 0 {
+						Button {
+							self.showingIntervalSessionSelection = true
+						} label: {
+							Label("Intervals", systemImage: "stopwatch")
+						}
+						.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
+							ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
+								Button {
+									SetCurrentIntervalWorkout(item.id.uuidString)
+								} label: {
+									Text(item.name)
+								}
 							}
 						}
+						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.opacity(self.activityVM.isInProgress ? 0 : 1)
+						.help("Interval session selection.")
 					}
-					.opacity(self.activityVM.isInProgress ? 0 : 1)
-					.help("Interval session selection.")
 
 					// Pace Plan selection button
-					Button {
-						self.showingPacePlanSelection = true
-					} label: {
-						Label("Pace Plan", systemImage: "arrow.up.arrow.down")
-					}
-					.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
-						ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
-							Button {
-								SetCurrentPacePlan(item.id.uuidString)
-							} label: {
-								Text(item.name)
+					if self.pacePlansVM.pacePlans.count > 0 {
+						Button {
+							self.showingPacePlanSelection = true
+						} label: {
+							Label("Pace Plan", systemImage: "arrow.up.arrow.down")
+						}
+						.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
+							ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
+								Button {
+									SetCurrentPacePlan(item.id.uuidString)
+								} label: {
+									Text(item.name)
+								}
 							}
 						}
+						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.opacity(self.activityVM.isInProgress ? 0 : 1)
+						.help("Pace plan selection.")
 					}
-					.opacity(self.activityVM.isInProgress ? 0 : 1)
-					.help("Pace plan selection.")
 
 					// Page button
 					Button {
@@ -442,6 +473,7 @@ struct ActivityView: View {
 					} label: {
 						Label("Page", systemImage: "book")
 					}
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.help("Will switch between different views/pages.")
 
 					// AutoStart button
@@ -451,7 +483,7 @@ struct ActivityView: View {
 					} label: {
 						Label("Autostart", systemImage: "play.circle")
 					}
-					.foregroundColor(self.activityVM.autoStartEnabled ? .red : .blue)
+					.foregroundColor(self.activityVM.autoStartEnabled ? .red : (colorScheme == .dark ? .white : .black))
 					.help("Autostart. Will start when movement is detected.")
 
 					// Start/Stop/Pause button
@@ -463,13 +495,16 @@ struct ActivityView: View {
 							self.showingStopSelection = true
 						}
 						else {
-							self.activityVM.start()
+							if !self.activityVM.start() {
+								self.showingStartError = true
+							}
 						}
 					} label: {
 						Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
 					}
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
-						NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: ACTIVITY_INDEX_UNKNOWN, activityId: self.activityVM.stop()))) {
+						NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: ACTIVITY_INDEX_UNKNOWN, activityId: self.activityVM.stop(), name: "", description: ""))) {
 							Text("Stop")
 						}
 						Button {
@@ -477,6 +512,8 @@ struct ActivityView: View {
 						} label: {
 							Text("Pause")
 						}
+					}
+					.alert("There was an unspecified error while trying to start the activity.", isPresented: $showingStartError) {
 					}
 				}
 			}

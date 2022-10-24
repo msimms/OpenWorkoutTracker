@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct NewPacePlanView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject private var pacePlansVM = PacePlansVM()
 	@State private var pacePlanId: String = ""
@@ -115,7 +116,7 @@ struct NewPacePlanView: View {
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
+						.foregroundColor(colorScheme == .dark ? .white : .black)
 						.padding()
 				}
 				.alert("Failed to create the pace plan.", isPresented: $showingCreateError) {

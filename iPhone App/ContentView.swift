@@ -13,6 +13,7 @@ struct ContentView: View {
 	@State private var showingViewSelection: Bool = false
 	@State private var showingEditSelection: Bool = false
 	@State private var showingResetConfirmation: Bool = false
+	@State private var isBusy: Bool = false
 
 	var body: some View {
 		NavigationStack() {
@@ -28,11 +29,11 @@ struct ContentView: View {
 					self.showingActivitySelection = true
 				}
 				.confirmationDialog("Select the workout to perform", isPresented: $showingActivitySelection, titleVisibility: .visible) {
-					ForEach(ActivitiesVM.getActivityTypes(), id: \.self) { item in
+					ForEach(HistoryVM.getActivityTypes(), id: \.self) { item in
 						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
 					}
 				}
-				.foregroundColor(colorScheme == .dark ? .white : .black)
+				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 				.padding(10)
 				
@@ -41,14 +42,23 @@ struct ContentView: View {
 					self.showingViewSelection = true
 				}
 				.confirmationDialog("What would you like to view?", isPresented: $showingViewSelection, titleVisibility: .visible) {
-					NavigationLink("History", destination: HistoryView())
+					NavigationLink(destination: HistoryView()) {
+						Text("History")
+					}.simultaneousGesture(TapGesture().onEnded{
+						self.isBusy = true
+					})
+
+					//NavigationLink("History", destination: HistoryView())
 					NavigationLink("Statistics", destination: StatisticsView())
 					NavigationLink("Workouts", destination: WorkoutsView())
 				}
-				.foregroundColor(colorScheme == .dark ? .white : .black)
+				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 				.padding(10)
-				
+				.sheet(isPresented: $isBusy) {
+					ProgressView("Loading...")
+				}
+
 				Spacer()
 				
 				// Edit settings button
@@ -63,13 +73,13 @@ struct ContentView: View {
 					NavigationLink("Pace Plans", destination: PacePlansView())
 					NavigationLink("Gear", destination: GearView())
 				}
-				.foregroundColor(colorScheme == .dark ? .white : .black)
+				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 				.padding(10)
 				
 				// About button
 				NavigationLink("About", destination: AboutView())
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(.black)
 					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 					.padding(10)
 				
@@ -83,7 +93,7 @@ struct ContentView: View {
 					Button("Cancel") {
 					}
 				}
-				.foregroundColor(colorScheme == .dark ? .white : .black)
+				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue", fixedSize: 24))
 				.padding(10)
 			}

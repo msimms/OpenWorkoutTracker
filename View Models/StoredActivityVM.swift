@@ -20,6 +20,8 @@ func tagsTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<Uns
 class StoredActivityVM : ObservableObject {
 	var activityIndex: Int = ACTIVITY_INDEX_UNKNOWN // Index into the cache of loaded activities
 	var activityId: String = ""                     // Unique identifier for the activity
+	var name: String = ""                           // Name of the activity
+	var description: String = ""                    // Description of the activity
 	var locationTrack: Array<CLLocationCoordinate2D> = []
 	var startingLat: Double = 0.0
 	var startingLon: Double = 0.0
@@ -32,7 +34,7 @@ class StoredActivityVM : ObservableObject {
 	var power: Array<(UInt64, Double)> = []
 	var speed: Array<(UInt64, Double)> = []
 
-	init (activityIndex: Int, activityId: String) {
+	init (activityIndex: Int, activityId: String, name: String, description: String) {
 
 		// If a database index wasn't provided then we probably needed to load the activity summary from the database.
 		// The activity index will be zero because it will be the only activity loaded.
@@ -45,6 +47,8 @@ class StoredActivityVM : ObservableObject {
 			self.activityIndex = activityIndex
 		}
 		self.activityId = activityId
+		self.name = name
+		self.description = description
 		self.loadSensorData()
 	}
 
@@ -172,17 +176,17 @@ class StoredActivityVM : ObservableObject {
 	func exportActivity(format: FileFormat) {
 	}
 
-	func updateActivityName(name: String) -> Bool {
-		if UpdateActivityName(self.activityId, name) {
-			ApiClient.shared.setActivityName(activityId: self.activityId, name: name)
+	func updateActivityName() -> Bool {
+		if UpdateActivityName(self.activityId, self.name) {
+			ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name)
 			return true
 		}
 		return false
 	}
 
-	func updateActivityDescription(description: String) -> Bool {
-		if UpdateActivityDescription(self.activityId, description) {
-			ApiClient.shared.setActivityDescription(activityId: self.activityId, description: description)
+	func updateActivityDescription() -> Bool {
+		if UpdateActivityDescription(self.activityId, self.description) {
+			ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description)
 			return true
 		}
 		return false

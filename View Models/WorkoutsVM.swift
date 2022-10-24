@@ -100,9 +100,6 @@ class WorkoutsVM : ObservableObject {
 				else {
 					let summaryObj = WorkoutSummary()
 
-					let decoder = JSONDecoder()
-					decoder.keyDecodingStrategy = .convertFromSnakeCase
-					
 					let workoutJsonStr = String(cString: workoutJsonStrPtr!.assumingMemoryBound(to: CChar.self))
 					let summaryDict = try! JSONSerialization.jsonObject(with: Data(workoutJsonStr.utf8), options: []) as! [String:Any]
 

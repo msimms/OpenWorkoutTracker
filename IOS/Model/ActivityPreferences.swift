@@ -436,8 +436,11 @@ class ActivityPreferences {
 
 		// Default value
 		if mydefaults.object(forKey: keyName) == nil {
-			if activityType == ACTIVITY_TYPE_CHINUP || activityType == ACTIVITY_TYPE_PULLUP ||
-			   activityType == ACTIVITY_TYPE_PUSHUP || activityType == ACTIVITY_TYPE_SQUAT {
+			if activityType == ACTIVITY_TYPE_BENCH_PRESS ||
+			   activityType == ACTIVITY_TYPE_CHINUP ||
+			   activityType == ACTIVITY_TYPE_PULLUP ||
+			   activityType == ACTIVITY_TYPE_PUSHUP ||
+			   activityType == ACTIVITY_TYPE_SQUAT {
 				return true // Three second countdown for strength activities.
 			}
 			else {

@@ -28,6 +28,7 @@ let PREF_NAME_BROADCAST_SHOW_ICON =                   "Broadcast Show Icon"
 let PREF_NAME_ALWAYS_CONNECT =                        "Always Connect"
 let PREF_NAME_WILL_INTEGRATE_HEALTH_KIT_ACTIVITIES =  "Will Integrate HealthKit Activities"
 let PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES =            "Hide HealthKit Duplicates"
+let PREF_NAME_AUTO_SAVE_TO_ICLOUD =                   "Auto Save To iCloud Drive"
 let PREF_NAME_HAS_SHOWN_FIRST_TIME_USE_MSG =          "Has Shown First Time Use Message"
 let PREF_NAME_HAS_SHOWN_PULL_UP_HELP =                "Has Shown Pull Up Help"
 let PREF_NAME_HAS_SHOWN_PUSH_UP_HELP =                "Has Shown Push Up Help"
@@ -224,6 +225,11 @@ class Preferences {
 	static func hideHealthKitDuplicates() -> Bool {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.bool(forKey: PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES)
+	}
+	
+	static func autoSaveToICloudDrive() -> Bool {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.bool(forKey: PREF_NAME_AUTO_SAVE_TO_ICLOUD)
 	}
 	
 	static func hasShownFirstTimeUseMessage() -> Bool {
@@ -515,6 +521,11 @@ class Preferences {
 	static func setHideHealthKitDuplicates(value: Bool) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_HIDE_HEALTH_KIT_DUPLICATES)
+	}
+	
+	static func setAutoSaveToICloudDrive(value: Bool) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_AUTO_SAVE_TO_ICLOUD)
 	}
 	
 	static func setHashShownFirstTimeUseMessage(value: Bool) {

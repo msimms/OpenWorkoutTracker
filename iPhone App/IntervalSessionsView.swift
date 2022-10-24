@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct IntervalSessionsView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
 	
 	var body: some View {
@@ -26,6 +27,7 @@ struct IntervalSessionsView: View {
 			}
 			ToolbarItem(placement: .bottomBar) {
 				NavigationLink("+", destination: NewIntervalSessionView())
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 			}
 		}
 	}

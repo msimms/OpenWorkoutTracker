@@ -6,13 +6,14 @@
 import SwiftUI
 
 struct SettingsView: View {
+	@Environment(\.colorScheme) var colorScheme
 	private var apiClient = ApiClient.shared
-	@State private var preferMetric: Bool = false
+	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
 	@State private var readActivitiesFromHealthKit: Bool = Preferences.willIntegrateHealthKitActivities()
-	@State private var autoSaveActivitiesToICloudDrive: Bool = false
+	@State private var autoSaveActivitiesToICloudDrive: Bool = Preferences.autoSaveToICloudDrive()
 	@State private var hideDuplicateActivities: Bool = Preferences.hideHealthKitDuplicates()
 	@State private var broadcastEnabled: Bool = Preferences.shouldBroadcastToServer()
-	@State private var useHttps: Bool = true
+	@State private var useHttps: Bool = Preferences.broadcastProtocol() == "https"
 	@State private var showBroadcastIcon: Bool = Preferences.broadcastShowIcon()
 	@State private var broadcastServer: String = Preferences.broadcastHostName()
 	@ObservedObject var updateRate = NumbersOnly(initialValue: Preferences.broadcastRate())
@@ -47,6 +48,9 @@ struct SettingsView: View {
 				.bold()
 			VStack(alignment: .center) {
 				Toggle("Auto Save Files to iCloud Drive", isOn: $autoSaveActivitiesToICloudDrive)
+					.onChange(of: autoSaveActivitiesToICloudDrive) { value in
+						Preferences.setAutoSaveToICloudDrive(value: autoSaveActivitiesToICloudDrive)
+					}
 			}
 			.padding(5)
 
@@ -104,6 +108,7 @@ struct SettingsView: View {
 					} label: {
 						Text("Login")
 					}
+					.foregroundColor(colorScheme == .dark ? .white : .black)
 				}
 			}
 		}
