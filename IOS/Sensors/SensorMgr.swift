@@ -151,15 +151,17 @@ class SensorMgr : ObservableObject {
 	}
 
 	func startSensors() {
-		let interestingServices = [ CBUUID(data: BT_SERVICE_HEART_RATE),
-									CBUUID(data: BT_SERVICE_CYCLING_POWER),
-									CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE),
-									CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR) ]
-		
-		self.scanner.startScanningForServices(serviceIdsToScanFor: interestingServices,
-											  peripheralCallbacks: [peripheralDiscovered],
-											  serviceCallbacks: [serviceDiscovered],
-											  valueUpdatedCallbacks: [valueUpdated])
+		if Preferences.shouldScanForSensors() {
+			let interestingServices = [ CBUUID(data: BT_SERVICE_HEART_RATE),
+										CBUUID(data: BT_SERVICE_CYCLING_POWER),
+										CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE),
+										CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR) ]
+			
+			self.scanner.startScanningForServices(serviceIdsToScanFor: interestingServices,
+												  peripheralCallbacks: [peripheralDiscovered],
+												  serviceCallbacks: [serviceDiscovered],
+												  valueUpdatedCallbacks: [valueUpdated])
+		}
 
 		self.location.start()
 		self.accelerometer.start()

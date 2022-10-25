@@ -11,7 +11,7 @@ class BroadcastManager {
 	var locationCache: Array<String> = []      // Locations to be sent
 	var accelerometerCache: Array<String> = [] // Accelerometer readings to be sent
 	var lastCacheFlush: UInt64 = 0             // Unix time of the cache flush
-	var deviceId: String = ""                  // Unique identifier for the device doing the sending
+	var deviceId: String? = Preferences.uuid() // Unique identifier for the device doing the sending
 	var dataBeingSent: String = ""             // Formatted data to be sent
 	var errorSending: Bool = false             // Whether or not the last send was successful
 	var currentActivityId: String = ""         // Cached for performance reasons
@@ -34,16 +34,13 @@ class BroadcastManager {
 		let activityType = String(cString: UnsafeRawPointer(GetCurrentActivityType()).assumingMemoryBound(to: CChar.self))
 		return activityType
 	}
-	
+
 	func displayMessage(text: String) {
-	}
-	
-	func updateBroadcastStatus(status: Bool) {
 	}
 
 	func sendToServer(hostName: String, path: String, data: String, activityId: String, isStopped: Bool) {
 		let protocolStr = Preferences.broadcastProtocol()
-		let urlStr = String(format: "%@://%@/%s", protocolStr, hostName, path)
+		let urlStr = String(format: "%@://%@/%@", protocolStr, hostName, path)
 		let postLength = String(format: "%lu", data.count)
 		
 		var request = URLRequest(url: URL(string: urlStr)!)
@@ -58,19 +55,11 @@ class BroadcastManager {
 		let dataTask = session.dataTask(with: request) { data, response, error in
 			if let httpResponse = response as? HTTPURLResponse {
 				if httpResponse.statusCode == 200 {
-					self.updateBroadcastStatus(status: true)
 					self.dataBeingSent = ""
 					self.errorSending = false
-					
-					if isStopped {
-//						dispatch_async(dispatch_get_main_queue(),^{
-//							[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_BROADCAST_MGR_SENT_ACTIVITY object:activityId];
-//						} );
-					}
 				}
 				else {
 //					self.displayMessage(text: MESSAGE_ERROR_SENDING)
-					self.updateBroadcastStatus(status: false)
 					self.errorSending = true
 				}
 			}
@@ -113,7 +102,7 @@ class BroadcastManager {
 		post += "]"
 		
 		// Write cached accelerometer data to the JSON string.
-		post += "accelerometer\": ["
+		post += ", \"accelerometer\": ["
 		var numAccelObjsBeingSent = 0
 		for text in self.accelerometerCache {
 			if numAccelObjsBeingSent > 0 {
@@ -126,20 +115,20 @@ class BroadcastManager {
 		post += "]"
 		
 		// Add the device ID to the JSON string.
-		if self.deviceId.count > 0 {
-			post += String(format: ",\n\"%s\":\"%@\"", KEY_NAME_DEVICE_ID, self.deviceId)
+		if self.deviceId != nil && self.deviceId!.count > 0 {
+			post += String(format: ",\n\"%@\":\"%@\"", KEY_NAME_DEVICE_ID, self.deviceId!)
 		}
 		
 		// Add the activity ID to the JSON string.
-		post += String(format: ",\n\"%s\":\"%@\"", KEY_NAME_ACTIVITY_ID, self.currentActivityId)
+		post += String(format: ",\n\"%@\":\"%@\"", KEY_NAME_ACTIVITY_ID, self.currentActivityId)
 		
 		// Add the activity type to the JSON string.
-		post += String(format: ",\n\"%s\":\"%s\"", KEY_NAME_ACTIVITY_TYPE, self.currentActivityType)
+		post += String(format: ",\n\"%@\":\"%@\"", KEY_NAME_ACTIVITY_TYPE, self.currentActivityType)
 		
 		// Add the user name to the JSON string.
 		let userName = Preferences.broadcastUserName()
 		if userName != nil && userName!.count > 0 {
-			post += String(format: ",\n\"%s\":\"%@\"", ACTIVITY_ATTRIBUTE_USER_NAME, userName!)
+			post += String(format: ",\n\"%@\":\"%@\"", ACTIVITY_ATTRIBUTE_USER_NAME, userName!)
 		}
 		post += "}\n"
 		
@@ -154,6 +143,7 @@ class BroadcastManager {
 		// Flush at the user-specified interval. Default to 60 seconds if one was not specified.
 		let rate = Preferences.broadcastRate()
 		
+		// If we have data to send and it's been long enough since we last sent then flush the cache.
 		if ((self.locationCache.count > 0 || self.accelerometerCache.count > 0) && (UInt64(time(nil)) - self.lastCacheFlush > rate)) {
 			self.flushGlobalBroadcastCacheRest(isStopped: false)
 		}
@@ -280,10 +270,11 @@ class BroadcastManager {
 		self.locationCache.removeAll()
 		self.accelerometerCache.removeAll()
 		self.lastCacheFlush = UInt64(time(nil))
+		self.deviceId = Preferences.uuid()
 		self.currentActivityId = self.getCurrentActivityId()
 		self.currentActivityType = self.getCurrentActivityType()
 	}
-	
+
 	/// @brief This method is called in response to an activity stopped notification.
 	@objc func activityStopped(notification: NSNotification) {
 		self.flushGlobalBroadcastCacheRest(isStopped: true)

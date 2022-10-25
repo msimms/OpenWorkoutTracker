@@ -103,7 +103,6 @@ struct ProfileView: View {
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
 			}
 			.alert("Invalid value", isPresented: self.$showingHeightError) {
-				Button("OK", role: .cancel) { }
 			}
 			.padding(5)
 
@@ -126,7 +125,6 @@ struct ProfileView: View {
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
 			}
 			.alert("Invalid value", isPresented: self.$showingWeightError) {
-				Button("OK", role: .cancel) { }
 			}
 			.padding(5)
 
@@ -149,7 +147,6 @@ struct ProfileView: View {
 				Text(" watts")
 			}
 			.alert("Invalid value", isPresented: self.$showingFtpError) {
-				Button("OK", role: .cancel) { }
 			}
 			.padding(5)
 

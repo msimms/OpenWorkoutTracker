@@ -43,52 +43,46 @@ struct HistoryDetailsView: View {
 			
 			// Name and Description
 			VStack(alignment: .leading) {
-				Text("Name")
-					.bold()
-				TextField("Name", text: self.$activityVM.name)
-					.onChange(of: self.activityVM.name) { value in
-						showingUpdateNameError = !self.activityVM.updateActivityName()
-					}
-				Text("Description")
-					.bold()
-				TextField("Description", text: self.$activityVM.description, axis: .vertical)
-					.onChange(of: self.activityVM.description) { value in
-						showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
-					}
-					.lineLimit(2...10)
+				Section(header: Text("Name")) {
+					TextField("Name", text: self.$activityVM.name)
+						.onChange(of: self.activityVM.name) { value in
+							showingUpdateNameError = !self.activityVM.updateActivityName()
+						}
+				}
+				Section(header: Text("Description")) {
+					TextField("Description", text: self.$activityVM.description, axis: .vertical)
+						.onChange(of: self.activityVM.description) { value in
+							showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
+						}
+						.lineLimit(2...10)
+				}
 			}
-			.padding(10)
 
 			// Attributes Summary
 			VStack(alignment: .leading) {
-				Text("Details")
-					.bold()
-					.padding(10)
-				List(self.activityVM.getActivityAttributes(), id: \.self) { item in
-					HStack() {
-						Text(item)
-						Spacer()
-						Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+				Section(header: Text("Attributes")) {
+					List(self.activityVM.getActivityAttributes(), id: \.self) { item in
+						HStack() {
+							Text(item)
+							Spacer()
+							Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+						}
 					}
+					.listStyle(.plain)
 				}
-				.listStyle(.plain)
-			}
-			
-			// Charts and Graphs
-			VStack(alignment: .leading) {
-				Text("Charts")
-					.bold()
-					.padding(10)
-				List() {
-					NavigationLink("Heart Rate", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Heart Rate", data: self.activityVM.heartRate))
-					if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
-						NavigationLink("Cadence", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Cadence", data: self.activityVM.cadence))
-						NavigationLink("Pace", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Pace", data: self.activityVM.pace))
-						NavigationLink("Power", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Power", data: self.activityVM.power))
-						NavigationLink("Speed", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Speed", data: self.activityVM.speed))
+
+				Section(header: Text("Charts")) {
+					List() {
+						NavigationLink("Heart Rate", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Heart Rate", data: self.activityVM.heartRate))
+						if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
+							NavigationLink("Cadence", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Cadence", data: self.activityVM.cadence))
+							NavigationLink("Pace", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Pace", data: self.activityVM.pace))
+							NavigationLink("Power", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Power", data: self.activityVM.power))
+							NavigationLink("Speed", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Speed", data: self.activityVM.speed))
+						}
 					}
+					.listStyle(.plain)
 				}
-				.listStyle(.plain)
 			}
 		}
 		.padding(10)
@@ -156,7 +150,7 @@ struct HistoryDetailsView: View {
 						}
 					}
 					.confirmationDialog("New Activity Type", isPresented: $showingActivityTypeSelection, titleVisibility: .visible) {
-						ForEach(HistoryVM.getActivityTypes(), id: \.self) { item in
+						ForEach(CommonApp.getActivityTypes(), id: \.self) { item in
 							Button(item) {
 								UpdateActivityType(self.activityVM.activityId, item)
 							}

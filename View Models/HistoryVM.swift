@@ -5,16 +5,6 @@
 
 import Foundation
 
-struct ActivityTypeCallbackType {
-	var names: Array<String>
-}
-
-func activityTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
-	let activityType = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
-	let typedPointer = context!.bindMemory(to: ActivityTypeCallbackType.self, capacity: 1)
-	typedPointer.pointee.names.append(activityType)
-}
-
 class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
 	enum CodingKeys: CodingKey {
 		case index
@@ -56,20 +46,6 @@ class HistoryVM : ObservableObject {
 
 	init() {
 		self.buildHistoricalActivitiesList()
-	}
-
-	static func getActivityTypes() -> Array<String> {
-		let pointer = UnsafeMutablePointer<ActivityTypeCallbackType>.allocate(capacity: 1)
-
-		defer {
-			pointer.deinitialize(count: 1)
-			pointer.deallocate()
-		}
-
-		pointer.pointee = ActivityTypeCallbackType(names: [])
-		GetActivityTypes(activityTypeCallback, pointer, true, true, true)
-		let activityTypes = pointer.pointee.names
-		return activityTypes
 	}
 
 	func buildHistoricalActivitiesList() {

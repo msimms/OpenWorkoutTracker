@@ -7,6 +7,7 @@ import SwiftUI
 import MapKit
 
 struct HistoryDetailsView: View {
+	@Environment(\.defaultMinListRowHeight) var minRowHeight
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: StoredActivityVM
@@ -27,15 +28,18 @@ struct HistoryDetailsView: View {
 				.padding(5)
 				
 				// Attributes Summary
+
 				List(self.activityVM.getActivityAttributes(), id: \.self) { item in
-					VStack() {
+					HStack() {
 						Text(item)
 							.bold()
+						Spacer()
 						Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
 					}
+					.padding(5)
 				}
-				.listStyle(.plain)
-				
+				.frame(minHeight: minRowHeight * 3)
+
 				// Close button
 				Button("Close") {
 					self.dismiss()

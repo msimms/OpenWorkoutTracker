@@ -224,10 +224,19 @@ class LiveActivityVM : ObservableObject {
 
 	/// @brief Helper function for starting an activity..
 	func doStart() -> Bool {
-		if StartActivity(activityId) {
+		if StartActivity(self.activityId) {
+
+			// Update state.
 			self.isInProgress = true
 			self.isPaused = false
 			self.autoStartEnabled = false
+
+			// Tell any subscribers that we've started an activity.
+			var notificationData: Dictionary<String, String> = [:]
+			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId
+			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STARTED), object: notificationData)
+			NotificationCenter.default.post(notification)
+
 			return true
 		}
 		return false
@@ -255,10 +264,17 @@ class LiveActivityVM : ObservableObject {
 			// Stop requesting data from sensors.
 			self.sensorMgr.stopSensors()
 
+			// Update state.
 			self.isInProgress = false
 			self.isPaused = false
 			self.autoStartEnabled = false
 			self.isStopped = true
+
+			// Tell any subscribers that we've stopped an activity.
+			var notificationData: Dictionary<String, String> = [:]
+			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId
+			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: notificationData)
+			NotificationCenter.default.post(notification)
 		}
 		return self.activityId
 	}

@@ -29,7 +29,7 @@ struct ContentView: View {
 					self.showingActivitySelection = true
 				}
 				.confirmationDialog("Select the workout to perform", isPresented: $showingActivitySelection, titleVisibility: .visible) {
-					ForEach(HistoryVM.getActivityTypes(), id: \.self) { item in
+					ForEach(CommonApp.getActivityTypes(), id: \.self) { item in
 						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
 					}
 				}

@@ -16,6 +16,7 @@ struct SettingsView: View {
 	@State private var useHttps: Bool = Preferences.broadcastProtocol() == "https"
 	@State private var showBroadcastIcon: Bool = Preferences.broadcastShowIcon()
 	@State private var broadcastServer: String = Preferences.broadcastHostName()
+	@State private var showingLogoutError: Bool = false
 	@ObservedObject var updateRate = NumbersOnly(initialValue: Preferences.broadcastRate())
 
 	var body: some View {
@@ -103,12 +104,24 @@ struct SettingsView: View {
 		.toolbar {
 			ToolbarItem(placement: .bottomBar) {
 				HStack() {
-					Button {
-						//self.apiClient.login()
-					} label: {
-						Text("Login")
+					if self.apiClient.isLoggedIn() {
+						Button("Logout") {
+							if !self.apiClient.logout() {
+								self.showingLogoutError = true
+							}
+						}
+						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.help("Logout")
+						.alert("Failed to logout.", isPresented: $showingLogoutError) {
+						}
 					}
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					else {
+						NavigationLink(destination: LoginView()) {
+							Text("Login")
+						}
+						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.help("Login")
+					}
 				}
 			}
 		}

@@ -178,39 +178,36 @@ class StoredActivityVM : ObservableObject {
 
 	func updateActivityName() -> Bool {
 		if UpdateActivityName(self.activityId, self.name) {
-			ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name)
-			return true
+			return ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name)
 		}
 		return false
 	}
 
 	func updateActivityDescription() -> Bool {
 		if UpdateActivityDescription(self.activityId, self.description) {
-			ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description)
-			return true
+			return ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description)
 		}
 		return false
 	}
 
 	func deleteActivity() -> Bool {
 		if DeleteActivityFromDatabase(self.activityId) {
-			ApiClient.shared.deleteActivity(activityId: self.activityId)
-			return true
+			return ApiClient.shared.deleteActivity(activityId: self.activityId)
 		}
 		return false
 	}
 	
 	func listTags() -> Array<String> {
-		let pointer = UnsafeMutablePointer<ActivityTypeCallbackType>.allocate(capacity: 1)
+		let pointer = UnsafeMutablePointer<TagsTypeCallbackType>.allocate(capacity: 1)
 		
 		defer {
 			pointer.deinitialize(count: 1)
 			pointer.deallocate()
 		}
 		
-		pointer.pointee = ActivityTypeCallbackType(names: [])
+		pointer.pointee = TagsTypeCallbackType(tags: [])
 		RetrieveTags(self.activityId, tagsTypeCallback, pointer)
-		let tags = pointer.pointee.names
+		let tags = pointer.pointee.tags
 		return tags
 	}
 }
