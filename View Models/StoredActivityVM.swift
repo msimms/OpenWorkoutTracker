@@ -44,6 +44,7 @@ class StoredActivityVM : ObservableObject {
 			self.activityIndex = 0
 		}
 		else {
+			CreateHistoricalActivityObject(activityIndex)
 			self.activityIndex = activityIndex
 		}
 		self.activityId = activityId

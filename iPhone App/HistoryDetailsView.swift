@@ -41,14 +41,16 @@ struct HistoryDetailsView: View {
 				.frame(width: 400, height: 200)
 			}
 			
-			// Name and Description
 			VStack(alignment: .leading) {
+				// Name
 				Section(header: Text("Name")) {
 					TextField("Name", text: self.$activityVM.name)
 						.onChange(of: self.activityVM.name) { value in
 							showingUpdateNameError = !self.activityVM.updateActivityName()
 						}
 				}
+
+				// Description
 				Section(header: Text("Description")) {
 					TextField("Description", text: self.$activityVM.description, axis: .vertical)
 						.onChange(of: self.activityVM.description) { value in
@@ -56,10 +58,8 @@ struct HistoryDetailsView: View {
 						}
 						.lineLimit(2...10)
 				}
-			}
 
-			// Attributes Summary
-			VStack(alignment: .leading) {
+				// Attributes Summary
 				Section(header: Text("Attributes")) {
 					List(self.activityVM.getActivityAttributes(), id: \.self) { item in
 						HStack() {
@@ -71,14 +71,15 @@ struct HistoryDetailsView: View {
 					.listStyle(.plain)
 				}
 
+				// Charts
 				Section(header: Text("Charts")) {
 					List() {
-						NavigationLink("Heart Rate", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Heart Rate", data: self.activityVM.heartRate))
+						NavigationLink("Heart Rate", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Heart Rate", data: self.activityVM.heartRate, color: .red))
 						if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
-							NavigationLink("Cadence", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Cadence", data: self.activityVM.cadence))
-							NavigationLink("Pace", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Pace", data: self.activityVM.pace))
-							NavigationLink("Power", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Power", data: self.activityVM.power))
-							NavigationLink("Speed", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Speed", data: self.activityVM.speed))
+							NavigationLink("Cadence", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Cadence", data: self.activityVM.cadence, color: .green))
+							NavigationLink("Pace", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Pace", data: self.activityVM.pace, color: .purple))
+							NavigationLink("Power", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Power", data: self.activityVM.power, color: .blue))
+							NavigationLink("Speed", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Speed", data: self.activityVM.speed, color: .teal))
 						}
 					}
 					.listStyle(.plain)
@@ -150,7 +151,7 @@ struct HistoryDetailsView: View {
 						}
 					}
 					.confirmationDialog("New Activity Type", isPresented: $showingActivityTypeSelection, titleVisibility: .visible) {
-						ForEach(CommonApp.getActivityTypes(), id: \.self) { item in
+						ForEach(CommonApp.activityTypes, id: \.self) { item in
 							Button(item) {
 								UpdateActivityType(self.activityVM.activityId, item)
 							}

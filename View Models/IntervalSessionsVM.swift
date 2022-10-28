@@ -32,6 +32,25 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 		return lhs.id == rhs.id
 	}
 	
+	func validModifiers(activityType: String) -> Array<String> {
+		var modifiers: Array<String> = []
+
+		if self.sets > 0 {
+			modifiers.append("Repititions")
+		}
+		if self.duration == 0 {
+			modifiers.append("Duration")
+		}
+		if self.distance == 0 {
+			modifiers.append("Distance")
+		}
+		modifiers.append("Power")
+		return modifiers
+	}
+	
+	func applyModifier() {
+	}
+
 	func description() -> String {
 		var description: String = ""
 
@@ -113,8 +132,8 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 
 class IntervalSession : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
-	var name: String = ""
-	var sport: String = ""
+	var name: String = "Untitled"
+	var sport: String = ACTIVITY_TYPE_RUNNING
 	var segments: Array<IntervalSegment> = []
 
 	/// Constructor
@@ -136,7 +155,6 @@ class IntervalSession : Identifiable, Hashable, Equatable {
 
 class IntervalSessionsVM : ObservableObject {
 	@Published var intervalSessions: Array<IntervalSession> = []
-	@Published var newSession: Array<IntervalSegment> = []
 
 	/// Constructor
 	init() {
@@ -167,12 +185,12 @@ class IntervalSessionsVM : ObservableObject {
 			}
 		}
 	}
-	
-	func createIntervalSession() -> Bool {
-		return false
+
+	func createIntervalSession(session: IntervalSession) -> Bool {
+		return CreateNewIntervalWorkout(session.id.uuidString, session.name, session.sport)
 	}
-	
-	func deleteIntervalSession(intervalSessionId: String) -> Bool {
-		return DeleteIntervalWorkout(intervalSessionId)
+
+	func deleteIntervalSession(intervalSessionId: UUID) -> Bool {
+		return DeleteIntervalWorkout(intervalSessionId.uuidString)
 	}
 }

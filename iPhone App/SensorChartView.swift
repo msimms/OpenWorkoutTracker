@@ -9,6 +9,7 @@ struct SensorChartView: View {
 	var activityId: String = ""
 	var title: String = ""
 	var data: Array<(UInt64, Double)> = []
+	var color: Color
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -16,8 +17,7 @@ struct SensorChartView: View {
 				.bold()
 			Group() {
 				if self.data.count > 0 {
-					Spacer()
-					LineGraphView(points: self.data)
+					LineGraphView(points: self.data, color: color)
 				}
 				else {
 					Text("No Data")

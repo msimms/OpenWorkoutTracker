@@ -22,16 +22,14 @@ struct HistoryView: View {
 			if self.historyVM.historicalActivities.count > 0 {
 				List(self.historyVM.historicalActivities, id: \.self) { item in
 					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: item.index, activityId: item.id, name: item.name, description: item.description))) {
-						VStack(alignment: .leading) {
-							if item.name.count > 0 {
-								Text(item.name)
-									.bold()
-							}
-							HStack() {
-								Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-								Text(item.type)
-									.bold()
-								Spacer()
+						HStack() {
+							Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
+								.frame(width: 48)
+							VStack(alignment: .leading) {
+								if item.name.count > 0 {
+									Text(item.name)
+										.bold()
+								}
 								Text("\(self.dateFormatter.string(from: item.startTime))")
 							}
 						}

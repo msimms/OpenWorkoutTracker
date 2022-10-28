@@ -2825,6 +2825,7 @@ extern "C" {
 					if (pointIndex < summary.heartRateMonitorReadings.size())
 					{
 						SensorReading& reading = summary.heartRateMonitorReadings.at(pointIndex);
+						(*pointTime) = reading.time;
 						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
 						result = true;
 					}
@@ -2833,6 +2834,7 @@ extern "C" {
 					if (pointIndex < summary.cadenceReadings.size())
 					{
 						SensorReading& reading = summary.cadenceReadings.at(pointIndex);
+						(*pointTime) = reading.time;
 						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
 						result = true;
 					}
@@ -2843,6 +2845,7 @@ extern "C" {
 					if (pointIndex < summary.powerReadings.size())
 					{
 						SensorReading& reading = summary.powerReadings.at(pointIndex);
+						(*pointTime) = reading.time;
 						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
 						result = true;
 					}

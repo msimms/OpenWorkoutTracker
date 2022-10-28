@@ -20,17 +20,6 @@ class CommonApp : ObservableObject {
 
 	@Published var isLoggedIn: Bool = false
 
-	static func getActivityTypes() -> Array<String> {
-		return self.activityTypes
-	}
-	
-	func healthKitCompletion(result: Bool, error: Error?) {
-		if result {
-		}
-		else {
-		}
-	}
-
 	init() {
 		// Initialize the backend, including the database.
 		var baseUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].standardizedFileURL
@@ -47,6 +36,6 @@ class CommonApp : ObservableObject {
 		}
 
 		// Initialize HealthKit.
-		self.healthMgr.requestAuthorization(completion: healthKitCompletion)
+		self.healthMgr.requestAuthorization()
 	}
 }

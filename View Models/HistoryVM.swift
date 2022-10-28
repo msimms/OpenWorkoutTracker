@@ -50,7 +50,6 @@ class HistoryVM : ObservableObject {
 
 	func buildHistoricalActivitiesList() {
 		InitializeHistoricalActivityList()
-		CreateAllHistoricalActivityObjects()
 
 		if LoadAllHistoricalActivitySummaryData() {
 

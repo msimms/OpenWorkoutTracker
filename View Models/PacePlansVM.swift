@@ -68,10 +68,13 @@ class PacePlansVM : ObservableObject {
 		}
 	}
 	
-	func createPacePlan(name: String, description: String, distanceInKms: Double, paceSeconds: UInt, splits: Double) -> Bool {
+	func createPacePlan(name: String, description: String, distanceInKms: Double, targetPaceInMinKm: Double, splits: Double, targetDistanceUnits: UnitSystem, targetPaceUnits: UnitSystem) -> Bool {
 		let planId = UUID().uuidString
 		if CreateNewPacePlan(name, planId) {
-//			if UpdatePacePlanDetails(planId, name, description, double targetPaceInMinKm, distanceInKms, splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime) { }
+			let lastUpdatedTime = time(nil)
+			if UpdatePacePlan(planId, name, description, targetPaceInMinKm, distanceInKms, splits, targetDistanceUnits, targetPaceUnits, lastUpdatedTime) {
+				return true
+			}
 		}
 		return false
 	}

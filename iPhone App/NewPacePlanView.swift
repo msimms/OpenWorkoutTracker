@@ -107,8 +107,8 @@ struct NewPacePlanView: View {
 			// Save and Delete
 			Group() {
 				Button(action: {
-					if self.pacePlansVM.createPacePlan(name: self.name, description: description, distanceInKms: self.distance, paceSeconds: UInt(self.paceSeconds), splits: self.splitSeconds) {
-						dismiss()
+						if self.pacePlansVM.createPacePlan(name: self.name, description: description, distanceInKms: self.distance, targetPaceInMinKm: Double(self.paceSeconds), splits: self.splitSeconds, targetDistanceUnits: self.distanceUnits, targetPaceUnits: self.paceUnits) {
+						self.dismiss()
 					}
 					else {
 						self.showingCreateError = true
@@ -135,7 +135,7 @@ struct NewPacePlanView: View {
 				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: $showingDeleteConfirmation) {
 					Button("Delete") {
 						if self.pacePlansVM.deletePacePlan(pacePlanId: self.pacePlanId) {
-							dismiss()
+							self.dismiss()
 						}
 						else {
 							self.showingDeleteError = true

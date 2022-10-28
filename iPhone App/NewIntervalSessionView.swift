@@ -7,8 +7,9 @@ import SwiftUI
 
 struct NewIntervalSessionView: View {
 	@Environment(\.colorScheme) var colorScheme
+	@Environment(\.dismiss) var dismiss
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
-	@State private var session: IntervalSession = IntervalSession()
+	@State private var newSession: IntervalSession = IntervalSession()
 	@State private var name: String = ""
 	@State private var sport: String = ""
 	@State private var description: String = ""
@@ -18,35 +19,54 @@ struct NewIntervalSessionView: View {
 	@State private var showingIntervalRepsValueSelection: Bool = false
 	@State private var showingSegmentDetailsSelection: Bool = false
 	@State private var showingDeleteConfirmation: Bool = false
+	@State private var showingSportSelection: Bool = false
+	@State private var showingSaveFailedAlert: Bool = false
+	@State private var showingDeleteFailedAlert: Bool = false
+	@State private var showingValueEntryAlert: Bool = false
+	@State private var valueEntry: String = ""
 
 	var body: some View {
 		VStack(alignment: .center) {
 
-			// Metadata: name, description, etc.
 			Group() {
 				Text("Name")
 					.bold()
 				TextField("Name", text: $name)
 					.onChange(of: self.name) { value in
-						self.session.name = value
+						self.newSession.name = value
 					}
+			}
+			.padding(5)
 				
-				Text("Sport")
-					.bold()
-				Button("") {
+			Group() {
+				Button("Sport") {
+					self.showingSportSelection = true
 				}
+				.bold()
+				.confirmationDialog("Select the workout to perform", isPresented: $showingSportSelection, titleVisibility: .visible) {
+					ForEach(CommonApp.activityTypes, id: \.self) { item in
+						Button(item) {
+							self.newSession.sport = item
+						}
+					}
+				}
+				Text(self.newSession.sport)
+			}
+			.padding(5)
 
+			Group() {
 				Text("Description")
 					.bold()
 				TextField("Description", text: $description, axis: .vertical)
 					.lineLimit(2...10)
 			}
+			.padding(5)
 
 			Spacer()
 
 			Group() {
 				VStack(alignment: .leading) {
-					ForEach(self.intervalSessionsVM.newSession, id: \.self) { segment in
+					ForEach(self.newSession.segments, id: \.self) { segment in
 						Button(action: {
 							self.showingSegmentDetailsSelection = true
 						}) {
@@ -58,17 +78,18 @@ struct NewIntervalSessionView: View {
 						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 						.opacity(0.8)
 						.confirmationDialog("Which type of interval?", isPresented: $showingSegmentDetailsSelection, titleVisibility: .visible) {
-							Button("Time") {
-								segment.duration = 100
-							}
-							Button("Distance") {
-								segment.distance = 1000
-							}
-							Button("Power") {
-								segment.power = 100
-							}
-							Button("Repititions") {
-								segment.reps = 8
+							ForEach(self.newSession.segments.last!.validModifiers(activityType: self.sport), id: \.self) { item in
+								Button(item) {
+									self.showingValueEntryAlert = true
+								}
+								.alert(item, isPresented: self.$showingValueEntryAlert, actions: {
+									TextField("10", text: self.$valueEntry)
+									Button("Ok", action: {
+									})
+									Button("Cancel", role: .cancel, action: {})
+								}, message: {
+									Text("Enter the number")
+								})
 							}
 						}
 					}
@@ -90,19 +111,19 @@ struct NewIntervalSessionView: View {
 						let newSegment = IntervalSegment()
 						newSegment.duration = 60
 						newSegment.units = INTERVAL_UNIT_SECONDS
-						self.intervalSessionsVM.newSession.append(newSegment)
+						self.newSession.segments.append(newSegment)
 					}
 					Button("Distance") {
 						let newSegment = IntervalSegment()
 						newSegment.distance = 1000
 						newSegment.units = INTERVAL_UNIT_METERS
-						self.intervalSessionsVM.newSession.append(newSegment)
+						self.newSession.segments.append(newSegment)
 					}
 					Button("Sets") {
 						let newSegment = IntervalSegment()
 						newSegment.sets = 3
 						newSegment.units = INTERVAL_UNIT_NOT_SET
-						self.intervalSessionsVM.newSession.append(newSegment)
+						self.newSession.segments.append(newSegment)
 					}
 				}
 				.bold()
@@ -110,10 +131,12 @@ struct NewIntervalSessionView: View {
 
 			Spacer()
 
-			// Save and Delete
+			// Save
 			Group() {
 				Button(action: {
-					
+					if !self.intervalSessionsVM.createIntervalSession(session: self.newSession) {
+						self.showingSaveFailedAlert = true
+					}
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
@@ -123,7 +146,10 @@ struct NewIntervalSessionView: View {
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
+			}
 
+			// Delete
+			Group() {
 				Button(action: { self.showingDeleteConfirmation = true }) {
 					Text("Delete")
 						.frame(minWidth: 0, maxWidth: .infinity)
@@ -133,6 +159,12 @@ struct NewIntervalSessionView: View {
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: $showingDeleteConfirmation) {
 					Button("Delete") {
+						if self.intervalSessionsVM.deleteIntervalSession(intervalSessionId: self.newSession.id) {
+							self.dismiss()
+						}
+						else {
+							self.showingDeleteFailedAlert = true
+						}
 					}
 					Button("Cancel") {
 					}
