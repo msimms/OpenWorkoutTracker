@@ -34,6 +34,9 @@ class CommonApp : ObservableObject {
 		if Preferences.uuid() == nil {
 			Preferences.setUuid(value: UUID().uuidString)
 		}
+		
+		// Set the user's preferred unit system.
+		SetPreferredUnitSystem(Preferences.preferredUnitSystem())
 
 		// Initialize HealthKit.
 		self.healthMgr.requestAuthorization()

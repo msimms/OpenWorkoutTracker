@@ -809,7 +809,7 @@ extern "C" {
 	// Functions for controlling preferences.
 	//
 
-	void SetUnitSystem(UnitSystem system)
+	void SetPreferredUnitSystem(UnitSystem system)
 	{
 		UnitMgr::SetUnitSystem(system);
 	}
@@ -3372,7 +3372,7 @@ extern "C" {
 		UnitMgr::ConvertActivityAttributeToCustomaryUnits(*value);
 	}
 
-	void ConvertToPreferredUntis(ActivityAttributeType* value)
+	void ConvertToPreferredUnits(ActivityAttributeType* value)
 	{
 		UnitMgr::ConvertActivityAttributeToPreferredUnits(*value);
 	}

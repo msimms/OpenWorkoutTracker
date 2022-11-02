@@ -107,7 +107,7 @@ struct NewPacePlanView: View {
 			// Save and Delete
 			Group() {
 				Button(action: {
-						if self.pacePlansVM.createPacePlan(name: self.name, description: description, distanceInKms: self.distance, targetPaceInMinKm: Double(self.paceSeconds), splits: self.splitSeconds, targetDistanceUnits: self.distanceUnits, targetPaceUnits: self.paceUnits) {
+					if self.pacePlansVM.createPacePlan(name: self.name, description: description, distanceInKms: self.distance, targetPaceInMinKm: Double(self.paceSeconds), splits: self.splitSeconds, targetDistanceUnits: self.distanceUnits, targetPaceUnits: self.paceUnits) {
 						self.dismiss()
 					}
 					else {
@@ -116,7 +116,7 @@ struct NewPacePlanView: View {
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.foregroundColor(.white)
 						.padding()
 				}
 				.alert("Failed to create the pace plan.", isPresented: $showingCreateError) {

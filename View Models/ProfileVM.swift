@@ -82,7 +82,7 @@ class ProfileVM {
 		attr.measureType = MEASURE_HEIGHT
 		attr.unitSystem = UNIT_SYSTEM_METRIC
 		attr.valid = true
-		ConvertToPreferredUntis(&attr)
+		ConvertToPreferredUnits(&attr)
 		return attr.value.doubleVal
 	}
 	
@@ -93,7 +93,7 @@ class ProfileVM {
 		attr.measureType = MEASURE_WEIGHT
 		attr.unitSystem = UNIT_SYSTEM_METRIC
 		attr.valid = true
-		ConvertToPreferredUntis(&attr)
+		ConvertToPreferredUnits(&attr)
 		return attr.value.doubleVal
 	}
 	

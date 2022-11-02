@@ -8,6 +8,7 @@ import SwiftUI
 import UIKit
 
 let ACTIVITY_PREF_VIEW_TYPE =                            "View Type"
+let ACTIVITY_PREF_ATTRIBUTE_COLOR =                      "Attribute Color"
 let ACTIVITY_PREF_BACKGROUND_COLOR =                     "Background Color"
 let ACTIVITY_PREF_LABEL_COLOR =                          "Label Color"
 let ACTIVITY_PREF_TEXT_COLOR =                           "Text Color"
@@ -157,7 +158,7 @@ class ActivityPreferences {
 	}
 
 	static func buildKeyStr(activityType: String, attributeName: String) -> String {
-		return String(format: "%@ %@", activityType, attributeName)
+		return String(format:"%@ %@", activityType, attributeName)
 	}
 
 	static func getDefaultViewForActivityType(activityType: String) -> ActivityViewType {
@@ -252,14 +253,31 @@ class ActivityPreferences {
 		if mydefaults.object(forKey: keyName) == nil {
 			return self.getDefaultActivityLayout(activityType: activityType)
 		}
-
 		return mydefaults.array(forKey: keyName) as! Array<String>
 	}
 	
-	func setActivityLayout(activityType: String, layout: Array<String>) {
+	static func setActivityLayout(activityType: String, layout: Array<String>) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		let keyName = ActivityPreferences.buildKeyStr(activityType: activityType, attributeName: ACTIVITY_PREF_ATTRIBUTES)
 		mydefaults.set(layout, forKey: keyName)
+	}
+
+	static func getActivityAttributeColorName(activityType: String, attributeName: String) -> String {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		let keyName = ActivityPreferences.buildKeyStr(activityType: activityType, attributeName: ACTIVITY_PREF_ATTRIBUTE_COLOR) + " for " + attributeName
+		let colorName = mydefaults.string(forKey: keyName)
+
+		// Default value
+		if colorName == nil {
+			return COLOR_NAME_WHITE
+		}
+		return colorName!
+	}
+
+	static func setActivityAttributeColorName(activityType: String, attributeName: String, colorName: String) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		let keyName = ActivityPreferences.buildKeyStr(activityType: activityType, attributeName: ACTIVITY_PREF_ATTRIBUTE_COLOR) + " for " + attributeName
+		mydefaults.set(colorName, forKey: keyName)
 	}
 
 	static func getBackgroundColorName(activityType: String) -> String {
@@ -295,6 +313,11 @@ class ActivityPreferences {
 		return colorName!
 	}
 
+	static func getActivityAttributeColor(activityType: String, attributeName: String) -> Color {
+		let colorStr = getActivityAttributeColorName(activityType: activityType, attributeName: attributeName)
+		return convertColorNameToObject(colorName: colorStr)
+	}
+	
 	static func getBackgroundColor(activityType: String) -> Color {
 		let colorStr = getBackgroundColorName(activityType: activityType)
 		return convertColorNameToObject(colorName: colorStr)

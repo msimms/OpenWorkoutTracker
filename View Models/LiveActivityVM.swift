@@ -5,6 +5,7 @@
 
 import Foundation
 import MapKit
+import SwiftUI
 
 let VALUE_NOT_SET_STR: String = "--"
 let COUNTDOWN_SECS: UInt = 4 // one more than 3 to handle the edge condition
@@ -80,30 +81,53 @@ class LiveActivityVM : ObservableObject {
 	}
 	
 	func create(activityType: String) {
-		
+
+		var activityTypeToUse = activityType
+		var orphanedActivityIndex: size_t = 0
+		let isOrphaned = IsActivityOrphaned(&orphanedActivityIndex)
+		let isInProgress = IsActivityInProgress()
+
+		// Perhaps the app shutdown poorly (phone rebooted, etc.).
+		// Check for an existing, in progress, activity.
+		if isOrphaned || isInProgress {
+
+			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex))
+			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
+
+			defer {
+				orphanedActivityIdPtr!.deallocate()
+				orphanedActivityTypePtr!.deallocate()
+			}
+
+			activityTypeToUse = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
+			ReCreateOrphanedActivity(orphanedActivityIndex)
+
+			self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
+			self.isInProgress = true
+		}
+
 		// Create the backend structures needed to do the activity.
-		CreateActivityObject(activityType)
+		else {
+			CreateActivityObject(activityTypeToUse)
+
+			// Generate a unique identifier for this activity.
+			self.activityId = NSUUID().uuidString
+		}
 
 		// What attributes does the user wish to display when doing this activity?
 		let activityPrefs = ActivityPreferences()
-		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: activityType)
+		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: activityTypeToUse)
 
 		// Preferred view layout.
-		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityType)
+		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
 
 		// Configure the location accuracy parameters.
-		self.sensorMgr.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityType))
-		self.sensorMgr.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityType))
+		self.sensorMgr.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
+		self.sensorMgr.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
 
 		// Start the sensors.
 		self.sensorMgr.startSensors()
 		
-		// Generate a unique identifier for this activity.
-		self.activityId = NSUUID().uuidString
-
-		//let screenLocking = ActivityPreferences.getScreenAutoLocking(activityType: activityType)
-		//UIApplication.shared.isIdleTimerDisabled = !screenLocking
-
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
 			
@@ -148,7 +172,27 @@ class LiveActivityVM : ObservableObject {
 			var index = 1
 			for activityAttribute in self.activityAttributePrefs {
 				var attr = QueryLiveActivityAttribute(activityAttribute)
-				ConvertToPreferredUntis(&attr)
+				ConvertToPreferredUnits(&attr)
+				
+				// If the activity hasn't been started yet then we should just grab sensor data directly
+				// instead of looking in the database.
+				if !self.isInProgress {
+					if activityAttribute == ACTIVITY_ATTRIBUTE_HEART_RATE {
+						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_BPM, UNIT_SYSTEM_METRIC)
+						attr.value.intVal = UInt64(self.sensorMgr.currentHeartRateBpm)
+						attr.valid = true
+					}
+					else if activityAttribute == ACTIVITY_ATTRIBUTE_POWER {
+						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_POWER, UNIT_SYSTEM_METRIC)
+						attr.value.intVal = UInt64(self.sensorMgr.currentPowerWatts)
+						attr.valid = true
+					}
+					else if activityAttribute == ACTIVITY_ATTRIBUTE_CADENCE {
+						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_RPM, UNIT_SYSTEM_METRIC)
+						attr.value.intVal = UInt64(self.sensorMgr.currentCadenceRpm)
+						attr.valid = true
+					}
+				}
 				
 				let valueStr = LiveActivityVM.formatActivityValue(attribute: attr)
 				let measureStr = LiveActivityVM.formatActivityMeasureType(measureType: attr.measureType)
@@ -324,8 +368,15 @@ class LiveActivityVM : ObservableObject {
 		self.activityAttributePrefs.remove(at: position)
 		self.activityAttributePrefs.insert(attributeName, at: position)
 
-		let activityPrefs = ActivityPreferences()
-		activityPrefs.setActivityLayout(activityType: self.activityType, layout: self.activityAttributePrefs)
+		ActivityPreferences.setActivityLayout(activityType: self.activityType, layout: self.activityAttributePrefs)
+	}
+
+	func setWatchActivityAttributeColor(attributeName: String, colorName: String) {
+		ActivityPreferences.setActivityAttributeColorName(activityType: self.activityType, attributeName: attributeName, colorName: colorName)
+	}
+
+	func getWatchActivityAttributeColor(attributeName: String) -> Color {
+		return ActivityPreferences.getActivityAttributeColor(activityType: self.activityType, attributeName: attributeName)
 	}
 
 	/// @brief Utility function for formatting things like Elapsed Time, etc.

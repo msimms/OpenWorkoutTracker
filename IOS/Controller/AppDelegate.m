@@ -391,7 +391,7 @@ typedef enum MsgDestinationType
 - (void)setUnits
 {
 	UnitSystem preferredUnits = [Preferences preferredUnitSystem];
-	SetUnitSystem(preferredUnits);
+	SetPreferredUnitSystem(preferredUnits);
 }
 
 #pragma mark copies the user profile to the backend
@@ -3317,7 +3317,7 @@ void attributeNameCallback(const char* name, void* context)
 
 - (void)convertToPreferredUnits:(ActivityAttributeType*)attr
 {
-	ConvertToPreferredUntis(attr);
+	ConvertToPreferredUnits(attr);
 }
 
 #pragma mark cloud methods

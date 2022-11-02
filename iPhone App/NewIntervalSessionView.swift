@@ -17,13 +17,14 @@ struct NewIntervalSessionView: View {
 	@State private var showingIntervalTimeValueSelection: Bool = false
 	@State private var showingIntervalDistanceValueSelection: Bool = false
 	@State private var showingIntervalRepsValueSelection: Bool = false
-	@State private var showingSegmentDetailsSelection: Bool = false
+	@State private var showingSegmentEditSelection: Bool = false
 	@State private var showingDeleteConfirmation: Bool = false
 	@State private var showingSportSelection: Bool = false
 	@State private var showingSaveFailedAlert: Bool = false
 	@State private var showingDeleteFailedAlert: Bool = false
-	@State private var showingValueEntryAlert: Bool = false
-	@State private var valueEntry: String = ""
+	@State private var showingValueEditAlert: Bool = false
+	@State private var keyBeingEdited: String = ""
+	@State private var valueBeingEdited: String = ""
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -39,7 +40,7 @@ struct NewIntervalSessionView: View {
 			.padding(5)
 				
 			Group() {
-				Button("Sport") {
+				Button(self.newSession.sport) {
 					self.showingSportSelection = true
 				}
 				.bold()
@@ -50,7 +51,6 @@ struct NewIntervalSessionView: View {
 						}
 					}
 				}
-				Text(self.newSession.sport)
 			}
 			.padding(5)
 
@@ -68,7 +68,7 @@ struct NewIntervalSessionView: View {
 				VStack(alignment: .leading) {
 					ForEach(self.newSession.segments, id: \.self) { segment in
 						Button(action: {
-							self.showingSegmentDetailsSelection = true
+							self.showingSegmentEditSelection = true
 						}) {
 							Text(segment.description())
 								.frame(minWidth: 0, maxWidth: .infinity)
@@ -77,21 +77,23 @@ struct NewIntervalSessionView: View {
 						}
 						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 						.opacity(0.8)
-						.confirmationDialog("Which type of interval?", isPresented: $showingSegmentDetailsSelection, titleVisibility: .visible) {
+						.confirmationDialog("Edit", isPresented: $showingSegmentEditSelection, titleVisibility: .visible) {
 							ForEach(self.newSession.segments.last!.validModifiers(activityType: self.sport), id: \.self) { item in
 								Button(item) {
-									self.showingValueEntryAlert = true
+									self.keyBeingEdited = item
+									self.showingValueEditAlert = true
 								}
-								.alert(item, isPresented: self.$showingValueEntryAlert, actions: {
-									TextField("10", text: self.$valueEntry)
-									Button("Ok", action: {
-									})
-									Button("Cancel", role: .cancel, action: {})
-								}, message: {
-									Text("Enter the number")
-								})
 							}
 						}
+						.alert(self.keyBeingEdited, isPresented: self.$showingValueEditAlert, actions: {
+							TextField("10", text: self.$valueBeingEdited)
+							Button("Ok", action: {
+								self.newSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: self.valueBeingEdited)
+							})
+							Button("Cancel", role: .cancel, action: {})
+						}, message: {
+							Text("Enter the value")
+						})
 					}
 				}
 			}

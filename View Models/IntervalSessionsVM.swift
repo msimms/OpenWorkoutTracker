@@ -35,20 +35,66 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	func validModifiers(activityType: String) -> Array<String> {
 		var modifiers: Array<String> = []
 
-		if self.sets > 0 {
-			modifiers.append("Repititions")
-		}
+		// Can we edit or add duration?
 		if self.duration == 0 {
-			modifiers.append("Duration")
+			modifiers.append("Add Duration")
 		}
-		if self.distance == 0 {
-			modifiers.append("Distance")
+		else {
+			modifiers.append("Edit Duration")
 		}
-		modifiers.append("Power")
+
+		// Can we edit or add distance? Not if duration was already specified.
+		if self.duration == 0 {
+			if self.distance == 0 {
+				modifiers.append("Add Distance")
+			}
+			else {
+				modifiers.append("Edit Distance")
+			}
+		}
+
+		// Can we edit or add pace?
+		if self.pace == 0 {
+			modifiers.append("Add Pace")
+		}
+		else {
+			modifiers.append("Edit Pace")
+		}
+
+		// Can we edit or add sets or reps?
+		if self.sets == 0 {
+			modifiers.append("Add Sets")
+		}
+		else {
+			modifiers.append("Add Repititions")
+		}
+
+		// Can we edit or add power?
+		if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
+			modifiers.append("Power")
+		}
 		return modifiers
 	}
 	
-	func applyModifier() {
+	func applyModifier(key: String, value: String) {
+		if key.contains("Duration") {
+			self.duration = UInt(value)!
+		}
+		else if key.contains("Distance") {
+			self.distance = Double(value)!
+		}
+		else if key.contains("Pace") {
+			self.pace = Double(value)!
+		}
+		else if key.contains("Sets") {
+			self.sets = UInt(value)!
+		}
+		else if key.contains("Repititions") {
+			self.reps = UInt(value)!
+		}
+		else if key.contains("Power") {
+			self.power = Double(value)!
+		}
 	}
 
 	func description() -> String {
@@ -60,6 +106,9 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 			break
 		case INTERVAL_UNIT_SECONDS:
 			description = String(format: "%u seconds", self.duration)
+			if self.pace > 0.01 {
+				description += String(format: " at %d", self.pace)
+			}
 			break
 		case INTERVAL_UNIT_METERS:
 			description = String(format: "%d meters", self.distance)

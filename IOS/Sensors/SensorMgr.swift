@@ -5,38 +5,17 @@
 
 import Foundation
 import CoreBluetooth
+import SwiftUI
 
 let HEART_RATE_SERVICE_ID = CBUUID(data: BT_SERVICE_HEART_RATE)
 let POWER_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_POWER)
 let CADENCE_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE)
 let RADAR_SERVICE_ID = CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR)
 
-class SensorSummary : Codable, Identifiable, Hashable, Equatable {
-	enum CodingKeys: CodingKey {
-		case id
-		case name
-		case enabled
-	}
-	
-	var id: String = UUID().uuidString
+struct SensorSummary : Identifiable {
+	var id: UUID = UUID()
 	var name: String = ""
-	var enabled: Bool = false
-
-	/// Constructor
-	init() {
-	}
-	init(json: Decodable) {
-	}
-	
-	/// Hashable overrides
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(self.id)
-	}
-
-	/// Equatable overrides
-	static func == (lhs: SensorSummary, rhs: SensorSummary) -> Bool {
-		return lhs.id == rhs.id
-	}
+	@State var enabled: Bool = false
 }
 
 class SensorMgr : ObservableObject {
@@ -65,10 +44,21 @@ class SensorMgr : ObservableObject {
 
 	/// Called when a peripheral is discovered.
 	/// Returns true to indicate that we should connect to this peripheral and discover its services.
-	func peripheralDiscovered(description: String) -> Bool {
-		let summary = SensorSummary()
-		summary.name = description
-		self.sensors.append(summary)
+	func peripheralDiscovered(name: String) -> Bool {
+		var found: Bool = false
+
+		for sensor in self.sensors {
+			if sensor.name == name {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			var summary = SensorSummary()
+			summary.name = name
+			self.sensors.append(summary)
+		}
 		return true
 	}
 
@@ -171,9 +161,5 @@ class SensorMgr : ObservableObject {
 		self.scanner.stopScanning()
 		self.location.stop()
 		self.accelerometer.stop()
-	}
-	
-	func listSensors() -> Array<SensorSummary> {
-		return self.sensors
 	}
 }

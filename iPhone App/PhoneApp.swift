@@ -7,11 +7,21 @@ import SwiftUI
 
 @main
 struct PhoneApp: App {
+	static let shared = PhoneApp()
 	private var common = CommonApp()
-
+	
 	var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
+		WindowGroup {
+			ContentView()
+		}
+	}
+	
+	func setScreenLockingForActivity(activityType: String) {
+		let screenLocking = ActivityPreferences.getScreenAutoLocking(activityType: activityType)
+		UIApplication.shared.isIdleTimerDisabled = !screenLocking
+	}
+	
+	func enableScreenLocking() {
+		UIApplication.shared.isIdleTimerDisabled = true
+	}
 }

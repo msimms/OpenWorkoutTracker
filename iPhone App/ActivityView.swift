@@ -62,7 +62,7 @@ struct ActivityView: View {
 
 								Image(systemName: "car.fill")
 									.resizable()
-									.frame(width: 32.0, height: 32.0)
+									.frame(width: 28.0, height: 28.0)
 									.offset(x: 2, y: imageY)
 							}
 						}
@@ -115,7 +115,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value2)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection2 = true
@@ -132,7 +132,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value3)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection3 = true
@@ -149,7 +149,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value4)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection4 = true
@@ -166,7 +166,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value5)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection5 = true
@@ -183,7 +183,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value6)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection6 = true
@@ -200,7 +200,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value7)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection7 = true
@@ -217,7 +217,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value8)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection8 = true
@@ -234,7 +234,7 @@ struct ActivityView: View {
 											.font(.system(size: 16))
 											.foregroundColor(labelColor)
 										Text(self.activityVM.value9)
-											.font(.system(size: 24))
+											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
 												self.showingActivityAttributeSelection9 = true
@@ -520,8 +520,13 @@ struct ActivityView: View {
 		}
 		.onAppear() {
 			if self.activityVM.isStopped {
-				dismiss()
+				self.dismiss()
 			}
+
+			PhoneApp.shared.setScreenLockingForActivity(activityType: self.activityType)
+		}
+		.onDisappear() {
+			PhoneApp.shared.enableScreenLocking()
 		}
 	}
 }

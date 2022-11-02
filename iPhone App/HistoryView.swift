@@ -7,7 +7,6 @@ import SwiftUI
 
 struct HistoryView: View {
 	@Environment(\.colorScheme) var colorScheme
-	@Environment(\.dismiss) var dismiss
 	@StateObject private var historyVM = HistoryVM()
 
 	let dateFormatter: DateFormatter = {

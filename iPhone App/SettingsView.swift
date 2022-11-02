@@ -27,6 +27,7 @@ struct SettingsView: View {
 				Toggle("Metric", isOn: $preferMetric)
 					.onChange(of: preferMetric) { value in
 						Preferences.setPreferredUnitSystem(system: value ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
+						SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
 					}
 			}
 			.padding(5)

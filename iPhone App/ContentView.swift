@@ -1,7 +1,5 @@
 //
 //  ContentView.swift
-//  OpenWorkoutTracker
-//
 //  Created by Michael Simms on 9/27/22.
 //
 
@@ -36,7 +34,7 @@ struct ContentView: View {
 				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 				.padding(10)
-				
+
 				// View history and statistics button
 				Button("View") {
 					self.showingViewSelection = true
@@ -48,7 +46,6 @@ struct ContentView: View {
 						self.isBusy = true
 					})
 
-					//NavigationLink("History", destination: HistoryView())
 					NavigationLink("Statistics", destination: StatisticsView())
 					NavigationLink("Workouts", destination: WorkoutsView())
 				}

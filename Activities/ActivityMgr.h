@@ -69,7 +69,7 @@ extern "C" {
 	bool RetrieveActivityIdsNotSynchedToWeb(SyncCallback callback, void* context);
 
 	// Functions for controlling user preferences.
-	void SetUnitSystem(UnitSystem system);
+	void SetPreferredUnitSystem(UnitSystem system);
 	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
 	bool GetUsersWeightHistory(WeightCallback callback, void* context);
 	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg);
@@ -216,7 +216,7 @@ extern "C" {
 	void ConvertToMetric(ActivityAttributeType* value);
 	void ConvertToBroadcastUnits(ActivityAttributeType* value);
 	void ConvertToCustomaryUnits(ActivityAttributeType* value);
-	void ConvertToPreferredUntis(ActivityAttributeType* value);
+	void ConvertToPreferredUnits(ActivityAttributeType* value);
 
 	// Functions for creating and destroying the current activity.
 	void CreateActivityObject(const char* const activityType);
