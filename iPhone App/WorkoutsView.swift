@@ -15,6 +15,7 @@ struct WorkoutsView: View {
 	@State private var allowCyclingWorkouts: Bool = Preferences.workoutsCanIncludeBikeRides()
 	@State private var allowPoolSwimWorkouts: Bool = Preferences.workoutsCanIncludePoolSwims()
 	@State private var allowOpenWaterSwims: Bool = Preferences.workoutsCanIncludeOpenWaterSwims()
+	@State private var showingWorkoutGenError: Bool = false
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -106,10 +107,11 @@ struct WorkoutsView: View {
 							Preferences.setWorkoutLongRunDay(value: day)
 
 							// Regenerate
-							if self.workoutsVM.generateWorkouts() {
-							}
+							self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
 						}
 					}
+				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
 				}
 				.bold()
 				Spacer()
@@ -124,8 +126,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludeBikeRides(value: allowCyclingWorkouts)
 
 					// Regenerate
-					if self.workoutsVM.generateWorkouts() {
-					}
+					self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
 				}
 				.bold()
 				.padding(5)
@@ -135,8 +138,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludePoolSwims(value: allowPoolSwimWorkouts)
 
 					// Regenerate
-					if self.workoutsVM.generateWorkouts() {
-					}
+					self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
 				}
 				.bold()
 				.padding(5)
@@ -146,8 +150,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludeOpenWaterSwims(value: allowOpenWaterSwims)
 
 					// Regenerate
-					if self.workoutsVM.generateWorkouts() {
-					}
+					self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
 				}
 				.bold()
 				.padding(5)

@@ -220,15 +220,6 @@ struct ActivityView: View {
 					// Start/Stop/Cancel
 					HStack() {
 						Button {
-							if self.activityVM.isInProgress {
-							}
-							else {
-								self.dismiss()
-							}
-						} label: {
-							Text(self.activityVM.isInProgress ? "Page" : "Cancel")
-						}
-						Button {
 							if self.activityVM.isPaused {
 								self.activityVM.pause()
 							}
@@ -243,13 +234,17 @@ struct ActivityView: View {
 						}
 						.foregroundColor(self.activityVM.isInProgress ? .red : .green)
 						.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
-							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: ACTIVITY_INDEX_UNKNOWN, activityId: self.activityVM.stop(), name: "", description: ""))) {
+							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: self.activityVM.stop()))) {
 								Text("Stop")
 							}
 							Button {
 								self.activityVM.pause()
 							} label: {
 								Label("Pause", systemImage: "pause")
+							}
+							Button {
+							} label: {
+								Text("Cancel")
 							}
 						}
 					}

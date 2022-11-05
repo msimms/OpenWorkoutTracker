@@ -13,6 +13,7 @@ struct ProfileView: View {
 	@State private var showingHeightError: Bool = false
 	@State private var showingWeightError: Bool = false
 	@State private var showingFtpError: Bool = false
+	@State private var showingApiError: Bool = false
 	@ObservedObject var height = NumbersOnly(initialValue: ProfileVM.getDisplayedHeight())
 	@ObservedObject var weight = NumbersOnly(initialValue: ProfileVM.getDisplayedWeight())
 	@ObservedObject var ftp = NumbersOnly(initialValue: Preferences.ftp())
@@ -96,13 +97,16 @@ struct ProfileView: View {
 					.onChange(of: height.value) { value in
 						if let value = Double(height.value) {
 							ProfileVM.setHeight(height: value)
+							showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
 						} else {
 							self.showingHeightError = true
 						}
 					}
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
 			}
-			.alert("Invalid value", isPresented: self.$showingHeightError) {
+			.alert("Invalid value!", isPresented: self.$showingFtpError) {
+			}
+			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
 			}
 			.padding(5)
 
@@ -118,13 +122,16 @@ struct ProfileView: View {
 					.onChange(of: weight.value) { value in
 						if let value = Double(weight.value) {
 							ProfileVM.setWeight(weight: value)
+							showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())
 						} else {
 							self.showingWeightError = true
 						}
 					}
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
 			}
-			.alert("Invalid value", isPresented: self.$showingWeightError) {
+			.alert("Invalid value!", isPresented: self.$showingFtpError) {
+			}
+			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
 			}
 			.padding(5)
 
@@ -140,13 +147,16 @@ struct ProfileView: View {
 					.onChange(of: ftp.value) { value in
 						if let value = Double(ftp.value) {
 							Preferences.setFtp(value: value)
+							showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
 						} else {
 							self.showingFtpError = true
 						}
 					}
 				Text(" watts")
 			}
-			.alert("Invalid value", isPresented: self.$showingFtpError) {
+			.alert("Invalid value!", isPresented: self.$showingFtpError) {
+			}
+			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
 			}
 			.padding(5)
 

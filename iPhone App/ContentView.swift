@@ -40,21 +40,13 @@ struct ContentView: View {
 					self.showingViewSelection = true
 				}
 				.confirmationDialog("What would you like to view?", isPresented: $showingViewSelection, titleVisibility: .visible) {
-					NavigationLink(destination: HistoryView()) {
-						Text("History")
-					}.simultaneousGesture(TapGesture().onEnded{
-						self.isBusy = true
-					})
-
+					NavigationLink("History", destination: HistoryView())
 					NavigationLink("Statistics", destination: StatisticsView())
 					NavigationLink("Workouts", destination: WorkoutsView())
 				}
 				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 				.padding(10)
-				.sheet(isPresented: $isBusy) {
-					ProgressView("Loading...")
-				}
 
 				Spacer()
 				

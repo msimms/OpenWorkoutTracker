@@ -6,14 +6,18 @@
 import Foundation
 import MapKit
 
-struct TagsTypeCallbackType {
+enum ActivityExportException: Error {
+	case runtimeError(String)
+}
+
+struct TagsCallbackType {
 	var tags: Array<String>
 }
 
-func tagsTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>)
+func tagsCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>)
 {
 	let tag = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
-	let typedPointer = context!.bindMemory(to: TagsTypeCallbackType.self, capacity: 1)
+	let typedPointer = context!.bindMemory(to: TagsCallbackType.self, capacity: 1)
 	typedPointer.pointee.tags.append(tag)
 }
 
@@ -34,23 +38,28 @@ class StoredActivityVM : ObservableObject {
 	var power: Array<(UInt64, Double)> = []
 	var speed: Array<(UInt64, Double)> = []
 
-	init (activityIndex: Int, activityId: String, name: String, description: String) {
+	init(activitySummary: ActivitySummary) {
 
-		// If a database index wasn't provided then we probably needed to load the activity summary from the database.
-		// The activity index will be zero because it will be the only activity loaded.
-		if activityIndex == ACTIVITY_INDEX_UNKNOWN {
-			LoadHistoricalActivity(activityId)
-			CreateHistoricalActivityObject(0)
-			self.activityIndex = 0
+		if activitySummary.source == ActivitySummary.Source.database {
+
+			// If a database index wasn't provided then we probably needed to load the activity summary from the database.
+			// The activity index will be zero because it will be the only activity loaded.
+			if activitySummary.index == ACTIVITY_INDEX_UNKNOWN {
+				LoadHistoricalActivity(activitySummary.id)
+				CreateHistoricalActivityObject(0)
+				self.activityIndex = 0
+			}
+			else {
+				CreateHistoricalActivityObject(activitySummary.index)
+				self.activityIndex = activitySummary.index
+			}
+
+			self.loadSensorData()
 		}
-		else {
-			CreateHistoricalActivityObject(activityIndex)
-			self.activityIndex = activityIndex
-		}
-		self.activityId = activityId
-		self.name = name
-		self.description = description
-		self.loadSensorData()
+
+		self.activityId = activitySummary.id
+		self.name = activitySummary.name
+		self.description = activitySummary.description
 	}
 
 	func loadSensorData() {
@@ -174,7 +183,26 @@ class StoredActivityVM : ObservableObject {
 		return startTime
 	}
 
-	func exportActivity(format: FileFormat) {
+	func exportActivityToFile(fileFormat: FileFormat) throws {
+
+		// Build the URL for the application's directory.
+		var exportDirUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)
+		if exportDirUrl == nil {
+			throw ActivityExportException.runtimeError("iCloud storage is disabled.")
+		}
+		exportDirUrl = exportDirUrl?.appendingPathComponent("Documents")
+		try FileManager.default.createDirectory(at: exportDirUrl!, withIntermediateDirectories: true, attributes: nil)
+
+		// Export the file.
+		let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, exportDirUrl?.absoluteString))
+
+		guard fileNamePtr != nil else {
+			throw ActivityExportException.runtimeError("Export failed!")
+		}
+
+		do {
+			fileNamePtr!.deallocate()
+		}
 	}
 
 	func updateActivityName() -> Bool {
@@ -199,15 +227,15 @@ class StoredActivityVM : ObservableObject {
 	}
 	
 	func listTags() -> Array<String> {
-		let pointer = UnsafeMutablePointer<TagsTypeCallbackType>.allocate(capacity: 1)
+		let pointer = UnsafeMutablePointer<TagsCallbackType>.allocate(capacity: 1)
 		
 		defer {
 			pointer.deinitialize(count: 1)
 			pointer.deallocate()
 		}
 		
-		pointer.pointee = TagsTypeCallbackType(tags: [])
-		RetrieveTags(self.activityId, tagsTypeCallback, pointer)
+		pointer.pointee = TagsCallbackType(tags: [])
+		RetrieveTags(self.activityId, tagsCallback, pointer)
 		let tags = pointer.pointee.tags
 		return tags
 	}

@@ -7,7 +7,7 @@ import SwiftUI
 
 struct HistoryView: View {
 	@Environment(\.colorScheme) var colorScheme
-	@StateObject private var historyVM = HistoryVM()
+	@ObservedObject private var historyVM = HistoryVM()
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -16,28 +16,40 @@ struct HistoryView: View {
 		return df
 	}()
 
+	private func loadHistory() {
+		self.historyVM.buildHistoricalActivitiesList()
+	}
+
 	var body: some View {
-		VStack(alignment: .center) {
-			if self.historyVM.historicalActivities.count > 0 {
-				List(self.historyVM.historicalActivities, id: \.self) { item in
-					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: item.index, activityId: item.id, name: item.name, description: item.description))) {
-						HStack() {
-							Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-								.frame(width: 48)
-							VStack(alignment: .leading) {
-								if item.name.count > 0 {
-									Text(item.name)
-										.bold()
+		switch self.historyVM.state {
+		case HistoryVM.State.empty:
+			VStack(alignment: .center) {
+				ProgressView("Loading...").onAppear(perform: self.loadHistory)
+					.progressViewStyle(CircularProgressViewStyle(tint: .black))
+			}
+		case HistoryVM.State.loaded:
+			VStack(alignment: .center) {
+				if self.historyVM.historicalActivities.count > 0 {
+					List(self.historyVM.historicalActivities, id: \.self) { item in
+						NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
+							HStack() {
+								Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
+									.frame(width: 48)
+								VStack(alignment: .leading) {
+									if item.name.count > 0 {
+										Text(item.name)
+											.bold()
+									}
+									Text("\(self.dateFormatter.string(from: item.startTime))")
 								}
-								Text("\(self.dateFormatter.string(from: item.startTime))")
 							}
 						}
 					}
+					.listStyle(.plain)
 				}
-				.listStyle(.plain)
-			}
-			else {
-				Text("Ho History")
+				else {
+					Text("Ho History")
+				}
 			}
 		}
     }

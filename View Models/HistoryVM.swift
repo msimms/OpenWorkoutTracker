@@ -5,7 +5,7 @@
 
 import Foundation
 
-class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
+class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable {
 	enum CodingKeys: CodingKey {
 		case index
 		case id
@@ -15,7 +15,11 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
 		case startTime
 		case endTime
 	}
-
+	enum Source {
+		case database
+		case healthkit
+	}
+	
 	var index: Int = ACTIVITY_INDEX_UNKNOWN
 	var id: String = ""
 	var name: String = ""
@@ -23,32 +27,103 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable {
 	var type: String = ""
 	var startTime: Date = Date()
 	var endTime: Date = Date()
-
+	var source: Source = Source.database
+	
 	/// Constructor
 	init() {
 	}
 	init(json: Decodable) {
 	}
-
-	/// Hashable overrides
+	
+	/// @brief Hashable overrides
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(self.id)
 	}
 	
-	/// Equatable overrides
+	/// @brief Equatable overrides
 	static func == (lhs: ActivitySummary, rhs: ActivitySummary) -> Bool {
 		return lhs.id == rhs.id
+	}
+	
+	/// @brief Comparable overrides
+	static func < (lhs: ActivitySummary, rhs: ActivitySummary) -> Bool {
+		return lhs.startTime >= rhs.startTime
+	}
+}
+
+extension RandomAccessCollection where Element : Comparable {
+	func insertionIndex(of value: Element) -> Index {
+		var slice : SubSequence = self[...]
+		
+		while !slice.isEmpty {
+			let middle = slice.index(slice.startIndex, offsetBy: slice.count / 2)
+			if value < slice[middle] {
+				slice = slice[..<middle]
+			} else {
+				slice = slice[index(after: middle)...]
+			}
+		}
+		return slice.startIndex
 	}
 }
 
 class HistoryVM : ObservableObject {
-	@Published var historicalActivities: Array<ActivitySummary> = []
+	enum State {
+		case empty
+		case loaded
+	}
+	
+	@Published private(set) var state = State.empty
+	var historicalActivities: Array<ActivitySummary> = []
 
 	init() {
-		self.buildHistoricalActivitiesList()
+		self.state = State.empty
 	}
 
-	func buildHistoricalActivitiesList() {
+	/// @brief Loads the activity list from HealthKit (if enabled).
+	private func loadActivitiesFromHealthKit() {
+		if Preferences.willIntegrateHealthKitActivities() {
+
+			// Read all relevant activities from HealthKit.
+			HealthManager.shared.readAllActivitiesFromHealthStore()
+
+			// De-duplicate the list against itself as well as the activities in our database.
+			if Preferences.hideHealthKitDuplicates() {
+
+				// Remove duplicate activities from within the HealthKit list.
+				HealthManager.shared.removeDuplicateActivities()
+
+				// Remove activities that overlap with ones in our database.
+				let numDbActivities = GetNumHistoricalActivities()
+				for activityIndex in 0..<numDbActivities {
+					var startTime: time_t = 0
+					var endTime: time_t = 0
+					
+					if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
+						HealthManager.shared.removeActivitiesThatOverlapWithStartTime(startTime: startTime, endTime:endTime)
+					}
+				}
+			}
+
+			// Incorporate HealthKit's list into the master list of activities.
+			for workout in HealthManager.shared.workouts {
+				let summary = ActivitySummary()
+				summary.id = workout.key
+				summary.name = ""
+				summary.type = HealthManager.healthKitWorkoutToActivityType(workout: workout.value)
+				summary.index = ACTIVITY_INDEX_UNKNOWN
+				summary.startTime = workout.value.startDate
+				summary.endTime = workout.value.endDate
+				summary.source = ActivitySummary.Source.healthkit
+
+				let index = self.historicalActivities.insertionIndex(of: summary)
+				self.historicalActivities.insert(summary, at: index)
+			}
+		}
+	}
+
+	/// @brief Loads the activity list from our database.
+	private func loadActivitiesFromDatabase() {
 		InitializeHistoricalActivityList()
 
 		if LoadAllHistoricalActivitySummaryData() {
@@ -96,6 +171,7 @@ class HistoryVM : ObservableObject {
 						summary.index = activityIndex
 						summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime))
 						summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime))
+						summary.source = ActivitySummary.Source.database
 
 						self.historicalActivities.insert(summary, at: 0)
 
@@ -109,6 +185,14 @@ class HistoryVM : ObservableObject {
 		}
 	}
 
+	/// @brief Loads the activity list from our database as well as HealthKit (if enabled).
+	func buildHistoricalActivitiesList() {
+		self.loadActivitiesFromDatabase()
+		self.loadActivitiesFromHealthKit()
+		self.state = State.loaded
+	}
+
+	/// @brief Utility function for getting the image name that corresponds to an activity, such as running, cycling, etc.
 	static func imageNameForActivityType(activityType: String) -> String {
 		if activityType == ACTIVITY_TYPE_BENCH_PRESS {
 			return "scalemass"

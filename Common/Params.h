@@ -13,7 +13,9 @@
 #define PARAM_DEVICE                          "device"
 
 // User Details
+#define PARAM_USER_HEIGHT                     "height"
 #define PARAM_USER_WEIGHT                     "weight"
+#define PARAM_USER_FTP                        "ftp"
 #define PARAM_TIMESTAMP                       "timestamp"
 
 // Activity Sync

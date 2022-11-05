@@ -24,6 +24,7 @@ struct HistoryDetailsView: View {
 	@State private var showingFormatSelection: Bool = false
 	@State private var showingUpdateNameError: Bool = false
 	@State private var showingUpdateDescriptionError: Bool = false
+	@State private var showingExportFailedError: Bool = false
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -48,6 +49,7 @@ struct HistoryDetailsView: View {
 						.onChange(of: self.activityVM.name) { value in
 							showingUpdateNameError = !self.activityVM.updateActivityName()
 						}
+						.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
 				}
 
 				// Description
@@ -57,6 +59,7 @@ struct HistoryDetailsView: View {
 							showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
 						}
 						.lineLimit(2...10)
+						.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
 				}
 
 				// Attributes Summary
@@ -188,21 +191,22 @@ struct HistoryDetailsView: View {
 					.confirmationDialog("Export", isPresented: $showingFormatSelection, titleVisibility: .visible) {
 						if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
 							Button("GPX") {
-								self.activityVM.exportActivity(format: FILE_GPX)
+								do { try self.activityVM.exportActivityToFile(fileFormat: FILE_GPX) } catch { self.showingExportFailedError = true }
 							}
 							Button("TCX") {
-								self.activityVM.exportActivity(format: FILE_TCX)
+								do { try self.activityVM.exportActivityToFile(fileFormat: FILE_TCX) } catch { self.showingExportFailedError = true }
 							}
 							Button("FIT") {
-								self.activityVM.exportActivity(format: FILE_FIT)
+								do { try self.activityVM.exportActivityToFile(fileFormat: FILE_FIT) } catch { self.showingExportFailedError = true }
 							}
 						}
 						Button("CSV") {
-							self.activityVM.exportActivity(format: FILE_CSV)
+							do { try self.activityVM.exportActivityToFile(fileFormat: FILE_CSV) } catch { self.showingExportFailedError = true }
 						}
 					}
 					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.help("Export this activity")
+					.alert("Export failed!", isPresented: self.$showingExportFailedError) { }
 				}
 			}
 		}

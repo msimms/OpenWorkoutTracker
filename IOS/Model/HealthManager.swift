@@ -5,13 +5,19 @@
 
 import Foundation
 import HealthKit
+import CoreLocation
 
 class HealthManager {
 	static let shared = HealthManager()
 	
-	var authorized = false
-	let healthStore = HKHealthStore();
-	
+	private var authorized = false
+	private let healthStore = HKHealthStore();
+	var workouts: Dictionary<String, HKWorkout> = [:] // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
+	private var locations: Dictionary<String, Array<CLLocation>> = [:] // arrays of locations stored in the health store, key is the activity ID
+	private var distances: Dictionary<String, Array<Double>> = [:] // arrays of distances computed from the locations array, key is the activity ID
+	private var speeds: Dictionary<String, Array<Double>> = [:] // arrays of speeds computed from the distances array, key is the activity ID
+	private var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
+
 	/// Singleton constructor
 	private init() {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
@@ -130,9 +136,211 @@ class HealthManager {
 		let weightType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
 		
 		self.mostRecentQuantitySampleOfType(quantityType: weightType) { sample, error in
-			let weightUnit = HKUnit.meterUnit(with: HKMetricPrefix.kilo)
+			let weightUnit = HKUnit.gramUnit(with: HKMetricPrefix.kilo)
 			let usersWeight = sample!.quantity.doubleValue(for: weightUnit)
 			Preferences.setWeightKg(value: usersWeight)
+		}
+	}
+
+	func clearWorkoutsList() {
+		self.workouts.removeAll()
+		self.locations.removeAll()
+		self.distances.removeAll()
+		self.speeds.removeAll()
+	}
+	
+	func readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType) {
+		let predicate = HKQuery.predicateForWorkouts(with: activityType)
+		let sortDescriptor = NSSortDescriptor.init(key: HKSampleSortIdentifierStartDate, ascending: false)
+		let quantityType = HKWorkoutType.workoutType()
+		let sampleQuery = HKSampleQuery.init(sampleType: quantityType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor], resultsHandler: { query, samples, error in
+
+			if samples != nil {
+				for sample in samples! {
+					if let workout = sample as? HKWorkout {
+						self.workouts[UUID().uuidString] = workout
+					}
+				}
+			}
+			self.queryGroup.leave()
+		})
+
+		self.queryGroup.enter()
+		self.healthStore.execute(sampleQuery)
+	}
+	
+	func readRunningWorkoutsFromHealthStore() {
+		self.readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType.running)
+	}
+
+	func readWalkingWorkoutsFromHealthStore() {
+		self.readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType.walking)
+	}
+
+	func readCyclingWorkoutsFromHealthStore() {
+		self.readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType.cycling)
+	}
+
+	func readAllActivitiesFromHealthStore() {
+		self.clearWorkoutsList()
+		self.readRunningWorkoutsFromHealthStore()
+		self.readWalkingWorkoutsFromHealthStore()
+		self.readCyclingWorkoutsFromHealthStore()
+		self.waitForHealthKitQueries()
+	}
+
+	func calculateSpeedsFromDistances(distances: Array<Double>, activityId: String) {
+		var speeds: Array<Double> = [0]
+		
+		for (index, distance2) in distances.enumerated() {
+			let distance1 = distances[index - 1]
+
+			let speed = distance2 - distance1;
+			speeds.append(speed)
+		}
+		
+		self.speeds[activityId] = speeds
+	}
+
+	func calculateDistancesFromLocations(locations: Array<CLLocation>, activityId: String) {
+		var distances: Array<Double> = [0]
+
+		for (index, loc2) in locations.enumerated() {
+			if index > 0 {
+				let loc1 = locations[index - 1]
+
+				let c1 = Coordinate(latitude: loc1.coordinate.latitude, longitude: loc1.coordinate.longitude, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+				let c2 = Coordinate(latitude: loc2.coordinate.latitude, longitude: loc2.coordinate.longitude, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0 )
+
+				let distance = DistanceBetweenCoordinates(c1, c2)
+				distances.append(distance)
+			}
+		}
+
+		self.distances[activityId] = distances
+		
+		// Now update the speed calculations.
+		self.calculateSpeedsFromDistances(distances: distances, activityId: activityId)
+	}
+
+	func readLocationPointsFromHealthStoreForWorkoutRoute(route: HKWorkoutRoute, activityId: String) {
+		let query = HKWorkoutRouteQuery.init(route: route) { _, routeData, done, error in
+
+			if routeData != nil {
+				if var activityLocations = self.locations[activityId] {
+					activityLocations.append(contentsOf: routeData!)
+				}
+				else {
+					self.locations[activityId] = Array(routeData!)
+				}
+			}
+			
+			if done {
+				if let activityLocations = self.locations[activityId] {
+					self.calculateDistancesFromLocations(locations: activityLocations, activityId:activityId)
+				}
+			}
+		}
+
+		self.healthStore.execute(query)
+	}
+
+	func readLocationPointsFromHealthStoreForWorkout(workout: HKWorkout, activityId: String) {
+		let predicate = HKQuery.predicateForObjects(from: workout)
+		let sampleType = HKSeriesType.workoutRoute()
+		let query = HKAnchoredObjectQuery.init(type: sampleType, predicate: predicate, anchor: nil, limit: HKObjectQueryNoLimit, resultsHandler: { _, samples, _, _, error in
+
+			if samples != nil {
+				for sample in samples! {
+					if let route = sample as? HKWorkoutRoute {
+						self.readLocationPointsFromHealthStoreForWorkoutRoute(route: route, activityId: activityId)
+					}
+				}
+			}
+		})
+		
+		self.healthStore.execute(query)
+	}
+
+	func readLocationPointsFromHealthStoreForActivityId(activityId: String) {
+		guard let workout = self.workouts[activityId] else {
+			return
+		}
+		self.readLocationPointsFromHealthStoreForWorkout(workout: workout, activityId: activityId)
+	}
+
+	/// @brief Blocks until all HealthKit queries have completed.
+	func waitForHealthKitQueries() {
+		self.queryGroup.wait()
+	}
+
+	func timeRangesOverlapWithStartRange1(startRange1: time_t, endRange1: time_t, startRange2: time_t, endRange2: time_t) -> Bool {
+		return ((startRange1 >= startRange2 && startRange1 < endRange2) ||
+				(endRange1 >= startRange2 && endRange1 < endRange2) ||
+				(startRange2 >= startRange1 && startRange2 < endRange1) ||
+				(endRange2 >= startRange1 && endRange2 < endRange1));
+	}
+
+	/// @brief Searches the HealthKit activity list for duplicates and removes them, keeping the first in the list.
+	func removeDuplicateActivities() {
+		var itemsToRemove: Array<String> = []
+
+		for (_, activityId1) in self.workouts.keys.enumerated() {
+			guard let workout1 = self.workouts[activityId1] else {
+				break
+			}
+
+			let workoutStartTime1 = workout1.startDate.timeIntervalSince1970
+			let workoutEndTime1 = workout1.endDate.timeIntervalSince1970
+
+			var found = false
+			for (_, activityId2) in self.workouts.keys.enumerated() {
+				guard let workout2 = self.workouts[activityId2] else {
+					break
+				}
+
+				// Remove any duplicates appearing after we've found our original id.
+				if found {
+					let workoutStartTime2 = workout2.startDate.timeIntervalSince1970
+					let workoutEndTime2 = workout2.endDate.timeIntervalSince1970
+
+					// Is either the start time or the end time of the first activity within the bounds of the second activity?
+					if self.timeRangesOverlapWithStartRange1(startRange1: time_t(workoutStartTime1), endRange1: time_t(workoutEndTime1), startRange2: time_t(workoutStartTime2), endRange2: time_t(workoutEndTime2)) {
+						itemsToRemove.append(activityId2)
+					}
+				}
+				
+				if activityId1 == activityId2 {
+					found = true
+				}
+			}
+		}
+
+		for itemToRemove in itemsToRemove {
+			self.workouts.removeValue(forKey: itemToRemove)
+		}
+	}
+	
+	/// @brief Used for de-duplicating the HealthKit activity list, so we don't see activities recorded with this app twice.
+	func removeActivitiesThatOverlapWithStartTime(startTime: time_t, endTime: time_t) {
+		var itemsToRemove: Array<String> = []
+
+		for (_, activityId) in self.workouts.keys.enumerated() {
+			guard let workout = self.workouts[activityId] else {
+				break
+			}
+
+			let workoutStartTime = workout.startDate.timeIntervalSince1970
+			let workoutEndTime = workout.endDate.timeIntervalSince1970
+
+			// Is either the start time or the end time of the first activity within the bounds of the second activity?
+			if self.timeRangesOverlapWithStartRange1(startRange1: startTime, endRange1: endTime, startRange2: time_t(workoutStartTime), endRange2: time_t(workoutEndTime)) {
+				itemsToRemove.append(activityId)
+			}
+		}
+
+		for itemToRemove in itemsToRemove {
+			self.workouts.removeValue(forKey: itemToRemove)
 		}
 	}
 
@@ -185,21 +393,93 @@ class HealthManager {
 		self.healthStore.save(calorieSample, withCompletion: {_,_ in })
 	}
 
+	func convertIndexToActivityId(index: size_t) -> String {
+		let keys = self.workouts.keys
+		let dictIndex = keys.index(keys.startIndex, offsetBy: index)
+		return keys[dictIndex]
+	}
+	
+	func getHistoricalActivityType(activityId: String) -> String {
+		let workout = self.workouts[activityId]
+
+		if workout != nil {
+			switch workout!.workoutActivityType {
+			case HKWorkoutActivityType.cycling:
+				return ACTIVITY_TYPE_CYCLING
+			case HKWorkoutActivityType.running:
+				return ACTIVITY_TYPE_RUNNING
+			case HKWorkoutActivityType.walking:
+				return ACTIVITY_TYPE_WALKING
+			default:
+				break
+			}
+		}
+		return ""
+	}
+
 	/// @brief Exports the activity with the specified ID to a file of the given format in the given directory..
 	func exportActivityToFile(activityId: String, fileFormat: FileFormat, dirName: String) -> String {
-		return ""
+		var newFileName = ""
+
+		let workout = self.workouts[activityId]
+		if workout != nil {
+
+			// The file name starts with the directory and will include the start time and the sport type.
+			let sportType = self.getHistoricalActivityType(activityId: activityId)
+
+			// Start and end times.
+			let startTime = workout!.startDate.timeIntervalSince1970
+
+		}
+
+		return newFileName
 	}
 
 	/// @brief This method is called in response to a heart rate updated notification from the watch.
 	@objc func heartRateUpdated(notification: NSNotification) {
+
+		if let notificationData = notification.object as? Dictionary<String, Any> {
+
+			if  let idStr = notificationData[KEY_NAME_PERIPHERAL_OBJ] as? String,
+				let rate = notificationData[KEY_NAME_HEART_RATE] as? Double {
+				
+				if Preferences.shouldUsePeripheral(uuid: idStr) {
+					self.saveHeartRateIntoHealthStore(beats: rate)
+				}
+			}
+		}
 	}
 
 	/// @brief This method is called in response to an activity stopped notification.
 	@objc func activityStopped(notification: NSNotification) {
+		
+		if let notificationData = notification.object as? Dictionary<String, Any> {
+
+			if  let activityType = notificationData[KEY_NAME_ACTIVITY_TYPE] as? String,
+				let startTime = notificationData[KEY_NAME_START_TIME] as? Date,
+				let endTime = notificationData[KEY_NAME_END_TIME] as? Date,
+				let distance = notificationData[KEY_NAME_DISTANCE] as? Double,
+				let calories = notificationData[KEY_NAME_CALORIES] as? Double {
+				
+				let units = HealthManager.unitSystemToHKDistanceUnit(units: Preferences.preferredUnitSystem())
+
+				// HealthKit limitation: Cannot have activities lasting longer than four days.
+				if endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 < 345600 {
+					if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
+						self.saveCyclingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
+					}
+					else if activityType == ACTIVITY_TYPE_RUNNING || activityType == ACTIVITY_TYPE_WALKING {
+						self.saveRunningWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
+					}
+				}
+				
+				self.saveCaloriesBurnedIntoHealthStore(calories: calories, startDate: startTime, endDate: endTime)
+			}
+		}
 	}
 
 	/// @brief Utility method for converting between the specified unit system and HKUnit.
-	func unitSystemToHKDistanceUnit(units: UnitSystem) -> HKUnit {
+	static func unitSystemToHKDistanceUnit(units: UnitSystem) -> HKUnit {
 		switch units {
 		case UNIT_SYSTEM_METRIC:
 			return HKUnit.meterUnit(with: HKMetricPrefix.kilo)
@@ -212,7 +492,7 @@ class HealthManager {
 	}
 	
 	/// @brief Utility method for converting between the activity type strings used in this app and the workout enums used by Apple.
-	func activityTypeToHKWorkoutType(activityType: String) -> HKWorkoutActivityType {
+	static func activityTypeToHKWorkoutType(activityType: String) -> HKWorkoutActivityType {
 		if activityType == ACTIVITY_TYPE_CHINUP {
 			return HKWorkoutActivityType.functionalStrengthTraining
 		}
@@ -254,9 +534,28 @@ class HealthManager {
 		}
 		return HKWorkoutActivityType.fencing // Shouldn't get here, so return something funny to make it easier to debug if we do.
 	}
-	
+
+	/// @brief Utility method for converting between the activity type strings used in this app and the workout enums used by Apple.
+	static func healthKitWorkoutToActivityType(workout: HKWorkout) -> String {
+		switch workout.workoutActivityType {
+		case HKWorkoutActivityType.cycling:
+			return ACTIVITY_TYPE_CYCLING
+		case HKWorkoutActivityType.hiking:
+			return ACTIVITY_TYPE_HIKING
+		case HKWorkoutActivityType.running:
+			return ACTIVITY_TYPE_RUNNING
+		case HKWorkoutActivityType.walking:
+			return ACTIVITY_TYPE_WALKING
+		case HKWorkoutActivityType.swimming:
+			return ACTIVITY_TYPE_POOL_SWIMMING
+		default:
+			break
+		}
+		return ""
+	}
+
 	/// @brief Utility method for converting between the activity type strings used in this app and the workout session location enums used by Apple.
-	func activityTypeToHKWorkoutSessionLocationType(activityType: String) -> HKWorkoutSessionLocationType {
+	static func activityTypeToHKWorkoutSessionLocationType(activityType: String) -> HKWorkoutSessionLocationType {
 		if activityType == ACTIVITY_TYPE_CHINUP {
 			return HKWorkoutSessionLocationType.indoor
 		}
@@ -300,7 +599,7 @@ class HealthManager {
 	}
 	
 	/// @brief Utility method for converting between the activity type strings used in this app and the workout session swimming location enums used by Apple.
-	func activityTypeToHKWorkoutSwimmingLocationType(activityType: String) -> HKWorkoutSwimmingLocationType {
+	static func activityTypeToHKWorkoutSwimmingLocationType(activityType: String) -> HKWorkoutSwimmingLocationType {
 		if activityType == ACTIVITY_TYPE_OPEN_WATER_SWIMMING {
 			return HKWorkoutSwimmingLocationType.openWater
 		}
@@ -310,7 +609,7 @@ class HealthManager {
 		return HKWorkoutSwimmingLocationType.unknown
 	}
 	
-	func poolLengthToHKQuantity() -> HKQuantity {
+	static func poolLengthToHKQuantity() -> HKQuantity {
 		switch Preferences.poolLengthUnits() {
 		case UNIT_SYSTEM_METRIC:
 			return HKQuantity.init(unit: HKUnit.meterUnit(with: HKMetricPrefix.none), doubleValue: Double(Preferences.poolLength()))

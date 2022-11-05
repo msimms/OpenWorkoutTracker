@@ -19,7 +19,7 @@ struct HistoryView: View {
 	var body: some View {
 		VStack(alignment: .leading) {
 			List(self.historyVM.historicalActivities, id: \.self) { item in
-				NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: item.index, activityId: item.id, name: item.name, description: item.description))) {
+				NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
 					VStack(alignment: .leading) {
 						if item.name.count > 0 {
 							Text(item.name)

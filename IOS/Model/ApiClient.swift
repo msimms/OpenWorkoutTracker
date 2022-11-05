@@ -19,21 +19,21 @@ class ApiClient {
 			request.timeoutInterval = 30.0
 			request.allowsExpensiveNetworkAccess = true
 			request.httpMethod = method
-
+			
 			if data.count > 0 {
 				let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
 				let text = String(data: jsonData, encoding: String.Encoding.ascii)!
 				let postLength = String(format: "%lu", data.count)
-
+				
 				request.setValue(postLength, forHTTPHeaderField:"Content-Length")
 				request.setValue("application/json", forHTTPHeaderField:"Content-Type")
 				request.httpBody = text.data(using:.utf8)
 			}
-
+			
 			let session = URLSession.shared
 			let dataTask = session.dataTask(with: request) { data, response, error in
 				if let httpResponse = response as? HTTPURLResponse {
-
+					
 					if url.contains(REMOTE_API_IS_LOGGED_IN_URL) {
 					}
 					else if url.contains(REMOTE_API_LOGIN_URL) {
@@ -66,24 +66,24 @@ class ApiClient {
 				else {
 				}
 			}
-
+			
 			dataTask.resume()
 		}
 		catch {
 		}
 		return false
 	}
-
+	
 	func login(username: String, password: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USERNAME] = username
 		postDict[PARAM_PASSWORD] = password
 		postDict[PARAM_DEVICE] = Preferences.uuid()
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_LOGIN_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-
+	
 	func createLogin(username: String, password1: String, password2: String, realname: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USERNAME] = username
@@ -91,7 +91,7 @@ class ApiClient {
 		postDict[PARAM_PASSWORD2] = password2
 		postDict[PARAM_REALNAME] = realname
 		postDict[PARAM_DEVICE] = Preferences.uuid()
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_LOGIN_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
@@ -134,28 +134,28 @@ class ApiClient {
 	func requestActivityMetadata(activityId: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_ACTIVITY_METADATA_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
-
+	
 	func requestWorkoutDetails(workoutId: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_WORKOUT_ID] = workoutId
 		postDict["format"] = "json"
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_WORKOUT_DETAILS_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
-
+	
 	func requestToFollow(target: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_TARGET_EMAIL] = target
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_TO_FOLLOW_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
-
+	
 	func deleteActivity(activityId: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -168,11 +168,11 @@ class ApiClient {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_TAG] = tag
 		postDict[PARAM_ACTIVITY_ID] = activityId
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_TAG_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-
+	
 	func deleteTag(tag: String, activityId: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_TAG] = tag
@@ -190,42 +190,33 @@ class ApiClient {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
-	func setUserWeight(weightKg: Double, timestamp: Date) -> Bool {
-		var postDict: Dictionary<String,String> = [:]
-		postDict[PARAM_USER_WEIGHT] = String(format:"%f", weightKg)
-		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
-
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
-	}
-
 	func setActivityName(activityId: String, name: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_NAME] = name
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-
+	
 	func setActivityType(activityId: String, type: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_TYPE] = type
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-
+	
 	func setActivityDescription(activityId: String, description: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_DESCRIPTION] = description
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-
+	
 	func requestUpdatesSince(timestamp: Date) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
@@ -233,7 +224,7 @@ class ApiClient {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
-
+	
 	func hasActivity(activityId: String, hash: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -242,25 +233,52 @@ class ApiClient {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_HAS_ACTIVITY_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
-
+	
 	func sendActivity(activityId: String, name: String, contents: Data) -> Bool {
 		let base64Encoded = contents.base64EncodedString()
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_UPLOADED_FILE_NAME] = name
 		postDict[PARAM_UPLOADED_FILE_DATA] = base64Encoded
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPLOAD_ACTIVITY_FILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-
+	
 	func sendIntervalSession(description: Dictionary<String, String>) -> Bool {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_INTERVAL_WORKOUT_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: description)
 	}
-
+	
 	func sendPacePlan(description: Dictionary<String, String>) -> Bool {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_PACE_PLAN_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: description)
+	}
+	
+	func sendUpdatedUserHeight(timestamp: Date) -> Bool {
+		var postDict: Dictionary<String,String> = [:]
+		postDict[PARAM_USER_HEIGHT] = String(format:"%f", Preferences.heightCm())
+		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
+
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+	
+	func sendUpdatedUserWeight(timestamp: Date) -> Bool {
+		var postDict: Dictionary<String,String> = [:]
+		postDict[PARAM_USER_WEIGHT] = String(format:"%f", Preferences.weightKg())
+		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
+		
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+	
+	func sendUpdatedUserFtp(timestamp: Date) -> Bool {
+		var postDict: Dictionary<String,String> = [:]
+		postDict[PARAM_USER_FTP] = String(format:"%f", Preferences.ftp())
+		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
+
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 }

@@ -84,3 +84,4 @@
 #define KEY_NAME_INTERVAL_PACE                        "IntervalPace"
 #define KEY_NAME_INTERVAL_POWER                       "IntervalPower"
 #define KEY_NAME_INTERVAL_UNITS                       "IntervalUnits"
+#define KEY_NAME_HEART_RATE                           "Heart Rate"

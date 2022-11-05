@@ -54,11 +54,11 @@ class LiveActivityVM : ObservableObject {
 	@Published var units9: String = "Units"
 	
 	@Published var viewType: ActivityViewType = ACTIVITY_VIEW_COMPLEX
-	@Published var autoStartEnabled: Bool = false
 
 	var isInProgress: Bool = false
 	var isPaused: Bool = false
 	var isStopped: Bool = false // Has been stopped (after being started)
+	var autoStartEnabled: Bool = false
 	var countdownSecsRemaining: UInt = 0
 
 	var locationTrack: Array<CLLocationCoordinate2D> = []
@@ -296,9 +296,16 @@ class LiveActivityVM : ObservableObject {
 	}
 
 	/// @brief Stops the activity.
-	func stop() -> String {
+	func stop() -> ActivitySummary {
+		let summary = ActivitySummary()
+
 		if StopCurrentActivity() {
 
+			let startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME)
+			let endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME)
+			let distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
+			let calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
+			
 			// So we don't have to recompute everything each time the activity is loaded, save a summary.
 			SaveActivitySummaryData();
 			
@@ -313,14 +320,26 @@ class LiveActivityVM : ObservableObject {
 			self.isPaused = false
 			self.autoStartEnabled = false
 			self.isStopped = true
+			
+			// Fill in the summary struct.
+			summary.id = self.activityId
+			summary.type = self.activityType
+			summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime.value.intVal))
+			summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime.value.intVal))
+			summary.source = ActivitySummary.Source.database
 
 			// Tell any subscribers that we've stopped an activity.
-			var notificationData: Dictionary<String, String> = [:]
+			var notificationData: Dictionary<String, Any> = [:]
 			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId
+			notificationData[KEY_NAME_ACTIVITY_TYPE] = self.activityType
+			notificationData[KEY_NAME_START_TIME] = summary.startTime
+			notificationData[KEY_NAME_END_TIME] = summary.endTime
+			notificationData[KEY_NAME_DISTANCE] = distance.value.doubleVal
+			notificationData[KEY_NAME_CALORIES] = calories.value.doubleVal
 			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: notificationData)
 			NotificationCenter.default.post(notification)
 		}
-		return self.activityId
+		return summary
 	}
 
 	/// @brief Pauses the activity.

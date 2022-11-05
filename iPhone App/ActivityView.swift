@@ -504,7 +504,7 @@ struct ActivityView: View {
 					}
 					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
-						NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activityIndex: ACTIVITY_INDEX_UNKNOWN, activityId: self.activityVM.stop(), name: "", description: ""))) {
+						NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: self.activityVM.stop()))) {
 							Text("Stop")
 						}
 						Button {

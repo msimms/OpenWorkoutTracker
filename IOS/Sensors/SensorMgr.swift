@@ -113,30 +113,32 @@ class SensorMgr : ObservableObject {
 
 	/// Called when a sensor characteristic is updated.
 	func valueUpdated(peripheral: CBPeripheral, serviceId: CBUUID, value: Data) {
-		do {
-			if serviceId == HEART_RATE_SERVICE_ID {
-				self.currentHeartRateBpm = decodeHeartRateReading(data: value)
-				ProcessHrmReading(Double(self.currentHeartRateBpm), UInt64(Date().timeIntervalSince1970))
+		if Preferences.shouldUsePeripheral(uuid: peripheral.identifier.uuidString) {
+			do {
+				if serviceId == HEART_RATE_SERVICE_ID {
+					self.currentHeartRateBpm = decodeHeartRateReading(data: value)
+					ProcessHrmReading(Double(self.currentHeartRateBpm), UInt64(Date().timeIntervalSince1970))
+				}
+				else if serviceId == POWER_SERVICE_ID {
+					self.currentPowerWatts = try decodeCyclingPowerReading(data: value)
+					ProcessPowerMeterReading(Double(self.currentPowerWatts), UInt64(Date().timeIntervalSince1970))
+				}
+				else if serviceId == CADENCE_SERVICE_ID {
+					let cadenceData = try decodeCyclingCadenceReading(data: value)
+					//let currentWheelRevCount = reading[KEY_NAME_WHEEL_REV_COUNT]
+					let currentCrankCount = cadenceData[KEY_NAME_WHEEL_CRANK_COUNT]
+					let currentCrankTime = cadenceData[KEY_NAME_WHEEL_CRANK_TIME]
+					let timestamp = NSDate().timeIntervalSince1970
+					self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount!), currentCrankTime: UInt64(currentCrankTime!))
+					ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
+				}
+				else if serviceId == RADAR_SERVICE_ID {
+					self.radarMeasurements = decodeCyclingRadarReading(data: value)
+					ProcessRadarReading(UInt(self.radarMeasurements.count), UInt64(Date().timeIntervalSince1970))
+				}
+			} catch {
+				print(error.localizedDescription)
 			}
-			else if serviceId == POWER_SERVICE_ID {
-				self.currentPowerWatts = try decodeCyclingPowerReading(data: value)
-				ProcessPowerMeterReading(Double(self.currentPowerWatts), UInt64(Date().timeIntervalSince1970))
-			}
-			else if serviceId == CADENCE_SERVICE_ID {
-				let cadenceData = try decodeCyclingCadenceReading(data: value)
-				//let currentWheelRevCount = reading[KEY_NAME_WHEEL_REV_COUNT]
-				let currentCrankCount = cadenceData[KEY_NAME_WHEEL_CRANK_COUNT]
-				let currentCrankTime = cadenceData[KEY_NAME_WHEEL_CRANK_TIME]
-				let timestamp = NSDate().timeIntervalSince1970
-				self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount!), currentCrankTime: UInt64(currentCrankTime!))
-				ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
-			}
-			else if serviceId == RADAR_SERVICE_ID {
-				self.radarMeasurements = decodeCyclingRadarReading(data: value)
-				ProcessRadarReading(UInt(self.radarMeasurements.count), UInt64(Date().timeIntervalSince1970))
-			}
-		} catch {
-			print(error.localizedDescription)
 		}
 	}
 
