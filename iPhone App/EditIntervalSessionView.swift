@@ -1,18 +1,20 @@
 //
-//  NewIntervalSessionView.swift
+//  EditIntervalSessionView.swift
 //  Created by Michael Simms on 10/7/22.
 //
 
 import SwiftUI
 
-struct NewIntervalSessionView: View {
+struct EditIntervalSessionView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
-	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
+	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
 	@State private var newSession: IntervalSession = IntervalSession()
 	@State private var name: String = ""
 	@State private var sport: String = ""
 	@State private var description: String = ""
+	@State private var keyBeingEdited: String = ""
+	@State private var valueBeingEdited: String = ""
 	@State private var showingIntervalTypeSelection: Bool = false
 	@State private var showingIntervalTimeValueSelection: Bool = false
 	@State private var showingIntervalDistanceValueSelection: Bool = false
@@ -23,8 +25,9 @@ struct NewIntervalSessionView: View {
 	@State private var showingSaveFailedAlert: Bool = false
 	@State private var showingDeleteFailedAlert: Bool = false
 	@State private var showingValueEditAlert: Bool = false
-	@State private var keyBeingEdited: String = ""
-	@State private var valueBeingEdited: String = ""
+
+	init(sessionid: UUID) {
+	}
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -145,6 +148,7 @@ struct NewIntervalSessionView: View {
 						.foregroundColor(.white)
 						.padding()
 				}
+				.alert("Failed to create the interval session.", isPresented: $showingSaveFailedAlert) {}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
@@ -171,10 +175,14 @@ struct NewIntervalSessionView: View {
 					Button("Cancel") {
 					}
 				}
+				.alert("Failed to delete the interval session.", isPresented: $showingDeleteFailedAlert) {}
 				.opacity(0.8)
 				.bold()
 			}
 		}
 		.padding(10)
+		.onAppear() {
+			//self.intervalSessionsVM.retrieveIntervalSession(sessionid: self.planId)
+		}
     }
 }

@@ -15,7 +15,6 @@ let STR_MALE =              "Male"
 let STR_FEMALE =            "Female"
 
 class ProfileVM {
-	
 	static func activityLevelToString(activityLevel: ActivityLevel) -> String {
 		switch activityLevel {
 		case ACTIVITY_LEVEL_SEDENTARY:
@@ -33,7 +32,7 @@ class ProfileVM {
 		}
 		return STR_MODERATELY_ACTIVE
 	}
-	
+
 	static func activityLevelStringToType(activityLevelStr: String) -> ActivityLevel {
 		if activityLevelStr == STR_SEDENTARY {
 			return ACTIVITY_LEVEL_SEDENTARY
@@ -52,7 +51,7 @@ class ProfileVM {
 		}
 		return ACTIVITY_LEVEL_MODERATE
 	}
-	
+
 	static func genderToString(genderType: Gender) -> String {
 		switch genderType {
 		case GENDER_MALE:
@@ -64,7 +63,7 @@ class ProfileVM {
 		}
 		return STR_COMPLETION
 	}
-	
+
 	static func genderStringToType(genderStr: String) -> Gender {
 		if genderStr == STR_MALE {
 			return GENDER_MALE
@@ -74,7 +73,7 @@ class ProfileVM {
 		}
 		return GENDER_MALE
 	}
-	
+
 	static func getDisplayedHeight() -> Double {
 		var attr: ActivityAttributeType = ActivityAttributeType()
 		attr.value.doubleVal = Preferences.heightCm()

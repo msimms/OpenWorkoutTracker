@@ -1732,15 +1732,16 @@ extern "C" {
 			const PacePlan& plan = g_pacePlans.at(planIndex);
 			std::map<std::string, std::string> params;
 
-			params.insert(std::make_pair("id", EscapeAndQuoteString(plan.planId)));
-			params.insert(std::make_pair("name", EscapeAndQuoteString(plan.name)));
-			params.insert(std::make_pair("target pace", FormatDouble(plan.targetPaceInMinKm)));
-			params.insert(std::make_pair("target distance", FormatDouble(plan.targetDistanceInKms)));
-			params.insert(std::make_pair("display units pace", FormatDouble(plan.displayUnitsPace)));
-			params.insert(std::make_pair("display units distance", FormatDouble(plan.displayUnitsDistance)));
-			params.insert(std::make_pair("splits", FormatDouble(plan.splits)));
-			params.insert(std::make_pair("route", EscapeAndQuoteString(plan.route)));
-			params.insert(std::make_pair("last updated", FormatInt(plan.lastUpdatedTime)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_ID, EscapeAndQuoteString(plan.planId)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_NAME, EscapeAndQuoteString(plan.name)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_DESCRIPTION, EscapeAndQuoteString(plan.description)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_DISTANCE, FormatDouble(plan.targetDistance)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS, FormatInt(plan.distanceUnits)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_TIME, FormatInt(plan.targetTime)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_SPLITS, FormatInt(plan.targetSplits)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_SPLITS_UNITS, FormatInt(plan.splitsUnits)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_ROUTE, EscapeAndQuoteString(plan.route)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_LAST_UPDATED_TIME, FormatInt(plan.lastUpdatedTime)));
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;
@@ -1768,22 +1769,29 @@ extern "C" {
 
 			plan.planId = planId;
 			plan.name = planName;
-			plan.targetPaceInMinKm = (double)0.0;
-			plan.targetDistanceInKms = (double)0.0;
-			plan.splits = (double).0;
+			plan.description = "";
+			plan.targetDistance = (double)0.0;
+			plan.targetTime = 0;
+			plan.targetSplits = (double)0.0;
 			plan.route = "";
-			plan.displayUnitsDistance = UNIT_SYSTEM_METRIC;
-			plan.displayUnitsPace = UNIT_SYSTEM_METRIC;
+			plan.distanceUnits = UNIT_SYSTEM_METRIC;
+			plan.splitsUnits = UNIT_SYSTEM_METRIC;
 			plan.lastUpdatedTime = time(NULL);
 			result = g_pDatabase->CreatePacePlan(plan);
 		}
 
 		g_dbLock.unlock();
 
+		// Reload the pace plan cache.
+		if (result)
+		{
+			result = InitializePacePlanList();
+		}
+
 		return result;
 	}
 
-	bool RetrievePacePlan(const char* const planId, char** const name, char** const description, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime)
+	bool RetrievePacePlan(const char* const planId, const char** const name, const char** const description, double* targetDistance, time_t* targetTime, time_t* targetSplits, UnitSystem* targetDistanceUnits, UnitSystem* targetSplitsUnits, time_t* lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (planId == NULL)
@@ -1801,16 +1809,16 @@ extern "C" {
 					(*name) = strdup(pacePlan.name.c_str());
 				if (description)
 					(*description) = strdup(pacePlan.description.c_str());
-				if (targetPaceInMinKm)
-					(*targetPaceInMinKm) = pacePlan.targetPaceInMinKm;
-				if (targetDistanceInKms)
-					(*targetDistanceInKms) = pacePlan.targetDistanceInKms;
-				if (splits)
-					(*splits) = pacePlan.splits;
+				if (targetDistance)
+					(*targetDistance) = pacePlan.targetDistance;
+				if (targetTime)
+					(*targetTime) = pacePlan.targetTime;
+				if (targetSplits)
+					(*targetSplits) = pacePlan.targetSplits;
 				if (targetDistanceUnits)
-					(*targetDistanceUnits) = pacePlan.displayUnitsDistance;
-				if (targetPaceUnits)
-					(*targetPaceUnits) = pacePlan.displayUnitsPace;
+					(*targetDistanceUnits) = pacePlan.distanceUnits;
+				if (targetSplitsUnits)
+					(*targetSplitsUnits) = pacePlan.splitsUnits;
 				if (lastUpdatedTime)
 					(*lastUpdatedTime) = pacePlan.lastUpdatedTime;
 				return true;
@@ -1819,7 +1827,7 @@ extern "C" {
 		return false;
 	}
 
-	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime)
+	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetDistance, time_t targetTime, time_t targetSplits, UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (planId == NULL)
@@ -1845,11 +1853,11 @@ extern "C" {
 				{
 					pacePlan.name = name;
 					pacePlan.description = description;
-					pacePlan.targetPaceInMinKm = targetPaceInMinKm;
-					pacePlan.targetDistanceInKms = targetDistanceInKms;
-					pacePlan.splits = splits;
-					pacePlan.displayUnitsDistance = targetDistanceUnits;
-					pacePlan.displayUnitsPace = targetPaceUnits;
+					pacePlan.targetDistance = targetDistance;
+					pacePlan.targetTime = targetTime;
+					pacePlan.targetSplits = targetSplits;
+					pacePlan.distanceUnits = targetDistanceUnits;
+					pacePlan.splitsUnits = targetSplitsUnits;
 					pacePlan.lastUpdatedTime = lastUpdatedTime;
 					result = g_pDatabase->UpdatePacePlan(pacePlan);
 				}
@@ -1885,6 +1893,12 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+
+		// Reload the pace plan cache.
+		if (result)
+		{
+			result = InitializePacePlanList();
+		}
 
 		return result;
 	}

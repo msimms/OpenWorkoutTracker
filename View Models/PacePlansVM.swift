@@ -5,19 +5,18 @@
 
 import Foundation
 
-class PacePlan : Codable, Identifiable, Hashable, Equatable {
-	enum CodingKeys: CodingKey {
-		case id
-		case name
-		case distance
-		case splits
-	}
-	
+class PacePlan : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
 	var name: String = ""
+	var description: String = ""
 	var distance: Double = 0.0
-	var splits: Double = 0.0
-	
+	var distanceUnits: UnitSystem = UNIT_SYSTEM_METRIC
+	var time: Int = 0 // The time (seconds) in which the user wishes to complete the pace plan
+	var splits: Int = 0 // The splits (seconds, can be negative)
+	var splitsUnits: UnitSystem = UNIT_SYSTEM_METRIC
+	var route: String = ""
+	var lastUpdatedTime: Date = Date()
+
 	/// Constructor
 	init() {
 	}
@@ -36,51 +35,129 @@ class PacePlan : Codable, Identifiable, Hashable, Equatable {
 }
 
 class PacePlansVM : ObservableObject {
+	static let shared = PacePlansVM()
 	@Published var pacePlans: Array<PacePlan> = []
 	
-	/// Constructor
-	init() {
+	/// Singleton Constructor
+	private init() {
 		buildPacePlansList()
 	}
 	
-	func buildPacePlansList() {
+	func buildPacePlansList() -> Bool {
+		var result = false
+
+		// Remove any old ones.
+		self.pacePlans = []
+
+		// Query the backend for the latest pace plans.
 		if InitializePacePlanList() {
+
 			var pacePlanIndex = 0
 			var done = false
-			
+
 			while !done {
-				let pacePlanDesc = RetrievePacePlanAsJSON(pacePlanIndex)
-				
-				if pacePlanDesc == nil {
-					done = true
-				}
-				else {
-					let ptr = UnsafeRawPointer(pacePlanDesc)
-					let tempPacePlanDesc = String(cString: ptr!.assumingMemoryBound(to: CChar.self))
-					
-					defer {
-						ptr!.deallocate()
+				if let rawPacePlanDescPtr = RetrievePacePlanAsJSON(pacePlanIndex) {
+					let summaryObj = PacePlan()
+					let pacePlanDescPtr = UnsafeRawPointer(rawPacePlanDescPtr)
+
+					let pacePlanDesc = String(cString: pacePlanDescPtr.assumingMemoryBound(to: CChar.self))
+					let summaryDict = try! JSONSerialization.jsonObject(with: Data(pacePlanDesc.utf8), options: []) as! [String:Any]
+
+					if let pacePlanId = summaryDict[PARAM_PACE_PLAN_ID] as? String {
+						summaryObj.id = UUID(uuidString: pacePlanId)!
 					}
-					
+					if let pacePlanName = summaryDict[PARAM_PACE_PLAN_NAME] as? String {
+						summaryObj.name = pacePlanName
+					}
+					if let pacePlanDescription = summaryDict[PARAM_PACE_PLAN_DESCRIPTION] as? String {
+						summaryObj.description = pacePlanDescription
+					}
+					if let pacePlanDistance = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE] as? Double {
+						summaryObj.distance = pacePlanDistance
+					}
+					if let pacePlanDistanceUnits = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS] as? UnitSystem {
+						summaryObj.distanceUnits = pacePlanDistanceUnits
+					}
+					if let pacePlanTime = summaryDict[PARAM_PACE_PLAN_TARGET_TIME] as? Int {
+						summaryObj.time = pacePlanTime
+					}
+					if let pacePlanSplits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS] as? Int {
+						summaryObj.splits = pacePlanSplits
+					}
+					if let pacePlanSplitsUnits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS_UNITS] as? UnitSystem {
+						summaryObj.splitsUnits = pacePlanSplitsUnits
+					}
+					if let pacePlanRoute = summaryDict[PARAM_PACE_PLAN_ROUTE] as? String {
+						summaryObj.route = pacePlanRoute
+					}
+					if let lastModifiedTime = summaryDict[PARAM_PACE_PLAN_LAST_UPDATED_TIME] as? UInt {
+						summaryObj.lastUpdatedTime = Date(timeIntervalSince1970: TimeInterval(lastModifiedTime))
+					}
+
+					defer {
+						pacePlanDescPtr.deallocate()
+					}
+
+					self.pacePlans.append(summaryObj)
 					pacePlanIndex += 1
 				}
+				else {
+					done = true
+				}
 			}
+
+			result = true
 		}
+		
+		return result
 	}
 	
-	func createPacePlan(name: String, description: String, distanceInKms: Double, targetPaceInMinKm: Double, splits: Double, targetDistanceUnits: UnitSystem, targetPaceUnits: UnitSystem) -> Bool {
-		let planId = UUID().uuidString
-		if CreateNewPacePlan(name, planId) {
+	func createPacePlan(plan: PacePlan) -> Bool {
+		if CreateNewPacePlan(plan.name, plan.id.uuidString) {
 			let lastUpdatedTime = time(nil)
-			if UpdatePacePlan(planId, name, description, targetPaceInMinKm, distanceInKms, splits, targetDistanceUnits, targetPaceUnits, lastUpdatedTime) {
+
+			if UpdatePacePlan(plan.id.uuidString, plan.name, plan.description, plan.distance, plan.time, plan.splits, plan.distanceUnits, plan.splitsUnits, lastUpdatedTime) {
+				return buildPacePlansList()
+			}
+
+			// Creation failed, clean up our mess.
+			DeletePacePlan(plan.id.uuidString)
+		}
+		return false
+	}
+
+	func doesPacePlanExist(planId: UUID) -> Bool {
+		for existingPlan in self.pacePlans {
+			if existingPlan.id == planId {
 				return true
 			}
 		}
 		return false
 	}
-	
-	func deletePacePlan(pacePlanId: String) -> Bool {
-		return DeletePacePlan(pacePlanId)
+
+	func retrievePacePlan(planId: UUID) -> PacePlan {
+		for existingPlan in self.pacePlans {
+			if existingPlan.id == planId {
+				return existingPlan
+			}
+		}
+		return PacePlan() // Return an empty pace plan object
+	}
+
+	func updatePacePlan(plan: PacePlan) -> Bool {
+		let lastUpdatedTime = time(nil)
+		
+		if UpdatePacePlan(plan.id.uuidString, plan.name, plan.description, plan.distance, plan.time, plan.splits, plan.distanceUnits, plan.splitsUnits, lastUpdatedTime) {
+			return buildPacePlansList()
+		}
+		return false
+	}
+
+	func deletePacePlan(planId: UUID) -> Bool {
+		if DeletePacePlan(planId.uuidString) {
+			return buildPacePlansList()
+		}
+		return false
 	}
 
 	func parseHHMMSS(str: String, hours: inout Int, minutes: inout Int, seconds: inout Int) -> Bool {

@@ -6,16 +6,54 @@
 import Foundation
 import SwiftUI
 
+let NO_INTERVAL_SESSION_INDEX: Int = -1
+
+let MODIFIER_ADD_SETS = "Add Sets"
+let MODIFIER_EDIT_SETS = "Edit Sets"
+
+let MODIFIER_ADD_REPS = "Add Reps"
+let MODIFIER_EDIT_REPS = "Edit Reps"
+
+let MODIFIER_ADD_DURATION = "Add Duration (seconds)"
+let MODIFIER_EDIT_DURATION = "Edit Duration (seconds)"
+
+let MODIFIER_ADD_DISTANCE_METERS = "Add Distance (meters)"
+let MODIFIER_EDIT_DISTANCE_METERS = "Edit Distance (meters)"
+
+let MODIFIER_ADD_DISTANCE_KILOMETERS = "Add Distance (kilometers)"
+let MODIFIER_EDIT_DISTANCE_KILOMETERS = "Edit Distance (kilometers)"
+
+let MODIFIER_ADD_DISTANCE_FEET = "Add Distance (feet)"
+let MODIFIER_EDIT_DISTANCE_FEET = "Edit Distance (feet)"
+
+let MODIFIER_ADD_DISTANCE_YARDS = "Add Distance (yards)"
+let MODIFIER_EDIT_DISTANCE_YARDS = "Edit Distance (yards)"
+
+let MODIFIER_ADD_DISTANCE_MILES = "Add Distance (miles)"
+let MODIFIER_EDIT_DISTANCE_MILES = "Edit Distance (miles)"
+
+let MODIFIER_ADD_PACE_US_CUSTOMARY = "Add Pace (mins/mile)"
+let MODIFIER_EDIT_PACE_US_CUSTOMARY = "Edit Pace (mins/mile)"
+
+let MODIFIER_ADD_PACE_METRIC = "Add Pace (mins/km)"
+let MODIFIER_EDIT_PACE_METRIC = "Edit Pace (mins/km)"
+
+let MODIFIER_ADD_SPEED_US_CUSTOMARY = "Add Speed (mph)"
+let MODIFIER_EDIT_SPEED_US_CUSTOMARY = "Edit Speed (mph)"
+
+let MODIFIER_ADD_SPEED_METRIC = "Add Speed (kph)"
+let MODIFIER_EDIT_SPEED_METRIC = "Edit Speed (kph)"
+
+let MODIFIER_ADD_POWER = "Add Power (watts)"
+let MODIFIER_EDIT_POWER = "Edit Power (watts)"
+
 class IntervalSegment : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
-	var sets: UInt = 0         // Number of sets
-	var reps: UInt = 0         // Number of repititions
-	var duration: UInt = 0     // Duration, if applicable, in seconds
-	var distance: Double = 0.0
-	var pace: Double = 0.0
-	var power: Double = 0.0
-	var units: IntervalUnit = INTERVAL_UNIT_NOT_SET
-	
+	var firstValue: Double = 0.0
+	var secondValue: Double = 0.0
+	var firstUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET  // Units for the first part of the description (ex: X secs at Y pace or X sets of Y reps)
+	var secondUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET // Units for the first second of the description (ex: X secs at Y pace or X sets of Y reps)
+
 	/// Constructor
 	init() {
 	}
@@ -35,123 +73,259 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	func validModifiers(activityType: String) -> Array<String> {
 		var modifiers: Array<String> = []
 
-		// Can we edit or add duration?
-		if self.duration == 0 {
-			modifiers.append("Add Duration")
-		}
-		else {
-			modifiers.append("Edit Duration")
-		}
-
-		// Can we edit or add distance? Not if duration was already specified.
-		if self.duration == 0 {
-			if self.distance == 0 {
-				modifiers.append("Add Distance")
+		switch self.firstUnits {
+		case INTERVAL_UNIT_NOT_SET:
+			modifiers.append(MODIFIER_ADD_DURATION)
+			modifiers.append(MODIFIER_ADD_DISTANCE_METERS)
+			modifiers.append(MODIFIER_ADD_DISTANCE_KILOMETERS)
+			modifiers.append(MODIFIER_ADD_DISTANCE_FEET)
+			modifiers.append(MODIFIER_ADD_DISTANCE_YARDS)
+			modifiers.append(MODIFIER_ADD_DISTANCE_MILES)
+			modifiers.append(MODIFIER_ADD_SETS)
+			break
+		case INTERVAL_UNIT_SETS:
+			modifiers.append(MODIFIER_EDIT_SETS)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_REPS)
 			}
-			else {
-				modifiers.append("Edit Distance")
+			break;
+		case INTERVAL_UNIT_REPS:
+			modifiers.append(MODIFIER_EDIT_REPS)
+			break
+		case INTERVAL_UNIT_SECONDS:
+			modifiers.append(MODIFIER_EDIT_DURATION)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_PACE_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_PACE_METRIC)
+				modifiers.append(MODIFIER_ADD_SPEED_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_SPEED_METRIC)
+				modifiers.append(MODIFIER_ADD_POWER)
 			}
-		}
-
-		// Can we edit or add pace?
-		if self.pace == 0 {
-			modifiers.append("Add Pace")
-		}
-		else {
-			modifiers.append("Edit Pace")
-		}
-
-		// Can we edit or add sets or reps?
-		if self.sets == 0 {
-			modifiers.append("Add Sets")
-		}
-		else {
-			modifiers.append("Add Repititions")
-		}
-
-		// Can we edit or add power?
-		if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
-			modifiers.append("Power")
+			break
+		case INTERVAL_UNIT_METERS:
+			modifiers.append(MODIFIER_EDIT_DISTANCE_METERS)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_PACE_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_PACE_METRIC)
+				modifiers.append(MODIFIER_ADD_SPEED_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_SPEED_METRIC)
+				modifiers.append(MODIFIER_ADD_POWER)
+			}
+			break
+		case INTERVAL_UNIT_KILOMETERS:
+			modifiers.append(MODIFIER_EDIT_DISTANCE_KILOMETERS)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_PACE_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_PACE_METRIC)
+				modifiers.append(MODIFIER_ADD_SPEED_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_SPEED_METRIC)
+				modifiers.append(MODIFIER_ADD_POWER)
+			}
+			break
+		case INTERVAL_UNIT_FEET:
+			modifiers.append(MODIFIER_EDIT_DISTANCE_FEET)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_PACE_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_PACE_METRIC)
+				modifiers.append(MODIFIER_ADD_SPEED_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_SPEED_METRIC)
+				modifiers.append(MODIFIER_ADD_POWER)
+			}
+			break
+		case INTERVAL_UNIT_YARDS:
+			modifiers.append(MODIFIER_EDIT_DISTANCE_YARDS)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_PACE_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_PACE_METRIC)
+				modifiers.append(MODIFIER_ADD_SPEED_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_SPEED_METRIC)
+				modifiers.append(MODIFIER_ADD_POWER)
+			}
+			break
+		case INTERVAL_UNIT_MILES:
+			modifiers.append(MODIFIER_EDIT_DISTANCE_MILES)
+			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
+				modifiers.append(MODIFIER_ADD_PACE_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_PACE_METRIC)
+				modifiers.append(MODIFIER_ADD_SPEED_US_CUSTOMARY)
+				modifiers.append(MODIFIER_ADD_SPEED_METRIC)
+				modifiers.append(MODIFIER_ADD_POWER)
+			}
+			break
+		case INTERVAL_UNIT_PACE_US_CUSTOMARY:
+			modifiers.append(MODIFIER_EDIT_PACE_US_CUSTOMARY)
+			break
+		case INTERVAL_UNIT_PACE_METRIC:
+			modifiers.append(MODIFIER_EDIT_PACE_METRIC)
+			break
+		case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
+			modifiers.append(MODIFIER_EDIT_SPEED_US_CUSTOMARY)
+			break
+		case INTERVAL_UNIT_SPEED_METRIC:
+			modifiers.append(MODIFIER_EDIT_SPEED_METRIC)
+			break
+		case INTERVAL_UNIT_WATTS:
+			modifiers.append(MODIFIER_EDIT_POWER)
+			break
+		default:
+			break
 		}
 		return modifiers
 	}
 	
-	func applyModifier(key: String, value: String) {
-		if key.contains("Duration") {
-			self.duration = UInt(value)!
+	func applyModifier(key: String, value: Double) {
+
+		if key.contains(MODIFIER_ADD_SETS) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_SETS
 		}
-		else if key.contains("Distance") {
-			self.distance = Double(value)!
+		else if key.contains(MODIFIER_EDIT_SETS) {
+			if self.firstUnits == INTERVAL_UNIT_SETS {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
-		else if key.contains("Pace") {
-			self.pace = Double(value)!
+		else if key.contains(MODIFIER_ADD_REPS) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_REPS
 		}
-		else if key.contains("Sets") {
-			self.sets = UInt(value)!
+		else if key.contains(MODIFIER_EDIT_REPS) {
+			if self.firstUnits == INTERVAL_UNIT_REPS {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
-		else if key.contains("Repititions") {
-			self.reps = UInt(value)!
+		else if key.contains(MODIFIER_ADD_DURATION) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_SECONDS
 		}
-		else if key.contains("Power") {
-			self.power = Double(value)!
+		else if key.contains(MODIFIER_EDIT_DURATION) {
+			if self.firstUnits == INTERVAL_UNIT_SECONDS {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_METERS) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_METERS
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_KILOMETERS) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_KILOMETERS
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_FEET) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_FEET
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_YARDS) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_YARDS
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_MILES) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_MILES
+		}
+		else if key.contains(MODIFIER_ADD_PACE_US_CUSTOMARY) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_PACE_US_CUSTOMARY
+		}
+		else if key.contains(MODIFIER_ADD_PACE_METRIC) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_PACE_METRIC
+		}
+		else if key.contains(MODIFIER_ADD_SPEED_US_CUSTOMARY) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_SPEED_US_CUSTOMARY
+		}
+		else if key.contains(MODIFIER_ADD_SPEED_METRIC) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_PACE_METRIC
+		}
+		else if key.contains(MODIFIER_ADD_POWER) {
+			self.secondValue = value
+			self.secondUnits = INTERVAL_UNIT_WATTS
+		}
+	}
+
+	private func unitsStr(units: IntervalUnit) -> String {
+		switch units {
+		case INTERVAL_UNIT_NOT_SET:
+			return ""
+		case INTERVAL_UNIT_SETS:
+			return "sets"
+		case INTERVAL_UNIT_REPS:
+			return "repititions"
+		case INTERVAL_UNIT_SECONDS:
+			return "seconds"
+		case INTERVAL_UNIT_METERS:
+			return "meters"
+		case INTERVAL_UNIT_KILOMETERS:
+			return "kms"
+		case INTERVAL_UNIT_FEET:
+			return "feet"
+		case INTERVAL_UNIT_YARDS:
+			return "yards"
+		case INTERVAL_UNIT_MILES:
+			return "miles"
+		case INTERVAL_UNIT_PACE_US_CUSTOMARY:
+			return "min/mile"
+		case INTERVAL_UNIT_PACE_METRIC:
+			return "km/mile"
+		case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
+			return "mph"
+		case INTERVAL_UNIT_SPEED_METRIC:
+			return "kph"
+		case INTERVAL_UNIT_WATTS:
+			return "watts"
+		default:
+			break
+		}
+		return ""
+	}
+
+	private func formatDescriptionFragment(value: Double, units: IntervalUnit) -> String {
+		return String(format: "%0.1lf %@", value, self.unitsStr(units: units))
 	}
 
 	func description() -> String {
 		var description: String = ""
 
-		switch self.units {
-		case INTERVAL_UNIT_NOT_SET:
-			description = String(format: "%u sets of %u reps", self.sets, self.reps)
-			break
-		case INTERVAL_UNIT_SECONDS:
-			description = String(format: "%u seconds", self.duration)
-			if self.pace > 0.01 {
-				description += String(format: " at %d", self.pace)
+		if self.firstUnits != INTERVAL_UNIT_NOT_SET {
+			description = self.formatDescriptionFragment(value: self.firstValue, units: self.firstUnits)
+
+			if self.secondUnits != INTERVAL_UNIT_NOT_SET {
+				if  self.secondUnits == INTERVAL_UNIT_PACE_US_CUSTOMARY ||
+					self.secondUnits == INTERVAL_UNIT_PACE_METRIC ||
+					self.secondUnits == INTERVAL_UNIT_SPEED_US_CUSTOMARY ||
+					self.secondUnits == INTERVAL_UNIT_SPEED_METRIC ||
+					self.secondUnits == INTERVAL_UNIT_WATTS {
+					description += " at "
+				}
+				else if self.secondUnits == INTERVAL_UNIT_REPS {
+					description += " of "
+				}
+				description += self.formatDescriptionFragment(value: self.secondValue, units: self.secondUnits)
 			}
-			break
-		case INTERVAL_UNIT_METERS:
-			description = String(format: "%d meters", self.distance)
-			break
-		case INTERVAL_UNIT_KILOMETERS:
-			description = String(format: "%d kilometers", self.distance)
-			break
-		case INTERVAL_UNIT_FEET:
-			description = String(format: "%d feet", self.distance)
-			break
-		case INTERVAL_UNIT_YARDS:
-			description = String(format: "%d yards", self.distance)
-			break
-		case INTERVAL_UNIT_MILES:
-			description = String(format: "%d miles", self.distance)
-			break
-		case INTERVAL_UNIT_PACE_US_CUSTOMARY:
-			description = " min/mile"
-			break
-		case INTERVAL_UNIT_PACE_METRIC:
-			description = " km/mile"
-			break
-		case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
-			description = " mph"
-			break
-		case INTERVAL_UNIT_SPEED_METRIC:
-			description = " kph"
-			break
-		case INTERVAL_UNIT_TIME_AND_POWER:
-			description = String(format: "%.1f watts for %u seconds", self.power, self.duration)
-			break
-		default:
-			break
 		}
 		return description
 	}
 	
 	func color() -> Color {
-		switch self.units {
+		switch self.firstUnits {
 		case INTERVAL_UNIT_NOT_SET:
 			break
 		case INTERVAL_UNIT_SECONDS:
 			return .red
+		case INTERVAL_UNIT_SETS:
+			return .white
+		case INTERVAL_UNIT_REPS:
+			return .white
 		case INTERVAL_UNIT_METERS:
 			return .blue
 		case INTERVAL_UNIT_KILOMETERS:
@@ -170,7 +344,7 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 			return .cyan
 		case INTERVAL_UNIT_SPEED_METRIC:
 			return .cyan
-		case INTERVAL_UNIT_TIME_AND_POWER:
+		case INTERVAL_UNIT_WATTS:
 			return .blue
 		default:
 			break
@@ -184,6 +358,7 @@ class IntervalSession : Identifiable, Hashable, Equatable {
 	var name: String = "Untitled"
 	var sport: String = ACTIVITY_TYPE_RUNNING
 	var segments: Array<IntervalSegment> = []
+	var lastUpdatedTime: Date = Date()
 
 	/// Constructor
 	init() {
@@ -203,14 +378,21 @@ class IntervalSession : Identifiable, Hashable, Equatable {
 }
 
 class IntervalSessionsVM : ObservableObject {
+	static let shared = IntervalSessionsVM()
 	@Published var intervalSessions: Array<IntervalSession> = []
 
-	/// Constructor
-	init() {
+	/// Singleton Constructor
+	private init() {
 		buildIntervalSessionList()
 	}
 
-	func buildIntervalSessionList() {
+	func buildIntervalSessionList() -> Bool {
+		var result = false
+
+		// Remove any old ones.
+		self.intervalSessions = []
+		
+		// Query the backend for the latest interval sessions.
 		if InitializeIntervalWorkoutList() {
 			var workoutIndex = 0
 			var done = false
@@ -232,14 +414,24 @@ class IntervalSessionsVM : ObservableObject {
 					workoutIndex += 1
 				}
 			}
+			
+			result = true
 		}
+		
+		return result
 	}
 
 	func createIntervalSession(session: IntervalSession) -> Bool {
-		return CreateNewIntervalWorkout(session.id.uuidString, session.name, session.sport)
+		if CreateNewIntervalWorkout(session.id.uuidString, session.name, session.sport) {
+			return buildIntervalSessionList()
+		}
+		return false
 	}
 
 	func deleteIntervalSession(intervalSessionId: UUID) -> Bool {
-		return DeleteIntervalWorkout(intervalSessionId.uuidString)
+		if DeleteIntervalWorkout(intervalSessionId.uuidString) {
+			return buildIntervalSessionList()
+		}
+		return false
 	}
 }

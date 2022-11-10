@@ -122,8 +122,8 @@ extern "C" {
 	bool InitializePacePlanList(void);
 	char* RetrievePacePlanAsJSON(size_t planIndex);
 	bool CreateNewPacePlan(const char* const planName, const char* const planId);
-	bool RetrievePacePlan(const char* const planId, char** const name, char** const description, double* targetPaceInMinKm, double* targetDistanceInKms, double* splits, UnitSystem* targetDistanceUnits, UnitSystem* targetPaceUnits, time_t* lastUpdatedTime);
-	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetPaceInMinKm, double targetDistanceInKms, double splits, UnitSystem targetDistanceUnits, UnitSystem targetPaceUnits, time_t lastUpdatedTime);
+	bool RetrievePacePlan(const char* const planId, const char** const name, const char** const description, double* targetDistance, time_t* targetTime, time_t* targetSplits, UnitSystem* targetDistanceUnits, UnitSystem* targetSplitsUnits, time_t* lastUpdatedTime);
+	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetDistance, time_t targetTime, time_t targetSplits, UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime);
 	bool DeletePacePlan(const char* planId);
 
 	// Functions for managing the currently set pace plan.

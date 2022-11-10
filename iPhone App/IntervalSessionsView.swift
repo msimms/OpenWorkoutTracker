@@ -7,14 +7,29 @@ import SwiftUI
 
 struct IntervalSessionsView: View {
 	@Environment(\.colorScheme) var colorScheme
-	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
+	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
 	
+	let dateFormatter: DateFormatter = {
+		let df = DateFormatter()
+		df.dateStyle = .medium
+		df.timeZone = .gmt
+		return df
+	}()
+
 	var body: some View {
 		VStack(alignment: .center) {
 			if self.intervalSessionsVM.intervalSessions.count > 0 {
 				List(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
-					Text(item.name)
+					NavigationLink(destination: EditIntervalSessionView(sessionid: item.id)) {
+						VStack(alignment: .leading) {
+							Text(item.name)
+								.bold()
+							Text("Last Updated: \(self.dateFormatter.string(from: item.lastUpdatedTime))")
+								.italic()
+						}
+					}
 				}
+				.listStyle(.plain)
 			}
 			else {
 				Text("No Interval Sessions")
@@ -26,7 +41,7 @@ struct IntervalSessionsView: View {
 				Spacer()
 			}
 			ToolbarItem(placement: .bottomBar) {
-				NavigationLink("+", destination: NewIntervalSessionView())
+				NavigationLink("+", destination: EditIntervalSessionView(sessionid: UUID()))
 					.foregroundColor(colorScheme == .dark ? .white : .black)
 			}
 		}

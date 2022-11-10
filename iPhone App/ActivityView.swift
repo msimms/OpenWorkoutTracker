@@ -12,8 +12,8 @@ struct ActivityView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: LiveActivityVM
-	@StateObject private var pacePlansVM = PacePlansVM()
-	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
+	@StateObject private var pacePlansVM = PacePlansVM.shared
+	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
 	@State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
 	@State private var showingStopSelection: Bool = false
 	@State private var showingIntervalSessionSelection: Bool = false

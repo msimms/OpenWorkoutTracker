@@ -1110,20 +1110,26 @@ SegmentType MovingActivity::GradeAdjustedPace() const
 time_t MovingActivity::GapToTargetPace() const
 {
 	// Make sure a pace plan is selected.
-	if (m_pacePlan.targetDistanceInKms > (double)0.01 && m_pacePlan.targetPaceInMinKm > (double)0.0)
+	if (m_pacePlan.targetDistance > (double)0.01)
 	{
-		double remainingDistanceInMeters = (m_pacePlan.targetDistanceInKms * 1000.0) - DistanceTraveledInMeters();
+		// Convert distance to metric and calculate the remaining distance.
+		double targetDistanceInKms = m_pacePlan.targetDistance;
+		if (m_pacePlan.distanceUnits == UNIT_SYSTEM_US_CUSTOMARY)
+			targetDistanceInKms = UnitConverter::MilesToKilometers(targetDistanceInKms) * 1000.0;
+		double targetDistanceInMeters = targetDistanceInKms * (double)1000.0;
+		double remainingDistanceInMeters = targetDistanceInMeters - DistanceTraveledInMeters();
 
 		// Are we there yet?
 		if (remainingDistanceInMeters > (double)0.01)
 		{
 			SegmentType currentPaceSegment = CurrentPace();
-			
+
 			// Don't bother computing anything if we're standing still.
 			if (currentPaceSegment.startTime > 0)
 			{
+				double targetPaceInMinKm = ((double)m_pacePlan.targetTime / (double)60.0) / targetDistanceInKms;
 				double elapsedMins = ElapsedTimeInSeconds() / (double)60.0;
-				double targetFinishTimeInMins = (m_pacePlan.targetDistanceInKms * m_pacePlan.targetPaceInMinKm) - elapsedMins;
+				double targetFinishTimeInMins = (targetDistanceInKms * targetPaceInMinKm) - elapsedMins;
 
 				// Make sure we haven't already passed the original target finish time.
 				if (targetFinishTimeInMins > (double)0.01)
@@ -1133,11 +1139,10 @@ time_t MovingActivity::GapToTargetPace() const
 					if (remainingDistanceInUserUnits > (double)0.01)
 					{
 						// Percentage remaining. Needed to compute splits.
-						double totalDistanceInMeters = m_pacePlan.targetDistanceInKms * (double)1000.0;
-						double percentDistanceRemaining = remainingDistanceInMeters / totalDistanceInMeters;
+						double percentDistanceRemaining = remainingDistanceInMeters / targetDistanceInMeters;
 						
 						// Pace difference between the first km and the last km, due to splits.
-						double splitDiff = m_pacePlan.targetDistanceInKms * m_pacePlan.splits;
+						double splitDiff = targetDistanceInKms * m_pacePlan.targetSplits;
 						splitDiff = (percentDistanceRemaining * splitDiff) - ((double)0.5 * splitDiff);
 
 						// Compute the average pace we need to maintain, from our current location, if we are to hit our target time and distance.

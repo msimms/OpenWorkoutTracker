@@ -63,11 +63,12 @@
 // Pace Plans
 #define PARAM_PACE_PLAN_ID                    "id"
 #define PARAM_PACE_PLAN_NAME                  "name"
-#define PARAM_PACE_PLAN_TARGET_PACE           "target pace"
+#define PARAM_PACE_PLAN_DESCRIPTION           "description"
 #define PARAM_PACE_PLAN_TARGET_DISTANCE       "target distance"
-#define PARAM_PACE_PLAN_TARGET_PACE_UNITS     "target pace units"
 #define PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS "target distance units"
-#define PARAM_PACE_PLAN_SPLITS                "splits"
+#define PARAM_PACE_PLAN_TARGET_TIME           "target time"
+#define PARAM_PACE_PLAN_TARGET_SPLITS         "target splits"
+#define PARAM_PACE_PLAN_TARGET_SPLITS_UNITS   "target splits units"
 #define PARAM_PACE_PLAN_ROUTE                 "route"
 #define PARAM_PACE_PLAN_LAST_UPDATED_TIME     "last updated"
 

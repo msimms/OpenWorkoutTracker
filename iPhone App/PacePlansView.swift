@@ -7,15 +7,29 @@ import SwiftUI
 
 struct PacePlansView: View {
 	@Environment(\.colorScheme) var colorScheme
-	@StateObject private var pacePlansVM = PacePlansVM()
-	@State private var showingNewView: Bool = false
+	@StateObject private var pacePlansVM = PacePlansVM.shared
+
+	let dateFormatter: DateFormatter = {
+		let df = DateFormatter()
+		df.dateStyle = .medium
+		df.timeZone = .gmt
+		return df
+	}()
 
 	var body: some View {
 		VStack(alignment: .center) {
 			if self.pacePlansVM.pacePlans.count > 0 {
 				List(self.pacePlansVM.pacePlans, id: \.self) { item in
-					Text(item.name)
+					NavigationLink(destination: EditPacePlanView(pacePlan: item)) {
+						VStack(alignment: .leading) {
+							Text(item.name)
+								.bold()
+							Text("Last Updated: \(self.dateFormatter.string(from: item.lastUpdatedTime))")
+								.italic()
+						}
+					}
 				}
+				.listStyle(.plain)
 			}
 			else {
 				Text("No Pace Plans")
@@ -27,7 +41,7 @@ struct PacePlansView: View {
 				Spacer()
 			}
 			ToolbarItem(placement: .bottomBar) {
-				NavigationLink("+", destination: NewPacePlanView())
+				NavigationLink("+", destination: EditPacePlanView(pacePlan: PacePlan()))
 					.foregroundColor(colorScheme == .dark ? .white : .black)
 			}
 		}

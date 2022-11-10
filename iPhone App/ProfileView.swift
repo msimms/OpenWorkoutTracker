@@ -14,9 +14,9 @@ struct ProfileView: View {
 	@State private var showingWeightError: Bool = false
 	@State private var showingFtpError: Bool = false
 	@State private var showingApiError: Bool = false
-	@ObservedObject var height = NumbersOnly(initialValue: ProfileVM.getDisplayedHeight())
-	@ObservedObject var weight = NumbersOnly(initialValue: ProfileVM.getDisplayedWeight())
-	@ObservedObject var ftp = NumbersOnly(initialValue: Preferences.ftp())
+	@ObservedObject var height = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedHeight())
+	@ObservedObject var weight = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedWeight())
+	@ObservedObject var ftp = NumbersOnly(initialDoubleValue: Preferences.ftp())
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()

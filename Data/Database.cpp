@@ -190,29 +190,17 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("pace_plan"))
 	{
-		sql = "create table pace_plan (id integer primary key, plan_id text, name text, description text, target_pace double, target_distance double, splits double, route text, display_units_distance integer, display_units_pace integer, last_updated_time big int)";
+		sql = "create table pace_plan (id integer primary key, plan_id text, name text, description text, target_distance double, target_distance_units integer, target_time integer, target_splits integer, target_splits_units integer, route text, last_updated_time big int)";
 		queries.push_back(sql);
 	}
 	else
 	{
-		if (!DoesTableHaveColumn("pace_plan", "description"))
+		if (DoesTableHaveColumn("pace_plan", "target_pace"))
 		{
-			sql = "alter table pace_plan add column description text";
+			sql = "drop table pace_plan";
 			queries.push_back(sql);
-		}
-		if (!DoesTableHaveColumn("pace_plan", "display_units_distance"))
-		{
-			sql = "alter table pace_plan add column display_units_distance integer";
-			queries.push_back(sql);
-		}
-		if (!DoesTableHaveColumn("pace_plan", "display_units_pace"))
-		{
-			sql = "alter table pace_plan add column display_units_pace integer";
-			queries.push_back(sql);
-		}
-		if (!DoesTableHaveColumn("pace_plan", "last_updated_time"))
-		{
-			sql = "alter table pace_plan add column last_updated_time big int";
+
+			sql = "create table pace_plan (id integer primary key, plan_id text, name text, description text, target_distance double, target_distance_units integer, target_time integer, target_splits integer, target_splits_units integer, route text, last_updated_time big int)";
 			queries.push_back(sql);
 		}
 	}
@@ -1005,12 +993,12 @@ bool Database::CreatePacePlan(const PacePlan& plan)
 		sqlite3_bind_text(statement, 1, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, plan.name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 3, plan.description.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 4, plan.targetPaceInMinKm);
-		sqlite3_bind_double(statement, 5, plan.targetDistanceInKms);
-		sqlite3_bind_double(statement, 6, plan.splits);
-		sqlite3_bind_text(statement, 7, plan.route.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(statement, 8, plan.displayUnitsDistance);
-		sqlite3_bind_int(statement, 9, plan.displayUnitsPace);
+		sqlite3_bind_double(statement, 4, plan.targetDistance);
+		sqlite3_bind_int64(statement, 5, plan.targetTime);
+		sqlite3_bind_int64(statement, 6, plan.targetSplits);
+		sqlite3_bind_int(statement, 7, plan.distanceUnits);
+		sqlite3_bind_int(statement, 8, plan.splitsUnits);
+		sqlite3_bind_text(statement, 9, plan.route.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 10, plan.lastUpdatedTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
@@ -1022,8 +1010,8 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
-	
-	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, description, target_pace, target_distance, splits, route, display_units_distance, display_units_pace, last_updated_time from pace_plan", -1, &statement, 0) == SQLITE_OK)
+
+	if (sqlite3_prepare_v2(m_pDb, "select plan_id, name, description, target_distance, target_distance_units, target_time, target_splits, target_splits_units, route, last_updated_time from pace_plan", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
@@ -1032,12 +1020,12 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 			plan.planId.append((const char*)sqlite3_column_text(statement, 0));
 			plan.name.append((const char*)sqlite3_column_text(statement, 1));
 			plan.description.append((const char*)sqlite3_column_text(statement, 2));
-			plan.targetPaceInMinKm = sqlite3_column_double(statement, 3);
-			plan.targetDistanceInKms = sqlite3_column_double(statement, 4);
-			plan.splits = sqlite3_column_double(statement, 5);
-			plan.route.append((const char*)sqlite3_column_text(statement, 6));
-			plan.displayUnitsDistance = (UnitSystem)sqlite3_column_int(statement, 7);
-			plan.displayUnitsPace = (UnitSystem)sqlite3_column_int(statement, 8);
+			plan.targetDistance = sqlite3_column_double(statement, 3);
+			plan.distanceUnits = (UnitSystem)sqlite3_column_int(statement, 4);
+			plan.targetTime = sqlite3_column_int64(statement, 5);
+			plan.targetSplits = sqlite3_column_int64(statement, 6);
+			plan.splitsUnits = (UnitSystem)sqlite3_column_int(statement, 7);
+			plan.route.append((const char*)sqlite3_column_text(statement, 8));
 			plan.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 9);
 
 			plans.push_back(plan);
@@ -1053,18 +1041,18 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, description = ?, target_pace = ?, target_distance = ?, splits = ?, display_units_distance = ?, display_units_pace = ?, last_updated_time = ? where plan_id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "update pace_plan set name = ?, description = ?, target_distance = ?, target_distance_units = ?, target_time = ?, target_splits = ?, target_splits_units = ?, route = ?, last_updated_time = ? where plan_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, plan.name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, plan.description.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_double(statement, 3, plan.targetPaceInMinKm);
-		sqlite3_bind_double(statement, 4, plan.targetDistanceInKms);
-		sqlite3_bind_double(statement, 5, plan.splits);
-		sqlite3_bind_int(statement, 6, plan.displayUnitsDistance);
-		sqlite3_bind_int(statement, 7, plan.displayUnitsPace);
-		sqlite3_bind_int64(statement, 8, plan.lastUpdatedTime);
-		sqlite3_bind_text(statement, 9, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 3, plan.targetDistance);
+		sqlite3_bind_int(statement, 4, plan.distanceUnits);
+		sqlite3_bind_int64(statement, 5, plan.targetTime);
+		sqlite3_bind_int64(statement, 6, plan.targetSplits);
+		sqlite3_bind_int(statement, 7, plan.splitsUnits);
+		sqlite3_bind_text(statement, 8, plan.route.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 9, plan.lastUpdatedTime);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

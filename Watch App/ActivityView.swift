@@ -11,8 +11,8 @@ let MAX_CROWN_VALUE: Double = MIN_CROWN_VALUE + 2.0
 struct ActivityView: View {
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: LiveActivityVM
-	@StateObject private var pacePlansVM = PacePlansVM()
-	@StateObject private var intervalSessionsVM = IntervalSessionsVM()
+	@StateObject private var pacePlansVM = PacePlansVM.shared
+	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
 	@State private var showingStopSelection: Bool = false
 	@State private var showingIntervalSessionSelection: Bool = false
 	@State private var showingPacePlanSelection: Bool = false

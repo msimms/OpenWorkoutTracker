@@ -9,7 +9,7 @@ class NumbersOnly: ObservableObject {
 	
 	@Published var value = "" {
 		didSet {
-			let filtered = value.filter { $0.isNumber }
+			let filtered = value.filter { $0.isNumber || $0 == "."}
 			
 			if value != filtered {
 				value = filtered
@@ -20,8 +20,8 @@ class NumbersOnly: ObservableObject {
 	init() {
 	}
 	
-	init(initialValue: Double) {
-		self.value = String(format: "%0.0f", initialValue)
+	init(initialDoubleValue: Double) {
+		self.value = String(format: "%0.0f", initialDoubleValue)
 	}
 	
 	init(initialValue: Int) {

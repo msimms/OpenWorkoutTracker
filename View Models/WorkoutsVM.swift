@@ -29,17 +29,7 @@ let STR_FRIDAY =                       "Friday"
 let STR_SATURDAY =                     "Saturday"
 let STR_SUNDAY =                       "Sunday"
 
-class WorkoutSummary : Codable, Identifiable, Hashable, Equatable {
-	enum CodingKeys: String, CodingKey {
-		case id
-		case sportType
-		case workoutType
-		case numIntervals
-		case duration
-		case distance
-		case scheduledTime
-	}
-	
+class WorkoutSummary : Identifiable, Hashable, Equatable {
 	var id: String = ""
 	var sportType: String = ""
 	var workoutType: String = ""
@@ -86,21 +76,10 @@ class WorkoutsVM : ObservableObject {
 			var done = false
 			
 			while !done {
-				let workoutJsonStrPtr = UnsafeRawPointer(RetrieveWorkoutAsJSON(workoutIndex))
-				
-				defer {
-					if workoutJsonStrPtr != nil {
-						workoutJsonStrPtr!.deallocate()
-					}
-				}
-				
-				if workoutJsonStrPtr == nil {
-					done = true
-				}
-				else {
+				if let workoutJsonStrPtr = UnsafeRawPointer(RetrieveWorkoutAsJSON(workoutIndex)) {
 					let summaryObj = WorkoutSummary()
 
-					let workoutJsonStr = String(cString: workoutJsonStrPtr!.assumingMemoryBound(to: CChar.self))
+					let workoutJsonStr = String(cString: workoutJsonStrPtr.assumingMemoryBound(to: CChar.self))
 					let summaryDict = try! JSONSerialization.jsonObject(with: Data(workoutJsonStr.utf8), options: []) as! [String:Any]
 
 					if let workoutId = summaryDict[PARAM_WORKOUT_ID] as? String {
@@ -119,8 +98,15 @@ class WorkoutsVM : ObservableObject {
 						summaryObj.scheduledTime = Date(timeIntervalSince1970: TimeInterval(scheduledTime))
 					}
 
+					defer {
+						workoutJsonStrPtr.deallocate()
+					}
+
 					self.workouts.append(summaryObj)
 					workoutIndex += 1
+				}
+				else {
+					done = true
 				}
 			}
 			

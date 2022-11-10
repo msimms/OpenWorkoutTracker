@@ -14,16 +14,16 @@
 */
 typedef struct PacePlan
 {
-	std::string  planId;               // unique identifier
-	std::string  name;                 // name
-	std::string  description;          // description
-	double       targetPaceInMinKm;    // target pace (in min/km)
-	double       targetDistanceInKms;  // target distance (in kilometers)
-	double       splits;               // desired splits (in min/km)
-	std::string  route;
-	UnitSystem   displayUnitsDistance; // unit system in which the user prefers to display the distance
-	UnitSystem   displayUnitsPace;     // unit system in which the user prefers to display the pace
-	time_t       lastUpdatedTime;      // last updated timestamp
+	std::string  planId;          // unique identifier
+	std::string  name;            // name
+	std::string  description;     // description
+	double       targetDistance;  // target distance (in specified units)
+	time_t       targetTime;      // target time, i.e. total time to execute the plan (in seconds)
+	time_t       targetSplits;    // desired splits (in seconds)
+	std::string  route;           // name of the route file (optional)
+	UnitSystem   distanceUnits;   // unit system in which the user prefers to display the distance
+	UnitSystem   splitsUnits;     // unit system in which the user prefers to display the splits
+	time_t       lastUpdatedTime; // last updated timestamp
 } PacePlan;
 
 #endif

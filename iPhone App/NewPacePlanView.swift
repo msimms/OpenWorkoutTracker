@@ -13,7 +13,7 @@ struct NewPacePlanView: View {
 	@State private var name: String = ""
 	@State private var description: String = ""
 	@State private var splitSeconds: Double = 0
-	@ObservedObject var distanceEntry = NumbersOnly(initialValue: 0.0)
+	@ObservedObject var distanceEntry = NumbersOnly(initialDoubleValue: 0.0)
 	@State private var distanceUnits: UnitSystem = Preferences.preferredUnitSystem()
 	@State private var paceUnits: UnitSystem = Preferences.preferredUnitSystem()
 	@State private var pace: String = ""
@@ -25,13 +25,20 @@ struct NewPacePlanView: View {
 	@State private var distance: Double = 0.0
 	@State private var paceSeconds: Int = 0
 
-	func unitsToStr(units: UnitSystem) -> String {
+	func distanceUnitsToStr(units: UnitSystem) -> String {
+		if units == UNIT_SYSTEM_METRIC {
+			return "km(s)"
+		}
+		return "mile(s)"
+	}
+	
+	func paceUnitsToStr(units: UnitSystem) -> String {
 		if units == UNIT_SYSTEM_METRIC {
 			return "mins/km"
 		}
 		return "mins/mile"
 	}
-
+	
 	var body: some View {
 		VStack(alignment: .center) {
 			
@@ -65,7 +72,7 @@ struct NewPacePlanView: View {
 						}
 						.alert("Invalid distance. Must be a number.", isPresented: $showingDistanceError) {
 						}
-					Text(self.unitsToStr(units: self.distanceUnits))
+					Text(self.distanceUnitsToStr(units: self.distanceUnits))
 				}
 				
 				Text("Target Pace (hh:mm:ss)")
@@ -87,7 +94,7 @@ struct NewPacePlanView: View {
 						}
 						.alert("Invalid pace format. Should be HH:MM:SS.", isPresented: $showingPaceError) {
 						}
-					Text(self.unitsToStr(units: self.paceUnits))
+					Text(self.paceUnitsToStr(units: self.paceUnits))
 				}
 
 				Text("Splits")

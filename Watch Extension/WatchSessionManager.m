@@ -31,13 +31,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityStopped:) name:@NOTIFICATION_NAME_ACTIVITY_STOPPED object:nil];
 }
 
-/// @brief Requests the user's preferences from the phone.
-- (void)sendSyncPrefsMsg
-{
-	NSDictionary* msgData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@WATCH_MSG_SYNC_PREFS, @WATCH_MSG_TYPE, nil];
-	[self->watchSession sendMessage:msgData replyHandler:nil errorHandler:nil];
-}
-
 /// @brief Sends our unique identifier to the phone.
 - (void)sendRegisterDeviceMsg
 {

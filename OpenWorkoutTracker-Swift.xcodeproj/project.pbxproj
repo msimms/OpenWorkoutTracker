@@ -206,8 +206,8 @@
 		2740E11928F0DCC200293B71 /* HealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11728F0DCC200293B71 /* HealthManager.swift */; };
 		2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AC28E6758500293B71 /* PacePlansVM.swift */; };
 		2740E11B28F0E5EC00293B71 /* IntervalSessionsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */; };
-		2740E11D28F0E81400293B71 /* NewPacePlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11C28F0E81400293B71 /* NewPacePlanView.swift */; };
-		2740E12028F0E83000293B71 /* NewIntervalSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11F28F0E83000293B71 /* NewIntervalSessionView.swift */; };
+		2740E11D28F0E81400293B71 /* EditPacePlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11C28F0E81400293B71 /* EditPacePlanView.swift */; };
+		2740E12028F0E83000293B71 /* EditIntervalSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11F28F0E83000293B71 /* EditIntervalSessionView.swift */; };
 		2740E12228F233A200293B71 /* StoredActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12128F233A200293B71 /* StoredActivityVM.swift */; };
 		2740E12328F233A200293B71 /* StoredActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12128F233A200293B71 /* StoredActivityVM.swift */; };
 		2740E12528F2D3F000293B71 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12428F2D3F000293B71 /* ApiClient.swift */; };
@@ -518,8 +518,8 @@
 		2740E11328EDFEB700293B71 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		2740E11528EF758500293B71 /* ProfileVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVM.swift; sourceTree = "<group>"; };
 		2740E11728F0DCC200293B71 /* HealthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HealthManager.swift; path = IOS/Model/HealthManager.swift; sourceTree = "<group>"; };
-		2740E11C28F0E81400293B71 /* NewPacePlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPacePlanView.swift; sourceTree = "<group>"; };
-		2740E11F28F0E83000293B71 /* NewIntervalSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewIntervalSessionView.swift; sourceTree = "<group>"; };
+		2740E11C28F0E81400293B71 /* EditPacePlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPacePlanView.swift; sourceTree = "<group>"; };
+		2740E11F28F0E83000293B71 /* EditIntervalSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditIntervalSessionView.swift; sourceTree = "<group>"; };
 		2740E12128F233A200293B71 /* StoredActivityVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredActivityVM.swift; sourceTree = "<group>"; };
 		2740E12428F2D3F000293B71 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApiClient.swift; path = IOS/Model/ApiClient.swift; sourceTree = "<group>"; };
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
@@ -976,6 +976,8 @@
 				278D92C528E38F17003B077C /* ContentView.swift */,
 				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
 				2740E12928F4427C00293B71 /* EditBikeView.swift */,
+				2740E11F28F0E83000293B71 /* EditIntervalSessionView.swift */,
+				2740E11C28F0E81400293B71 /* EditPacePlanView.swift */,
 				2740E12728F4425A00293B71 /* EditShoesView.swift */,
 				2740E08828E629CE00293B71 /* GearView.swift */,
 				2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */,
@@ -983,8 +985,6 @@
 				2740E09128E6319700293B71 /* IntervalSessionsView.swift */,
 				2704224828FB7B0E00FD02D4 /* LineGraphView.swift */,
 				2704224C28FCDDF600FD02D4 /* LoginView.swift */,
-				2740E11F28F0E83000293B71 /* NewIntervalSessionView.swift */,
-				2740E11C28F0E81400293B71 /* NewPacePlanView.swift */,
 				2740E11328EDFEB700293B71 /* NumbersOnly.swift */,
 				2740E08E28E6318000293B71 /* PacePlansView.swift */,
 				278D92C328E38F17003B077C /* PhoneApp.swift */,
@@ -1297,7 +1297,7 @@
 				2740E11628EF758500293B71 /* ProfileVM.swift in Sources */,
 				2740E06528E4D98300293B71 /* Peaks.cpp in Sources */,
 				2740DFD228E460E200293B71 /* WorkoutPlanGenerator.cpp in Sources */,
-				2740E12028F0E83000293B71 /* NewIntervalSessionView.swift in Sources */,
+				2740E12028F0E83000293B71 /* EditIntervalSessionView.swift in Sources */,
 				2740DFD828E460E200293B71 /* Cycling.cpp in Sources */,
 				2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */,
 				2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */,
@@ -1341,7 +1341,7 @@
 				2740E07328E4E75300293B71 /* LiveActivityVM.swift in Sources */,
 				2740DFE828E460E200293B71 /* Hike.cpp in Sources */,
 				2740E0AF28E67C0600293B71 /* GearVM.swift in Sources */,
-				2740E11D28F0E81400293B71 /* NewPacePlanView.swift in Sources */,
+				2740E11D28F0E81400293B71 /* EditPacePlanView.swift in Sources */,
 				2740E02E28E4CE1C00293B71 /* File.cpp in Sources */,
 				2740E07B28E5DEC500293B71 /* HeartRateService.swift in Sources */,
 				2740E03728E4CE1C00293B71 /* ZwoFileWriter.cpp in Sources */,
