@@ -214,13 +214,13 @@ void LiftingActivity::BuildSummaryAttributeList(std::vector<std::string>& attrib
 
 bool LiftingActivity::CheckSetsInterval()
 {
-	if ((m_intervalWorkout.workoutId.size() > 0) ||
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
+	if ((m_intervalSession.sessionId.size() > 0) ||
+		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size()))
 	{
 		return false;
 	}
 
-	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
+	const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
 	if (segment.sets > 0)
 	{
 		if (m_sets >= segment.sets)
@@ -233,13 +233,13 @@ bool LiftingActivity::CheckSetsInterval()
 
 bool LiftingActivity::CheckRepsInterval()
 {
-	if ((m_intervalWorkout.workoutId.size() > 0) ||
-		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size()))
+	if ((m_intervalSession.sessionId.size() > 0) ||
+		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size()))
 	{
 		return false;
 	}
 
-	const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
+	const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
 	if (segment.reps > 0)
 	{
 		uint16_t total = Total();

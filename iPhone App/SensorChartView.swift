@@ -6,8 +6,8 @@
 import SwiftUI
 
 struct SensorChartView: View {
-	var activityId: String = ""
 	var title: String = ""
+	var yLabel: String = ""
 	var data: Array<(UInt64, Double)> = []
 	var color: Color
 
@@ -17,7 +17,14 @@ struct SensorChartView: View {
 				.bold()
 			Group() {
 				if self.data.count > 0 {
-					LineGraphView(points: self.data, color: color)
+					HStack() {
+						Text(self.yLabel)
+							.rotationEffect(Angle(degrees: -90.0))
+						VStack() {
+							LineGraphView(points: self.data, color: color)
+							Text("Elapsed Time")
+						}
+					}
 				}
 				else {
 					Text("No Data")

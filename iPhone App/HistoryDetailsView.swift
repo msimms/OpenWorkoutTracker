@@ -64,25 +64,37 @@ struct HistoryDetailsView: View {
 
 				// Attributes Summary
 				Section(header: Text("Attributes")) {
-					List(self.activityVM.getActivityAttributes(), id: \.self) { item in
-						HStack() {
-							Text(item)
-							Spacer()
-							Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+					List(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
+						if item == "Heart Rate" {
+							NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red))
 						}
-					}
-					.listStyle(.plain)
-				}
-
-				// Charts
-				Section(header: Text("Charts")) {
-					List() {
-						NavigationLink("Heart Rate", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Heart Rate", data: self.activityVM.heartRate, color: .red))
-						if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
-							NavigationLink("Cadence", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Cadence", data: self.activityVM.cadence, color: .green))
-							NavigationLink("Pace", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Pace", data: self.activityVM.pace, color: .purple))
-							NavigationLink("Power", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Power", data: self.activityVM.power, color: .blue))
-							NavigationLink("Speed", destination: SensorChartView(activityId: self.activityVM.activityId, title: "Speed", data: self.activityVM.speed, color: .teal))
+						else if item == "Cadence" {
+							NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green))
+						}
+						else if item == "Pace" {
+							NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple))
+						}
+						else if item == "Power" {
+							NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue))
+						}
+						else if item == "Speed" {
+							NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal))
+						}
+						else if item == "X Axis" {
+							NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red))
+						}
+						else if item == "Y Axis" {
+							NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green))
+						}
+						else if item == "Z Axis" {
+							NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue))
+						}
+						else {
+							HStack() {
+								Text(item)
+								Spacer()
+								Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+							}
 						}
 					}
 					.listStyle(.plain)

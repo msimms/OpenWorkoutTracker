@@ -63,12 +63,12 @@ extern "C" {
 	char* GetActivityIdByHash(const char* const hash);
 	char* GetHashForActivityId(const char* const activityId);
 
-	// Methods for managing activity sync status.
+	// Methods for managing the activity sync status.
 	bool CreateActivitySync(const char* const activityId, const char* const destination);
 	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context);
 	bool RetrieveActivityIdsNotSynchedToWeb(SyncCallback callback, void* context);
 
-	// Functions for controlling user preferences.
+	// Functions for controlling user preferences and profile data.
 	void SetPreferredUnitSystem(UnitSystem system);
 	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
 	bool GetUsersWeightHistory(WeightCallback callback, void* context);
@@ -96,27 +96,27 @@ extern "C" {
 	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired);
 	uint64_t GetShoeIdFromName(const char* const name);
 
-	// Functions for managing the currently set interval workout.
-	bool SetCurrentIntervalWorkout(const char* const workoutId);
-	char* GetCurrentIntervalWorkoutId(void);
-	bool CheckCurrentIntervalWorkout(void);
-	bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment* segment);
-	bool IsIntervalWorkoutComplete(void);
-	void AdvanceCurrentIntervalWorkout(void);
+	// Functions for managing the currently set interval session.
+	bool SetCurrentIntervalSession(const char* const sessionId);
+	char* GetCurrentIntervalSessionId(void);
+	bool CheckCurrentIntervalSession(void);
+	bool GetCurrentIntervalSessionSegment(IntervalSessionSegment* segment);
+	bool IsIntervalSessionComplete(void);
+	void AdvanceCurrentIntervalSession(void);
 
-	// Functions for managing interval workouts.
-	bool InitializeIntervalWorkoutList(void);
-	char* RetrieveIntervalWorkoutAsJSON(size_t workoutIndex);
-	bool RetrieveIntervalWorkout(const char* const workoutId, char** const workoutName, char** const sport);
-	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport);
-	bool DeleteIntervalWorkout(const char* const workoutId);
+	// Functions for managing interval sessions.
+	bool InitializeIntervalSessionList(void);
+	char* RetrieveIntervalSessionAsJSON(size_t sessionIndex);
+	bool RetrieveIntervalSession(const char* const sessionId, char** const sessionName, char** const sport, char** const description);
+	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description);
+	bool DeleteIntervalSession(const char* const sessionId);
 
-	// Functions for managing interval workout segments.
-	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId);
-	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment);
-	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex);
-	bool GetIntervalWorkoutSegmentByIndex(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment);
-	bool GetIntervalWorkoutSegmentByTimeOffset(const char* const workoutId, time_t timeOffsetInSecs, IntervalWorkoutSegment* segment);
+	// Functions for managing interval session segments.
+	size_t GetNumSegmentsForIntervalSession(const char* const sessionId);
+	bool CreateNewIntervalSessionSegment(const char* const sessionId, IntervalSessionSegment segment);
+	bool DeleteIntervalSessionSegment(const char* const sessionId, size_t segmentIndex);
+	bool GetIntervalSessionSegmentByIndex(const char* const sessionId, size_t segmentIndex, IntervalSessionSegment* segment);
+	bool GetIntervalSessionSegmentByTimeOffset(const char* const sessionId, time_t timeOffsetInSecs, IntervalSessionSegment* segment);
 
 	// Functions for managing pace plans.
 	bool InitializePacePlanList(void);
@@ -174,11 +174,11 @@ extern "C" {
 
 	// Functions for accessing historical location data.
 	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex);
-	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate);
+	bool GetHistoricalActivityLocationPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate);
 
 	// Functions for accessing historical sensor data.
-	size_t GetNumHistoricalSensorPoints(size_t activityIndex, SensorType sensorType);
-	bool GetHistoricalActivitySensorPoint(size_t activityIndex, SensorType sensorType, size_t pointIndex, time_t* const pointTime, double* const pointValue);
+	size_t GetNumHistoricalSensorReadings(size_t activityIndex, SensorType sensorType);
+	bool GetHistoricalActivitySensorReading(size_t activityIndex, SensorType sensorType, size_t readingIndex, time_t* const readingTime, double* const readingValue);
 
 	// Functions for listing locations from the current activity.
 	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate);
@@ -198,11 +198,11 @@ extern "C" {
 	// Functions for estimating the athlete's fitness.
 	double EstimateFtp(void);
 
-	// Functions for managing workout generation.
+	// Functions for managing suggested workout generation.
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
 
-	// Functions for managing workout generation.
+	// Functions for managing suggested workout generation.
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime);

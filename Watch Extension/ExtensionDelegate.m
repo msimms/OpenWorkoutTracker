@@ -869,12 +869,12 @@ void attributeNameCallback(const char* name, void* context)
 {
 	NSMutableArray* namesAndIds = [[NSMutableArray alloc] init];
 
-	if (InitializeIntervalWorkoutList())
+	if (InitializeIntervalSessionList())
 	{
 		size_t index = 0;
 		char* workoutJson = NULL;
 
-		while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index)) != NULL)
+		while ((workoutJson = RetrieveIntervalSessionAsJSON(index)) != NULL)
 		{
 			NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
 			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -962,7 +962,7 @@ void attributeNameCallback(const char* name, void* context)
 		{
 			CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 		}
-		UpdatePacePlanDetails([planId UTF8String], [planName UTF8String], "", targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits, time(NULL));
+		UpdatePacePlan([planId UTF8String], [planName UTF8String], "", targetPaceInMinKm, targetDistanceInKms, targetDistanceUnits, targetPaceUnits, splits, time(NULL));
 	}
 }
 

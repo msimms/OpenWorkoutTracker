@@ -126,7 +126,7 @@ typedef enum MsgDestinationType
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginChecked:) name:@NOTIFICATION_NAME_LOGIN_CHECKED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gearListUpdated:) name:@NOTIFICATION_NAME_GEAR_LIST_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(plannedWorkoutsUpdated:) name:@NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalWorkoutsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_WORKOUT_UPDATED object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(intervalSessionsUpdated:) name:@NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pacePlansUpdated:) name:@NOTIFICATION_NAME_PACE_PLANS_UPDATED object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unsynchedActivitiesListReceived:) name:@NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(activityMetadataReceived:) name:@NOTIFICATION_NAME_ACTIVITY_METADATA object:nil];
@@ -1446,7 +1446,7 @@ void startSensorCallback(SensorType type, void* context)
 }
 
 /// @brief Called when the server responds to a request for the user's list of interval workouts.
-- (void)intervalWorkoutsUpdated:(NSNotification*)notification
+- (void)intervalSessionsUpdated:(NSNotification*)notification
 {
 	@try
 	{
@@ -1470,7 +1470,7 @@ void startSensorCallback(SensorType type, void* context)
 		{
 			NSError* error = nil;
 			NSDictionary* pacePlans = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-
+			
 			// Valid JSON?
 			if (pacePlans)
 			{
@@ -1478,11 +1478,12 @@ void startSensorCallback(SensorType type, void* context)
 				{
 					NSString* newPlanName = [pacePlan objectForKey:@PARAM_PACE_PLAN_NAME];
 					NSString* newPlanId = [pacePlan objectForKey:@PARAM_PACE_PLAN_ID];
-					NSNumber* newTargetPaceInMinKm = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_PACE];
-					NSNumber* newTargetDistanceInKms = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE];
-					NSNumber* newSplits = [pacePlan objectForKey:@PARAM_PACE_PLAN_SPLITS];
+					NSString* newPlanDescription = [pacePlan objectForKey:@PARAM_PACE_PLAN_DESCRIPTION];
+					NSNumber* newTargetDistance = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE];
 					NSNumber* newTargetDistanceUnits = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS];
-					NSNumber* newTargetPaceUnits = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_PACE_UNITS];
+					NSNumber* newTargetTime = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_TIME];
+					NSNumber* newTargetSplits = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_SPLITS];
+					NSNumber* newTargetSplitsUnits = [pacePlan objectForKey:@PARAM_PACE_PLAN_TARGET_SPLITS_UNITS];
 					NSNumber* newLastUpdatedTime = [pacePlan objectForKey:@PARAM_PACE_PLAN_LAST_UPDATED_TIME];
 
 					time_t existingLastUpdatedTime = 0;
@@ -1491,7 +1492,7 @@ void startSensorCallback(SensorType type, void* context)
 					{
 						if ([newLastUpdatedTime intValue] > existingLastUpdatedTime)
 						{
-							if (!UpdatePacePlan([newPlanId UTF8String], [newPlanName UTF8String], "", [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
+							if (!UpdatePacePlan([newPlanId UTF8String], [newPlanName UTF8String], [newPlanDescription UTF8String], [newTargetDistance doubleValue], [newTargetDistanceUnits intValue], [newTargetTime doubleValue], [newTargetSplits intValue], [newTargetSplitsUnits intValue], [newLastUpdatedTime intValue]))
 							{
 								NSLog(@"Failed to update a pace plan.");
 							}
@@ -1501,7 +1502,7 @@ void startSensorCallback(SensorType type, void* context)
 					{
 						if (CreateNewPacePlan([newPlanName UTF8String], [newPlanId UTF8String]))
 						{
-							if (!UpdatePacePlan([newPlanId UTF8String], [newPlanName UTF8String], "", [newTargetPaceInMinKm doubleValue], [newTargetDistanceInKms doubleValue], [newSplits doubleValue], [newTargetDistanceUnits intValue], [newTargetPaceUnits intValue], [newLastUpdatedTime intValue]))
+							if (!UpdatePacePlan([newPlanId UTF8String], [newPlanName UTF8String], [newPlanDescription UTF8String], [newTargetDistance doubleValue], [newTargetDistanceUnits intValue], [newTargetTime doubleValue], [newTargetSplits intValue], [newTargetSplitsUnits intValue], [newLastUpdatedTime intValue]))
 							{
 								NSLog(@"Failed to update a pace plan.");
 							}
@@ -1616,17 +1617,17 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)onIntervalTimer:(NSTimer*)timer
 {
-	if (CheckCurrentIntervalWorkout())
+	if (CheckCurrentIntervalSession())
 	{
-		if (IsIntervalWorkoutComplete())
+		if (IsIntervalSessionComplete())
 		{
 			[[NSNotificationCenter defaultCenter] postNotificationName:@NOTIFICATION_NAME_INTERVAL_COMPLETE object:nil];
 		}
 		else
 		{
-			IntervalWorkoutSegment segment;
+			IntervalSessionSegment segment;
 
-			if (GetCurrentIntervalWorkoutSegment(&segment))
+			if (GetCurrentIntervalSessionSegment(&segment))
 			{
 				NSDictionary* intervalData = [[NSDictionary alloc] initWithObjectsAndKeys:
 											  [NSNumber numberWithLongLong:segment.segmentId], @KEY_NAME_INTERVAL_SEGMENT_ID,
@@ -2769,16 +2770,19 @@ void tagCallback(const char* name, void* context)
 		if (InitializeBikeProfileList())
 		{
 			size_t bikeIndex = 0;
-			char* bikeName = NULL;
 			uint64_t bikeId = 0;
+			char* bikeName = NULL;
+			char* bikeDescription = NULL;
 			double weightKg = (double)0.0;
 			double wheelCircumference = (double)0.0;
+			time_t timeAdded = (time_t)0;
 			time_t timeRetired = (time_t)0;
-			
-			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &weightKg, &wheelCircumference, &timeRetired))
+
+			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &bikeDescription, &weightKg, &wheelCircumference, &timeAdded, &timeRetired))
 			{
 				[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
 				free((void*)bikeName);
+				free((void*)bikeDescription);
 			}
 		}
 	}
@@ -2821,12 +2825,12 @@ void tagCallback(const char* name, void* context)
 
 	if (namesAndIds)
 	{
-		if (InitializeIntervalWorkoutList())
+		if (InitializeIntervalSessionList())
 		{
 			size_t index = 0;
 			char* workoutJson = NULL;
 
-			while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index++)) != NULL)
+			while ((workoutJson = RetrieveIntervalSessionAsJSON(index++)) != NULL)
 			{
 				NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
 				NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -2993,19 +2997,20 @@ void attributeNameCallback(const char* name, void* context)
 	return [NSString stringWithFormat:@"%s", GetCurrentActivityId()];
 }
 
-#pragma mark methods for managing interval workotus
+#pragma mark methods for managing interval sessions
 
-- (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport
+- (BOOL)createNewIntervalSession:(NSString*)sessionId withName:(NSString*)workoutName withSport:(NSString*)sport withDescription:(NSString*)description
 {
-	return CreateNewIntervalWorkout([workoutId UTF8String], [workoutName UTF8String], [sport UTF8String]);
+	return CreateNewIntervalSession([sessionId UTF8String], [workoutName UTF8String], [sport UTF8String], [description UTF8String]);
 }
 
-- (BOOL)retrieveIntervalWorkout:(NSString*)workoutId withName:(NSString**)workoutName withSport:(NSString**)sport
+- (BOOL)retrieveIntervalSession:(NSString*)sessionId withName:(NSString**)workoutName withSport:(NSString**)sport withDescription:(NSString**)description
 {
 	char* tempWorkoutName = NULL;
 	char* tempSport = NULL;
+	char* tempDescription = NULL;
 
-	BOOL result = RetrieveIntervalWorkout([workoutId UTF8String], &tempWorkoutName, &tempSport);
+	BOOL result = RetrieveIntervalSession([sessionId UTF8String], &tempWorkoutName, &tempSport, &tempDescription);
 
 	if (tempWorkoutName)
 	{
@@ -3017,29 +3022,34 @@ void attributeNameCallback(const char* name, void* context)
 		(*sport) = [NSString stringWithFormat:@"%s", tempSport];
 		free((void*)tempSport);
 	}
+	if (tempDescription)
+	{
+		(*description) = [NSString stringWithFormat:@"%s", tempDescription];
+		free((void*)tempDescription);
+	}
 
 	return result;
 }
 
-- (BOOL)setCurrentIntervalWorkout:(NSString*)workoutId
+- (BOOL)setCurrentIntervalSession:(NSString*)sessionId
 {
-	return SetCurrentIntervalWorkout([workoutId UTF8String]);
+	return SetCurrentIntervalSession([sessionId UTF8String]);
 }
 
-- (BOOL)deleteIntervalWorkout:(NSString*)workoutId
+- (BOOL)deleteIntervalSession:(NSString*)sessionId
 {
-	return DeleteIntervalWorkout([workoutId UTF8String]);
+	return DeleteIntervalSession([sessionId UTF8String]);
 }
 
-- (NSString*)getCurrentIntervalWorkoutId
+- (NSString*)getCurrentIntervalSessionId
 {
-	char* temp = GetCurrentIntervalWorkoutId();
+	char* temp = GetCurrentIntervalSessionId();
 
 	if (temp)
 	{
-		NSString* workoutId = [[NSString alloc] initWithUTF8String:temp];
+		NSString* sessionId = [[NSString alloc] initWithUTF8String:temp];
 		free((void*)temp);
-		return workoutId;
+		return sessionId;
 	}
 	return nil;
 }
@@ -3051,55 +3061,24 @@ void attributeNameCallback(const char* name, void* context)
 	return CreateNewPacePlan([planName UTF8String], [planId UTF8String]);
 }
 
-- (BOOL)retrievePacePlan:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits
+- (BOOL)retrievePacePlan:(NSString*)planId withPlanName:(NSString**)name withTargetDistance:(double*)targetDistance withTargetTime:(time_t*)targetTime withSplits:(time_t*)targetSplits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetSplitsUnits:(UnitSystem*)targetSplitsUnits
 {
 	char* tempName = NULL;
 	time_t lastUpdatedTime = 0;
-	BOOL result = RetrievePacePlan([planId UTF8String], &tempName, NULL, targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, &lastUpdatedTime);
+	
+	BOOL result = RetrievePacePlan([planId UTF8String], (const char**)&tempName, NULL, targetDistance, targetTime, targetSplits, targetDistanceUnits, targetSplitsUnits, &lastUpdatedTime);
 
 	if (tempName)
 	{
 		(*name) = [[NSString alloc] initWithUTF8String:tempName];
 		free((void*)tempName);
 	}
-
-	// Convert units.
-	if (result && targetDistance)
-	{
-		ActivityAttributeType attr;
-
-		if ((*targetDistanceUnits) == UNIT_SYSTEM_US_CUSTOMARY)
-		{
-			attr.value.doubleVal = (*targetDistance);
-			attr.valueType = TYPE_DOUBLE;
-			attr.measureType = MEASURE_DISTANCE;
-			attr.unitSystem = UNIT_SYSTEM_METRIC;
-			attr.valid = true;
-			ConvertToCustomaryUnits(&attr);
-			(*targetDistance) = attr.value.doubleVal;
-		}
-
-		if ((*targetPaceUnits) == UNIT_SYSTEM_US_CUSTOMARY)
-		{
-			attr.value.doubleVal = (*targetPace);
-			attr.measureType = MEASURE_PACE;
-			attr.unitSystem = UNIT_SYSTEM_METRIC;
-			ConvertToCustomaryUnits(&attr);
-			(*targetPace) = attr.value.doubleVal;
-
-			attr.value.doubleVal = (*splits);
-			attr.measureType = MEASURE_PACE;
-			attr.unitSystem = UNIT_SYSTEM_METRIC;
-			ConvertToCustomaryUnits(&attr);
-			(*splits) = attr.value.doubleVal;
-		}
-	}
 	return result;
 }
 
-- (BOOL)updatePacePlan:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits
+- (BOOL)updatePacePlan:(NSString*)planId withPlanName:(NSString*)name withTargetDistance:(double)targetDistance withTargetTime:(time_t)targetTime withSplits:(time_t)targetSplits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetSplitsUnits:(UnitSystem)targetSplitsUnits
 {
-	return UpdatePacePlan([planId UTF8String], [name UTF8String], "", targetPace, targetDistance, splits, targetDistanceUnits, targetPaceUnits, time(NULL));
+	return UpdatePacePlan([planId UTF8String], [name UTF8String], "", targetDistance, targetTime, targetSplits, targetDistanceUnits, targetSplitsUnits, time(NULL));
 }
 
 - (BOOL)setCurrentPacePlan:(NSString*)planId
@@ -3522,12 +3501,12 @@ void attributeNameCallback(const char* name, void* context)
 /// @brief Sends interval workouts to the watch.
 - (void)sendIntervalWorkouts:(MsgDestinationType)dest replyHandler:(void (^)(NSDictionary<NSString*,id>*))replyHandler
 {
-	if (InitializeIntervalWorkoutList())
+	if (InitializeIntervalSessionList())
 	{
 		size_t index = 0;
 		char* workoutJson = NULL;
 
-		while ((workoutJson = RetrieveIntervalWorkoutAsJSON(index++)) != NULL)
+		while ((workoutJson = RetrieveIntervalSessionAsJSON(index++)) != NULL)
 		{
 			NSString* jsonString = [[NSString alloc] initWithUTF8String:workoutJson];
 			NSData* jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -3543,7 +3522,7 @@ void attributeNameCallback(const char* name, void* context)
 					case MSG_DESTINATION_WATCH:
 						if (replyHandler)
 						{
-							[msgData setObject:@WATCH_MSG_INTERVAL_WORKOUT forKey:@WATCH_MSG_TYPE];
+							[msgData setObject:@WATCH_MSG_INTERVAL_SESSION forKey:@WATCH_MSG_TYPE];
 							replyHandler(msgData);
 						}
 						else
@@ -3767,7 +3746,7 @@ void attributeNameCallback(const char* name, void* context)
 		// The watch needs a session key for server communication.
 		[self generateWatchSessionKey:replyHandler];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_SESSIONS])
 	{
 		// The watch app wants to download interval workouts.
 		[self sendIntervalWorkouts:MSG_DESTINATION_WATCH replyHandler:replyHandler];
@@ -3777,7 +3756,7 @@ void attributeNameCallback(const char* name, void* context)
 		// The watch app wants to download pace plans.
 		[self sendPacePlans:MSG_DESTINATION_WATCH replyHandler:replyHandler];
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
+	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_SESSION])
 	{
 		// The watch app is sending an interval workout.
 	}
@@ -3820,7 +3799,7 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch needs a session key for server communication.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_WORKOUTS])
+	else if ([msgType isEqualToString:@WATCH_MSG_DOWNLOAD_INTERVAL_SESSIONS])
 	{
 		// The watch app wants to download interval workouts.
 	}
@@ -3828,7 +3807,7 @@ void attributeNameCallback(const char* name, void* context)
 	{
 		// The watch app wants to download pace plans.
 	}
-	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_WORKOUT])
+	else if ([msgType isEqualToString:@WATCH_MSG_INTERVAL_SESSION])
 	{
 		// The watch app is sending an interval workout.
 	}

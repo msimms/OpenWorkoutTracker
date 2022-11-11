@@ -135,15 +135,6 @@ class PacePlansVM : ObservableObject {
 		return false
 	}
 
-	func retrievePacePlan(planId: UUID) -> PacePlan {
-		for existingPlan in self.pacePlans {
-			if existingPlan.id == planId {
-				return existingPlan
-			}
-		}
-		return PacePlan() // Return an empty pace plan object
-	}
-
 	func updatePacePlan(plan: PacePlan) -> Bool {
 		let lastUpdatedTime = time(nil)
 		

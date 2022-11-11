@@ -253,19 +253,19 @@
 
 - (NSString*)getCurrentActivityId;
 
-// methods for managing interval workouts
+// methods for managing interval sessions
 
-- (BOOL)createNewIntervalWorkout:(NSString*)workoutId withName:(NSString*)workoutName withSport:(NSString*)sport;
-- (BOOL)retrieveIntervalWorkout:(NSString*)workoutId withName:(NSString**)workoutName withSport:(NSString**)sport;
-- (BOOL)setCurrentIntervalWorkout:(NSString*)workoutId;
-- (BOOL)deleteIntervalWorkout:(NSString*)workoutId;
-- (NSString*)getCurrentIntervalWorkoutId;
+- (BOOL)createNewIntervalSession:(NSString*)sessionId withName:(NSString*)sessionName withSport:(NSString*)sport withDescription:(NSString*)description;
+- (BOOL)retrieveIntervalSession:(NSString*)sessionId withName:(NSString**)sessionName withSport:(NSString**)sport withDescription:(NSString**)description;
+- (BOOL)setCurrentIntervalSession:(NSString*)sessionId;
+- (BOOL)deleteIntervalSession:(NSString*)sessionId;
+- (NSString*)getCurrentIntervalSessionId;
 
 // methods for managing pace plans
 
 - (BOOL)createNewPacePlan:(NSString*)planName withPlanId:(NSString*)planId;
-- (BOOL)retrievePacePlan:(NSString*)planId withPlanName:(NSString**)name withTargetPace:(double*)targetPace withTargetDistance:(double*)targetDistance withSplits:(double*)splits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetPaceUnits:(UnitSystem*)targetPaceUnits;
-- (BOOL)updatePacePlan:(NSString*)planId withPlanName:(NSString*)name withTargetPace:(double)targetPace withTargetDistance:(double)targetDistance withSplits:(double)splits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetPaceUnits:(UnitSystem)targetPaceUnits;
+- (BOOL)retrievePacePlan:(NSString*)planId withPlanName:(NSString**)name withTargetDistance:(double*)targetDistance withTargetTime:(time_t*)targetTime withSplits:(time_t*)targetSplits withTargetDistanceUnits:(UnitSystem*)targetDistanceUnits withTargetSplitsUnits:(UnitSystem*)targetSplitsUnits;
+- (BOOL)updatePacePlan:(NSString*)planId withPlanName:(NSString*)name withTargetDistance:(double)targetDistance withTargetTime:(time_t)targetTime withSplits:(time_t)targetSplits withTargetDistanceUnits:(UnitSystem)targetDistanceUnits withTargetSplitsUnits:(UnitSystem)targetSplitsUnits;
 - (BOOL)setCurrentPacePlan:(NSString*)planId;
 - (BOOL)deletePacePlanWithId:(NSString*)planId;
 - (NSString*)getCurrentPacePlanId;

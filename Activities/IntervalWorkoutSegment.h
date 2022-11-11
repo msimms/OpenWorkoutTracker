@@ -5,8 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef __INTERVALWORKOUTSEGMENT__
-#define __INTERVALWORKOUTSEGMENT__
+#ifndef __INTERVALSESSIONSEGMENT__
+#define __INTERVALSESSIONSEGMENT__
 
 #include <stdint.h>
 
@@ -28,7 +28,7 @@ typedef enum IntervalUnit
 	INTERVAL_UNIT_WATTS
 } IntervalUnit;
 
-typedef struct IntervalWorkoutSegment
+typedef struct IntervalSessionSegment
 {
 	uint64_t     segmentId; // Database identifier for this segment
 	uint32_t     sets;      // Number of sets
@@ -38,6 +38,6 @@ typedef struct IntervalWorkoutSegment
 	double       pace;      // Pace, if applicable, in meters/second
 	double       power;     // Power, if applicable, in percentage of FTP
 	IntervalUnit units;     // Informs the consumer of this structure as to which fields are meaningful and how to interpret the distance field
-} IntervalWorkoutSegment;
+} IntervalSessionSegment;
 
 #endif

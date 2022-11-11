@@ -18,8 +18,10 @@ struct EditPacePlanView: View {
 	@State private var tempDescription: String
 	@State private var tempDistanceUnits: UnitSystem
 	@State private var tempSplits: Double
-	
+	@State private var tempSplitsUnits: UnitSystem
+
 	@State private var showingDistanceUnitsSelection: Bool = false
+	@State private var showingSplitsUnitsSelection: Bool = false
 	@State private var showingDeleteConfirmation: Bool = false
 	@State private var showingDistanceError: Bool = false
 	@State private var showingTimeError: Bool = false
@@ -32,6 +34,7 @@ struct EditPacePlanView: View {
 		_tempDescription = State(initialValue: pacePlan.description)
 		_tempDistanceUnits = State(initialValue: pacePlan.distanceUnits)
 		_tempSplits = State(initialValue: Double(pacePlan.splits))
+		_tempSplitsUnits = State(initialValue: pacePlan.splitsUnits)
 	}
 
 	func distanceUnitsToStr(units: UnitSystem) -> String {
@@ -39,6 +42,13 @@ struct EditPacePlanView: View {
 			return "km(s)"
 		}
 		return "mile(s)"
+	}
+
+	func splitsUnitsToStr(units: UnitSystem) -> String {
+		if units == UNIT_SYSTEM_METRIC {
+			return "secs/km"
+		}
+		return "secs/mile"
 	}
 
 	var body: some View {
@@ -67,64 +77,88 @@ struct EditPacePlanView: View {
 			// Plan details
 			Group() {
 
-				Text("Distance")
-					.bold()
-				HStack() {
-					TextField("Distance", text: self.$distanceEntry.value)
-						.keyboardType(.decimalPad)
-						.onChange(of: self.distanceEntry.value) { value in
-							if let value = Double(self.distanceEntry.value) {
-								self.tempPacePlan.distance = value
+				Group() {
+					Text("Distance")
+						.bold()
+					HStack() {
+						TextField("Distance", text: self.$distanceEntry.value)
+							.keyboardType(.decimalPad)
+							.onChange(of: self.distanceEntry.value) { value in
+								if let value = Double(self.distanceEntry.value) {
+									self.tempPacePlan.distance = value
+								}
+								else {
+									self.showingDistanceError = true
+								}
 							}
-							else {
-								self.showingDistanceError = true
+							.alert("Invalid distance. Must be a number.", isPresented: self.$showingDistanceError) {}
+						Button(self.distanceUnitsToStr(units: self.tempDistanceUnits)) {
+							self.showingDistanceUnitsSelection = true
+						}
+						.confirmationDialog("", isPresented: self.$showingDistanceUnitsSelection, titleVisibility: .visible) {
+							Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_METRIC)) {
+								self.tempDistanceUnits = UNIT_SYSTEM_METRIC
+								self.tempPacePlan.distanceUnits = UNIT_SYSTEM_METRIC
 							}
-						}
-						.alert("Invalid distance. Must be a number.", isPresented: self.$showingDistanceError) {}
-					Button(self.distanceUnitsToStr(units: self.tempDistanceUnits)) {
-						self.showingDistanceUnitsSelection = true
-					}
-					.confirmationDialog("", isPresented: self.$showingDistanceUnitsSelection, titleVisibility: .visible) {
-						Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_METRIC)) {
-							self.tempDistanceUnits = UNIT_SYSTEM_METRIC
-						}
-						Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_US_CUSTOMARY)) {
-							self.tempDistanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+							Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_US_CUSTOMARY)) {
+								self.tempDistanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+								self.tempPacePlan.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+							}
 						}
 					}
 				}
 
-				Text("Target Time (hh:mm:ss)")
-					.bold()
-				HStack() {
-					Spacer()
-					TextField("Time (hh:mm:ss)", text: self.$timeStr)
-						.onChange(of: self.timeStr) { value in
-							var hours: Int = 0
-							var mins: Int = 0
-							var secs: Int = 0
-
-							if self.pacePlansVM.parseHHMMSS(str: self.timeStr, hours: &hours, minutes: &mins, seconds: &secs) == false {
-								self.showingTimeError = true
+				Group() {
+					Text("Target Time (hh:mm:ss)")
+						.bold()
+					HStack() {
+						Spacer()
+						TextField("Time (hh:mm:ss)", text: self.$timeStr)
+							.onChange(of: self.timeStr) { value in
+								var hours: Int = 0
+								var mins: Int = 0
+								var secs: Int = 0
+								
+								if self.pacePlansVM.parseHHMMSS(str: self.timeStr, hours: &hours, minutes: &mins, seconds: &secs) == false {
+									self.showingTimeError = true
+								}
+								else {
+									self.tempPacePlan.time = secs + (mins * 60) + (hours * 3600)
+								}
 							}
-							else {
-								self.tempPacePlan.time = secs + (mins * 60) + (hours * 3600)
-							}
-						}
-						.alert("Invalid time format. Should be HH:MM:SS.", isPresented: self.$showingTimeError) {}
+							.alert("Invalid time format. Should be HH:MM:SS.", isPresented: self.$showingTimeError) {}
+					}
 				}
 
-				Text("Splits (seconds)")
-					.bold()
-				Slider(value: Binding(
-					get: {
-						self.tempSplits
-					},
-					set: {(newValue) in
-						self.tempSplits = newValue
-						self.tempPacePlan.splits = Int(newValue)
+				Group() {
+					Group() {
+						Text("Splits (seconds)")
+							.bold()
+						Slider(value: Binding(
+							get: {
+								self.tempSplits
+							},
+							set: {(newValue) in
+								self.tempSplits = newValue
+								self.tempPacePlan.splits = Int(newValue)
+							}
+						), in: -60...60, step: 1)
+
+						Button(self.splitsUnitsToStr(units: self.tempSplitsUnits)) {
+							self.showingSplitsUnitsSelection = true
+						}
+						.confirmationDialog("", isPresented: self.$showingSplitsUnitsSelection, titleVisibility: .visible) {
+							Button(self.splitsUnitsToStr(units: UNIT_SYSTEM_METRIC)) {
+								self.tempSplitsUnits = UNIT_SYSTEM_METRIC
+								self.tempPacePlan.splitsUnits = UNIT_SYSTEM_METRIC
+							}
+							Button(self.splitsUnitsToStr(units: UNIT_SYSTEM_US_CUSTOMARY)) {
+								self.tempSplitsUnits = UNIT_SYSTEM_US_CUSTOMARY
+								self.tempPacePlan.splitsUnits = UNIT_SYSTEM_US_CUSTOMARY
+							}
+						}
 					}
-				), in: -60...60, step: 1)
+				}
 			}
 
 			Spacer()

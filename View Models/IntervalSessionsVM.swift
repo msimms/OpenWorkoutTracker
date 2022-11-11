@@ -357,6 +357,7 @@ class IntervalSession : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
 	var name: String = "Untitled"
 	var sport: String = ACTIVITY_TYPE_RUNNING
+	var description: String = ""
 	var segments: Array<IntervalSegment> = []
 	var lastUpdatedTime: Date = Date()
 
@@ -393,28 +394,41 @@ class IntervalSessionsVM : ObservableObject {
 		self.intervalSessions = []
 		
 		// Query the backend for the latest interval sessions.
-		if InitializeIntervalWorkoutList() {
-			var workoutIndex = 0
+		if InitializeIntervalSessionList() {
+
+			var sessionIndex = 0
 			var done = false
-			
+
 			while !done {
-				let workoutDesc = RetrieveIntervalWorkoutAsJSON(workoutIndex)
-				
-				if workoutDesc == nil {
-					done = true
-				}
-				else {
-					let ptr = UnsafeRawPointer(workoutDesc)
-					let tempWorkoutDesc = String(cString: ptr!.assumingMemoryBound(to: CChar.self))
+				if let rawSessionDescPtr = RetrieveIntervalSessionAsJSON(sessionIndex) {
+					let summaryObj = IntervalSession()
+					let sessionDescPtr = UnsafeRawPointer(rawSessionDescPtr)
 					
-					defer {
-						ptr!.deallocate()
+					let sessionDesc = String(cString: sessionDescPtr.assumingMemoryBound(to: CChar.self))
+					let summaryDict = try! JSONSerialization.jsonObject(with: Data(sessionDesc.utf8), options: []) as! [String:Any]
+					
+					if let sessionId = summaryDict[PARAM_INTERVAL_ID] as? String {
+						summaryObj.id = UUID(uuidString: sessionId)!
+					}
+					if let sessionName = summaryDict[PARAM_INTERVAL_NAME] as? String {
+						summaryObj.name = sessionName
+					}
+					if let sessionDescription = summaryDict[PARAM_INTERVAL_DESCRIPTION] as? String {
+						summaryObj.description = sessionDescription
 					}
 
-					workoutIndex += 1
+					defer {
+						sessionDescPtr.deallocate()
+					}
+					
+					self.intervalSessions.append(summaryObj)
+					sessionIndex += 1
+				}
+				else {
+					done = true
 				}
 			}
-			
+
 			result = true
 		}
 		
@@ -422,14 +436,27 @@ class IntervalSessionsVM : ObservableObject {
 	}
 
 	func createIntervalSession(session: IntervalSession) -> Bool {
-		if CreateNewIntervalWorkout(session.id.uuidString, session.name, session.sport) {
+		if CreateNewIntervalSession(session.id.uuidString, session.name, session.sport, session.description) {
 			return buildIntervalSessionList()
 		}
 		return false
 	}
 
+	func doesIntervalSessionExist(sessionId: UUID) -> Bool {
+		for existingSession in self.intervalSessions {
+			if existingSession.id == sessionId {
+				return true
+			}
+		}
+		return false
+	}
+
+	func updateIntervalSession(session: IntervalSession) -> Bool {
+		return false
+	}
+
 	func deleteIntervalSession(intervalSessionId: UUID) -> Bool {
-		if DeleteIntervalWorkout(intervalSessionId.uuidString) {
+		if DeleteIntervalSession(intervalSessionId.uuidString) {
 			return buildIntervalSessionList()
 		}
 		return false

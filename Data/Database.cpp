@@ -157,14 +157,14 @@ bool Database::CreateTables()
 		sql = "alter table shoe add column last_updated_time big int";
 		queries.push_back(sql);
 	}
-	if (!DoesTableExist("interval_workout"))
+	if (!DoesTableExist("interval_session"))
 	{
-		sql = "create table interval_workout (id integer primary key, workout_id test, name text, sport text, last_updated_time big int)";
+		sql = "create table interval_session (id integer primary key, session_id test, name text, sport text, description text, last_updated_time big int)";
 		queries.push_back(sql);
 	}
-	if (!DoesTableExist("interval_workout_segment"))
+	if (!DoesTableExist("interval_session_segment"))
 	{
-		sql = "create table interval_workout_segment (id integer primary key, workout_id test, sets integer, reps integer, duration integer, distance double, pace double, power double, units integer)";
+		sql = "create table interval_session_segment (id integer primary key, session_id test, sets integer, reps integer, duration integer, distance double, pace double, power double, units integer)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("workout"))
@@ -359,9 +359,9 @@ bool Database::Reset()
 	queries.push_back(sql);
 	sql = "delete from shoe";
 	queries.push_back(sql);
-	sql = "delete from interval_workout";
+	sql = "delete from interval_session";
 	queries.push_back(sql);
-	sql = "delete from interval_workout_segment";
+	sql = "delete from interval_session_segment";
 	queries.push_back(sql);
 	sql = "delete from workout";
 	queries.push_back(sql);
@@ -617,36 +617,38 @@ bool Database::DeleteShoe(uint64_t shoeId)
 	return result == SQLITE_DONE;
 }
 
-bool Database::CreateIntervalWorkout(const std::string& workoutId, const std::string& name, const std::string& sport)
+bool Database::CreateIntervalSession(const std::string& sessionId, const std::string& name, const std::string& sport, const std::string& description)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_workout values (NULL,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session values (NULL,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 2, name.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(statement, 3, sport.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 4, time(NULL));
+		sqlite3_bind_text(statement, 4, description.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(statement, 5, time(NULL));
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}	
 	return result == SQLITE_DONE;
 }
 
-bool Database::RetrieveIntervalWorkout(const std::string& workoutId, std::string& name, std::string& sport)
+bool Database::RetrieveIntervalSession(const std::string& sessionId, std::string& name, std::string& sport, std::string& description)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select name, sport from interval_workout where workout_id = ?", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select name, sport from interval_session where session_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			name.append((const char*)sqlite3_column_text(statement, 0));
 			sport.append((const char*)sqlite3_column_text(statement, 1));
+			description.append((const char*)sqlite3_column_text(statement, 2));
 			result = true;
 		}
 		
@@ -655,21 +657,22 @@ bool Database::RetrieveIntervalWorkout(const std::string& workoutId, std::string
 	return result;
 }
 
-bool Database::RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts)
+bool Database::RetrieveIntervalSessions(std::vector<IntervalSession>& sessions)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select workout_id, name, sport from interval_workout order by name", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select session_id, name, sport, description from interval_session order by name", -1, &statement, 0) == SQLITE_OK)
 	{
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			IntervalWorkout workout;
+			IntervalSession session;
 			
-			workout.workoutId.append((const char*)sqlite3_column_text(statement, 0));
-			workout.name.append((const char*)sqlite3_column_text(statement, 1));
-			workout.sport.append((const char*)sqlite3_column_text(statement, 2));
-			workouts.push_back(workout);
+			session.sessionId.append((const char*)sqlite3_column_text(statement, 0));
+			session.name.append((const char*)sqlite3_column_text(statement, 1));
+			session.sport.append((const char*)sqlite3_column_text(statement, 2));
+			session.description.append((const char*)sqlite3_column_text(statement, 3));
+			sessions.push_back(session);
 		}
 
 		sqlite3_finalize(statement);
@@ -678,28 +681,28 @@ bool Database::RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts)
 	return result;
 }
 
-bool Database::DeleteIntervalWorkout(const std::string& workoutId)
+bool Database::DeleteIntervalSession(const std::string& sessionId)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "delete from interval_workout where workout_id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "delete from interval_session where session_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
 	return result == SQLITE_DONE;
 }
 
-bool Database::CreateIntervalSegment(const std::string& workoutId, const IntervalWorkoutSegment& segment)
+bool Database::CreateIntervalSegment(const std::string& sessionId, const IntervalSessionSegment& segment)
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_workout_segment values (NULL,?,?,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 2, segment.sets);
 		sqlite3_bind_int64(statement, 3, segment.reps);
 		sqlite3_bind_int64(statement, 4, segment.duration);
@@ -713,18 +716,18 @@ bool Database::CreateIntervalSegment(const std::string& workoutId, const Interva
 	return result == SQLITE_DONE;
 }
 
-bool Database::RetrieveIntervalSegments(const std::string& workoutId, std::vector<IntervalWorkoutSegment>& segments)
+bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vector<IntervalSessionSegment>& segments)
 {
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select id, sets, reps, duration, distance, pace, power, units from interval_workout_segment where workout_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, sets, reps, duration, distance, pace, power, units from interval_session_segment where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			IntervalWorkoutSegment segment;
+			IntervalSessionSegment segment;
 			
 			segment.segmentId = sqlite3_column_int64(statement, 0);
 			segment.sets = (uint32_t)sqlite3_column_int64(statement, 1);
@@ -747,7 +750,7 @@ bool Database::DeleteIntervalSegment(uint64_t segmentId)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "delete from interval_workout_segment where id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "delete from interval_session_segment where id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_int64(statement, 1, segmentId);
@@ -757,14 +760,14 @@ bool Database::DeleteIntervalSegment(uint64_t segmentId)
 	return result == SQLITE_DONE;
 }
 
-bool Database::DeleteIntervalSegmentsForWorkout(const std::string& workoutId)
+bool Database::DeleteIntervalSegmentsForSession(const std::string& sessionId)
 {
 	sqlite3_stmt* statement = NULL;
 	
-	int result = sqlite3_prepare_v2(m_pDb, "delete from interval_workout_segment where workout_id = ?", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "delete from interval_session_segment where session_id = ?", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workoutId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -2574,6 +2577,56 @@ bool Database::RetrieveActivityFootPodReadings(const std::string& activityId, Se
 				double rate = sqlite3_column_double(statement, 1);
 				reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_STEPS_TAKEN, rate));
 				
+				if (size == capacity)
+				{
+					readings.reserve(capacity + SIZE_INCREMENT);
+				}
+				
+				readings.push_back(reading);
+			}
+			
+			result = true;
+		}
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveActivityEventReadings(const std::string& activityId, SensorReadingList& readings)
+{
+	const size_t SIZE_INCREMENT = 4096;
+	
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	readings.clear();
+
+	if (sqlite3_prepare_v2(m_pDb, "select time,event_type,value from event where activity_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_text(statement, 1, activityId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
+		{
+			readings.reserve(1024);
+			
+			while (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				size_t capacity = readings.capacity();
+				size_t size = readings.size();
+				
+				SensorReading reading;
+				
+				reading.time = sqlite3_column_int64(statement, 0);
+				reading.type = (SensorType)sqlite3_column_int64(statement, 1);
+				double value = sqlite3_column_double(statement, 2);
+
+				switch (reading.type)
+				{
+				case SENSOR_TYPE_RADAR:
+					reading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_THREAT_COUNT, value));
+					break;
+				default:
+					break;
+				}
+
 				if (size == capacity)
 				{
 					readings.reserve(capacity + SIZE_INCREMENT);

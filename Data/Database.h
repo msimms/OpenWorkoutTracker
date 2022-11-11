@@ -55,17 +55,17 @@ public:
 	bool UpdateShoe(Shoes& shoes);
 	bool DeleteShoe(uint64_t shoeId);
 
-	// Methods for interval workouts.
+	// Methods for interval sessions.
 	
-	bool CreateIntervalWorkout(const std::string& workoutId, const std::string& name, const std::string& sport);
-	bool RetrieveIntervalWorkout(const std::string& workoutId, std::string& name, std::string& sport);
-	bool RetrieveIntervalWorkouts(std::vector<IntervalWorkout>& workouts);
-	bool DeleteIntervalWorkout(const std::string& workoutId);
+	bool CreateIntervalSession(const std::string& sessionId, const std::string& name, const std::string& sport, const std::string& description);
+	bool RetrieveIntervalSession(const std::string& sessionId, std::string& name, std::string& sport, std::string& description);
+	bool RetrieveIntervalSessions(std::vector<IntervalSession>& sessions);
+	bool DeleteIntervalSession(const std::string& sessionId);
 
-	bool CreateIntervalSegment(const std::string& workoutId, const IntervalWorkoutSegment& segment);
-	bool RetrieveIntervalSegments(const std::string& workoutId, std::vector<IntervalWorkoutSegment>& segments);
+	bool CreateIntervalSegment(const std::string& sessionId, const IntervalSessionSegment& segment);
+	bool RetrieveIntervalSegments(const std::string& sessionId, std::vector<IntervalSessionSegment>& segments);
 	bool DeleteIntervalSegment(uint64_t segmentId);
-	bool DeleteIntervalSegmentsForWorkout(const std::string& workoutId);
+	bool DeleteIntervalSegmentsForSession(const std::string& sessionId);
 
 	// Methods for planned workouts.
 
@@ -160,6 +160,7 @@ public:
 	bool RetrieveActivityWheelSpeedReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityPowerMeterReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityFootPodReadings(const std::string& activityId, SensorReadingList& readings);
+	bool RetrieveActivityEventReadings(const std::string& activityId, SensorReadingList& readings);
 
 	// Methods for trimming activity data.
 

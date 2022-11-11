@@ -447,10 +447,10 @@ void Activity::SetActivityAttribute(const std::string& attributeName, ActivityAt
 	}
 }
 
-bool Activity::CheckIntervalWorkout()
+bool Activity::CheckIntervalSession()
 {
-	// Is the interval workout still in progress?
-	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
+	// Is the interval session still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
 	{
 		return false;
 	}
@@ -482,17 +482,17 @@ bool Activity::CheckIntervalWorkout()
 	return shouldAdvance;
 }
 
-bool Activity::GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment)
+bool Activity::GetCurrentIntervalSessionSegment(IntervalSessionSegment& segment)
 {
-	// Is the interval workout still in progress?
-	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
+	// Is the interval session still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
 	{
 		return false;
 	}
 
 	try
 	{
-		const IntervalWorkoutSegment& tempSegment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
+		const IntervalSessionSegment& tempSegment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
 		segment = tempSegment;
 	}
 	catch (...)
@@ -502,10 +502,10 @@ bool Activity::GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment)
 	return true;
 }
 
-bool Activity::IsIntervalWorkoutComplete()
+bool Activity::IsIntervalSessionComplete()
 {
-	// Is the interval workout still in progress?
-	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
+	// Is the interval session still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
 	{
 		return true;
 	}
@@ -514,15 +514,15 @@ bool Activity::IsIntervalWorkoutComplete()
 
 bool Activity::CheckTimeInterval()
 {
-	// Is the interval workout still in progress?
-	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalWorkout.segments.size())
+	// Is the interval session still in progress?
+	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
 	{
 		return false;
 	}
 
 	try
 	{
-		const IntervalWorkoutSegment& segment = m_intervalWorkout.segments.at(m_intervalWorkoutState.nextSegmentIndex);
+		const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
 		if (segment.duration > 0)
 		{
 			uint64_t currentTime = ElapsedTimeInSeconds();

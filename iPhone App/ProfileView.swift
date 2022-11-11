@@ -33,7 +33,7 @@ struct ProfileView: View {
 				Button("Activity Level") {
 					self.showingActivityLevelSelection = true
 				}
-				.confirmationDialog("Please describe your current activity level", isPresented: $showingActivityLevelSelection, titleVisibility: .visible) {
+				.confirmationDialog("Please describe your current activity level", isPresented: self.$showingActivityLevelSelection, titleVisibility: .visible) {
 					ForEach([STR_SEDENTARY, STR_LIGHT, STR_MODERATELY_ACTIVE, STR_HIGHLY_ACTIVE, STR_EXTREMELY_ACTIVE], id: \.self) { item in
 						Button(item) {
 							let activityLevel = ProfileVM.activityLevelStringToType(activityLevelStr: item)
@@ -71,7 +71,7 @@ struct ProfileView: View {
 				Button("Biological Gender") {
 					self.showingGenderSelection = true
 				}
-				.confirmationDialog("Please enter your biological gender", isPresented: $showingGenderSelection, titleVisibility: .visible) {
+				.confirmationDialog("Please enter your biological gender", isPresented: self.$showingGenderSelection, titleVisibility: .visible) {
 					ForEach([STR_MALE, STR_FEMALE], id: \.self) { item in
 						Button(item) {
 							let gender = ProfileVM.genderStringToType(genderStr: item)
@@ -90,12 +90,12 @@ struct ProfileView: View {
 				Text("Height")
 					.bold()
 				Spacer()
-				TextField("Height", text: $height.value)
+				TextField("Height", text: self.$height.value)
 					.keyboardType(.decimalPad)
 					.multilineTextAlignment(.trailing)
 					.fixedSize()
-					.onChange(of: height.value) { value in
-						if let value = Double(height.value) {
+					.onChange(of: self.height.value) { value in
+						if let value = Double(self.height.value) {
 							ProfileVM.setHeight(height: value)
 							showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
 						} else {
@@ -104,7 +104,7 @@ struct ProfileView: View {
 					}
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
 			}
-			.alert("Invalid value!", isPresented: self.$showingFtpError) {
+			.alert("Invalid value!", isPresented: self.$showingHeightError) {
 			}
 			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
 			}
@@ -115,12 +115,12 @@ struct ProfileView: View {
 				Text("Weight")
 					.bold()
 				Spacer()
-				TextField("Weight", text: $weight.value)
+				TextField("Weight", text: self.$weight.value)
 					.keyboardType(.decimalPad)
 					.multilineTextAlignment(.trailing)
 					.fixedSize()
-					.onChange(of: weight.value) { value in
-						if let value = Double(weight.value) {
+					.onChange(of: self.weight.value) { value in
+						if let value = Double(self.weight.value) {
 							ProfileVM.setWeight(weight: value)
 							showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())
 						} else {
@@ -129,7 +129,7 @@ struct ProfileView: View {
 					}
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
 			}
-			.alert("Invalid value!", isPresented: self.$showingFtpError) {
+			.alert("Invalid value!", isPresented: self.$showingWeightError) {
 			}
 			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
 			}
@@ -140,12 +140,12 @@ struct ProfileView: View {
 				Text("Functional Threshold Power")
 					.bold()
 				Spacer()
-				TextField("FTP", text: $ftp.value)
+				TextField("FTP", text: self.$ftp.value)
 					.keyboardType(.decimalPad)
 					.multilineTextAlignment(.trailing)
 					.fixedSize()
-					.onChange(of: ftp.value) { value in
-						if let value = Double(ftp.value) {
+					.onChange(of: self.ftp.value) { value in
+						if let value = Double(self.ftp.value) {
 							Preferences.setFtp(value: value)
 							showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
 						} else {

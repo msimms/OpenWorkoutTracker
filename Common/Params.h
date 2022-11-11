@@ -35,7 +35,7 @@
 #define PARAM_ADD_TIME                        "add_time"
 #define PARAM_RETIRE_TIME                     "retire_time"
 
-// Workouts
+// Suggested Workouts
 #define PARAM_WORKOUT_ID                      "workout_id"
 #define PARAM_WORKOUT_NUM_INTERVALS           "num intervals"
 #define PARAM_WORKOUT_WORKOUT_TYPE            "type"
@@ -49,7 +49,11 @@
 #define PARAM_WORKOUT_COOLDOWN                "cooldown"
 #define PARAM_WORKOUT_INTERVALS               "intervals"
 
-// Workout Interval
+// Interval Session
+#define PARAM_INTERVAL_ID                     "id"
+#define PARAM_INTERVAL_NAME                   "name"
+#define PARAM_INTERVAL_SPORT                  "sport"
+#define PARAM_INTERVAL_DESCRIPTION            "description"
 #define PARAM_INTERVAL_REPEAT                 "repeat"
 #define PARAM_INTERVAL_DURATION               "duration"
 #define PARAM_INTERVAL_DISTANCE               "distance"

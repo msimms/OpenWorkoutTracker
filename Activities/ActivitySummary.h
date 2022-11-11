@@ -33,6 +33,7 @@ typedef struct ActivitySummary
 	SensorReadingList    heartRateMonitorReadings; // List of all heart rate monitor readings recorded as part of this activity
 	SensorReadingList    cadenceReadings;          // List of all cadence sensor readings recorded as part of this activity
 	SensorReadingList    powerReadings;            // List of power meter readings recorded as part of this activity
+	SensorReadingList    eventReadings;            // List of events (radar threats, gear shifts, etc.) recorded as part of this activity
 	ActivityAttributeMap summaryAttributes;
 	Activity*            pActivity;                // Optional activity object
 
@@ -56,6 +57,7 @@ typedef struct ActivitySummary
 		this->heartRateMonitorReadings = rhs.heartRateMonitorReadings;
 		this->cadenceReadings = rhs.cadenceReadings;
 		this->powerReadings = rhs.powerReadings;
+		this->eventReadings = rhs.eventReadings;
 		this->summaryAttributes = rhs.summaryAttributes;
 		this->pActivity = rhs.pActivity;
 	}
@@ -73,6 +75,7 @@ typedef struct ActivitySummary
 		this->heartRateMonitorReadings = std::move(rhs.heartRateMonitorReadings);
 		this->cadenceReadings = std::move(rhs.cadenceReadings);
 		this->powerReadings = std::move(rhs.powerReadings);
+		this->eventReadings = std::move(rhs.eventReadings);
 		this->summaryAttributes = std::move(rhs.summaryAttributes);
 		this->pActivity = rhs.pActivity;
 	}

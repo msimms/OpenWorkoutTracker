@@ -427,7 +427,7 @@ struct ActivityView: View {
 						.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
 							ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
 								Button {
-									SetCurrentIntervalWorkout(item.id.uuidString)
+									SetCurrentIntervalSession(item.id.uuidString)
 								} label: {
 									Text(item.name)
 								}

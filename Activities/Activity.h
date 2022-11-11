@@ -47,7 +47,7 @@ public:
 	virtual std::string GetType() const = 0;
 
 	virtual void SetAthleteProfile(const User& athlete) { m_athlete = athlete; };
-	virtual void SetIntervalWorkout(const IntervalWorkout& workout) { m_intervalWorkout = workout; };
+	virtual void SetIntervalWorkout(const IntervalSession& session) { m_intervalSession = session; };
 	virtual void SetPacePlan(const PacePlan& pacePlan) { m_pacePlan = pacePlan; };
 	virtual std::string GetPacePlanId() const { return m_pacePlan.planId; };
 
@@ -100,10 +100,10 @@ public:
 
 	SensorReading GetMostRecentSensorReading() const { return m_mostRecentSensorReading; };
 
-	virtual std::string GetCurrentIntervalWorkoutId() const { return m_intervalWorkout.workoutId; };
-	virtual bool CheckIntervalWorkout();
-	virtual bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment& segment);
-	virtual bool IsIntervalWorkoutComplete();
+	virtual std::string GetCurrentIntervalSessionId() const { return m_intervalSession.sessionId; };
+	virtual bool CheckIntervalSession();
+	virtual bool GetCurrentIntervalSessionSegment(IntervalSessionSegment& segment);
+	virtual bool IsIntervalSessionComplete();
 	virtual void UserWantsToAdvanceIntervalState() { m_intervalWorkoutState.shouldAdvance = true; };
 
 protected:
@@ -131,8 +131,8 @@ protected:
 protected:
 	std::string          m_id;                        // unique identifier for this activity (UUID)
 	User                 m_athlete;                   // user profile
-	IntervalWorkout      m_intervalWorkout;           // interval workout to use (optional)
-	IntervalWorkoutState m_intervalWorkoutState;      // current position within the interval workout
+	IntervalSession      m_intervalSession;           // interval session to use (optional)
+	IntervalSessionState m_intervalWorkoutState;      // current position within the interval session
 	PacePlan             m_pacePlan;                  // pace plan to use (optional)
 	double               m_additionalWeightKg;        // weight of barbells, dumbells, etc.
 	uint64_t             m_lastHeartRateUpdateTime;   // time the heart rate data was last updated
@@ -143,7 +143,7 @@ protected:
 	time_t               m_startTimeSecs;             // clock time at start
 	time_t               m_endTimeSecs;               // clock time at end
 	bool                 m_isPaused;                  // TRUE if activity is paused, FALSE otherwise
-	bool                 m_firstIteration;            // used in managing interval workouts
+	bool                 m_firstIteration;            // used in managing interval sessions
 	time_t               m_timeWhenLastPaused;        // clock time when last paused
 	time_t               m_secsPreviouslySpentPaused; // number of seconds spent paused
 	SensorReading        m_lastAccelReading;          // the oldest accelerometer reading received

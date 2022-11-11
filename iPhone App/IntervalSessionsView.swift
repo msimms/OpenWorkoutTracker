@@ -20,7 +20,7 @@ struct IntervalSessionsView: View {
 		VStack(alignment: .center) {
 			if self.intervalSessionsVM.intervalSessions.count > 0 {
 				List(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
-					NavigationLink(destination: EditIntervalSessionView(sessionid: item.id)) {
+					NavigationLink(destination: EditIntervalSessionView(session: item)) {
 						VStack(alignment: .leading) {
 							Text(item.name)
 								.bold()
@@ -41,7 +41,7 @@ struct IntervalSessionsView: View {
 				Spacer()
 			}
 			ToolbarItem(placement: .bottomBar) {
-				NavigationLink("+", destination: EditIntervalSessionView(sessionid: UUID()))
+				NavigationLink("+", destination: EditIntervalSessionView(session: IntervalSession()))
 					.foregroundColor(colorScheme == .dark ? .white : .black)
 			}
 		}

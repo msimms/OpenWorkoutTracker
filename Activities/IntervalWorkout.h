@@ -5,26 +5,29 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#ifndef __INTERVALWORKOUT__
-#define __INTERVALWORKOUT__
+#ifndef __INTERVALSESSION__
+#define __INTERVALSESSION__
 
 #include <stdint.h>
 #include <string>
 
+// This was split into it's own file to remove a dependency on the <string> include.
 #include "IntervalWorkoutSegment.h"
 
 /**
-* Intervals are used to structure workouts. Interval workouts can be fairly complex, containing segments that specify target times, distances, sets, reps, etc.
-*/
-typedef struct IntervalWorkout
+ * Intervals are used to structure workouts. Interval sessions can be fairly complex, containing segments that specify target times, distances, sets, reps, etc.
+ */
+
+typedef struct IntervalSession
 {
-	std::string  workoutId; // Unique identifier
+	std::string  sessionId; // Unique identifier
 	std::string  name;      // Displayable name
 	std::string  sport;     // Sport to which this workout applies
-	std::vector<IntervalWorkoutSegment> segments;
-} IntervalWorkout;
+	std::string  description;
+	std::vector<IntervalSessionSegment> segments;
+} IntervalSession;
 
-typedef struct IntervalWorkoutState
+typedef struct IntervalSessionState
 {
 	size_t   nextSegmentIndex;
 	uint64_t lastTimeSecs;
@@ -32,6 +35,6 @@ typedef struct IntervalWorkoutState
 	uint16_t lastSetCount;
 	uint16_t lastRepCount;
 	bool     shouldAdvance;
-} IntervalWorkoutState;
+} IntervalSessionState;
 
 #endif

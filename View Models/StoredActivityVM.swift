@@ -32,11 +32,14 @@ class StoredActivityVM : ObservableObject {
 #if !os(watchOS)
 	@Published var route: MKPolyline = MKPolyline()
 #endif
-	var heartRate: Array<(UInt64, Double)> = []
-	var cadence: Array<(UInt64, Double)> = []
-	var pace: Array<(UInt64, Double)> = []
-	var power: Array<(UInt64, Double)> = []
-	var speed: Array<(UInt64, Double)> = []
+	var heartRate: Array<(UInt64, Double)> = []     // Heart rate readings vs time
+	var cadence: Array<(UInt64, Double)> = []       // Cadence readings vs time
+	var pace: Array<(UInt64, Double)> = []          // Pace calculations vs time
+	var power: Array<(UInt64, Double)> = []         // Power readings vs time
+	var speed: Array<(UInt64, Double)> = []         // Speed calculations vs time
+	var x: Array<(UInt64, Double)> = []             // X-axis accelerometer readings vs time
+	var y: Array<(UInt64, Double)> = []             // Y-axis accelerometer readings vs time
+	var z: Array<(UInt64, Double)> = []             // Z-axis accelerometer readings vs time
 
 	init(activitySummary: ActivitySummary) {
 
@@ -72,7 +75,7 @@ class StoredActivityVM : ObservableObject {
 				for pointIndex in 0...numLocationPoints - 1 {
 					var coordinate = Coordinate( latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0 )
 					
-					if GetHistoricalActivityPoint(self.activityIndex, pointIndex, &coordinate) {
+					if GetHistoricalActivityLocationPoint(self.activityIndex, pointIndex, &coordinate) {
 						self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
 					}
 				}
@@ -87,39 +90,39 @@ class StoredActivityVM : ObservableObject {
 				}
 			}
 			
-			// Heart rate points
-			let numHeartRatePoints = GetNumHistoricalSensorPoints(self.activityIndex, SENSOR_TYPE_HEART_RATE)
-			if numHeartRatePoints > 0 {
+			// Heart rate readings
+			let numHeartRateReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_HEART_RATE)
+			if numHeartRateReadings > 0 {
 
-				for pointIndex in 0...numHeartRatePoints - 1 {
+				for pointIndex in 0...numHeartRateReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
 
-					if GetHistoricalActivitySensorPoint(self.activityIndex, SENSOR_TYPE_HEART_RATE, pointIndex, &timestamp, &value) {
+					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_HEART_RATE, pointIndex, &timestamp, &value) {
 						self.heartRate.append((UInt64(timestamp), value))
 					}
 				}
 			}
 
-			// Cadence points
-			let numCadencePoints = GetNumHistoricalSensorPoints(self.activityIndex, SENSOR_TYPE_CADENCE)
-			if numCadencePoints > 0 {
+			// Cadence readings
+			let numCadenceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_CADENCE)
+			if numCadenceReadings > 0 {
 
-				for pointIndex in 0...numCadencePoints - 1 {
+				for pointIndex in 0...numCadenceReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
 					
-					if GetHistoricalActivitySensorPoint(self.activityIndex, SENSOR_TYPE_CADENCE, pointIndex, &timestamp, &value) {
+					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_CADENCE, pointIndex, &timestamp, &value) {
 						self.cadence.append((UInt64(timestamp), value))
 					}
 				}
 			}
 
-			// Pace and speed points
-			let numPacePoints = GetNumHistoricalSensorPoints(self.activityIndex, SENSOR_TYPE_LOCATION)
-			if numPacePoints > 0 {
+			// Pace and speed readings
+			let numPaceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_LOCATION)
+			if numPaceReadings > 0 {
 				
-				for pointIndex in 0...numPacePoints - 1 {
+				for pointIndex in 0...numPaceReadings - 1 {
 					let pace = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_PACE)
 					let speed = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_SPEED)
 
@@ -128,17 +131,25 @@ class StoredActivityVM : ObservableObject {
 				}
 			}
 
-			// Power points
-			let numPowerPoints = GetNumHistoricalSensorPoints(self.activityIndex, SENSOR_TYPE_POWER)
-			if numPowerPoints > 0 {
+			// Power readings
+			let numPowerReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_POWER)
+			if numPowerReadings > 0 {
 
-				for pointIndex in 0...numPowerPoints - 1 {
+				for pointIndex in 0...numPowerReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
 					
-					if GetHistoricalActivitySensorPoint(self.activityIndex, SENSOR_TYPE_POWER, pointIndex, &timestamp, &value) {
+					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_POWER, pointIndex, &timestamp, &value) {
 						self.power.append((UInt64(timestamp), value))
 					}
+				}
+			}
+			
+			// Accelerometer readings
+			let numAccelPoints = GetNumHistoricalActivityAccelerometerReadings(self.activityIndex)
+			if numAccelPoints > 0 {
+
+				for pointIndex in 0...numAccelPoints - 1 {
 				}
 			}
 		}
@@ -162,6 +173,25 @@ class StoredActivityVM : ObservableObject {
 				}
 			}
 		}
+		return attributeList
+	}
+
+	func getActivityAttributesAndCharts() -> Array<String> {
+		var attributeList = self.getActivityAttributes()
+
+		attributeList.append("Heart Rate")
+		if IsHistoricalActivityMovingActivity(self.activityIndex) {
+			attributeList.append("Cadence")
+			attributeList.append("Pace")
+			attributeList.append("Power")
+			attributeList.append("Speed")
+		}
+		else if IsHistoricalActivityLiftingActivity(self.activityIndex) {
+			attributeList.append("X Axis")
+			attributeList.append("Y Axis")
+			attributeList.append("Z Axis")
+		}
+
 		return attributeList
 	}
 

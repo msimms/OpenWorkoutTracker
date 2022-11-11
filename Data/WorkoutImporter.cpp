@@ -29,7 +29,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 	{
 		std::string name = reader.GetName();
 
-		bool result = pDatabase->CreateIntervalWorkout(workoutId, name, "");
+		bool result = pDatabase->CreateIntervalSession(workoutId, name, "", "");
 		if (result)
 		{
 			FileLib::ZwoWarmup warmup;
@@ -41,7 +41,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 			{
 				const FileLib::ZwoWorkoutSegment* fileSegment = (*iter);
 
-				IntervalWorkoutSegment dbSegment;
+				IntervalSessionSegment dbSegment;
 				dbSegment.segmentId = segmentId;
 				dbSegment.sets = 0;
 				dbSegment.reps = 0;

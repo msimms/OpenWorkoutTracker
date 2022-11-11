@@ -9,12 +9,15 @@ struct EditIntervalSessionView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
-	@State private var newSession: IntervalSession = IntervalSession()
-	@State private var name: String = ""
-	@State private var sport: String = ""
-	@State private var description: String = ""
+
+	@State private var tempSession: IntervalSession
+	@State private var tempName: String
+	@State private var tempSport: String
+	@State private var tempDescription: String
+
 	@State private var keyBeingEdited: String = ""
 	@State private var valueBeingEdited: String = ""
+
 	@State private var showingIntervalTypeSelection: Bool = false
 	@State private var showingIntervalTimeValueSelection: Bool = false
 	@State private var showingIntervalDistanceValueSelection: Bool = false
@@ -26,7 +29,11 @@ struct EditIntervalSessionView: View {
 	@State private var showingDeleteFailedAlert: Bool = false
 	@State private var showingValueEditAlert: Bool = false
 
-	init(sessionid: UUID) {
+	init(session: IntervalSession) {
+		_tempSession = State(initialValue: session)
+		_tempName = State(initialValue: session.name)
+		_tempSport = State(initialValue: session.sport)
+		_tempDescription = State(initialValue: session.description)
 	}
 
 	var body: some View {
@@ -35,22 +42,22 @@ struct EditIntervalSessionView: View {
 			Group() {
 				Text("Name")
 					.bold()
-				TextField("Name", text: $name)
-					.onChange(of: self.name) { value in
-						self.newSession.name = value
+				TextField("Name", text: self.$tempName)
+					.onChange(of: self.tempName) { value in
+						self.tempSession.name = value
 					}
 			}
 			.padding(5)
 				
 			Group() {
-				Button(self.newSession.sport) {
+				Button(self.tempSession.sport) {
 					self.showingSportSelection = true
 				}
 				.bold()
-				.confirmationDialog("Select the workout to perform", isPresented: $showingSportSelection, titleVisibility: .visible) {
+				.confirmationDialog("Select the workout to perform", isPresented: self.$showingSportSelection, titleVisibility: .visible) {
 					ForEach(CommonApp.activityTypes, id: \.self) { item in
 						Button(item) {
-							self.newSession.sport = item
+							self.tempSession.sport = item
 						}
 					}
 				}
@@ -60,8 +67,11 @@ struct EditIntervalSessionView: View {
 			Group() {
 				Text("Description")
 					.bold()
-				TextField("Description", text: $description, axis: .vertical)
+				TextField("Description", text: self.$tempDescription, axis: .vertical)
 					.lineLimit(2...10)
+					.onChange(of: self.tempDescription) { value in
+						self.tempSession.description = value
+					}
 			}
 			.padding(5)
 
@@ -69,7 +79,7 @@ struct EditIntervalSessionView: View {
 
 			Group() {
 				VStack(alignment: .leading) {
-					ForEach(self.newSession.segments, id: \.self) { segment in
+					ForEach(self.tempSession.segments, id: \.self) { segment in
 						Button(action: {
 							self.showingSegmentEditSelection = true
 						}) {
@@ -80,8 +90,8 @@ struct EditIntervalSessionView: View {
 						}
 						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 						.opacity(0.8)
-						.confirmationDialog("Edit", isPresented: $showingSegmentEditSelection, titleVisibility: .visible) {
-							ForEach(self.newSession.segments.last!.validModifiers(activityType: self.sport), id: \.self) { item in
+						.confirmationDialog("Edit", isPresented: self.$showingSegmentEditSelection, titleVisibility: .visible) {
+							ForEach(self.tempSession.segments.last!.validModifiers(activityType: self.tempSport), id: \.self) { item in
 								Button(item) {
 									self.keyBeingEdited = item
 									self.showingValueEditAlert = true
@@ -91,7 +101,7 @@ struct EditIntervalSessionView: View {
 						.alert(self.keyBeingEdited, isPresented: self.$showingValueEditAlert, actions: {
 							TextField("10", text: self.$valueBeingEdited)
 							Button("Ok", action: {
-								self.newSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: Double(self.valueBeingEdited)!)
+								self.tempSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: Double(self.valueBeingEdited)!)
 							})
 							Button("Cancel", role: .cancel, action: {})
 						}, message: {
@@ -111,24 +121,24 @@ struct EditIntervalSessionView: View {
 						.padding()
 				}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-				.confirmationDialog("Which type of interval?", isPresented: $showingIntervalTypeSelection, titleVisibility: .visible) {
+				.confirmationDialog("Which type of interval?", isPresented: self.$showingIntervalTypeSelection, titleVisibility: .visible) {
 					Button("Time") {
 						let newSegment = IntervalSegment()
 						newSegment.firstValue = 60.0
 						newSegment.firstUnits = INTERVAL_UNIT_SECONDS
-						self.newSession.segments.append(newSegment)
+						self.tempSession.segments.append(newSegment)
 					}
 					Button("Distance") {
 						let newSegment = IntervalSegment()
 						newSegment.firstValue = 1000.0
 						newSegment.firstUnits = INTERVAL_UNIT_METERS
-						self.newSession.segments.append(newSegment)
+						self.tempSession.segments.append(newSegment)
 					}
 					Button("Sets") {
 						let newSegment = IntervalSegment()
 						newSegment.firstValue = 3.0
 						newSegment.firstUnits = INTERVAL_UNIT_SETS
-						self.newSession.segments.append(newSegment)
+						self.tempSession.segments.append(newSegment)
 					}
 				}
 				.bold()
@@ -139,8 +149,21 @@ struct EditIntervalSessionView: View {
 			// Save
 			Group() {
 				Button(action: {
-					if !self.intervalSessionsVM.createIntervalSession(session: self.newSession) {
-						self.showingSaveFailedAlert = true
+					if self.intervalSessionsVM.doesIntervalSessionExist(sessionId: self.tempSession.id) {
+						if self.intervalSessionsVM.updateIntervalSession(session: self.tempSession) {
+							self.dismiss()
+						}
+						else {
+							self.showingSaveFailedAlert = true
+						}
+					}
+					else {
+						if self.intervalSessionsVM.createIntervalSession(session: self.tempSession) {
+							self.dismiss()
+						}
+						else {
+							self.showingSaveFailedAlert = true
+						}
 					}
 				}) {
 					Text("Save")
@@ -148,7 +171,7 @@ struct EditIntervalSessionView: View {
 						.foregroundColor(.white)
 						.padding()
 				}
-				.alert("Failed to create the interval session.", isPresented: $showingSaveFailedAlert) {}
+				.alert("Failed to create the interval session.", isPresented: self.$showingSaveFailedAlert) {}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
@@ -163,9 +186,9 @@ struct EditIntervalSessionView: View {
 						.padding()
 				}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: $showingDeleteConfirmation) {
+				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {
 					Button("Delete") {
-						if self.intervalSessionsVM.deleteIntervalSession(intervalSessionId: self.newSession.id) {
+						if self.intervalSessionsVM.deleteIntervalSession(intervalSessionId: self.tempSession.id) {
 							self.dismiss()
 						}
 						else {
@@ -175,14 +198,11 @@ struct EditIntervalSessionView: View {
 					Button("Cancel") {
 					}
 				}
-				.alert("Failed to delete the interval session.", isPresented: $showingDeleteFailedAlert) {}
+				.alert("Failed to delete the interval session.", isPresented: self.$showingDeleteFailedAlert) {}
 				.opacity(0.8)
 				.bold()
 			}
 		}
 		.padding(10)
-		.onAppear() {
-			//self.intervalSessionsVM.retrieveIntervalSession(sessionid: self.planId)
-		}
     }
 }

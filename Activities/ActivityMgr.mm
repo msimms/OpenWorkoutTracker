@@ -115,7 +115,7 @@ extern "C" {
 	std::map<std::string, size_t> g_activityIdMap;          // maps activity IDs to activity indexes
 	std::vector<Bike>             g_bikes;                  // cache of bike profiles
 	std::vector<Shoes>            g_shoes;                  // cache of shoe profiles
-	std::vector<IntervalWorkout>  g_intervalWorkouts;       // cache of interval workouts
+	std::vector<IntervalSession>  g_intervalSessions;       // cache of interval sessions
 	std::vector<PacePlan>         g_pacePlans;              // cache of pace plans
 	std::vector<Workout>          g_workouts;               // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
@@ -1337,82 +1337,82 @@ extern "C" {
 	}
 
 	//
-	// Functions for managing the currently set interval workout.
+	// Functions for managing the currently set interval session.
 	//
 
-	const IntervalWorkout* GetIntervalWorkout(const char* const workoutId)
+	const IntervalSession* GetIntervalSession(const char* const sessionId)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return NULL;
 		}
 
-		for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
+		for (auto iter = g_intervalSessions.begin(); iter != g_intervalSessions.end(); ++iter)
 		{
-			const IntervalWorkout& workout = (*iter);
+			const IntervalSession& session = (*iter);
 
-			if (workout.workoutId.compare(workoutId) == 0)
+			if (session.sessionId.compare(sessionId) == 0)
 			{
-				return &workout;
+				return &session;
 			}
 		}
 		return NULL;
 	}
 
-	bool SetCurrentIntervalWorkout(const char* const workoutId)
+	bool SetCurrentIntervalSession(const char* const sessionId)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
 
-		if (g_pCurrentActivity && workoutId)
+		if (g_pCurrentActivity && sessionId)
 		{
-			const IntervalWorkout* workout = GetIntervalWorkout(workoutId);
+			const IntervalSession* session = GetIntervalSession(sessionId);
 
-			if (workout)
+			if (session)
 			{
-				g_pCurrentActivity->SetIntervalWorkout((*workout));
+				g_pCurrentActivity->SetIntervalWorkout((*session));
 				return true;
 			}
 		}
 		return false;
 	}
 
-	char* GetCurrentIntervalWorkoutId(void)
+	char* GetCurrentIntervalSessionsId(void)
 	{
 		if (g_pCurrentActivity)
 		{
-			return strdup(g_pCurrentActivity->GetCurrentIntervalWorkoutId().c_str());
+			return strdup(g_pCurrentActivity->GetCurrentIntervalSessionId().c_str());
 		}
 		return NULL;
 	}
 
-	bool CheckCurrentIntervalWorkout()
+	bool CheckCurrentIntervalSession()
 	{
 		if (IsActivityInProgress())
 		{
-			return g_pCurrentActivity->CheckIntervalWorkout();
+			return g_pCurrentActivity->CheckIntervalSession();
 		}
 		return false;
 	}
 
-	bool GetCurrentIntervalWorkoutSegment(IntervalWorkoutSegment* segment)
+	bool GetCurrentIntervalSessionSegment(IntervalSessionSegment* segment)
 	{
 		if (IsActivityInProgress())
 		{
-			return g_pCurrentActivity->GetCurrentIntervalWorkoutSegment(*segment);
+			return g_pCurrentActivity->GetCurrentIntervalSessionSegment(*segment);
 		}
 		return false;	
 	}
 
-	bool IsIntervalWorkoutComplete()
+	bool IsIntervalSessionComplete()
 	{
 		if (IsActivityInProgress())
 		{
-			return g_pCurrentActivity->IsIntervalWorkoutComplete();
+			return g_pCurrentActivity->IsIntervalSessionComplete();
 		}
 		return false;
 	}
@@ -1426,24 +1426,24 @@ extern "C" {
 	}
 
 	//
-	// Functions for managing interval workouts.
+	// Functions for managing interval sessions.
 	//
 
-	// To be called before iterating over the interval workout list.
-	bool InitializeIntervalWorkoutList()
+	// To be called before iterating over the interval session list.
+	bool InitializeIntervalSessionList()
 	{
 		bool result = true;
 
-		g_intervalWorkouts.clear();
+		g_intervalSessions.clear();
 		g_dbLock.lock();
 
-		if (g_pDatabase && g_pDatabase->RetrieveIntervalWorkouts(g_intervalWorkouts))
+		if (g_pDatabase && g_pDatabase->RetrieveIntervalSessions(g_intervalSessions))
 		{
-			for (auto iter = g_intervalWorkouts.begin(); iter != g_intervalWorkouts.end(); ++iter)
+			for (auto iter = g_intervalSessions.begin(); iter != g_intervalSessions.end(); ++iter)
 			{
-				IntervalWorkout& workout = (*iter);
+				IntervalSession& session = (*iter);
 
-				if (!g_pDatabase->RetrieveIntervalSegments(workout.workoutId, workout.segments))
+				if (!g_pDatabase->RetrieveIntervalSegments(session.sessionId, session.segments))
 				{
 					result = false;
 				}
@@ -1455,33 +1455,38 @@ extern "C" {
 		return result;
 	}
 
-	char* RetrieveIntervalWorkoutAsJSON(size_t workoutIndex)
+	char* RetrieveIntervalSessionAsJSON(size_t sessionIndex)
 	{
-		if (workoutIndex < g_intervalWorkouts.size())
+		if (sessionIndex < g_intervalSessions.size())
 		{
-			const IntervalWorkout& workout = g_intervalWorkouts.at(workoutIndex);
+			const IntervalSession& session = g_intervalSessions.at(sessionIndex);
 			std::map<std::string, std::string> params;
 
-			params.insert(std::make_pair("id", EscapeAndQuoteString(workout.workoutId)));
-			params.insert(std::make_pair("name", EscapeAndQuoteString(workout.name)));
-			params.insert(std::make_pair("sport", EscapeAndQuoteString(workout.sport)));
+			params.insert(std::make_pair(PARAM_INTERVAL_ID, EscapeAndQuoteString(session.sessionId)));
+			params.insert(std::make_pair(PARAM_INTERVAL_NAME, EscapeAndQuoteString(session.name)));
+			params.insert(std::make_pair(PARAM_INTERVAL_SPORT, EscapeAndQuoteString(session.sport)));
+			params.insert(std::make_pair(PARAM_INTERVAL_DESCRIPTION, EscapeAndQuoteString(session.description)));
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;
 	}
 
-	bool RetrieveIntervalWorkout(const char* const workoutId, char** const workoutName, char** const sport)
+	bool RetrieveIntervalSession(const char* const sessionId, char** const sessionName, char** const sport, char** const description)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
-		if (workoutName == NULL)
+		if (sessionName == NULL)
 		{
 			return false;
 		}
 		if (sport == NULL)
+		{
+			return false;
+		}
+		if (description == NULL)
 		{
 			return false;
 		}
@@ -1492,12 +1497,14 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			std::string tempWorkoutName;
+			std::string tempSessionName;
 			std::string tempSport;
+			std::string tempDescription;
 
-			result = g_pDatabase->RetrieveIntervalWorkout(workoutId, tempWorkoutName, tempSport);
-			(*workoutName) = strdup(tempWorkoutName.c_str());
+			result = g_pDatabase->RetrieveIntervalSession(sessionId, tempSessionName, tempSport, tempDescription);
+			(*sessionName) = strdup(tempSessionName.c_str());
 			(*sport) = strdup(tempSport.c_str());
+			(*description) = strdup(tempDescription.c_str());
 		}
 
 		g_dbLock.unlock();
@@ -1505,14 +1512,14 @@ extern "C" {
 		return result;
 	}
 
-	bool CreateNewIntervalWorkout(const char* const workoutId, const char* const workoutName, const char* const sport)
+	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
-		if (workoutName == NULL)
+		if (sessionName == NULL)
 		{
 			return false;
 		}
@@ -1527,7 +1534,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->CreateIntervalWorkout(workoutId, workoutName, sport);
+			result = g_pDatabase->CreateIntervalSession(sessionId, sessionName, sport, description);
 		}
 
 		g_dbLock.unlock();
@@ -1535,10 +1542,10 @@ extern "C" {
 		return result;
 	}
 
-	bool DeleteIntervalWorkout(const char* const workoutId)
+	bool DeleteIntervalSession(const char* const sessionId)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
@@ -1549,7 +1556,7 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->DeleteIntervalWorkout(workoutId) && g_pDatabase->DeleteIntervalSegmentsForWorkout(workoutId);
+			result = g_pDatabase->DeleteIntervalSession(sessionId) && g_pDatabase->DeleteIntervalSegmentsForSession(sessionId);
 		}
 
 		g_dbLock.unlock();
@@ -1558,13 +1565,13 @@ extern "C" {
 	}
 
 	//
-	// Functions for managing interval workout segments.
+	// Functions for managing interval sessions.
 	//
 
-	size_t GetNumSegmentsForIntervalWorkout(const char* const workoutId)
+	size_t GetNumSegmentsForIntervalSession(const char* const sessionId)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return 0;
 		}
@@ -1575,11 +1582,11 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+			const IntervalSession* pSession = GetIntervalSession(sessionId);
 
-			if (pWorkout)
+			if (pSession)
 			{
-				numSegments = pWorkout->segments.size();
+				numSegments = pSession->segments.size();
 			}
 		}
 
@@ -1588,10 +1595,10 @@ extern "C" {
 		return numSegments;
 	}
 
-	bool CreateNewIntervalWorkoutSegment(const char* const workoutId, IntervalWorkoutSegment segment)
+	bool CreateNewIntervalSessionSegment(const char* const sessionId, IntervalSessionSegment segment)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
@@ -1600,13 +1607,13 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && workoutId)
+		if (g_pDatabase && sessionId)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+			const IntervalSession* pSession = GetIntervalSession(sessionId);
 
-			if (pWorkout)
+			if (pSession)
 			{
-				result = g_pDatabase->CreateIntervalSegment(workoutId, segment);
+				result = g_pDatabase->CreateIntervalSegment(sessionId, segment);
 			}
 		}
 
@@ -1615,10 +1622,10 @@ extern "C" {
 		return result;
 	}
 
-	bool DeleteIntervalWorkoutSegment(const char* const workoutId, size_t segmentIndex)
+	bool DeleteIntervalSessionSegment(const char* const sessionId, size_t segmentIndex)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
@@ -1629,11 +1636,11 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+			const IntervalSession* pSession = GetIntervalSession(sessionId);
 
-			if (pWorkout && (segmentIndex < pWorkout->segments.size()))
+			if (pSession && (segmentIndex < pSession->segments.size()))
 			{
-				const IntervalWorkoutSegment& segment = pWorkout->segments.at(segmentIndex);
+				const IntervalSessionSegment& segment = pSession->segments.at(segmentIndex);
 				result = g_pDatabase->DeleteIntervalSegment(segment.segmentId);
 			}
 		}
@@ -1643,10 +1650,10 @@ extern "C" {
 		return result;
 	}
 
-	bool GetIntervalWorkoutSegmentByIndex(const char* const workoutId, size_t segmentIndex, IntervalWorkoutSegment* segment)
+	bool GetIntervalSessionSegmentByIndex(const char* const sessionId, size_t segmentIndex, IntervalSessionSegment* segment)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
@@ -1657,11 +1664,11 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+			const IntervalSession* pSession = GetIntervalSession(sessionId);
 
-			if (pWorkout && (segmentIndex < pWorkout->segments.size()))
+			if (pSession && (segmentIndex < pSession->segments.size()))
 			{
-				(*segment) = pWorkout->segments.at(segmentIndex);
+				(*segment) = pSession->segments.at(segmentIndex);
 				result = true;
 			}
 		}
@@ -1671,10 +1678,10 @@ extern "C" {
 		return result;
 	}
 
-	bool GetIntervalWorkoutSegmentByTimeOffset(const char* const workoutId, time_t timeOffsetInSecs, IntervalWorkoutSegment* segment)
+	bool GetIntervalSessionSegmentByTimeOffset(const char* const sessionId, time_t timeOffsetInSecs, IntervalSessionSegment* segment)
 	{
 		// Sanity checks.
-		if (workoutId == NULL)
+		if (sessionId == NULL)
 		{
 			return false;
 		}
@@ -1685,13 +1692,13 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			const IntervalWorkout* pWorkout = GetIntervalWorkout(workoutId);
+			const IntervalSession* pSession = GetIntervalSession(sessionId);
 			size_t segmentIndex = 0;
 			time_t cumulativeTime = 0;
 
-			while (!result && (segmentIndex < pWorkout->segments.size()))
+			while (!result && (segmentIndex < pSession->segments.size()))
 			{
-				(*segment) = pWorkout->segments.at(segmentIndex);
+				(*segment) = pSession->segments.at(segmentIndex);
 				cumulativeTime += (*segment).duration;
 				result = (timeOffsetInSecs < cumulativeTime);
 				++segmentIndex;
@@ -2288,7 +2295,30 @@ extern "C" {
 				case SENSOR_TYPE_FOOT_POD:
 				case SENSOR_TYPE_SCALE:
 				case SENSOR_TYPE_LIGHT:
+					break;
 				case SENSOR_TYPE_RADAR:
+					if (summary.eventReadings.size() == 0)
+					{
+						if (g_pDatabase->RetrieveActivityEventReadings(summary.activityId, summary.eventReadings))
+						{
+							for (auto iter = summary.eventReadings.begin(); iter != summary.eventReadings.end(); ++iter)
+							{
+								const SensorReading& reading = (*iter);
+								if (reading.type == SENSOR_TYPE_RADAR)
+								{
+									summary.pActivity->ProcessSensorReading(reading);
+									if (callback)
+										callback(summary.activityId.c_str(), context);
+								}
+							}
+							result = true;
+						}
+					}
+					else
+					{
+						result = true;
+					}
+					break;
 				case SENSOR_TYPE_GOPRO:
 				case SENSOR_TYPE_NEARBY:
 					result = true;
@@ -2746,7 +2776,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetHistoricalActivityPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate)
+	bool GetHistoricalActivityLocationPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate)
 	{
 		bool result = false;
 
@@ -2775,7 +2805,7 @@ extern "C" {
 	// Functions for accessing historical sensor data.
 	//
 
-	size_t GetNumHistoricalSensorPoints(size_t activityIndex, SensorType sensorType)
+	size_t GetNumHistoricalSensorReadings(size_t activityIndex, SensorType sensorType)
 	{
 		size_t result = 0;
 		
@@ -2818,11 +2848,11 @@ extern "C" {
 		return result;
 	}
 
-	bool GetHistoricalActivitySensorPoint(size_t activityIndex, SensorType sensorType, size_t pointIndex, time_t* const pointTime, double* const pointValue)
+	bool GetHistoricalActivitySensorReading(size_t activityIndex, SensorType sensorType, size_t readingIndex, time_t* const readingTime, double* const readingValue)
 	{
 		bool result = false;
 		
-		if (pointValue != NULL)
+		if (readingValue != NULL)
 		{
 			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 			{
@@ -2836,31 +2866,31 @@ extern "C" {
 				case SENSOR_TYPE_LOCATION:
 					break;
 				case SENSOR_TYPE_HEART_RATE:
-					if (pointIndex < summary.heartRateMonitorReadings.size())
+					if (readingIndex < summary.heartRateMonitorReadings.size())
 					{
-						SensorReading& reading = summary.heartRateMonitorReadings.at(pointIndex);
-						(*pointTime) = reading.time;
-						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
+						SensorReading& reading = summary.heartRateMonitorReadings.at(readingIndex);
+						(*readingTime) = reading.time;
+						(*readingValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
 						result = true;
 					}
 					break;
 				case SENSOR_TYPE_CADENCE:
-					if (pointIndex < summary.cadenceReadings.size())
+					if (readingIndex < summary.cadenceReadings.size())
 					{
-						SensorReading& reading = summary.cadenceReadings.at(pointIndex);
-						(*pointTime) = reading.time;
-						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
+						SensorReading& reading = summary.cadenceReadings.at(readingIndex);
+						(*readingTime) = reading.time;
+						(*readingValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
 						result = true;
 					}
 					break;
 				case SENSOR_TYPE_WHEEL_SPEED:
 					break;
 				case SENSOR_TYPE_POWER:
-					if (pointIndex < summary.powerReadings.size())
+					if (readingIndex < summary.powerReadings.size())
 					{
-						SensorReading& reading = summary.powerReadings.at(pointIndex);
-						(*pointTime) = reading.time;
-						(*pointValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
+						SensorReading& reading = summary.powerReadings.at(readingIndex);
+						(*readingTime) = reading.time;
+						(*readingValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
 						result = true;
 					}
 					break;

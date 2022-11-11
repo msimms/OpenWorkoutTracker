@@ -73,7 +73,7 @@
 	
 	NSString* tempWorkoutName = nil;
 	NSString* tempWorkoutSport = nil;
-	[appDelegate retrieveIntervalWorkout:self->workoutId withName:&tempWorkoutName withSport:&tempWorkoutSport];
+	[appDelegate retrieveIntervalSession:self->workoutId withName:&tempWorkoutName withSport:&tempWorkoutSport];
 	self->workoutName = tempWorkoutName;
 	self->workoutSport = tempWorkoutSport;
 
@@ -157,6 +157,10 @@
 			{
 			case INTERVAL_UNIT_NOT_SET:
 				break;
+			case INTERVAL_UNIT_SETS:
+				break;
+			case INTERVAL_UNIT_REPS:
+				break;
 			case INTERVAL_UNIT_SECONDS:
 				break;
 			case INTERVAL_UNIT_METERS:
@@ -181,7 +185,7 @@
 			case INTERVAL_UNIT_SPEED_US_CUSTOMARY: // Segment data is stored in metric, so we're good here, the user just wants to display in US Customary
 			case INTERVAL_UNIT_SPEED_METRIC:
 				break;
-			case INTERVAL_UNIT_TIME_AND_POWER:
+			case INTERVAL_UNIT_WATTS:
 				break;
 			}
 		}
@@ -264,6 +268,10 @@
 			{
 			case INTERVAL_UNIT_NOT_SET:
 				break;
+			case INTERVAL_UNIT_SETS:
+				break;
+			case INTERVAL_UNIT_REPS:
+				break;
 			case INTERVAL_UNIT_SECONDS:
 				segment2.duration = valueFromUser;
 				segment2.units = INTERVAL_UNIT_SECONDS;
@@ -280,7 +288,7 @@
 			case INTERVAL_UNIT_PACE_METRIC:
 			case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
 			case INTERVAL_UNIT_SPEED_METRIC:
-			case INTERVAL_UNIT_TIME_AND_POWER:
+			case INTERVAL_UNIT_WATTS:
 				break;
 			}
 
@@ -455,7 +463,7 @@
 
 				if ([StringUtils parseDurationToSeconds:[alertController2.textFields.firstObject text] withSeconds:&segment.duration] && segment.power > 0)
 				{
-					segment.units = INTERVAL_UNIT_TIME_AND_POWER;
+					segment.units = INTERVAL_UNIT_WATTS;
 
 					if (CreateNewIntervalWorkoutSegment([self->workoutId UTF8String], segment))
 					{
@@ -566,7 +574,7 @@
 
 - (void)reload
 {
-	InitializeIntervalWorkoutList();
+	InitializeIntervalSessionList();
 	[self->intervalTableView reloadData];	
 }
 
@@ -620,6 +628,10 @@
 					{
 					case INTERVAL_UNIT_NOT_SET:
 						break;
+					case INTERVAL_UNIT_SETS:
+						break;
+					case INTERVAL_UNIT_REPS:
+						break;
 					case INTERVAL_UNIT_SECONDS:
 						[content setText:[NSString stringWithFormat:@"%zd. %@", row + 1, [StringUtils formatSeconds:segment.duration]]];
 						break;
@@ -658,7 +670,7 @@
 					case INTERVAL_UNIT_SPEED_METRIC:
 						[content setText:[NSString stringWithFormat:@"%zd. %@ at %0.1f kms/hour", row + 1, [StringUtils formatSeconds:segment.duration], segment.pace]];
 						break;
-					case INTERVAL_UNIT_TIME_AND_POWER:
+					case INTERVAL_UNIT_WATTS:
 						[content setText:[NSString stringWithFormat:@"%zd. %@ at %0.1f %% FTP", row + 1, [StringUtils formatSeconds:segment.duration], segment.power]];
 						break;
 					}
@@ -702,7 +714,7 @@
 	{
 		if (DeleteIntervalWorkoutSegment([self->workoutId UTF8String], [indexPath row]))
 		{
-			InitializeIntervalWorkoutList();
+			InitializeIntervalSessionList();
 			[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 		}
 	}
