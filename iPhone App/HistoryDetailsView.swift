@@ -30,75 +30,72 @@ struct HistoryDetailsView: View {
 		VStack(alignment: .center) {
 			// Map
 			if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
-				Map(coordinateRegion: .constant(
-					MKCoordinateRegion(
-						center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
-						span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-					)
+				let region = MKCoordinateRegion(
+					center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
+					span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
 				)
-				)
-				.addOverlay(self.activityVM.route)
-				.ignoresSafeArea()
-				.frame(width: 400, height: 200)
+
+				MapWithPolyline(region: region, lineCoordinates: self.activityVM.locationTrack)
+					.addOverlay(self.activityVM.trackLine)
+					.ignoresSafeArea()
+					.frame(width: 400, height: 300)
 			}
-			
-			VStack(alignment: .leading) {
-				// Name
-				Section(header: Text("Name")) {
-					TextField("Name", text: self.$activityVM.name)
-						.onChange(of: self.activityVM.name) { value in
-							showingUpdateNameError = !self.activityVM.updateActivityName()
-						}
-						.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
-				}
 
-				// Description
-				Section(header: Text("Description")) {
-					TextField("Description", text: self.$activityVM.description, axis: .vertical)
-						.onChange(of: self.activityVM.description) { value in
-							showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
-						}
-						.lineLimit(2...10)
-						.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
-				}
+			// Name
+			Section(header: Text("Name")) {
+				TextField("Name", text: self.$activityVM.name)
+					.onChange(of: self.activityVM.name) { value in
+						showingUpdateNameError = !self.activityVM.updateActivityName()
+					}
+					.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
+			}
 
-				// Attributes Summary
-				Section(header: Text("Attributes")) {
-					List(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
-						if item == "Heart Rate" {
-							NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red))
-						}
-						else if item == "Cadence" {
-							NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green))
-						}
-						else if item == "Pace" {
-							NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple))
-						}
-						else if item == "Power" {
-							NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue))
-						}
-						else if item == "Speed" {
-							NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal))
-						}
-						else if item == "X Axis" {
-							NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red))
-						}
-						else if item == "Y Axis" {
-							NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green))
-						}
-						else if item == "Z Axis" {
-							NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue))
-						}
-						else {
-							HStack() {
-								Text(item)
-								Spacer()
-								Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
-							}
+			// Description
+			Section(header: Text("Description")) {
+				TextField("Description", text: self.$activityVM.description, axis: .vertical)
+					.onChange(of: self.activityVM.description) { value in
+						showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
+					}
+					.lineLimit(2...10)
+					.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
+			}
+
+			// Attributes Summary
+			Section(header: Text("Attributes")) {
+				List(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
+					if item == "Heart Rate" {
+						NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red))
+					}
+					else if item == "Cadence" {
+						NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green))
+					}
+					else if item == "Pace" {
+						NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple))
+					}
+					else if item == "Power" {
+						NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue))
+					}
+					else if item == "Speed" {
+						NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal))
+					}
+					else if item == "X Axis" {
+						NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red))
+					}
+					else if item == "Y Axis" {
+						NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green))
+					}
+					else if item == "Z Axis" {
+						NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue))
+					}
+					else {
+						HStack() {
+							Text(item)
+							Spacer()
+							Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
 						}
 					}
-					.listStyle(.plain)
 				}
+				.listStyle(.plain)
 			}
 		}
 		.padding(10)

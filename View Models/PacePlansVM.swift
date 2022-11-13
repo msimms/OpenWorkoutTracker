@@ -75,8 +75,13 @@ class PacePlansVM : ObservableObject {
 					if let pacePlanDistance = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE] as? Double {
 						summaryObj.distance = pacePlanDistance
 					}
-					if let pacePlanDistanceUnits = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS] as? UnitSystem {
-						summaryObj.distanceUnits = pacePlanDistanceUnits
+					if let pacePlanDistanceUnits = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS] as? Int {
+						if pacePlanDistanceUnits == UNIT_SYSTEM_US_CUSTOMARY.rawValue {
+							summaryObj.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+						}
+						else {
+							summaryObj.distanceUnits = UNIT_SYSTEM_METRIC
+						}
 					}
 					if let pacePlanTime = summaryDict[PARAM_PACE_PLAN_TARGET_TIME] as? Int {
 						summaryObj.time = pacePlanTime
@@ -84,8 +89,13 @@ class PacePlansVM : ObservableObject {
 					if let pacePlanSplits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS] as? Int {
 						summaryObj.splits = pacePlanSplits
 					}
-					if let pacePlanSplitsUnits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS_UNITS] as? UnitSystem {
-						summaryObj.splitsUnits = pacePlanSplitsUnits
+					if let pacePlanSplitsUnits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS_UNITS] as? Int {
+						if pacePlanSplitsUnits == UNIT_SYSTEM_US_CUSTOMARY.rawValue {
+							summaryObj.splitsUnits = UNIT_SYSTEM_US_CUSTOMARY
+						}
+						else {
+							summaryObj.splitsUnits = UNIT_SYSTEM_METRIC
+						}
 					}
 					if let pacePlanRoute = summaryDict[PARAM_PACE_PLAN_ROUTE] as? String {
 						summaryObj.route = pacePlanRoute

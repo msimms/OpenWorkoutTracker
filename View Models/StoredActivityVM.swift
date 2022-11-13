@@ -30,7 +30,7 @@ class StoredActivityVM : ObservableObject {
 	var startingLat: Double = 0.0
 	var startingLon: Double = 0.0
 #if !os(watchOS)
-	@Published var route: MKPolyline = MKPolyline()
+	var trackLine: MKPolyline = MKPolyline()
 #endif
 	var heartRate: Array<(UInt64, Double)> = []     // Heart rate readings vs time
 	var cadence: Array<(UInt64, Double)> = []       // Cadence readings vs time
@@ -81,11 +81,10 @@ class StoredActivityVM : ObservableObject {
 				}
 				
 				if self.locationTrack.count > 0 {
-					
 					self.startingLat = locationTrack[0].latitude
 					self.startingLon = locationTrack[0].longitude
 #if !os(watchOS)
-					self.route = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
+					self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
 #endif
 				}
 			}
@@ -179,17 +178,33 @@ class StoredActivityVM : ObservableObject {
 	func getActivityAttributesAndCharts() -> Array<String> {
 		var attributeList = self.getActivityAttributes()
 
-		attributeList.append("Heart Rate")
+		if self.heartRate.count > 0 {
+			attributeList.append("Heart Rate")
+		}
 		if IsHistoricalActivityMovingActivity(self.activityIndex) {
-			attributeList.append("Cadence")
-			attributeList.append("Pace")
-			attributeList.append("Power")
-			attributeList.append("Speed")
+			if self.cadence.count > 0 {
+				attributeList.append("Cadence")
+			}
+			if self.pace.count > 0 {
+				attributeList.append("Pace")
+			}
+			if self.power.count > 0 {
+				attributeList.append("Power")
+			}
+			if self.speed.count > 0 {
+				attributeList.append("Speed")
+			}
 		}
 		else if IsHistoricalActivityLiftingActivity(self.activityIndex) {
-			attributeList.append("X Axis")
-			attributeList.append("Y Axis")
-			attributeList.append("Z Axis")
+			if self.x.count > 0 {
+				attributeList.append("X Axis")
+			}
+			if self.y.count > 0 {
+				attributeList.append("Y Axis")
+			}
+			if self.z.count > 0 {
+				attributeList.append("Z Axis")
+			}
 		}
 
 		return attributeList

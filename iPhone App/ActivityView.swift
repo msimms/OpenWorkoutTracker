@@ -356,15 +356,14 @@ struct ActivityView: View {
 								.padding(.horizontal)
 								Spacer()
 
-								Map(coordinateRegion: .constant(MKCoordinateRegion(
-										center: CLLocationCoordinate2D(latitude: self.activityVM.currentLat, longitude: self.activityVM.currentLon),
-										span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-									),
-									interactionModes: .all,
-									showsUserLocation: true
-								)
-								.addOverlay(self.activityVM.route)
-								.frame(width: 400, height: 300)
+								MapWithPolyline(region: MKCoordinateRegion(
+									center: CLLocationCoordinate2D(latitude: self.activityVM.currentLat, longitude: self.activityVM.currentLon),
+									span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+								), lineCoordinates: self.activityVM.locationTrack)
+									.addOverlay(self.activityVM.trackLine)
+									.ignoresSafeArea()
+									.frame(width: 400, height: 300)
+									.padding(10)
 							}
 							.padding(10)
 						}

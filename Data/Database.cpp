@@ -1056,6 +1056,7 @@ bool Database::UpdatePacePlan(const PacePlan& plan)
 		sqlite3_bind_int(statement, 7, plan.splitsUnits);
 		sqlite3_bind_text(statement, 8, plan.route.c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 9, plan.lastUpdatedTime);
+		sqlite3_bind_text(statement, 10, plan.planId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}

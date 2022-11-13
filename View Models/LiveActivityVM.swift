@@ -61,11 +61,11 @@ class LiveActivityVM : ObservableObject {
 	var autoStartEnabled: Bool = false
 	var countdownSecsRemaining: UInt = 0
 
-	var locationTrack: Array<CLLocationCoordinate2D> = []
-	var currentLat: Double = 0.0
-	var currentLon: Double = 0.0
 #if !os(watchOS)
-	@Published var route: MKPolyline = MKPolyline()
+	var locationTrack: Array<CLLocationCoordinate2D> = []
+	@Published var currentLat: Double = 0.0
+	@Published var currentLon: Double = 0.0
+	@Published var trackLine: MKPolyline = MKPolyline()
 #endif
 
 	private var autoStartCoordinate: Coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
@@ -84,12 +84,10 @@ class LiveActivityVM : ObservableObject {
 
 		var activityTypeToUse = activityType
 		var orphanedActivityIndex: size_t = 0
-		let isOrphaned = IsActivityOrphaned(&orphanedActivityIndex)
-		let isInProgress = IsActivityInProgress()
 
 		// Perhaps the app shutdown poorly (phone rebooted, etc.).
 		// Check for an existing, in progress, activity.
-		if isOrphaned || isInProgress {
+		if IsActivityOrphaned(&orphanedActivityIndex) || IsActivityInProgress() {
 
 			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex))
 			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
@@ -127,7 +125,10 @@ class LiveActivityVM : ObservableObject {
 
 		// Start the sensors.
 		self.sensorMgr.startSensors()
-		
+
+		// This won't change. Cache it.
+		let isMovingActivity = IsMovingActivity()
+
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
 			
@@ -157,16 +158,16 @@ class LiveActivityVM : ObservableObject {
 			}
 			
 			// Split beep?
-			
+
 			// Update the location and route.
-			if IsMovingActivity() {
+#if !os(watchOS)
+			if isMovingActivity && self.isInProgress {
 				self.currentLat = self.sensorMgr.location.currentLocation.coordinate.latitude
 				self.currentLon = self.sensorMgr.location.currentLocation.coordinate.latitude
 				self.locationTrack.append(CLLocationCoordinate2D(latitude: self.currentLat, longitude: self.currentLon))
-#if !os(watchOS)
-				self.route = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
-#endif
+				self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
 			}
+#endif
 
 			// Update the displayed attributes.
 			var index = 1

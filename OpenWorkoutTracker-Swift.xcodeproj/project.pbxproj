@@ -214,6 +214,7 @@
 		2740E12628F2D3F000293B71 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12428F2D3F000293B71 /* ApiClient.swift */; };
 		2740E12828F4425A00293B71 /* EditShoesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12728F4425A00293B71 /* EditShoesView.swift */; };
 		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
+		277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */; };
 		278D92C428E38F17003B077C /* PhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C328E38F17003B077C /* PhoneApp.swift */; };
 		278D92C628E38F17003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C528E38F17003B077C /* ContentView.swift */; };
 		278D92C828E38F18003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92C728E38F18003B077C /* Assets.xcassets */; };
@@ -524,6 +525,7 @@
 		2740E12428F2D3F000293B71 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApiClient.swift; path = IOS/Model/ApiClient.swift; sourceTree = "<group>"; };
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
 		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
+		277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWithPolyline.swift; sourceTree = "<group>"; };
 		278D92C028E38F17003B077C /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		278D92C328E38F17003B077C /* PhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneApp.swift; sourceTree = "<group>"; };
 		278D92C528E38F17003B077C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -985,6 +987,7 @@
 				2740E09128E6319700293B71 /* IntervalSessionsView.swift */,
 				2704224828FB7B0E00FD02D4 /* LineGraphView.swift */,
 				2704224C28FCDDF600FD02D4 /* LoginView.swift */,
+				277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */,
 				2740E11328EDFEB700293B71 /* NumbersOnly.swift */,
 				2740E08E28E6318000293B71 /* PacePlansView.swift */,
 				278D92C328E38F17003B077C /* PhoneApp.swift */,
@@ -1369,6 +1372,7 @@
 				2740E10E28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */,
 				2740E07C28E5DEC500293B71 /* BluetoothServices.swift in Sources */,
 				2740E04728E4CFFD00293B71 /* Double.cpp in Sources */,
+				277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */,
 				2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */,
 				2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */,
 				2740E03628E4CE1C00293B71 /* TextFileReader.cpp in Sources */,
