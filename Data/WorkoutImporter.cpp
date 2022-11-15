@@ -43,45 +43,47 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 
 				IntervalSessionSegment dbSegment;
 				dbSegment.segmentId = segmentId;
-				dbSegment.sets = 0;
-				dbSegment.reps = 0;
-				dbSegment.duration = 0;
-				dbSegment.distance = 0.0;
-				dbSegment.pace = 0.0;
-				dbSegment.power = 0.0;
-				dbSegment.units = INTERVAL_UNIT_SECONDS;
+				dbSegment.firstValue = 0.1;
+				dbSegment.secondValue = 0.0;
+				dbSegment.firstUnits = INTERVAL_UNIT_SECONDS;
 				
 				const FileLib::ZwoWarmup* warmupSegment = dynamic_cast<const FileLib::ZwoWarmup*>(fileSegment);
 				if (warmupSegment)
 				{
-					dbSegment.duration = warmupSegment->duration;
-					dbSegment.power = warmupSegment->powerHigh;
-					dbSegment.pace = warmupSegment->pace;
+					dbSegment.firstValue = warmupSegment->duration;
+					if (warmupSegment->powerHigh > 0.1)
+						dbSegment.secondValue = warmupSegment->powerHigh;
+					else
+						dbSegment.secondValue = warmupSegment->pace;
 				}
 
 				const FileLib::ZwoInterval* intervalSegment = dynamic_cast<const FileLib::ZwoInterval*>(fileSegment);
 				if (intervalSegment)
 				{
-					dbSegment.reps = intervalSegment->repeat;
-					dbSegment.duration = intervalSegment->onDuration;
-					dbSegment.power = intervalSegment->onPower;
+					dbSegment.repeat = intervalSegment->repeat;
+					if (warmupSegment->powerHigh > 0.1)
+						dbSegment.secondValue = warmupSegment->powerHigh;
+					else
+						dbSegment.secondValue = warmupSegment->pace;
 				}
 
 				const FileLib::ZwoCooldown* coolDown = dynamic_cast<const FileLib::ZwoCooldown*>(fileSegment);
 				if (coolDown)
 				{
-					dbSegment.duration = coolDown->duration;
-					dbSegment.power = coolDown->powerHigh;
-					dbSegment.pace = coolDown->pace;
+					dbSegment.firstValue = coolDown->duration;
+					if (warmupSegment->powerHigh > 0.1)
+						dbSegment.secondValue = warmupSegment->powerHigh;
+					else
+						dbSegment.secondValue = warmupSegment->pace;
 				}
 
 				const FileLib::ZwoFreeride* freeRide = dynamic_cast<const FileLib::ZwoFreeride*>(fileSegment);
 				if (freeRide)
 				{
-					dbSegment.duration = freeRide->duration;
+					dbSegment.firstValue = freeRide->duration;
 				}
 
-				if (dbSegment.duration > 0)
+				if (dbSegment.firstValue > 0.1)
 				{
 					result &= pDatabase->CreateIntervalSegment(workoutId, dbSegment);
 					if (result)

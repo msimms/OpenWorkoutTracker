@@ -19,7 +19,7 @@
 #include "Bike.h"
 #include "Callbacks.h"
 #include "Coordinate.h"
-#include "IntervalWorkout.h"
+#include "IntervalSession.h"
 #include "MovingActivity.h"
 #include "PacePlan.h"
 #include "SensorReading.h"

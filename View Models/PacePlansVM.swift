@@ -40,7 +40,7 @@ class PacePlansVM : ObservableObject {
 	
 	/// Singleton Constructor
 	private init() {
-		buildPacePlansList()
+		let _ = buildPacePlansList()
 	}
 	
 	func buildPacePlansList() -> Bool {

@@ -11,30 +11,46 @@ struct SettingsView: View {
 	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
 	@State private var heartRateEnabled: Bool = Preferences.useWatchHeartRate()
 	@State private var btSensorsEnabled: Bool = Preferences.shouldScanForSensors()
+	@State private var runSplitBeeps: Bool = Preferences.watchRunSplitBeeps()
+	@State private var startStopBeeps: Bool = Preferences.watchStartStopBeeps()
 
 	var body: some View {
 		VStack(alignment: .center) {
-			Toggle("Broadcast", isOn: $broadcastEnabled)
-				.onChange(of: broadcastEnabled) { value in
-					Preferences.setBroadcastToServer(value: broadcastEnabled)
-				}
-			Toggle("Metric", isOn: $preferMetric)
-				.onChange(of: preferMetric) { value in
-					Preferences.setPreferredUnitSystem(system: value ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
-					SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
-				}
-			Toggle("Heart Rate", isOn: $heartRateEnabled)
-				.onChange(of: heartRateEnabled) { value in
-					Preferences.setUseWatchHeartRate(value: heartRateEnabled)
-				}
-			Toggle("Bluetooth Sensors", isOn: $btSensorsEnabled)
-				.onChange(of: btSensorsEnabled) { value in
-					Preferences.setScanForSensors(value: btSensorsEnabled)
-				}
-			Button("Close") {
-				self.dismiss()
+			ScrollView() {
+				Text("Units")
+					.bold()
+				Toggle("Metric", isOn: $preferMetric)
+					.onChange(of: preferMetric) { value in
+						Preferences.setPreferredUnitSystem(system: value ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
+						SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
+					}
+				Text("Broadcast")
+					.bold()
+				Toggle("Broadcast", isOn: $broadcastEnabled)
+					.onChange(of: broadcastEnabled) { value in
+						Preferences.setBroadcastToServer(value: broadcastEnabled)
+					}
+				Text("Sensors")
+					.bold()
+				Toggle("Heart Rate", isOn: $heartRateEnabled)
+					.onChange(of: heartRateEnabled) { value in
+						Preferences.setUseWatchHeartRate(value: heartRateEnabled)
+					}
+				Toggle("Bluetooth Sensors", isOn: $btSensorsEnabled)
+					.onChange(of: btSensorsEnabled) { value in
+						Preferences.setScanForSensors(value: btSensorsEnabled)
+					}
+				Text("Sounds")
+					.bold()
+				Toggle("Run Split Beeps", isOn: $runSplitBeeps)
+					.onChange(of: runSplitBeeps) { value in
+						Preferences.setWatchRunSplitBeeps(value: runSplitBeeps)
+					}
+				Toggle("Start Stop Beeps", isOn: $startStopBeeps)
+					.onChange(of: startStopBeeps) { value in
+						Preferences.setWatchStartStopBeeps(value: startStopBeeps)
+					}
 			}
-			.bold()
 		}
 		.padding(10)
     }

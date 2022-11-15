@@ -159,12 +159,12 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("interval_session"))
 	{
-		sql = "create table interval_session (id integer primary key, session_id test, name text, sport text, description text, last_updated_time big int)";
+		sql = "create table interval_session (id integer primary key, session_id text, name text, sport text, description text, last_updated_time big int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("interval_session_segment"))
 	{
-		sql = "create table interval_session_segment (id integer primary key, session_id test, sets integer, reps integer, duration integer, distance double, pace double, power double, units integer)";
+		sql = "create table interval_session_segment (id integer primary key, session_id text, repeat integer, first_value double, second_value double, first_units int, second_units int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("workout"))
@@ -699,17 +699,15 @@ bool Database::CreateIntervalSegment(const std::string& sessionId, const Interva
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(statement, 2, segment.sets);
-		sqlite3_bind_int64(statement, 3, segment.reps);
-		sqlite3_bind_int64(statement, 4, segment.duration);
-		sqlite3_bind_double(statement, 5, segment.distance);
-		sqlite3_bind_double(statement, 6, segment.pace);
-		sqlite3_bind_double(statement, 7, segment.power);
-		sqlite3_bind_int64(statement, 8, segment.units);
+		sqlite3_bind_int(statement, 2, segment.repeat);
+		sqlite3_bind_double(statement, 3, segment.firstValue);
+		sqlite3_bind_double(statement, 4, segment.secondValue);
+		sqlite3_bind_int64(statement, 5, segment.firstUnits);
+		sqlite3_bind_int64(statement, 6, segment.secondUnits);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -721,7 +719,7 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select id, sets, reps, duration, distance, pace, power, units from interval_session_segment where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, repeat, first_value, second_value, first_units where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		
@@ -730,13 +728,11 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 			IntervalSessionSegment segment;
 			
 			segment.segmentId = sqlite3_column_int64(statement, 0);
-			segment.sets = (uint32_t)sqlite3_column_int64(statement, 1);
-			segment.reps = (uint32_t)sqlite3_column_int64(statement, 2);
-			segment.duration = (uint32_t)sqlite3_column_int64(statement, 3);
-			segment.distance = (double)sqlite3_column_double(statement, 4);
-			segment.pace = (double)sqlite3_column_double(statement, 5);
-			segment.power = (double)sqlite3_column_double(statement, 6);
-			segment.units = (IntervalUnit)sqlite3_column_double(statement, 7);
+			segment.repeat = (uint8_t)sqlite3_column_int(statement, 1);
+			segment.firstValue = (double)sqlite3_column_double(statement, 2);
+			segment.secondValue = (double)sqlite3_column_double(statement, 3);
+			segment.firstUnits = (IntervalUnit)sqlite3_column_int64(statement, 4);
+			segment.secondUnits = (IntervalUnit)sqlite3_column_int64(statement, 5);
 			segments.push_back(segment);
 		}
 		
@@ -1025,8 +1021,8 @@ bool Database::RetrievePacePlans(std::vector<PacePlan>& plans)
 			plan.description.append((const char*)sqlite3_column_text(statement, 2));
 			plan.targetDistance = sqlite3_column_double(statement, 3);
 			plan.distanceUnits = (UnitSystem)sqlite3_column_int(statement, 4);
-			plan.targetTime = sqlite3_column_int64(statement, 5);
-			plan.targetSplits = sqlite3_column_int64(statement, 6);
+			plan.targetTime = (time_t)sqlite3_column_int64(statement, 5);
+			plan.targetSplits = (time_t)sqlite3_column_int64(statement, 6);
 			plan.splitsUnits = (UnitSystem)sqlite3_column_int(statement, 7);
 			plan.route.append((const char*)sqlite3_column_text(statement, 8));
 			plan.lastUpdatedTime = (time_t)sqlite3_column_int64(statement, 9);

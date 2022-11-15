@@ -34,23 +34,29 @@ struct ActivityView: View {
 
 	var activityType: String
 
-	func selectAttributeToDisplay(position: UInt) -> some View {
-		return ForEach(self.activityVM.getActivityAttributeNames(), id: \.self) { item in
-			Button {
-				self.activityVM.setDisplayedActivityAttributeName(position: 0, attributeName: item)
-			} label: {
-				Text(item)
+	func selectAttributeToDisplay(position: Int) -> some View {
+		return VStack() {
+			Button("Cancel") {}
+			ForEach(self.activityVM.getActivityAttributeNames(), id: \.self) { item in
+				Button {
+					self.activityVM.setDisplayedActivityAttributeName(position: position, attributeName: item)
+				} label: {
+					Text(item)
+				}
 			}
 		}
 	}
 	
 	func selectColorToUse(attributeName: String) -> some View {
 		let colorNames: Array<String> = [COLOR_NAME_WHITE, COLOR_NAME_GRAY, COLOR_NAME_BLACK, COLOR_NAME_RED, COLOR_NAME_GREEN, COLOR_NAME_BLUE, COLOR_NAME_YELLOW]
-		return ForEach(colorNames, id: \.self) { colorName in
-			Button {
-				self.activityVM.setWatchActivityAttributeColor(attributeName: attributeName, colorName: colorName)
-			} label: {
-				Text(colorName)
+		return VStack() {
+			Button("Cancel") {}
+			ForEach(colorNames, id: \.self) { colorName in
+				Button {
+					self.activityVM.setWatchActivityAttributeColor(attributeName: attributeName, colorName: colorName)
+				} label: {
+					Text(colorName)
+				}
 			}
 		}
 	}

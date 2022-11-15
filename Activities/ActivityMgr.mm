@@ -15,7 +15,7 @@
 #include "DataImporter.h"
 #include "Distance.h"
 #include "HeatMapGenerator.h"
-#include "IntervalWorkout.h"
+#include "IntervalSession.h"
 #include "Params.h"
 #include "WorkoutImporter.h"
 #include "WorkoutPlanGenerator.h"
@@ -1650,66 +1650,6 @@ extern "C" {
 		return result;
 	}
 
-	bool GetIntervalSessionSegmentByIndex(const char* const sessionId, size_t segmentIndex, IntervalSessionSegment* segment)
-	{
-		// Sanity checks.
-		if (sessionId == NULL)
-		{
-			return false;
-		}
-
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			const IntervalSession* pSession = GetIntervalSession(sessionId);
-
-			if (pSession && (segmentIndex < pSession->segments.size()))
-			{
-				(*segment) = pSession->segments.at(segmentIndex);
-				result = true;
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
-	bool GetIntervalSessionSegmentByTimeOffset(const char* const sessionId, time_t timeOffsetInSecs, IntervalSessionSegment* segment)
-	{
-		// Sanity checks.
-		if (sessionId == NULL)
-		{
-			return false;
-		}
-
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			const IntervalSession* pSession = GetIntervalSession(sessionId);
-			size_t segmentIndex = 0;
-			time_t cumulativeTime = 0;
-
-			while (!result && (segmentIndex < pSession->segments.size()))
-			{
-				(*segment) = pSession->segments.at(segmentIndex);
-				cumulativeTime += (*segment).duration;
-				result = (timeOffsetInSecs < cumulativeTime);
-				++segmentIndex;
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
 	//
 	// Functions for managing pace plans.
 	//
@@ -2869,7 +2809,7 @@ extern "C" {
 					if (readingIndex < summary.heartRateMonitorReadings.size())
 					{
 						SensorReading& reading = summary.heartRateMonitorReadings.at(readingIndex);
-						(*readingTime) = reading.time;
+						(*readingTime) = (time_t)reading.time;
 						(*readingValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
 						result = true;
 					}
@@ -2878,7 +2818,7 @@ extern "C" {
 					if (readingIndex < summary.cadenceReadings.size())
 					{
 						SensorReading& reading = summary.cadenceReadings.at(readingIndex);
-						(*readingTime) = reading.time;
+						(*readingTime) = (time_t)reading.time;
 						(*readingValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
 						result = true;
 					}
@@ -2889,7 +2829,7 @@ extern "C" {
 					if (readingIndex < summary.powerReadings.size())
 					{
 						SensorReading& reading = summary.powerReadings.at(readingIndex);
-						(*readingTime) = reading.time;
+						(*readingTime) = (time_t)reading.time;
 						(*readingValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
 						result = true;
 					}
@@ -3164,23 +3104,27 @@ extern "C" {
 			params.insert(std::make_pair(PARAM_WORKOUT_DISTANCE, FormatDouble(workout.CalculateDistance())));
 			params.insert(std::make_pair(PARAM_WORKOUT_SCHEDULED_TIME, FormatInt((uint64_t)workout.GetScheduledTime())));
 
+			std::string subHeading = ", \"";
+			subHeading += PARAM_INTERVAL_SEGMENTS;
+			subHeading += "\": [";
+
 			workoutJson = MapToJsonStr(params);
-			workoutJson.insert(workoutJson.size() - 1, ", \"intervals\": [");
+			workoutJson.insert(workoutJson.size() - 1, subHeading);
 
 			for (auto interIter = intervals.begin(); interIter != intervals.end(); )
 			{
 				const WorkoutInterval& interval = (*interIter);
 				std::map<std::string, std::string> tempParams;
 
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_REPEAT, FormatInt((uint64_t)interval.m_repeat)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_DURATION, FormatDouble(interval.m_duration)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_DISTANCE, FormatDouble(interval.m_distance)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_PACE, FormatDouble(interval.m_pace)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_POWER, FormatDouble(interval.m_powerHigh)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_DURATION, FormatInt((uint64_t)interval.m_recoveryDuration)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_DISTANCE, FormatDouble(interval.m_recoveryDistance)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_PACE, FormatDouble(interval.m_recoveryPace)));
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_RECOVERY_POWER, FormatDouble(interval.m_powerLow)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_REPEAT, FormatInt((uint64_t)interval.m_repeat)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_DURATION, FormatDouble(interval.m_duration)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_DISTANCE, FormatDouble(interval.m_distance)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_PACE, FormatDouble(interval.m_pace)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_POWER, FormatDouble(interval.m_powerHigh)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_RECOVERY_DURATION, FormatInt((uint64_t)interval.m_recoveryDuration)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_RECOVERY_DISTANCE, FormatDouble(interval.m_recoveryDistance)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_RECOVERY_PACE, FormatDouble(interval.m_recoveryPace)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_RECOVERY_POWER, FormatDouble(interval.m_powerLow)));
 
 				std::string tempStr = MapToJsonStr(tempParams);
 				workoutJson.insert(workoutJson.size() - 1, tempStr);

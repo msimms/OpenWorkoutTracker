@@ -18,7 +18,7 @@
 #include "Gender.h"
 #include "Goal.h"
 #include "GoalType.h"
-#include "IntervalWorkoutSegment.h"
+#include "IntervalSessionSegment.h"
 #include "SensorType.h"
 #include "SyncDestination.h"
 #include "UnitSystem.h"
@@ -115,8 +115,6 @@ extern "C" {
 	size_t GetNumSegmentsForIntervalSession(const char* const sessionId);
 	bool CreateNewIntervalSessionSegment(const char* const sessionId, IntervalSessionSegment segment);
 	bool DeleteIntervalSessionSegment(const char* const sessionId, size_t segmentIndex);
-	bool GetIntervalSessionSegmentByIndex(const char* const sessionId, size_t segmentIndex, IntervalSessionSegment* segment);
-	bool GetIntervalSessionSegmentByTimeOffset(const char* const sessionId, time_t timeOffsetInSecs, IntervalSessionSegment* segment);
 
 	// Functions for managing pace plans.
 	bool InitializePacePlanList(void);

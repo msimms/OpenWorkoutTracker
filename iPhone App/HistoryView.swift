@@ -48,7 +48,7 @@ struct HistoryView: View {
 					.listStyle(.plain)
 				}
 				else {
-					Text("Ho History")
+					Text("No History")
 				}
 			}
 		}

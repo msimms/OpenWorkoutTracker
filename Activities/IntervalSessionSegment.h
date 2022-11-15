@@ -30,14 +30,15 @@ typedef enum IntervalUnit
 
 typedef struct IntervalSessionSegment
 {
-	uint64_t     segmentId; // Database identifier for this segment
-	uint32_t     sets;      // Number of sets
-	uint32_t     reps;      // Number of repititions
-	uint32_t     duration;  // Duration, if applicable, in seconds
-	double       distance;  // Distance, if applicable, in the specified units
-	double       pace;      // Pace, if applicable, in meters/second
-	double       power;     // Power, if applicable, in percentage of FTP
-	IntervalUnit units;     // Informs the consumer of this structure as to which fields are meaningful and how to interpret the distance field
+	uint64_t     segmentId;   // Database identifier for this segment
+	uint8_t      repeat;      // Number of repeats for this segment
+	double       firstValue;
+	double       secondValue;
+	IntervalUnit firstUnits;  // Units for the first part of the description (ex: X secs at Y pace or X sets of Y reps)
+	IntervalUnit secondUnits; // Units for the first second of the description (ex: X secs at Y pace or X sets of Y reps)
 } IntervalSessionSegment;
+
+bool IsDistanceBasedIntervalSegment(const IntervalSessionSegment* segment);
+double ConvertDistanceIntervalSegmentToKm(const IntervalSessionSegment* segment);
 
 #endif

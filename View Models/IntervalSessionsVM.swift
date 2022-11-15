@@ -381,24 +381,24 @@ class IntervalSession : Identifiable, Hashable, Equatable {
 class IntervalSessionsVM : ObservableObject {
 	static let shared = IntervalSessionsVM()
 	@Published var intervalSessions: Array<IntervalSession> = []
-
+	
 	/// Singleton Constructor
 	private init() {
-		buildIntervalSessionList()
+		let _ = buildIntervalSessionList()
 	}
 
 	func buildIntervalSessionList() -> Bool {
 		var result = false
-
+		
 		// Remove any old ones.
 		self.intervalSessions = []
 		
 		// Query the backend for the latest interval sessions.
 		if InitializeIntervalSessionList() {
-
+			
 			var sessionIndex = 0
 			var done = false
-
+			
 			while !done {
 				if let rawSessionDescPtr = RetrieveIntervalSessionAsJSON(sessionIndex) {
 					let summaryObj = IntervalSession()
@@ -416,7 +416,7 @@ class IntervalSessionsVM : ObservableObject {
 					if let sessionDescription = summaryDict[PARAM_INTERVAL_DESCRIPTION] as? String {
 						summaryObj.description = sessionDescription
 					}
-
+					
 					defer {
 						sessionDescPtr.deallocate()
 					}
@@ -428,20 +428,22 @@ class IntervalSessionsVM : ObservableObject {
 					done = true
 				}
 			}
-
+			
 			result = true
 		}
 		
 		return result
 	}
-
+	
 	func createIntervalSession(session: IntervalSession) -> Bool {
 		if CreateNewIntervalSession(session.id.uuidString, session.name, session.sport, session.description) {
+			for segment in session.segments {
+			}
 			return buildIntervalSessionList()
 		}
 		return false
 	}
-
+	
 	func doesIntervalSessionExist(sessionId: UUID) -> Bool {
 		for existingSession in self.intervalSessions {
 			if existingSession.id == sessionId {
@@ -450,15 +452,27 @@ class IntervalSessionsVM : ObservableObject {
 		}
 		return false
 	}
-
+	
 	func updateIntervalSession(session: IntervalSession) -> Bool {
 		return false
 	}
-
+	
 	func deleteIntervalSession(intervalSessionId: UUID) -> Bool {
 		if DeleteIntervalSession(intervalSessionId.uuidString) {
 			return buildIntervalSessionList()
 		}
+		return false
+	}
+	
+	func moveSegmentUp(segmentId: UUID) -> Bool {
+		return false
+	}
+	
+	func moveSegmentDown(segmentId: UUID) -> Bool  {
+		return false
+	}
+	
+	func deleteSegment(segmentId: UUID) -> Bool  {
 		return false
 	}
 }

@@ -12,7 +12,7 @@
 #include <string>
 
 // This was split into it's own file to remove a dependency on the <string> include.
-#include "IntervalWorkoutSegment.h"
+#include "IntervalSessionSegment.h"
 
 /**
  * Intervals are used to structure workouts. Interval sessions can be fairly complex, containing segments that specify target times, distances, sets, reps, etc.

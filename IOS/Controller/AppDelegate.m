@@ -1339,13 +1339,13 @@ void startSensorCallback(SensorType type, void* context)
 
 - (void)parsePlannedWorkoutIntervalObject:(NSDictionary*)intervalObj forWorkoutId:(NSString*)workoutId
 {
-	NSNumber* repeatObj = [intervalObj objectForKey:@PARAM_INTERVAL_REPEAT];
-	NSNumber* paceObj = [intervalObj objectForKey:@PARAM_INTERVAL_PACE];
-	NSNumber* distanceObj = [intervalObj objectForKey:@PARAM_INTERVAL_DISTANCE];
-	NSNumber* durationObj = [intervalObj objectForKey:@PARAM_INTERVAL_DURATION];
-	NSNumber* recoveryPaceObj = [intervalObj objectForKey:@PARAM_INTERVAL_RECOVERY_PACE];
-	NSNumber* recoveryDistanceObj = [intervalObj objectForKey:@PARAM_INTERVAL_RECOVERY_DISTANCE];
-	NSNumber* recoveryDurationObj = [intervalObj objectForKey:@PARAM_INTERVAL_RECOVERY_DURATION];
+	NSNumber* repeatObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGMENT_REPEAT];
+	NSNumber* paceObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGMENT_PACE];
+	NSNumber* distanceObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGMENT_DISTANCE];
+	NSNumber* durationObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGMENT_DURATION];
+	NSNumber* recoveryPaceObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGMENT_RECOVERY_PACE];
+	NSNumber* recoveryDistanceObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGMENT_RECOVERY_DISTANCE];
+	NSNumber* recoveryDurationObj = [intervalObj objectForKey:@PARAM_INTERVAL_SEGEMENT_RECOVERY_DURATION];
 
 	uint8_t repeat = 1;
 	double pace = 0.0;

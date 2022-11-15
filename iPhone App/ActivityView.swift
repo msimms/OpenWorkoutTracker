@@ -36,12 +36,15 @@ struct ActivityView: View {
 		Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
 	}
 
-	func selectAttributeToDisplay(position: UInt) -> some View {
-		return ForEach(self.activityVM.getActivityAttributeNames(), id: \.self) { item in
-			Button {
-				self.activityVM.setDisplayedActivityAttributeName(position: 0, attributeName: item)
-			} label: {
-				Text(item)
+	func selectAttributeToDisplay(position: Int) -> some View {
+		return VStack() {
+			Button("Cancel") {}
+			ForEach(self.activityVM.getActivityAttributeNames(), id: \.self) { item in
+				Button {
+					self.activityVM.setDisplayedActivityAttributeName(position: position, attributeName: item)
+				} label: {
+					Text(item)
+				}
 			}
 		}
 	}

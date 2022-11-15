@@ -6,6 +6,7 @@
 import Foundation
 import MapKit
 import SwiftUI
+import AVFoundation
 
 let VALUE_NOT_SET_STR: String = "--"
 let COUNTDOWN_SECS: UInt = 4 // one more than 3 to handle the edge condition
@@ -22,7 +23,7 @@ func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optiona
 
 class LiveActivityVM : ObservableObject {
 	@Published var currentMessage: String = ""
-
+	
 	@Published var title1: String = "Title"
 	@Published var title2: String = "Title"
 	@Published var title3: String = "Title"
@@ -54,91 +55,95 @@ class LiveActivityVM : ObservableObject {
 	@Published var units9: String = "Units"
 	
 	@Published var viewType: ActivityViewType = ACTIVITY_VIEW_COMPLEX
-
+	
 	var isInProgress: Bool = false
 	var isPaused: Bool = false
 	var isStopped: Bool = false // Has been stopped (after being started)
 	var autoStartEnabled: Bool = false
 	var countdownSecsRemaining: UInt = 0
-
+	
 #if !os(watchOS)
 	var locationTrack: Array<CLLocationCoordinate2D> = []
 	@Published var currentLat: Double = 0.0
 	@Published var currentLon: Double = 0.0
 	@Published var trackLine: MKPolyline = MKPolyline()
 #endif
-
+	
 	private var autoStartCoordinate: Coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 	private var sensorMgr = SensorMgr.shared
 	private var activityAttributePrefs: Array<String> = []
 	private var timer: Timer = Timer()
 	private var activityId: String = ""
 	private var activityType: String = ""
-
+	private var audioPlayer: AVAudioPlayer?
+	
 	init (activityType: String) {
 		self.create(activityType: activityType)
 		self.activityType = activityType
 	}
 	
 	func create(activityType: String) {
-
+		
 		var activityTypeToUse = activityType
 		var orphanedActivityIndex: size_t = 0
-
+		
 		// Perhaps the app shutdown poorly (phone rebooted, etc.).
 		// Check for an existing, in progress, activity.
 		if IsActivityOrphaned(&orphanedActivityIndex) || IsActivityInProgress() {
-
+			
 			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex))
 			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
-
+			
 			defer {
 				orphanedActivityIdPtr!.deallocate()
 				orphanedActivityTypePtr!.deallocate()
 			}
-
+			
 			activityTypeToUse = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
 			ReCreateOrphanedActivity(orphanedActivityIndex)
-
+			
 			self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
 			self.isInProgress = true
 		}
-
+		
 		// Create the backend structures needed to do the activity.
 		else {
 			CreateActivityObject(activityTypeToUse)
-
+			
 			// Generate a unique identifier for this activity.
 			self.activityId = NSUUID().uuidString
 		}
-
+		
 		// What attributes does the user wish to display when doing this activity?
 		let activityPrefs = ActivityPreferences()
 		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: activityTypeToUse)
-
+		
 		// Preferred view layout.
 		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
-
+		
 		// Configure the location accuracy parameters.
 		self.sensorMgr.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
 		self.sensorMgr.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
-
+		
 		// Start the sensors.
 		self.sensorMgr.startSensors()
-
+		
 		// This won't change. Cache it.
 		let isMovingActivity = IsMovingActivity()
+		
+		// Have we played the start beep yet?
+		var playedStartBeep = false
 
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
-			
+
 			// Autostart?
 			if !self.isInProgress && self.autoStartEnabled {
 				let MIN_AUTOSTART_DISTANCE = 25.0 // Meters
-
+				
 				let currentLocation = self.sensorMgr.location.currentLocation
 				let currentCoordinate: Coordinate = Coordinate(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, altitude: currentLocation.altitude, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
-
+				
 				let distance = DistanceBetweenCoordinates(currentCoordinate, self.autoStartCoordinate)
 				if distance > MIN_AUTOSTART_DISTANCE {
 					if !self.doStart() {
@@ -146,7 +151,7 @@ class LiveActivityVM : ObservableObject {
 					}
 				}
 			}
-
+			
 			// Countdown?
 			else if self.countdownSecsRemaining > 0 {
 				self.countdownSecsRemaining -= 1
@@ -156,9 +161,26 @@ class LiveActivityVM : ObservableObject {
 					}
 				}
 			}
-			
-			// Split beep?
 
+			// Split beep?
+			if isMovingActivity {
+#if os(watchOS)
+				if self.isInProgress && !playedStartBeep && Preferences.watchStartStopBeeps() {
+					self.playBeepSound()
+					playedStartBeep = true
+				}
+#else
+				if self.isInProgress && !playedStartBeep && ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse) {
+					self.playBeepSound()
+					playedStartBeep = true
+				}
+#endif
+			}
+			
+			// Update the interval session.
+			if CheckCurrentIntervalSession() {
+			}
+			
 			// Update the location and route.
 #if !os(watchOS)
 			if isMovingActivity && self.isInProgress {
@@ -168,7 +190,7 @@ class LiveActivityVM : ObservableObject {
 				self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
 			}
 #endif
-
+			
 			// Update the displayed attributes.
 			var index = 1
 			for activityAttribute in self.activityAttributePrefs {
@@ -197,7 +219,7 @@ class LiveActivityVM : ObservableObject {
 				
 				let valueStr = LiveActivityVM.formatActivityValue(attribute: attr)
 				let measureStr = LiveActivityVM.formatActivityMeasureType(measureType: attr.measureType)
-
+				
 				switch index {
 				case 1:
 					self.title1 = activityAttribute
@@ -256,37 +278,37 @@ class LiveActivityVM : ObservableObject {
 	func setAutoStart() -> Bool {
 		let currentState = IsAutoStartEnabled()
 		self.autoStartEnabled = !currentState
-
+		
 		// Remember where we were when the autostart button was pressed.
 		if self.autoStartEnabled {
 			let autoStartLocation = self.sensorMgr.location.currentLocation
 			self.autoStartCoordinate = Coordinate(latitude: autoStartLocation.coordinate.latitude, longitude: autoStartLocation.coordinate.longitude, altitude: autoStartLocation.altitude, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 		}
-
+		
 		SetAutoStart(self.autoStartEnabled)
 		return self.autoStartEnabled
 	}
-
+	
 	/// @brief Helper function for starting an activity..
 	func doStart() -> Bool {
 		if StartActivity(self.activityId) {
-
+			
 			// Update state.
 			self.isInProgress = true
 			self.isPaused = false
 			self.autoStartEnabled = false
-
+			
 			// Tell any subscribers that we've started an activity.
 			var notificationData: Dictionary<String, String> = [:]
 			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId
 			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STARTED), object: notificationData)
 			NotificationCenter.default.post(notification)
-
+			
 			return true
 		}
 		return false
 	}
-
+	
 	/// @brief Starts the activity. Called from the UI.
 	func start() -> Bool {
 		if ActivityPreferences.getCountdown(activityType: self.activityType) {
@@ -295,13 +317,13 @@ class LiveActivityVM : ObservableObject {
 		}
 		return doStart()
 	}
-
+	
 	/// @brief Stops the activity.
 	func stop() -> ActivitySummary {
 		let summary = ActivitySummary()
-
+		
 		if StopCurrentActivity() {
-
+			
 			let startTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_START_TIME)
 			let endTime = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_END_TIME)
 			let distance = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
@@ -315,7 +337,7 @@ class LiveActivityVM : ObservableObject {
 			
 			// Stop requesting data from sensors.
 			self.sensorMgr.stopSensors()
-
+			
 			// Update state.
 			self.isInProgress = false
 			self.isPaused = false
@@ -328,7 +350,7 @@ class LiveActivityVM : ObservableObject {
 			summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime.value.intVal))
 			summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime.value.intVal))
 			summary.source = ActivitySummary.Source.database
-
+			
 			// Tell any subscribers that we've stopped an activity.
 			var notificationData: Dictionary<String, Any> = [:]
 			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId
@@ -342,12 +364,12 @@ class LiveActivityVM : ObservableObject {
 		}
 		return summary
 	}
-
+	
 	/// @brief Pauses the activity.
 	func pause() {
 		self.isPaused = PauseCurrentActivity()
 	}
-
+	
 	/// @brief Starts a new lap.
 	func lap() {
 		StartNewLap()
@@ -356,7 +378,7 @@ class LiveActivityVM : ObservableObject {
 	func getCurrentActivityType() -> String {
 		let ptr = UnsafeRawPointer(GetCurrentActivityType())
 		let activityType = String(cString: ptr!.assumingMemoryBound(to: CChar.self))
-
+		
 		defer {
 			ptr!.deallocate()
 		}
@@ -367,44 +389,44 @@ class LiveActivityVM : ObservableObject {
 		let activityId = String(cString: UnsafeRawPointer(GetCurrentActivityId()).assumingMemoryBound(to: CChar.self))
 		return activityId
 	}
-
+	
 	/// @brief Lists all the attributes that are applicable to the current activity.
 	func getActivityAttributeNames() -> Array<String> {
 		let pointer = UnsafeMutablePointer<AttributeNameCallbackType>.allocate(capacity: 1)
-
+		
 		defer {
 			pointer.deinitialize(count: 1)
 			pointer.deallocate()
 		}
-
+		
 		pointer.pointee = AttributeNameCallbackType(names: [])
 		GetActivityAttributeNames(attributeNameCallback, pointer)
 		let attributeNames = pointer.pointee.names
-
+		
 		return attributeNames
 	}
-
+	
 	func setDisplayedActivityAttributeName(position: Int, attributeName: String) {
 		self.activityAttributePrefs.remove(at: position)
 		self.activityAttributePrefs.insert(attributeName, at: position)
-
+		
 		ActivityPreferences.setActivityLayout(activityType: self.activityType, layout: self.activityAttributePrefs)
 	}
-
+	
 	func setWatchActivityAttributeColor(attributeName: String, colorName: String) {
 		ActivityPreferences.setActivityAttributeColorName(activityType: self.activityType, attributeName: attributeName, colorName: colorName)
 	}
-
+	
 	func getWatchActivityAttributeColor(attributeName: String) -> Color {
 		return ActivityPreferences.getActivityAttributeColor(activityType: self.activityType, attributeName: attributeName)
 	}
-
+	
 	/// @brief Utility function for formatting things like Elapsed Time, etc.
 	static func formatSeconds(numSeconds: time_t) -> String {
 		let SECS_PER_DAY  = 86400
 		let SECS_PER_HOUR = 3600
 		let SECS_PER_MIN  = 60
-
+		
 		var tempSeconds = numSeconds
 		let days = (tempSeconds / SECS_PER_DAY)
 		tempSeconds -= (days * SECS_PER_DAY)
@@ -413,7 +435,7 @@ class LiveActivityVM : ObservableObject {
 		let minutes = (tempSeconds / SECS_PER_MIN)
 		tempSeconds -= (minutes * SECS_PER_MIN)
 		let seconds = (tempSeconds % SECS_PER_MIN)
-
+		
 		if days > 0 {
 			return String(format: "%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
 		}
@@ -422,7 +444,7 @@ class LiveActivityVM : ObservableObject {
 		}
 		return String(format: "%02d:%02d", minutes, seconds)
 	}
-
+	
 	/// @brief Utility function for converting an activity attribute structure to something human readable.
 	static func formatActivityValue(attribute: ActivityAttributeType) -> String {
 		if attribute.valid {
@@ -463,7 +485,7 @@ class LiveActivityVM : ObservableObject {
 			return VALUE_NOT_SET_STR
 		}
 	}
-
+	
 	/// @brief Utility function for formatting unit strings.
 	static func formatActivityMeasureType(measureType: ActivityAttributeMeasureType) -> String {
 		switch measureType {
@@ -550,5 +572,23 @@ class LiveActivityVM : ObservableObject {
 		default:
 			return ""
 		}
+	}
+	
+	func playBeepSound() {
+		let alertSound = URL(fileURLWithPath: Bundle.main.path(forResource: "BrightBeep", ofType: "aif")!)
+		
+		try! audioPlayer = AVAudioPlayer(contentsOf: alertSound)
+		audioPlayer!.play()
+	}
+	
+	func playPingSound() {
+		let alertSound = URL(fileURLWithPath: Bundle.main.path(forResource: "Ping", ofType: "aif")!)
+		
+		try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+		try! AVAudioSession.sharedInstance().setActive(true)
+		
+		try! audioPlayer = AVAudioPlayer(contentsOf: alertSound)
+		audioPlayer!.prepareToPlay()
+		audioPlayer!.play()
 	}
 }

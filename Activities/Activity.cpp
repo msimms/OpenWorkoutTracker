@@ -523,10 +523,10 @@ bool Activity::CheckTimeInterval()
 	try
 	{
 		const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-		if (segment.duration > 0)
+		if (segment.firstUnits == INTERVAL_UNIT_SECONDS)
 		{
 			uint64_t currentTime = ElapsedTimeInSeconds();
-			if (currentTime - m_intervalWorkoutState.lastTimeSecs >= segment.duration)
+			if (currentTime - m_intervalWorkoutState.lastTimeSecs >= segment.firstUnits)
 			{
 				return true;
 			}

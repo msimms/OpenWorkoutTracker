@@ -221,9 +221,9 @@ bool LiftingActivity::CheckSetsInterval()
 	}
 
 	const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-	if (segment.sets > 0)
+	if (segment.firstUnits > INTERVAL_UNIT_SETS)
 	{
-		if (m_sets >= segment.sets)
+		if (m_sets >= segment.firstValue)
 		{
 			return true;
 		}
@@ -240,10 +240,10 @@ bool LiftingActivity::CheckRepsInterval()
 	}
 
 	const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
-	if (segment.reps > 0)
+	if (segment.secondUnits > INTERVAL_UNIT_REPS)
 	{
 		uint16_t total = Total();
-		if (total >= segment.reps)
+		if (total >= segment.secondValue)
 		{
 			return true;
 		}

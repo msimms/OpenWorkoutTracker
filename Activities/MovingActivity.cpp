@@ -1406,9 +1406,13 @@ bool MovingActivity::CheckPositionInterval()
 	
 	const IntervalSessionSegment& segment = m_intervalSession.segments.at(m_intervalWorkoutState.nextSegmentIndex);
 
-	if (DistanceTraveledInMeters() - m_intervalWorkoutState.lastDistanceMeters >= segment.distance)
+	if (IsDistanceBasedIntervalSegment(&segment))
 	{
-		return true;
+		double segmentDistanceInKm = ConvertDistanceIntervalSegmentToKm(&segment);
+		if (DistanceTraveledInMeters() - m_intervalWorkoutState.lastDistanceMeters >= segmentDistanceInKm)
+		{
+			return true;
+		}
 	}
 	return false;
 }

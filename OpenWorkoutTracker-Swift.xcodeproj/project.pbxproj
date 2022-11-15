@@ -215,6 +215,10 @@
 		2740E12828F4425A00293B71 /* EditShoesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12728F4425A00293B71 /* EditShoesView.swift */; };
 		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
 		277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */; };
+		277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
+		277EAC2E2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
+		277EAC34292412C30091ADF6 /* BrightBeep.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC32292412C30091ADF6 /* BrightBeep.aif */; };
+		277EAC35292412C30091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
 		278D92C428E38F17003B077C /* PhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C328E38F17003B077C /* PhoneApp.swift */; };
 		278D92C628E38F17003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C528E38F17003B077C /* ContentView.swift */; };
 		278D92C828E38F18003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92C728E38F18003B077C /* Assets.xcassets */; };
@@ -331,7 +335,7 @@
 		2740DF7A28E460E000293B71 /* Run.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Run.h; path = Activities/Run.h; sourceTree = "<group>"; };
 		2740DF7B28E460E000293B71 /* ActivityAttributeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityAttributeType.h; path = Activities/ActivityAttributeType.h; sourceTree = "<group>"; };
 		2740DF7C28E460E000293B71 /* PullUpAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PullUpAnalyzer.h; path = Activities/PullUpAnalyzer.h; sourceTree = "<group>"; };
-		2740DF7D28E460E000293B71 /* IntervalWorkout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalWorkout.h; path = Activities/IntervalWorkout.h; sourceTree = "<group>"; };
+		2740DF7D28E460E000293B71 /* IntervalSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalSession.h; path = Activities/IntervalSession.h; sourceTree = "<group>"; };
 		2740DF7E28E460E000293B71 /* SegmentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentType.h; path = Activities/SegmentType.h; sourceTree = "<group>"; };
 		2740DF7F28E460E000293B71 /* BikePlanGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BikePlanGenerator.h; path = Activities/BikePlanGenerator.h; sourceTree = "<group>"; };
 		2740DF8028E460E000293B71 /* Cycling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cycling.cpp; path = Activities/Cycling.cpp; sourceTree = "<group>"; };
@@ -407,7 +411,7 @@
 		2740DFC728E460E200293B71 /* BenchPressAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BenchPressAnalyzer.h; path = Activities/BenchPressAnalyzer.h; sourceTree = "<group>"; };
 		2740DFC828E460E200293B71 /* SwimPlanGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SwimPlanGenerator.cpp; path = Activities/SwimPlanGenerator.cpp; sourceTree = "<group>"; };
 		2740DFC928E460E200293B71 /* WorkoutFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkoutFactory.h; path = Activities/WorkoutFactory.h; sourceTree = "<group>"; };
-		2740DFCA28E460E200293B71 /* IntervalWorkoutSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalWorkoutSegment.h; path = Activities/IntervalWorkoutSegment.h; sourceTree = "<group>"; };
+		2740DFCA28E460E200293B71 /* IntervalSessionSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntervalSessionSegment.h; path = Activities/IntervalSessionSegment.h; sourceTree = "<group>"; };
 		2740DFCB28E460E200293B71 /* Cycling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cycling.h; path = Activities/Cycling.h; sourceTree = "<group>"; };
 		2740DFCC28E460E200293B71 /* GForceAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GForceAnalyzer.cpp; path = Activities/GForceAnalyzer.cpp; sourceTree = "<group>"; };
 		2740DFFA28E4CD0B00293B71 /* UnitConversionFactors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitConversionFactors.h; path = Units/UnitConversionFactors.h; sourceTree = "<group>"; };
@@ -526,6 +530,9 @@
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
 		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
 		277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWithPolyline.swift; sourceTree = "<group>"; };
+		277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntervalSessionSegment.cpp; path = Activities/IntervalSessionSegment.cpp; sourceTree = "<group>"; };
+		277EAC32292412C30091ADF6 /* BrightBeep.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = BrightBeep.aif; path = Sounds/BrightBeep.aif; sourceTree = "<group>"; };
+		277EAC33292412C30091ADF6 /* Ping.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ping.aif; path = Sounds/Ping.aif; sourceTree = "<group>"; };
 		278D92C028E38F17003B077C /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		278D92C328E38F17003B077C /* PhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneApp.swift; sourceTree = "<group>"; };
 		278D92C528E38F17003B077C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -646,8 +653,9 @@
 				2740DF7528E460E000293B71 /* Hike.h */,
 				2740DF7128E460E000293B71 /* IntensityCalculator.cpp */,
 				2740DF6828E460E000293B71 /* IntensityCalculator.h */,
-				2740DF7D28E460E000293B71 /* IntervalWorkout.h */,
-				2740DFCA28E460E200293B71 /* IntervalWorkoutSegment.h */,
+				2740DF7D28E460E000293B71 /* IntervalSession.h */,
+				2740DFCA28E460E200293B71 /* IntervalSessionSegment.h */,
+				277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */,
 				2740DFBB28E460E200293B71 /* LiftingActivity.cpp */,
 				2740DF6C28E460E000293B71 /* LiftingActivity.h */,
 				2740DF9C28E460E100293B71 /* Measure.h */,
@@ -929,6 +937,8 @@
 				2740E11128EB90DB00293B71 /* OpenWorkoutTracker-Info.plist */,
 				2740E11028EB908400293B71 /* OpenWorkoutTracker.entitlements */,
 				2740E07528E4F77400293B71 /* Bridging-Header.h */,
+				277EAC32292412C30091ADF6 /* BrightBeep.aif */,
+				277EAC33292412C30091ADF6 /* Ping.aif */,
 				2740DF6428E460A000293B71 /* Backend */,
 				2740DFF728E4CCD000293B71 /* Bike */,
 				2740E05B28E4D92900293B71 /* Common */,
@@ -1191,7 +1201,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1400;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1410;
 				TargetAttributes = {
 					278D92BF28E38F17003B077C = {
 						CreatedOnToolsVersion = 14.0;
@@ -1269,6 +1279,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				277EAC34292412C30091ADF6 /* BrightBeep.aif in Resources */,
+				277EAC35292412C30091ADF6 /* Ping.aif in Resources */,
 				278D92F328E38F19003B077C /* Preview Assets.xcassets in Resources */,
 				278D92F028E38F19003B077C /* Assets.xcassets in Resources */,
 			);
@@ -1302,6 +1314,7 @@
 				2740DFD228E460E200293B71 /* WorkoutPlanGenerator.cpp in Sources */,
 				2740E12028F0E83000293B71 /* EditIntervalSessionView.swift in Sources */,
 				2740DFD828E460E200293B71 /* Cycling.cpp in Sources */,
+				277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */,
 				2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */,
 				2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */,
 				2740DFE028E460E200293B71 /* VO2MaxCalculator.cpp in Sources */,
@@ -1526,6 +1539,7 @@
 				2740E11928F0DCC200293B71 /* HealthManager.swift in Sources */,
 				2740E0BD28E7028C00293B71 /* PoolSwim.cpp in Sources */,
 				2740E0B928E7028C00293B71 /* GForceAnalyzer.cpp in Sources */,
+				277EAC2E2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */,
 				2740E0CD28E7028C00293B71 /* Workout.cpp in Sources */,
 				2740E0E528E702AD00293B71 /* GpxFileWriter.cpp in Sources */,
 				2740E10F28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */,
@@ -1618,6 +1632,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1676,6 +1691,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

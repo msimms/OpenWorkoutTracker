@@ -18,29 +18,29 @@ struct HistoryView: View {
 
 	var body: some View {
 		VStack(alignment: .leading) {
-			List(self.historyVM.historicalActivities, id: \.self) { item in
-				NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
-					VStack(alignment: .leading) {
-						if item.name.count > 0 {
-							Text(item.name)
-								.bold()
-						}
-						HStack() {
-							Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-							Text(item.type)
-								.bold()
-							Spacer()
-							Text("\(self.dateFormatter.string(from: item.startTime))")
+			if self.historyVM.historicalActivities.count > 0 {
+				List(self.historyVM.historicalActivities, id: \.self) { item in
+					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
+						VStack(alignment: .leading) {
+							if item.name.count > 0 {
+								Text(item.name)
+									.bold()
+							}
+							HStack() {
+								Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
+								Text(item.type)
+									.bold()
+								Spacer()
+								Text("\(self.dateFormatter.string(from: item.startTime))")
+							}
 						}
 					}
 				}
+				.listStyle(.plain)
 			}
-			.listStyle(.plain)
-
-			Button("Close") {
-				self.dismiss()
+			else {
+				Text("No History")
 			}
-			.bold()
 		}
     }
 }

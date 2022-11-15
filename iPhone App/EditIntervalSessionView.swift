@@ -28,6 +28,9 @@ struct EditIntervalSessionView: View {
 	@State private var showingSaveFailedAlert: Bool = false
 	@State private var showingDeleteFailedAlert: Bool = false
 	@State private var showingValueEditAlert: Bool = false
+	@State private var showingMoveSegmentUpAlert: Bool = false
+	@State private var showingMoveSegmentDownAlert: Bool = false
+	@State private var showingDeleteSegmentAlert: Bool = false
 
 	init(session: IntervalSession) {
 		_tempSession = State(initialValue: session)
@@ -78,35 +81,66 @@ struct EditIntervalSessionView: View {
 			Spacer()
 
 			Group() {
-				VStack(alignment: .leading) {
-					ForEach(self.tempSession.segments, id: \.self) { segment in
-						Button(action: {
-							self.showingSegmentEditSelection = true
-						}) {
-							Text(segment.description())
-								.frame(minWidth: 0, maxWidth: .infinity)
-								.foregroundColor(segment.color())
-								.padding()
-						}
-						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-						.opacity(0.8)
-						.confirmationDialog("Edit", isPresented: self.$showingSegmentEditSelection, titleVisibility: .visible) {
-							ForEach(self.tempSession.segments.last!.validModifiers(activityType: self.tempSport), id: \.self) { item in
-								Button(item) {
-									self.keyBeingEdited = item
-									self.showingValueEditAlert = true
+				ScrollView() {
+					VStack(alignment: .leading) {
+						ForEach(self.tempSession.segments, id: \.self) { segment in
+							HStack() {
+								// Move up button
+								Button(action : {
+									self.showingMoveSegmentUpAlert = !self.intervalSessionsVM.moveSegmentUp(segmentId: segment.id)
+								}) {
+									Image(systemName: "arrow.up.square")
 								}
+								.alert("Failed to move the segment up.", isPresented: self.$showingMoveSegmentUpAlert) {}
+
+								Spacer()
+								
+								// Main button
+								Button(action: {
+									self.showingSegmentEditSelection = true
+								}) {
+									Text(segment.description())
+										.frame(minWidth: 0, maxWidth: .infinity)
+										.foregroundColor(segment.color())
+										.padding()
+								}
+								.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+								.opacity(0.8)
+								.confirmationDialog("Edit", isPresented: self.$showingSegmentEditSelection, titleVisibility: .visible) {
+									VStack() {
+										ForEach(self.tempSession.segments.last!.validModifiers(activityType: self.tempSport), id: \.self) { item in
+											Button(item) {
+												self.keyBeingEdited = item
+												self.showingValueEditAlert = true
+											}
+										}
+										Button("Delete") {
+											self.showingDeleteSegmentAlert = !self.intervalSessionsVM.deleteSegment(segmentId: segment.id)
+										}
+									}
+								}
+								.alert("Failed to delete the segment.", isPresented: self.$showingDeleteSegmentAlert) {}
+								.alert(self.keyBeingEdited, isPresented: self.$showingValueEditAlert, actions: {
+									TextField("10", text: self.$valueBeingEdited)
+									Button("Ok", action: {
+										self.tempSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: Double(self.valueBeingEdited)!)
+									})
+									Button("Cancel", role: .cancel, action: {})
+								}, message: {
+									Text("Enter the value")
+								})
+
+								Spacer()
+								
+								// Move down button
+								Button(action : {
+									self.showingMoveSegmentDownAlert = !self.intervalSessionsVM.moveSegmentDown(segmentId: segment.id)
+								}) {
+									Image(systemName: "arrow.down.square")
+								}
+								.alert("Failed to move the segment down.", isPresented: self.$showingMoveSegmentDownAlert) {}
 							}
 						}
-						.alert(self.keyBeingEdited, isPresented: self.$showingValueEditAlert, actions: {
-							TextField("10", text: self.$valueBeingEdited)
-							Button("Ok", action: {
-								self.tempSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: Double(self.valueBeingEdited)!)
-							})
-							Button("Cancel", role: .cancel, action: {})
-						}, message: {
-							Text("Enter the value")
-						})
 					}
 				}
 			}

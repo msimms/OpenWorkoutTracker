@@ -281,8 +281,8 @@
 	// Which interval are we in when at the given distance?
 	for (NSDictionary* interval in intervals)
 	{
-		NSUInteger numRepeats = (NSUInteger)([interval[@PARAM_INTERVAL_REPEAT] integerValue]);
-		double intervalDistance = [interval[@PARAM_INTERVAL_DISTANCE] doubleValue];
+		NSUInteger numRepeats = (NSUInteger)([interval[@PARAM_INTERVAL_SEGMENT_REPEAT] integerValue]);
+		double intervalDistance = [interval[@PARAM_INTERVAL_SEGMENT_DISTANCE] doubleValue];
 		double recoveryDistance = [interval[@PARAM_INTERVAL_RECOVERY_DISTANCE] doubleValue];
 
 		// For each time this interval is repeated:
@@ -292,7 +292,7 @@
 			currentDistanceInMeters += intervalDistance;
 			if (currentDistanceInMeters >= distanceInMeters)
 			{
-				NSNumber* pace = interval[@PARAM_INTERVAL_PACE];
+				NSNumber* pace = interval[@PARAM_INTERVAL_SEGMENT_PACE];
 
 				// Zero doesn't make for a very nice graph so draw something.
 				// This might happen if drawing a workout in which pace was not specified.
@@ -324,11 +324,11 @@
 	// Which interval are we in when at the given distance?
 	for (NSDictionary* interval in intervals)
 	{
-		NSUInteger numRepeats = (NSUInteger)([interval[@PARAM_INTERVAL_REPEAT] integerValue]);
-		uint64_t intervalDuration = (uint64_t)[interval[@PARAM_INTERVAL_DURATION] integerValue];
-		uint64_t recoveryDuration = (uint64_t)[interval[@PARAM_INTERVAL_RECOVERY_DURATION] integerValue];
-		double intervalPower = [interval[@PARAM_INTERVAL_POWER] doubleValue] * 100.0;
-		double recoveryPower = [interval[@PARAM_INTERVAL_RECOVERY_POWER] doubleValue] * 100.0;
+		NSUInteger numRepeats = (NSUInteger)([interval[@PARAM_INTERVAL_SEGMENT_REPEAT] integerValue]);
+		uint64_t intervalDuration = (uint64_t)[interval[@PARAM_INTERVAL_SEGMENT_DURATION] integerValue];
+		uint64_t recoveryDuration = (uint64_t)[interval[@PARAM_INTERVAL_SEGMENT_RECOVERY_DURATION] integerValue];
+		double intervalPower = [interval[@PARAM_INTERVAL_SEGMENT_POWER] doubleValue] * 100.0;
+		double recoveryPower = [interval[@PARAM_INTERVAL_SEGMENT_RECOVERY_POWER] doubleValue] * 100.0;
 
 		// For each time this interval is repeated:
 		for (NSUInteger repeatIndex = 0; repeatIndex < numRepeats; ++repeatIndex)

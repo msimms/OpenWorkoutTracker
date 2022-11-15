@@ -38,6 +38,8 @@ let PREF_NAME_HAS_SHOWN_SQUAT_HELP =                  "Has Shown Squat Help"
 let PREF_NAME_HAS_SHOWN_STATIONARY_BIKE_HELP =        "Has Shown Stationary Bike Help"
 let PREF_NAME_HAS_SHOWN_TREADMILL_HELP =              "Has Shown Treadmill Help"
 let PREF_NAME_USE_WATCH_HEART_RATE =                  "Use Watch Heart Rate"
+let PREF_NAME_USE_WATCH_RUN_SPLIT_BEEPS =             "Watch Run Split Beeps"
+let PREF_NAME_WATCH_START_STOP_BEEPS =                "Watch Start Stop Beeps"
 let PREF_NAME_WORKOUT_GOAL =                          "Workout Goal"
 let PREF_NAME_WORKOUT_GOAL_TYPE =                     "Workout Goal Type"
 let PREF_NAME_WORKOUT_GOAL_DATE =                     "Workout Goal Date"
@@ -277,6 +279,16 @@ class Preferences {
 		return mydefaults.bool(forKey: PREF_NAME_USE_WATCH_HEART_RATE)
 	}
 	
+	static func watchRunSplitBeeps() -> Bool {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.bool(forKey: PREF_NAME_USE_WATCH_RUN_SPLIT_BEEPS)
+	}
+
+	static func watchStartStopBeeps() -> Bool {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.bool(forKey: PREF_NAME_WATCH_START_STOP_BEEPS)
+	}
+
 	static func workoutGoal() -> Goal {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		let goal = mydefaults.integer(forKey: PREF_NAME_WORKOUT_GOAL)
@@ -572,7 +584,17 @@ class Preferences {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_USE_WATCH_HEART_RATE)
 	}
-	
+
+	static func setWatchRunSplitBeeps(value: Bool) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_USE_WATCH_RUN_SPLIT_BEEPS)
+	}
+
+	static func setWatchStartStopBeeps(value: Bool) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_WATCH_START_STOP_BEEPS)
+	}
+
 	static func setWorkoutGoal(value: Goal) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value.rawValue, forKey: PREF_NAME_WORKOUT_GOAL)

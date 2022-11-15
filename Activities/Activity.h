@@ -14,7 +14,7 @@
 
 #include "ActivityAttributeType.h"
 #include "ActivityType.h"
-#include "IntervalWorkout.h"
+#include "IntervalSession.h"
 #include "PacePlan.h"
 #include "SegmentType.h"
 #include "SensorReading.h"
