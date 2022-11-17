@@ -8,21 +8,34 @@ import SwiftUI
 struct ContentView: View {
 	@State private var showingActivitySelection: Bool = false
 	@State var pushed: Bool = true
+	@State private var showingResetConfirmation: Bool = false
 
 	var body: some View {
 		NavigationStack() {
-			Button("Start") {
-				showingActivitySelection = true
-			}
-			.confirmationDialog("Select the workout to perform", isPresented: $showingActivitySelection, titleVisibility: .visible) {
-				ForEach(CommonApp.activityTypes, id: \.self) { item in
-					NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
+			ScrollView() {
+				Button("Start") {
+					showingActivitySelection = true
 				}
-			}
-			NavigationLink("History", destination: HistoryView())
-			HStack() {
+				.confirmationDialog("Select the workout to perform", isPresented: $showingActivitySelection, titleVisibility: .visible) {
+					ForEach(CommonApp.activityTypes, id: \.self) { item in
+						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
+					}
+				}
+				NavigationLink("History", destination: HistoryView())
 				NavigationLink("Settings", destination: SettingsView())
-				NavigationLink("About", destination: AboutView())
+				HStack() {
+					Button("Reset") {
+						self.showingResetConfirmation = true
+					}
+					.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented:$showingResetConfirmation) {
+						Button("Delete") {
+							ResetDatabase()
+						}
+						Button("Cancel") {
+						}
+					}
+					NavigationLink("About", destination: AboutView())
+				}
 			}
 		}
     }

@@ -36,6 +36,7 @@ typedef struct IntervalSessionSegment
 	double       secondValue;
 	IntervalUnit firstUnits;  // Units for the first part of the description (ex: X secs at Y pace or X sets of Y reps)
 	IntervalUnit secondUnits; // Units for the first second of the description (ex: X secs at Y pace or X sets of Y reps)
+	uint8_t      position;    // Position in the workout, starting from zero
 } IntervalSessionSegment;
 
 bool IsDistanceBasedIntervalSegment(const IntervalSessionSegment* segment);

@@ -88,7 +88,7 @@ struct ActivityView: View {
 								.font(.custom("DBLCDTempBlack", fixedSize: 72))
 								.foregroundColor(colorScheme == .dark ? .white : ActivityPreferences.getTextColor(activityType: self.activityType))
 								.onTapGesture {
-									self.showingActivityAttributeSelection1 = true
+									self.showingActivityAttributeSelection1 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection1, titleVisibility: .visible) {
 									selectAttributeToDisplay(position: 0)
@@ -121,7 +121,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection2 = true
+												self.showingActivityAttributeSelection2 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 1)
@@ -138,7 +138,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection3 = true
+												self.showingActivityAttributeSelection3 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 2)
@@ -155,7 +155,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection4 = true
+												self.showingActivityAttributeSelection4 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection4, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 3)
@@ -172,7 +172,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection5 = true
+												self.showingActivityAttributeSelection5 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 4)
@@ -189,7 +189,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection6 = true
+												self.showingActivityAttributeSelection6 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection6, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 5)
@@ -206,7 +206,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection7 = true
+												self.showingActivityAttributeSelection7 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection7, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 6)
@@ -223,7 +223,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection8 = true
+												self.showingActivityAttributeSelection8 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection8, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 7)
@@ -240,7 +240,7 @@ struct ActivityView: View {
 											.font(.system(size: 28))
 											.foregroundColor(colorScheme == .dark ? .white : textColor)
 											.onTapGesture {
-												self.showingActivityAttributeSelection9 = true
+												self.showingActivityAttributeSelection9 = ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 											}
 											.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection9, titleVisibility: .visible) {
 												selectAttributeToDisplay(position: 8)

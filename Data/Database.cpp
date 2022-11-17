@@ -19,56 +19,8 @@ Database::Database()
 
 Database::~Database()
 {
-	if (m_pDb)
-	{
-		sqlite3_close(m_pDb);
-		m_pDb = NULL;
-	}
-	
-	if (m_accelerometerInsertStatement)
-	{
-		sqlite3_finalize(m_accelerometerInsertStatement);
-	}
-	if (m_locationInsertStatement)
-	{
-		sqlite3_finalize(m_locationInsertStatement);
-	}
-	if (m_heartRateInsertStatement)
-	{
-		sqlite3_finalize(m_heartRateInsertStatement);
-	}
-	if (m_cadenceInsertStatement)
-	{
-		sqlite3_finalize(m_cadenceInsertStatement);
-	}
-	if (m_wheelSpeedInsertStatement)
-	{
-		sqlite3_finalize(m_wheelSpeedInsertStatement);
-	}
-	if (m_powerInsertStatement)
-	{
-		sqlite3_finalize(m_powerInsertStatement);
-	}
-	if (m_footPodStatement)
-	{
-		sqlite3_finalize(m_footPodStatement);
-	}
-	if (m_eventStatement)
-	{
-		sqlite3_finalize(m_eventStatement);
-	}
-	if (m_selectActivitySummaryStatement)
-	{
-		sqlite3_finalize(m_selectActivitySummaryStatement);
-	}
-	if (m_selectActivityIdFromHashStatement)
-	{
-		sqlite3_finalize(m_selectActivityIdFromHashStatement);
-	}
-	if (m_selectActivityHashFromIdStatement)
-	{
-		sqlite3_finalize(m_selectActivityHashFromIdStatement);
-	}
+	Close();
+	DeleteStatements();
 }
 
 bool Database::Open(const std::string& dbFileName)
@@ -78,7 +30,14 @@ bool Database::Open(const std::string& dbFileName)
 
 bool Database::Close()
 {
-	return (sqlite3_close(m_pDb) == SQLITE_OK);
+	bool result = false;
+
+	if (m_pDb)
+	{
+		result = (sqlite3_close(m_pDb) == SQLITE_OK);
+		m_pDb = NULL;
+	}
+	return result;
 }
 
 bool Database::DoesTableHaveColumn(const std::string& tableName, const std::string& columnName)
@@ -98,7 +57,6 @@ bool Database::DoesTableHaveColumn(const std::string& tableName, const std::stri
 			temp.append((const char*)sqlite3_column_text(statement, 1));
 			result = (temp.compare(columnName) == 0);
 		}
-		
 		sqlite3_finalize(statement);
 	}
 	return result;
@@ -107,16 +65,6 @@ bool Database::DoesTableHaveColumn(const std::string& tableName, const std::stri
 bool Database::DoesTableExist(const std::string& tableName)
 {
 	std::string sql = "select name from sqlite_master where type='table' AND name='";
-	sql += tableName;
-	sql += "'";
-
-	int result = ExecuteQuery(sql);
-	return (result == SQLITE_ROW);
-}
-
-bool Database::DropTable(const std::string& tableName)
-{
-	std::string sql = "drop table '";
 	sql += tableName;
 	sql += "'";
 
@@ -133,19 +81,6 @@ bool Database::CreateTables()
 	{
 		sql = "create table bike (id integer primary key, name text, description text, weight_kg double, wheel_circumference_mm double, time_added unsigned big int, time_retired unsigned big int, last_updated_time big int)";
 		queries.push_back(sql);
-	}
-	else
-	{
-		if (!DoesTableHaveColumn("bike", "description"))
-		{
-			sql = "alter table bike add column description text";
-			queries.push_back(sql);
-		}
-		if (!DoesTableHaveColumn("bike", "last_updated_time"))
-		{
-			sql = "alter table bike add column last_updated_time big int";
-			queries.push_back(sql);
-		}
 	}
 	if (!DoesTableExist("shoe"))
 	{
@@ -164,7 +99,7 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("interval_session_segment"))
 	{
-		sql = "create table interval_session_segment (id integer primary key, session_id text, repeat integer, first_value double, second_value double, first_units int, second_units int)";
+		sql = "create table interval_session_segment (id integer primary key, session_id text, repeat integer, first_value double, second_value double, first_units int, second_units int, position int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("workout"))
@@ -177,63 +112,20 @@ bool Database::CreateTables()
 		sql = "create table workout_interval (id integer primary key, workout_id text, repeat integer, duration big int, power_low double, power_high double, distance double, pace double, recovery_duration big int, recovery_distance double, recovery_pace double)";
 		queries.push_back(sql);
 	}
-	else
-	{
-		if (!DoesTableHaveColumn("workout_interval", "recovery_duration"))
-		{
-			sql = "drop table workout_interval";
-			queries.push_back(sql);
-
-			sql = "create table workout_interval (id integer primary key, workout_id text, repeat integer, duration big int, power_low double, power_high double, distance double, pace double, recovery_duration big int, recovery_distance double, recovery_pace double)";
-			queries.push_back(sql);
-		}
-	}
 	if (!DoesTableExist("pace_plan"))
 	{
 		sql = "create table pace_plan (id integer primary key, plan_id text, name text, description text, target_distance double, target_distance_units integer, target_time integer, target_splits integer, target_splits_units integer, route text, last_updated_time big int)";
 		queries.push_back(sql);
-	}
-	else
-	{
-		if (DoesTableHaveColumn("pace_plan", "target_pace"))
-		{
-			sql = "drop table pace_plan";
-			queries.push_back(sql);
-
-			sql = "create table pace_plan (id integer primary key, plan_id text, name text, description text, target_distance double, target_distance_units integer, target_time integer, target_splits integer, target_splits_units integer, route text, last_updated_time big int)";
-			queries.push_back(sql);
-		}
 	}
 	if (!DoesTableExist("activity"))
 	{
 		sql = "create table activity (id integer primary key, activity_id text, user_id text, type text, name text, description text, start_time unsigned big int, end_time unsigned big int)";
 		queries.push_back(sql);
 	}
-	else
-	{
-		if (!DoesTableHaveColumn("activity", "description"))
-		{
-			sql = "alter table activity add column description text";
-			queries.push_back(sql);
-		}
-	}
 	if (!DoesTableExist("lap"))
 	{
 		sql = "create table lap (id integer primary key, activity_id text, start_time unsigned big int, calories_burned double)";
 		queries.push_back(sql);
-	}
-	else
-	{
-		if (!DoesTableHaveColumn("lap", "calories_burned"))
-		{
-			sql = "alter table lap add column calories_burned double";
-			queries.push_back(sql);
-		}
-		if (!DoesTableHaveColumn("lap", "distance"))
-		{
-			sql = "alter table lap add column distance double";
-			queries.push_back(sql);
-		}
 	}
 	if (!DoesTableExist("gps"))
 	{
@@ -323,6 +215,60 @@ bool Database::CreateTables()
 	return (result == SQLITE_OK || result == SQLITE_DONE);
 }
 
+bool Database::DeleteTables()
+{
+	std::vector<std::string> queries;
+	std::string sql;
+	
+	sql = "drop table bike";
+	queries.push_back(sql);
+	sql = "drop table shoe";
+	queries.push_back(sql);
+	sql = "drop table interval_session";
+	queries.push_back(sql);
+	sql = "drop table interval_session_segment";
+	queries.push_back(sql);
+	sql = "drop table workout";
+	queries.push_back(sql);
+	sql = "drop table workout_interval";
+	queries.push_back(sql);
+	sql = "drop table pace_plan";
+	queries.push_back(sql);
+	sql = "drop table activity";
+	queries.push_back(sql);
+	sql = "drop table lap";
+	queries.push_back(sql);
+	sql = "drop table gps";
+	queries.push_back(sql);
+	sql = "drop table accelerometer";
+	queries.push_back(sql);
+	sql = "drop table cadence";
+	queries.push_back(sql);
+	sql = "drop table hrm";
+	queries.push_back(sql);
+	sql = "drop table wheel_speed";
+	queries.push_back(sql);
+	sql = "drop table power_meter";
+	queries.push_back(sql);
+	sql = "drop table foot_pod";
+	queries.push_back(sql);
+	sql = "drop table event";
+	queries.push_back(sql);
+	sql = "drop table weight";
+	queries.push_back(sql);
+	sql = "drop table tag";
+	queries.push_back(sql);
+	sql = "drop table activity_summary";
+	queries.push_back(sql);
+	sql = "drop table activity_hash";
+	queries.push_back(sql);
+	sql = "drop table activity_sync";
+	queries.push_back(sql);
+	
+	int result = ExecuteQueries(queries);
+	return (result == SQLITE_OK || result == SQLITE_DONE);
+}
+
 bool Database::CreateStatements()
 {
 	if (sqlite3_prepare_v2(m_pDb, "insert into accelerometer values (NULL,?,?,?,?,?)", -1, &m_accelerometerInsertStatement, 0) != SQLITE_OK)
@@ -350,58 +296,61 @@ bool Database::CreateStatements()
 	return true;
 }
 
+void Database::DeleteStatements()
+{
+	if (m_accelerometerInsertStatement)
+	{
+		sqlite3_finalize(m_accelerometerInsertStatement);
+	}
+	if (m_locationInsertStatement)
+	{
+		sqlite3_finalize(m_locationInsertStatement);
+	}
+	if (m_heartRateInsertStatement)
+	{
+		sqlite3_finalize(m_heartRateInsertStatement);
+	}
+	if (m_cadenceInsertStatement)
+	{
+		sqlite3_finalize(m_cadenceInsertStatement);
+	}
+	if (m_wheelSpeedInsertStatement)
+	{
+		sqlite3_finalize(m_wheelSpeedInsertStatement);
+	}
+	if (m_powerInsertStatement)
+	{
+		sqlite3_finalize(m_powerInsertStatement);
+	}
+	if (m_footPodStatement)
+	{
+		sqlite3_finalize(m_footPodStatement);
+	}
+	if (m_eventStatement)
+	{
+		sqlite3_finalize(m_eventStatement);
+	}
+	if (m_selectActivitySummaryStatement)
+	{
+		sqlite3_finalize(m_selectActivitySummaryStatement);
+	}
+	if (m_selectActivityIdFromHashStatement)
+	{
+		sqlite3_finalize(m_selectActivityIdFromHashStatement);
+	}
+	if (m_selectActivityHashFromIdStatement)
+	{
+		sqlite3_finalize(m_selectActivityHashFromIdStatement);
+	}
+}
+
 bool Database::Reset()
 {
-	std::vector<std::string> queries;
-	std::string sql;
-
-	sql = "delete from bike";
-	queries.push_back(sql);
-	sql = "delete from shoe";
-	queries.push_back(sql);
-	sql = "delete from interval_session";
-	queries.push_back(sql);
-	sql = "delete from interval_session_segment";
-	queries.push_back(sql);
-	sql = "delete from workout";
-	queries.push_back(sql);
-	sql = "delete from workout_interval";
-	queries.push_back(sql);
-	sql = "delete from pace_plan";
-	queries.push_back(sql);
-	sql = "delete from activity";
-	queries.push_back(sql);
-	sql = "delete from lap";
-	queries.push_back(sql);
-	sql = "delete from gps";
-	queries.push_back(sql);
-	sql = "delete from accelerometer";
-	queries.push_back(sql);
-	sql = "delete from cadence";
-	queries.push_back(sql);
-	sql = "delete from hrm";
-	queries.push_back(sql);
-	sql = "delete from wheel_speed";
-	queries.push_back(sql);
-	sql = "delete from power_meter";
-	queries.push_back(sql);
-	sql = "delete from foot_pod";
-	queries.push_back(sql);
-	sql = "delete from event";
-	queries.push_back(sql);
-	sql = "delete from weight";
-	queries.push_back(sql);
-	sql = "delete from tag";
-	queries.push_back(sql);
-	sql = "delete from activity_summary";
-	queries.push_back(sql);
-	sql = "delete from activity_hash";
-	queries.push_back(sql);
-	sql = "delete from activity_sync";
-	queries.push_back(sql);
-	
-	int result = ExecuteQueries(queries);
-	return (result == SQLITE_OK || result == SQLITE_DONE);
+	bool result = DeleteTables();
+	DeleteStatements();
+	result &= CreateTables();
+	result &= CreateStatements();
+	return result;
 }
 
 bool Database::CreateBike(const Bike& bike)
@@ -699,7 +648,7 @@ bool Database::CreateIntervalSegment(const std::string& sessionId, const Interva
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
@@ -708,6 +657,7 @@ bool Database::CreateIntervalSegment(const std::string& sessionId, const Interva
 		sqlite3_bind_double(statement, 4, segment.secondValue);
 		sqlite3_bind_int64(statement, 5, segment.firstUnits);
 		sqlite3_bind_int64(statement, 6, segment.secondUnits);
+		sqlite3_bind_int(statement, 7, segment.position);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -719,7 +669,7 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select id, repeat, first_value, second_value, first_units where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, repeat, first_value, second_value, first_units, position where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		
@@ -733,6 +683,7 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 			segment.secondValue = (double)sqlite3_column_double(statement, 3);
 			segment.firstUnits = (IntervalUnit)sqlite3_column_int64(statement, 4);
 			segment.secondUnits = (IntervalUnit)sqlite3_column_int64(statement, 5);
+			segment.position = (uint8_t)sqlite3_column_int(statement, 6);
 			segments.push_back(segment);
 		}
 		

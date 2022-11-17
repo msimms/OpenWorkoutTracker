@@ -1455,6 +1455,36 @@ extern "C" {
 		return result;
 	}
 
+	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description)
+	{
+		// Sanity checks.
+		if (sessionId == NULL)
+		{
+			return false;
+		}
+		if (sessionName == NULL)
+		{
+			return false;
+		}
+		if (sport == NULL)
+		{
+			return false;
+		}
+		
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->CreateIntervalSession(sessionId, sessionName, sport, description);
+		}
+		
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
 	char* RetrieveIntervalSessionAsJSON(size_t sessionIndex)
 	{
 		if (sessionIndex < g_intervalSessions.size())
@@ -1505,36 +1535,6 @@ extern "C" {
 			(*sessionName) = strdup(tempSessionName.c_str());
 			(*sport) = strdup(tempSport.c_str());
 			(*description) = strdup(tempDescription.c_str());
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
-	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description)
-	{
-		// Sanity checks.
-		if (sessionId == NULL)
-		{
-			return false;
-		}
-		if (sessionName == NULL)
-		{
-			return false;
-		}
-		if (sport == NULL)
-		{
-			return false;
-		}
-
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			result = g_pDatabase->CreateIntervalSession(sessionId, sessionName, sport, description);
 		}
 
 		g_dbLock.unlock();
@@ -1672,6 +1672,50 @@ extern "C" {
 		return result;
 	}
 
+	bool CreateNewPacePlan(const char* const planName, const char* planId)
+	{
+		// Sanity checks.
+		if (planName == NULL)
+		{
+			return false;
+		}
+		if (planId == NULL)
+		{
+			return false;
+		}
+		
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			PacePlan plan;
+			
+			plan.planId = planId;
+			plan.name = planName;
+			plan.description = "";
+			plan.targetDistance = (double)0.0;
+			plan.targetTime = 0;
+			plan.targetSplits = (double)0.0;
+			plan.route = "";
+			plan.distanceUnits = UNIT_SYSTEM_METRIC;
+			plan.splitsUnits = UNIT_SYSTEM_METRIC;
+			plan.lastUpdatedTime = time(NULL);
+			result = g_pDatabase->CreatePacePlan(plan);
+		}
+		
+		g_dbLock.unlock();
+		
+		// Reload the pace plan cache.
+		if (result)
+		{
+			result = InitializePacePlanList();
+		}
+		
+		return result;
+	}
+
 	char* RetrievePacePlanAsJSON(size_t planIndex)
 	{
 		if (planIndex < g_pacePlans.size())
@@ -1692,50 +1736,6 @@ extern "C" {
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;
-	}
-
-	bool CreateNewPacePlan(const char* const planName, const char* planId)
-	{
-		// Sanity checks.
-		if (planName == NULL)
-		{
-			return false;
-		}
-		if (planId == NULL)
-		{
-			return false;
-		}
-
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			PacePlan plan;
-
-			plan.planId = planId;
-			plan.name = planName;
-			plan.description = "";
-			plan.targetDistance = (double)0.0;
-			plan.targetTime = 0;
-			plan.targetSplits = (double)0.0;
-			plan.route = "";
-			plan.distanceUnits = UNIT_SYSTEM_METRIC;
-			plan.splitsUnits = UNIT_SYSTEM_METRIC;
-			plan.lastUpdatedTime = time(NULL);
-			result = g_pDatabase->CreatePacePlan(plan);
-		}
-
-		g_dbLock.unlock();
-
-		// Reload the pace plan cache.
-		if (result)
-		{
-			result = InitializePacePlanList();
-		}
-
-		return result;
 	}
 
 	bool RetrievePacePlan(const char* const planId, const char** const name, const char** const description, double* targetDistance, time_t* targetTime, time_t* targetSplits, UnitSystem* targetDistanceUnits, UnitSystem* targetSplitsUnits, time_t* lastUpdatedTime)
@@ -2843,6 +2843,30 @@ extern "C" {
 					break;
 				case NUM_SENSOR_TYPES:
 					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	bool GetHistoricalActivityAccelerometerReading(size_t activityIndex, size_t readingIndex, time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue)
+	{
+		bool result = false;
+		
+		if (xValue && yValue && zValue)
+		{
+			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+			{
+				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
+				if (readingIndex < summary.accelerometerReadings.size())
+				{
+					SensorReading& reading = summary.accelerometerReadings.at(readingIndex);
+					(*readingTime) = (time_t)reading.time;
+					(*xValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_X);
+					(*yValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_Y);
+					(*zValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_Z);
+					result = true;
 				}
 			}
 		}

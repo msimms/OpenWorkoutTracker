@@ -40,6 +40,7 @@ let PREF_NAME_HAS_SHOWN_TREADMILL_HELP =              "Has Shown Treadmill Help"
 let PREF_NAME_USE_WATCH_HEART_RATE =                  "Use Watch Heart Rate"
 let PREF_NAME_USE_WATCH_RUN_SPLIT_BEEPS =             "Watch Run Split Beeps"
 let PREF_NAME_WATCH_START_STOP_BEEPS =                "Watch Start Stop Beeps"
+let PREF_NAME_WATCH_ALLOW_PRESSES_DURING_ACTIVITY =   "Watch Allow Presses During Activity"
 let PREF_NAME_WORKOUT_GOAL =                          "Workout Goal"
 let PREF_NAME_WORKOUT_GOAL_TYPE =                     "Workout Goal Type"
 let PREF_NAME_WORKOUT_GOAL_DATE =                     "Workout Goal Date"
@@ -287,6 +288,11 @@ class Preferences {
 	static func watchStartStopBeeps() -> Bool {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.bool(forKey: PREF_NAME_WATCH_START_STOP_BEEPS)
+	}
+	
+	static func watchAllowPressesDuringActivity() -> Bool {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.bool(forKey: PREF_NAME_WATCH_ALLOW_PRESSES_DURING_ACTIVITY)
 	}
 
 	static func workoutGoal() -> Goal {
@@ -593,6 +599,11 @@ class Preferences {
 	static func setWatchStartStopBeeps(value: Bool) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_WATCH_START_STOP_BEEPS)
+	}
+	
+	static func setWatchAllowPressesDuringActivity(value: Bool) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_WATCH_ALLOW_PRESSES_DURING_ACTIVITY)
 	}
 
 	static func setWorkoutGoal(value: Goal) {

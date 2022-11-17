@@ -33,7 +33,7 @@ class ApiClient {
 			let session = URLSession.shared
 			let dataTask = session.dataTask(with: request) { data, response, error in
 				if let httpResponse = response as? HTTPURLResponse {
-					
+
 					if url.contains(REMOTE_API_IS_LOGGED_IN_URL) {
 					}
 					else if url.contains(REMOTE_API_LOGIN_URL) {

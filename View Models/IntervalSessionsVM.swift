@@ -47,6 +47,7 @@ let MODIFIER_EDIT_SPEED_METRIC = "Edit Speed (kph)"
 let MODIFIER_ADD_POWER = "Add Power (watts)"
 let MODIFIER_EDIT_POWER = "Edit Power (watts)"
 
+// Mirrors the backend structure IntervalSessionSegment
 class IntervalSegment : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
 	var firstValue: Double = 0.0
@@ -68,6 +69,16 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	/// Equatable overrides
 	static func == (lhs: IntervalSegment, rhs: IntervalSegment) -> Bool {
 		return lhs.id == rhs.id
+	}
+	
+	func toBackendStruct() -> IntervalSessionSegment {
+		var result: IntervalSessionSegment = IntervalSessionSegment()
+		result.firstValue = self.firstValue
+		result.secondValue = self.secondValue
+		result.firstUnits = self.firstUnits
+		result.secondUnits = self.secondUnits
+		result.position = 0
+		return result
 	}
 	
 	func validModifiers(activityType: String) -> Array<String> {
@@ -437,14 +448,21 @@ class IntervalSessionsVM : ObservableObject {
 	
 	func createIntervalSession(session: IntervalSession) -> Bool {
 		if CreateNewIntervalSession(session.id.uuidString, session.name, session.sport, session.description) {
+			var position: UInt8 = 0
+
 			for segment in session.segments {
+				var tempSegment = segment.toBackendStruct()
+
+				tempSegment.position = position
+				position += 1
+				CreateNewIntervalSessionSegment(session.id.uuidString, tempSegment)
 			}
 			return buildIntervalSessionList()
 		}
 		return false
 	}
 	
-	func doesIntervalSessionExist(sessionId: UUID) -> Bool {
+	func doesIntervalSessionExistInDatabase(sessionId: UUID) -> Bool {
 		for existingSession in self.intervalSessions {
 			if existingSession.id == sessionId {
 				return true
@@ -454,6 +472,9 @@ class IntervalSessionsVM : ObservableObject {
 	}
 	
 	func updateIntervalSession(session: IntervalSession) -> Bool {
+		if self.deleteIntervalSession(intervalSessionId: session.id) {
+			return self.createIntervalSession(session: session)
+		}
 		return false
 	}
 	
@@ -464,15 +485,53 @@ class IntervalSessionsVM : ObservableObject {
 		return false
 	}
 	
-	func moveSegmentUp(segmentId: UUID) -> Bool {
-		return false
+	func moveSegmentUp(session: IntervalSession, segmentId: UUID) -> Bool {
+		var position = 0
+		for segment in session.segments {
+			if segment.id == segmentId {
+				if position > 0 {
+					session.segments.swapAt(position, position - 1)
+					break
+				}
+				return false
+			}
+			position += 1
+		}
+		if self.doesIntervalSessionExistInDatabase(sessionId: session.id) {
+			return updateIntervalSession(session: session)
+		}
+		return true
 	}
 	
-	func moveSegmentDown(segmentId: UUID) -> Bool  {
-		return false
+	func moveSegmentDown(session: IntervalSession, segmentId: UUID) -> Bool  {
+		var position = 0
+		for segment in session.segments {
+			if segment.id == segmentId {
+				if position < session.segments.count {
+					session.segments.swapAt(position, position + 1)
+					break
+				}
+				return false
+			}
+			position += 1
+		}
+		if self.doesIntervalSessionExistInDatabase(sessionId: session.id) {
+			return updateIntervalSession(session: session)
+		}
+		return true
 	}
 	
-	func deleteSegment(segmentId: UUID) -> Bool  {
-		return false
+	func deleteSegment(session: IntervalSession, segmentId: UUID) -> Bool  {
+		var position = 0
+		for segment in session.segments {
+			if segment.id == segmentId {
+				session.segments.remove(at: position)
+			}
+			position += 1
+		}
+		if self.doesIntervalSessionExistInDatabase(sessionId: session.id) {
+			return updateIntervalSession(session: session)
+		}
+		return true
 	}
 }

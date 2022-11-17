@@ -87,7 +87,7 @@ struct EditIntervalSessionView: View {
 							HStack() {
 								// Move up button
 								Button(action : {
-									self.showingMoveSegmentUpAlert = !self.intervalSessionsVM.moveSegmentUp(segmentId: segment.id)
+									self.showingMoveSegmentUpAlert = !self.intervalSessionsVM.moveSegmentUp(session: self.tempSession, segmentId: segment.id)
 								}) {
 									Image(systemName: "arrow.up.square")
 								}
@@ -115,7 +115,7 @@ struct EditIntervalSessionView: View {
 											}
 										}
 										Button("Delete") {
-											self.showingDeleteSegmentAlert = !self.intervalSessionsVM.deleteSegment(segmentId: segment.id)
+											self.showingDeleteSegmentAlert = !self.intervalSessionsVM.deleteSegment(session: self.tempSession, segmentId: segment.id)
 										}
 									}
 								}
@@ -134,7 +134,7 @@ struct EditIntervalSessionView: View {
 								
 								// Move down button
 								Button(action : {
-									self.showingMoveSegmentDownAlert = !self.intervalSessionsVM.moveSegmentDown(segmentId: segment.id)
+									self.showingMoveSegmentDownAlert = !self.intervalSessionsVM.moveSegmentDown(session: self.tempSession, segmentId: segment.id)
 								}) {
 									Image(systemName: "arrow.down.square")
 								}
@@ -183,7 +183,7 @@ struct EditIntervalSessionView: View {
 			// Save
 			Group() {
 				Button(action: {
-					if self.intervalSessionsVM.doesIntervalSessionExist(sessionId: self.tempSession.id) {
+					if self.intervalSessionsVM.doesIntervalSessionExistInDatabase(sessionId: self.tempSession.id) {
 						if self.intervalSessionsVM.updateIntervalSession(session: self.tempSession) {
 							self.dismiss()
 						}

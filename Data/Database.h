@@ -36,7 +36,9 @@ public:
 	bool Close();
 
 	bool CreateTables();
+	bool DeleteTables();
 	bool CreateStatements();
+	void DeleteStatements();
 	bool Reset();
 
 	// Methods for managing the bicycle inventory.
@@ -188,7 +190,6 @@ private:
 
 	bool DoesTableHaveColumn(const std::string& tableName, const std::string& columnName);
 	bool DoesTableExist(const std::string& tableName);
-	bool DropTable(const std::string& tableName);
 
 	bool CreateAccelerometerReading(const std::string& activityId, const SensorReading& reading);
 	bool CreateLocationReading(const std::string& activityId, const SensorReading& reading);

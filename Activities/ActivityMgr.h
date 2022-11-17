@@ -106,9 +106,9 @@ extern "C" {
 
 	// Functions for managing interval sessions.
 	bool InitializeIntervalSessionList(void);
+	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description);
 	char* RetrieveIntervalSessionAsJSON(size_t sessionIndex);
 	bool RetrieveIntervalSession(const char* const sessionId, char** const sessionName, char** const sport, char** const description);
-	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description);
 	bool DeleteIntervalSession(const char* const sessionId);
 
 	// Functions for managing interval session segments.
@@ -118,8 +118,8 @@ extern "C" {
 
 	// Functions for managing pace plans.
 	bool InitializePacePlanList(void);
-	char* RetrievePacePlanAsJSON(size_t planIndex);
 	bool CreateNewPacePlan(const char* const planName, const char* const planId);
+	char* RetrievePacePlanAsJSON(size_t planIndex);
 	bool RetrievePacePlan(const char* const planId, const char** const name, const char** const description, double* targetDistance, time_t* targetTime, time_t* targetSplits, UnitSystem* targetDistanceUnits, UnitSystem* targetSplitsUnits, time_t* lastUpdatedTime);
 	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetDistance, time_t targetTime, time_t targetSplits, UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime);
 	bool DeletePacePlan(const char* planId);
@@ -177,6 +177,7 @@ extern "C" {
 	// Functions for accessing historical sensor data.
 	size_t GetNumHistoricalSensorReadings(size_t activityIndex, SensorType sensorType);
 	bool GetHistoricalActivitySensorReading(size_t activityIndex, SensorType sensorType, size_t readingIndex, time_t* const readingTime, double* const readingValue);
+	bool GetHistoricalActivityAccelerometerReading(size_t activityIndex, size_t readingIndex, time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue);
 
 	// Functions for listing locations from the current activity.
 	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate);

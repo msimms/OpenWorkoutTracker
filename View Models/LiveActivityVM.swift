@@ -160,6 +160,9 @@ class LiveActivityVM : ObservableObject {
 						NSLog("Failed to start the activity after the countdown timer expired.")
 					}
 				}
+				else {
+					self.playPingSound()
+				}
 			}
 
 			// Split beep?
@@ -583,12 +586,8 @@ class LiveActivityVM : ObservableObject {
 	
 	func playPingSound() {
 		let alertSound = URL(fileURLWithPath: Bundle.main.path(forResource: "Ping", ofType: "aif")!)
-		
-		try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-		try! AVAudioSession.sharedInstance().setActive(true)
-		
+
 		try! audioPlayer = AVAudioPlayer(contentsOf: alertSound)
-		audioPlayer!.prepareToPlay()
 		audioPlayer!.play()
 	}
 }

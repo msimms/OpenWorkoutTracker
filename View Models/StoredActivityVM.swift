@@ -149,6 +149,16 @@ class StoredActivityVM : ObservableObject {
 			if numAccelPoints > 0 {
 
 				for pointIndex in 0...numAccelPoints - 1 {
+					var timestamp: time_t = 0
+					var xValue: Double = 0.0
+					var yValue: Double = 0.0
+					var zValue: Double = 0.0
+
+					if GetHistoricalActivityAccelerometerReading(self.activityIndex, pointIndex, &timestamp, &xValue, &yValue, &zValue) {
+						self.x.append((UInt64(timestamp), xValue))
+						self.y.append((UInt64(timestamp), xValue))
+						self.z.append((UInt64(timestamp), xValue))
+					}
 				}
 			}
 		}

@@ -219,6 +219,8 @@
 		277EAC2E2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
 		277EAC34292412C30091ADF6 /* BrightBeep.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC32292412C30091ADF6 /* BrightBeep.aif */; };
 		277EAC35292412C30091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
+		277EAC3629242E440091ADF6 /* BrightBeep.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC32292412C30091ADF6 /* BrightBeep.aif */; };
+		277EAC3729242E440091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
 		278D92C428E38F17003B077C /* PhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C328E38F17003B077C /* PhoneApp.swift */; };
 		278D92C628E38F17003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C528E38F17003B077C /* ContentView.swift */; };
 		278D92C828E38F18003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92C728E38F18003B077C /* Assets.xcassets */; };
@@ -1256,7 +1258,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				277EAC3729242E440091ADF6 /* Ping.aif in Resources */,
 				278D92CB28E38F18003B077C /* Preview Assets.xcassets in Resources */,
+				277EAC3629242E440091ADF6 /* BrightBeep.aif in Resources */,
 				278D92C828E38F18003B077C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
