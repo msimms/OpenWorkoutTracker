@@ -306,7 +306,7 @@ typedef enum ExportFileTypeButtons
 - (void)activityMetadataReceived:(NSNotification*)notification
 {
 	NSDictionary* responseData = [notification object];
-	NSString* responseStr = [responseData objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSString* responseStr = [responseData objectForKey:@KEY_NAME_RESPONSE_DATA];
 	NSError* error = nil;
 	NSDictionary* activityData = [NSJSONSerialization JSONObjectWithData:[responseStr dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
 

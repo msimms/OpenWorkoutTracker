@@ -90,7 +90,7 @@
 {
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
-	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 	// Valid response was received?
 	if (responseCode && [responseCode intValue] == 200)
@@ -114,7 +114,7 @@
 {
 	NSDictionary* data = [notification object];
 	NSNumber* responseCode = [data objectForKey:@KEY_NAME_RESPONSE_CODE];
-	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSString* responseStr = [data objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 	if (responseCode && [responseCode intValue] == 200)
 	{

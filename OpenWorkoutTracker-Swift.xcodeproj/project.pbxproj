@@ -214,6 +214,8 @@
 		2740E12628F2D3F000293B71 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12428F2D3F000293B71 /* ApiClient.swift */; };
 		2740E12828F4425A00293B71 /* EditShoesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12728F4425A00293B71 /* EditShoesView.swift */; };
 		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
+		27413904292E9FD8008EA7B7 /* GearVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AE28E67C0600293B71 /* GearVM.swift */; };
+		27413905292EA19C008EA7B7 /* WorkoutsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A728E645C300293B71 /* WorkoutsVM.swift */; };
 		277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */; };
 		277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
 		277EAC2E2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
@@ -242,7 +244,23 @@
 		278D932A28E38FE7003B077C /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932328E38FE7003B077C /* HistoryView.swift */; };
 		278D932B28E38FE7003B077C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932428E38FE7003B077C /* SettingsView.swift */; };
 		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
-		27F1979B290722BF006FEAD9 /* ComplicationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F19799290722A9006FEAD9 /* ComplicationViews.swift */; };
+		27E608EA292C205700401901 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608E9292C205700401901 /* WidgetKit.framework */; };
+		27E608EC292C205700401901 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608EB292C205700401901 /* SwiftUI.framework */; };
+		27E608EF292C205700401901 /* ActivityWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E608EE292C205700401901 /* ActivityWidgetsBundle.swift */; };
+		27E608F1292C205700401901 /* ActivityWidgetsLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E608F0292C205700401901 /* ActivityWidgetsLiveActivity.swift */; };
+		27E608F3292C205700401901 /* ActivityWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E608F2292C205700401901 /* ActivityWidgets.swift */; };
+		27E608F6292C205800401901 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27E608F5292C205800401901 /* Assets.xcassets */; };
+		27E608F8292C205800401901 /* ActivityWidgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 27E608F4292C205700401901 /* ActivityWidgets.intentdefinition */; };
+		27E608F9292C205800401901 /* ActivityWidgets.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 27E608F4292C205700401901 /* ActivityWidgets.intentdefinition */; };
+		27E608FC292C205800401901 /* ActivityWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		27E6090A292D13D900401901 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608E9292C205700401901 /* WidgetKit.framework */; };
+		27E6090B292D13D900401901 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608EB292C205700401901 /* SwiftUI.framework */; };
+		27E6090E292D13D900401901 /* ActivityComplications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6090D292D13D900401901 /* ActivityComplications.swift */; };
+		27E60911292D13DA00401901 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27E60910292D13DA00401901 /* Assets.xcassets */; };
+		27E60913292D13DA00401901 /* ActivityComplications.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 27E6090F292D13D900401901 /* ActivityComplications.intentdefinition */; };
+		27E60914292D13DA00401901 /* ActivityComplications.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 27E6090F292D13D900401901 /* ActivityComplications.intentdefinition */; };
+		27E60917292D13DA00401901 /* ActivityComplicationsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27E60909292D13D900401901 /* ActivityComplicationsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		27E6091D292D4EEC00401901 /* ActivityVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6091C292D4EEC00401901 /* ActivityVM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -281,6 +299,20 @@
 			remoteGlobalIDString = 278D92E528E38F18003B077C;
 			remoteInfo = "OpenWorkoutTracker Watch App";
 		};
+		27E608FA292C205800401901 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E608E7292C205700401901;
+			remoteInfo = ActivityWidgetsExtension;
+		};
+		27E60915292D13DA00401901 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 278D92B828E38F17003B077C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E60908292D13D900401901;
+			remoteInfo = ActivityComplicationsExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -293,6 +325,28 @@
 				278D92E728E38F18003B077C /* OpenWorkoutTracker Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E608FD292C205800401901 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				27E608FC292C205800401901 /* ActivityWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E6091B292D13DA00401901 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				27E60917292D13DA00401901 /* ActivityComplicationsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -561,7 +615,21 @@
 		278D932328E38FE7003B077C /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		278D932428E38FE7003B077C /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		278D932528E38FE7003B077C /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
-		27F19799290722A9006FEAD9 /* ComplicationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationViews.swift; sourceTree = "<group>"; };
+		27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ActivityWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		27E608E9292C205700401901 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		27E608EB292C205700401901 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		27E608EE292C205700401901 /* ActivityWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityWidgetsBundle.swift; sourceTree = "<group>"; };
+		27E608F0292C205700401901 /* ActivityWidgetsLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityWidgetsLiveActivity.swift; sourceTree = "<group>"; };
+		27E608F2292C205700401901 /* ActivityWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityWidgets.swift; sourceTree = "<group>"; };
+		27E608F4292C205700401901 /* ActivityWidgets.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = ActivityWidgets.intentdefinition; sourceTree = "<group>"; };
+		27E608F5292C205800401901 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27E608F7292C205800401901 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27E60909292D13D900401901 /* ActivityComplicationsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ActivityComplicationsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		27E6090D292D13D900401901 /* ActivityComplications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityComplications.swift; sourceTree = "<group>"; };
+		27E6090F292D13D900401901 /* ActivityComplications.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = ActivityComplications.intentdefinition; sourceTree = "<group>"; };
+		27E60910292D13DA00401901 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27E60912292D13DA00401901 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		27E6091C292D4EEC00401901 /* ActivityVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -608,6 +676,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E608E5292C205700401901 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E608EC292C205700401901 /* SwiftUI.framework in Frameworks */,
+				27E608EA292C205700401901 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E60906292D13D900401901 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E6090B292D13D900401901 /* SwiftUI.framework in Frameworks */,
+				27E6090A292D13D900401901 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -875,6 +961,8 @@
 				2740E0F328E7031700293B71 /* libsqlite3.0.tbd */,
 				2740E06928E4DA1A00293B71 /* libxml2.2.tbd */,
 				2740E06728E4DA0100293B71 /* libsqlite3.0.tbd */,
+				27E608E9292C205700401901 /* WidgetKit.framework */,
+				27E608EB292C205700401901 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -962,6 +1050,8 @@
 				278D92EA28E38F18003B077C /* Watch App */,
 				278D92FB28E38F19003B077C /* Watch AppTests */,
 				278D930528E38F19003B077C /* Watch AppUITests */,
+				27E608ED292C205700401901 /* ActivityWidgets */,
+				27E6090C292D13D900401901 /* ActivityComplications */,
 				278D92C128E38F17003B077C /* Products */,
 				2740E06628E4DA0100293B71 /* Frameworks */,
 			);
@@ -976,6 +1066,8 @@
 				278D92E628E38F18003B077C /* OpenWorkoutTracker Watch App.app */,
 				278D92F828E38F19003B077C /* OpenWorkoutTracker Watch AppTests.xctest */,
 				278D930228E38F19003B077C /* OpenWorkoutTracker Watch AppUITests.xctest */,
+				27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */,
+				27E60909292D13D900401901 /* ActivityComplicationsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1047,7 +1139,6 @@
 			children = (
 				278D932128E38FE7003B077C /* AboutView.swift */,
 				278D932228E38FE7003B077C /* ActivityView.swift */,
-				27F19799290722A9006FEAD9 /* ComplicationViews.swift */,
 				278D92ED28E38F18003B077C /* ContentView.swift */,
 				278D932528E38FE7003B077C /* HistoryDetailsView.swift */,
 				278D932328E38FE7003B077C /* HistoryView.swift */,
@@ -1084,6 +1175,31 @@
 			path = "Watch AppUITests";
 			sourceTree = "<group>";
 		};
+		27E608ED292C205700401901 /* ActivityWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				27E6091C292D4EEC00401901 /* ActivityVM.swift */,
+				27E608EE292C205700401901 /* ActivityWidgetsBundle.swift */,
+				27E608F0292C205700401901 /* ActivityWidgetsLiveActivity.swift */,
+				27E608F2292C205700401901 /* ActivityWidgets.swift */,
+				27E608F4292C205700401901 /* ActivityWidgets.intentdefinition */,
+				27E608F5292C205800401901 /* Assets.xcassets */,
+				27E608F7292C205800401901 /* Info.plist */,
+			);
+			path = ActivityWidgets;
+			sourceTree = "<group>";
+		};
+		27E6090C292D13D900401901 /* ActivityComplications */ = {
+			isa = PBXGroup;
+			children = (
+				27E6090D292D13D900401901 /* ActivityComplications.swift */,
+				27E6090F292D13D900401901 /* ActivityComplications.intentdefinition */,
+				27E60910292D13DA00401901 /* Assets.xcassets */,
+				27E60912292D13DA00401901 /* Info.plist */,
+			);
+			path = ActivityComplications;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1095,11 +1211,13 @@
 				278D92BD28E38F17003B077C /* Frameworks */,
 				278D92BE28E38F17003B077C /* Resources */,
 				278D930F28E38F19003B077C /* Embed Watch Content */,
+				27E608FD292C205800401901 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				278D92E928E38F18003B077C /* PBXTargetDependency */,
+				27E608FB292C205800401901 /* PBXTargetDependency */,
 			);
 			name = OpenWorkoutTracker;
 			productName = OpenWorkoutTracker;
@@ -1149,10 +1267,12 @@
 				278D92E228E38F18003B077C /* Sources */,
 				278D92E328E38F18003B077C /* Frameworks */,
 				278D92E428E38F18003B077C /* Resources */,
+				27E6091B292D13DA00401901 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				27E60916292D13DA00401901 /* PBXTargetDependency */,
 			);
 			name = "OpenWorkoutTracker Watch App";
 			productName = "OpenWorkoutTracker Watch App";
@@ -1195,6 +1315,40 @@
 			productReference = 278D930228E38F19003B077C /* OpenWorkoutTracker Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		27E608E7292C205700401901 /* ActivityWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E60900292C205800401901 /* Build configuration list for PBXNativeTarget "ActivityWidgetsExtension" */;
+			buildPhases = (
+				27E608E4292C205700401901 /* Sources */,
+				27E608E5292C205700401901 /* Frameworks */,
+				27E608E6292C205700401901 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ActivityWidgetsExtension;
+			productName = ActivityWidgetsExtension;
+			productReference = 27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		27E60908292D13D900401901 /* ActivityComplicationsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E60918292D13DA00401901 /* Build configuration list for PBXNativeTarget "ActivityComplicationsExtension" */;
+			buildPhases = (
+				27E60905292D13D900401901 /* Sources */,
+				27E60906292D13D900401901 /* Frameworks */,
+				27E60907292D13D900401901 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ActivityComplicationsExtension;
+			productName = ActivityComplicationsExtension;
+			productReference = 27E60909292D13D900401901 /* ActivityComplicationsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1202,7 +1356,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1400;
+				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
 					278D92BF28E38F17003B077C = {
@@ -1228,6 +1382,12 @@
 						CreatedOnToolsVersion = 14.0;
 						TestTargetID = 278D92E528E38F18003B077C;
 					};
+					27E608E7292C205700401901 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+					27E60908292D13D900401901 = {
+						CreatedOnToolsVersion = 14.1;
+					};
 				};
 			};
 			buildConfigurationList = 278D92BB28E38F17003B077C /* Build configuration list for PBXProject "OpenWorkoutTracker-Swift" */;
@@ -1249,6 +1409,8 @@
 				278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */,
 				278D92F728E38F19003B077C /* OpenWorkoutTracker Watch AppTests */,
 				278D930128E38F19003B077C /* OpenWorkoutTracker Watch AppUITests */,
+				27E608E7292C205700401901 /* ActivityWidgetsExtension */,
+				27E60908292D13D900401901 /* ActivityComplicationsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1301,6 +1463,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E608E6292C205700401901 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E608F6292C205800401901 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E60907292D13D900401901 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E60911292D13DA00401901 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1413,6 +1591,7 @@
 				2740E09F28E643FD00293B71 /* ActivityPreferences.swift in Sources */,
 				2740E02D28E4CE1C00293B71 /* XmlFileWriter.cpp in Sources */,
 				2740E05928E4D0C700293B71 /* DataImporter.cpp in Sources */,
+				27E608F9292C205800401901 /* ActivityWidgets.intentdefinition in Sources */,
 				2704224B28FB7B2900FD02D4 /* BarChartView.swift in Sources */,
 				2740DFED28E460E200293B71 /* MountainBiking.cpp in Sources */,
 				2740E0A828E645C300293B71 /* WorkoutsVM.swift in Sources */,
@@ -1461,6 +1640,7 @@
 				2740E0B328E7028C00293B71 /* IntensityCalculator.cpp in Sources */,
 				2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */,
 				2740E0E228E702AD00293B71 /* GpxFileReader.cpp in Sources */,
+				27E60914292D13DA00401901 /* ActivityComplications.intentdefinition in Sources */,
 				2740E0C228E7028C00293B71 /* UnitMgr.cpp in Sources */,
 				2740E0C628E7028C00293B71 /* PullUpAnalyzer.cpp in Sources */,
 				272E77E52910ABE3009AB275 /* WatchSession.swift in Sources */,
@@ -1491,6 +1671,7 @@
 				2704225C2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */,
 				2740E0CA28E7028C00293B71 /* ChinUp.cpp in Sources */,
 				2740E0DE28E702AD00293B71 /* TcxFileReader.cpp in Sources */,
+				27413905292EA19C008EA7B7 /* WorkoutsVM.swift in Sources */,
 				2740E10128EB41D600293B71 /* BluetoothServices.swift in Sources */,
 				2740E0DF28E702AD00293B71 /* XmlFileWriter.cpp in Sources */,
 				2740E10328EB41DB00293B71 /* HeartRateService.swift in Sources */,
@@ -1541,6 +1722,7 @@
 				2740E10928EB5ABF00293B71 /* LocationSensor.swift in Sources */,
 				2740E0CB28E7028C00293B71 /* MountainBiking.cpp in Sources */,
 				2740E11928F0DCC200293B71 /* HealthManager.swift in Sources */,
+				27413904292E9FD8008EA7B7 /* GearVM.swift in Sources */,
 				2740E0BD28E7028C00293B71 /* PoolSwim.cpp in Sources */,
 				2740E0B928E7028C00293B71 /* GForceAnalyzer.cpp in Sources */,
 				277EAC2E2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */,
@@ -1551,7 +1733,6 @@
 				2740E0E028E702AD00293B71 /* ZwoFileReader.cpp in Sources */,
 				2740E0F128E702D300293B71 /* UnitConverter.cpp in Sources */,
 				2740E10228EB41D800293B71 /* CyclingPowerService.swift in Sources */,
-				27F1979B290722BF006FEAD9 /* ComplicationViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1569,6 +1750,27 @@
 			files = (
 				278D930728E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITests.swift in Sources */,
 				278D930928E38F19003B077C /* OpenWorkoutTracker_Watch_AppUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E608E4292C205700401901 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E608EF292C205700401901 /* ActivityWidgetsBundle.swift in Sources */,
+				27E6091D292D4EEC00401901 /* ActivityVM.swift in Sources */,
+				27E608F1292C205700401901 /* ActivityWidgetsLiveActivity.swift in Sources */,
+				27E608F8292C205800401901 /* ActivityWidgets.intentdefinition in Sources */,
+				27E608F3292C205700401901 /* ActivityWidgets.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27E60905292D13D900401901 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E6090E292D13D900401901 /* ActivityComplications.swift in Sources */,
+				27E60913292D13DA00401901 /* ActivityComplications.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1599,6 +1801,16 @@
 			isa = PBXTargetDependency;
 			target = 278D92E528E38F18003B077C /* OpenWorkoutTracker Watch App */;
 			targetProxy = 278D930328E38F19003B077C /* PBXContainerItemProxy */;
+		};
+		27E608FB292C205800401901 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27E608E7292C205700401901 /* ActivityWidgetsExtension */;
+			targetProxy = 27E608FA292C205800401901 /* PBXContainerItemProxy */;
+		};
+		27E60916292D13DA00401901 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27E60908292D13D900401901 /* ActivityComplicationsExtension */;
+			targetProxy = 27E60915292D13DA00401901 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1717,6 +1929,7 @@
 		278D930D28E38F19003B077C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "OpenWorkoutTracker Watch App.entitlements";
@@ -1728,6 +1941,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "OpenWorkoutTracker-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mjs-software.OpenWorkoutTracker";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1750,6 +1965,7 @@
 		278D930E28E38F19003B077C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "OpenWorkoutTracker Watch App.entitlements";
@@ -1761,6 +1977,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "OpenWorkoutTracker-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.mjs-software.OpenWorkoutTracker";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2033,6 +2251,126 @@
 			};
 			name = Release;
 		};
+		27E608FE292C205800401901 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ActivityWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ActivityWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.ActivityWidgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		27E608FF292C205800401901 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ActivityWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ActivityWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.ActivityWidgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		27E60919292D13DA00401901 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ActivityComplications/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ActivityComplications;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp.ActivityComplications";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		27E6091A292D13DA00401901 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F42C985T48;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ActivityComplications/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ActivityComplications;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mjs-software.OpenWorkoutTracker.watchkitapp.ActivityComplications";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2095,6 +2433,24 @@
 			buildConfigurations = (
 				278D931D28E38F19003B077C /* Debug */,
 				278D931E28E38F19003B077C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27E60900292C205800401901 /* Build configuration list for PBXNativeTarget "ActivityWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E608FE292C205800401901 /* Debug */,
+				27E608FF292C205800401901 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27E60918292D13DA00401901 /* Build configuration list for PBXNativeTarget "ActivityComplicationsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27E60919292D13DA00401901 /* Debug */,
+				27E6091A292D13DA00401901 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

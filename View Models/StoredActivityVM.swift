@@ -14,8 +14,7 @@ struct TagsCallbackType {
 	var tags: Array<String>
 }
 
-func tagsCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>)
-{
+func tagsCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let tag = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
 	let typedPointer = context!.bindMemory(to: TagsCallbackType.self, capacity: 1)
 	typedPointer.pointee.tags.append(tag)

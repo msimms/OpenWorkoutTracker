@@ -192,6 +192,16 @@ class HistoryVM : ObservableObject {
 		self.state = State.loaded
 	}
 
+	func getFormattedTotalActivityAttribute(activityType: String, attributeName: String) -> String {
+		let attr = QueryActivityAttributeTotalByActivityType(attributeName, activityType)
+		return LiveActivityVM.formatActivityValue(attribute: attr)
+	}
+
+	func getFormattedBestActivityAttribute(activityType: String, attributeName: String, smallestIsBest: Bool) -> String {
+		let attr = QueryBestActivityAttributeByActivityType(attributeName, activityType, smallestIsBest, nil)
+		return LiveActivityVM.formatActivityValue(attribute: attr)
+	}
+
 	/// @brief Utility function for getting the image name that corresponds to an activity, such as running, cycling, etc.
 	static func imageNameForActivityType(activityType: String) -> String {
 		if activityType == ACTIVITY_TYPE_BENCH_PRESS {

@@ -46,7 +46,7 @@ class GearVM : ObservableObject {
 	init() {
 		self.buildGearList()
 	}
-
+	
 	func buildGearList() {
 		InitializeBikeProfileList()
 		InitializeShoeProfileList()
@@ -61,14 +61,14 @@ class GearVM : ObservableObject {
 		var timeAdded: time_t = 0
 		var timeRetired: time_t = 0
 		var done: Bool = false
-
+		
 		while !done {
 			var namePtr: UnsafeMutablePointer<CChar>!
 			var descriptionPtr: UnsafeMutablePointer<CChar>!
-
+			
 			if GetBikeProfileByIndex(bikeIndex, &bikeId, &namePtr, &descriptionPtr, &bikeWeight, &wheelCircumference, &timeAdded, &timeRetired) {
 				let summary: GearSummary = GearSummary()
-
+				
 				summary.id = bikeId
 				summary.name = String.init(cString: namePtr)
 				summary.description = String.init(cString: descriptionPtr)
@@ -90,16 +90,16 @@ class GearVM : ObservableObject {
 		var shoeIndex: size_t = 0
 		var shoeId: UInt64 = 0
 		var done: Bool = false
-
+		
 		while !done {
 			var namePtr: UnsafeMutablePointer<CChar>!
 			var descriptionPtr: UnsafeMutablePointer<CChar>!
 			var timeAdded: time_t = 0
 			var timeRetired: time_t = 0
-
+			
 			if GetShoeProfileByIndex(shoeIndex, &shoeId, &namePtr, &descriptionPtr, &timeAdded, &timeRetired) {
 				let summary: GearSummary = GearSummary()
-
+				
 				summary.id = shoeId
 				summary.name = String.init(cString: namePtr)
 				summary.description = String.init(cString: descriptionPtr)
@@ -112,11 +112,11 @@ class GearVM : ObservableObject {
 				done = true
 			}
 		}
-
+		
 		return shoes
 	}
 	
-	static func saveBike(item: GearSummary) -> Bool {
+	static func createBike(item: GearSummary) -> Bool {
 		if item.id == 0 { // New item
 		}
 		else {
@@ -124,12 +124,24 @@ class GearVM : ObservableObject {
 		return false
 	}
 	
-	static func saveShoes(item: GearSummary) -> Bool {
+	static func createShoes(item: GearSummary) -> Bool {
 		if item.id == 0 { // New item
 			return AddShoeProfile(item.name, item.description, time(nil), 0)
 		}
 		else {
 		}
+		return false
+	}
+
+	static func updateBike() -> Bool {
+		return false
+	}
+
+	static func updateShoe() -> Bool {
+		return false
+	}
+	
+	static func updateGearFromDict(dict: Dictionary<String, AnyObject>) -> Bool {
 		return false
 	}
 }

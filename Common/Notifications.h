@@ -65,7 +65,7 @@
 #define KEY_NAME_UNITS                                "Units"
 #define KEY_NAME_CALORIES                             "Calories"
 #define KEY_NAME_RESPONSE_CODE                        "ResponseCode"
-#define KEY_NAME_RESPONSE_STR                         "ResponseStr"
+#define KEY_NAME_RESPONSE_DATA                        "ResponseData"
 #define KEY_NAME_DATA                                 "Data"
 #define KEY_NAME_URL                                  "URL"
 #define KEY_NAME_TAG                                  "Tag"

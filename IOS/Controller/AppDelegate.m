@@ -1204,7 +1204,7 @@ void startSensorCallback(SensorType type, void* context)
 		if (responseCode && [responseCode intValue] == 200)
 		{
 			// Extract the session cookie from the response and store it.
-			NSString* responseStr = [loginData objectForKey:@KEY_NAME_RESPONSE_STR];
+			NSString* responseStr = [loginData objectForKey:@KEY_NAME_RESPONSE_DATA];
 			if (responseStr && [responseStr length] > 0)
 			{
 				NSError* error = nil;
@@ -1272,7 +1272,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		NSDictionary* responseObj = [notification object];
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)
@@ -1380,7 +1380,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		NSDictionary* responseObj = [notification object];
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)
@@ -1463,7 +1463,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		NSDictionary* responseObj = [notification object];
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)
@@ -1532,7 +1532,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		NSDictionary* responseObj = [notification object];
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)
@@ -1566,7 +1566,7 @@ void startSensorCallback(SensorType type, void* context)
 	{
 		NSDictionary* responseObj = [notification object];
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)
@@ -2407,7 +2407,7 @@ void syncStatusCallback(const char* const destination, void* context)
 	{
 		NSDictionary* responseObj = [notification object];
 		NSString* responseCode = [responseObj objectForKey:@KEY_NAME_RESPONSE_CODE];
-		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_STR];
+		NSString* responseStr = [responseObj objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 		// Valid response was received?
 		if (responseCode && [responseCode intValue] == 200)

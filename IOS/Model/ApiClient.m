@@ -48,7 +48,7 @@
 				dataStr = tempStr;
 		}
 
-		[downloadedData setObject:dataStr forKey:@KEY_NAME_RESPONSE_STR];
+		[downloadedData setObject:dataStr forKey:@KEY_NAME_RESPONSE_DATA];
 		[downloadedData setObject:[[NSMutableData alloc] init] forKey:@KEY_NAME_DATA];
 
 		if ([urlStr rangeOfString:@REMOTE_API_IS_LOGGED_IN_URL].location != NSNotFound)

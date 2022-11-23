@@ -77,7 +77,7 @@ class LiveActivityVM : ObservableObject {
 	private var activityType: String = ""
 	private var audioPlayer: AVAudioPlayer?
 	
-	init (activityType: String) {
+	init(activityType: String) {
 		self.create(activityType: activityType)
 		self.activityType = activityType
 	}
@@ -114,7 +114,7 @@ class LiveActivityVM : ObservableObject {
 			self.activityId = NSUUID().uuidString
 		}
 		
-		// What attributes does the user wish to display when doing this activity?
+		// Which attributes does the user wish to display when doing this activity?
 		let activityPrefs = ActivityPreferences()
 		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: activityTypeToUse)
 		
@@ -195,8 +195,7 @@ class LiveActivityVM : ObservableObject {
 #endif
 			
 			// Update the displayed attributes.
-			var index = 1
-			for activityAttribute in self.activityAttributePrefs {
+			for (index, activityAttribute) in self.activityAttributePrefs.enumerated() {
 				var attr = QueryLiveActivityAttribute(activityAttribute)
 				ConvertToPreferredUnits(&attr)
 				
@@ -224,47 +223,47 @@ class LiveActivityVM : ObservableObject {
 				let measureStr = LiveActivityVM.formatActivityMeasureType(measureType: attr.measureType)
 				
 				switch index {
-				case 1:
+				case 0:
 					self.title1 = activityAttribute
 					self.value1 = valueStr
 					self.units1 = measureStr
 					break
-				case 2:
+				case 1:
 					self.title2 = activityAttribute
 					self.value2 = valueStr
 					self.units2 = measureStr
 					break
-				case 3:
+				case 2:
 					self.title3 = activityAttribute
 					self.value3 = valueStr
 					self.units3 = measureStr
 					break
-				case 4:
+				case 3:
 					self.title4 = activityAttribute
 					self.value4 = valueStr
 					self.units4 = measureStr
 					break
-				case 5:
+				case 4:
 					self.title5 = activityAttribute
 					self.value5 = valueStr
 					self.units5 = measureStr
 					break
-				case 6:
+				case 5:
 					self.title6 = activityAttribute
 					self.value6 = valueStr
 					self.units6 = measureStr
 					break
-				case 7:
+				case 6:
 					self.title7 = activityAttribute
 					self.value7 = valueStr
 					self.units7 = measureStr
 					break
-				case 8:
+				case 7:
 					self.title8 = activityAttribute
 					self.value8 = valueStr
 					self.units8 = measureStr
 					break
-				case 9:
+				case 8:
 					self.title9 = activityAttribute
 					self.value9 = valueStr
 					self.units9 = measureStr
@@ -272,7 +271,6 @@ class LiveActivityVM : ObservableObject {
 				default:
 					break
 				}
-				index += 1
 			}
 		}
 	}

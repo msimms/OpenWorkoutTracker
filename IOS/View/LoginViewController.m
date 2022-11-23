@@ -69,7 +69,7 @@
 {
 	NSDictionary* loginData = [notification object];
 	NSNumber* responseCode = [loginData objectForKey:@KEY_NAME_RESPONSE_CODE];
-	NSString* responseDataStr = [loginData objectForKey:@KEY_NAME_RESPONSE_STR];
+	NSString* responseDataStr = [loginData objectForKey:@KEY_NAME_RESPONSE_DATA];
 
 	if (responseCode && [responseCode intValue] == 200)
 	{

@@ -30,7 +30,7 @@ struct EditShoesView: View {
 
 			Button("Save") {
 				let item = GearSummary(id: self.id, name: self.name, description: self.description)
-				showingSaveError = !GearVM.saveShoes(item: item)
+				showingSaveError = !GearVM.createShoes(item: item)
 			}
 		}
 		.padding(10)

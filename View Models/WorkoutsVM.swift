@@ -60,7 +60,7 @@ class WorkoutsVM : ObservableObject {
 	
 	/// Constructor
 	init() {
-		buildWorkoutsList()
+		let _ = buildWorkoutsList()
 	}
 	
 	func buildWorkoutsList() -> Bool {

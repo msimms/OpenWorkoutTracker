@@ -31,36 +31,69 @@ class ApiClient {
 			}
 			
 			let session = URLSession.shared
-			let dataTask = session.dataTask(with: request) { data, response, error in
-				if let httpResponse = response as? HTTPURLResponse {
+			let dataTask = session.dataTask(with: request) { responseData, responseCode, error in
+				if let httpResponse = responseCode as? HTTPURLResponse {
+
+					var downloadedData: Dictionary<String, Any> = [:]
+					downloadedData[KEY_NAME_URL] = url
+					downloadedData[KEY_NAME_RESPONSE_CODE] = httpResponse
+					downloadedData[KEY_NAME_RESPONSE_DATA] = responseData
 
 					if url.contains(REMOTE_API_IS_LOGGED_IN_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LOGIN_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_PROCESSED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_CREATE_LOGIN_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LOGOUT_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGGED_OUT), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LIST_FRIENDS_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LIST_GEAR_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LIST_PLANNED_WORKOUTS_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LIST_INTERVAL_WORKOUTS_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LIST_PACE_PLANS_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_REQUEST_ACTIVITY_METADATA_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_REQUEST_WORKOUT_DETAILS_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 					else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
+						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: downloadedData)
+						NotificationCenter.default.post(notification)
 					}
 				}
 				else {
@@ -259,7 +292,7 @@ class ApiClient {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_HEIGHT] = String(format:"%f", Preferences.heightCm())
 		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
@@ -277,8 +310,32 @@ class ApiClient {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_FTP] = String(format:"%f", Preferences.ftp())
 		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
-
+		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+	
+	/// @brief Request the latest of everything from the server.  Also, send the server anything it is missing as well.
+	func syncWithServer() -> Bool {
+		var result = true
+
+		// Rate limit the server synchronizations. Let's not be spammy.
+		let now = time(nil)
+		let lastServerSync = Preferences.lastServerSyncTime()
+		if (now - lastServerSync > 60) {
+			result = self.listGear()
+			result = result && self.listPlannedWorkouts()
+			result = result && self.listIntervalSessions()
+			result = result && self.listPacePlans()
+
+			/*
+			[self sendUserDetailsToServer];
+			[self sendMissingActivitiesToServer];
+			[self sendPacePlans:MSG_DESTINATION_WEB replyHandler:nil]; */
+			
+			result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
+			Preferences.setLastServerSyncTime(value: now)
+		}
+		return result
 	}
 }
