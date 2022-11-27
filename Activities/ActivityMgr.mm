@@ -911,7 +911,7 @@ extern "C" {
 		return result;
 	}
 
-	bool AddBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
+	bool CreateBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -925,16 +925,16 @@ extern "C" {
 		{
 			uint64_t existingId = GetBikeIdFromName(name);
 
-			if (existingId == (uint64_t)-1)
+			if (existingId == GEAR_NOT_FOUND)
 			{
 				Bike bike;
 				bike.name = name;
 				bike.description = description;
 				bike.weightKg = weightKg;
 				bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
-				bike.timeAdded = time(NULL);
+				bike.timeAdded = timeAdded;
 				bike.timeRetired = timeRetired;
-				bike.lastUpdatedTime = time(NULL);
+				bike.lastUpdatedTime = lastUpdatedTime;
 
 				g_dbLock.lock();
 				result = g_pDatabase->CreateBike(bike);
@@ -950,7 +950,7 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired)
+	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -968,7 +968,9 @@ extern "C" {
 			bike.description = description;
 			bike.weightKg = weightKg;
 			bike.computedWheelCircumferenceMm = wheelCircumferenceMm;
+			bike.timeAdded = timeAdded;
 			bike.timeRetired = timeRetired;
+			bike.lastUpdatedTime = lastUpdatedTime;
 
 			g_dbLock.lock();
 			result = g_pDatabase->UpdateBike(bike);
@@ -1016,8 +1018,9 @@ extern "C" {
 			double wheelCircumferenceMm = (double)0.0;
 			time_t timeAdded = (time_t)0;
 			time_t timeRetired = (time_t)0;
+			time_t lastUpdatedTime = (time_t)0;
 
-			if (GetBikeProfileById(bikeId, &bikeName, &description, &weightKg, &wheelCircumferenceMm, &timeAdded, &timeRetired))
+			if (GetBikeProfileById(bikeId, &bikeName, &description, &weightKg, &wheelCircumferenceMm, &timeAdded, &timeRetired, &lastUpdatedTime))
 			{
 				double circumferenceTotalMm = (double)0.0;
 				uint64_t numSamples = 0;
@@ -1069,7 +1072,7 @@ extern "C" {
 				if (numSamples > 0)
 				{
 					wheelCircumferenceMm = circumferenceTotalMm / numSamples;
-					result = UpdateBikeProfile(bikeId, bikeName, description, weightKg, wheelCircumferenceMm, timeRetired);
+					result = UpdateBikeProfile(bikeId, bikeName, description, weightKg, wheelCircumferenceMm, timeAdded, timeRetired, lastUpdatedTime);
 				}
 			}
 
@@ -1084,7 +1087,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired)
+	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
 	{
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
 		{
@@ -1104,13 +1107,15 @@ extern "C" {
 					(*timeAdded) = bike.timeAdded;
 				if (timeRetired)
 					(*timeRetired) = bike.timeRetired;
+				if (lastUpdatedTime)
+					(*lastUpdatedTime) = bike.lastUpdatedTime;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired)
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
 	{
 		if (bikeIndex < g_bikes.size())
 		{
@@ -1130,6 +1135,8 @@ extern "C" {
 				(*timeAdded) = bike.timeAdded;
 			if (timeRetired)
 				(*timeRetired) = bike.timeRetired;
+			if (lastUpdatedTime)
+				(*lastUpdatedTime) = bike.lastUpdatedTime;
 			return true;
 		}
 		return false;
@@ -1140,7 +1147,7 @@ extern "C" {
 		// Sanity checks.
 		if (name == NULL)
 		{
-			return (uint64_t)-1;
+			return GEAR_NOT_FOUND;
 		}
 
 		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
@@ -1152,7 +1159,7 @@ extern "C" {
 				return bike.id;
 			}
 		}
-		return (uint64_t)-1;
+		return GEAR_NOT_FOUND;
 	}
 
 	//
@@ -1176,7 +1183,7 @@ extern "C" {
 		return result;
 	}
 
-	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
+	bool CreateShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -1194,7 +1201,7 @@ extern "C" {
 		{
 			uint64_t existingId = GetShoeIdFromName(name);
 
-			if (existingId == (uint64_t)-1)
+			if (existingId == GEAR_NOT_FOUND)
 			{
 				Shoes shoes;
 
@@ -1202,6 +1209,7 @@ extern "C" {
 				shoes.description = description;
 				shoes.timeAdded = timeAdded;
 				shoes.timeRetired = timeRetired;
+				shoes.lastUpdatedTime = lastUpdatedTime;
 
 				g_dbLock.lock();
 				result = g_pDatabase->CreateShoe(shoes);
@@ -1217,7 +1225,7 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired)
+	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
 		if (name == NULL)
@@ -1240,6 +1248,7 @@ extern "C" {
 			shoes.description = description;
 			shoes.timeAdded = timeAdded;
 			shoes.timeRetired = timeRetired;
+			shoes.lastUpdatedTime = lastUpdatedTime;
 
 			g_dbLock.lock();
 			result = g_pDatabase->UpdateShoe(shoes);
@@ -1273,7 +1282,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired)
+	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
 	{
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
 		{
@@ -1289,13 +1298,15 @@ extern "C" {
 					(*timeAdded) = shoes.timeAdded;
 				if (timeRetired)
 					(*timeRetired) = shoes.timeRetired;
+				if (lastUpdatedTime)
+					(*lastUpdatedTime) = shoes.lastUpdatedTime;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired)
+	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
 	{
 		if (shoeIndex < g_shoes.size())
 		{
@@ -1311,6 +1322,8 @@ extern "C" {
 				(*timeAdded) = shoes.timeAdded;
 			if (timeRetired)
 				(*timeRetired) = shoes.timeRetired;
+			if (lastUpdatedTime)
+				(*lastUpdatedTime) = shoes.lastUpdatedTime;
 			return true;
 		}
 		return false;
@@ -1321,7 +1334,7 @@ extern "C" {
 		// Sanity checks.
 		if (name == NULL)
 		{
-			return (uint64_t)-1;
+			return GEAR_NOT_FOUND;
 		}
 
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
@@ -1333,7 +1346,7 @@ extern "C" {
 				return shoe.id;
 			}
 		}
-		return (uint64_t)-1;
+		return GEAR_NOT_FOUND;
 	}
 
 	//

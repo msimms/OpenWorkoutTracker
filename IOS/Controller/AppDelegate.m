@@ -1302,7 +1302,7 @@ void startSensorCallback(SensorType type, void* context)
 						// If not, add it.
 						if (gearId == (uint64_t)-1)
 						{
-							[self addShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];
+							[self createShoeProfile:gearName withDescription:gearDescription withTimeAdded:[addTime intValue] withTimeRetired:[retireTime intValue]];
 						}
 						else
 						{
@@ -1317,7 +1317,7 @@ void startSensorCallback(SensorType type, void* context)
 						// If not, add it.
 						if (gearId == (uint64_t)-1)
 						{
-							[self addBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0 withTimeRetired:[retireTime intValue]];
+							[self createBikeProfile:gearName withWeight:(double)0.0 withWheelCircumference:(double)0.0 withTimeRetired:[retireTime intValue]];
 						}
 						else
 						{
@@ -2280,19 +2280,20 @@ void startSensorCallback(SensorType type, void* context)
 	return InitializeBikeProfileList();
 }
 
-- (BOOL)addBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
+- (BOOL)createBikeProfile:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double) wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
 {
-	return AddBikeProfile([name UTF8String], NULL, weightKg, wheelCircumferenceMm, timeRetired);
+	time_t now = time(NULL);
+	return CreateBikeProfile([name UTF8String], NULL, weightKg, wheelCircumferenceMm, now, timeRetired, now);
 }
 
 - (BOOL)updateBikeProfile:(uint64_t)bikeId withName:(NSString*)name withWeight:(double)weightKg withWheelCircumference:(double)wheelCircumferenceMm withTimeRetired:(time_t)timeRetired
 {
-	return UpdateBikeProfile(bikeId, [name UTF8String], NULL, weightKg, wheelCircumferenceMm, timeRetired);
+	return UpdateBikeProfile(bikeId, [name UTF8String], NULL, weightKg, wheelCircumferenceMm, 0, timeRetired, 0);
 }
 
 - (BOOL)getBikeProfileById:(uint64_t)bikeId withName:(char** const)name withWeightKg:(double*)weightKg withWheelCircumferenceMm:(double*)wheelCircumferenceMm withTimeRetired:(time_t*)timeRetired
 {
-	return GetBikeProfileById(bikeId, name, NULL, weightKg, wheelCircumferenceMm, NULL, timeRetired);
+	return GetBikeProfileById(bikeId, name, NULL, weightKg, wheelCircumferenceMm, NULL, timeRetired, NULL);
 }
 
 - (uint64_t)getBikeIdFromName:(NSString*)bikeName
@@ -2312,14 +2313,14 @@ void startSensorCallback(SensorType type, void* context)
 	return InitializeShoeProfileList();
 }
 
-- (BOOL)addShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
+- (BOOL)createShoeProfile:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
-	return AddShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired);
+	return CreateShoeProfile([name UTF8String], [description UTF8String], timeAdded, timeRetired, time(NULL));
 }
 
 - (BOOL)updateShoeProfile:(uint64_t)bikeId withName:(NSString*)name withDescription:(NSString*)description withTimeAdded:(time_t)timeAdded withTimeRetired:(time_t)timeRetired
 {
-	return UpdateShoeProfile(bikeId, [name UTF8String], [description UTF8String], timeAdded, timeRetired);
+	return UpdateShoeProfile(bikeId, [name UTF8String], [description UTF8String], timeAdded, timeRetired, time(NULL));
 }
 
 - (uint64_t)getShoeIdFromName:(NSString*)shoeName
@@ -2777,8 +2778,9 @@ void tagCallback(const char* name, void* context)
 			double wheelCircumference = (double)0.0;
 			time_t timeAdded = (time_t)0;
 			time_t timeRetired = (time_t)0;
+			time_t lastUpdatedTime = (time_t)0;
 
-			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &bikeDescription, &weightKg, &wheelCircumference, &timeAdded, &timeRetired))
+			while (GetBikeProfileByIndex(bikeIndex++, &bikeId, &bikeName, &bikeDescription, &weightKg, &wheelCircumference, &timeAdded, &timeRetired, &lastUpdatedTime))
 			{
 				[names addObject:[[NSString alloc] initWithUTF8String:bikeName]];
 				free((void*)bikeName);

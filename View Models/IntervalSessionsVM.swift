@@ -445,7 +445,10 @@ class IntervalSessionsVM : ObservableObject {
 		
 		return result
 	}
-	
+
+	func updateIntervalSessionFromDict(dict: Dictionary<String, Any>) {
+	}
+
 	func createIntervalSession(session: IntervalSession) -> Bool {
 		if CreateNewIntervalSession(session.id.uuidString, session.name, session.sport, session.description) {
 			var position: UInt8 = 0

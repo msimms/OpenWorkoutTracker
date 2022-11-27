@@ -122,6 +122,9 @@ class PacePlansVM : ObservableObject {
 		return result
 	}
 	
+	func updatePacePlanFromDict(dict: Dictionary<String, AnyObject>) {
+	}
+
 	func createPacePlan(plan: PacePlan) -> Bool {
 		if CreateNewPacePlan(plan.name, plan.id.uuidString) {
 			let lastUpdatedTime = time(nil)

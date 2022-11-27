@@ -12,10 +12,10 @@ let POWER_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_POWER)
 let CADENCE_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE)
 let RADAR_SERVICE_ID = CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR)
 
-struct SensorSummary : Identifiable {
+class SensorSummary : Identifiable {
 	var id: UUID = UUID()
 	var name: String = ""
-	@State var enabled: Bool = false
+	var enabled: Bool = false
 }
 
 class SensorMgr : ObservableObject {

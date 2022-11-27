@@ -29,11 +29,13 @@
 #define PARAM_UPLOADED_FILE_DATA                 "uploaded_file_data"
 
 // Gear
+#define PARAM_GEAR_ID                            "gear_id"
 #define PARAM_GEAR_TYPE                          "type"
 #define PARAM_GEAR_NAME                          "name"
 #define PARAM_GEAR_DESCRIPTION                   "description"
-#define PARAM_ADD_TIME                           "add_time"
-#define PARAM_RETIRE_TIME                        "retire_time"
+#define PARAM_GEAR_ADD_TIME                      "add_time"
+#define PARAM_GEAR_RETIRE_TIME                   "retire_time"
+#define PARAM_GEAR_LAST_UPDATED_TIME             "last_updated_time"
 
 // Suggested Workouts
 #define PARAM_WORKOUT_ID                         "workout_id"
@@ -48,12 +50,14 @@
 #define PARAM_WORKOUT_WARMUP                     "warmup"
 #define PARAM_WORKOUT_COOLDOWN                   "cooldown"
 #define PARAM_WORKOUT_INTERVALS                  "intervals"
+#define PARAM_WORKOUT_LAST_UPDATED_TIME          "last updated time"
 
 // Interval Session
 #define PARAM_INTERVAL_ID                        "id"
 #define PARAM_INTERVAL_NAME                      "name"
 #define PARAM_INTERVAL_SPORT                     "sport"
 #define PARAM_INTERVAL_DESCRIPTION               "description"
+#define PARAM_INTERVAL_LAST_UPDATED_TIME         "last updated time"
 #define PARAM_INTERVAL_SEGMENTS                  "intervals"
 #define PARAM_INTERVAL_SEGMENT_REPEAT            "repeat"
 #define PARAM_INTERVAL_SEGMENT_DURATION          "duration"
@@ -75,7 +79,7 @@
 #define PARAM_PACE_PLAN_TARGET_SPLITS            "target splits"
 #define PARAM_PACE_PLAN_TARGET_SPLITS_UNITS      "target splits units"
 #define PARAM_PACE_PLAN_ROUTE                    "route"
-#define PARAM_PACE_PLAN_LAST_UPDATED_TIME        "last updated"
+#define PARAM_PACE_PLAN_LAST_UPDATED_TIME        "last updated time"
 
 // Activities
 #define PARAM_ACTIVITY_NAME                      "name"

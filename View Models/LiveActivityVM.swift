@@ -205,17 +205,17 @@ class LiveActivityVM : ObservableObject {
 					if activityAttribute == ACTIVITY_ATTRIBUTE_HEART_RATE {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_BPM, UNIT_SYSTEM_METRIC)
 						attr.value.intVal = UInt64(self.sensorMgr.currentHeartRateBpm)
-						attr.valid = true
+						attr.valid = self.sensorMgr.heartRateConnected
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_POWER {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_POWER, UNIT_SYSTEM_METRIC)
 						attr.value.intVal = UInt64(self.sensorMgr.currentPowerWatts)
-						attr.valid = true
+						attr.valid = self.sensorMgr.powerConnected
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_CADENCE {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_RPM, UNIT_SYSTEM_METRIC)
 						attr.value.intVal = UInt64(self.sensorMgr.currentCadenceRpm)
-						attr.valid = true
+						attr.valid = self.sensorMgr.cadenceConnected
 					}
 				}
 				

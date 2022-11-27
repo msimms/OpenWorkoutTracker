@@ -335,10 +335,23 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE) == 0)
 	{
+#if !TARGET_OS_WATCH
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastHeartRateUpdateTime;
+#endif
+
 		result.value.intVal = HeartRateZone();
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_NOT_SET;
-		result.valid = m_numHeartRateReadings > 0;
+
+		// On the Aople Watch, heart rate updates are sent whenever the watch feels like sending them
+		// so we can't pick a timeout for deciding if the data is missing.
+#if TARGET_OS_WATCH
+		result.valid = (m_numHeartRateReadings > 0);
+#else
+		result.valid = (m_numHeartRateReadings > 0) && (timeSinceLastUpdate < 3000);
+#endif
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_ELAPSED_TIME) == 0)
 	{

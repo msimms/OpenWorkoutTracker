@@ -77,7 +77,7 @@
 		char* shoeName = nil;
 		char* shoeDesc = nil;
 
-		if (GetShoeProfileById(self->shoeId, &shoeName, &shoeDesc, NULL, NULL))
+		if (GetShoeProfileById(self->shoeId, &shoeName, &shoeDesc, NULL, NULL, NULL))
 		{
 			self->nameTextField.text = [[NSString alloc] initWithUTF8String:shoeName];
 			self->descTextField.text = [[NSString alloc] initWithUTF8String:shoeDesc];
@@ -110,15 +110,16 @@
     const char* shoeName = [[self->nameTextField text] UTF8String];
     const char* shoeDesc = [[self->descTextField text] UTF8String];
 
+	time_t now = time(NULL);
     bool saved = false;
     
     switch (self->mode)
     {
 	case SHOE_PROFILE_NEW:
-		saved = AddShoeProfile(shoeName, shoeDesc, 0, 0);
+		saved = CreateShoeProfile(shoeName, shoeDesc, now, 0, now);
 		break;
 	case SHOE_PROFILE_UPDATE:
-		saved = UpdateShoeProfile(self->shoeId, shoeName, shoeDesc, 0, 0);
+		saved = UpdateShoeProfile(self->shoeId, shoeName, shoeDesc, now, 0, now);
 		break;
 	default:
 		break;

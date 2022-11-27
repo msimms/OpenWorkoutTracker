@@ -7,8 +7,7 @@ import SwiftUI
 
 struct SensorsView: View {
 	@State private var shouldScan: Bool = Preferences.shouldScanForSensors()
-	@State private var enabledSensors: Array<Bool> = []
-	@ObservedObject var sensorMgr = SensorMgr.shared
+	@StateObject private var sensorMgr = SensorMgr.shared
 
 	var body: some View {
 		ScrollView() {
@@ -21,10 +20,15 @@ struct SensorsView: View {
 					Text("Sensors")
 						.bold()
 					ForEach(self.sensorMgr.sensors) { sensor in
-						Toggle(sensor.name, isOn: sensor.$enabled)
-							.onChange(of: sensor.enabled) { value in
-//								Preferences.addPeripheralToUse(uuid: sensor.id)
+						HStack() {
+							Text(sensor.name)
+							Spacer()
+							Button(sensor.enabled ? "Disconnect" : "Connect") {
+								sensor.enabled = !sensor.enabled
+//								Preferences.shouldUsePeripheral(uuid: sensor.id)
 							}
+							.padding(5)
+						}
 					}
 				}
 			}

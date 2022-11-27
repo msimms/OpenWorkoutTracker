@@ -5,6 +5,16 @@
 
 import Foundation
 
+struct UnsynchedActivitiesCallbackType {
+	var ids: Array<String>
+}
+
+func unsynchedActivitiesCallback(destination: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
+	let activityId = String(cString: UnsafeRawPointer(destination!).assumingMemoryBound(to: CChar.self))
+	let typedPointer = context!.bindMemory(to: UnsynchedActivitiesCallbackType.self, capacity: 1)
+	typedPointer.pointee.ids.append(activityId)
+}
+
 class ApiClient {
 	static let shared = ApiClient()
 	var loggedIn = false
@@ -258,10 +268,9 @@ class ApiClient {
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
 	
-	func hasActivity(activityId: String, hash: String) -> Bool {
+	func hasActivity(activityId: String) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
-		postDict[PARAM_ACTIVITY_HASH] = hash
 		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_HAS_ACTIVITY_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
@@ -288,6 +297,31 @@ class ApiClient {
 		return self.makeRequest(url: urlStr, method: "POST", data: description)
 	}
 	
+	func sendPacePlansToServer() -> Bool {
+		if InitializePacePlanList() {
+			
+			var pacePlanIndex = 0
+			var done = false
+			var result = true
+			
+			while !done {
+				if let rawPacePlanDescPtr = RetrievePacePlanAsJSON(pacePlanIndex) {
+					let pacePlanDescPtr = UnsafeRawPointer(rawPacePlanDescPtr)
+					let pacePlanDesc = String(cString: pacePlanDescPtr.assumingMemoryBound(to: CChar.self))
+					let summaryDict = try! JSONSerialization.jsonObject(with: Data(pacePlanDesc.utf8), options: []) as! [String:String]
+
+					result = result && self.sendPacePlan(description: summaryDict)
+					pacePlanIndex += 1
+				}
+				else {
+					done = true
+				}
+			}
+			return result
+		}
+		return false
+	}
+
 	func sendUpdatedUserHeight(timestamp: Date) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_HEIGHT] = String(format:"%f", Preferences.heightCm())
@@ -296,7 +330,7 @@ class ApiClient {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-	
+
 	func sendUpdatedUserWeight(timestamp: Date) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_WEIGHT] = String(format:"%f", Preferences.weightKg())
@@ -315,26 +349,69 @@ class ApiClient {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
+	func sendUserDetailsToServer() -> Bool {
+		var timestamp: time_t = 0
+		var weightKg: Double = 0.0
+
+		if GetUsersCurrentWeight(&timestamp, &weightKg) {
+			return self.sendUpdatedUserWeight(timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
+		}
+		return false
+	}
+
+	func sendMissingActivitiesToServer() -> Bool {
+		// List activities that haven't been synched to the server.
+		let pointer = UnsafeMutablePointer<UnsynchedActivitiesCallbackType>.allocate(capacity: 1)
+		
+		defer {
+			pointer.deinitialize(count: 1)
+			pointer.deallocate()
+		}
+		
+		pointer.pointee = UnsynchedActivitiesCallbackType(ids: [])
+		GetActivityAttributeNames(attributeNameCallback, pointer)
+
+		if (RetrieveActivityIdsNotSynchedToWeb(unsynchedActivitiesCallback, pointer)) {
+			let activityIds = pointer.pointee.ids
+			var result = true
+
+			// For each activity that isn't listed as being synced to the web, offer it to the web server.
+			for activityId in activityIds {
+
+				// Ask the server if it wants this activity. Response is handled by handleHasActivityResponse.
+				result = result && self.hasActivity(activityId: activityId)
+			}
+			
+			return result
+		}
+		return false
+	}
+
 	/// @brief Request the latest of everything from the server.  Also, send the server anything it is missing as well.
 	func syncWithServer() -> Bool {
 		var result = true
 
-		// Rate limit the server synchronizations. Let's not be spammy.
-		let now = time(nil)
-		let lastServerSync = Preferences.lastServerSyncTime()
-		if (now - lastServerSync > 60) {
-			result = self.listGear()
-			result = result && self.listPlannedWorkouts()
-			result = result && self.listIntervalSessions()
-			result = result && self.listPacePlans()
+		if Preferences.shouldBroadcastToServer() {
 
-			/*
-			[self sendUserDetailsToServer];
-			[self sendMissingActivitiesToServer];
-			[self sendPacePlans:MSG_DESTINATION_WEB replyHandler:nil]; */
-			
-			result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
-			Preferences.setLastServerSyncTime(value: now)
+/*			guard let _ = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, Preferences.broadcastHostName()) else {
+				return false
+			} */
+
+			// Rate limit the server synchronizations. Let's not be spammy.
+			let now = time(nil)
+			let lastServerSync = Preferences.lastServerSyncTime()
+			if (now - lastServerSync > 60) {
+				result = self.listGear()
+				result = result && self.listPlannedWorkouts()
+				result = result && self.listIntervalSessions()
+				result = result && self.listPacePlans()
+				result = result && self.sendUserDetailsToServer()
+				result = result && self.sendMissingActivitiesToServer()
+				result = result && self.sendPacePlansToServer()
+
+				result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
+				Preferences.setLastServerSyncTime(value: now)
+			}
 		}
 		return result
 	}

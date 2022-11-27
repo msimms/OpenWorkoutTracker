@@ -19,28 +19,28 @@ class CommonApp : ObservableObject {
 	private var apiClient = ApiClient.shared
 	
 	@Published var isLoggedIn: Bool = false
-	
+
 	init() {
 		// Initialize the backend, including the database.
 		var baseUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].standardizedFileURL
 		baseUrl = baseUrl.appendingPathComponent("Activities.sqlite")
 		Initialize(baseUrl.absoluteString)
-		
+	
 		// Build the list of activity types the backend can handle.
 		CommonApp.activityTypes = []
 		GetActivityTypes(activityTypeCallback, nil, true, true, true)
-		
+	
 		// Do we have a device ID, because we should?
 		if Preferences.uuid() == nil {
 			Preferences.setUuid(value: UUID().uuidString)
 		}
-		
+	
 		// Set the user's preferred unit system.
 		SetPreferredUnitSystem(Preferences.preferredUnitSystem())
-		
+
 		// Initialize HealthKit.
 		self.healthMgr.requestAuthorization()
-		
+
 		// Sync with the server.
 		NotificationCenter.default.addObserver(self, selector: #selector(self.friendsListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
@@ -52,9 +52,9 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.requestToFollowResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: nil)
-		self.apiClient.syncWithServer()
+		let _ = self.apiClient.syncWithServer()
 	}
-	
+
 	@objc func friendsListUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -63,16 +63,17 @@ class CommonApp : ObservableObject {
 			}
 		}
 	}
-	
+
 	@objc func gearListUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+						let gearVM: GearVM = GearVM()
 						let gearList = try! JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
 						for gear in gearList {
 							if let gearDict = gear as? Dictionary<String, AnyObject> {
-								GearVM.updateGearFromDict(dict: gearDict)
+								gearVM.updateGearFromDict(dict: gearDict)
 							}
 						}
 					}
@@ -86,9 +87,12 @@ class CommonApp : ObservableObject {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-						var workoutsVM: WorkoutsVM = WorkoutsVM()
+						let workoutsVM: WorkoutsVM = WorkoutsVM()
 						let workoutsList = try! JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
 						for workout in workoutsList {
+							if let workoutDict = workout as? Dictionary<String, AnyObject> {
+								workoutsVM.updateWorkoutFromDict(dict: workoutDict)
+							}
 						}
 					}
 				}
@@ -101,9 +105,12 @@ class CommonApp : ObservableObject {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-						var intervalSessionsVM = IntervalSessionsVM.shared
+						let intervalSessionsVM = IntervalSessionsVM.shared
 						let sessionsList = try! JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
 						for session in sessionsList {
+							if let sessionDict = session as? Dictionary<String, AnyObject> {
+								intervalSessionsVM.updateIntervalSessionFromDict(dict: sessionDict)
+							}
 						}
 					}
 				}
@@ -116,9 +123,12 @@ class CommonApp : ObservableObject {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-						var pacePlansVM = PacePlansVM.shared
+						let pacePlansVM = PacePlansVM.shared
 						let planList = try! JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
 						for plan in planList {
+							if let planDict = plan as? Dictionary<String, AnyObject> {
+								pacePlansVM.updatePacePlanFromDict(dict: planDict)
+							}
 						}
 					}
 				}

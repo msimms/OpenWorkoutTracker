@@ -88,6 +88,9 @@ struct ActivityView: View {
 							selectColorToUse(attributeName: self.activityVM.title1)
 						}
 						.foregroundColor(getColorToUse(attributeName: self.activityVM.title1))
+						.allowsTightening(true)
+						.lineLimit(1)
+						.minimumScaleFactor(0.75)
 				}
 
 				// Countdown timer
@@ -120,6 +123,9 @@ struct ActivityView: View {
 										selectColorToUse(attributeName: self.activityVM.title2)
 									}
 									.foregroundColor(getColorToUse(attributeName: self.activityVM.title2))
+									.allowsTightening(true)
+									.lineLimit(1)
+									.minimumScaleFactor(0.75)
 								Text(self.activityVM.units2).font(.system(size: 12))
 							}
 							VStack() {
@@ -138,6 +144,9 @@ struct ActivityView: View {
 										selectColorToUse(attributeName: self.activityVM.title3)
 									}
 									.foregroundColor(getColorToUse(attributeName: self.activityVM.title3))
+									.allowsTightening(true)
+									.lineLimit(1)
+									.minimumScaleFactor(0.75)
 								Text(self.activityVM.units3).font(.system(size: 12))
 							}
 						}
@@ -160,6 +169,9 @@ struct ActivityView: View {
 										selectColorToUse(attributeName: self.activityVM.title4)
 									}
 									.foregroundColor(getColorToUse(attributeName: self.activityVM.title4))
+									.allowsTightening(true)
+									.lineLimit(1)
+									.minimumScaleFactor(0.75)
 								Text(self.activityVM.units4).font(.system(size: 12))
 							}
 							VStack() {
@@ -178,6 +190,9 @@ struct ActivityView: View {
 										selectColorToUse(attributeName: self.activityVM.title5)
 									}
 									.foregroundColor(getColorToUse(attributeName: self.activityVM.title5))
+									.allowsTightening(true)
+									.lineLimit(1)
+									.minimumScaleFactor(0.75)
 								Text(self.activityVM.units5).font(.system(size: 12))
 							}
 						}
@@ -200,6 +215,9 @@ struct ActivityView: View {
 										selectColorToUse(attributeName: self.activityVM.title6)
 									}
 									.foregroundColor(getColorToUse(attributeName: self.activityVM.title6))
+									.allowsTightening(true)
+									.lineLimit(1)
+									.minimumScaleFactor(0.75)
 								Text(self.activityVM.units6).font(.system(size: 12))
 							}
 							VStack() {
@@ -218,6 +236,9 @@ struct ActivityView: View {
 										selectColorToUse(attributeName: self.activityVM.title5)
 									}
 									.foregroundColor(getColorToUse(attributeName: self.activityVM.title7))
+									.allowsTightening(true)
+									.lineLimit(1)
+									.minimumScaleFactor(0.75)
 								Text(self.activityVM.units7).font(.system(size: 12))
 							}
 						}

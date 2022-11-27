@@ -116,6 +116,9 @@ class WorkoutsVM : ObservableObject {
 		return result
 	}
 	
+	func updateWorkoutFromDict(dict: Dictionary<String, Any>) {
+	}
+
 	func generateWorkouts() -> Bool {
 		var result = false
 

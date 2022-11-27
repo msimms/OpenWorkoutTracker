@@ -28,6 +28,7 @@
 
 #define ACTIVITY_INDEX_UNKNOWN (size_t)-1
 #define WORKOUT_INDEX_UNKNOWN (size_t)-1
+#define GEAR_NOT_FOUND (uint64_t)-1
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,21 +80,21 @@ extern "C" {
 
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);
-	bool AddBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeRetired);
+	bool CreateBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
+	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
 	bool DeleteBikeProfile(uint64_t bikeId);
 	bool ComputeWheelCircumference(uint64_t bikeId);
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired);
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired);
+	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
+	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
 	uint64_t GetBikeIdFromName(const char* const name);
 
 	// Functions for managing shoes.
 	bool InitializeShoeProfileList(void);
-	bool AddShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
-	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired);
+	bool CreateShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
+	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
 	bool DeleteShoeProfile(uint64_t shoeId);
-	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired);
-	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired);
+	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
+	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
 	uint64_t GetShoeIdFromName(const char* const name);
 
 	// Functions for managing the currently set interval session.

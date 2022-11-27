@@ -272,7 +272,7 @@
 	switch (self->mode)
     {
 	case BIKE_PROFILE_NEW:
-		saved = [appDelegate addBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize withTimeRetired:0];
+		saved = [appDelegate createBikeProfile:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize withTimeRetired:0];
 		break;
 	case BIKE_PROFILE_UPDATE:
 		saved = [appDelegate updateBikeProfile:bikeId withName:[self.nameTextField text] withWeight:weight withWheelCircumference:wheelSize withTimeRetired:0];
