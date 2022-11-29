@@ -420,6 +420,22 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 	return workout;
 }
 
+/// @brief Utility function for creating the goal workout/race.
+Workout* RunPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters)
+{
+	// Create the workout object.
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_RUNNING);
+	if (workout)
+	{
+		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
+		
+		// Update the tally of easy, medium, and hard workouts so we can keep the weekly plan in check.
+		this->m_intensityDistributionWorkouts[INTENSITY_ZONE_INDEX_HIGH] += 1;
+	}
+	
+	return workout;
+}
+
 /// @brief Returns the maximum distance for a single run during the taper.
 double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 {
@@ -611,6 +627,13 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	{
 		// Keep track of the number of easy miles/kms and the number of hard miles/kms we're expecting the user to run so we can balance the two.
 		this->ClearIntensityDistribution();
+
+		// Is this the goal week? If so, add that event.
+		if (weeksUntilGoal == 0)
+		{
+			Workout* goalWorkout = this->GenerateGoalWorkout(goalDistance);
+			workouts.push_back(goalWorkout);
+		}
 
 		// Add a long run. No need for a long run if the goal is general fitness.
 		if (!inTaper && goal != GOAL_FITNESS)

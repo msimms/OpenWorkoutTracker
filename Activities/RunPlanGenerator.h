@@ -49,6 +49,7 @@ private:
 	Workout* GenerateFreeRun(double easyRunPace);
 	Workout* GenerateHillRepeats(void);
 	Workout* GenerateFartlekRun(void);
+	Workout* GenerateGoalWorkout(double goalDistanceMeters);
 
 	double MaxTaperDistance(Goal raceDistance);
 };

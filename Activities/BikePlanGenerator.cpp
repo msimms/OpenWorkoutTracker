@@ -175,6 +175,19 @@ Workout* BikePlanGenerator::GenerateSweetSpotRide(void)
 	return workout;
 }
 
+/// @brief Utility function for creating the goal workout/race.
+Workout* BikePlanGenerator::GenerateGoalWorkout(double goalDistanceMeters)
+{
+	// Create the workout object.
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_CYCLING);
+	if (workout)
+	{
+		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
+	}
+	
+	return workout;
+}
+
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
 std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {

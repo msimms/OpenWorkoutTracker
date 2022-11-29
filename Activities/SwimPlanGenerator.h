@@ -21,6 +21,7 @@ public:
 private:
 	Workout* GenerateAerobicSwim(void);
 	Workout* GenerateTechniqueSwim(void);
+	Workout* GenerateGoalWorkout(double goalDistanceMeters);
 };
 
 #endif
