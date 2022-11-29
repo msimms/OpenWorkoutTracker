@@ -24,6 +24,12 @@ class ApiClient {
 	}
 	
 	func makeRequest(url: String, method: String, data: Dictionary<String,String>) -> Bool {
+		
+		// If we're not supposed to be using the broadcast functionality then turn around right here.
+		if !Preferences.shouldBroadcastToServer() {
+			return true
+		}
+
 		do {
 			var request = URLRequest(url: URL(string: url)!)
 			request.timeoutInterval = 30.0
@@ -31,13 +37,28 @@ class ApiClient {
 			request.httpMethod = method
 			
 			if data.count > 0 {
-				let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-				let text = String(data: jsonData, encoding: String.Encoding.ascii)!
-				let postLength = String(format: "%lu", data.count)
 				
-				request.setValue(postLength, forHTTPHeaderField:"Content-Length")
-				request.setValue("application/json", forHTTPHeaderField:"Content-Type")
-				request.httpBody = text.data(using:.utf8)
+				// POST method, put the dictionary in the HTTP body
+				if method == "POST" {
+					let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+					let text = String(data: jsonData, encoding: String.Encoding.ascii)!
+					let postLength = String(format: "%lu", data.count)
+					
+					request.setValue(postLength, forHTTPHeaderField:"Content-Length")
+					request.setValue("application/json", forHTTPHeaderField:"Content-Type")
+					request.httpBody = text.data(using:.utf8)
+				}
+				
+				// GET method, append the parameters to the URL.
+				else if method == "GET" {
+					var newUrl = url + "?"
+					for datum in data {
+						newUrl = newUrl + datum.key
+						newUrl = newUrl + "="
+						newUrl = newUrl + datum.value
+					}
+					request.url = URL(string: newUrl)
+				}
 			}
 			
 			let session = URLSession.shared
@@ -49,6 +70,8 @@ class ApiClient {
 					downloadedData[KEY_NAME_RESPONSE_CODE] = httpResponse
 					downloadedData[KEY_NAME_RESPONSE_DATA] = responseData
 
+					// Handle anything related to authorization. Trigger the notification no matter what so that
+					// we can display error messages, etc.
 					if url.contains(REMOTE_API_IS_LOGGED_IN_URL) {
 						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: downloadedData)
 						NotificationCenter.default.post(notification)
@@ -65,45 +88,50 @@ class ApiClient {
 						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGGED_OUT), object: downloadedData)
 						NotificationCenter.default.post(notification)
 					}
-					else if url.contains(REMOTE_API_LIST_FRIENDS_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_LIST_GEAR_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_LIST_PLANNED_WORKOUTS_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_LIST_INTERVAL_WORKOUTS_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_LIST_PACE_PLANS_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_REQUEST_ACTIVITY_METADATA_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_REQUEST_WORKOUT_DETAILS_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: downloadedData)
-						NotificationCenter.default.post(notification)
-					}
-					else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: downloadedData)
-						NotificationCenter.default.post(notification)
+
+					// For non-auth checks, only call trigger the notifications if we get an HTTP Ok error code.
+					else if httpResponse.statusCode == 200 {
+
+						if url.contains(REMOTE_API_LIST_FRIENDS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_LIST_GEAR_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_LIST_PLANNED_WORKOUTS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_LIST_INTERVAL_WORKOUTS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_LIST_PACE_PLANS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_REQUEST_ACTIVITY_METADATA_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_REQUEST_WORKOUT_DETAILS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
 					}
 				}
 				else {
@@ -111,6 +139,7 @@ class ApiClient {
 			}
 			
 			dataTask.resume()
+			return true
 		}
 		catch {
 		}
@@ -225,12 +254,15 @@ class ApiClient {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
-	func claimDevice(deviceId: String) -> Bool {
+	func claimDevice() -> Bool {
 		var postDict: Dictionary<String,String> = [:]
-		postDict[PARAM_DEVICE_ID2] = deviceId
-		
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CLAIM_DEVICE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		let deviceId = Preferences.uuid()
+		if deviceId != nil {
+			postDict[PARAM_DEVICE_ID2] = deviceId!
+			let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CLAIM_DEVICE_URL)
+			return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		}
+		return false
 	}
 	
 	func setActivityName(activityId: String, name: String) -> Bool {
@@ -356,7 +388,7 @@ class ApiClient {
 		if GetUsersCurrentWeight(&timestamp, &weightKg) {
 			return self.sendUpdatedUserWeight(timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
 		}
-		return false
+		return true // User may not have any weight data
 	}
 
 	func sendMissingActivitiesToServer() -> Bool {
@@ -391,7 +423,7 @@ class ApiClient {
 	func syncWithServer() -> Bool {
 		var result = true
 
-		if Preferences.shouldBroadcastToServer() {
+		if Preferences.shouldBroadcastToServer() && self.loggedIn {
 
 /*			guard let _ = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, Preferences.broadcastHostName()) else {
 				return false
@@ -400,11 +432,13 @@ class ApiClient {
 			// Rate limit the server synchronizations. Let's not be spammy.
 			let now = time(nil)
 			let lastServerSync = Preferences.lastServerSyncTime()
-			if (now - lastServerSync > 60) {
+			if now - lastServerSync > 60 {
 				result = self.listGear()
+				result = result && self.claimDevice()
 				result = result && self.listPlannedWorkouts()
 				result = result && self.listIntervalSessions()
 				result = result && self.listPacePlans()
+				result = result && self.listFriends()
 				result = result && self.sendUserDetailsToServer()
 				result = result && self.sendMissingActivitiesToServer()
 				result = result && self.sendPacePlansToServer()

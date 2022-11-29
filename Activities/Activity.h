@@ -135,7 +135,7 @@ protected:
 	IntervalSessionState m_intervalWorkoutState;      // current position within the interval session
 	PacePlan             m_pacePlan;                  // pace plan to use (optional)
 	double               m_additionalWeightKg;        // weight of barbells, dumbells, etc.
-	uint64_t             m_lastHeartRateUpdateTime;   // time the heart rate data was last updated
+	uint64_t             m_lastHeartRateUpdateTimeMs; // time the heart rate data was last updated
 	SegmentType          m_currentHeartRateBpm;       // the most recent heart rate monitor sample
 	SegmentType          m_maxHeartRateBpm;           // the hightest single heart rate monitor sample
 	double               m_totalHeartRateReadings;    // the sum of all heart rate monitor samples

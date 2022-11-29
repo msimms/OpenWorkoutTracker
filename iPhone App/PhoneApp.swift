@@ -8,8 +8,8 @@ import SwiftUI
 @main
 struct PhoneApp: App {
 	static let shared = PhoneApp()
-	private var common = CommonApp()
-	
+	private var common = CommonApp.shared
+
 	var body: some Scene {
 		WindowGroup {
 			ContentView()

@@ -44,7 +44,7 @@ class SensorMgr : ObservableObject {
 
 	/// Called when a peripheral is discovered.
 	/// Returns true to indicate that we should connect to this peripheral and discover its services.
-	func peripheralDiscovered(name: String) -> Bool {
+	func peripheralDiscovered(peripheral: CBPeripheral, name: String) -> Bool {
 		var found: Bool = false
 
 		for sensor in self.sensors {
@@ -55,8 +55,10 @@ class SensorMgr : ObservableObject {
 		}
 
 		if !found {
-			var summary = SensorSummary()
+			let summary = SensorSummary()
+			summary.id = peripheral.identifier
 			summary.name = name
+			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
 			self.sensors.append(summary)
 		}
 		return true

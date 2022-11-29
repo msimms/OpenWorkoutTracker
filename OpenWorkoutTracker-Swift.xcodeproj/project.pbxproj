@@ -223,6 +223,8 @@
 		277EAC35292412C30091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
 		277EAC3629242E440091ADF6 /* BrightBeep.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC32292412C30091ADF6 /* BrightBeep.aif */; };
 		277EAC3729242E440091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
+		278C209D2935425C00828479 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209C2935425C00828479 /* FriendsVM.swift */; };
+		278C20A0293586D800828479 /* ActivityHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209F293586D800828479 /* ActivityHash.swift */; };
 		278D92C428E38F17003B077C /* PhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C328E38F17003B077C /* PhoneApp.swift */; };
 		278D92C628E38F17003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C528E38F17003B077C /* ContentView.swift */; };
 		278D92C828E38F18003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92C728E38F18003B077C /* Assets.xcassets */; };
@@ -589,6 +591,8 @@
 		277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntervalSessionSegment.cpp; path = Activities/IntervalSessionSegment.cpp; sourceTree = "<group>"; };
 		277EAC32292412C30091ADF6 /* BrightBeep.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = BrightBeep.aif; path = Sounds/BrightBeep.aif; sourceTree = "<group>"; };
 		277EAC33292412C30091ADF6 /* Ping.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ping.aif; path = Sounds/Ping.aif; sourceTree = "<group>"; };
+		278C209C2935425C00828479 /* FriendsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsVM.swift; sourceTree = "<group>"; };
+		278C209F293586D800828479 /* ActivityHash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ActivityHash.swift; path = IOS/Model/ActivityHash.swift; sourceTree = "<group>"; };
 		278D92C028E38F17003B077C /* OpenWorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenWorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		278D92C328E38F17003B077C /* PhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneApp.swift; sourceTree = "<group>"; };
 		278D92C528E38F17003B077C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -970,6 +974,7 @@
 		2740E07128E4E6D000293B71 /* View Models */ = {
 			isa = PBXGroup;
 			children = (
+				278C209C2935425C00828479 /* FriendsVM.swift */,
 				2740E0AE28E67C0600293B71 /* GearVM.swift */,
 				278D931F28E38FE7003B077C /* HistoryVM.swift */,
 				2740E0AA28E6757300293B71 /* IntervalSessionsVM.swift */,
@@ -999,6 +1004,7 @@
 			isa = PBXGroup;
 			children = (
 				2740E10A28EB5AD600293B71 /* Accelerometer.swift */,
+				278C209F293586D800828479 /* ActivityHash.swift */,
 				2740E09E28E643FD00293B71 /* ActivityPreferences.swift */,
 				2740E12428F2D3F000293B71 /* ApiClient.swift */,
 				2740E0A128E6441C00293B71 /* BroadcastManager.swift */,
@@ -1543,6 +1549,7 @@
 				2740E02E28E4CE1C00293B71 /* File.cpp in Sources */,
 				2740E07B28E5DEC500293B71 /* HeartRateService.swift in Sources */,
 				2740E03728E4CE1C00293B71 /* ZwoFileWriter.cpp in Sources */,
+				278C209D2935425C00828479 /* FriendsVM.swift in Sources */,
 				2740DFD628E460E200293B71 /* FtpCalculator.cpp in Sources */,
 				2740DFD728E460E200293B71 /* UnitMgr.cpp in Sources */,
 				2740E0A528E644EE00293B71 /* SensorMgr.swift in Sources */,
@@ -1550,6 +1557,7 @@
 				2740E03428E4CE1C00293B71 /* GpxFileWriter.cpp in Sources */,
 				2740DFEC28E460E200293B71 /* Walk.cpp in Sources */,
 				2740E0AB28E6757300293B71 /* IntervalSessionsVM.swift in Sources */,
+				278C20A0293586D800828479 /* ActivityHash.swift in Sources */,
 				272E77E42910ABE3009AB275 /* WatchSession.swift in Sources */,
 				2740DFE528E460E200293B71 /* StationaryCycling.cpp in Sources */,
 				2740DFDD28E460E200293B71 /* GForceAnalyzerFactory.cpp in Sources */,

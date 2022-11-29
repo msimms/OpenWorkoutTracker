@@ -8,7 +8,7 @@ import SwiftUI
 struct LoginView: View {
 	@Environment(\.colorScheme) var colorScheme
 	private var apiClient = ApiClient.shared
-	@State private var email: String = ""
+	@State private var email: String = Preferences.broadcastUserName()
 	@State private var password: String = ""
 	@State private var showingLoginError: Bool = false
 
@@ -18,6 +18,7 @@ struct LoginView: View {
 				Text("Email")
 					.bold()
 				TextField("Email", text: $email)
+					.autocapitalization(.none)
 			}
 			Group() {
 				Text("Password")

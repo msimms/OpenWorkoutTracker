@@ -176,9 +176,13 @@ class Preferences {
 		return mydefaults.bool(forKey: PREF_NAME_BROADCAST_TO_SERVER)
 	}
 	
-	static func broadcastUserName() -> String? {
+	static func broadcastUserName() -> String {
 		let mydefaults: UserDefaults = UserDefaults.standard
-		return mydefaults.string(forKey: PREF_NAME_BROADCAST_USER_NAME)
+		let result = mydefaults.string(forKey: PREF_NAME_BROADCAST_USER_NAME)
+		if result != nil {
+			return result!
+		}
+		return ""
 	}
 	
 	static func broadcastRate() -> Int {

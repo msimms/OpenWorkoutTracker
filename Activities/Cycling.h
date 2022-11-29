@@ -102,8 +102,8 @@ protected:
 	uint16_t        m_lastWheelSpeedReading;
 	uint64_t        m_lastWheelSpeedTime;
 
-	uint64_t        m_lastCadenceUpdateTime; // time the cadence data was last updated
-	uint64_t        m_lastPowerUpdateTime;   // time the power data was last updated
+	uint64_t        m_lastCadenceUpdateTimeMs; // time the cadence data was last updated
+	uint64_t        m_lastPowerUpdateTimeMs;   // time the power data was last updated
 };
 
 #endif

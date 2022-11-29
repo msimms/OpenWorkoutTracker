@@ -140,7 +140,7 @@ struct ProfileView: View {
 				Text("Functional Threshold Power")
 					.bold()
 				Spacer()
-				TextField("FTP", text: self.$ftp.value)
+				TextField("Not set", text: self.$ftp.value)
 					.keyboardType(.decimalPad)
 					.multilineTextAlignment(.trailing)
 					.fixedSize()

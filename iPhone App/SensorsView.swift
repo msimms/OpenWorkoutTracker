@@ -25,7 +25,12 @@ struct SensorsView: View {
 							Spacer()
 							Button(sensor.enabled ? "Disconnect" : "Connect") {
 								sensor.enabled = !sensor.enabled
-//								Preferences.shouldUsePeripheral(uuid: sensor.id)
+								if sensor.enabled {
+									Preferences.addPeripheralToUse(uuid: sensor.id.uuidString)
+								}
+								else {
+									Preferences.removePeripheralFromUseList(uuid: sensor.id.uuidString)
+								}
 							}
 							.padding(5)
 						}

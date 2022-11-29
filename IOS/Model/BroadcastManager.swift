@@ -127,8 +127,8 @@ class BroadcastManager {
 		
 		// Add the user name to the JSON string.
 		let userName = Preferences.broadcastUserName()
-		if userName != nil && userName!.count > 0 {
-			post += String(format: ",\n\"%@\":\"%@\"", ACTIVITY_ATTRIBUTE_USER_NAME, userName!)
+		if userName.count > 0 {
+			post += String(format: ",\n\"%@\":\"%@\"", ACTIVITY_ATTRIBUTE_USER_NAME, userName)
 		}
 		post += "}\n"
 		

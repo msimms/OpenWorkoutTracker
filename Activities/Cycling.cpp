@@ -45,8 +45,8 @@ Cycling::Cycling() : MovingActivity()
 	m_lastWheelSpeedReading             = 0;
 	m_lastWheelSpeedTime                = 0;
 
-	m_lastCadenceUpdateTime             = 0;
-	m_lastPowerUpdateTime               = 0;
+	m_lastCadenceUpdateTimeMs           = 0;
+	m_lastPowerUpdateTimeMs             = 0;
 
 	m_bike.id                           = BIKE_ID_NOT_SET;
 	m_bike.computedWheelCircumferenceMm = (double)0.0;
@@ -76,7 +76,7 @@ bool Cycling::ProcessCadenceReading(const SensorReading& reading)
 	{
 		if (reading.reading.count(ACTIVITY_ATTRIBUTE_CADENCE) > 0)
 		{
-			m_lastCadenceUpdateTime = reading.time;
+			m_lastCadenceUpdateTimeMs = reading.time * 1000;
 			m_currentCadence = reading.reading.at(ACTIVITY_ATTRIBUTE_CADENCE);
 			m_totalCadenceReadings += m_currentCadence;
 			m_numCadenceReadings++;
@@ -137,7 +137,7 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 	{
 		if (reading.reading.count(ACTIVITY_ATTRIBUTE_POWER) > 0)
 		{
-			m_lastPowerUpdateTime = reading.time;
+			m_lastPowerUpdateTimeMs = reading.time * 1000;
 			m_currentPower = reading.reading.at(ACTIVITY_ATTRIBUTE_POWER);
 
 			// Update values needed for the average power calculation.
@@ -201,7 +201,7 @@ bool Cycling::ProcessPowerMeterReading(const SensorReading& reading)
 			{
 				double avg30Sec = LibMath::Statistics::averageDouble(m_current30SecBuffer);
 				m_normalizedPowerBuffer.push_back(avg30Sec);
-				m_current30SecBufferStartTime = m_lastPowerUpdateTime;
+				m_current30SecBufferStartTime = m_lastPowerUpdateTimeMs / 1000;
 				m_current30SecBuffer.clear();
 			}
 		}
@@ -224,13 +224,13 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastCadenceUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastCadenceUpdateTimeMs;
 
 		result.value.doubleVal = CurrentCadence();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_RPM;
-		result.startTime = m_lastCadenceUpdateTime;
-		result.endTime = m_lastCadenceUpdateTime;
+		result.startTime = m_lastCadenceUpdateTimeMs / 1000;
+		result.endTime = m_lastCadenceUpdateTimeMs / 1000;
 		result.valid = (m_numCadenceReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_CADENCE) == 0)
@@ -251,13 +251,13 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = CurrentPower();
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_POWER;
-		result.startTime = m_lastPowerUpdateTime;
-		result.endTime = m_lastPowerUpdateTime;
+		result.startTime = m_lastPowerUpdateTimeMs / 1000;
+		result.endTime = m_lastPowerUpdateTimeMs / 1000;
 		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_POWER) == 0)
@@ -285,7 +285,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = ThreeSecPower();
 		result.valueType = TYPE_DOUBLE;
@@ -296,7 +296,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = TwentyMinPower();
 		result.valueType = TYPE_DOUBLE;
@@ -307,7 +307,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = OneHourPower();
 		result.valueType = TYPE_DOUBLE;
@@ -318,7 +318,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = HighestThreeSecPower();
 		result.valueType = TYPE_DOUBLE;
@@ -329,7 +329,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = HighestTwentyMinPower();
 		result.valueType = TYPE_DOUBLE;
@@ -340,7 +340,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		result.value.doubleVal = HighestOneHourPower();
 		result.valueType = TYPE_DOUBLE;
@@ -351,7 +351,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	{
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
 		
 		uint8_t zone = CurrentPowerZone();
 		result.value.intVal = zone;

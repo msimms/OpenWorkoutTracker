@@ -7,7 +7,7 @@ import SwiftUI
 
 @main
 struct WatchApp: App {
-	private var common = CommonApp()
+	private var common = CommonApp.shared
 
 	var body: some Scene {
         WindowGroup {

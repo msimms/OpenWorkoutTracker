@@ -22,7 +22,7 @@ Activity::Activity()
 	SegmentType nullSegment = { 0, 0, 0 };
 
 	m_additionalWeightKg = (double)0.0;
-	m_lastHeartRateUpdateTime = 0;
+	m_lastHeartRateUpdateTimeMs = 0;
 	m_currentHeartRateBpm = nullSegment;
 	m_maxHeartRateBpm = nullSegment;
 	m_totalHeartRateReadings = 0;
@@ -206,7 +206,7 @@ bool Activity::ProcessHrmReading(const SensorReading& reading)
 	{
 		if (reading.reading.count(ACTIVITY_ATTRIBUTE_HEART_RATE) > 0)
 		{
-			m_lastHeartRateUpdateTime = reading.time;
+			m_lastHeartRateUpdateTimeMs = reading.time * 1000;
 			m_currentHeartRateBpm.value.doubleVal = reading.reading.at(ACTIVITY_ATTRIBUTE_HEART_RATE);
 			m_currentHeartRateBpm.startTime = reading.time;
 			m_currentHeartRateBpm.endTime = reading.time + 1;
@@ -291,7 +291,7 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 #if !TARGET_OS_WATCH
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastHeartRateUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastHeartRateUpdateTimeMs;
 #endif
 
 		SegmentType hr = CurrentHeartRate();
@@ -338,7 +338,7 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 #if !TARGET_OS_WATCH
 		uint64_t timeSinceLastUpdate = 0;
 		if (!HasStopped())
-			timeSinceLastUpdate = CurrentTimeInMs() - m_lastHeartRateUpdateTime;
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastHeartRateUpdateTimeMs;
 #endif
 
 		result.value.intVal = HeartRateZone();

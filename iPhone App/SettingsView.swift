@@ -8,6 +8,7 @@ import SwiftUI
 struct SettingsView: View {
 	@Environment(\.colorScheme) var colorScheme
 	private var apiClient = ApiClient.shared
+	private var app = CommonApp.shared
 	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
 	@State private var readActivitiesFromHealthKit: Bool = Preferences.willIntegrateHealthKitActivities()
 	@State private var autoSaveActivitiesToICloudDrive: Bool = Preferences.autoSaveToICloudDrive()
@@ -62,6 +63,7 @@ struct SettingsView: View {
 				Toggle("Enabled", isOn: $broadcastEnabled)
 					.onChange(of: broadcastEnabled) { value in
 						Preferences.setBroadcastToServer(value: broadcastEnabled)
+						let _ = self.apiClient.isLoggedIn()
 					}
 				HStack() {
 					Text("Update Rate")
@@ -105,7 +107,7 @@ struct SettingsView: View {
 		.toolbar {
 			ToolbarItem(placement: .bottomBar) {
 				HStack() {
-					if self.apiClient.isLoggedIn() {
+					if self.apiClient.loggedIn {
 						Button("Logout") {
 							if !self.apiClient.logout() {
 								self.showingLogoutError = true
@@ -113,8 +115,7 @@ struct SettingsView: View {
 						}
 						.foregroundColor(colorScheme == .dark ? .white : .black)
 						.help("Logout")
-						.alert("Failed to logout.", isPresented: $showingLogoutError) {
-						}
+						.alert("Failed to logout.", isPresented: $showingLogoutError) {}
 					}
 					else {
 						NavigationLink(destination: LoginView()) {
