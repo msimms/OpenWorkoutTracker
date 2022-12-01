@@ -125,9 +125,11 @@ class HealthManager {
 		let heightType = HKObjectType.quantityType(forIdentifier: .height)!
 		
 		self.mostRecentQuantitySampleOfType(quantityType: heightType) { sample, error in
-			let heightUnit = HKUnit.meterUnit(with: HKMetricPrefix.centi)
-			let usersHeight = sample!.quantity.doubleValue(for: heightUnit)
-			Preferences.setHeightCm(value: usersHeight)
+			if sample != nil {
+				let heightUnit = HKUnit.meterUnit(with: HKMetricPrefix.centi)
+				let usersHeight = sample!.quantity.doubleValue(for: heightUnit)
+				Preferences.setHeightCm(value: usersHeight)
+			}
 		}
 	}
 
@@ -136,9 +138,11 @@ class HealthManager {
 		let weightType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
 		
 		self.mostRecentQuantitySampleOfType(quantityType: weightType) { sample, error in
-			let weightUnit = HKUnit.gramUnit(with: HKMetricPrefix.kilo)
-			let usersWeight = sample!.quantity.doubleValue(for: weightUnit)
-			Preferences.setWeightKg(value: usersWeight)
+			if sample != nil {
+				let weightUnit = HKUnit.gramUnit(with: HKMetricPrefix.kilo)
+				let usersWeight = sample!.quantity.doubleValue(for: weightUnit)
+				Preferences.setWeightKg(value: usersWeight)
+			}
 		}
 	}
 

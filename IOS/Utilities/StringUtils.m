@@ -278,6 +278,7 @@
 	return sbuf;
 }
 
+/// @brief Parses the string for a time value in the format of HH:MM:SS where MM and SS ranges from 0 to 59.
 + (BOOL)parseHHMMSS:(NSString*)str withHours:(uint16_t*)hours withMinutes:(uint16_t*)minutes withSeconds:(uint16_t*)seconds
 {
 	NSArray* listItems = [str componentsSeparatedByString:@":"];

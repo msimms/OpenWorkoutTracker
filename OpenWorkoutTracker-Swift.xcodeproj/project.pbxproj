@@ -225,6 +225,7 @@
 		277EAC3729242E440091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
 		278C209D2935425C00828479 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209C2935425C00828479 /* FriendsVM.swift */; };
 		278C20A0293586D800828479 /* ActivityHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209F293586D800828479 /* ActivityHash.swift */; };
+		278C20A12937F80500828479 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209C2935425C00828479 /* FriendsVM.swift */; };
 		278D92C428E38F17003B077C /* PhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C328E38F17003B077C /* PhoneApp.swift */; };
 		278D92C628E38F17003B077C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D92C528E38F17003B077C /* ContentView.swift */; };
 		278D92C828E38F18003B077C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 278D92C728E38F18003B077C /* Assets.xcassets */; };
@@ -1646,6 +1647,7 @@
 				2740E0BC28E7028C00293B71 /* ChinUpAnalyzer.cpp in Sources */,
 				2740E0DB28E7029900293B71 /* DataImporter.cpp in Sources */,
 				2740E0B328E7028C00293B71 /* IntensityCalculator.cpp in Sources */,
+				278C20A12937F80500828479 /* FriendsVM.swift in Sources */,
 				2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */,
 				2740E0E228E702AD00293B71 /* GpxFileReader.cpp in Sources */,
 				27E60914292D13DA00401901 /* ActivityComplications.intentdefinition in Sources */,

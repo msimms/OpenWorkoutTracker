@@ -27,9 +27,12 @@ class FriendSummary : Identifiable, Hashable, Equatable {
 	}
 }
 
-class FriiendsVM : ObservableObject {
+class FriendsVM : ObservableObject {
 	@Published var friends: Array<FriendSummary> = []
 	
 	init() {
+	}
+	
+	func updateFriendFromDict(dict: Dictionary<String, AnyObject>) {
 	}
 }

@@ -164,6 +164,7 @@ class PacePlansVM : ObservableObject {
 		return false
 	}
 
+	/// @brief Parses the string for a time value in the format of HH:MM:SS where MM and SS ranges from 0 to 59.
 	func parseHHMMSS(str: String, hours: inout Int, minutes: inout Int, seconds: inout Int) -> Bool {
 		let listItems = str.components(separatedBy: ":")
 		let reversedList = Array(listItems.reversed())

@@ -120,8 +120,12 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					let friendsVM: FriendsVM = FriendsVM()
 					let friendsList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
 					for friend in friendsList {
+						if let friendDict = friend as? Dictionary<String, AnyObject> {
+							friendsVM.updateFriendFromDict(dict: friendDict)
+						}
 					}
 				}
 			}
