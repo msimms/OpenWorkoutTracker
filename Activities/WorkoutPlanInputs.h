@@ -38,6 +38,7 @@
 #define WORKOUT_INPUT_STRUCTURED_TRAINING_COMFORT_LEVEL  "Structured Training Comfort Level" // Athlete's comfort level (i.e. experience) with doing intervals, long runs, etc. (scale 1-10)
 #define WORKOUT_INPUT_GOAL                               "Goal"
 #define WORKOUT_INPUT_GOAL_TYPE                          "Goal Type"                  // Fitness oriented or competition oriented
+#define WORKOUT_INPUT_GOAL_DATE                          "Goal Date"                  // Goal date in Unix time
 #define WORKOUT_INPUT_GOAL_SWIM_DISTANCE                 "Goal Swim Distance"         // In meters
 #define WORKOUT_INPUT_GOAL_BIKE_DISTANCE                 "Goal Bike Distance"         // In meters
 #define WORKOUT_INPUT_GOAL_RUN_DISTANCE                  "Goal Run Distance"          // In meters

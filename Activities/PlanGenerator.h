@@ -22,6 +22,9 @@ public:
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy) = 0;
 
 protected:
+	static bool ValidFloat(double num, double minValue);
+	static double RoundDistance(double distance);
+
 	bool IsInTaper(double weeksUntilGoal, Goal goal);
 };
 

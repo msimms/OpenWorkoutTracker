@@ -100,7 +100,7 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 
 /// @brief Utility function for creating an easy ride.
 /// Aerobic rides are typically around 55-75% FTP.
-Workout* BikePlanGenerator::GenerateEasyAerobicRide(double avgRideDuration)
+Workout* BikePlanGenerator::GenerateEasyAerobicRide(double goalDistance, double longestRideInFourWeeks, double avgRideDuration)
 {
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RIDE, ACTIVITY_TYPE_CYCLING);
@@ -176,13 +176,14 @@ Workout* BikePlanGenerator::GenerateSweetSpotRide(void)
 }
 
 /// @brief Utility function for creating the goal workout/race.
-Workout* BikePlanGenerator::GenerateGoalWorkout(double goalDistanceMeters)
+Workout* BikePlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
 {
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
+		workout->SetScheduledTime(goalDate);
 	}
 	
 	return workout;
@@ -194,9 +195,10 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 	std::vector<Workout*> workouts;
 
 	// Extract the necessary inputs.
-	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_BIKE_DISTANCE);
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 	GoalType goalType = (GoalType)inputs.at(WORKOUT_INPUT_GOAL_TYPE);
+	time_t goalDate = (time_t)inputs.at(WORKOUT_INPUT_GOAL_DATE);
+	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_BIKE_DISTANCE);
 	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
 	double longestRideWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_1); // Most recent week
 	double longestRideWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_2);
@@ -217,53 +219,65 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 	// Are we in a taper?
 	bool inTaper = this->IsInTaper(weeksUntilGoal, goal);
 
-	switch (goal)
+	if (goal == GOAL_FITNESS)
 	{
-	// General fitness
-	case GOAL_FITNESS:
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
+		workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
 		workouts.push_back(GenerateIntervalSession(goalDistance));
-		break;
+	}
+	else
+	{
+		// Is this the goal week? If so, add that event.
+		if ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1))
+		{
+			workouts.push_back(GenerateGoalWorkout(goalDistance, goalDate));
+		}
 
-	// Cross training to support medium distance running
-	case GOAL_5K_RUN:
-	case GOAL_10K_RUN:
-	case GOAL_15K_RUN:
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		break;
+		switch (goal)
+		{
+		// General fitness
+		case GOAL_FITNESS:
+			break;
 
-	// Cross training to support long distance running
-	case GOAL_HALF_MARATHON_RUN:
-	case GOAL_MARATHON_RUN:
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		break;
+		// Cross training to support medium distance running
+		case GOAL_5K_RUN:
+		case GOAL_10K_RUN:
+		case GOAL_15K_RUN:
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			break;
 
-	// Cross training to support ultra distance running
-	case GOAL_50K_RUN:
-	case GOAL_50_MILE_RUN:
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		break;
+		// Cross training to support long distance running
+		case GOAL_HALF_MARATHON_RUN:
+		case GOAL_MARATHON_RUN:
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			break;
 
-	// Short distance triathlons
-	case GOAL_SPRINT_TRIATHLON:
-	case GOAL_OLYMPIC_TRIATHLON:
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		if (inTaper || goalType == GOAL_TYPE_COMPLETION)
-			workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		else
-			workouts.push_back(GenerateIntervalSession(goalDistance));
-		break;
+		// Cross training to support ultra distance running
+		case GOAL_50K_RUN:
+		case GOAL_50_MILE_RUN:
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			break;
 
-	// Long distance triathlons
-	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
-	case GOAL_IRON_DISTANCE_TRIATHLON:
-		workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		if (inTaper || goalType == GOAL_TYPE_COMPLETION)
-			workouts.push_back(GenerateEasyAerobicRide(avgRideDuration));
-		else
-			workouts.push_back(GenerateIntervalSession(goalDistance));
-		break;
+		// Short distance triathlons
+		case GOAL_SPRINT_TRIATHLON:
+		case GOAL_OLYMPIC_TRIATHLON:
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			if (inTaper || goalType == GOAL_TYPE_COMPLETION)
+				workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			else
+				workouts.push_back(GenerateIntervalSession(goalDistance));
+			break;
+
+		// Long distance triathlons
+		case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
+		case GOAL_IRON_DISTANCE_TRIATHLON:
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			if (inTaper || goalType == GOAL_TYPE_COMPLETION)
+				workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			else
+				workouts.push_back(GenerateIntervalSession(goalDistance));
+			break;
+		}
 	}
 
 	return workouts;

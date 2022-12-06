@@ -21,10 +21,10 @@ public:
 private:
 	Workout* GenerateHillRide(void);
 	Workout* GenerateIntervalSession(double goalDistance);
-	Workout* GenerateEasyAerobicRide(double avgRideDuration);
+	Workout* GenerateEasyAerobicRide(double goalDistance, double longestRideInFourWeeks, double avgRideDuration);
 	Workout* GenerateTempoRide(void);
 	Workout* GenerateSweetSpotRide(void);
-	Workout* GenerateGoalWorkout(double goalDistanceMeters);
+	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
 
 	uint8_t RoundDistance(uint8_t number, uint8_t nearest);
 };

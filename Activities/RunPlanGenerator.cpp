@@ -15,7 +15,6 @@
 #include "WorkoutPlanInputs.h"
 
 #include <algorithm>
-#include <math.h>
 #include <numeric>
 #include <random>
 
@@ -44,16 +43,6 @@ RunPlanGenerator::RunPlanGenerator()
 
 RunPlanGenerator::~RunPlanGenerator()
 {
-}
-
-bool RunPlanGenerator::ValidFloat(double num, double minValue)
-{
-	return num > minValue;
-}
-
-double RunPlanGenerator::RoundDistance(double distance)
-{
-	return float(ceil(distance / 100.0)) * 100.0;
 }
 
 /// @brief Given a distance, returns the nearest 'common' interval distance,
@@ -421,13 +410,14 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 }
 
 /// @brief Utility function for creating the goal workout/race.
-Workout* RunPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters)
+Workout* RunPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
 {
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
+		workout->SetScheduledTime(goalDate);
 		
 		// Update the tally of easy, medium, and hard workouts so we can keep the weekly plan in check.
 		this->m_intensityDistributionWorkouts[INTENSITY_ZONE_INDEX_HIGH] += 1;
@@ -475,9 +465,10 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 
 	// 3 Critical runs: Speed session, tempo or threshold run, and long run
 
-	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_RUN_DISTANCE);
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 	GoalType goalType = (GoalType)inputs.at(WORKOUT_INPUT_GOAL_TYPE);
+	time_t goalDate = (time_t)inputs.at(WORKOUT_INPUT_GOAL_DATE);
+	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_RUN_DISTANCE);
 	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
 	double shortIntervalRunPace = inputs.at(WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE);
 	double functionalThresholdPace = inputs.at(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE);
@@ -501,7 +492,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	double longestRunInFourWeeks = std::max(std::max(longestRunWeek1, longestRunWeek2), std::max(longestRunWeek3, longestRunWeek4));
 
 	// Handle situation in which the user hasn't run in four weeks.
-	if (!RunPlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
+	if (!PlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
 	{
 		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		workouts.push_back(this->GenerateFreeRun(easyRunPace));
@@ -518,20 +509,20 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	}
 
 	// No pace data?
-	if (!(RunPlanGenerator::ValidFloat(shortIntervalRunPace, 0.1) &&
-		  RunPlanGenerator::ValidFloat(speedRunPace, 0.1) &&
-		  RunPlanGenerator::ValidFloat(tempoRunPace, 0.1) &&
-		  RunPlanGenerator::ValidFloat(longRunPace, 0.1) &&
-		  RunPlanGenerator::ValidFloat(easyRunPace, 0.1)))
+	if (!(PlanGenerator::ValidFloat(shortIntervalRunPace, 0.1) &&
+		  PlanGenerator::ValidFloat(speedRunPace, 0.1) &&
+		  PlanGenerator::ValidFloat(tempoRunPace, 0.1) &&
+		  PlanGenerator::ValidFloat(longRunPace, 0.1) &&
+		  PlanGenerator::ValidFloat(easyRunPace, 0.1)))
 	{
 		return workouts;
 	}
 
 	// If the long run has been increasing for the last three weeks then give the person a break.
-	if (RunPlanGenerator::ValidFloat(longestRunWeek1, 0.1) &&
-		RunPlanGenerator::ValidFloat(longestRunWeek2, 0.1) &&
-		RunPlanGenerator::ValidFloat(longestRunWeek3, 0.1) &&
-		RunPlanGenerator::ValidFloat(longestRunWeek4, 0.1))
+	if (PlanGenerator::ValidFloat(longestRunWeek1, 0.1) &&
+		PlanGenerator::ValidFloat(longestRunWeek2, 0.1) &&
+		PlanGenerator::ValidFloat(longestRunWeek3, 0.1) &&
+		PlanGenerator::ValidFloat(longestRunWeek4, 0.1))
 	{
 		if (longestRunWeek1 >= longestRunWeek2 && longestRunWeek2 >= longestRunWeek3 && longestRunWeek3 >= longestRunWeek4)
 			longestRunInFourWeeks *= 0.75;
@@ -549,10 +540,10 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	bool easyWeek = false;
 	if (!inTaper)
 	{
-		if (RunPlanGenerator::ValidFloat(totalIntensityWeek1, 0.1) &&
-			RunPlanGenerator::ValidFloat(totalIntensityWeek2, 0.1) &&
-			RunPlanGenerator::ValidFloat(totalIntensityWeek3, 0.1) &&
-			RunPlanGenerator::ValidFloat(totalIntensityWeek4, 0.1))
+		if (PlanGenerator::ValidFloat(totalIntensityWeek1, 0.1) &&
+			PlanGenerator::ValidFloat(totalIntensityWeek2, 0.1) &&
+			PlanGenerator::ValidFloat(totalIntensityWeek3, 0.1) &&
+			PlanGenerator::ValidFloat(totalIntensityWeek4, 0.1))
 		{
 			if (totalIntensityWeek1 >= totalIntensityWeek2 && totalIntensityWeek2 >= totalIntensityWeek3 && totalIntensityWeek3 >= totalIntensityWeek4)
 				easyWeek = true;
@@ -629,9 +620,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		this->ClearIntensityDistribution();
 
 		// Is this the goal week? If so, add that event.
-		if (weeksUntilGoal == 0)
+		if ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1))
 		{
-			Workout* goalWorkout = this->GenerateGoalWorkout(goalDistance);
+			Workout* goalWorkout = this->GenerateGoalWorkout(goalDistance, goalDate);
 			workouts.push_back(goalWorkout);
 		}
 

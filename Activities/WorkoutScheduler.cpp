@@ -9,6 +9,7 @@
 #include "Signals.h"
 #include "Statistics.h"
 
+#include <algorithm>
 #include <random>
 #include <time.h>
 
@@ -160,6 +161,10 @@ void WorkoutScheduler::RandomScheduler(std::vector<Workout*> workouts, Workout* 
 // Organizes the workouts into a schedule for the next week. Implements a very basic constraint solving algorithm.
 void WorkoutScheduler::ScheduleWorkouts(std::vector<Workout*> workouts, time_t startTime, DayType preferredLongRunDay)
 {
+	// Shuffle the deck.
+	auto rng = std::default_random_engine{};
+	std::shuffle(std::begin(workouts), std::end(workouts), rng);
+
 	// This will server as our calendar for next week.
 	Workout* week[DAYS_PER_WEEK] = { NULL };
 

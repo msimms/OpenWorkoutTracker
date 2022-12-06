@@ -19,9 +19,9 @@ public:
 	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 private:
-	Workout* GenerateAerobicSwim(void);
-	Workout* GenerateTechniqueSwim(void);
-	Workout* GenerateGoalWorkout(double goalDistanceMeters);
+	Workout* GenerateAerobicSwim(bool hasSwimmingPoolAccess);
+	Workout* GenerateTechniqueSwim(bool hasSwimmingPoolAccess);
+	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
 };
 
 #endif

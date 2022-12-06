@@ -83,6 +83,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	// Need the user's goals.
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL, goal));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_TYPE, goalType));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_GOAL_DATE, goalDate));
 
 	// Compute the time remaining until the goal.
 	if (goal != GOAL_FITNESS)

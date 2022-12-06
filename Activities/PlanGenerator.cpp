@@ -2,6 +2,17 @@
 // Copyright (c) 2022 Michael J. Simms. All rights reserved.
 
 #include "PlanGenerator.h"
+#include <math.h>
+
+bool PlanGenerator::ValidFloat(double num, double minValue)
+{
+	return num > minValue;
+}
+
+double PlanGenerator::RoundDistance(double distance)
+{
+	return float(ceil(distance / 100.0)) * 100.0;
+}
 
 /// @brief Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less.
 bool PlanGenerator::IsInTaper(double weeksUntilGoal, Goal goal)

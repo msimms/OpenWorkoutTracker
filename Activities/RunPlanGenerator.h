@@ -31,8 +31,6 @@ private:
 	double m_trainingIntensityDistribution[NUM_TRAINING_ZONES];  // Ideal distribution of intensity across training zones
 	uint8_t m_intensityDistributionWorkouts[NUM_TRAINING_ZONES]; // Distribution of the number of workouts in each intensity zone
 
-	static bool ValidFloat(double num, double minValue);
-	static double RoundDistance(double distance);
 	static uint64_t NearestIntervalDistance(double distance, double minDistanceInMeters);
 
 	double MaxLongRunDistance(double goalDistance);
@@ -49,7 +47,7 @@ private:
 	Workout* GenerateFreeRun(double easyRunPace);
 	Workout* GenerateHillRepeats(void);
 	Workout* GenerateFartlekRun(void);
-	Workout* GenerateGoalWorkout(double goalDistanceMeters);
+	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
 
 	double MaxTaperDistance(Goal raceDistance);
 };

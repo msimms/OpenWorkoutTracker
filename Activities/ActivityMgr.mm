@@ -3073,23 +3073,25 @@ extern "C" {
 
 			// Generate new workouts.
 			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
-
-			// Schedule the workouts.
-			WorkoutScheduler scheduler;
-			scheduler.ScheduleWorkouts(plannedWorkouts, scheduler.TimestampOfNextDayOfWeek(DAY_TYPE_MONDAY), preferredLongRunDay);
-
-			// Delete old workouts.
-			result = g_pDatabase->DeleteAllWorkouts();
-
-			// Store the new workouts.
-			for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+			if (plannedWorkouts.size())
 			{
-				Workout* workout = (*iter);
-
-				if (workout)
+				// Schedule the workouts.
+				WorkoutScheduler scheduler;
+				scheduler.ScheduleWorkouts(plannedWorkouts, scheduler.TimestampOfNextDayOfWeek(DAY_TYPE_MONDAY), preferredLongRunDay);
+				
+				// Delete old workouts.
+				result = g_pDatabase->DeleteAllWorkouts();
+				
+				// Store the new workouts.
+				for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
 				{
-					result &= g_pDatabase->CreateWorkout(*workout);
-					delete workout;
+					Workout* workout = (*iter);
+					
+					if (workout)
+					{
+						result &= g_pDatabase->CreateWorkout(*workout);
+						delete workout;
+					}
 				}
 			}
 		}

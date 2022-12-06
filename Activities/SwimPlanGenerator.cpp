@@ -41,29 +41,30 @@ Workout* GeneratePoolSwim()
 }
 
 /// @brief Utility function for creating an aerobic-focused swim.
-Workout* SwimPlanGenerator::GenerateAerobicSwim(void)
+Workout* SwimPlanGenerator::GenerateAerobicSwim(bool hasSwimmingPoolAccess)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_POOL_SWIM, ACTIVITY_TYPE_POOL_SWIMMING);
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_POOL_SWIM, hasSwimmingPoolAccess ? ACTIVITY_TYPE_POOL_SWIMMING : ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
 	return workout;
 }
 
 /// @brief Utility function for creating a technique swim.
-Workout* SwimPlanGenerator::GenerateTechniqueSwim(void)
+Workout* SwimPlanGenerator::GenerateTechniqueSwim(bool hasSwimmingPoolAccess)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TECHNIQUE_SWIM, ACTIVITY_TYPE_POOL_SWIMMING);
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TECHNIQUE_SWIM, hasSwimmingPoolAccess ? ACTIVITY_TYPE_POOL_SWIMMING : ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
 	return workout;
 }
 
 /// @brief Utility function for creating the goal workout/race.
-Workout* SwimPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters)
+Workout* SwimPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
 {
 	// Create the workout object.
 	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
+		workout->SetScheduledTime(goalDate);
 	}
 	
 	return workout;
@@ -75,24 +76,35 @@ std::vector<Workout*> SwimPlanGenerator::GenerateWorkouts(std::map<std::string, 
 	std::vector<Workout*> workouts;
 
 	// Extract the necessary inputs.
-	//double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_SWIM_DISTANCE);
+	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_SWIM_DISTANCE);
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
+	time_t goalDate = (time_t)inputs.at(WORKOUT_INPUT_GOAL_DATE);
+	double weeksUntilGoal = inputs.at(WORKOUT_INPUT_WEEKS_UNTIL_GOAL);
 	bool hasSwimmingPoolAccess = inputs.at(WORKOUT_INPUT_HAS_SWIMMING_POOL_ACCESS);
 	bool hasOpenWaterSwimAccess = inputs.at(WORKOUT_INPUT_HAS_OPEN_WATER_SWIM_ACCESS);
 
 	// If the user has access to a pool then include one technique swim each week.
 	if (!(hasSwimmingPoolAccess || hasOpenWaterSwimAccess))
+	{
 		return workouts;
-	else if (hasSwimmingPoolAccess)
-		workouts.push_back(GenerateTechniqueSwim());
+	}
+
+	// Is this the goal week? If so, add that event.
+	if ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1))
+	{
+		workouts.push_back(GenerateGoalWorkout(goalDistance, goalDate));
+	}
+
+	if (hasSwimmingPoolAccess)
+		workouts.push_back(GenerateTechniqueSwim(hasSwimmingPoolAccess));
 	else if (hasOpenWaterSwimAccess)
-		workouts.push_back(GenerateAerobicSwim());
+		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 
 	// Add the remaining inputs.
 	switch (goal)
 	{
 	case GOAL_FITNESS:
-		workouts.push_back(GenerateAerobicSwim());
+		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 		break;
 	case GOAL_5K_RUN:
 	case GOAL_10K_RUN:
@@ -104,12 +116,12 @@ std::vector<Workout*> SwimPlanGenerator::GenerateWorkouts(std::map<std::string, 
 		break;
 	case GOAL_SPRINT_TRIATHLON:
 	case GOAL_OLYMPIC_TRIATHLON:
-		workouts.push_back(GenerateAerobicSwim());
+		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 		break;
 	case GOAL_HALF_IRON_DISTANCE_TRIATHLON:
 	case GOAL_IRON_DISTANCE_TRIATHLON:
-		workouts.push_back(GenerateAerobicSwim());
-		workouts.push_back(GenerateAerobicSwim());
+		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
+		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 		break;
 	}
 
