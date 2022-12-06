@@ -42,7 +42,76 @@ class PacePlansVM : ObservableObject {
 	private init() {
 		let _ = buildPacePlansList()
 	}
-	
+
+	private func dictToObj(summaryDict: Dictionary<String, AnyObject>) -> PacePlan {
+		let summaryObj = PacePlan()
+		
+		if let pacePlanId = summaryDict[PARAM_PACE_PLAN_ID] as? String {
+			summaryObj.id = UUID(uuidString: pacePlanId)!
+		}
+		if let pacePlanName = summaryDict[PARAM_PACE_PLAN_NAME] as? String {
+			summaryObj.name = pacePlanName
+		}
+		if let pacePlanDescription = summaryDict[PARAM_PACE_PLAN_DESCRIPTION] as? String {
+			summaryObj.description = pacePlanDescription
+		}
+		if let pacePlanDistance = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE] as? Double {
+			summaryObj.distance = pacePlanDistance
+		}
+		if let pacePlanDistanceUnits = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS] as? Int {
+			if pacePlanDistanceUnits == UNIT_SYSTEM_US_CUSTOMARY.rawValue {
+				summaryObj.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+			}
+			else {
+				summaryObj.distanceUnits = UNIT_SYSTEM_METRIC
+			}
+		}
+		else if let pacePlanDistanceUnits = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS] as? String {
+			if pacePlanDistanceUnits == "standard" {
+				summaryObj.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+			}
+			else {
+				summaryObj.distanceUnits = UNIT_SYSTEM_METRIC
+			}
+		}
+		if let pacePlanTime = summaryDict[PARAM_PACE_PLAN_TARGET_TIME] as? Int {
+			summaryObj.time = pacePlanTime
+		}
+		else if let pacePlanTime = summaryDict[PARAM_PACE_PLAN_TARGET_TIME] as? String {
+			var hours: Int = 0, minutes: Int = 0, seconds: Int = 0
+			if self.parseHHMMSS(str: pacePlanTime, hours: &hours, minutes: &minutes, seconds: &seconds) {
+				summaryObj.time = (hours * 60 * 60) + (minutes * 60) + seconds
+			}
+		}
+		if let pacePlanSplits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS] as? Int {
+			summaryObj.splits = pacePlanSplits
+		}
+		if let pacePlanSplitsUnits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS_UNITS] as? Int {
+			if pacePlanSplitsUnits == UNIT_SYSTEM_US_CUSTOMARY.rawValue {
+				summaryObj.splitsUnits = UNIT_SYSTEM_US_CUSTOMARY
+			}
+			else {
+				summaryObj.splitsUnits = UNIT_SYSTEM_METRIC
+			}
+		}
+		else if let pacePlanSplitsUnits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS_UNITS] as? String {
+			if pacePlanSplitsUnits == "standard" {
+				summaryObj.splitsUnits = UNIT_SYSTEM_US_CUSTOMARY
+			}
+			else {
+				summaryObj.splitsUnits = UNIT_SYSTEM_METRIC
+			}
+		}
+		if let pacePlanRoute = summaryDict[PARAM_PACE_PLAN_ROUTE] as? String {
+			summaryObj.route = pacePlanRoute
+		}
+		if let lastModifiedTime = summaryDict[PARAM_PACE_PLAN_LAST_UPDATED_TIME] as? UInt {
+			summaryObj.lastUpdatedTime = Date(timeIntervalSince1970: TimeInterval(lastModifiedTime))
+		}
+
+		return summaryObj
+	}
+
 	func buildPacePlansList() -> Bool {
 		var result = false
 
@@ -57,52 +126,11 @@ class PacePlansVM : ObservableObject {
 
 			while !done {
 				if let rawPacePlanDescPtr = RetrievePacePlanAsJSON(pacePlanIndex) {
-					let summaryObj = PacePlan()
 					let pacePlanDescPtr = UnsafeRawPointer(rawPacePlanDescPtr)
 
 					let pacePlanDesc = String(cString: pacePlanDescPtr.assumingMemoryBound(to: CChar.self))
-					let summaryDict = try! JSONSerialization.jsonObject(with: Data(pacePlanDesc.utf8), options: []) as! [String:Any]
-
-					if let pacePlanId = summaryDict[PARAM_PACE_PLAN_ID] as? String {
-						summaryObj.id = UUID(uuidString: pacePlanId)!
-					}
-					if let pacePlanName = summaryDict[PARAM_PACE_PLAN_NAME] as? String {
-						summaryObj.name = pacePlanName
-					}
-					if let pacePlanDescription = summaryDict[PARAM_PACE_PLAN_DESCRIPTION] as? String {
-						summaryObj.description = pacePlanDescription
-					}
-					if let pacePlanDistance = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE] as? Double {
-						summaryObj.distance = pacePlanDistance
-					}
-					if let pacePlanDistanceUnits = summaryDict[PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS] as? Int {
-						if pacePlanDistanceUnits == UNIT_SYSTEM_US_CUSTOMARY.rawValue {
-							summaryObj.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
-						}
-						else {
-							summaryObj.distanceUnits = UNIT_SYSTEM_METRIC
-						}
-					}
-					if let pacePlanTime = summaryDict[PARAM_PACE_PLAN_TARGET_TIME] as? Int {
-						summaryObj.time = pacePlanTime
-					}
-					if let pacePlanSplits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS] as? Int {
-						summaryObj.splits = pacePlanSplits
-					}
-					if let pacePlanSplitsUnits = summaryDict[PARAM_PACE_PLAN_TARGET_SPLITS_UNITS] as? Int {
-						if pacePlanSplitsUnits == UNIT_SYSTEM_US_CUSTOMARY.rawValue {
-							summaryObj.splitsUnits = UNIT_SYSTEM_US_CUSTOMARY
-						}
-						else {
-							summaryObj.splitsUnits = UNIT_SYSTEM_METRIC
-						}
-					}
-					if let pacePlanRoute = summaryDict[PARAM_PACE_PLAN_ROUTE] as? String {
-						summaryObj.route = pacePlanRoute
-					}
-					if let lastModifiedTime = summaryDict[PARAM_PACE_PLAN_LAST_UPDATED_TIME] as? UInt {
-						summaryObj.lastUpdatedTime = Date(timeIntervalSince1970: TimeInterval(lastModifiedTime))
-					}
+					let summaryDict = try! JSONSerialization.jsonObject(with: Data(pacePlanDesc.utf8), options: []) as! [String:AnyObject]
+					let summaryObj = self.dictToObj(summaryDict: summaryDict)
 
 					defer {
 						pacePlanDescPtr.deallocate()
@@ -122,9 +150,6 @@ class PacePlansVM : ObservableObject {
 		return result
 	}
 	
-	func updatePacePlanFromDict(dict: Dictionary<String, AnyObject>) {
-	}
-
 	func createPacePlan(plan: PacePlan) -> Bool {
 		if CreateNewPacePlan(plan.name, plan.id.uuidString) {
 			let lastUpdatedTime = time(nil)
@@ -157,6 +182,24 @@ class PacePlansVM : ObservableObject {
 		return false
 	}
 
+	func updatePacePlanFromDict(summaryDict: Dictionary<String, AnyObject>) -> Bool {
+		let summaryObj = self.dictToObj(summaryDict: summaryDict)
+
+		if self.doesPacePlanExist(planId: summaryObj.id) {
+			if UpdatePacePlan(summaryObj.id.uuidString, summaryObj.name, summaryObj.description, summaryObj.distance, summaryObj.time, summaryObj.splits, summaryObj.distanceUnits, summaryObj.splitsUnits, time_t(summaryObj.lastUpdatedTime.timeIntervalSince1970)) {
+				return buildPacePlansList()
+			}
+		}
+		else {
+			if CreateNewPacePlan(summaryObj.name, summaryObj.id.uuidString) {
+				if UpdatePacePlan(summaryObj.id.uuidString, summaryObj.name, summaryObj.description, summaryObj.distance, summaryObj.time, summaryObj.splits, summaryObj.distanceUnits, summaryObj.splitsUnits, time_t(summaryObj.lastUpdatedTime.timeIntervalSince1970)) {
+					return buildPacePlansList()
+				}
+			}
+		}
+		return false
+	}
+	
 	func deletePacePlan(planId: UUID) -> Bool {
 		if DeletePacePlan(planId.uuidString) {
 			return buildPacePlansList()

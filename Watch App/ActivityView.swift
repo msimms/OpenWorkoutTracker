@@ -65,6 +65,13 @@ struct ActivityView: View {
 		return self.activityVM.getWatchActivityAttributeColor(attributeName: attributeName)
 	}
 
+	func canShowAttributeMenu() -> Bool {
+		if !IsActivityInProgress() {
+			return true
+		}
+		return Preferences.watchAllowPressesDuringActivity()
+	}
+
 	var items: [GridItem] {
 		Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
 	}
@@ -76,10 +83,10 @@ struct ActivityView: View {
 				HStack() {
 					Text(self.activityVM.value1).font(.system(size: 48))
 						.onTapGesture {
-							self.showingActivityAttributeSelection1 = Preferences.watchAllowPressesDuringActivity()
+							self.showingActivityAttributeSelection1 = canShowAttributeMenu()
 						}
 						.onLongPressGesture(minimumDuration: 2) {
-							self.showingActivityColorSelection1 = Preferences.watchAllowPressesDuringActivity()
+							self.showingActivityColorSelection1 = canShowAttributeMenu()
 						}
 						.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection1, titleVisibility: .visible) {
 							selectAttributeToDisplay(position: 0)
@@ -111,10 +118,10 @@ struct ActivityView: View {
 								Text(self.activityVM.title2).font(.system(size: 12))
 								Text(self.activityVM.value2).font(.system(size: 24))
 									.onTapGesture {
-										self.showingActivityAttributeSelection2 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityAttributeSelection2 = canShowAttributeMenu()
 									}
 									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection2 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityColorSelection2 = canShowAttributeMenu()
 									}
 									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
 										selectAttributeToDisplay(position: 1)
@@ -132,10 +139,10 @@ struct ActivityView: View {
 								Text(self.activityVM.title3).font(.system(size: 12))
 								Text(self.activityVM.value3).font(.system(size: 24))
 									.onTapGesture {
-										self.showingActivityAttributeSelection3 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityAttributeSelection3 = canShowAttributeMenu()
 									}
 									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection3 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityColorSelection3 = canShowAttributeMenu()
 									}
 									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
 										selectAttributeToDisplay(position: 2)
@@ -157,10 +164,10 @@ struct ActivityView: View {
 								Text(self.activityVM.title4).font(.system(size: 12))
 								Text(self.activityVM.value4).font(.system(size: 24))
 									.onTapGesture {
-										self.showingActivityAttributeSelection4 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityAttributeSelection4 = canShowAttributeMenu()
 									}
 									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection4 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityColorSelection4 = canShowAttributeMenu()
 									}
 									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection4, titleVisibility: .visible) {
 										selectAttributeToDisplay(position: 3)
@@ -178,10 +185,10 @@ struct ActivityView: View {
 								Text(self.activityVM.title5).font(.system(size: 12))
 								Text(self.activityVM.value5).font(.system(size: 24))
 									.onTapGesture {
-										self.showingActivityAttributeSelection5 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityAttributeSelection5 = canShowAttributeMenu()
 									}
 									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection5 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityColorSelection5 = canShowAttributeMenu()
 									}
 									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
 										selectAttributeToDisplay(position: 4)
@@ -203,10 +210,10 @@ struct ActivityView: View {
 								Text(self.activityVM.title6).font(.system(size: 12))
 								Text(self.activityVM.value6).font(.system(size: 24))
 									.onTapGesture {
-										self.showingActivityAttributeSelection6 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityAttributeSelection6 = canShowAttributeMenu()
 									}
 									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection6 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityColorSelection6 = canShowAttributeMenu()
 									}
 									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection6, titleVisibility: .visible) {
 										selectAttributeToDisplay(position: 5)
@@ -224,10 +231,10 @@ struct ActivityView: View {
 								Text(self.activityVM.title7).font(.system(size: 12))
 								Text(self.activityVM.value7).font(.system(size: 24))
 									.onTapGesture {
-										self.showingActivityAttributeSelection7 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityAttributeSelection7 = canShowAttributeMenu()
 									}
 									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection7 = Preferences.watchAllowPressesDuringActivity()
+										self.showingActivityColorSelection7 = canShowAttributeMenu()
 									}
 									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection7, titleVisibility: .visible) {
 										selectAttributeToDisplay(position: 6)

@@ -196,7 +196,7 @@ class CommonApp : ObservableObject {
 					let planList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
 					for plan in planList {
 						if let planDict = plan as? Dictionary<String, AnyObject> {
-							pacePlansVM.updatePacePlanFromDict(dict: planDict)
+							let _ = pacePlansVM.updatePacePlanFromDict(summaryDict: planDict)
 						}
 					}
 				}

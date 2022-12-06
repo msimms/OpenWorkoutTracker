@@ -12,7 +12,7 @@ struct PacePlansView: View {
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
 		df.dateStyle = .medium
-		df.timeZone = .gmt
+		df.timeZone = .current
 		return df
 	}()
 

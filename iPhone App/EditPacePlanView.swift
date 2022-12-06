@@ -37,7 +37,8 @@ struct EditPacePlanView: View {
 		_tempSplitsUnits = State(initialValue: pacePlan.splitsUnits)
 
 		self.distanceEntry.value = String(format: "%.2lf", pacePlan.distance)
-		self.timeStr = LiveActivityVM.formatSeconds(numSeconds: pacePlan.time)
+		let tempTimeStr = LiveActivityVM.formatSeconds(numSeconds: pacePlan.time)
+		_timeStr = State(initialValue: tempTimeStr)
 	}
 
 	func distanceUnitsToStr(units: UnitSystem) -> String {
@@ -79,34 +80,31 @@ struct EditPacePlanView: View {
 
 			// Plan details
 			Group() {
-
-				Group() {
-					Text("Distance")
-						.bold()
-					HStack() {
-						TextField("Distance", text: self.$distanceEntry.value)
-							.keyboardType(.decimalPad)
-							.onChange(of: self.distanceEntry.value) { value in
-								if let value = Double(self.distanceEntry.value) {
-									self.tempPacePlan.distance = value
-								}
-								else {
-									self.showingDistanceError = true
-								}
+				Text("Distance")
+					.bold()
+				HStack() {
+					TextField("Distance", text: self.$distanceEntry.value)
+						.keyboardType(.decimalPad)
+						.onChange(of: self.distanceEntry.value) { value in
+							if let value = Double(self.distanceEntry.value) {
+								self.tempPacePlan.distance = value
 							}
-							.alert("Invalid distance. Must be a number.", isPresented: self.$showingDistanceError) {}
-						Button(self.distanceUnitsToStr(units: self.tempDistanceUnits)) {
-							self.showingDistanceUnitsSelection = true
+							else {
+								self.showingDistanceError = true
+							}
 						}
-						.confirmationDialog("", isPresented: self.$showingDistanceUnitsSelection, titleVisibility: .visible) {
-							Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_METRIC)) {
-								self.tempDistanceUnits = UNIT_SYSTEM_METRIC
-								self.tempPacePlan.distanceUnits = UNIT_SYSTEM_METRIC
-							}
-							Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_US_CUSTOMARY)) {
-								self.tempDistanceUnits = UNIT_SYSTEM_US_CUSTOMARY
-								self.tempPacePlan.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
-							}
+						.alert("Invalid distance. Must be a number.", isPresented: self.$showingDistanceError) {}
+					Button(self.distanceUnitsToStr(units: self.tempDistanceUnits)) {
+						self.showingDistanceUnitsSelection = true
+					}
+					.confirmationDialog("", isPresented: self.$showingDistanceUnitsSelection, titleVisibility: .visible) {
+						Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_METRIC)) {
+							self.tempDistanceUnits = UNIT_SYSTEM_METRIC
+							self.tempPacePlan.distanceUnits = UNIT_SYSTEM_METRIC
+						}
+						Button(self.distanceUnitsToStr(units: UNIT_SYSTEM_US_CUSTOMARY)) {
+							self.tempDistanceUnits = UNIT_SYSTEM_US_CUSTOMARY
+							self.tempPacePlan.distanceUnits = UNIT_SYSTEM_US_CUSTOMARY
 						}
 					}
 				}
@@ -115,7 +113,6 @@ struct EditPacePlanView: View {
 					Text("Target Time (hh:mm:ss)")
 						.bold()
 					HStack() {
-						Spacer()
 						TextField("Time (hh:mm:ss)", text: self.$timeStr)
 							.onChange(of: self.timeStr) { value in
 								var hours: Int = 0

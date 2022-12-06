@@ -7,6 +7,21 @@ import Foundation
 import HealthKit
 import CoreLocation
 
+struct ExportCallbackType {
+	var pointIndex = 0
+}
+
+func exportNextCoordinate(activityId: Optional<UnsafePointer<Int8>>, coordinate: Optional<UnsafeMutablePointer<Coordinate>>, context: Optional<UnsafeMutableRawPointer>) -> Bool {
+	let healthKit = HealthManager.shared
+
+	let tempActivityId = String(cString: UnsafeRawPointer(activityId!).assumingMemoryBound(to: CChar.self))
+	let typedPointer = context!.bindMemory(to: ExportCallbackType.self, capacity: 1)
+
+	let result = healthKit.getHistoricalActivityLocationPoint(activityId: tempActivityId, coordinate: &coordinate!.pointee, pointIndex: typedPointer.pointee.pointIndex)
+	typedPointer.pointee.pointIndex += 1
+	return result
+}
+
 class HealthManager {
 	static let shared = HealthManager()
 	
@@ -227,7 +242,7 @@ class HealthManager {
 		self.calculateSpeedsFromDistances(distances: distances, activityId: activityId)
 	}
 
-	func readLocationPointsFromHealthStoreForWorkoutRoute(route: HKWorkoutRoute, activityId: String) {
+	private func readLocationPointsFromHealthStoreForWorkoutRoute(route: HKWorkoutRoute, activityId: String) {
 		let query = HKWorkoutRouteQuery.init(route: route) { _, routeData, done, error in
 
 			if routeData != nil {
@@ -271,6 +286,19 @@ class HealthManager {
 			return
 		}
 		self.readLocationPointsFromHealthStoreForWorkout(workout: workout, activityId: activityId)
+	}
+
+	func getHistoricalActivityLocationPoint(activityId: String, coordinate: inout Coordinate, pointIndex: Int) -> Bool {
+		if let locations = self.locations[activityId] {
+			if pointIndex < locations.count {
+				coordinate.latitude = locations[pointIndex].coordinate.latitude
+				coordinate.longitude = locations[pointIndex].coordinate.longitude
+				coordinate.altitude = locations[pointIndex].altitude
+				coordinate.time = UInt64(locations[pointIndex].timestamp.timeIntervalSince1970) * 1000 // Convert to milliseconds
+				return true
+			}
+		}
+		return false
 	}
 
 	/// @brief Blocks until all HealthKit queries have completed.
@@ -421,19 +449,112 @@ class HealthManager {
 		return ""
 	}
 
+	private func quantityInUserPreferredUnits(qty: HKQuantity) -> Double {
+		if Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC {
+			return qty.doubleValue(for: HKUnit.meterUnit(with: HKMetricPrefix.kilo))
+		}
+		return qty.doubleValue(for: HKUnit.mile())
+	}
+
+	func getWorkoutAttribute(attributeName: String, activityId: String) -> ActivityAttributeType {
+		var attr: ActivityAttributeType = InitializeActivityAttribute(TYPE_NOT_SET, MEASURE_NOT_SET, UNIT_SYSTEM_METRIC)
+		attr.valid = false
+
+		guard let workout = self.workouts[activityId] else {
+			return attr
+		}
+
+		if attributeName == ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED {
+			let qty = workout.totalDistance
+			attr.value.doubleVal = self.quantityInUserPreferredUnits(qty: qty!)
+			attr.valueType = TYPE_DOUBLE
+			attr.measureType = MEASURE_DISTANCE
+			attr.valid = true
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_ELAPSED_TIME {
+			let qty = workout.duration
+			attr.value.timeVal = time_t(Date(timeIntervalSince1970: qty).timeIntervalSince1970)
+			attr.valueType = TYPE_TIME
+			attr.measureType = MEASURE_TIME
+			attr.valid = true
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_MAX_CADENCE {
+			attr.value.doubleVal = 0.0
+			attr.valueType = TYPE_DOUBLE
+			attr.measureType = MEASURE_RPM
+			attr.valid = false
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_MAX_HEART_RATE {
+			attr.value.doubleVal = 0.0
+			attr.valueType = TYPE_DOUBLE
+			attr.measureType = MEASURE_BPM
+			attr.valid = false
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_STARTING_LATITUDE {
+			if let locations = self.locations[activityId] {
+				if locations.count > 0 {
+					attr.value.doubleVal = locations[0].coordinate.latitude
+					attr.valid = true
+				}
+				else {
+					attr.value.doubleVal = 0.0
+					attr.valid = false
+				}
+			}
+			attr.valueType = TYPE_DOUBLE
+			attr.measureType = MEASURE_DEGREES
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE {
+			if let locations = self.locations[activityId] {
+				if locations.count > 0 {
+					attr.value.doubleVal = locations[0].coordinate.longitude
+					attr.valid = true
+				}
+				else {
+					attr.value.doubleVal = 0.0
+					attr.valid = false
+				}
+			}
+			attr.valueType = TYPE_DOUBLE
+			attr.measureType = MEASURE_DEGREES
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_CALORIES_BURNED {
+			if let energyBurned = workout.totalEnergyBurned {
+				attr.value.doubleVal = energyBurned.doubleValue(for: HKUnit.largeCalorie())
+				attr.valueType = TYPE_DOUBLE
+				attr.measureType = MEASURE_CALORIES
+				attr.valid = true
+			}
+			else {
+				attr.valid = false
+			}
+		}
+		return attr;
+	}
+
 	/// @brief Exports the activity with the specified ID to a file of the given format in the given directory..
 	func exportActivityToFile(activityId: String, fileFormat: FileFormat, dirName: String) -> String {
 		var newFileName = ""
 
-		let workout = self.workouts[activityId]
-		if workout != nil {
+		if let workout = self.workouts[activityId] {
 
 			// The file name starts with the directory and will include the start time and the sport type.
 			let sportType = self.getHistoricalActivityType(activityId: activityId)
 
 			// Start and end times.
-			let startTime = workout!.startDate.timeIntervalSince1970
+			let startTime: time_t = time_t(workout.startDate.timeIntervalSince1970)
 
+			// Callback struct.
+			let pointer = UnsafeMutablePointer<ExportCallbackType>.allocate(capacity: 1)
+			
+			defer {
+				pointer.deinitialize(count: 1)
+				pointer.deallocate()
+			}
+			
+			pointer.pointee = ExportCallbackType()
+
+			ExportActivityUsingCallbackData(activityId, fileFormat, dirName, startTime, sportType, exportNextCoordinate, pointer)
 		}
 
 		return newFileName

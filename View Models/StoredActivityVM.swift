@@ -21,6 +21,7 @@ func tagsCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeM
 }
 
 class StoredActivityVM : ObservableObject {
+	var source: ActivitySummary.Source = ActivitySummary.Source.database
 	var activityIndex: Int = ACTIVITY_INDEX_UNKNOWN // Index into the cache of loaded activities
 	var activityId: String = ""                     // Unique identifier for the activity
 	var name: String = ""                           // Name of the activity
@@ -42,6 +43,12 @@ class StoredActivityVM : ObservableObject {
 
 	init(activitySummary: ActivitySummary) {
 
+		self.source = activitySummary.source
+		self.activityId = activitySummary.id
+		self.name = activitySummary.name
+		self.description = activitySummary.description
+
+		// Activity is from the app database.
 		if activitySummary.source == ActivitySummary.Source.database {
 
 			// If a database index wasn't provided then we probably needed to load the activity summary from the database.
@@ -56,15 +63,21 @@ class StoredActivityVM : ObservableObject {
 				self.activityIndex = activitySummary.index
 			}
 
-			self.loadSensorData()
+			self.loadSensorDataFromDb()
 		}
-
-		self.activityId = activitySummary.id
-		self.name = activitySummary.name
-		self.description = activitySummary.description
+		
+		// Activity is from HealthKit.
+		else if activitySummary.source == ActivitySummary.Source.healthkit {
+			self.loadSensorDataFromHealthKit()
+		}
 	}
 
-	func loadSensorData() {
+	func loadSensorDataFromHealthKit() {
+		let healthKit = HealthManager.shared
+		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId)
+	}
+
+	func loadSensorDataFromDb() {
 		if LoadAllHistoricalActivitySensorData(self.activityIndex) {
 			
 			// Location points
@@ -163,23 +176,34 @@ class StoredActivityVM : ObservableObject {
 		}
 	}
 
+	/// @brief Returns a list of attributes attribute names that are applicable to this activity.
 	func getActivityAttributes() -> Array<String> {
 		var attributeList: Array<String> = []
-		let numAttributes = GetNumHistoricalActivityAttributes(self.activityIndex)
-		
-		if numAttributes > 0 {
-			for attributeIndex in 0...numAttributes - 1 {
-				let attributeNamePtr = UnsafeRawPointer(GetHistoricalActivityAttributeName(self.activityIndex, attributeIndex))
-				
-				if attributeNamePtr != nil {
-					defer {
-						attributeNamePtr!.deallocate()
-					}
+
+		if self.source == ActivitySummary.Source.database {
+			let numAttributes = GetNumHistoricalActivityAttributes(self.activityIndex)
+			
+			if numAttributes > 0 {
+				for attributeIndex in 0...numAttributes - 1 {
+					let attributeNamePtr = UnsafeRawPointer(GetHistoricalActivityAttributeName(self.activityIndex, attributeIndex))
 					
-					let attributeName = String(cString: attributeNamePtr!.assumingMemoryBound(to: CChar.self))
-					attributeList.append(attributeName)
+					if attributeNamePtr != nil {
+						defer {
+							attributeNamePtr!.deallocate()
+						}
+						
+						let attributeName = String(cString: attributeNamePtr!.assumingMemoryBound(to: CChar.self))
+						attributeList.append(attributeName)
+					}
 				}
 			}
+		}
+		else if self.source == ActivitySummary.Source.healthkit {
+			attributeList.append(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
+			attributeList.append(ACTIVITY_ATTRIBUTE_ELAPSED_TIME)
+			attributeList.append(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
+//			attributeList.append(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)
+//			attributeList.append(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)
 		}
 		return attributeList
 	}
@@ -215,16 +239,29 @@ class StoredActivityVM : ObservableObject {
 				attributeList.append("Z Axis")
 			}
 		}
-
 		return attributeList
 	}
 
-	func getActivityAttributeValueStr(attributeName: String) -> String {
-		let attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+	private func formatActivityAttribute(attribute: ActivityAttributeType) -> String {
+		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
+		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
+	}
 
-		if attribute.valid {
-			let result = LiveActivityVM.formatActivityValue(attribute: attribute)
-			return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
+	func getActivityAttributeValueStr(attributeName: String) -> String {
+		if self.source == ActivitySummary.Source.database {
+			let attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+
+			if attribute.valid {
+				return self.formatActivityAttribute(attribute: attribute)
+			}
+		}
+		else if self.source == ActivitySummary.Source.healthkit {
+			let healthKit = HealthManager.shared
+			let attribute = healthKit.getWorkoutAttribute(attributeName: attributeName, activityId: self.activityId)
+
+			if attribute.valid {
+				return self.formatActivityAttribute(attribute: attribute)
+			}
 		}
 		return ""
 	}
