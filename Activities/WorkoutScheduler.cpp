@@ -167,6 +167,18 @@ void WorkoutScheduler::ScheduleWorkouts(std::vector<Workout*> workouts, time_t s
 
 	// This will server as our calendar for next week.
 	Workout* week[DAYS_PER_WEEK] = { NULL };
+	
+	// Are there any events this week?
+	for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
+	{
+		Workout* workout = (*iter);
+
+		if (workout->GetType() == WORKOUT_TYPE_EVENT)
+		{
+			size_t dayIndex = (size_t)((workout->GetScheduledTime() - startTime) / 7);
+			week[dayIndex] = workout;
+		}
+	}
 
 	// When does the user want to do long runs?
 	for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
