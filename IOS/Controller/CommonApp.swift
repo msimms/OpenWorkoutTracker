@@ -61,6 +61,29 @@ class CommonApp : ObservableObject {
 		let _ = self.apiClient.syncWithServer()
 	}
 
+	func markAsSynchedToWeb(activityId: String) -> Bool {
+		return CreateActivitySync(activityId, SYNC_DEST_WEB)
+	}
+	
+	func markAsSynchedToICloudDrive(activityId: String) -> Bool {
+		return CreateActivitySync(activityId, SYNC_DEST_ICLOUD_DRIVE)
+	}
+
+	func markAsSynchedToWatch(activityId: String) -> Bool {
+		return CreateActivitySync(activityId, SYNC_DEST_WATCH)
+	}
+
+	func exportActivityToWeb(activityId: String) throws {
+		let summary = ActivitySummary()
+		summary.id = activityId
+		summary.source = ActivitySummary.Source.database
+		
+		let storedActivityVM = StoredActivityVM(activitySummary: summary)
+		let fileName = try storedActivityVM.exportActivityToFile(fileFormat: FILE_GPX)
+
+		try FileManager.default.removeItem(at: URL(string: fileName)!)
+	}
+
 	@objc func loginStatusUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -131,6 +154,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 
@@ -149,6 +173,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 	
@@ -167,6 +192,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 
@@ -185,6 +211,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 
@@ -203,6 +230,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 	
@@ -217,6 +245,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 	
@@ -224,10 +253,42 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+						let app = CommonApp.shared
+						let activityId = responseDict[PARAM_ACTIVITY_ID] as! String
+						let codeStr = responseDict[PARAM_CODE]
+						let code = codeStr as? ActivityMatch
+
+						switch (code) {
+						case ACTIVITY_MATCH_CODE_NO_ACTIVITY:
+							// Send the activity
+							try app.exportActivityToWeb(activityId: activityId)
+							break
+						case ACTIVITY_MATCH_CODE_HASH_NOT_COMPUTED:
+							// Mark it as synced
+							let _ = app.markAsSynchedToWeb(activityId: activityId)
+							break
+						case ACTIVITY_MATCH_CODE_HASH_DOES_NOT_MATCH:
+							// Mark it as synced
+							let _ = app.markAsSynchedToWeb(activityId: activityId)
+							break
+						case ACTIVITY_MATCH_CODE_HASH_MATCHES:
+							// Mark it as synced
+							let _ = app.markAsSynchedToWeb(activityId: activityId)
+							break
+						case ACTIVITY_MATCH_CODE_HASH_NOT_PROVIDED:
+							// Mark it as synced
+							let _ = app.markAsSynchedToWeb(activityId: activityId)
+							break
+						default:
+							break
+						}
+					}
 				}
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 	
@@ -235,10 +296,13 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+					}
 				}
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 	
@@ -246,10 +310,13 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+					}
 				}
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 	
@@ -257,10 +324,13 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+					}
 				}
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
 }

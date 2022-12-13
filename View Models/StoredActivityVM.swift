@@ -274,7 +274,7 @@ class StoredActivityVM : ObservableObject {
 		return startTime
 	}
 
-	func exportActivityToFile(fileFormat: FileFormat) throws {
+	func exportActivityToFile(fileFormat: FileFormat) throws -> String {
 
 		// Build the URL for the application's directory.
 		var exportDirUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)
@@ -294,6 +294,8 @@ class StoredActivityVM : ObservableObject {
 		do {
 			fileNamePtr!.deallocate()
 		}
+
+		return String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
 	}
 
 	func updateActivityName() -> Bool {

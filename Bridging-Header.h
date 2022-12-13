@@ -4,6 +4,7 @@
 
 #include "ActivityMgr.h"
 #include "ActivityAttribute.h"
+#include "ActivityMatch.h"
 #include "ActivityType.h"
 #include "ActivityViewType.h"
 #include "AxisName.h"

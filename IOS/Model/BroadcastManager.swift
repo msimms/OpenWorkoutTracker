@@ -71,7 +71,7 @@ class BroadcastManager {
 		// No host name set, just return.
 		let hostName = Preferences.broadcastHostName()
 		if hostName.count == 0 {
-			print("Broadcast host name not specified.")
+			NSLog("Broadcast host name not specified.")
 			return
 		}
 		
@@ -79,10 +79,10 @@ class BroadcastManager {
 		if self.dataBeingSent.count > 0 {
 			if self.errorSending {
 				self.sendToServer(hostName: hostName, path: REMOTE_API_UPDATE_STATUS_URL, data: self.dataBeingSent, activityId: self.currentActivityId, isStopped: isStopped)
-				print("Resending.")
+				NSLog("Resending.")
 			}
 			else {
-				print("Waiting on previous data to be sent.")
+				NSLog("Waiting on previous data to be sent.")
 			}
 			self.lastCacheFlush = UInt64(time(nil))
 			return
