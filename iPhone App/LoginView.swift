@@ -35,6 +35,7 @@ struct LoginView: View {
 			} label: {
 				Text("Login")
 					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.fontWeight(Font.Weight.heavy)
 			}
 			.alert("Login failed!", isPresented: $showingLoginError) {
 			}

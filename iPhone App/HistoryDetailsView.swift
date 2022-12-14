@@ -200,17 +200,17 @@ struct HistoryDetailsView: View {
 					.confirmationDialog("Export", isPresented: $showingFormatSelection, titleVisibility: .visible) {
 						if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
 							Button("GPX") {
-								do { let _ = try self.activityVM.exportActivityToFile(fileFormat: FILE_GPX) } catch { self.showingExportFailedError = true }
+								do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX) } catch { self.showingExportFailedError = true }
 							}
 							Button("TCX") {
-								do { let _ = try self.activityVM.exportActivityToFile(fileFormat: FILE_TCX) } catch { self.showingExportFailedError = true }
+								do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX) } catch { self.showingExportFailedError = true }
 							}
 							Button("FIT") {
-								do { let _ = try self.activityVM.exportActivityToFile(fileFormat: FILE_FIT) } catch { self.showingExportFailedError = true }
+								do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT) } catch { self.showingExportFailedError = true }
 							}
 						}
 						Button("CSV") {
-							do { let _ = try self.activityVM.exportActivityToFile(fileFormat: FILE_CSV) } catch { self.showingExportFailedError = true }
+							do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_CSV) } catch { self.showingExportFailedError = true }
 						}
 					}
 					.foregroundColor(colorScheme == .dark ? .white : .black)

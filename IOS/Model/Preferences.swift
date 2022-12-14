@@ -52,6 +52,7 @@ let PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING =          "Workouts Can Include Runn
 let PREF_NAME_POOL_LENGTH =                           "Pool Length"
 let PREF_NAME_POOL_LENGTH_UNITS =                     "Pool Length Units"
 let PREF_NAME_LAST_SERVER_SYNC_TIME =                 "Last Server Sync Time"
+let PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION =      "Most Recent Activity Description"
 
 let PREF_NAME_METRIC =       "units_metric"
 let PREF_NAME_US_CUSTOMARY = "units_us_customary"
@@ -712,6 +713,24 @@ class Preferences {
 			return true
 		}
 		return false
+	}
+
+	//
+	// Methods for managing the most recent activity (used by the iPhone widget)
+	//
+
+	static func mostRecentActivityDescription() -> String {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		let result = mydefaults.string(forKey: PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION)
+		if result != nil {
+			return result!
+		}
+		return "None"
+	}
+
+	static func setMostRecentActivityDescription(value: String) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION)
 	}
 
 	//

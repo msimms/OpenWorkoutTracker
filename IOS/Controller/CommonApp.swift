@@ -79,9 +79,12 @@ class CommonApp : ObservableObject {
 		summary.source = ActivitySummary.Source.database
 		
 		let storedActivityVM = StoredActivityVM(activitySummary: summary)
-		let fileName = try storedActivityVM.exportActivityToFile(fileFormat: FILE_GPX)
-
-		try FileManager.default.removeItem(at: URL(string: fileName)!)
+		let fileName = try storedActivityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
+		let fileUrl = URL(string: "file://" + fileName)
+		let fileContents = try Data(contentsOf: fileUrl!)
+		let _ = self.apiClient.sendActivity(activityId: summary.id, name: fileUrl!.lastPathComponent, contents: fileContents)
+		
+		try FileManager.default.removeItem(at: fileUrl!)
 	}
 
 	@objc func loginStatusUpdated(notification: NSNotification) {
@@ -257,7 +260,8 @@ class CommonApp : ObservableObject {
 						let app = CommonApp.shared
 						let activityId = responseDict[PARAM_ACTIVITY_ID] as! String
 						let codeStr = responseDict[PARAM_CODE]
-						let code = codeStr as? ActivityMatch
+						let codeNum = codeStr as? UInt32
+						let code = ActivityMatch(rawValue: codeNum!)
 
 						switch (code) {
 						case ACTIVITY_MATCH_CODE_NO_ACTIVITY:

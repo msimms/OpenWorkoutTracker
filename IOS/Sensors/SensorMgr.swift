@@ -10,11 +10,13 @@ import SwiftUI
 let HEART_RATE_SERVICE_ID = CBUUID(data: BT_SERVICE_HEART_RATE)
 let POWER_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_POWER)
 let CADENCE_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE)
+let RUNNING_POWER_SERVICE_ID = CBUUID(data: BT_SERVICE_RUNNING_SPEED_AND_CADENCE)
 let RADAR_SERVICE_ID = CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR)
 
 class SensorSummary : Identifiable {
 	var id: UUID = UUID()
 	var name: String = ""
+	var peripheral: CBPeripheral! = nil
 	var enabled: Bool = false
 }
 
@@ -58,6 +60,7 @@ class SensorMgr : ObservableObject {
 			let summary = SensorSummary()
 			summary.id = peripheral.identifier
 			summary.name = name
+			summary.peripheral = peripheral
 			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
 			self.sensors.append(summary)
 		}
@@ -139,22 +142,27 @@ class SensorMgr : ObservableObject {
 					ProcessRadarReading(UInt(self.radarMeasurements.count), UInt64(Date().timeIntervalSince1970))
 				}
 			} catch {
-				print(error.localizedDescription)
+				NSLog(error.localizedDescription)
 			}
 		}
 	}
 
+	/// Called when a peripheral disconnects.
+	func peripheralDiscovered(peripheral: CBPeripheral) {
+	}
+
 	func startSensors() {
 		if Preferences.shouldScanForSensors() {
-			let interestingServices = [ CBUUID(data: BT_SERVICE_HEART_RATE),
-										CBUUID(data: BT_SERVICE_CYCLING_POWER),
-										CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE),
-										CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR) ]
+			let interestingServices = [ HEART_RATE_SERVICE_ID,
+										POWER_SERVICE_ID,
+										CADENCE_SERVICE_ID,
+										RADAR_SERVICE_ID ]
 			
 			self.scanner.startScanningForServices(serviceIdsToScanFor: interestingServices,
 												  peripheralCallbacks: [peripheralDiscovered],
 												  serviceCallbacks: [serviceDiscovered],
-												  valueUpdatedCallbacks: [valueUpdated])
+												  valueUpdatedCallbacks: [valueUpdated],
+												  peripheralDisconnectedCallbacks: [peripheralDiscovered])
 		}
 
 		self.location.start()

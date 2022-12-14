@@ -124,7 +124,7 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("lap"))
 	{
-		sql = "create table lap (id integer primary key, activity_id text, start_time unsigned big int, calories_burned double)";
+		sql = "create table lap (id integer primary key, activity_id text, start_time unsigned big int, calories_burned double, distance double)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("gps"))

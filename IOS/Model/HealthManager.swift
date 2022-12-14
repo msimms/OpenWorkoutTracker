@@ -533,7 +533,7 @@ class HealthManager {
 	}
 
 	/// @brief Exports the activity with the specified ID to a file of the given format in the given directory..
-	func exportActivityToFile(activityId: String, fileFormat: FileFormat, dirName: String) -> String {
+	func exportActivityToFile(activityId: String, fileFormat: FileFormat, dirName: String) throws -> String {
 		var newFileName = ""
 
 		if let workout = self.workouts[activityId] {
@@ -554,7 +554,17 @@ class HealthManager {
 			
 			pointer.pointee = ExportCallbackType()
 
-			ExportActivityUsingCallbackData(activityId, fileFormat, dirName, startTime, sportType, exportNextCoordinate, pointer)
+			let fileNamePtr = UnsafeRawPointer(ExportActivityUsingCallbackData(activityId, fileFormat, dirName, startTime, sportType, exportNextCoordinate, pointer))
+			
+			guard fileNamePtr != nil else {
+				throw ActivityExportException.runtimeError("Export failed!")
+			}
+			
+			newFileName = String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
+			
+			do {
+				fileNamePtr!.deallocate()
+			}
 		}
 
 		return newFileName

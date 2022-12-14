@@ -7,6 +7,17 @@ import WidgetKit
 import SwiftUI
 import Intents
 
+let PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION = "Most Recent Activity Description"
+
+func mostRecentActivityDescription() -> String {
+	let mydefaults: UserDefaults = UserDefaults.standard
+	let result = mydefaults.string(forKey: PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION)
+	if result != nil {
+		return result!
+	}
+	return "None"
+}
+
 struct Provider: IntentTimelineProvider {
 	func placeholder(in context: Context) -> SimpleEntry {
 		SimpleEntry(date: Date(), configuration: ConfigurationIntent())
@@ -44,7 +55,9 @@ struct ActivityWidgetsEntryView : View {
 
 	var body: some View {
 		VStack() {
-			Text("foo")
+			Text("Most Recent:")
+				.bold()
+			Text(mostRecentActivityDescription())
 		}
 	}
 }
@@ -57,7 +70,7 @@ struct ActivityWidgets: Widget {
 			ActivityWidgetsEntryView(entry: entry)
 		}
 		.configurationDisplayName("OpenWorkoutTracker")
-		.description("This is an example widget.")
+		.description("Shows the most recent activity recorded with the app.")
 	}
 }
 

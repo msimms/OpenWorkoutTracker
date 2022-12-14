@@ -274,7 +274,28 @@ class StoredActivityVM : ObservableObject {
 		return startTime
 	}
 
-	func exportActivityToFile(fileFormat: FileFormat) throws -> String {
+	func exportActivityToFile(fileFormat: FileFormat, dirName: String) throws -> String {
+		let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, dirName))
+		
+		guard fileNamePtr != nil else {
+			throw ActivityExportException.runtimeError("Export failed!")
+		}
+		
+		let fileName = String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
+
+		do {
+			fileNamePtr!.deallocate()
+		}
+		
+		return fileName
+	}
+
+	func exportActivityToTempFile(fileFormat: FileFormat) throws -> String {
+		let directory = NSTemporaryDirectory()
+		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: directory)
+	}
+
+	func exportActivityToICloudFile(fileFormat: FileFormat) throws -> String {
 
 		// Build the URL for the application's directory.
 		var exportDirUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)
@@ -285,17 +306,7 @@ class StoredActivityVM : ObservableObject {
 		try FileManager.default.createDirectory(at: exportDirUrl!, withIntermediateDirectories: true, attributes: nil)
 
 		// Export the file.
-		let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, exportDirUrl?.absoluteString))
-
-		guard fileNamePtr != nil else {
-			throw ActivityExportException.runtimeError("Export failed!")
-		}
-
-		do {
-			fileNamePtr!.deallocate()
-		}
-
-		return String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
+		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: exportDirUrl!.absoluteString)
 	}
 
 	func updateActivityName() -> Bool {
