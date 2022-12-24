@@ -1012,6 +1012,7 @@
 				2740E10A28EB5AD600293B71 /* Accelerometer.swift */,
 				278C209F293586D800828479 /* ActivityHash.swift */,
 				2740E09E28E643FD00293B71 /* ActivityPreferences.swift */,
+				278B8F3529411F1600B34161 /* ActivitySummary.swift */,
 				2740E12428F2D3F000293B71 /* ApiClient.swift */,
 				2740E0A128E6441C00293B71 /* BroadcastManager.swift */,
 				2740E11728F0DCC200293B71 /* HealthManager.swift */,
@@ -1019,7 +1020,6 @@
 				2740E09B28E6344400293B71 /* Preferences.swift */,
 				2740E0A428E644EE00293B71 /* SensorMgr.swift */,
 				272E77E32910ABE3009AB275 /* WatchSession.swift */,
-				278B8F3529411F1600B34161 /* ActivitySummary.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";

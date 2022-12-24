@@ -31,8 +31,16 @@ class FriendsVM : ObservableObject {
 	@Published var friends: Array<FriendSummary> = []
 	
 	init() {
+		let _ = ApiClient.shared.listFriends()
 	}
 	
 	func updateFriendFromDict(dict: Dictionary<String, AnyObject>) {
+		if  let username = dict[PARAM_USERNAME] as? String,
+			let realname = dict[PARAM_REALNAME] as? String
+		{
+		}
+	}
+
+	func updateFriendRequestFromDict(dict: Dictionary<String, AnyObject>) {
 	}
 }

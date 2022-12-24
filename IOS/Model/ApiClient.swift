@@ -15,7 +15,7 @@ func unsynchedActivitiesCallback(destination: Optional<UnsafePointer<Int8>>, con
 	typedPointer.pointee.ids.append(activityId)
 }
 
-class ApiClient {
+class ApiClient : ObservableObject {
 	static let shared = ApiClient()
 	var loggedIn = false
 	
@@ -104,6 +104,10 @@ class ApiClient {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
+						else if url.contains(REMOTE_API_REQUEST_WORKOUT_DETAILS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
 						else if url.contains(REMOTE_API_LIST_INTERVAL_WORKOUTS_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
@@ -122,10 +126,6 @@ class ApiClient {
 						}
 						else if url.contains(REMOTE_API_REQUEST_ACTIVITY_METADATA_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: downloadedData)
-							NotificationCenter.default.post(notification)
-						}
-						else if url.contains(REMOTE_API_REQUEST_WORKOUT_DETAILS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
 						else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
@@ -438,7 +438,6 @@ class ApiClient {
 				result = result && self.listPlannedWorkouts()
 				result = result && self.listIntervalSessions()
 				result = result && self.listPacePlans()
-				result = result && self.listFriends()
 				result = result && self.sendUserDetailsToServer()
 				result = result && self.sendMissingActivitiesToServer()
 				result = result && self.sendPacePlansToServer()

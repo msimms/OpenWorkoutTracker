@@ -47,15 +47,15 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.createLoginProcessed), name: Notification.Name(rawValue: NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.logoutProcessed), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGGED_OUT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.friendsListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.requestToFollowResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.intervalSessionsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.pacePlansUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.unsynchedActivitiesListReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.hasActivityResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.requestToFollowResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: nil)
 
 		// Sync with the server.
 		let _ = self.apiClient.syncWithServer()
@@ -161,6 +161,22 @@ class CommonApp : ObservableObject {
 		}
 	}
 
+	@objc func requestToFollowResponse(notification: NSNotification) {
+		do {
+			if let data = notification.object as? Dictionary<String, AnyObject> {
+				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+						let friendsVM = FriendsVM()
+						friendsVM.updateFriendRequestFromDict(dict: responseDict)
+					}
+				}
+			}
+		}
+		catch {
+			NSLog(error.localizedDescription)
+		}
+	}
+
 	@objc func gearListUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -186,10 +202,36 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let workoutsVM: WorkoutsVM = WorkoutsVM()
 					let workoutsList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
-					for workout in workoutsList {
-						if let workoutDict = workout as? Dictionary<String, AnyObject> {
-							workoutsVM.updateWorkoutFromDict(dict: workoutDict)
+
+					if workoutsList.count > 0 {
+						
+						// Remove any existing workouts.
+						if workoutsVM.deleteAllWorkouts() {
+							for workout in workoutsList {
+								if let workoutDict = workout as? Dictionary<String, AnyObject> {
+									try workoutsVM.importWorkoutFromDict(dict: workoutDict)
+								}
+							}
 						}
+						else {
+							NSLog("Error deleting existing workout suggestions.")
+						}
+					}
+				}
+			}
+		}
+		catch {
+			NSLog(error.localizedDescription)
+		}
+	}
+
+	@objc func plannedWorkoutUpdated(notification: NSNotification) {
+		do {
+			if let data = notification.object as? Dictionary<String, AnyObject> {
+				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+						let workoutsVM: WorkoutsVM = WorkoutsVM()
+						try workoutsVM.updateWorkoutFromDict(dict: responseDict)
 					}
 				}
 			}
@@ -297,34 +339,6 @@ class CommonApp : ObservableObject {
 	}
 	
 	@objc func activityMetadataReceived(notification: NSNotification) {
-		do {
-			if let data = notification.object as? Dictionary<String, AnyObject> {
-				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
-					}
-				}
-			}
-		}
-		catch {
-			NSLog(error.localizedDescription)
-		}
-	}
-	
-	@objc func plannedWorkoutUpdated(notification: NSNotification) {
-		do {
-			if let data = notification.object as? Dictionary<String, AnyObject> {
-				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
-					}
-				}
-			}
-		}
-		catch {
-			NSLog(error.localizedDescription)
-		}
-	}
-	
-	@objc func requestToFollowResponse(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {

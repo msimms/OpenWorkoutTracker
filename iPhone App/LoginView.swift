@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct LoginView: View {
-	@Environment(\.colorScheme) var colorScheme
 	private var apiClient = ApiClient.shared
 	@State private var email: String = Preferences.broadcastUserName()
 	@State private var password: String = ""
@@ -20,12 +19,14 @@ struct LoginView: View {
 				TextField("Email", text: $email)
 					.autocapitalization(.none)
 			}
+			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 5, trailing: 0))
 			Group() {
 				Text("Password")
 					.bold()
 				SecureField("Password", text: $password)
 					.bold()
 			}
+			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
 
 			Button {
 				Preferences.setBroadcastUserName(value: self.email)
@@ -34,11 +35,15 @@ struct LoginView: View {
 				}
 			} label: {
 				Text("Login")
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(.white)
 					.fontWeight(Font.Weight.heavy)
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.padding()
 			}
-			.alert("Login failed!", isPresented: $showingLoginError) {
-			}
+			.alert("Login failed!", isPresented: $showingLoginError) { }
+			.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+			.opacity(0.8)
+			.bold()
 		}
 		.padding(10)
     }

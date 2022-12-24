@@ -204,8 +204,13 @@ class LiveActivityVM : ObservableObject {
 				if !self.isInProgress {
 					if activityAttribute == ACTIVITY_ATTRIBUTE_HEART_RATE {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_BPM, UNIT_SYSTEM_METRIC)
+#if os(watchOS)
+						attr.value.intVal = UInt64(HealthManager.shared.currentHeartRate)
+						attr.valid = HealthManager.shared.heartRateRead
+#else
 						attr.value.intVal = UInt64(self.sensorMgr.currentHeartRateBpm)
 						attr.valid = self.sensorMgr.heartRateConnected
+#endif
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_POWER {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_POWER, UNIT_SYSTEM_METRIC)

@@ -167,11 +167,23 @@ class SensorMgr : ObservableObject {
 
 		self.location.start()
 		self.accelerometer.start()
+
+#if os(watchOS)
+		if Preferences.useWatchHeartRate() {
+			let healthMgr = HealthManager.shared
+			healthMgr.subscribeToHeartRateUpdates()
+		}
+#endif
 	}
 
 	func stopSensors() {
 		self.scanner.stopScanning()
 		self.location.stop()
 		self.accelerometer.stop()
+
+#if os(watchOS)
+		let healthMgr = HealthManager.shared
+		healthMgr.unsubscribeFromHeartRateUpdates()
+#endif
 	}
 }

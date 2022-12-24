@@ -27,11 +27,14 @@ class HealthManager {
 	
 	private var authorized = false
 	private let healthStore = HKHealthStore();
-	var workouts: Dictionary<String, HKWorkout> = [:] // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
+	public var workouts: Dictionary<String, HKWorkout> = [:] // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
+	public var currentHeartRate: Double = 0.0 // Most recent heart rate reading (Apple Watch)
+	public var heartRateRead: Bool = false // True if we are receiving heart rate data (Apple Watch)
 	private var locations: Dictionary<String, Array<CLLocation>> = [:] // arrays of locations stored in the health store, key is the activity ID
 	private var distances: Dictionary<String, Array<Double>> = [:] // arrays of distances computed from the locations array, key is the activity ID
 	private var speeds: Dictionary<String, Array<Double>> = [:] // arrays of speeds computed from the distances array, key is the activity ID
 	private var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
+	private var hrQuery: HKQuery? = nil // the query that reads heart rate on the watch
 
 	/// Singleton constructor
 	private init() {
@@ -125,7 +128,33 @@ class HealthManager {
 		// Execute asynchronously.
 		self.healthStore.execute(query)
 	}
-	
+
+	func subscribeToQuantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantity?, Date?, Error?) -> ()) {
+
+		let datePredicate = HKQuery.predicateForSamples(withStart: Date(), end: nil, options:HKQueryOptions.strictStartDate)
+		let query = HKAnchoredObjectQuery.init(type: quantityType, predicate: datePredicate, anchor: nil, limit: HKObjectQueryNoLimit, resultsHandler: { query, addedObjects, deletedObjects, newAnchor, error in
+			
+			if addedObjects != nil {
+				for sample in addedObjects! {
+					if let quantitySample = sample as? HKQuantitySample {
+						callback(quantitySample.quantity, quantitySample.endDate, error)
+					}
+				}
+			}
+		})
+		
+		query.updateHandler = { query, addedObjects, deletedObjects, newAnchor, error in
+			for sample in addedObjects! {
+				if let quantitySample = sample as? HKQuantitySample {
+					callback(quantitySample.quantity, quantitySample.endDate, error)
+				}
+			}
+		}
+		
+		// Execute asynchronously.
+		self.healthStore.execute(query)
+	}
+
 	/// @brief Gets the user's age from HealthKit and updates the copy in our database.
 	func updateUsersAge() throws {
 		let dateOfBirth = try self.healthStore.dateOfBirthComponents()
@@ -570,7 +599,7 @@ class HealthManager {
 		return newFileName
 	}
 
-	/// @brief This method is called in response to a heart rate updated notification from the watch.
+	/// @brief This method is called in response to a heart rate updated notification. It saves the heart rate to the health store.
 	@objc func heartRateUpdated(notification: NSNotification) {
 
 		if let notificationData = notification.object as? Dictionary<String, Any> {
@@ -611,6 +640,35 @@ class HealthManager {
 				self.saveCaloriesBurnedIntoHealthStore(calories: calories, startDate: startTime, endDate: endTime)
 			}
 		}
+	}
+
+	func subscribeToHeartRateUpdates() {
+		let sampleType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
+		self.hrQuery = HKObserverQuery.init(sampleType: sampleType!, predicate: nil, updateHandler: { query, completionHandler, error in
+			if error != nil {
+				self.subscribeToQuantitySamplesOfType(quantityType: sampleType!, callback: { quantity, date, error in
+					if quantity != nil && date != nil {
+						let heartRateUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+						let unixTime = date!.timeIntervalSince1970 // Apple Watch processor is 32-bit, so time_t is 32-bit as well
+						self.currentHeartRate = quantity!.doubleValue(for: heartRateUnit)
+						self.heartRateRead = true
+						ProcessHrmReading(self.currentHeartRate, UInt64(unixTime))
+					}
+				})
+			}
+			completionHandler()
+		})
+
+		self.healthStore.execute(self.hrQuery!)
+	}
+
+	func unsubscribeFromHeartRateUpdates() {
+		guard self.hrQuery != nil else {
+			return
+		}
+
+		self.healthStore.stop(self.hrQuery!)
+		self.hrQuery = nil
 	}
 
 	/// @brief Utility method for converting between the specified unit system and HKUnit.

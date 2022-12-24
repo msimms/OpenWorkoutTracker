@@ -29,6 +29,10 @@ let STR_FRIDAY =                       "Friday"
 let STR_SATURDAY =                     "Saturday"
 let STR_SUNDAY =                       "Sunday"
 
+enum WorkoutException: Error {
+	case runtimeError(String)
+}
+
 class WorkoutSummary : Identifiable, Hashable, Equatable {
 	var id: String = ""
 	var sportType: String = ""
@@ -65,10 +69,10 @@ class WorkoutsVM : ObservableObject {
 	
 	func buildWorkoutsList() -> Bool {
 		var result = false
-
+		
 		// Remove the old workout descriptions.
 		self.workouts = []
-
+		
 		// Query the backend for the latest workouts.
 		if InitializeWorkoutList() {
 			
@@ -78,10 +82,10 @@ class WorkoutsVM : ObservableObject {
 			while !done {
 				if let workoutJsonStrPtr = UnsafeRawPointer(RetrieveWorkoutAsJSON(workoutIndex)) {
 					let summaryObj = WorkoutSummary()
-
+					
 					let workoutJsonStr = String(cString: workoutJsonStrPtr.assumingMemoryBound(to: CChar.self))
 					let summaryDict = try! JSONSerialization.jsonObject(with: Data(workoutJsonStr.utf8), options: []) as! [String:Any]
-
+					
 					if let workoutId = summaryDict[PARAM_WORKOUT_ID] as? String {
 						summaryObj.id = workoutId
 					}
@@ -97,11 +101,11 @@ class WorkoutsVM : ObservableObject {
 					if let scheduledTime = summaryDict[PARAM_WORKOUT_SCHEDULED_TIME] as? UInt {
 						summaryObj.scheduledTime = Date(timeIntervalSince1970: TimeInterval(scheduledTime))
 					}
-
+					
 					defer {
 						workoutJsonStrPtr.deallocate()
 					}
-
+					
 					self.workouts.append(summaryObj)
 					workoutIndex += 1
 				}
@@ -112,16 +116,34 @@ class WorkoutsVM : ObservableObject {
 			
 			result = true
 		}
-
+		
 		return result
 	}
 	
-	func updateWorkoutFromDict(dict: Dictionary<String, Any>) {
+	func importWorkoutFromDict(dict: Dictionary<String, Any>) throws {
+		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
+			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
+			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
+			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double,
+			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t
+		{
+			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
+			CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
+		}
 	}
 
-	func generateWorkouts() -> Bool {
+	func updateWorkoutFromDict(dict: Dictionary<String, Any>) throws {
+	}
+
+	func deleteAllWorkouts() -> Bool {
+		workouts.removeAll()
+		return DeleteAllWorkouts()
+	}
+
+	func regenerateWorkouts() -> Bool {
 		var result = false
 
+		// This will remove existing workouts and generate new ones.
 		if GenerateWorkouts(Preferences.workoutGoal(),
 							Preferences.workoutGoalType(),
 							Preferences.workoutGoalDate(),
@@ -133,7 +155,7 @@ class WorkoutsVM : ObservableObject {
 		}
 		return result
 	}
-	
+
 	static func workoutGoalToString(goal: Goal) -> String {
 		switch goal {
 		case GOAL_FITNESS:
@@ -273,5 +295,69 @@ class WorkoutsVM : ObservableObject {
 			return DAY_TYPE_SUNDAY
 		}
 		return DAY_TYPE_SUNDAY
+	}
+	
+	static func workoutTypeStringToEnum(typeStr: String) throws -> WorkoutType {
+		if typeStr == WORKOUT_TYPE_STR_REST {
+			return WORKOUT_TYPE_REST
+		}
+		if typeStr == WORKOUT_TYPE_STR_EVENT {
+			return WORKOUT_TYPE_EVENT
+		}
+		if typeStr == WORKOUT_TYPE_STR_SPEED_RUN {
+			return WORKOUT_TYPE_SPEED_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_THRESHOLD_RUN {
+			return WORKOUT_TYPE_THRESHOLD_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_TEMPO_RUN {
+			return WORKOUT_TYPE_TEMPO_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_EASY_RUN {
+			return WORKOUT_TYPE_EASY_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_LONG_RUN {
+			return WORKOUT_TYPE_LONG_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_FREE_RUN {
+			return WORKOUT_TYPE_FREE_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_HILL_REPEATS {
+			return WORKOUT_TYPE_HILL_REPEATS
+		}
+		if typeStr == WORKOUT_TYPE_STR_PROGRESSION_RUN {
+			return WORKOUT_TYPE_PROGRESSION_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_FARTLEK_RUN {
+			return WORKOUT_TYPE_FARTLEK_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN {
+			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN
+		}
+		if typeStr == WORKOUT_TYPE_STR_HILL_RIDE {
+			return WORKOUT_TYPE_HILL_RIDE
+		}
+		if typeStr == WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE {
+			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE
+		}
+		if typeStr == WORKOUT_TYPE_STR_TEMPO_RIDE {
+			return WORKOUT_TYPE_TEMPO_RIDE
+		}
+		if typeStr == WORKOUT_TYPE_STR_EASY_RIDE {
+			return WORKOUT_TYPE_EASY_RIDE
+		}
+		if typeStr == WORKOUT_TYPE_STR_SWEET_SPOT_RIDE {
+			return WORKOUT_TYPE_SWEET_SPOT_RIDE
+		}
+		if typeStr == WORKOUT_TYPE_STR_OPEN_WATER_SWIM {
+			return WORKOUT_TYPE_OPEN_WATER_SWIM
+		}
+		if typeStr == WORKOUT_TYPE_STR_POOL_SWIM {
+			return WORKOUT_TYPE_POOL_SWIM
+		}
+		if typeStr == WORKOUT_TYPE_STR_TECHNIQUE_SWIM {
+			return WORKOUT_TYPE_TECHNIQUE_SWIM
+		}
+		throw WorkoutException.runtimeError("Invalid workout type string.")
 	}
 }

@@ -10,7 +10,8 @@ class BroadcastManager {
 	
 	var locationCache: Array<String> = []      // Locations to be sent
 	var accelerometerCache: Array<String> = [] // Accelerometer readings to be sent
-	var lastCacheFlush: UInt64 = 0             // Unix time of the cache flush
+	var lastCacheFlushTime: UInt64 = 0         // Unix time of the most recent cache flush
+	var lastSendTime: UInt64 = 0               // Unix time of the most recent transmission
 	var deviceId: String? = Preferences.uuid() // Unique identifier for the device doing the sending
 	var dataBeingSent: String = ""             // Formatted data to be sent
 	var errorSending: Bool = false             // Whether or not the last send was successful
@@ -57,9 +58,10 @@ class BroadcastManager {
 				if httpResponse.statusCode == 200 {
 					self.dataBeingSent = ""
 					self.errorSending = false
+					self.lastSendTime = UInt64(time(nil))
 				}
 				else {
-//					self.displayMessage(text: MESSAGE_ERROR_SENDING)
+					self.displayMessage(text: "Error sending data to the server.")
 					self.errorSending = true
 				}
 			}
@@ -84,7 +86,7 @@ class BroadcastManager {
 			else {
 				NSLog("Waiting on previous data to be sent.")
 			}
-			self.lastCacheFlush = UInt64(time(nil))
+			self.lastCacheFlushTime = UInt64(time(nil))
 			return
 		}
 		
@@ -136,7 +138,7 @@ class BroadcastManager {
 			self.sendToServer(hostName: hostName, path: REMOTE_API_UPDATE_STATUS_URL, data: post, activityId: self.currentActivityId, isStopped: isStopped)
 		}
 		
-		self.lastCacheFlush = UInt64(time(nil))
+		self.lastCacheFlushTime = UInt64(time(nil))
 	}
 	
 	func broadcast() {
@@ -144,7 +146,7 @@ class BroadcastManager {
 		let rate = Preferences.broadcastRate()
 		
 		// If we have data to send and it's been long enough since we last sent then flush the cache.
-		if ((self.locationCache.count > 0 || self.accelerometerCache.count > 0) && (UInt64(time(nil)) - self.lastCacheFlush > rate)) {
+		if ((self.locationCache.count > 0 || self.accelerometerCache.count > 0) && (UInt64(time(nil)) - self.lastCacheFlushTime > rate)) {
 			self.flushGlobalBroadcastCacheRest(isStopped: false)
 		}
 	}
@@ -269,7 +271,8 @@ class BroadcastManager {
 	@objc func activityStarted(notification: NSNotification) {
 		self.locationCache.removeAll()
 		self.accelerometerCache.removeAll()
-		self.lastCacheFlush = UInt64(time(nil))
+		self.lastCacheFlushTime = UInt64(time(nil))
+		self.lastSendTime = 0
 		self.deviceId = Preferences.uuid()
 		self.currentActivityId = self.getCurrentActivityId()
 		self.currentActivityType = self.getCurrentActivityType()

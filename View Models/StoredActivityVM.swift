@@ -72,11 +72,13 @@ class StoredActivityVM : ObservableObject {
 		}
 	}
 
+	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in HealthKit.
 	func loadSensorDataFromHealthKit() {
 		let healthKit = HealthManager.shared
 		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId)
 	}
 
+	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in our own database.
 	func loadSensorDataFromDb() {
 		if LoadAllHistoricalActivitySensorData(self.activityIndex) {
 			
@@ -270,31 +272,46 @@ class StoredActivityVM : ObservableObject {
 		var startTime: time_t = 0
 		var endTime: time_t = 0
 
-		GetHistoricalActivityStartAndEndTime(self.activityIndex, &startTime, &endTime)
+		if self.source == ActivitySummary.Source.database {
+			GetHistoricalActivityStartAndEndTime(self.activityIndex, &startTime, &endTime)
+		}
+		else if self.source == ActivitySummary.Source.healthkit {
+		}
 		return startTime
 	}
 
+	/// @brief Exports the activity to the specified directory, in the specified file format..
 	func exportActivityToFile(fileFormat: FileFormat, dirName: String) throws -> String {
-		let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, dirName))
-		
-		guard fileNamePtr != nil else {
-			throw ActivityExportException.runtimeError("Export failed!")
-		}
-		
-		let fileName = String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
+		var fileName = ""
 
-		do {
-			fileNamePtr!.deallocate()
+		if self.source == ActivitySummary.Source.database {
+			let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, dirName))
+			
+			guard fileNamePtr != nil else {
+				throw ActivityExportException.runtimeError("Export failed!")
+			}
+			
+			fileName = String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
+			
+			do {
+				fileNamePtr!.deallocate()
+			}
 		}
-		
+		else if self.source == ActivitySummary.Source.healthkit {
+			let healthKit = HealthManager.shared
+			fileName = try healthKit.exportActivityToFile(activityId: self.activityId, fileFormat: fileFormat, dirName: dirName)
+		}
+
 		return fileName
 	}
 
+	/// @brief Exports the activity to the temp directory, in the specified file format..
 	func exportActivityToTempFile(fileFormat: FileFormat) throws -> String {
 		let directory = NSTemporaryDirectory()
 		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: directory)
 	}
 
+	/// @brief Exports the activity to the iCloud drive, in the specified file format..
 	func exportActivityToICloudFile(fileFormat: FileFormat) throws -> String {
 
 		// Build the URL for the application's directory.
@@ -309,38 +326,56 @@ class StoredActivityVM : ObservableObject {
 		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: exportDirUrl!.absoluteString)
 	}
 
+	/// @brief Updates the activity name in our database and also the server, if applicable.
 	func updateActivityName() -> Bool {
-		if UpdateActivityName(self.activityId, self.name) {
-			return ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name)
+		// Only applicable to activities in our own database.
+		if self.source == ActivitySummary.Source.database {
+			if UpdateActivityName(self.activityId, self.name) {
+				return ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name)
+			}
 		}
 		return false
 	}
 
+	/// @brief Updates the activity description in our database and also the server, if applicable.
 	func updateActivityDescription() -> Bool {
-		if UpdateActivityDescription(self.activityId, self.description) {
-			return ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description)
+		// Only applicable to activities in our own database.
+		if self.source == ActivitySummary.Source.database {
+			if UpdateActivityDescription(self.activityId, self.description) {
+				return ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description)
+			}
 		}
 		return false
 	}
 
+	/// @brief Deletes this activity from our database and also the server, if applicable.
 	func deleteActivity() -> Bool {
-		if DeleteActivityFromDatabase(self.activityId) {
-			return ApiClient.shared.deleteActivity(activityId: self.activityId)
+		// Only applicable to activities in our own database.
+		if self.source == ActivitySummary.Source.database {
+			if DeleteActivityFromDatabase(self.activityId) {
+				return ApiClient.shared.deleteActivity(activityId: self.activityId)
+			}
 		}
 		return false
 	}
-	
+
+	/// @brief Returns any tags that were applied to this activity.
 	func listTags() -> Array<String> {
-		let pointer = UnsafeMutablePointer<TagsCallbackType>.allocate(capacity: 1)
-		
-		defer {
-			pointer.deinitialize(count: 1)
-			pointer.deallocate()
+		var tags: Array<String> = []
+
+		// Only applicable to activities in our own database.
+		if self.source == ActivitySummary.Source.database {
+			let pointer = UnsafeMutablePointer<TagsCallbackType>.allocate(capacity: 1)
+			
+			defer {
+				pointer.deinitialize(count: 1)
+				pointer.deallocate()
+			}
+			
+			pointer.pointee = TagsCallbackType(tags: [])
+			RetrieveTags(self.activityId, tagsCallback, pointer)
+			tags = pointer.pointee.tags
 		}
-		
-		pointer.pointee = TagsCallbackType(tags: [])
-		RetrieveTags(self.activityId, tagsCallback, pointer)
-		let tags = pointer.pointee.tags
 		return tags
 	}
 }

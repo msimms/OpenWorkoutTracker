@@ -7,7 +7,6 @@ import SwiftUI
 
 struct ContentView: View {
 	@State private var showingActivitySelection: Bool = false
-	@State var pushed: Bool = true
 	@State private var showingResetConfirmation: Bool = false
 
 	var body: some View {

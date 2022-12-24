@@ -104,10 +104,8 @@ struct ProfileView: View {
 					}
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
 			}
-			.alert("Invalid value!", isPresented: self.$showingHeightError) {
-			}
-			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
-			}
+			.alert("Invalid value!", isPresented: self.$showingHeightError) { }
+			.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 			.padding(5)
 
 			// User's weight
@@ -129,10 +127,8 @@ struct ProfileView: View {
 					}
 				Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
 			}
-			.alert("Invalid value!", isPresented: self.$showingWeightError) {
-			}
-			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
-			}
+			.alert("Invalid value!", isPresented: self.$showingWeightError) { }
+			.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 			.padding(5)
 
 			// User's FTP
@@ -154,10 +150,8 @@ struct ProfileView: View {
 					}
 				Text(" watts")
 			}
-			.alert("Invalid value!", isPresented: self.$showingFtpError) {
-			}
-			.alert("Error storing the new value!", isPresented: self.$showingApiError) {
-			}
+			.alert("Invalid value!", isPresented: self.$showingFtpError) { }
+			.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 			.padding(5)
 
 			Spacer()

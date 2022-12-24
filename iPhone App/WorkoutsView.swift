@@ -40,11 +40,11 @@ struct WorkoutsView: View {
 							Preferences.setWorkoutGoal(value: goal)
 							
 							// Regenerate
-							if self.workoutsVM.generateWorkouts() {
-							}
+							self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
 						}
 					}
 				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				Spacer()
 				Text(WorkoutsVM.workoutGoalToString(goal: Preferences.workoutGoal()))
@@ -64,11 +64,11 @@ struct WorkoutsView: View {
 							Preferences.setWorkoutGoalType(value: goalType)
 
 							// Regenerate
-							if self.workoutsVM.generateWorkouts() {
-							}
+							self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
 						}
 					}
 				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				Spacer()
 				Text(WorkoutsVM.workoutGoalTypeToString(goalType: Preferences.workoutGoalType()))
@@ -107,12 +107,11 @@ struct WorkoutsView: View {
 							Preferences.setWorkoutLongRunDay(value: day)
 
 							// Regenerate
-							self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+							self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
 						}
 					}
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
-				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				Spacer()
 				Text(WorkoutsVM.dayTypeToString(day: Preferences.workoutLongRunDay()))
@@ -126,10 +125,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludeBikeRides(value: allowCyclingWorkouts)
 
 					// Regenerate
-					self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
-				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
 			Toggle("Pool Swims", isOn: $allowPoolSwimWorkouts)
@@ -138,10 +136,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludePoolSwims(value: allowPoolSwimWorkouts)
 
 					// Regenerate
-					self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
-				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
 			Toggle("Open Water Swims", isOn: $allowOpenWaterSwims)
@@ -150,10 +147,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludeOpenWaterSwims(value: allowOpenWaterSwims)
 
 					// Regenerate
-					self.showingWorkoutGenError = !self.workoutsVM.generateWorkouts()
+					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) {
-				}
+				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
 
