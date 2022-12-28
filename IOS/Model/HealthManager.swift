@@ -645,7 +645,7 @@ class HealthManager {
 	func subscribeToHeartRateUpdates() {
 		let sampleType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
 		self.hrQuery = HKObserverQuery.init(sampleType: sampleType!, predicate: nil, updateHandler: { query, completionHandler, error in
-			if error != nil {
+			if error == nil {
 				self.subscribeToQuantitySamplesOfType(quantityType: sampleType!, callback: { quantity, date, error in
 					if quantity != nil && date != nil {
 						let heartRateUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
