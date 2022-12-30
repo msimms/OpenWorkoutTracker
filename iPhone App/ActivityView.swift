@@ -443,6 +443,14 @@ struct ActivityView: View {
 						.resizable()
 						.frame(width: 32.0, height: 32.0)
 						.opacity(self.sensorMgr.cadenceConnected ? 1 : 0)
+					Image(systemName: "figure.run")
+						.resizable()
+						.frame(width: 32.0, height: 32.0)
+						.opacity(self.sensorMgr.runningPowerConnected ? 1 : 0)
+					Image(systemName: "antenna.radiowaves.left.and.right.circle")
+						.resizable()
+						.frame(width: 32.0, height: 32.0)
+						.opacity(self.broadcastMgr.lastSendTime > 0 && Preferences.broadcastShowIcon() ? 1 : 0)
 				}
 				
 				Spacer()

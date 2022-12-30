@@ -24,7 +24,11 @@ class ApiClient : ObservableObject {
 	}
 	
 	func makeRequest(url: String, method: String, data: Dictionary<String,Any>) -> Bool {
-		
+
+		guard Preferences.isFeatureEnabled(feature: FEATURE_BROADCAST) else {
+			return true
+		}
+
 		// If we're not supposed to be using the broadcast functionality then turn around right here.
 		if !Preferences.shouldBroadcastToServer() {
 			return true
@@ -170,7 +174,7 @@ class ApiClient : ObservableObject {
 	
 	func isLoggedIn() -> Bool {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_IS_LOGGED_IN_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:])
 	}
 	
 	func logout() -> Bool {

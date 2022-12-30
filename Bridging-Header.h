@@ -8,6 +8,8 @@
 #include "ActivityType.h"
 #include "ActivityViewType.h"
 #include "AxisName.h"
+#include "Cookies.h"
+#include "Feature.h"
 #include "Notifications.h"
 #include "Params.h"
 #include "Urls.h"

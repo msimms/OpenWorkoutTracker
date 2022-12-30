@@ -68,9 +68,10 @@ class HealthManager {
 		let activeEnergyBurnType = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
 		let birthdayType = HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!
 		let biologicalSexType = HKObjectType.characteristicType(forIdentifier: .biologicalSex)!
+		let routeType = HKObjectType.seriesType(forIdentifier: HKWorkoutRouteTypeIdentifier)!
 		let workoutType = HKObjectType.workoutType()
-		let writeTypes = Set([heightType, weightType, heartRateType, bikeType, runType, swimType, activeEnergyBurnType])
-		let readTypes = Set([heartRateType, heightType, weightType, birthdayType, biologicalSexType, workoutType])
+		let writeTypes = Set([heightType, weightType, heartRateType, bikeType, runType, swimType, activeEnergyBurnType, workoutType, routeType])
+		let readTypes = Set([heartRateType, heightType, weightType, birthdayType, biologicalSexType, workoutType, routeType])
 #endif
 		healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { result, error in
 			do {
@@ -643,6 +644,10 @@ class HealthManager {
 	}
 
 	func subscribeToHeartRateUpdates() {
+		guard self.hrQuery == nil else {
+			return
+		}
+
 		let sampleType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
 		self.hrQuery = HKObserverQuery.init(sampleType: sampleType!, predicate: nil, updateHandler: { query, completionHandler, error in
 			if error == nil {

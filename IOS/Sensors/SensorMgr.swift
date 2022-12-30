@@ -17,6 +17,7 @@ class SensorSummary : Identifiable {
 	var id: UUID = UUID()
 	var name: String = ""
 	var peripheral: CBPeripheral! = nil
+	var sensors: Array<CBUUID> = []
 	var enabled: Bool = false
 }
 
@@ -34,6 +35,7 @@ class SensorMgr : ObservableObject {
 	@Published var heartRateConnected: Bool = false
 	@Published var powerConnected: Bool = false
 	@Published var cadenceConnected: Bool = false
+	@Published var runningPowerConnected: Bool = false
 	@Published var radarConnected: Bool = false
 	private var lastCrankCount: UInt16 = 0
 	private var lastCrankCountTime: UInt64 = 0
@@ -68,25 +70,44 @@ class SensorMgr : ObservableObject {
 	}
 
 	/// Called when a service is discovered.
-	func serviceDiscovered(serviceId: CBUUID) {
-		if serviceId == HEART_RATE_SERVICE_ID {
-			self.heartRateConnected = true
+	func serviceDiscovered(peripheral: CBPeripheral, serviceId: CBUUID) {
+		var found: Bool = false
+
+		for sensor in self.sensors {
+			if sensor.peripheral == peripheral && sensor.enabled {
+				found = true
+				break
+			}
 		}
-		else if serviceId == POWER_SERVICE_ID {
-			self.powerConnected = true
-		}
-		else if serviceId == CADENCE_SERVICE_ID {
-			self.cadenceConnected = true
-		}
-		else if serviceId == RADAR_SERVICE_ID {
-			self.radarConnected = true
+
+		if found {
+			if serviceId == HEART_RATE_SERVICE_ID {
+				self.heartRateConnected = true
+			}
+			else if serviceId == POWER_SERVICE_ID {
+				self.powerConnected = true
+			}
+			else if serviceId == CADENCE_SERVICE_ID {
+				self.cadenceConnected = true
+			}
+			else if serviceId == RUNNING_POWER_SERVICE_ID {
+				self.runningPowerConnected = true
+			}
+			else if serviceId == RADAR_SERVICE_ID {
+				self.radarConnected = true
+			}
 		}
 	}
 
 	func calculateCadence(curTimeMs: UInt64, currentCrankCount: UInt16, currentCrankTime: UInt64) {
 		let msSinceLastUpdate = curTimeMs - self.lastCadenceUpdateTimeMs
 		var elapsedSecs: Double = 0.0
-		
+
+		// Sensor has reset
+		if currentCrankCount == 0 {
+			self.firstCadenceUpdate = true
+		}
+	
 		if currentCrankTime >= self.lastCrankCountTime { // handle wrap-around
 			elapsedSecs = Double(currentCrankTime - self.lastCrankCountTime) / 1024.0
 		}
@@ -131,11 +152,12 @@ class SensorMgr : ObservableObject {
 				else if serviceId == CADENCE_SERVICE_ID {
 					let cadenceData = try decodeCyclingCadenceReading(data: value)
 					//let currentWheelRevCount = reading[KEY_NAME_WHEEL_REV_COUNT]
-					let currentCrankCount = cadenceData[KEY_NAME_WHEEL_CRANK_COUNT]
-					let currentCrankTime = cadenceData[KEY_NAME_WHEEL_CRANK_TIME]
-					let timestamp = NSDate().timeIntervalSince1970
-					self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount!), currentCrankTime: UInt64(currentCrankTime!))
-					ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
+					if  let currentCrankCount = cadenceData[KEY_NAME_WHEEL_CRANK_COUNT],
+						let currentCrankTime = cadenceData[KEY_NAME_WHEEL_CRANK_TIME] {
+						let timestamp = NSDate().timeIntervalSince1970 * 1000
+						self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
+						ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
+					}
 				}
 				else if serviceId == RADAR_SERVICE_ID {
 					self.radarMeasurements = decodeCyclingRadarReading(data: value)
@@ -148,7 +170,19 @@ class SensorMgr : ObservableObject {
 	}
 
 	/// Called when a peripheral disconnects.
-	func peripheralDiscovered(peripheral: CBPeripheral) {
+	func peripheralDisconnected(peripheral: CBPeripheral) {
+		var removed: Bool = false
+		
+		for (index, sensor) in self.sensors.enumerated() {
+			if sensor.peripheral == peripheral && sensor.enabled {
+				self.sensors.remove(at: index)
+				removed = true
+				break
+			}
+		}
+		
+		if removed {
+		}
 	}
 
 	func startSensors() {
@@ -156,13 +190,14 @@ class SensorMgr : ObservableObject {
 			let interestingServices = [ HEART_RATE_SERVICE_ID,
 										POWER_SERVICE_ID,
 										CADENCE_SERVICE_ID,
+										RUNNING_POWER_SERVICE_ID,
 										RADAR_SERVICE_ID ]
 			
 			self.scanner.startScanningForServices(serviceIdsToScanFor: interestingServices,
 												  peripheralCallbacks: [peripheralDiscovered],
 												  serviceCallbacks: [serviceDiscovered],
 												  valueUpdatedCallbacks: [valueUpdated],
-												  peripheralDisconnectedCallbacks: [peripheralDiscovered])
+												  peripheralDisconnectedCallbacks: [peripheralDisconnected])
 		}
 
 		self.location.start()

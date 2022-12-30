@@ -40,6 +40,10 @@ struct HistoryView: View {
 											.bold()
 									}
 									Text("\(self.dateFormatter.string(from: item.startTime))")
+									if item.source == ActivitySummary.Source.healthkit {
+										Text("HealthKit")
+											.bold()
+									}
 								}
 							}
 						}

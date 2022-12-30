@@ -102,30 +102,41 @@ struct SettingsView: View {
 			.padding(5)
 
 			Spacer()
-		}
-		.padding(10)
-		.toolbar {
-			ToolbarItem(placement: .bottomBar) {
-				HStack() {
+
+			HStack() {
+				if Preferences.shouldBroadcastToServer() {
 					if self.apiClient.loggedIn {
-						Button("Logout") {
+						Button {
 							if !self.apiClient.logout() {
 								self.showingLogoutError = true
 							}
+						} label: {
+							Text(self.apiClient.loggedIn ? "Logout" : "Login")
+								.foregroundColor(.white)
+								.fontWeight(Font.Weight.heavy)
+								.frame(minWidth: 0, maxWidth: .infinity)
+								.padding()
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.help("Logout")
 						.alert("Failed to logout.", isPresented: $showingLogoutError) {}
+						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+						.opacity(0.8)
+						.bold()
 					}
 					else {
 						NavigationLink(destination: LoginView()) {
 							Text("Login")
+								.foregroundColor(.white)
+								.fontWeight(Font.Weight.heavy)
+								.frame(minWidth: 0, maxWidth: .infinity)
+								.padding()
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.help("Login")
+						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+						.opacity(0.8)
+						.bold()
 					}
 				}
 			}
 		}
+		.padding(10)
     }
 }

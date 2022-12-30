@@ -478,7 +478,7 @@ class Preferences {
 	
 	static func setPreferredUnitSystem(system: UnitSystem) {
 		let mydefaults: UserDefaults = UserDefaults.standard
-		switch (system) {
+		switch system {
 		case UNIT_SYSTEM_US_CUSTOMARY:
 			mydefaults.set(PREF_NAME_US_CUSTOMARY, forKey: PREF_NAME_UNITS)
 			break
@@ -731,6 +731,35 @@ class Preferences {
 	static func setMostRecentActivityDescription(value: String) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION)
+	}
+
+	//
+	// Which featurs are enabled
+	//
+
+	static func isFeatureEnabled(feature: Feature) -> Bool {
+		switch feature {
+		case FEATURE_BROADCAST:
+			return true
+		case FEATURE_WORKOUT_PLAN_GENERATION:
+			return true
+		case FEATURE_DROPBOX:
+			return false
+		case FEATURE_STRAVA:
+			return false
+		case FEATURE_RUNKEEPER:
+			return false
+		case FEATURE_STRENGTH_ACTIVITIES:
+			return true
+		case FEATURE_SWIM_ACTIVITIES:
+			return true
+		case FEATURE_MULTISPORT:
+			return true
+		case FEATURE_DEBUG:
+			return true
+		default:
+			return false
+		}
 	}
 
 	//

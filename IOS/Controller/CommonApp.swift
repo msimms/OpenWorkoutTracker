@@ -34,7 +34,12 @@ class CommonApp : ObservableObject {
 		if Preferences.uuid() == nil {
 			Preferences.setUuid(value: UUID().uuidString)
 		}
-	
+
+		// Are we supposed to use the optional web server?
+		if Preferences.shouldBroadcastToServer() {
+			let _ = self.apiClient.isLoggedIn()
+		}
+
 		// Set the user's preferred unit system.
 		SetPreferredUnitSystem(Preferences.preferredUnitSystem())
 
@@ -103,16 +108,26 @@ class CommonApp : ObservableObject {
 				if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 					if responseCode.statusCode == 200 {
 						self.apiClient.loggedIn = true
-						let _ = self.apiClient.syncWithServer() // re-sync
 
-						if let data = notification.object as? Dictionary<String, AnyObject> {
-							if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-								if let sessionDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
-									let sessionCookieStr = sessionDict["cookie"]
-									let sessionExpiry = sessionDict["expiry"]
-								}
+						if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+							if let sessionDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+								let sessionCookieStr = sessionDict["cookie"]
+								let sessionExpiry = sessionDict["expiry"]
+
+								// Dictionary containing the cookie and the associated expiry date.
+								/*let cookieProperties: Dictionary<String, AnyObject> = [:]
+								cookieProperties[NSHTTPCookieName] = SESSION_COOKIE_NAME
+								cookieProperties[NSHTTPCookieValue] = sessionCookieStr
+								cookieProperties[NSHTTPCookiePath] = "/"
+								cookieProperties[NSHTTPCookieDomain] = Preferences.broadcastHostName()
+
+								NSDate* expiryDate = [[NSDate date] initWithTimeIntervalSince1970:[sessionExpiry unsignedIntValue]];
+								[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
+								[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];*/
 							}
 						}
+
+						let _ = self.apiClient.syncWithServer() // re-sync
 					}
 				}
 			}

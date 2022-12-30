@@ -590,6 +590,7 @@
 		2740E12428F2D3F000293B71 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApiClient.swift; path = IOS/Model/ApiClient.swift; sourceTree = "<group>"; };
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
 		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
+		2752B645295E1B680050CCFC /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = IOS/Controller/Feature.h; sourceTree = "<group>"; };
 		277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWithPolyline.swift; sourceTree = "<group>"; };
 		277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntervalSessionSegment.cpp; path = Activities/IntervalSessionSegment.cpp; sourceTree = "<group>"; };
 		277EAC32292412C30091ADF6 /* BrightBeep.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = BrightBeep.aif; path = Sounds/BrightBeep.aif; sourceTree = "<group>"; };
@@ -1028,6 +1029,7 @@
 			isa = PBXGroup;
 			children = (
 				2740E0FA28E90CE300293B71 /* CommonApp.swift */,
+				2752B645295E1B680050CCFC /* Feature.h */,
 			);
 			name = Controller;
 			sourceTree = "<group>";

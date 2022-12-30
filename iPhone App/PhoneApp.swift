@@ -18,7 +18,7 @@ struct PhoneApp: App {
 	
 	func setScreenLockingForActivity(activityType: String) {
 		let screenLocking = ActivityPreferences.getScreenAutoLocking(activityType: activityType)
-		UIApplication.shared.isIdleTimerDisabled = !screenLocking
+		UIApplication.shared.isIdleTimerDisabled = screenLocking
 	}
 	
 	func enableScreenLocking() {
