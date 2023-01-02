@@ -76,6 +76,22 @@ class StoredActivityVM : ObservableObject {
 	func loadSensorDataFromHealthKit() {
 		let healthKit = HealthManager.shared
 		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId)
+		
+		var coordinate: Coordinate = Coordinate()
+		var pointIndex: Int = 0
+
+		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &coordinate, pointIndex: pointIndex) {
+			self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
+			pointIndex += 1
+		}
+
+		if self.locationTrack.count > 0 {
+			self.startingLat = self.locationTrack[0].latitude
+			self.startingLon = self.locationTrack[0].longitude
+#if !os(watchOS)
+			self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
+#endif
+		}
 	}
 
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in our own database.
@@ -95,8 +111,8 @@ class StoredActivityVM : ObservableObject {
 				}
 				
 				if self.locationTrack.count > 0 {
-					self.startingLat = locationTrack[0].latitude
-					self.startingLon = locationTrack[0].longitude
+					self.startingLat = self.locationTrack[0].latitude
+					self.startingLon = self.locationTrack[0].longitude
 #if !os(watchOS)
 					self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
 #endif
@@ -176,6 +192,10 @@ class StoredActivityVM : ObservableObject {
 				}
 			}
 		}
+	}
+
+	func isMovingActivity() -> Bool {
+		return self.locationTrack.count > 0
 	}
 
 	/// @brief Returns a list of attributes attribute names that are applicable to this activity.

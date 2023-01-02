@@ -34,6 +34,7 @@ class HealthManager {
 	private var distances: Dictionary<String, Array<Double>> = [:] // arrays of distances computed from the locations array, key is the activity ID
 	private var speeds: Dictionary<String, Array<Double>> = [:] // arrays of speeds computed from the distances array, key is the activity ID
 	private var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
+	private var locationQueryGroup: DispatchGroup = DispatchGroup() // tracks location/route queries until they are completed
 	private var hrQuery: HKQuery? = nil // the query that reads heart rate on the watch
 
 	/// Singleton constructor
@@ -242,10 +243,12 @@ class HealthManager {
 		var speeds: Array<Double> = [0]
 		
 		for (index, distance2) in distances.enumerated() {
-			let distance1 = distances[index - 1]
-
-			let speed = distance2 - distance1;
-			speeds.append(speed)
+			if index > 0 {
+				let distance1 = distances[index - 1]
+				
+				let speed = distance2 - distance1;
+				speeds.append(speed)
+			}
 		}
 		
 		self.speeds[activityId] = speeds
@@ -278,6 +281,7 @@ class HealthManager {
 			if routeData != nil {
 				if var activityLocations = self.locations[activityId] {
 					activityLocations.append(contentsOf: routeData!)
+					self.locations[activityId] = activityLocations
 				}
 				else {
 					self.locations[activityId] = Array(routeData!)
@@ -288,9 +292,11 @@ class HealthManager {
 				if let activityLocations = self.locations[activityId] {
 					self.calculateDistancesFromLocations(locations: activityLocations, activityId:activityId)
 				}
+				self.queryGroup.leave()
 			}
 		}
 
+		self.queryGroup.enter()
 		self.healthStore.execute(query)
 	}
 
@@ -306,9 +312,13 @@ class HealthManager {
 					}
 				}
 			}
+
+			self.queryGroup.leave()
 		})
-		
+
+		self.queryGroup.enter()
 		self.healthStore.execute(query)
+		self.waitForHealthKitQueries()
 	}
 
 	func readLocationPointsFromHealthStoreForActivityId(activityId: String) {

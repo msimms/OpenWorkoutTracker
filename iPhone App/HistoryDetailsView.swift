@@ -29,7 +29,7 @@ struct HistoryDetailsView: View {
 	var body: some View {
 		VStack(alignment: .center) {
 			// Map
-			if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
+			if self.activityVM.isMovingActivity() {
 				let region = MKCoordinateRegion(
 					center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
 					span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
