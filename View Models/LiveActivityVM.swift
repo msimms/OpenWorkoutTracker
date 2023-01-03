@@ -365,6 +365,9 @@ class LiveActivityVM : ObservableObject {
 			notificationData[KEY_NAME_END_TIME] = summary.endTime
 			notificationData[KEY_NAME_DISTANCE] = distance.value.doubleVal
 			notificationData[KEY_NAME_CALORIES] = calories.value.doubleVal
+#if !os(watchOS)
+			notificationData[KEY_NAME_LOCATIONS] = self.locationTrack
+#endif
 			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: notificationData)
 			NotificationCenter.default.post(notification)
 		}

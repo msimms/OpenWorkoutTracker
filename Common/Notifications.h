@@ -64,6 +64,7 @@
 #define KEY_NAME_DISTANCE                             "Distance"
 #define KEY_NAME_UNITS                                "Units"
 #define KEY_NAME_CALORIES                             "Calories"
+#define KEY_NAME_LOCATIONS                            "Locations"
 #define KEY_NAME_RESPONSE_CODE                        "ResponseCode"
 #define KEY_NAME_RESPONSE_DATA                        "ResponseData"
 #define KEY_NAME_DATA                                 "Data"

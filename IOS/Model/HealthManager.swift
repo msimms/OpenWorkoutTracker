@@ -441,18 +441,49 @@ class HealthManager {
 	}
 
 	func saveHeartRateIntoHealthStore(beats: Double) {
+		let now = Date()
+		let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+		let hrQuantity = HKQuantity.init(unit: hrUnit, doubleValue: beats)
+		let hrType = HKQuantityType.init(HKQuantityTypeIdentifier.heartRate)
+		let hrSample = HKQuantitySample.init(type: hrType, quantity: hrQuantity, start: now, end: now)
+		self.healthStore.save(hrSample, withCompletion: {_,_ in })
 	}
 
-	func saveRunningWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date) {
+	func saveRunningWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
+		// Save the distance.
 		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
 		let distanceType = HKQuantityType.init(HKQuantityTypeIdentifier.distanceWalkingRunning)
 		let distanceSample = HKQuantitySample.init(type: distanceType, quantity: distanceQuantity, start: startDate, end: endDate)
 		self.healthStore.save(distanceSample, withCompletion: {_,_ in })
+
+		// Save the workout.
+		let workout = HKWorkout(activityType: .running, start: startDate, end: endDate)
+		self.healthStore.save(workout, withCompletion: {_,_ in
+			
+			// Append the route
+			self.saveWorkoutRouteIntoHealthStore(workout: workout, locations: locations)
+		})
 	}
 
-	func saveCyclingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date) {
+	func saveCyclingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
+		// Save the distance.
 		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
 		let distanceType = HKQuantityType.init(HKQuantityTypeIdentifier.distanceCycling)
+		let distanceSample = HKQuantitySample.init(type: distanceType, quantity: distanceQuantity, start: startDate, end: endDate)
+		self.healthStore.save(distanceSample, withCompletion: {_,_ in })
+
+		// Save the workout.
+		let workout = HKWorkout(activityType: .cycling, start: startDate, end: endDate)
+		self.healthStore.save(workout, withCompletion: {_,_ in
+			
+			// Append the route
+			self.saveWorkoutRouteIntoHealthStore(workout: workout, locations: locations)
+		})
+	}
+
+	func saveSwimmingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date) {
+		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
+		let distanceType = HKQuantityType.init(HKQuantityTypeIdentifier.distanceSwimming)
 		let distanceSample = HKQuantitySample.init(type: distanceType, quantity: distanceQuantity, start: startDate, end: endDate)
 		self.healthStore.save(distanceSample, withCompletion: {_,_ in })
 	}
@@ -463,6 +494,23 @@ class HealthManager {
 		let calorieType = HKQuantityType.init(HKQuantityTypeIdentifier.activeEnergyBurned)
 		let calorieSample = HKQuantitySample.init(type: calorieType, quantity: calorieQuantity, start: startDate, end: endDate)
 		self.healthStore.save(calorieSample, withCompletion: {_,_ in })
+	}
+	
+	func saveWorkoutRouteIntoHealthStore(workout: HKWorkout, locations: Array<CLLocationCoordinate2D>) {
+		guard locations.count > 0 else {
+			return
+		}
+
+		var tempLocations: [CLLocation] = []
+		for location in locations {
+			tempLocations.append(CLLocation(latitude: location.latitude, longitude: location.longitude))
+		}
+
+		let routeBuilder = HKWorkoutRouteBuilder(healthStore: self.healthStore, device: nil)
+		routeBuilder.insertRouteData(tempLocations) { (success, error) in
+		}
+		routeBuilder.finishRoute(with: workout, metadata: nil) { (newRoute, error) in
+		}
 	}
 
 	func convertIndexToActivityId(index: size_t) -> String {
@@ -630,21 +678,29 @@ class HealthManager {
 		
 		if let notificationData = notification.object as? Dictionary<String, Any> {
 
-			if  let activityType = notificationData[KEY_NAME_ACTIVITY_TYPE] as? String,
+			if  let activityId = notificationData[KEY_NAME_ACTIVITY_ID] as? String,
+				let activityType = notificationData[KEY_NAME_ACTIVITY_TYPE] as? String,
 				let startTime = notificationData[KEY_NAME_START_TIME] as? Date,
 				let endTime = notificationData[KEY_NAME_END_TIME] as? Date,
 				let distance = notificationData[KEY_NAME_DISTANCE] as? Double,
-				let calories = notificationData[KEY_NAME_CALORIES] as? Double {
+				let calories = notificationData[KEY_NAME_CALORIES] as? Double,
+				let locations = notificationData[KEY_NAME_LOCATIONS] as? Array<CLLocationCoordinate2D> {
 				
 				let units = HealthManager.unitSystemToHKDistanceUnit(units: Preferences.preferredUnitSystem())
 
 				// HealthKit limitation: Cannot have activities lasting longer than four days.
 				if endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 < 345600 {
 					if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
-						self.saveCyclingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
+						self.saveCyclingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
 					}
 					else if activityType == ACTIVITY_TYPE_RUNNING || activityType == ACTIVITY_TYPE_WALKING {
-						self.saveRunningWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
+						self.saveRunningWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
+					}
+					else if activityType == ACTIVITY_TYPE_POOL_SWIMMING {
+						self.saveSwimmingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
+					}
+					else if activityType == ACTIVITY_TYPE_OPEN_WATER_SWIMMING {
+						self.saveSwimmingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
 					}
 				}
 				
