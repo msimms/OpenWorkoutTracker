@@ -19,7 +19,7 @@ struct SensorsView: View {
 				Group() {
 					Text("Sensors")
 						.bold()
-					ForEach(self.sensorMgr.sensors) { sensor in
+					ForEach(self.sensorMgr.peripherals) { sensor in
 						HStack() {
 							Text(sensor.name)
 							Spacer()

@@ -13,11 +13,11 @@ let CADENCE_SERVICE_ID = CBUUID(data: BT_SERVICE_CYCLING_SPEED_AND_CADENCE)
 let RUNNING_POWER_SERVICE_ID = CBUUID(data: BT_SERVICE_RUNNING_SPEED_AND_CADENCE)
 let RADAR_SERVICE_ID = CBUUID(data: CUSTOM_BT_SERVICE_VARIA_RADAR)
 
-class SensorSummary : Identifiable {
+class PeripheralSummary : Identifiable {
 	var id: UUID = UUID()
 	var name: String = ""
 	var peripheral: CBPeripheral! = nil
-	var sensors: Array<CBUUID> = []
+	var services: Array<CBUUID> = []
 	var enabled: Bool = false
 }
 
@@ -27,7 +27,7 @@ class SensorMgr : ObservableObject {
 	var scanner: BluetoothScanner = BluetoothScanner()
 	var accelerometer: Accelerometer = Accelerometer()
 	var location: LocationSensor = LocationSensor()
-	@Published var sensors: Array<SensorSummary> = []
+	@Published var peripherals: Array<PeripheralSummary> = []
 	@Published var currentHeartRateBpm: UInt16 = 0
 	@Published var currentPowerWatts: UInt16 = 0
 	@Published var currentCadenceRpm: UInt16 = 0
@@ -51,36 +51,45 @@ class SensorMgr : ObservableObject {
 	func peripheralDiscovered(peripheral: CBPeripheral, name: String) -> Bool {
 		var found: Bool = false
 
-		for sensor in self.sensors {
-			if sensor.name == name {
+		for existingPeripheral in self.peripherals {
+			if existingPeripheral.name == name {
 				found = true
 				break
 			}
 		}
 
 		if !found {
-			let summary = SensorSummary()
+			let summary = PeripheralSummary()
 			summary.id = peripheral.identifier
 			summary.name = name
 			summary.peripheral = peripheral
 			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
-			self.sensors.append(summary)
+			self.peripherals.append(summary)
 		}
 		return true
 	}
 
 	/// Called when a service is discovered.
 	func serviceDiscovered(peripheral: CBPeripheral, serviceId: CBUUID) {
-		var found: Bool = false
+		var foundPeripheral: Bool = false
+		var foundService: Bool = false
 
-		for sensor in self.sensors {
-			if sensor.peripheral == peripheral && sensor.enabled {
-				found = true
+		for existingPeripheral in self.peripherals {
+			if existingPeripheral.peripheral == peripheral && existingPeripheral.enabled {
+				for existingServiceId in existingPeripheral.services {
+					if existingServiceId == serviceId {
+						foundService = true
+					}
+				}
+				if !foundService {
+					existingPeripheral.services.append(serviceId)
+				}
+				foundPeripheral = true
 				break
 			}
 		}
 
-		if found {
+		if foundPeripheral {
 			if serviceId == HEART_RATE_SERVICE_ID {
 				self.heartRateConnected = true
 			}
@@ -159,6 +168,8 @@ class SensorMgr : ObservableObject {
 						ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
 					}
 				}
+				else if serviceId == RUNNING_POWER_SERVICE_ID {
+				}
 				else if serviceId == RADAR_SERVICE_ID {
 					self.radarMeasurements = decodeCyclingRadarReading(data: value)
 					ProcessRadarReading(UInt(self.radarMeasurements.count), UInt64(Date().timeIntervalSince1970))
@@ -173,15 +184,47 @@ class SensorMgr : ObservableObject {
 	func peripheralDisconnected(peripheral: CBPeripheral) {
 		var removed: Bool = false
 		
-		for (index, sensor) in self.sensors.enumerated() {
-			if sensor.peripheral == peripheral && sensor.enabled {
-				self.sensors.remove(at: index)
+		for (index, existingPeripheral) in self.peripherals.enumerated() {
+			if existingPeripheral.peripheral == peripheral && existingPeripheral.enabled {
+				self.peripherals.remove(at: index)
 				removed = true
 				break
 			}
 		}
 		
 		if removed {
+			var tempHeartRateConnected: Bool = false
+			var tempPowerConnected: Bool = false
+			var tempCadenceConnected: Bool = false
+			var tempRunningPowerConnected: Bool = false
+			var tempRadarConnected: Bool = false
+
+			// Rebuild the list of connected and enabled services.
+			for existingPeripheral in self.peripherals {
+				for serviceId in existingPeripheral.services {
+					if serviceId == HEART_RATE_SERVICE_ID {
+						tempHeartRateConnected = true
+					}
+					else if serviceId == POWER_SERVICE_ID {
+						tempPowerConnected = true
+					}
+					else if serviceId == CADENCE_SERVICE_ID {
+						tempCadenceConnected = true
+					}
+					else if serviceId == RUNNING_POWER_SERVICE_ID {
+						tempRunningPowerConnected = true
+					}
+					else if serviceId == RADAR_SERVICE_ID {
+						tempRadarConnected = true
+					}
+				}
+			}
+
+			self.heartRateConnected = tempHeartRateConnected
+			self.powerConnected = tempPowerConnected
+			self.cadenceConnected = tempCadenceConnected
+			self.runningPowerConnected = tempRunningPowerConnected
+			self.radarConnected = tempRadarConnected
 		}
 	}
 
