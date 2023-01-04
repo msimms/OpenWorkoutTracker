@@ -42,7 +42,7 @@ struct HistoryDetailsView: View {
 			}
 
 			// Name
-			Section(header: Text("Name")) {
+			Section(header: Text("Name").bold()) {
 				TextField("Name", text: self.$activityVM.name)
 					.onChange(of: self.activityVM.name) { value in
 						showingUpdateNameError = !self.activityVM.updateActivityName()
@@ -51,7 +51,7 @@ struct HistoryDetailsView: View {
 			}
 
 			// Description
-			Section(header: Text("Description")) {
+			Section(header: Text("Description").bold()) {
 				TextField("Description", text: self.$activityVM.description, axis: .vertical)
 					.onChange(of: self.activityVM.description) { value in
 						showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
@@ -61,7 +61,7 @@ struct HistoryDetailsView: View {
 			}
 
 			// Attributes Summary
-			Section(header: Text("Attributes")) {
+			Section(header: Text("Attributes").bold()) {
 				List(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
 					if item == "Heart Rate" {
 						NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red))
@@ -93,6 +93,23 @@ struct HistoryDetailsView: View {
 							Spacer()
 							Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
 						}
+					}
+				}
+				.listStyle(.plain)
+			}
+				
+			if self.activityVM.isMovingActivity() {
+				Section(header: Text("Splits").bold()) {
+					let splits = self.activityVM.getSplitStrings()
+
+					if splits.count > 0 {
+						List(splits, id: \.self) { split in
+							Text(split)
+						}
+						.listStyle(.plain)
+					}
+					else {
+						Text("No Splits")
 					}
 				}
 				.listStyle(.plain)

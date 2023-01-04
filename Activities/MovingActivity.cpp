@@ -74,7 +74,8 @@ MovingActivity::~MovingActivity()
 	m_distances.clear();
 	m_smoothedDistances.clear();
 	m_laps.clear();
-	m_splitTimes.clear();
+	m_splitTimesKMs.clear();
+	m_splitTimesMiles.clear();
 }
 
 void MovingActivity::StartNewLap()
@@ -320,11 +321,10 @@ void MovingActivity::UpdateSplitTimes()
 		splitTime.valid = true;
 
 		std::stringstream attributeNameStream;
-		attributeNameStream << ACTIVITY_ATTRIBUTE_SPLIT_TIME;
-		attributeNameStream << "KM ";
+		attributeNameStream << ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM;
 		attributeNameStream << currentKmInt;
 
-		m_splitTimes.insert(ActivityAttributePair(attributeNameStream.str(), splitTime));
+		m_splitTimesKMs.insert(ActivityAttributePair(attributeNameStream.str(), splitTime));
 	}
 
 	if (prevMilesInt != currentMilesInt)
@@ -340,11 +340,10 @@ void MovingActivity::UpdateSplitTimes()
 		splitTime.valid = true;
 		
 		std::stringstream attributeNameStream;
-		attributeNameStream << ACTIVITY_ATTRIBUTE_SPLIT_TIME;
-		attributeNameStream << "Mile ";
+		attributeNameStream << ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE;
 		attributeNameStream << currentMilesInt;
 
-		m_splitTimes.insert(ActivityAttributePair(attributeNameStream.str(), splitTime));
+		m_splitTimesMiles.insert(ActivityAttributePair(attributeNameStream.str(), splitTime));
 	}
 }
 
@@ -881,13 +880,35 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.endTime = segment.endTime;
 		result.valid = true;
 	}
-	else if (attributeName.find(ACTIVITY_ATTRIBUTE_SPLIT_TIME) == 0)
+	else if (attributeName.find(ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM) == 0)
 	{
-		ActivityAttributeMap::const_iterator splitTimesIter = m_splitTimes.find(attributeName);
-		if (splitTimesIter != m_splitTimes.end())
+		ActivityAttributeMap::const_iterator splitTimesIter = m_splitTimesKMs.find(attributeName);
+		if (splitTimesIter != m_splitTimesKMs.end())
 		{
 			result = splitTimesIter->second;
 		}
+	}
+	else if (attributeName.find(ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE) == 0)
+	{
+		ActivityAttributeMap::const_iterator splitTimesIter = m_splitTimesMiles.find(attributeName);
+		if (splitTimesIter != m_splitTimesMiles.end())
+		{
+			result = splitTimesIter->second;
+		}
+	}
+	else if (attributeName.find(ACTIVITY_ATTRIBUTE_NUM_KM_SPLITS) == 0)
+	{
+		result.value.intVal = m_splitTimesKMs.size();
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_COUNT;
+		result.valid = true;
+	}
+	else if (attributeName.find(ACTIVITY_ATTRIBUTE_NUM_MILE_SPLITS) == 0)
+	{
+		result.value.intVal = m_splitTimesMiles.size();
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_COUNT;
+		result.valid = true;
 	}
 	else if (attributeName.find(ACTIVITY_ATTRIBUTE_LAP_TIME) == 0)
 	{

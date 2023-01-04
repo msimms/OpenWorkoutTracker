@@ -678,8 +678,7 @@ class HealthManager {
 		
 		if let notificationData = notification.object as? Dictionary<String, Any> {
 
-			if  let activityId = notificationData[KEY_NAME_ACTIVITY_ID] as? String,
-				let activityType = notificationData[KEY_NAME_ACTIVITY_TYPE] as? String,
+			if  let activityType = notificationData[KEY_NAME_ACTIVITY_TYPE] as? String,
 				let startTime = notificationData[KEY_NAME_START_TIME] as? Date,
 				let endTime = notificationData[KEY_NAME_END_TIME] as? Date,
 				let distance = notificationData[KEY_NAME_DISTANCE] as? Double,

@@ -133,6 +133,13 @@ class LiveActivityVM : ObservableObject {
 		
 		// Have we played the start beep yet?
 		var playedStartBeep = false
+		
+		// Used for determining if we need to play the split beep.
+		var lastSplitNum = 0
+		var splitAttrName = ACTIVITY_ATTRIBUTE_NUM_KM_SPLITS
+		if Preferences.preferredUnitSystem() == UNIT_SYSTEM_US_CUSTOMARY {
+			splitAttrName = ACTIVITY_ATTRIBUTE_NUM_MILE_SPLITS
+		}
 
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
@@ -165,17 +172,40 @@ class LiveActivityVM : ObservableObject {
 				}
 			}
 
-			// Split beep?
-			if isMovingActivity {
+			// Start and split beeps?
+			if isMovingActivity && self.isInProgress {
+				
+				// Have we started a new mile or kilometer?
+				var newSplit = false
+				let attr = QueryLiveActivityAttribute(splitAttrName)
+				if attr.valid && attr.value.intVal > lastSplitNum {
+					newSplit = true
+					lastSplitNum += 1
+				}
+
 #if os(watchOS)
-				if self.isInProgress && !playedStartBeep && Preferences.watchStartStopBeeps() {
+				// Start beep
+				if !playedStartBeep && Preferences.watchStartStopBeeps() {
 					self.playBeepSound()
 					playedStartBeep = true
 				}
+
+				// Split beep
+				if newSplit && self.activityType == ACTIVITY_TYPE_RUNNING {
+					if Preferences.watchRunSplitBeeps() {
+						self.playPingSound()
+					}
+				}
 #else
-				if self.isInProgress && !playedStartBeep && ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse) {
+				// Start beep
+				if !playedStartBeep && ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse) {
 					self.playBeepSound()
 					playedStartBeep = true
+				}
+
+				// Split beep
+				if newSplit && ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse) {
+					self.playPingSound()
 				}
 #endif
 			}

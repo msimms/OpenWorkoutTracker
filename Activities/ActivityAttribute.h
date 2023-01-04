@@ -86,7 +86,10 @@
 #define ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB              "Biggest Climb"           // biggest climb (M)
 #define ACTIVITY_ATTRIBUTE_VERTICAL_SPEED             "Vertical Speed"          // Vm/h
 #define ACTIVITY_ATTRIBUTE_CALORIES_BURNED            "Calories"                // total calories burned
-#define ACTIVITY_ATTRIBUTE_SPLIT_TIME                 "Split Time "             // "Split Time KM 1", "Split Time Mile 1", etc.
+#define ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM              "Split Time KM "          // "Split Time KM 1", "Split Time Mile 1", etc.
+#define ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE            "Split Time Mile "        // "Split Time KM 1", "Split Time Mile 1", etc.
+#define ACTIVITY_ATTRIBUTE_NUM_KM_SPLITS              "Num KM Splits"           // Number of kilometer splits
+#define ACTIVITY_ATTRIBUTE_NUM_MILE_SPLITS            "Num Mile Splits"         // Number of mile splits
 #define ACTIVITY_ATTRIBUTE_LAP_TIME                   "Lap Time "               // "Lap Time 1", etc.
 #define ACTIVITY_ATTRIBUTE_LAP_DISTANCE               "Lap Distance "           // "Lap Distance 1", etc.
 #define ACTIVITY_ATTRIBUTE_LAP_CALORIES               "Lap Calories "           // "Lap Calories 1", etc.

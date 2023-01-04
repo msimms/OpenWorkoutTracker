@@ -263,7 +263,61 @@ class StoredActivityVM : ObservableObject {
 		}
 		return attributeList
 	}
+	
+	func getKilometerSplits() -> Array<time_t> {
+		var result: Array<time_t> = []
+		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + "1"
+		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var splitIndex = 1
 
+		while attribute.valid {
+			result.append(time_t(attribute.value.intVal))
+
+			splitIndex += 1
+			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + String(splitIndex)
+			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		}
+
+		return result
+	}
+	
+	func getMileSplits() -> Array<time_t> {
+		var result: Array<time_t> = []
+		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + "1"
+		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var splitIndex = 1
+
+		while attribute.valid {
+			result.append(time_t(attribute.value.intVal))
+
+			splitIndex += 1
+			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + String(splitIndex)
+			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		}
+		
+		return result
+	}
+	
+	func getSplitStrings() -> Array<String> {
+		var result: Array<String> = []
+
+		let kmSplits = self.getKilometerSplits()
+		let mileSplits = self.getMileSplits()
+
+		var count = 1
+		for split in kmSplits {
+			result.append("KM " + String(count) + ": " + LiveActivityVM.formatSeconds(numSeconds: split))
+			count += 1
+		}
+		count = 1
+		for split in mileSplits {
+			result.append("Mile " + String(count) + ": " + LiveActivityVM.formatSeconds(numSeconds: split))
+			count += 1
+		}
+		
+		return result
+	}
+	
 	private func formatActivityAttribute(attribute: ActivityAttributeType) -> String {
 		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
 		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)

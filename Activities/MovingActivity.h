@@ -153,7 +153,8 @@ protected:
 	TimeDistancePairList m_distances;                     // list of all time/distance pairs comprising the activity (raw data)
 	TimeDistancePairList m_smoothedDistances;             // list of all time/distance pairs comprising the activity (smoothed data)
 	LapSummaryList       m_laps;
-	ActivityAttributeMap m_splitTimes;
+	ActivityAttributeMap m_splitTimesKMs;
+	ActivityAttributeMap m_splitTimesMiles;
 
 protected:
 	virtual bool ProcessLocationReading(const SensorReading& reading);

@@ -116,7 +116,7 @@ typedef enum SectionType
 	// Loop will break when we receive the first invalid value.
 	for (uint16_t km = 1; ; ++km)
 	{
-		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sKM %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, km];
+		NSString* attributeName = [[NSString alloc] initWithFormat:@"%s %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM, km];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 
 		if (value.valid)
@@ -156,7 +156,7 @@ typedef enum SectionType
 	// Loop will break when we receive the first invalid value.
 	for (uint16_t mile = 1; ; ++mile)
 	{
-		NSString* attributeName = [[NSString alloc] initWithFormat:@"%sMile %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME, mile];
+		NSString* attributeName = [[NSString alloc] initWithFormat:@"%s %d", ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE, mile];
 		ActivityAttributeType value = [appDelegate queryHistoricalActivityAttribute:[attributeName UTF8String] forActivityId:self->activityId];
 
 		if (value.valid)
