@@ -669,7 +669,7 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select id, repeat, first_value, second_value, first_units, position where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, repeat, first_value, second_value, first_units, second_units, position from interval_session_segment where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		

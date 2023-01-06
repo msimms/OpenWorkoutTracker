@@ -212,8 +212,17 @@ class LiveActivityVM : ObservableObject {
 			
 			// Update the interval session.
 			if CheckCurrentIntervalSession() {
+
+				if (IsIntervalSessionComplete()) {
+					self.currentMessage = "The interval session is complete."
+				}
+				else {
+					let segment: IntervalSessionSegment = IntervalSessionSegment()
+					let segmentVm: IntervalSegment = IntervalSegment()
+					self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
+				}
 			}
-			
+
 			// Update the location and route.
 #if !os(watchOS)
 			if isMovingActivity && self.isInProgress {

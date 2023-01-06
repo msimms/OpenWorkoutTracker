@@ -304,27 +304,31 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 		return String(format: "%0.1lf %@", value, self.unitsStr(units: units))
 	}
 
-	func description() -> String {
+	func formatDescription(value1: Double, units1: IntervalUnit, value2: Double, units2: IntervalUnit) -> String {
 		var description: String = ""
-
-		if self.firstUnits != INTERVAL_UNIT_NOT_SET {
-			description = self.formatDescriptionFragment(value: self.firstValue, units: self.firstUnits)
-
-			if self.secondUnits != INTERVAL_UNIT_NOT_SET {
-				if  self.secondUnits == INTERVAL_UNIT_PACE_US_CUSTOMARY ||
-					self.secondUnits == INTERVAL_UNIT_PACE_METRIC ||
-					self.secondUnits == INTERVAL_UNIT_SPEED_US_CUSTOMARY ||
-					self.secondUnits == INTERVAL_UNIT_SPEED_METRIC ||
-					self.secondUnits == INTERVAL_UNIT_WATTS {
+		
+		if units1 != INTERVAL_UNIT_NOT_SET {
+			description = self.formatDescriptionFragment(value: value1, units: units1)
+			
+			if units2 != INTERVAL_UNIT_NOT_SET {
+				if  units2 == INTERVAL_UNIT_PACE_US_CUSTOMARY ||
+					units2 == INTERVAL_UNIT_PACE_METRIC ||
+					units2 == INTERVAL_UNIT_SPEED_US_CUSTOMARY ||
+					units2 == INTERVAL_UNIT_SPEED_METRIC ||
+					units2 == INTERVAL_UNIT_WATTS {
 					description += " at "
 				}
-				else if self.secondUnits == INTERVAL_UNIT_REPS {
+				else if units2 == INTERVAL_UNIT_REPS {
 					description += " of "
 				}
-				description += self.formatDescriptionFragment(value: self.secondValue, units: self.secondUnits)
+				description += self.formatDescriptionFragment(value: value2, units: units2)
 			}
 		}
 		return description
+	}
+
+	func description() -> String {
+		return self.formatDescription(value1: self.firstValue, units1: self.firstUnits, value2: self.secondValue, units2: self.secondUnits)
 	}
 	
 	func color() -> Color {
@@ -451,6 +455,9 @@ class IntervalSessionsVM : ObservableObject {
 
 	func createIntervalSession(session: IntervalSession) -> Bool {
 		if CreateNewIntervalSession(session.id.uuidString, session.name, session.sport, session.description) {
+			
+			InitializeIntervalSessionList()
+
 			var position: UInt8 = 0
 
 			for segment in session.segments {
@@ -458,7 +465,10 @@ class IntervalSessionsVM : ObservableObject {
 
 				tempSegment.position = position
 				position += 1
-				CreateNewIntervalSessionSegment(session.id.uuidString, tempSegment)
+				
+				if !CreateNewIntervalSessionSegment(session.id.uuidString, tempSegment) {
+					return false
+				}
 			}
 			return buildIntervalSessionList()
 		}
