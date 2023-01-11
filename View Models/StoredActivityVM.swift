@@ -201,7 +201,7 @@ class StoredActivityVM : ObservableObject {
 	}
 	
 	func isMovingActivity() -> Bool {
-		return self.locationTrack.count > 0
+		return IsHistoricalActivityMovingActivity(self.activityIndex)
 	}
 	
 	/// @brief Returns a list of attributes attribute names that are applicable to this activity.

@@ -100,17 +100,16 @@ class HistoryVM : ObservableObject {
 						FixHistoricalActivityEndTime(activityIndex)
 					}
 
-					let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(activityIndex))
+					let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(activityIndex)) // this one is a const char*, so don't dealloc it
 					let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIndex))
 					let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
 
 					defer {
-						activityIdPtr!.deallocate()
 						activityTypePtr!.deallocate()
 						activityNamePtr!.deallocate()
 					}
 
-					if activityTypePtr == nil  || activityNamePtr == nil {
+					if activityTypePtr == nil || activityNamePtr == nil {
 						done = true
 					}
 					else {
@@ -141,9 +140,12 @@ class HistoryVM : ObservableObject {
 	}
 
 	/// @brief Loads the activity list from our database as well as HealthKit (if enabled).
-	func buildHistoricalActivitiesList() {
+	func buildHistoricalActivitiesList(createAllObjects: Bool) {
 		self.loadActivitiesFromDatabase()
 		self.loadActivitiesFromHealthKit()
+		if createAllObjects {
+			CreateAllHistoricalActivityObjects()
+		}
 		self.state = State.loaded
 	}
 

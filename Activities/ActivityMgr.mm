@@ -2535,21 +2535,30 @@ extern "C" {
 
 	bool GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime)
 	{
+		bool result = false;
+
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			if (startTime)
 				(*startTime) = g_historicalActivityList.at(activityIndex).startTime;
 			if (endTime)
 				(*endTime) = g_historicalActivityList.at(activityIndex).endTime;
-			return true;
+			result = true;
 		}
-		return false;
+
+		g_historicalActivityLock.unlock();
+
+		return result;
 	}
 
 	// Finds the most recent sensor reading and uses it as the end time for the activity.
 	// This is useful if the activity was not ended properly (app crash, phone reboot, etc.)
 	void FixHistoricalActivityEndTime(size_t activityIndex)
 	{
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2569,24 +2578,40 @@ extern "C" {
 				g_dbLock.unlock();
 			}
 		}
+
+		g_historicalActivityLock.unlock();
 	}
 
 	char* GetHistoricalActivityType(size_t activityIndex)
 	{
+		char* result = NULL;
+
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
-			return strdup(g_historicalActivityList.at(activityIndex).type.c_str());
+			result = strdup(g_historicalActivityList.at(activityIndex).type.c_str());
 		}
-		return NULL;
+
+		g_historicalActivityLock.unlock();
+
+		return result;
 	}
 
 	char* GetHistoricalActivityName(size_t activityIndex)
 	{
+		char* result = NULL;
+
+		g_historicalActivityLock.lock();
+
 		if (activityIndex < g_historicalActivityList.size())
 		{
-			return strdup(g_historicalActivityList.at(activityIndex).name.c_str());
+			result = strdup(g_historicalActivityList.at(activityIndex).name.c_str());
 		}
-		return NULL;
+
+		g_historicalActivityLock.unlock();
+
+		return result;
 	}
 
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex)
@@ -2641,17 +2666,24 @@ extern "C" {
 	{
 		size_t result = 0;
 
+		g_historicalActivityLock.lock();
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			result = summary.accelerometerReadings.size();
 		}
-		return result;		
+
+		g_historicalActivityLock.unlock();
+
+		return result;
 	}
 
 	size_t GetNumHistoricalActivityAttributes(size_t activityIndex)
 	{
 		size_t result = 0;
+
+		g_historicalActivityLock.lock();
 
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -2665,6 +2697,9 @@ extern "C" {
 				result = attributeNames.size();
 			}
 		}
+
+		g_historicalActivityLock.unlock();
+
 		return result;
 	}
 
@@ -2683,6 +2718,8 @@ extern "C" {
 
 		size_t numActivities = 0;
 
+		g_historicalActivityLock.lock();
+
 		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
 			ActivitySummary& summary = (*iter);
@@ -2692,11 +2729,16 @@ extern "C" {
 				++numActivities;
 			}
 		}
+
+		g_historicalActivityLock.unlock();
+
 		return numActivities;
 	}
 
 	void SetHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName, ActivityAttributeType attributeValue)
 	{
+		g_historicalActivityLock.lock();
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2706,6 +2748,8 @@ extern "C" {
 				summary.pActivity->SetActivityAttribute(attributeName, attributeValue);
 			}
 		}
+
+		g_historicalActivityLock.unlock();
 	}
 
 	bool IsHistoricalActivityFootBased(size_t activityIndex)
@@ -2761,11 +2805,16 @@ extern "C" {
 	{
 		size_t result = 0;
 
+		g_historicalActivityLock.lock();
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			result = summary.locationPoints.size();
 		}
+
+		g_historicalActivityLock.unlock();
+
 		return result;
 	}
 
@@ -2775,6 +2824,8 @@ extern "C" {
 
 		if (coordinate != NULL)
 		{
+			g_historicalActivityLock.lock();
+
 			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2790,6 +2841,8 @@ extern "C" {
 					result = true;
 				}
 			}
+
+			g_historicalActivityLock.unlock();
 		}
 		return result;
 	}
@@ -2801,7 +2854,9 @@ extern "C" {
 	size_t GetNumHistoricalSensorReadings(size_t activityIndex, SensorType sensorType)
 	{
 		size_t result = 0;
-		
+
+		g_historicalActivityLock.lock();
+
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2838,6 +2893,9 @@ extern "C" {
 				break;
 			}
 		}
+
+		g_historicalActivityLock.unlock();
+
 		return result;
 	}
 
@@ -2847,6 +2905,8 @@ extern "C" {
 		
 		if (readingValue != NULL)
 		{
+			g_historicalActivityLock.lock();
+
 			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2898,6 +2958,8 @@ extern "C" {
 					break;
 				}
 			}
+
+			g_historicalActivityLock.unlock();
 		}
 		return result;
 	}
@@ -2908,6 +2970,8 @@ extern "C" {
 		
 		if (xValue && yValue && zValue)
 		{
+			g_historicalActivityLock.lock();
+
 			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
@@ -2922,6 +2986,8 @@ extern "C" {
 					result = true;
 				}
 			}
+
+			g_historicalActivityLock.unlock();
 		}
 		return result;
 	}

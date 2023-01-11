@@ -79,6 +79,15 @@ typedef struct ActivitySummary
 		this->summaryAttributes = std::move(rhs.summaryAttributes);
 		this->pActivity = rhs.pActivity;
 	}
+	
+	virtual ~ActivitySummary()
+	{
+		if (this->pActivity)
+		{
+			delete this->pActivity;
+			this->pActivity = NULL;
+		}
+	}
 } ActivitySummary;
 
 typedef std::vector<ActivitySummary> ActivitySummaryList;

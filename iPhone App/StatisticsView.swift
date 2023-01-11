@@ -16,8 +16,7 @@ struct StatisticsView: View {
 	}()
 
 	private func loadHistory() {
-		self.historyVM.buildHistoricalActivitiesList()
-		CreateAllHistoricalActivityObjects()
+		self.historyVM.buildHistoricalActivitiesList(createAllObjects: true)
 	}
 
 	private func getTotalActivityAttribute(activityType: String, attributeName: String) -> some View {
@@ -39,17 +38,11 @@ struct StatisticsView: View {
 	}
 
 	var body: some View {
-		switch self.historyVM.state {
-		case HistoryVM.State.empty:
-			VStack(alignment: .center) {
-				ProgressView("Loading...").onAppear(perform: self.loadHistory)
-					.progressViewStyle(CircularProgressViewStyle(tint: .black))
-			}
-		case HistoryVM.State.loaded:
+		ScrollView() {
 			VStack(alignment: .center) {
 				if self.historyVM.historicalActivities.count > 0 {
 					ForEach(CommonApp.activityTypes, id: \.self) { activityType in
-						if (GetNumHistoricalActivitiesByType(activityType) > 0) {
+						if GetNumHistoricalActivitiesByType(activityType) > 0 {
 							VStack() {
 								Text(activityType)
 									.bold()
@@ -66,7 +59,7 @@ struct StatisticsView: View {
 									.bold()
 								self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, smallestIsBest: false)
 								self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, smallestIsBest: false)
-
+								
 								if activityType == ACTIVITY_TYPE_CYCLING {
 									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_CENTURY, smallestIsBest: true)
 									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY, smallestIsBest: true)
@@ -103,7 +96,14 @@ struct StatisticsView: View {
 					Text("No History")
 				}
 			}
-			.padding(10)
+			.overlay() {
+				if self.historyVM.state == HistoryVM.State.empty {
+					VStack(alignment: .center) {
+						ProgressView("Loading...").onAppear(perform: self.loadHistory)
+							.progressViewStyle(CircularProgressViewStyle(tint: .black))
+					}
+				}
+			}
 		}
     }
 }
