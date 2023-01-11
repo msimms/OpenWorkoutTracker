@@ -450,14 +450,18 @@ class HealthManager {
 	}
 
 	func saveRunningWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
-		// Save the distance.
 		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
-		let distanceType = HKQuantityType.init(HKQuantityTypeIdentifier.distanceWalkingRunning)
-		let distanceSample = HKQuantitySample.init(type: distanceType, quantity: distanceQuantity, start: startDate, end: endDate)
-		self.healthStore.save(distanceSample, withCompletion: {_,_ in })
+		let workout = HKWorkout(activityType: .running, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
+		self.healthStore.save(workout, withCompletion: {_,_ in
+			
+			// Append the route
+			self.saveWorkoutRouteIntoHealthStore(workout: workout, locations: locations)
+		})
+	}
 
-		// Save the workout.
-		let workout = HKWorkout(activityType: .running, start: startDate, end: endDate)
+	func saveWalkingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
+		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
+		let workout = HKWorkout(activityType: .walking, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
 		self.healthStore.save(workout, withCompletion: {_,_ in
 			
 			// Append the route
@@ -466,14 +470,8 @@ class HealthManager {
 	}
 
 	func saveCyclingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
-		// Save the distance.
 		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
-		let distanceType = HKQuantityType.init(HKQuantityTypeIdentifier.distanceCycling)
-		let distanceSample = HKQuantitySample.init(type: distanceType, quantity: distanceQuantity, start: startDate, end: endDate)
-		self.healthStore.save(distanceSample, withCompletion: {_,_ in })
-
-		// Save the workout.
-		let workout = HKWorkout(activityType: .cycling, start: startDate, end: endDate)
+		let workout = HKWorkout(activityType: .cycling, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
 		self.healthStore.save(workout, withCompletion: {_,_ in
 			
 			// Append the route
@@ -508,8 +506,8 @@ class HealthManager {
 
 		let routeBuilder = HKWorkoutRouteBuilder(healthStore: self.healthStore, device: nil)
 		routeBuilder.insertRouteData(tempLocations) { (success, error) in
-		}
-		routeBuilder.finishRoute(with: workout, metadata: nil) { (newRoute, error) in
+			routeBuilder.finishRoute(with: workout, metadata: nil) { (newRoute, error) in
+			}
 		}
 	}
 
@@ -692,8 +690,11 @@ class HealthManager {
 					if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
 						self.saveCyclingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
 					}
-					else if activityType == ACTIVITY_TYPE_RUNNING || activityType == ACTIVITY_TYPE_WALKING {
+					else if activityType == ACTIVITY_TYPE_RUNNING {
 						self.saveRunningWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
+					}
+					else if activityType == ACTIVITY_TYPE_WALKING {
+						self.saveWalkingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
 					}
 					else if activityType == ACTIVITY_TYPE_POOL_SWIMMING {
 						self.saveSwimmingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)

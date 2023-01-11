@@ -105,6 +105,7 @@ class HistoryVM : ObservableObject {
 					let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
 
 					defer {
+						activityIdPtr!.deallocate()
 						activityTypePtr!.deallocate()
 						activityNamePtr!.deallocate()
 					}

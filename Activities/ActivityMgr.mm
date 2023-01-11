@@ -253,6 +253,33 @@ extern "C" {
 	// Functions for managing the activity name.
 	//
 
+	char* RetrieveActivityName(const char* const activityId)
+	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return NULL;
+		}
+		
+		char* name = NULL;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			std::string tempName;
+			
+			if (g_pDatabase->RetrieveActivityName(activityId, tempName))
+			{
+				name = strdup(tempName.c_str());
+			}
+		}
+		
+		g_dbLock.unlock();
+		
+		return name;
+	}
+
 	bool UpdateActivityName(const char* const activityId, const char* const name)
 	{
 		// Sanity checks.
@@ -277,33 +304,6 @@ extern "C" {
 		g_dbLock.unlock();
 
 		return result;
-	}
-
-	char* RetrieveActivityName(const char* const activityId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return NULL;
-		}
-
-		char* name = NULL;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			std::string tempName;
-
-			if (g_pDatabase->RetrieveActivityName(activityId, tempName))
-			{
-				name = strdup(tempName.c_str());
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return name;
 	}
 
 	//
@@ -340,6 +340,33 @@ extern "C" {
 	// Functions for managing the activity description.
 	//
 
+	char* RetrieveActivityDescription(const char* const activityId)
+	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return NULL;
+		}
+		
+		char* description = NULL;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			std::string tempDesc;
+			
+			if (g_pDatabase->RetrieveActivityDescription(activityId, tempDesc))
+			{
+				description = strdup(tempDesc.c_str());
+			}
+		}
+		
+		g_dbLock.unlock();
+		
+		return description;
+	}
+
 	bool UpdateActivityDescription(const char* const activityId, const char* const description)
 	{
 		// Sanity checks.
@@ -364,32 +391,6 @@ extern "C" {
 		g_dbLock.unlock();
 
 		return result;
-	}
-	char* RetrieveActivityDescription(const char* const activityId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return NULL;
-		}
-
-		char* description = NULL;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			std::string tempDesc;
-
-			if (g_pDatabase->RetrieveActivityDescription(activityId, tempDesc))
-			{
-				description = strdup(tempDesc.c_str());
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return description;
 	}
 
 	//
@@ -655,6 +656,43 @@ extern "C" {
 	// Methods for managing activity sync status.
 	//
 
+	bool IsActivitySynched(const char* const activityId, const char* const destination)
+	{
+		// Sanity checks.
+		if (activityId == NULL)
+		{
+			return false;
+		}
+		if (destination == NULL)
+		{
+			return false;
+		}
+
+		bool synched = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			std::vector<std::string> destinations;
+			
+			if (g_pDatabase->RetrieveSyncDestinationsForActivityId(activityId, destinations))
+			{
+				for (auto destIter = destinations.begin(); !synched && destIter != destinations.end(); ++destIter)
+				{
+					if ((*destIter).compare(destination) == 0)
+					{
+						synched = true;
+					}
+				}
+			}
+		}
+		
+		g_dbLock.unlock();
+		
+		return synched;
+	}
+
 	bool CreateActivitySync(const char* const activityId, const char* const destination)
 	{
 		// Sanity checks.
@@ -683,7 +721,9 @@ extern "C" {
 				for (auto destIter = destinations.begin(); !alreadyStored && destIter != destinations.end(); ++destIter)
 				{
 					if ((*destIter).compare(destination) == 0)
+					{
 						alreadyStored = true;
+					}
 				}
 				if (!alreadyStored)
 				{

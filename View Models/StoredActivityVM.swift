@@ -40,17 +40,19 @@ class StoredActivityVM : ObservableObject {
 	var x: Array<(UInt64, Double)> = []             // X-axis accelerometer readings vs time
 	var y: Array<(UInt64, Double)> = []             // Y-axis accelerometer readings vs time
 	var z: Array<(UInt64, Double)> = []             // Z-axis accelerometer readings vs time
-
+	
 	init(activitySummary: ActivitySummary) {
-
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
+		
 		self.source = activitySummary.source
 		self.activityId = activitySummary.id
 		self.name = activitySummary.name
 		self.description = activitySummary.description
-
+		
 		// Activity is from the app database.
 		if activitySummary.source == ActivitySummary.Source.database {
-
+			
 			// If a database index wasn't provided then we probably needed to load the activity summary from the database.
 			// The activity index will be zero because it will be the only activity loaded.
 			if activitySummary.index == ACTIVITY_INDEX_UNKNOWN {
@@ -62,8 +64,12 @@ class StoredActivityVM : ObservableObject {
 				CreateHistoricalActivityObject(activitySummary.index)
 				self.activityIndex = activitySummary.index
 			}
-
+			
+			// Retrieve all the sensor and location data.
 			self.loadSensorDataFromDb()
+			
+			// Make sure we have the latest name, description, etc.
+			let _  = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
 		}
 		
 		// Activity is from HealthKit.
@@ -71,7 +77,7 @@ class StoredActivityVM : ObservableObject {
 			self.loadSensorDataFromHealthKit()
 		}
 	}
-
+	
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in HealthKit.
 	func loadSensorDataFromHealthKit() {
 		let healthKit = HealthManager.shared
@@ -79,12 +85,12 @@ class StoredActivityVM : ObservableObject {
 		
 		var coordinate: Coordinate = Coordinate()
 		var pointIndex: Int = 0
-
+		
 		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &coordinate, pointIndex: pointIndex) {
 			self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
 			pointIndex += 1
 		}
-
+		
 		if self.locationTrack.count > 0 {
 			self.startingLat = self.locationTrack[0].latitude
 			self.startingLon = self.locationTrack[0].longitude
@@ -93,7 +99,7 @@ class StoredActivityVM : ObservableObject {
 #endif
 		}
 	}
-
+	
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in our own database.
 	func loadSensorDataFromDb() {
 		if LoadAllHistoricalActivitySensorData(self.activityIndex) {
@@ -101,10 +107,10 @@ class StoredActivityVM : ObservableObject {
 			// Location points
 			let numLocationPoints = GetNumHistoricalActivityLocationPoints(self.activityIndex)
 			if numLocationPoints > 0 {
-
+				
 				for pointIndex in 0...numLocationPoints - 1 {
-					var coordinate = Coordinate( latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0 )
-					
+					var coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+
 					if GetHistoricalActivityLocationPoint(self.activityIndex, pointIndex, &coordinate) {
 						self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
 					}
@@ -122,21 +128,21 @@ class StoredActivityVM : ObservableObject {
 			// Heart rate readings
 			let numHeartRateReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_HEART_RATE)
 			if numHeartRateReadings > 0 {
-
+				
 				for pointIndex in 0...numHeartRateReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
-
+					
 					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_HEART_RATE, pointIndex, &timestamp, &value) {
 						self.heartRate.append((UInt64(timestamp), value))
 					}
 				}
 			}
-
+			
 			// Cadence readings
 			let numCadenceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_CADENCE)
 			if numCadenceReadings > 0 {
-
+				
 				for pointIndex in 0...numCadenceReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
@@ -146,7 +152,7 @@ class StoredActivityVM : ObservableObject {
 					}
 				}
 			}
-
+			
 			// Pace and speed readings
 			let numPaceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_LOCATION)
 			if numPaceReadings > 0 {
@@ -154,16 +160,16 @@ class StoredActivityVM : ObservableObject {
 				for pointIndex in 0...numPaceReadings - 1 {
 					let pace = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_PACE)
 					let speed = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_SPEED)
-
+					
 					self.pace.append((UInt64(pointIndex), pace.value.doubleVal))
 					self.speed.append((UInt64(pointIndex), speed.value.doubleVal))
 				}
 			}
-
+			
 			// Power readings
 			let numPowerReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_POWER)
 			if numPowerReadings > 0 {
-
+				
 				for pointIndex in 0...numPowerReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
@@ -177,13 +183,13 @@ class StoredActivityVM : ObservableObject {
 			// Accelerometer readings
 			let numAccelPoints = GetNumHistoricalActivityAccelerometerReadings(self.activityIndex)
 			if numAccelPoints > 0 {
-
+				
 				for pointIndex in 0...numAccelPoints - 1 {
 					var timestamp: time_t = 0
 					var xValue: Double = 0.0
 					var yValue: Double = 0.0
 					var zValue: Double = 0.0
-
+					
 					if GetHistoricalActivityAccelerometerReading(self.activityIndex, pointIndex, &timestamp, &xValue, &yValue, &zValue) {
 						self.x.append((UInt64(timestamp), xValue))
 						self.y.append((UInt64(timestamp), xValue))
@@ -193,15 +199,15 @@ class StoredActivityVM : ObservableObject {
 			}
 		}
 	}
-
+	
 	func isMovingActivity() -> Bool {
 		return self.locationTrack.count > 0
 	}
-
+	
 	/// @brief Returns a list of attributes attribute names that are applicable to this activity.
 	func getActivityAttributes() -> Array<String> {
 		var attributeList: Array<String> = []
-
+		
 		if self.source == ActivitySummary.Source.database {
 			let numAttributes = GetNumHistoricalActivityAttributes(self.activityIndex)
 			
@@ -224,15 +230,15 @@ class StoredActivityVM : ObservableObject {
 			attributeList.append(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
 			attributeList.append(ACTIVITY_ATTRIBUTE_ELAPSED_TIME)
 			attributeList.append(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
-//			attributeList.append(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)
-//			attributeList.append(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)
+			//			attributeList.append(ACTIVITY_ATTRIBUTE_STARTING_LATITUDE)
+			//			attributeList.append(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE)
 		}
 		return attributeList
 	}
-
+	
 	func getActivityAttributesAndCharts() -> Array<String> {
 		var attributeList = self.getActivityAttributes()
-
+		
 		if self.heartRate.count > 0 {
 			attributeList.append("Heart Rate")
 		}
@@ -269,15 +275,15 @@ class StoredActivityVM : ObservableObject {
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + "1"
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
 		var splitIndex = 1
-
+		
 		while attribute.valid {
 			result.append(time_t(attribute.value.intVal))
-
+			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
 		}
-
+		
 		return result
 	}
 	
@@ -286,10 +292,10 @@ class StoredActivityVM : ObservableObject {
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + "1"
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
 		var splitIndex = 1
-
+		
 		while attribute.valid {
 			result.append(time_t(attribute.value.intVal))
-
+			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
@@ -300,10 +306,10 @@ class StoredActivityVM : ObservableObject {
 	
 	func getSplitStrings() -> Array<String> {
 		var result: Array<String> = []
-
+		
 		let kmSplits = self.getKilometerSplits()
 		let mileSplits = self.getMileSplits()
-
+		
 		var count = 1
 		for split in kmSplits {
 			result.append("KM " + String(count) + ": " + LiveActivityVM.formatSeconds(numSeconds: split))
@@ -322,11 +328,11 @@ class StoredActivityVM : ObservableObject {
 		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
 		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
 	}
-
+	
 	func getActivityAttributeValueStr(attributeName: String) -> String {
 		if self.source == ActivitySummary.Source.database {
 			let attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
-
+			
 			if attribute.valid {
 				return self.formatActivityAttribute(attribute: attribute)
 			}
@@ -334,7 +340,7 @@ class StoredActivityVM : ObservableObject {
 		else if self.source == ActivitySummary.Source.healthkit {
 			let healthKit = HealthManager.shared
 			let attribute = healthKit.getWorkoutAttribute(attributeName: attributeName, activityId: self.activityId)
-
+			
 			if attribute.valid {
 				return self.formatActivityAttribute(attribute: attribute)
 			}
@@ -345,7 +351,7 @@ class StoredActivityVM : ObservableObject {
 	func getActivityStartTime() -> time_t {
 		var startTime: time_t = 0
 		var endTime: time_t = 0
-
+		
 		if self.source == ActivitySummary.Source.database {
 			GetHistoricalActivityStartAndEndTime(self.activityIndex, &startTime, &endTime)
 		}
@@ -353,11 +359,11 @@ class StoredActivityVM : ObservableObject {
 		}
 		return startTime
 	}
-
+	
 	/// @brief Exports the activity to the specified directory, in the specified file format..
 	func exportActivityToFile(fileFormat: FileFormat, dirName: String) throws -> String {
 		var fileName = ""
-
+		
 		if self.source == ActivitySummary.Source.database {
 			let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, dirName))
 			
@@ -375,19 +381,19 @@ class StoredActivityVM : ObservableObject {
 			let healthKit = HealthManager.shared
 			fileName = try healthKit.exportActivityToFile(activityId: self.activityId, fileFormat: fileFormat, dirName: dirName)
 		}
-
+		
 		return fileName
 	}
-
+	
 	/// @brief Exports the activity to the temp directory, in the specified file format..
 	func exportActivityToTempFile(fileFormat: FileFormat) throws -> String {
 		let directory = NSTemporaryDirectory()
 		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: directory)
 	}
-
+	
 	/// @brief Exports the activity to the iCloud drive, in the specified file format..
 	func exportActivityToICloudFile(fileFormat: FileFormat) throws -> String {
-
+		
 		// Build the URL for the application's directory.
 		var exportDirUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)
 		if exportDirUrl == nil {
@@ -395,11 +401,11 @@ class StoredActivityVM : ObservableObject {
 		}
 		exportDirUrl = exportDirUrl?.appendingPathComponent("Documents")
 		try FileManager.default.createDirectory(at: exportDirUrl!, withIntermediateDirectories: true, attributes: nil)
-
+		
 		// Export the file.
 		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: exportDirUrl!.absoluteString)
 	}
-
+	
 	/// @brief Updates the activity name in our database and also the server, if applicable.
 	func updateActivityName() -> Bool {
 		// Only applicable to activities in our own database.
@@ -410,7 +416,7 @@ class StoredActivityVM : ObservableObject {
 		}
 		return false
 	}
-
+	
 	/// @brief Updates the activity description in our database and also the server, if applicable.
 	func updateActivityDescription() -> Bool {
 		// Only applicable to activities in our own database.
@@ -421,7 +427,7 @@ class StoredActivityVM : ObservableObject {
 		}
 		return false
 	}
-
+	
 	/// @brief Deletes this activity from our database and also the server, if applicable.
 	func deleteActivity() -> Bool {
 		// Only applicable to activities in our own database.
@@ -432,11 +438,11 @@ class StoredActivityVM : ObservableObject {
 		}
 		return false
 	}
-
+	
 	/// @brief Returns any tags that were applied to this activity.
 	func listTags() -> Array<String> {
 		var tags: Array<String> = []
-
+		
 		// Only applicable to activities in our own database.
 		if self.source == ActivitySummary.Source.database {
 			let pointer = UnsafeMutablePointer<TagsCallbackType>.allocate(capacity: 1)
@@ -451,5 +457,22 @@ class StoredActivityVM : ObservableObject {
 			tags = pointer.pointee.tags
 		}
 		return tags
+	}
+	
+	@objc func activityMetadataUpdated(notification: NSNotification) {
+		if let data = notification.object as? Dictionary<String, AnyObject> {
+			let activityId = data[PARAM_ACTIVITY_ID] as? String
+			if activityId != nil && activityId == self.activityId {
+				let activityName = data[PARAM_ACTIVITY_NAME]
+				let activityDesc = data[PARAM_ACTIVITY_DESCRIPTION]
+				
+				if activityName != nil {
+					self.name = (activityName as? String)!
+				}
+				if activityDesc != nil {
+					self.description = (activityDesc as? String)!
+				}
+			}
+		}
 	}
 }

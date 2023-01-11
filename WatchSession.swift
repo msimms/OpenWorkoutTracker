@@ -34,6 +34,58 @@ class WatchSession : NSObject, WCSessionDelegate {
 	var timeOfLastMessage: time_t = 0  // Timestamp of the last time we got a message, use this to keep us from spamming
 	
 	func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+		let msgType = message[WATCH_MSG_TYPE] as? String
+
+		if msgType == WATCH_MSG_SYNC_PREFS {
+		}
+		else if msgType == WATCH_MSG_REGISTER_DEVICE {
+		}
+		else if msgType == WATCH_MSG_PARAM_DEVICE_ID {
+		}
+		else if msgType == WATCH_MSG_REQUEST_SESSION_KEY {
+		}
+		else if msgType == WATCH_MSG_PARAM_SESSION_KEY {
+		}
+		else if msgType == WATCH_MSG_PARAM_SESSION_KEY_EXPIRY {
+		}
+		else if msgType == WATCH_MSG_DOWNLOAD_INTERVAL_SESSIONS {
+		}
+		else if msgType == WATCH_MSG_INTERVAL_SESSION {
+		}
+		else if msgType == WATCH_MSG_PACE_PLAN {
+		}
+		else if msgType == WATCH_MSG_CHECK_ACTIVITY {
+		}
+		else if msgType == WATCH_MSG_REQUEST_ACTIVITY {
+		}
+		else if msgType == WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED {
+		}
+	}
+
+	func session(_ session: WCSession, didReceive file: WCSessionFile) {
+		do {
+			if let msgMetadata = file.metadata as? Dictionary<String, AnyObject> {
+				let activityId = msgMetadata[WATCH_MSG_PARAM_ACTIVITY_ID] as? String
+				let activityType = msgMetadata[WATCH_MSG_PARAM_ACTIVITY_TYPE] as? String
+				let fileFormat = msgMetadata[WATCH_MSG_PARAM_FILE_FORMAT] as? String
+
+				if IsActivityInDatabase(activityId) {
+					NSLog("Received a duplicate activity from the watch.")
+					return
+				}
+
+				// An activity file is received from the watch app.
+				let activityData = try Data(contentsOf: file.fileURL)
+				if !ImportActivityFromFile(file.fileURL.absoluteString, activityType, activityId) {
+					NSLog("Failed to import an activity from the watch.");
+				}
+
+				try FileManager.default.removeItem(at: file.fileURL)
+			}
+		}
+		catch {
+			NSLog("Exception when processing a file from the watch.")
+		}
 	}
 
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
@@ -44,14 +96,39 @@ class WatchSession : NSObject, WCSessionDelegate {
 			let fileName = fileTransfer.file.fileURL.absoluteString
 
 			if let activityId = fileTransfer.file.metadata![WATCH_MSG_PARAM_ACTIVITY_ID] as? String {
-				CreateActivitySync(activityId, SYNC_DEST_PHONE);
+				CreateActivitySync(activityId, SYNC_DEST_PHONE)
 			}
 			try FileManager.default.removeItem(at: URL(string: fileName)!)
 		}
 		catch {
 		}
 	}
-	
+
+	func sessionReachabilityDidChange(_ session: WCSession) {
+		do {
+			if session.isReachable {
+#if os(watchOS)
+				// Startup stuff.
+				if self.timeOfLastMessage == 0 {
+					self.sendRegisterDeviceMsgToPhone()
+					self.sendRequestSessionKeyMsgToPhone()
+					self.requestIntervalWorkoutsFromPhone()
+					self.requestPacePlansFromPhone()
+				}
+				
+				// Rate limit the server synchronizations. Let's not be spammy.
+				let now = time(nil)
+				if now - self.timeOfLastMessage > 60 {
+					try self.checkIfActivitiesAreUploadedToPhone()
+					self.timeOfLastMessage = now
+				}
+#endif
+			}
+		}
+		catch {
+		}
+	}
+
 #if !os(watchOS)
 	func sessionDidBecomeInactive(_ session: WCSession) {
 	}
@@ -62,7 +139,12 @@ class WatchSession : NSObject, WCSessionDelegate {
 
 	/// @brief Called by the Watch app to initialize the session
 	func startWatchSession() {
-		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
+		if WCSession.isSupported() {
+			self.timeOfLastMessage = 0
+			self.watchSession.delegate = self
+			self.watchSession.activate()
+			NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
+		}
 	}
 
 	/// @brief Sends our unique identifier to the phone.
@@ -81,15 +163,133 @@ class WatchSession : NSObject, WCSessionDelegate {
 		self.watchSession.sendMessage(msgData, replyHandler: (([String : Any]) -> Void)? {_ in })
 	}
 
-	/// @brief Called when connecting to the phone so we can determine which activities to send.
-	func checkIfActivitiesAreUploadedToPhone() {
+	func requestIntervalWorkoutsFromPhone() {
 	}
 
-	func sendActivityFileToPhone(activityId: String) -> Bool {
-		return false
+	func requestPacePlansFromPhone() {
+	}
+
+	/// @brief Called when connecting to the phone so we can determine which activities to send.
+	func checkIfActivitiesAreUploadedToPhone() throws {
+		var numHistoricalActivities = GetNumHistoricalActivities()
+		var numRequestedSyncs = 0
+
+		// Only reload the historical activities list if we really have to as it's rather
+		// computationally expensive for something running on a watch.
+		if numHistoricalActivities == 0 {
+			InitializeHistoricalActivityList()
+			numHistoricalActivities = GetNumHistoricalActivities()
+		}
+
+		if numHistoricalActivities > 0 {
+			// Check each activity. Loop in reverse order because the most recent activities are probably the most interesting.
+			for i in stride(from: numHistoricalActivities - 1, to: 0, by: -1) {
+				let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(i))
+
+				defer {
+					activityIdPtr!.deallocate()
+				}
+				
+				if activityIdPtr != nil {
+					let activityId = String(cString: activityIdPtr!.assumingMemoryBound(to: CChar.self))
+
+					// If it's already been synched then skip it. Otherwise, offer up the activity.
+					if IsActivitySynched(activityId, SYNC_DEST_PHONE) == false {
+						let _ = try self.sendActivityFileToPhone(activityId: activityId)
+						numRequestedSyncs += 1
+					}
+					
+					if numRequestedSyncs >= 1 {
+						break
+					}
+				}
+			}
+		}
+	}
+
+	/// @brief Returns the "best" file format for exporting an activity of the specified type.
+	private func preferredExportFormatForActivityType(activityType: String) -> FileFormat {
+		if activityType == ACTIVITY_TYPE_POOL_SWIMMING {
+			return FILE_CSV
+		}
+		return FILE_TCX
+	}
+
+	func sendActivityFileToPhone(activityId: String) throws -> Bool {
+		var numHistoricalActivities = GetNumHistoricalActivities()
+		var result = false
+		
+		// Only reload the historical activities list if we really have to as it's rather
+		// computationally expensive for something running on a watch.
+		if numHistoricalActivities == 0 {
+			InitializeHistoricalActivityList()
+			numHistoricalActivities = GetNumHistoricalActivities()
+		}
+
+		if numHistoricalActivities > 0 {
+			let activityIndex = ConvertActivityIdToActivityIndex(activityId)
+			let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIndex))
+			let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
+
+			defer {
+				activityTypePtr!.deallocate()
+				activityNamePtr!.deallocate()
+			}
+
+			if activityTypePtr != nil && activityNamePtr != nil {
+				let activityType = String(cString: activityTypePtr!.assumingMemoryBound(to: CChar.self))
+				let activityName = String(cString: activityNamePtr!.assumingMemoryBound(to: CChar.self))
+				let fileFormat = self.preferredExportFormatForActivityType(activityType: activityType)
+
+				var startTime: time_t = 0
+				var endTime: time_t = 0
+
+				if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
+					var activityMetaData: Dictionary<String, Any> = [:]
+
+					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_ID] = activityId
+					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_TYPE] = activityType
+					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_NAME] = activityName
+					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_START_TIME] = startTime
+					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_END_TIME] = endTime
+					activityMetaData[WATCH_MSG_PARAM_FILE_FORMAT] = fileFormat
+
+					let groupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.mjs-software.OpenWorkoutTracker")
+					if groupUrl != nil {
+						let summary = ActivitySummary()
+						summary.id = activityId
+						summary.type = activityType
+						summary.name = activityName
+						
+						// Export the activity to a file.
+						let storedActivity = StoredActivityVM(activitySummary: summary)
+						let fileName = try storedActivity.exportActivityToFile(fileFormat: fileFormat, dirName: groupUrl!.absoluteString)
+						if fileName.count > 0 {
+							let fileUrl = URL(string: fileName)
+							
+							// Send to the phone.
+							self.watchSession.transferFile(fileUrl!, metadata: activityMetaData)
+							
+							// Delete the temporary file.
+							try FileManager.default.removeItem(at: fileUrl!)
+						}
+						else {
+							NSLog("Activity export failed (file export).")
+						}
+					}
+					else {
+						NSLog("Activity export failed (nil group URL).")
+					}
+				}
+			}
+		}
+
+		return result
 	}
 	
 	/// @brief This method is called in response to an activity stopped notification.
 	@objc func activityStopped(notification: NSNotification) {
+		if self.watchSession.isReachable {
+		}
 	}
 }

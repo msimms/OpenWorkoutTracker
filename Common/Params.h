@@ -27,6 +27,7 @@
 #define PARAM_WEIGHT                             "weight"
 #define PARAM_UPLOADED_FILE_NAME                 "uploaded_file_name"
 #define PARAM_UPLOADED_FILE_DATA                 "uploaded_file_data"
+#define PARAM_EXPORT_FORMAT                      "export_format"
 
 // Gear
 #define PARAM_GEAR_ID                            "gear_id"

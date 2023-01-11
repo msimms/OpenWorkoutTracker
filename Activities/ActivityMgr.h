@@ -42,15 +42,15 @@ extern "C" {
 	bool CloseDatabase(void);
 
 	// Functions for managing the activity name.
-	bool UpdateActivityName(const char* const activityId, const char* const name);
 	char* RetrieveActivityName(const char* const activityId);
+	bool UpdateActivityName(const char* const activityId, const char* const name);
 
 	// Functions for managing the activity type.
 	bool UpdateActivityType(const char* const activityId, const char* const type);
 
 	// Functions for managing the activity description.
-	bool UpdateActivityDescription(const char* const activityId, const char* const description);
 	char* RetrieveActivityDescription(const char* const activityId);
+	bool UpdateActivityDescription(const char* const activityId, const char* const description);
 
 	// Functions for managing tags.
 	bool CreateTag(const char* const activityId, const char* const tag);
@@ -65,6 +65,7 @@ extern "C" {
 	char* GetHashForActivityId(const char* const activityId);
 
 	// Methods for managing the activity sync status.
+	bool IsActivitySynched(const char* const activityId, const char* const destination);
 	bool CreateActivitySync(const char* const activityId, const char* const destination);
 	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context);
 	bool RetrieveActivityIdsNotSynchedToWeb(SyncCallback callback, void* context);

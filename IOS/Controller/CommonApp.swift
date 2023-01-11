@@ -18,6 +18,7 @@ class CommonApp : ObservableObject {
 	private var broadcastMgr = BroadcastManager.shared
 	private var healthMgr = HealthManager.shared
 	private var apiClient = ApiClient.shared
+	private var watchSession = WatchSession()
 
 	/// Singleton constructor
 	private init() {
@@ -45,6 +46,9 @@ class CommonApp : ObservableObject {
 
 		// Initialize HealthKit.
 		self.healthMgr.requestAuthorization()
+		
+		// Initialize the watch session.
+		self.watchSession.startWatchSession()
 
 		// Things we care about knowing from the server.
 		NotificationCenter.default.addObserver(self, selector: #selector(self.loginStatusUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: nil)
@@ -53,6 +57,7 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.logoutProcessed), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGGED_OUT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.friendsListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.requestToFollowResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.downloadedActivityReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: nil)
@@ -97,6 +102,7 @@ class CommonApp : ObservableObject {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					self.apiClient.loggedIn = true
+					let _ = self.apiClient.syncWithServer()
 				}
 			}
 		}
@@ -184,6 +190,27 @@ class CommonApp : ObservableObject {
 						let friendsVM = FriendsVM()
 						friendsVM.updateFriendRequestFromDict(dict: responseDict)
 					}
+				}
+			}
+		}
+		catch {
+			NSLog(error.localizedDescription)
+		}
+	}
+
+	@objc func downloadedActivityReceived(notification: NSNotification) {
+		do {
+			if let data = notification.object as? Dictionary<String, AnyObject> {
+				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? String {
+					let directory = NSTemporaryDirectory()
+					let fileName = NSUUID().uuidString
+					let fullUrl = NSURL.fileURL(withPathComponents: [directory, fileName])
+
+					try responseData.write(to: fullUrl!, atomically: false, encoding: .utf8)
+					
+//					ImportActivityFromFile(fullUrl?.absoluteString, nil, nil)
+					
+					try FileManager.default.removeItem(at: fullUrl!)
 				}
 			}
 		}
@@ -298,8 +325,11 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-					let activitiesList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
-					for activity in activitiesList {
+					let activitiesIdList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [String]
+					for activityId in activitiesIdList {
+						if IsActivityInDatabase(activityId) {
+							let _ = self.apiClient.exportActivity(activityId: activityId)
+						}
 					}
 				}
 			}
@@ -357,7 +387,33 @@ class CommonApp : ObservableObject {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
+					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, Any> {
+						let activityId = responseDict[PARAM_ACTIVITY_ID] as? String
+
+						// If we were sent the activity name, description, or tags then update it in the database.
+						if activityId != nil {
+							let activityName = responseDict[PARAM_ACTIVITY_NAME]
+							let activityDesc = responseDict[PARAM_ACTIVITY_DESCRIPTION]
+							let tags = responseDict[PARAM_ACTIVITY_TAGS]
+
+							if activityName != nil {
+								UpdateActivityName(activityId, activityName as? String)
+							}
+							if activityDesc != nil {
+								UpdateActivityDescription(activityId, activityDesc as? String)
+							}
+							if tags != nil {
+								let tagsList = tags as? [String]
+								for tag in tagsList! {
+									if (!HasTag(activityId, tag)) {
+										CreateTag(activityId, tag)
+									}
+								}
+							}
+
+							let updatedNotification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: responseDict)
+							NotificationCenter.default.post(updatedNotification)
+						}
 					}
 				}
 			}

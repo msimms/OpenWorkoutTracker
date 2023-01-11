@@ -120,10 +120,6 @@ class ApiClient : ObservableObject {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
-						else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
-							NotificationCenter.default.post(notification)
-						}
 						else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: downloadedData)
 							NotificationCenter.default.post(notification)
@@ -135,6 +131,32 @@ class ApiClient : ObservableObject {
 						else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: downloadedData)
 							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_EXPORT_ACTIVITY_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_DELETE_ACTIVITY_URL) {
+						}
+						else if url.contains(REMOTE_API_CREATE_TAG_URL) {
+						}
+						else if url.contains(REMOTE_API_DELETE_TAG_URL) {
+						}
+						else if url.contains(REMOTE_API_CLAIM_DEVICE_URL) {
+						}
+						else if url.contains(REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL) {
+						}
+						else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
+						}
+						else if url.contains(REMOTE_API_UPLOAD_ACTIVITY_FILE_URL) {
+						}
+						else if url.contains(REMOTE_API_CREATE_INTERVAL_WORKOUT_URL) {
+						}
+						else if url.contains(REMOTE_API_CREATE_PACE_PLAN_URL) {
 						}
 					}
 				}
@@ -232,6 +254,15 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
 	
+	func exportActivity(activityId: String) -> Bool {
+		var postDict: Dictionary<String, String> = [:]
+		postDict[PARAM_ACTIVITY_ID] = activityId
+		postDict[PARAM_EXPORT_FORMAT] = "tcx"
+
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_EXPORT_ACTIVITY_URL)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+	}
+
 	func deleteActivity(activityId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -298,7 +329,7 @@ class ApiClient : ObservableObject {
 	
 	func requestUpdatesSince(timestamp: Date) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
-		postDict[PARAM_TIMESTAMP] = String(format:"%ull", timestamp.timeIntervalSince1970)
+		postDict[PARAM_TIMESTAMP] = String(UInt64(timestamp.timeIntervalSince1970))
 		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
