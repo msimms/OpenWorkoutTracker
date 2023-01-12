@@ -56,7 +56,7 @@ struct HistoryView: View {
 		case HistoryVM.State.empty:
 			VStack(alignment: .center) {
 				ProgressView("Loading...").onAppear(perform: self.loadHistory)
-					.progressViewStyle(CircularProgressViewStyle(tint: .black))
+					.progressViewStyle(CircularProgressViewStyle(tint: .gray))
 			}
 		}
     }

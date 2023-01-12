@@ -100,6 +100,7 @@ struct StatisticsView: View {
 						Text("No History")
 					}
 				}
+				.padding(10)
 			}
 		case HistoryVM.State.empty:
 			VStack(alignment: .center) {

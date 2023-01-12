@@ -13,6 +13,7 @@ struct ActivityView: View {
 	@StateObject var activityVM: LiveActivityVM
 	@StateObject private var pacePlansVM = PacePlansVM.shared
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
+	@State private var stopping: Bool = false
 	@State private var showingStopSelection: Bool = false
 	@State private var showingIntervalSessionSelection: Bool = false
 	@State private var showingPacePlanSelection: Bool = false
@@ -34,6 +35,10 @@ struct ActivityView: View {
 
 	var activityType: String
 
+	var items: [GridItem] {
+		Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
+	}
+	
 	func selectAttributeToDisplay(position: Int) -> some View {
 		return VStack() {
 			Button("Cancel") {}
@@ -72,8 +77,10 @@ struct ActivityView: View {
 		return Preferences.watchAllowPressesDuringActivity()
 	}
 
-	var items: [GridItem] {
-		Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
+	func stop() -> StoredActivityVM {
+		self.stopping = true
+		let summary = self.activityVM.stop()
+		return StoredActivityVM(activitySummary: summary)
 	}
 
 	var body: some View {
@@ -268,7 +275,7 @@ struct ActivityView: View {
 						}
 						.foregroundColor(self.activityVM.isInProgress ? .red : .green)
 						.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
-							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: self.activityVM.stop()))) {
+							NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
 								Text("Stop")
 							}
 							Button {
