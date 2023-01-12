@@ -67,7 +67,6 @@ class WatchSession : NSObject, WCSessionDelegate {
 			if let msgMetadata = file.metadata as? Dictionary<String, AnyObject> {
 				let activityId = msgMetadata[WATCH_MSG_PARAM_ACTIVITY_ID] as? String
 				let activityType = msgMetadata[WATCH_MSG_PARAM_ACTIVITY_TYPE] as? String
-				let fileFormat = msgMetadata[WATCH_MSG_PARAM_FILE_FORMAT] as? String
 
 				if IsActivityInDatabase(activityId) {
 					NSLog("Received a duplicate activity from the watch.")
@@ -75,7 +74,6 @@ class WatchSession : NSObject, WCSessionDelegate {
 				}
 
 				// An activity file is received from the watch app.
-				let activityData = try Data(contentsOf: file.fileURL)
 				if !ImportActivityFromFile(file.fileURL.absoluteString, activityType, activityId) {
 					NSLog("Failed to import an activity from the watch.");
 				}
@@ -272,6 +270,8 @@ class WatchSession : NSObject, WCSessionDelegate {
 							
 							// Delete the temporary file.
 							try FileManager.default.removeItem(at: fileUrl!)
+							
+							result = true
 						}
 						else {
 							NSLog("Activity export failed (file export).")

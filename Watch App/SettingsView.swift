@@ -45,6 +45,11 @@ struct SettingsView: View {
 					Toggle("Heart Rate", isOn: $heartRateEnabled)
 						.onChange(of: heartRateEnabled) { value in
 							Preferences.setUseWatchHeartRate(value: heartRateEnabled)
+							
+							// If we are currently subscribed to the heart rate query, then unsubscribe.
+							if value == false {
+								HealthManager.shared.unsubscribeFromHeartRateUpdates()
+							}
 						}
 						.padding(5)
 					Toggle("Bluetooth Sensors", isOn: $btSensorsEnabled)
