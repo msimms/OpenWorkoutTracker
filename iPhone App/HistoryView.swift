@@ -16,43 +16,47 @@ struct HistoryView: View {
 	}()
 
 	private func loadHistory() {
-		self.historyVM.buildHistoricalActivitiesList(createAllObjects: false)
+		DispatchQueue.global(qos: .userInitiated).async {
+			self.historyVM.buildHistoricalActivitiesList(createAllObjects: false)
+		}
 	}
 
 	var body: some View {
-		VStack(alignment: .center) {
-			if self.historyVM.historicalActivities.count > 0 {
-				List(self.historyVM.historicalActivities, id: \.self) { item in
-					NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
-						HStack() {
-							Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-								.frame(width: 48)
-							VStack(alignment: .leading) {
-								if item.name.count > 0 {
-									Text(item.name)
-										.bold()
-								}
-								Text("\(self.dateFormatter.string(from: item.startTime))")
-								if item.source == ActivitySummary.Source.healthkit {
-									Text("HealthKit")
-										.bold()
+		switch self.historyVM.state {
+		case HistoryVM.State.loaded:
+			VStack(alignment: .center) {
+				if self.historyVM.state == HistoryVM.State.loaded {
+					if self.historyVM.historicalActivities.count > 0 {
+						List(self.historyVM.historicalActivities, id: \.self) { item in
+							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
+								HStack() {
+									Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
+										.frame(width: 48)
+									VStack(alignment: .leading) {
+										if item.name.count > 0 {
+											Text(item.name)
+												.bold()
+										}
+										Text("\(self.dateFormatter.string(from: item.startTime))")
+										if item.source == ActivitySummary.Source.healthkit {
+											Text("HealthKit")
+												.bold()
+										}
+									}
 								}
 							}
 						}
+						.listStyle(.plain)
+					}
+					else {
+						Text("No History")
 					}
 				}
-				.listStyle(.plain)
 			}
-			else {
-				Text("No History")
-			}
-		}
-		.overlay() {
-			if self.historyVM.state == HistoryVM.State.empty {
-				VStack(alignment: .center) {
-					ProgressView("Loading...").onAppear(perform: self.loadHistory)
-						.progressViewStyle(CircularProgressViewStyle(tint: .black))
-				}
+		case HistoryVM.State.empty:
+			VStack(alignment: .center) {
+				ProgressView("Loading...").onAppear(perform: self.loadHistory)
+					.progressViewStyle(CircularProgressViewStyle(tint: .black))
 			}
 		}
     }

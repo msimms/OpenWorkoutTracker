@@ -16,7 +16,9 @@ struct StatisticsView: View {
 	}()
 
 	private func loadHistory() {
-		self.historyVM.buildHistoricalActivitiesList(createAllObjects: true)
+		DispatchQueue.global(qos: .userInitiated).async {
+			self.historyVM.buildHistoricalActivitiesList(createAllObjects: true)
+		}
 	}
 
 	private func getTotalActivityAttribute(activityType: String, attributeName: String) -> some View {
@@ -38,71 +40,71 @@ struct StatisticsView: View {
 	}
 
 	var body: some View {
-		ScrollView() {
-			VStack(alignment: .center) {
-				if self.historyVM.historicalActivities.count > 0 {
-					ForEach(CommonApp.activityTypes, id: \.self) { activityType in
-						if GetNumHistoricalActivitiesByType(activityType) > 0 {
-							VStack() {
-								Text(activityType)
-									.bold()
-								Image(systemName: HistoryVM.imageNameForActivityType(activityType: activityType))
-									.frame(width: 48)
-							}
-							VStack() {
-								Text("Totals")
-									.bold()
-								self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
-								self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
-								
-								Text("Bests")
-									.bold()
-								self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, smallestIsBest: false)
-								self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, smallestIsBest: false)
-								
-								if activityType == ACTIVITY_TYPE_CYCLING {
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_CENTURY, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_SPEED, smallestIsBest: false)
+		switch self.historyVM.state {
+		case HistoryVM.State.loaded:
+			ScrollView() {
+				VStack(alignment: .center) {
+					if self.historyVM.historicalActivities.count > 0 {
+						ForEach(CommonApp.activityTypes, id: \.self) { activityType in
+							if GetNumHistoricalActivitiesByType(activityType) > 0 {
+								VStack() {
+									Text(activityType)
+										.bold()
+									Image(systemName: HistoryVM.imageNameForActivityType(activityType: activityType))
+										.frame(width: 48)
 								}
-								else if activityType == ACTIVITY_TYPE_HIKING {
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
-								}
-								else if activityType == ACTIVITY_TYPE_RUNNING {
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MARATHON, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_HALF_MARATHON, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_10K, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_5K, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_400M, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_PACE, smallestIsBest: true)
-								}
-								else if activityType == ACTIVITY_TYPE_WALKING {
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
-								}
-								else if activityType == ACTIVITY_TYPE_CHINUP || activityType == ACTIVITY_TYPE_PULLUP || activityType == ACTIVITY_TYPE_PUSHUP || activityType == ACTIVITY_TYPE_SQUAT {
-									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_REPS, smallestIsBest: true)
+								VStack() {
+									Text("Totals")
+										.bold()
+									self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
+									self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
+									
+									Text("Bests")
+										.bold()
+									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, smallestIsBest: false)
+									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, smallestIsBest: false)
+									
+									if activityType == ACTIVITY_TYPE_CYCLING {
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_CENTURY, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_SPEED, smallestIsBest: false)
+									}
+									else if activityType == ACTIVITY_TYPE_HIKING {
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
+									}
+									else if activityType == ACTIVITY_TYPE_RUNNING {
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MARATHON, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_HALF_MARATHON, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_10K, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_5K, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_400M, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_PACE, smallestIsBest: true)
+									}
+									else if activityType == ACTIVITY_TYPE_WALKING {
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_MILE, smallestIsBest: true)
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_FASTEST_KM, smallestIsBest: true)
+									}
+									else if activityType == ACTIVITY_TYPE_CHINUP || activityType == ACTIVITY_TYPE_PULLUP || activityType == ACTIVITY_TYPE_PUSHUP || activityType == ACTIVITY_TYPE_SQUAT {
+										self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_REPS, smallestIsBest: true)
+									}
 								}
 							}
 						}
 					}
-				}
-				else {
-					Text("No History")
-				}
-			}
-			.overlay() {
-				if self.historyVM.state == HistoryVM.State.empty {
-					VStack(alignment: .center) {
-						ProgressView("Loading...").onAppear(perform: self.loadHistory)
-							.progressViewStyle(CircularProgressViewStyle(tint: .black))
+					else {
+						Text("No History")
 					}
 				}
+			}
+		case HistoryVM.State.empty:
+			VStack(alignment: .center) {
+				ProgressView("Loading...").onAppear(perform: self.loadHistory)
+					.progressViewStyle(CircularProgressViewStyle(tint: .black))
 			}
 		}
     }

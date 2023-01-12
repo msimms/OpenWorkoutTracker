@@ -28,7 +28,6 @@ struct HistoryDetailsView: View {
 				.padding(5)
 				
 				// Attributes Summary
-
 				List(self.activityVM.getActivityAttributes(), id: \.self) { item in
 					HStack() {
 						Text(item)
