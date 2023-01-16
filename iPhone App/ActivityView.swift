@@ -601,8 +601,7 @@ struct ActivityView: View {
 							Text("Pause")
 						}
 					}
-					.alert("There was an unspecified error while trying to start the activity.", isPresented: $showingStartError) {
-					}
+					.alert("There was an unspecified error while trying to start the activity.", isPresented: $showingStartError) { }
 				}
 			}
 		}

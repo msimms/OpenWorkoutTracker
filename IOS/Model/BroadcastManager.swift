@@ -37,6 +37,10 @@ class BroadcastManager {
 	}
 
 	func displayMessage(text: String) {
+		var notificationData: Dictionary<String, String> = [:]
+		notificationData[KEY_NAME_MESSAGE] = text
+		let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: notificationData)
+		NotificationCenter.default.post(notification)
 	}
 
 	func sendToServer(hostName: String, path: String, data: String, activityId: String, isStopped: Bool) {

@@ -76,6 +76,7 @@ class LiveActivityVM : ObservableObject {
 	private var activityId: String = ""
 	private var activityType: String = ""
 	private var audioPlayer: AVAudioPlayer?
+	private var currentMessageTime: time_t = 0 // timestamp of when the current message was set, allows us to know when to clear it
 	
 	init(activityType: String) {
 		self.create(activityType: activityType)
@@ -83,6 +84,8 @@ class LiveActivityVM : ObservableObject {
 	}
 	
 	func create(activityType: String) {
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(self.messageReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: nil)
 		
 		var activityTypeToUse = activityType
 		var orphanedActivityIndex: size_t = 0
@@ -140,9 +143,18 @@ class LiveActivityVM : ObservableObject {
 		if Preferences.preferredUnitSystem() == UNIT_SYSTEM_US_CUSTOMARY {
 			splitAttrName = ACTIVITY_ATTRIBUTE_NUM_MILE_SPLITS
 		}
-
+		
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
+			
+			// Clear the message display?
+			if self.currentMessageTime > 0 {
+				let now = time(nil)
+				if now - self.currentMessageTime >= 3 {
+					self.currentMessage = ""
+					self.currentMessageTime = 0
+				}
+			}
 
 			// Autostart?
 			if !self.isInProgress && self.autoStartEnabled {
@@ -171,7 +183,7 @@ class LiveActivityVM : ObservableObject {
 					self.playPingSound()
 				}
 			}
-
+			
 			// Start and split beeps?
 			if isMovingActivity && self.isInProgress {
 				
@@ -182,14 +194,14 @@ class LiveActivityVM : ObservableObject {
 					newSplit = true
 					lastSplitNum += 1
 				}
-
+				
 #if os(watchOS)
 				// Start beep
 				if !playedStartBeep && Preferences.watchStartStopBeeps() {
 					self.playBeepSound()
 					playedStartBeep = true
 				}
-
+				
 				// Split beep
 				if newSplit && self.activityType == ACTIVITY_TYPE_RUNNING {
 					if Preferences.watchRunSplitBeeps() {
@@ -202,7 +214,7 @@ class LiveActivityVM : ObservableObject {
 					self.playBeepSound()
 					playedStartBeep = true
 				}
-
+				
 				// Split beep
 				if newSplit && ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse) {
 					self.playPingSound()
@@ -212,7 +224,7 @@ class LiveActivityVM : ObservableObject {
 			
 			// Update the interval session.
 			if CheckCurrentIntervalSession() {
-
+				
 				if (IsIntervalSessionComplete()) {
 					self.currentMessage = "The interval session is complete."
 				}
@@ -222,7 +234,7 @@ class LiveActivityVM : ObservableObject {
 					self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
 				}
 			}
-
+			
 			// Update the location and route.
 #if !os(watchOS)
 			if isMovingActivity && self.isInProgress {
@@ -631,8 +643,17 @@ class LiveActivityVM : ObservableObject {
 	
 	func playPingSound() {
 		let alertSound = URL(fileURLWithPath: Bundle.main.path(forResource: "Ping", ofType: "aif")!)
-
+		
 		try! audioPlayer = AVAudioPlayer(contentsOf: alertSound)
 		audioPlayer!.play()
+	}
+	
+	@objc func messageReceived(notification: NSNotification) {
+		if let data = notification.object as? Dictionary<String, AnyObject> {
+			if  let message = data[KEY_NAME_MESSAGE] as? String {
+				self.currentMessage = message
+				self.currentMessageTime = time(nil)
+			}
+		}
 	}
 }

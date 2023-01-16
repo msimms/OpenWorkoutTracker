@@ -61,6 +61,12 @@ class LocationSensor : NSObject, CLLocationManagerDelegate {
 			if processLocation {
 				ProcessLocationReading(latitude, longitude, alt, horizontalAccuracy, verticalAccuracy, UInt64(theTimeMs))
 			}
+			else {
+				var notificationData: Dictionary<String, String> = [:]
+				notificationData[KEY_NAME_MESSAGE] = "Bad location data."
+				let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: notificationData)
+				NotificationCenter.default.post(notification)
+			}
 			
 			// Inform any subscribers.
 			var locData: Dictionary<String, Double> = [:]

@@ -87,24 +87,33 @@ struct ActivityView: View {
 		ScrollView() {
 			VStack(alignment: .center) {
 				// Top item
-				HStack() {
-					Text(self.activityVM.value1).font(.system(size: 48))
-						.onTapGesture {
-							self.showingActivityAttributeSelection1 = canShowAttributeMenu()
-						}
-						.onLongPressGesture(minimumDuration: 2) {
-							self.showingActivityColorSelection1 = canShowAttributeMenu()
-						}
-						.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection1, titleVisibility: .visible) {
-							selectAttributeToDisplay(position: 0)
-						}
-						.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection1, titleVisibility: .visible) {
-							selectColorToUse(attributeName: self.activityVM.title1)
-						}
-						.foregroundColor(getColorToUse(attributeName: self.activityVM.title1))
-						.allowsTightening(true)
-						.lineLimit(1)
-						.minimumScaleFactor(0.75)
+				VStack() {
+					HStack() {
+						Text("Stopping...")
+							.foregroundColor(.red)
+							.bold()
+					}
+					.opacity(self.stopping ? 1 : 0)
+
+					HStack() {
+						Text(self.activityVM.value1).font(.system(size: 48))
+							.onTapGesture {
+								self.showingActivityAttributeSelection1 = canShowAttributeMenu()
+							}
+							.onLongPressGesture(minimumDuration: 2) {
+								self.showingActivityColorSelection1 = canShowAttributeMenu()
+							}
+							.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection1, titleVisibility: .visible) {
+								selectAttributeToDisplay(position: 0)
+							}
+							.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection1, titleVisibility: .visible) {
+								selectColorToUse(attributeName: self.activityVM.title1)
+							}
+							.foregroundColor(getColorToUse(attributeName: self.activityVM.title1))
+							.allowsTightening(true)
+							.lineLimit(1)
+							.minimumScaleFactor(0.75)
+					}
 				}
 
 				// Countdown timer
