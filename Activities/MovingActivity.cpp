@@ -1133,14 +1133,14 @@ time_t MovingActivity::GapToTargetPace() const
 	// Make sure a pace plan is selected.
 	if (m_pacePlan.targetDistance > (double)0.01)
 	{
-		// Convert distance to metric and calculate the remaining distance.
+		// Convert the distance to metric, if necessary, and calculate the remaining distance.
 		double targetDistanceInKms = m_pacePlan.targetDistance;
 		if (m_pacePlan.distanceUnits == UNIT_SYSTEM_US_CUSTOMARY)
 			targetDistanceInKms = UnitConverter::MilesToKilometers(targetDistanceInKms) * 1000.0;
 		double targetDistanceInMeters = targetDistanceInKms * (double)1000.0;
 		double remainingDistanceInMeters = targetDistanceInMeters - DistanceTraveledInMeters();
 
-		// Are we there yet?
+		// Are we there yet? If not, continue.
 		if (remainingDistanceInMeters > (double)0.01)
 		{
 			SegmentType currentPaceSegment = CurrentPace();

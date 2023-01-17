@@ -24,19 +24,19 @@ struct StatisticsView: View {
 	private func getTotalActivityAttribute(activityType: String, attributeName: String) -> some View {
 		return HStack() {
 			Text(attributeName)
-				.bold()
 			Spacer()
 			Text(self.historyVM.getFormattedTotalActivityAttribute(activityType: activityType, attributeName: attributeName))
 		}
+		.padding(5)
 	}
 
 	private func getBestActivityAttribute(activityType: String, attributeName: String, smallestIsBest: Bool) -> some View {
 		return HStack() {
 			Text(attributeName)
-				.bold()
 			Spacer()
 			Text(self.historyVM.getFormattedBestActivityAttribute(activityType: activityType, attributeName: attributeName, smallestIsBest: smallestIsBest))
 		}
+		.padding(5)
 	}
 
 	var body: some View {
@@ -48,10 +48,11 @@ struct StatisticsView: View {
 						ForEach(CommonApp.activityTypes, id: \.self) { activityType in
 							if GetNumHistoricalActivitiesByType(activityType) > 0 {
 								VStack() {
-									Text(activityType)
-										.bold()
 									Image(systemName: HistoryVM.imageNameForActivityType(activityType: activityType))
 										.frame(width: 48)
+									Text(activityType)
+										.bold()
+										.fontWeight(Font.Weight.heavy)
 								}
 								VStack() {
 									Text("Totals")

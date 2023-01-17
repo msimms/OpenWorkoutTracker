@@ -31,7 +31,7 @@ struct HistoryView: View {
 							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
 								HStack() {
 									Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-										.frame(width: 48)
+										.frame(width: 32)
 									VStack(alignment: .leading) {
 										if item.name.count > 0 {
 											Text(item.name)

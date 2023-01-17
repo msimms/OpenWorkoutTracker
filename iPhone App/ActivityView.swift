@@ -44,6 +44,7 @@ struct ActivityView: View {
 	var sensorMgr = SensorMgr.shared
 	var broadcastMgr = BroadcastManager.shared
 	var activityType: String = ""
+	var font: String = "DBLCDTempBlack"
 
 	var items: [GridItem] {
 		Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
@@ -117,7 +118,7 @@ struct ActivityView: View {
 									.foregroundColor(ActivityPreferences.getLabelColor(activityType: self.activityType))
 									.padding(5)
 								Text(self.activityVM.value1)
-									.font(.custom("DBLCDTempBlack", fixedSize: 72))
+									.font(.custom(self.font, fixedSize: 72))
 									.foregroundColor(colorScheme == .dark ? .white : ActivityPreferences.getTextColor(activityType: self.activityType))
 									.onTapGesture {
 										self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
@@ -153,7 +154,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value2)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
@@ -161,6 +162,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 1)
 												}
+												.padding(1)
 											Text(self.activityVM.units2)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -170,7 +172,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value3)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
@@ -178,6 +180,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 2)
 												}
+												.padding(1)
 											Text(self.activityVM.units3)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -187,7 +190,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value4)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
@@ -195,6 +198,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection4, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 3)
 												}
+												.padding(1)
 											Text(self.activityVM.units4)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -204,7 +208,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value5)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
@@ -212,6 +216,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 4)
 												}
+												.padding(1)
 											Text(self.activityVM.units5)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -221,7 +226,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value6)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection6 = self.canShowAttributeMenu()
@@ -229,6 +234,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection6, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 5)
 												}
+												.padding(1)
 											Text(self.activityVM.units6)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -238,11 +244,12 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value7)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection7 = self.canShowAttributeMenu()
 												}
+												.padding(1)
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection7, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 6)
 												}
@@ -255,7 +262,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value8)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection8 = self.canShowAttributeMenu()
@@ -263,6 +270,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection8, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 7)
 												}
+												.padding(1)
 											Text(self.activityVM.units8)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -272,7 +280,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value9)
-												.font(.system(size: 28))
+												.font(.custom(self.font, fixedSize: 28))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection9 = self.canShowAttributeMenu()
@@ -280,6 +288,7 @@ struct ActivityView: View {
 												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection9, titleVisibility: .visible) {
 													selectAttributeToDisplay(position: 8)
 												}
+												.padding(1)
 											Text(self.activityVM.units9)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -302,7 +311,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 												.padding(5)
 											Text(self.activityVM.value2)
-												.font(.custom("DBLCDTempBlack", fixedSize: 64))
+												.font(.custom(self.font, fixedSize: 64))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
@@ -324,7 +333,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 												.padding(5)
 											Text(self.activityVM.value3)
-												.font(.custom("DBLCDTempBlack", fixedSize: 64))
+												.font(.custom(self.font, fixedSize: 64))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
@@ -357,7 +366,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value2)
-												.font(.system(size: 48))
+												.font(.custom(self.font, fixedSize: 48))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
@@ -368,6 +377,7 @@ struct ActivityView: View {
 												.allowsTightening(true)
 												.lineLimit(1)
 												.minimumScaleFactor(0.75)
+												.padding(1)
 											Text(self.activityVM.units2)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
@@ -377,7 +387,7 @@ struct ActivityView: View {
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value3)
-												.font(.system(size: 48))
+												.font(.custom(self.font, fixedSize: 48))
 												.foregroundColor(colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
@@ -388,47 +398,8 @@ struct ActivityView: View {
 												.allowsTightening(true)
 												.lineLimit(1)
 												.minimumScaleFactor(0.75)
+												.padding(1)
 											Text(self.activityVM.units3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title4)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value4)
-												.font(.system(size: 48))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection4, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 3)
-												}
-												.allowsTightening(true)
-												.lineLimit(1)
-												.minimumScaleFactor(0.75)
-											Text(self.activityVM.units4)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title5)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value5)
-												.font(.system(size: 48))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 4)
-												}
-												.allowsTightening(true)
-												.lineLimit(1)
-												.minimumScaleFactor(0.75)
-											Text(self.activityVM.units5)
 												.font(.system(size: 16))
 												.foregroundColor(labelColor)
 										}
@@ -452,30 +423,43 @@ struct ActivityView: View {
 					
 					// Connectivity icons
 					HStack() {
-						Image(systemName: "car.circle")
-							.resizable()
-							.frame(width: 32.0, height: 32.0)
-							.opacity(self.sensorMgr.radarConnected ? 1 : 0)
-						Image(systemName: "bolt.circle")
-							.resizable()
-							.frame(width: 32.0, height: 32.0)
-							.opacity(self.sensorMgr.powerConnected ? 1 : 0)
-						Image(systemName: "heart.circle")
-							.resizable()
-							.frame(width: 32.0, height: 32.0)
-							.opacity(self.sensorMgr.heartRateConnected ? 1 : 0)
-						Image(systemName: "c.circle")
-							.resizable()
-							.frame(width: 32.0, height: 32.0)
-							.opacity(self.sensorMgr.cadenceConnected ? 1 : 0)
-						Image(systemName: "figure.run")
-							.resizable()
-							.frame(width: 32.0, height: 32.0)
-							.opacity(self.sensorMgr.runningPowerConnected ? 1 : 0)
-						Image(systemName: "antenna.radiowaves.left.and.right.circle")
-							.resizable()
-							.frame(width: 32.0, height: 32.0)
-							.opacity(self.broadcastMgr.lastSendTime > 0 && Preferences.broadcastShowIcon() ? 1 : 0)
+						if self.sensorMgr.radarConnected {
+							Image(systemName: "car.circle")
+								.resizable()
+								.frame(width: 32.0, height: 32.0)
+								.opacity(self.sensorMgr.radarConnected ? 1 : 0)
+						}
+						if self.sensorMgr.powerConnected {
+							Image(systemName: "bolt.circle")
+								.resizable()
+								.frame(width: 32.0, height: 32.0)
+								.opacity(self.sensorMgr.powerConnected ? 1 : 0)
+						}
+						if self.sensorMgr.heartRateConnected {
+							Image(systemName: "heart.circle")
+								.resizable()
+								.frame(width: 32.0, height: 32.0)
+								.opacity(self.sensorMgr.heartRateConnected ? 1 : 0)
+						}
+						if self.sensorMgr.cadenceConnected {
+							Image(systemName: "c.circle")
+								.resizable()
+								.frame(width: 32.0, height: 32.0)
+								.opacity(self.sensorMgr.cadenceConnected ? 1 : 0)
+						}
+						if self.sensorMgr.runningPowerConnected {
+							Image(systemName: "figure.run")
+								.resizable()
+								.frame(width: 32.0, height: 32.0)
+								.opacity(self.sensorMgr.runningPowerConnected ? 1 : 0)
+						}
+						let showBroadcastIcon = self.broadcastMgr.lastSendTime > 0 && Preferences.broadcastShowIcon()
+						if showBroadcastIcon {
+							Image(systemName: "antenna.radiowaves.left.and.right.circle")
+								.resizable()
+								.frame(width: 32.0, height: 32.0)
+								.opacity(showBroadcastIcon ? 1 : 0)
+						}
 					}
 					
 					Spacer()
@@ -485,66 +469,72 @@ struct ActivityView: View {
 		.toolbar {
 			ToolbarItem(placement: .bottomBar) {
 				HStack() {
-					// Preferences Edit button
-					NavigationLink(destination: ActivityPreferencesView(activityType: self.activityType)) {
-						ZStack {
-							Image(systemName: "line.3.horizontal.decrease.circle")
-						}
-					}
-					.foregroundColor(colorScheme == .dark ? .white : .black)
-					.opacity(self.activityVM.isInProgress ? 0 : 1)
-					.help("View preferences")
+					if self.activityVM.isInProgress {
 
-					// Lap button
-					Button {
-						self.activityVM.lap()
-					} label: {
-						Label("Lap", systemImage: "stopwatch")
-					}
-					.foregroundColor(colorScheme == .dark ? .white : .black)
-					.opacity(self.activityVM.isInProgress ? 1 : 0)
-					.help("Lap")
-
-					// Interval Session selection button
-					if self.intervalSessionsVM.intervalSessions.count > 0 {
+						// Lap button
 						Button {
-							self.showingIntervalSessionSelection = true
+							self.activityVM.lap()
 						} label: {
-							Label("Intervals", systemImage: "stopwatch")
+							Label("Lap", systemImage: "stopwatch")
 						}
-						.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
-							ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
-								Button {
-									SetCurrentIntervalSession(item.id.uuidString)
-								} label: {
-									Text(item.name)
-								}
+						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.opacity(self.activityVM.isInProgress ? 1 : 0)
+						.help("Lap")
+					}
+
+					else {
+
+						// Preferences Edit button
+						NavigationLink(destination: ActivityPreferencesView(activityType: self.activityType)) {
+							ZStack {
+								Image(systemName: "line.3.horizontal.decrease.circle")
 							}
 						}
 						.foregroundColor(colorScheme == .dark ? .white : .black)
 						.opacity(self.activityVM.isInProgress ? 0 : 1)
-						.help("Interval session selection.")
-					}
-
-					// Pace Plan selection button
-					if self.pacePlansVM.pacePlans.count > 0 {
-						Button {
-							self.showingPacePlanSelection = true
-						} label: {
-							Label("Pace Plan", systemImage: "arrow.up.arrow.down")
-						}
-						.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
-							ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
-								Button {
-									SetCurrentPacePlan(item.id.uuidString)
-								} label: {
-									Text(item.name)
+						.help("View preferences")
+						
+						// Interval Session selection button
+						if self.intervalSessionsVM.intervalSessions.count > 0 {
+							Button {
+								self.showingIntervalSessionSelection = true
+							} label: {
+								Label("Intervals", systemImage: "stopwatch")
+							}
+							.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
+								ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
+									Button {
+										SetCurrentIntervalSession(item.id.uuidString)
+									} label: {
+										Text(item.name)
+									}
 								}
 							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.opacity(self.activityVM.isInProgress ? 0 : 1)
+							.help("Interval session selection.")
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.opacity(self.activityVM.isInProgress ? 0 : 1)
-						.help("Pace plan selection.")
+						
+						// Pace Plan selection button
+						if self.pacePlansVM.pacePlans.count > 0 {
+							Button {
+								self.showingPacePlanSelection = true
+							} label: {
+								Label("Pace Plan", systemImage: "arrow.up.arrow.down")
+							}
+							.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
+								ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
+									Button {
+										SetCurrentPacePlan(item.id.uuidString)
+									} label: {
+										Text(item.name)
+									}
+								}
+							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.opacity(self.activityVM.isInProgress ? 0 : 1)
+							.help("Pace plan selection.")
+						}
 					}
 
 					// Page button
