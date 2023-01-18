@@ -73,7 +73,9 @@ struct ActivityView: View {
 	func stop() -> StoredActivityVM {
 		self.stopping = true
 		let summary = self.activityVM.stop()
-		return StoredActivityVM(activitySummary: summary)
+		let storedActivityVM = StoredActivityVM(activitySummary: summary)
+		storedActivityVM.load()
+		return storedActivityVM
 	}
 
 	var body: some View {

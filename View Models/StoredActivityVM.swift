@@ -21,6 +21,12 @@ func tagsCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeM
 }
 
 class StoredActivityVM : ObservableObject {
+	enum State {
+		case empty
+		case loaded
+	}
+
+	@Published private(set) var state = State.empty
 	var source: ActivitySummary.Source = ActivitySummary.Source.database
 	var activityIndex: Int = ACTIVITY_INDEX_UNKNOWN // Index into the cache of loaded activities
 	var activityId: String = ""                     // Unique identifier for the activity
@@ -45,24 +51,27 @@ class StoredActivityVM : ObservableObject {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
 		
+		self.state = State.empty
 		self.source = activitySummary.source
 		self.activityId = activitySummary.id
 		self.name = activitySummary.name
 		self.description = activitySummary.description
-		
+		self.activityIndex = activitySummary.index
+	}
+	
+	func load() {
 		// Activity is from the app database.
-		if activitySummary.source == ActivitySummary.Source.database {
+		if self.source == ActivitySummary.Source.database {
 			
 			// If a database index wasn't provided then we probably needed to load the activity summary from the database.
 			// The activity index will be zero because it will be the only activity loaded.
-			if activitySummary.index == ACTIVITY_INDEX_UNKNOWN {
-				LoadHistoricalActivity(activitySummary.id)
+			if self.activityIndex == ACTIVITY_INDEX_UNKNOWN {
+				LoadHistoricalActivity(self.activityId)
 				CreateHistoricalActivityObject(0)
-				self.activityIndex = 0
+				self.activityIndex = 0 // Is now the first item in the list
 			}
 			else {
-				CreateHistoricalActivityObject(activitySummary.index)
-				self.activityIndex = activitySummary.index
+				CreateHistoricalActivityObject(self.activityIndex)
 			}
 			
 			// Retrieve all the sensor and location data.
@@ -73,9 +82,11 @@ class StoredActivityVM : ObservableObject {
 		}
 		
 		// Activity is from HealthKit.
-		else if activitySummary.source == ActivitySummary.Source.healthkit {
+		else if self.source == ActivitySummary.Source.healthkit {
 			self.loadSensorDataFromHealthKit()
 		}
+
+		self.state = State.loaded
 	}
 	
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in HealthKit.

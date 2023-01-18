@@ -89,6 +89,7 @@ class CommonApp : ObservableObject {
 		summary.source = ActivitySummary.Source.database
 		
 		let storedActivityVM = StoredActivityVM(activitySummary: summary)
+		storedActivityVM.load()
 		let fileName = try storedActivityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
 		let fileUrl = URL(string: "file://" + fileName)
 		let fileContents = try Data(contentsOf: fileUrl!)
