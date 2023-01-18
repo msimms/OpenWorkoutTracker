@@ -310,14 +310,18 @@ class StoredActivityVM : ObservableObject {
 		let kmSplits = self.getKilometerSplits()
 		let mileSplits = self.getMileSplits()
 		
+		var lastSplit: time_t = 0
 		var count = 1
-		for split in kmSplits {
-			result.append("KM " + String(count) + ": " + LiveActivityVM.formatSeconds(numSeconds: split))
+		for currentSplit in kmSplits {
+			result.append("KM " + String(count) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit - lastSplit))
+			lastSplit = currentSplit
 			count += 1
 		}
+		lastSplit = 0
 		count = 1
-		for split in mileSplits {
-			result.append("Mile " + String(count) + ": " + LiveActivityVM.formatSeconds(numSeconds: split))
+		for currentSplit in mileSplits {
+			result.append("Mile " + String(count) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit - lastSplit))
+			lastSplit = currentSplit
 			count += 1
 		}
 		

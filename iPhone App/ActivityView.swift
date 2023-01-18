@@ -554,15 +554,17 @@ struct ActivityView: View {
 					.foregroundColor(colorScheme == .dark ? .white : .black)
 					.help("Will switch between different views/pages.")
 
-					// AutoStart button
-					Button {
-						if self.activityVM.setAutoStart() {
+					if !self.activityVM.isInProgress {
+						// AutoStart button
+						Button {
+							if self.activityVM.setAutoStart() {
+							}
+						} label: {
+							Label("Autostart", systemImage: "play.circle")
 						}
-					} label: {
-						Label("Autostart", systemImage: "play.circle")
+						.foregroundColor(self.activityVM.autoStartEnabled ? .red : (colorScheme == .dark ? .white : .black))
+						.help("Autostart. Will start when movement is detected.")
 					}
-					.foregroundColor(self.activityVM.autoStartEnabled ? .red : (colorScheme == .dark ? .white : .black))
-					.help("Autostart. Will start when movement is detected.")
 
 					// Start/Stop/Pause button
 					Button {
@@ -595,6 +597,7 @@ struct ActivityView: View {
 				}
 			}
 		}
+		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
 		.onAppear() {
 			if self.activityVM.isStopped {
 				self.dismiss()

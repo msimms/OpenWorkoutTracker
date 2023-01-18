@@ -15,22 +15,19 @@ struct SensorChartView: View {
 		VStack(alignment: .center) {
 			Text(title)
 				.bold()
-			Group() {
-				if self.data.count > 0 {
-					HStack() {
-						Text(self.yLabel)
-							.rotationEffect(Angle(degrees: -90.0))
-						VStack() {
-							LineGraphView(points: self.data, color: color)
-							Text("Elapsed Time")
-						}
+			if self.data.count > 0 {
+				HStack() {
+					Text(self.yLabel)
+						.rotationEffect(Angle(degrees: -90.0))
+					VStack() {
+						LineGraphView(points: self.data, color: color)
+						Text("Elapsed Time")
 					}
 				}
-				else {
-					Text("No Data")
-				}
 			}
-			.padding(10)
+			else {
+				Text("No Data")
+			}
 		}
     }
 }
