@@ -116,7 +116,7 @@ class WatchSession : NSObject, WCSessionDelegate {
 				
 				// Rate limit the server synchronizations. Let's not be spammy.
 				let now = time(nil)
-				if now - self.timeOfLastMessage > 60 {
+				if now - self.timeOfLastMessage > 300 {
 					try self.checkIfActivitiesAreUploadedToPhone()
 					self.timeOfLastMessage = now
 				}
@@ -182,11 +182,7 @@ class WatchSession : NSObject, WCSessionDelegate {
 		if numHistoricalActivities > 0 {
 			// Check each activity. Loop in reverse order because the most recent activities are probably the most interesting.
 			for i in stride(from: numHistoricalActivities - 1, to: 0, by: -1) {
-				let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(i))
-
-				defer {
-					activityIdPtr!.deallocate()
-				}
+				let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(i)) // Returns const char*, no need to dealloc
 				
 				if activityIdPtr != nil {
 					let activityId = String(cString: activityIdPtr!.assumingMemoryBound(to: CChar.self))
@@ -230,8 +226,12 @@ class WatchSession : NSObject, WCSessionDelegate {
 			let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
 
 			defer {
-				activityTypePtr!.deallocate()
-				activityNamePtr!.deallocate()
+				if activityTypePtr != nil {
+					activityTypePtr!.deallocate()
+				}
+				if activityNamePtr != nil {
+					activityNamePtr!.deallocate()
+				}
 			}
 
 			if activityTypePtr != nil && activityNamePtr != nil {
@@ -259,9 +259,12 @@ class WatchSession : NSObject, WCSessionDelegate {
 						summary.type = activityType
 						summary.name = activityName
 						
+						// Load the activity from the database.
+						let storedActivityVM = StoredActivityVM(activitySummary: summary)
+						storedActivityVM.load()
+
 						// Export the activity to a file.
-						let storedActivity = StoredActivityVM(activitySummary: summary)
-						let fileName = try storedActivity.exportActivityToFile(fileFormat: fileFormat, dirName: groupUrl!.absoluteString)
+						let fileName = try storedActivityVM.exportActivityToFile(fileFormat: fileFormat, dirName: groupUrl!.absoluteString)
 						if fileName.count > 0 {
 							let fileUrl = URL(string: fileName)
 							
@@ -280,6 +283,9 @@ class WatchSession : NSObject, WCSessionDelegate {
 					else {
 						NSLog("Activity export failed (nil group URL).")
 					}
+				}
+				else {
+					NSLog("Activity export failed (undefined activity start time).")
 				}
 			}
 		}
