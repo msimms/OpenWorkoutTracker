@@ -2614,6 +2614,22 @@ extern "C" {
 		return result;
 	}
 
+	char* GetHistoricalActivityDescription(size_t activityIndex)
+	{
+		char* result = NULL;
+		
+		g_historicalActivityLock.lock();
+		
+		if (activityIndex < g_historicalActivityList.size())
+		{
+			result = strdup(g_historicalActivityList.at(activityIndex).description.c_str());
+		}
+		
+		g_historicalActivityLock.unlock();
+		
+		return result;
+	}
+
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex)
 	{
 		if (activityIndex < g_historicalActivityList.size())

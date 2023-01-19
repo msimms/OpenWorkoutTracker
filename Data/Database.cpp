@@ -1162,7 +1162,7 @@ bool Database::RetrieveActivities(ActivitySummaryList& activities)
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 	
-	if (sqlite3_prepare_v2(m_pDb, "select activity_id, user_id, type, name, start_time, end_time from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select activity_id, user_id, type, name, description, start_time, end_time from activity order by start_time", -1, &statement, 0) == SQLITE_OK)
 	{
 		activities.reserve(SIZE_INCREMENT);
 
@@ -1173,9 +1173,14 @@ bool Database::RetrieveActivities(ActivitySummaryList& activities)
 			summary.activityId.append((const char*)sqlite3_column_text(statement, 0));
 			summary.userId = sqlite3_column_int64(statement, 1);
 			summary.type.append((const char*)sqlite3_column_text(statement, 2));
-			summary.name.append((const char*)sqlite3_column_text(statement, 3));
-			summary.startTime = (time_t)sqlite3_column_int64(statement, 4);
-			summary.endTime = (time_t)sqlite3_column_int64(statement, 5);
+			const char* name = (const char*)sqlite3_column_text(statement, 3);
+			if (name)
+				summary.name.append(name);
+			const char* desc = (const char*)sqlite3_column_text(statement, 4);
+			if (desc)
+				summary.description.append(desc);
+			summary.startTime = (time_t)sqlite3_column_int64(statement, 5);
+			summary.endTime = (time_t)sqlite3_column_int64(statement, 6);
 			summary.pActivity = NULL;
 
 			activities.push_back(std::move(summary));

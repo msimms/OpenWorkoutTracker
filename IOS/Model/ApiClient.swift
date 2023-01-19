@@ -144,7 +144,7 @@ class ApiClient : ObservableObject {
 						}
 						else if url.contains(REMOTE_API_CLAIM_DEVICE_URL) {
 						}
-						else if url.contains(REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL) {
+						else if url.contains(REMOTE_API_UPDATE_ACTIVITY_METADATA_URL) {
 						}
 						else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
@@ -305,7 +305,7 @@ class ApiClient : ObservableObject {
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_NAME] = name
 		
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL)
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
@@ -314,7 +314,7 @@ class ApiClient : ObservableObject {
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_TYPE] = type
 		
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL)
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
@@ -323,7 +323,7 @@ class ApiClient : ObservableObject {
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_DESCRIPTION] = description
 		
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_PROFILE_URL)
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	

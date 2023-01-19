@@ -28,6 +28,7 @@ typedef struct ActivitySummary
 	time_t               endTime;                  // End time for the activity (UNIX time) or zero if not set
 	std::string          type;                     // Type of the activity (cycling, running, etc.)
 	std::string          name;                     // Name of the activity
+	std::string          description;              // Description of the activity
 	SensorReadingList    locationPoints;           // List of all locations
 	SensorReadingList    accelerometerReadings;    // List of all accelerometer readings recorded as part of this activity
 	SensorReadingList    heartRateMonitorReadings; // List of all heart rate monitor readings recorded as part of this activity
@@ -52,6 +53,7 @@ typedef struct ActivitySummary
 		this->endTime = rhs.endTime;
 		this->type = rhs.type;
 		this->name = rhs.name;
+		this->description = rhs.description;
 		this->locationPoints = rhs.locationPoints;
 		this->accelerometerReadings = rhs.accelerometerReadings;
 		this->heartRateMonitorReadings = rhs.heartRateMonitorReadings;
@@ -70,6 +72,7 @@ typedef struct ActivitySummary
 		this->endTime = rhs.endTime;
 		this->type = std::move(rhs.type);
 		this->name = std::move(rhs.name);
+		this->description = std::move(rhs.description);
 		this->locationPoints = std::move(rhs.locationPoints);
 		this->accelerometerReadings = std::move(rhs.accelerometerReadings);
 		this->heartRateMonitorReadings = std::move(rhs.heartRateMonitorReadings);

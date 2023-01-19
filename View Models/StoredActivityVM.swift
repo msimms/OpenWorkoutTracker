@@ -30,8 +30,8 @@ class StoredActivityVM : ObservableObject {
 	var source: ActivitySummary.Source = ActivitySummary.Source.database
 	var activityIndex: Int = ACTIVITY_INDEX_UNKNOWN // Index into the cache of loaded activities
 	var activityId: String = ""                     // Unique identifier for the activity
-	var name: String = ""                           // Name of the activity
-	var description: String = ""                    // Description of the activity
+	@Published var name: String = ""                // Name of the activity
+	@Published var description: String = ""         // Description of the activity
 	var locationTrack: Array<CLLocationCoordinate2D> = []
 	var startingLat: Double = 0.0
 	var startingLon: Double = 0.0

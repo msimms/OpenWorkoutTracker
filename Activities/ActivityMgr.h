@@ -161,6 +161,7 @@ extern "C" {
 	void FixHistoricalActivityEndTime(size_t activityIndex);
 	char* GetHistoricalActivityType(size_t activityIndex);
 	char* GetHistoricalActivityName(size_t activityIndex);
+	char* GetHistoricalActivityDescription(size_t activityIndex);
 	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex);
 	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName);
 	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex);

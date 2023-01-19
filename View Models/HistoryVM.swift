@@ -101,15 +101,18 @@ class HistoryVM : ObservableObject {
 					}
 
 					let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(activityIndex)) // this one is a const char*, so don't dealloc it
+
 					let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIndex))
 					let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
+					let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityIndex))
 
 					defer {
 						activityTypePtr!.deallocate()
 						activityNamePtr!.deallocate()
+						activityDescPtr!.deallocate()
 					}
 
-					if activityTypePtr == nil || activityNamePtr == nil {
+					if activityTypePtr == nil || activityNamePtr == nil || activityDescPtr == nil {
 						done = true
 					}
 					else {
@@ -118,10 +121,12 @@ class HistoryVM : ObservableObject {
 						let activityId = String(cString: activityIdPtr!.assumingMemoryBound(to: CChar.self))
 						let activityName = String(cString: activityNamePtr!.assumingMemoryBound(to: CChar.self))
 						let activityType = String(cString: activityTypePtr!.assumingMemoryBound(to: CChar.self))
+						let activityDesc = String(cString: activityDescPtr!.assumingMemoryBound(to: CChar.self))
 
 						summary.id = activityId
 						summary.name = activityName
 						summary.type = activityType
+						summary.description = activityDesc
 						summary.index = activityIndex
 						summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime))
 						summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime))
