@@ -94,11 +94,10 @@ class LiveActivityVM : ObservableObject {
 		// Check for an existing, in progress, activity.
 		if IsActivityOrphaned(&orphanedActivityIndex) || IsActivityInProgress() {
 			
-			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex))
+			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex)) // const char*, no need to dealloc
 			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
 			
 			defer {
-				orphanedActivityIdPtr!.deallocate()
 				orphanedActivityTypePtr!.deallocate()
 			}
 			

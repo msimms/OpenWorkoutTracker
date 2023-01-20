@@ -146,12 +146,15 @@ class HistoryVM : ObservableObject {
 
 	/// @brief Loads the activity list from our database as well as HealthKit (if enabled).
 	func buildHistoricalActivitiesList(createAllObjects: Bool) {
+		self.historicalActivities = []
 		self.loadActivitiesFromDatabase()
 		self.loadActivitiesFromHealthKit()
 		if createAllObjects {
 			CreateAllHistoricalActivityObjects()
 		}
-		self.state = State.loaded
+		DispatchQueue.main.async {
+			self.state = State.loaded
+		}
 	}
 
 	func getFormattedTotalActivityAttribute(activityType: String, attributeName: String) -> String {

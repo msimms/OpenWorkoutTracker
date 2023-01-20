@@ -5,8 +5,9 @@
 
 import SwiftUI
 
+let NUM_SCREENS: UInt = 4
 let MIN_CROWN_VALUE: Double = 1.0
-let MAX_CROWN_VALUE: Double = MIN_CROWN_VALUE + 2.0
+let MAX_CROWN_VALUE: Double = MIN_CROWN_VALUE + Double(NUM_SCREENS) + 1 // The number of screens, plus one for the start/stop
 
 struct ActivityView: View {
 	@Environment(\.dismiss) var dismiss
@@ -80,234 +81,216 @@ struct ActivityView: View {
 	func stop() -> StoredActivityVM {
 		self.stopping = true
 		let summary = self.activityVM.stop()
-		return StoredActivityVM(activitySummary: summary)
+		let storedActivityVM = StoredActivityVM(activitySummary: summary)
+		storedActivityVM.load()
+		return storedActivityVM
+	}
+
+	func handleStartStopPauseAction() {
+		if self.activityVM.isPaused {
+			self.activityVM.pause()
+		}
+		else if self.activityVM.isInProgress {
+			self.showingStopSelection = true
+		}
+		else if !self.activityVM.start() {
+			NSLog("Error starting when the Start button was manually pressed.")
+		}
 	}
 
 	var body: some View {
-		ScrollView() {
-			VStack(alignment: .center) {
-				// Top item
-				VStack() {
-					HStack() {
-						Text("Stopping...")
-							.foregroundColor(.red)
-							.bold()
-					}
-					.opacity(self.stopping ? 1 : 0)
-
-					HStack() {
-						Text(self.activityVM.value1).font(.system(size: 48))
-							.onTapGesture {
-								self.showingActivityAttributeSelection1 = canShowAttributeMenu()
-							}
-							.onLongPressGesture(minimumDuration: 2) {
-								self.showingActivityColorSelection1 = canShowAttributeMenu()
-							}
-							.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection1, titleVisibility: .visible) {
-								selectAttributeToDisplay(position: 0)
-							}
-							.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection1, titleVisibility: .visible) {
-								selectColorToUse(attributeName: self.activityVM.title1)
-							}
-							.foregroundColor(getColorToUse(attributeName: self.activityVM.title1))
-							.allowsTightening(true)
-							.lineLimit(1)
-							.minimumScaleFactor(0.75)
-					}
+		VStack(alignment: .center) {
+			// Top item
+			VStack() {
+				HStack() {
+					Text("Stopping...")
+						.foregroundColor(.red)
+						.bold()
 				}
+				.opacity(self.stopping ? 1 : 0)
 
-				// Countdown timer
-				if self.activityVM.countdownSecsRemaining > 0 {
-					Image(systemName: String(format: "%u.circle.fill", self.activityVM.countdownSecsRemaining))
-						.resizable()
-						.frame(width: 128.0, height: 128.0)
+				HStack() {
+					Text(self.activityVM.value1).font(.system(size: 48))
+						.onTapGesture {
+							self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
+						}
+						.onLongPressGesture(minimumDuration: 2) {
+							self.showingActivityColorSelection1 = self.canShowAttributeMenu()
+						}
+						.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection1, titleVisibility: .visible) {
+							self.selectAttributeToDisplay(position: 0)
+						}
+						.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection1, titleVisibility: .visible) {
+							self.selectColorToUse(attributeName: self.activityVM.title1)
+						}
+						.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title1))
+						.allowsTightening(true)
+						.lineLimit(1)
+						.minimumScaleFactor(0.75)
 				}
-				
-				// Normal view
-				else {
-					// Minor items
-					LazyVGrid(columns: self.items, spacing: 20) {
-						
-						// Screen 1
-						if self.crownValue < MIN_CROWN_VALUE + 1.0 {
-							VStack() {
-								Text(self.activityVM.title2).font(.system(size: 12))
-								Text(self.activityVM.value2).font(.system(size: 24))
-									.onTapGesture {
-										self.showingActivityAttributeSelection2 = canShowAttributeMenu()
-									}
-									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection2 = canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 1)
-									}
-									.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection2, titleVisibility: .visible) {
-										selectColorToUse(attributeName: self.activityVM.title2)
-									}
-									.foregroundColor(getColorToUse(attributeName: self.activityVM.title2))
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units2).font(.system(size: 12))
-							}
-							VStack() {
-								Text(self.activityVM.title3).font(.system(size: 12))
-								Text(self.activityVM.value3).font(.system(size: 24))
-									.onTapGesture {
-										self.showingActivityAttributeSelection3 = canShowAttributeMenu()
-									}
-									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection3 = canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 2)
-									}
-									.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection3, titleVisibility: .visible) {
-										selectColorToUse(attributeName: self.activityVM.title3)
-									}
-									.foregroundColor(getColorToUse(attributeName: self.activityVM.title3))
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units3).font(.system(size: 12))
-							}
-						}
+			}
 
-						// Screen 2
-						else if self.crownValue >= MIN_CROWN_VALUE + 1.0 && self.crownValue < MIN_CROWN_VALUE + 2.0 {
-							VStack() {
-								Text(self.activityVM.title4).font(.system(size: 12))
-								Text(self.activityVM.value4).font(.system(size: 24))
-									.onTapGesture {
-										self.showingActivityAttributeSelection4 = canShowAttributeMenu()
-									}
-									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection4 = canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection4, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 3)
-									}
-									.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection4, titleVisibility: .visible) {
-										selectColorToUse(attributeName: self.activityVM.title4)
-									}
-									.foregroundColor(getColorToUse(attributeName: self.activityVM.title4))
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units4).font(.system(size: 12))
-							}
-							VStack() {
-								Text(self.activityVM.title5).font(.system(size: 12))
-								Text(self.activityVM.value5).font(.system(size: 24))
-									.onTapGesture {
-										self.showingActivityAttributeSelection5 = canShowAttributeMenu()
-									}
-									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection5 = canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 4)
-									}
-									.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection5, titleVisibility: .visible) {
-										selectColorToUse(attributeName: self.activityVM.title5)
-									}
-									.foregroundColor(getColorToUse(attributeName: self.activityVM.title5))
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units5).font(.system(size: 12))
-							}
+			// Countdown timer
+			if self.activityVM.countdownSecsRemaining > 0 {
+				Image(systemName: String(format: "%u.circle.fill", self.activityVM.countdownSecsRemaining))
+					.resizable()
+					.frame(width: 128.0, height: 128.0)
+			}
+			
+			// Normal view
+			else {
+				// Minor items
+				LazyVGrid(columns: self.items, spacing: 20) {
+					
+					// Screen 1
+					if self.crownValue >= MIN_CROWN_VALUE && self.crownValue < MIN_CROWN_VALUE + 1.0 {
+						VStack(alignment: .center) {
+							Text(self.activityVM.title2).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.value2).font(.system(size: 24))
+								.onTapGesture {
+									self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
+								}
+								.onLongPressGesture(minimumDuration: 2) {
+									self.showingActivityColorSelection2 = self.canShowAttributeMenu()
+								}
+								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection2, titleVisibility: .visible) {
+									self.selectAttributeToDisplay(position: 1)
+								}
+								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection2, titleVisibility: .visible) {
+									self.selectColorToUse(attributeName: self.activityVM.title2)
+								}
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title2))
+								.allowsTightening(true)
+								.lineLimit(1)
+								.minimumScaleFactor(0.75)
+							Text(self.activityVM.units2).font(.system(size: 12))
 						}
+						VStack(alignment: .center) {
+							Text(self.activityVM.title3).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.value3).font(.system(size: 24))
+								.onTapGesture {
+									self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
+								}
+								.onLongPressGesture(minimumDuration: 2) {
+									self.showingActivityColorSelection3 = self.canShowAttributeMenu()
+								}
+								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection3, titleVisibility: .visible) {
+									self.selectAttributeToDisplay(position: 2)
+								}
+								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection3, titleVisibility: .visible) {
+									self.selectColorToUse(attributeName: self.activityVM.title3)
+								}
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title3))
+								.allowsTightening(true)
+								.lineLimit(1)
+								.minimumScaleFactor(0.75)
+							Text(self.activityVM.units3).font(.system(size: 12))
+						}
+					}
 
-						// Screen 3
-						else if self.crownValue >= MIN_CROWN_VALUE + 2.0 && self.crownValue < MIN_CROWN_VALUE + 3.0 {
-							VStack() {
-								Text(self.activityVM.title6).font(.system(size: 12))
-								Text(self.activityVM.value6).font(.system(size: 24))
-									.onTapGesture {
-										self.showingActivityAttributeSelection6 = canShowAttributeMenu()
-									}
-									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection6 = canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection6, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 5)
-									}
-									.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection6, titleVisibility: .visible) {
-										selectColorToUse(attributeName: self.activityVM.title6)
-									}
-									.foregroundColor(getColorToUse(attributeName: self.activityVM.title6))
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units6).font(.system(size: 12))
-							}
-							VStack() {
-								Text(self.activityVM.title7).font(.system(size: 12))
-								Text(self.activityVM.value7).font(.system(size: 24))
-									.onTapGesture {
-										self.showingActivityAttributeSelection7 = canShowAttributeMenu()
-									}
-									.onLongPressGesture(minimumDuration: 2) {
-										self.showingActivityColorSelection7 = canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection7, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 6)
-									}
-									.confirmationDialog("Select the color to use", isPresented: $showingActivityColorSelection7, titleVisibility: .visible) {
-										selectColorToUse(attributeName: self.activityVM.title5)
-									}
-									.foregroundColor(getColorToUse(attributeName: self.activityVM.title7))
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units7).font(.system(size: 12))
-							}
+					// Screen 2
+					else if self.crownValue >= MIN_CROWN_VALUE + 1.0 && self.crownValue < MIN_CROWN_VALUE + 2.0 {
+						VStack(alignment: .center) {
+							Text(self.activityVM.title4).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.value4).font(.system(size: 24))
+								.onTapGesture {
+									self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
+								}
+								.onLongPressGesture(minimumDuration: 2) {
+									self.showingActivityColorSelection4 = self.canShowAttributeMenu()
+								}
+								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection4, titleVisibility: .visible) {
+									self.selectAttributeToDisplay(position: 3)
+								}
+								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection4, titleVisibility: .visible) {
+									self.selectColorToUse(attributeName: self.activityVM.title4)
+								}
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title4))
+								.allowsTightening(true)
+								.lineLimit(1)
+								.minimumScaleFactor(0.75)
+							Text(self.activityVM.units4).font(.system(size: 12))
+						}
+						VStack(alignment: .center) {
+							Text(self.activityVM.title5).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.value5).font(.system(size: 24))
+								.onTapGesture {
+									self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
+								}
+								.onLongPressGesture(minimumDuration: 2) {
+									self.showingActivityColorSelection5 = self.canShowAttributeMenu()
+								}
+								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection5, titleVisibility: .visible) {
+									self.selectAttributeToDisplay(position: 4)
+								}
+								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection5, titleVisibility: .visible) {
+									self.selectColorToUse(attributeName: self.activityVM.title5)
+								}
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title5))
+								.allowsTightening(true)
+								.lineLimit(1)
+								.minimumScaleFactor(0.75)
+							Text(self.activityVM.units5).font(.system(size: 12))
+						}
+					}
+
+					// Screen 3
+					else if self.crownValue >= MIN_CROWN_VALUE + 2.0 && self.crownValue < MIN_CROWN_VALUE + 3.0 {
+						VStack(alignment: .center) {
+							Text(self.activityVM.title6).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.value6).font(.system(size: 24))
+								.onTapGesture {
+									self.showingActivityAttributeSelection6 = self.canShowAttributeMenu()
+								}
+								.onLongPressGesture(minimumDuration: 2) {
+									self.showingActivityColorSelection6 = self.canShowAttributeMenu()
+								}
+								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection6, titleVisibility: .visible) {
+									self.selectAttributeToDisplay(position: 5)
+								}
+								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection6, titleVisibility: .visible) {
+									self.selectColorToUse(attributeName: self.activityVM.title6)
+								}
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title6))
+								.allowsTightening(true)
+								.lineLimit(1)
+								.minimumScaleFactor(0.75)
+							Text(self.activityVM.units6).font(.system(size: 12))
+						}
+						VStack(alignment: .center) {
+							Text(self.activityVM.title7).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.value7).font(.system(size: 24))
+								.onTapGesture {
+									self.showingActivityAttributeSelection7 = self.canShowAttributeMenu()
+								}
+								.onLongPressGesture(minimumDuration: 2) {
+									self.showingActivityColorSelection7 = self.canShowAttributeMenu()
+								}
+								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection7, titleVisibility: .visible) {
+									self.selectAttributeToDisplay(position: 6)
+								}
+								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection7, titleVisibility: .visible) {
+									self.selectColorToUse(attributeName: self.activityVM.title5)
+								}
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title7))
+								.allowsTightening(true)
+								.lineLimit(1)
+								.minimumScaleFactor(0.75)
+							Text(self.activityVM.units7).font(.system(size: 12))
 						}
 					}
 					
-					// Start/Stop/Cancel
-					HStack() {
-						Button {
-							if self.activityVM.isPaused {
-								self.activityVM.pause()
-							}
-							else if self.activityVM.isInProgress {
-								self.showingStopSelection = true
-							}
-							else if !self.activityVM.start() {
-								NSLog("Error starting when the Start button was manually pressed.")
-							}
-						} label: {
-							Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
-						}
-						.foregroundColor(self.activityVM.isInProgress ? .red : .green)
-						.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
-							NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
-								Text("Stop")
-							}
-							Button {
-								self.activityVM.pause()
-							} label: {
-								Label("Pause", systemImage: "pause")
-							}
-							Button {
-							} label: {
-								Text("Cancel")
-							}
-						}
-					}
-					
-					HStack() {
+					// Screen 4
+					else if self.crownValue >= MIN_CROWN_VALUE + 3.0 && self.crownValue < MIN_CROWN_VALUE + 4.0 {
+
 						// Interval sessions
-						if self.intervalSessionsVM.intervalSessions.count > 0 {
+						if self.intervalSessionsVM.intervalSessions.count == 0 {
 							Button {
 								self.showingIntervalSessionSelection = true
 							} label: {
-								Text("Intervals")
+								Label("Intervals", systemImage: "stopwatch")
 							}
-							.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
+							.confirmationDialog("Select the interval session to perform", isPresented: self.$showingIntervalSessionSelection, titleVisibility: .visible) {
 								ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
 									Button {
 										SetCurrentIntervalSession(item.id.uuidString)
@@ -320,13 +303,13 @@ struct ActivityView: View {
 						}
 						
 						// Pace plans
-						if self.pacePlansVM.pacePlans.count > 0 {
+						if self.pacePlansVM.pacePlans.count == 0 {
 							Button {
 								self.showingPacePlanSelection = true
 							} label: {
-								Text("Pace Plan")
+								Label("Pace Plan", systemImage: "book.closed")
 							}
-							.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
+							.confirmationDialog("Select the pace plan to use", isPresented: self.$showingPacePlanSelection, titleVisibility: .visible) {
 								ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
 									Button {
 										SetCurrentPacePlan(item.id.uuidString)
@@ -339,12 +322,64 @@ struct ActivityView: View {
 						}
 					}
 				}
+				
+				HStack() {
+
+					// Start/Stop/Cancel
+					// If we're using the crown to start and stop the activity then hide the button.
+					// This is useful for activities like swimming, to prevent accidental presses.
+					if !Preferences.watchTurnCrownToStartStopActivity() {
+						HStack() {
+							Button {
+								self.handleStartStopPauseAction()
+							} label: {
+								Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
+							}
+							.foregroundColor(self.activityVM.isInProgress ? .red : .green)
+							.confirmationDialog("What would you like to do?", isPresented: self.$showingStopSelection, titleVisibility: .visible) {
+								NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
+									Text("Stop")
+								}
+								Button {
+									self.activityVM.pause()
+								} label: {
+									Label("Pause", systemImage: "pause")
+								}
+								Button {
+								} label: {
+									Text("Cancel")
+								}
+							}
+						}
+					}
+				}
 			}
 		}
-		.digitalCrownRotation(self.$crownValue, from: MIN_CROWN_VALUE, through: MAX_CROWN_VALUE, by: 1, sensitivity: .low, isContinuous: true, isHapticFeedbackEnabled: true)
+		.focusable()
+		.digitalCrownRotation(self.$crownValue, from: MIN_CROWN_VALUE, through: MAX_CROWN_VALUE, by: -1, sensitivity: .low, isContinuous: true, isHapticFeedbackEnabled: true)
 		.onChange(of: self.crownValue) { output in
+			if Preferences.watchTurnCrownToStartStopActivity() {
+				if output >= MIN_CROWN_VALUE + 4.0 && output < MIN_CROWN_VALUE + 5.0 {
+					self.handleStartStopPauseAction()
+				}
+			}
+		}
+		.confirmationDialog("What would you like to do?", isPresented: self.$showingStopSelection, titleVisibility: .visible) {
+			NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
+				Text("Stop")
+			}
+			Button {
+				self.activityVM.pause()
+			} label: {
+				Label("Pause", systemImage: "pause")
+			}
+			Button {
+			} label: {
+				Text("Cancel")
+			}
 		}
 		.navigationTitle(self.activityType)
+		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
 		.onAppear() {
 			if self.activityVM.isStopped {
 				self.dismiss()

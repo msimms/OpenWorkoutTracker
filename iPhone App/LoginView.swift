@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct LoginView: View {
+	@Environment(\.presentationMode) var presentation
 	private var apiClient = ApiClient.shared
 	@State private var email: String = Preferences.broadcastUserName()
 	@State private var password: String = ""
@@ -30,7 +31,10 @@ struct LoginView: View {
 
 			Button {
 				Preferences.setBroadcastUserName(value: self.email)
-				if !self.apiClient.login(username: self.email, password: self.password) {
+				if self.apiClient.login(username: self.email, password: self.password) {
+					self.presentation.wrappedValue.dismiss()
+				}
+				else {
 					self.showingLoginError = true
 				}
 			} label: {

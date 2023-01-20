@@ -86,7 +86,9 @@ class StoredActivityVM : ObservableObject {
 			self.loadSensorDataFromHealthKit()
 		}
 
-		self.state = State.loaded
+		DispatchQueue.main.async {
+			self.state = State.loaded
+		}
 	}
 	
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in HealthKit.

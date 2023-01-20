@@ -522,7 +522,7 @@ struct ActivityView: View {
 							Button {
 								self.showingPacePlanSelection = true
 							} label: {
-								Label("Pace Plan", systemImage: "arrow.up.arrow.down")
+								Label("Pace Plan", systemImage: "book.closed")
 							}
 							.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
 								ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
