@@ -50,10 +50,12 @@ class SensorMgr : ObservableObject {
 	/// Returns true to indicate that we should connect to this peripheral and discover its services.
 	func peripheralDiscovered(peripheral: CBPeripheral, name: String) -> Bool {
 		var found: Bool = false
+		var shouldDiscoverServices: Bool = false
 
 		for existingPeripheral in self.peripherals {
 			if existingPeripheral.name == name {
 				found = true
+				shouldDiscoverServices = existingPeripheral.enabled
 				break
 			}
 		}
@@ -64,9 +66,10 @@ class SensorMgr : ObservableObject {
 			summary.name = name
 			summary.peripheral = peripheral
 			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
+			shouldDiscoverServices = summary.enabled
 			self.peripherals.append(summary)
 		}
-		return true
+		return shouldDiscoverServices
 	}
 
 	/// Called when a service is discovered.
@@ -95,6 +98,7 @@ class SensorMgr : ObservableObject {
 			}
 			else if serviceId == POWER_SERVICE_ID {
 				self.powerConnected = true
+				self.cadenceConnected = true
 			}
 			else if serviceId == CADENCE_SERVICE_ID {
 				self.cadenceConnected = true
@@ -155,8 +159,20 @@ class SensorMgr : ObservableObject {
 					ProcessHrmReading(Double(self.currentHeartRateBpm), UInt64(Date().timeIntervalSince1970))
 				}
 				else if serviceId == POWER_SERVICE_ID {
-					self.currentPowerWatts = try decodeCyclingPowerReading(data: value)
-					ProcessPowerMeterReading(Double(self.currentPowerWatts), UInt64(Date().timeIntervalSince1970))
+					let powerDict = try decodeCyclingPowerReadingAsDict(data: value)
+
+					if  let currentPower = powerDict[KEY_NAME_CYCLING_POWER_WATTS] {
+						self.currentPowerWatts = UInt16(currentPower)
+						ProcessPowerMeterReading(Double(self.currentPowerWatts), UInt64(Date().timeIntervalSince1970))
+					}
+
+					// Power meters often send cadence data as well.
+					if  let currentCrankCount = powerDict[KEY_NAME_CYCLING_POWER_CRANK_REVS],
+						let currentCrankTime = powerDict[KEY_NAME_CYCLING_POWER_LAST_CRANK_TIME] {
+						let timestamp = NSDate().timeIntervalSince1970 * 1000
+						self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
+						ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
+					}
 				}
 				else if serviceId == CADENCE_SERVICE_ID {
 					let cadenceData = try decodeCyclingCadenceReading(data: value)
