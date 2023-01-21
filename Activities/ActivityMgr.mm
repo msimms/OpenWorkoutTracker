@@ -1549,6 +1549,34 @@ extern "C" {
 			params.insert(std::make_pair(PARAM_INTERVAL_NAME, EscapeAndQuoteString(session.name)));
 			params.insert(std::make_pair(PARAM_INTERVAL_SPORT, EscapeAndQuoteString(session.sport)));
 			params.insert(std::make_pair(PARAM_INTERVAL_DESCRIPTION, EscapeAndQuoteString(session.description)));
+
+			if (session.segments.size() > 0)
+			{
+				std::string segmentsStr = "[";
+
+				for (auto iter = session.segments.begin(); iter != session.segments.end(); ++iter)
+				{
+					const IntervalSessionSegment& segment = (*iter);
+					std::map<std::string, std::string> segmentParams;
+
+					if (iter != session.segments.begin())
+					{
+						segmentsStr.append(",");
+					}
+
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_REPEAT, FormatInt(segment.repeat)));
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_FIRST_VALUE, FormatDouble(segment.firstValue)));
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_FIRST_UNITS, FormatInt(segment.firstUnits)));
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_SECOND_VALUE, FormatDouble(segment.secondValue)));
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_SECOND_UNITS, FormatInt(segment.secondUnits)));
+
+					segmentsStr.append(MapToJsonStr(segmentParams));
+				}
+				
+				segmentsStr.append("]");
+				params.insert(std::make_pair(PARAM_INTERVAL_SEGMENTS, segmentsStr));
+			}
+
 			return strdup(MapToJsonStr(params).c_str());
 		}
 		return NULL;

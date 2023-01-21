@@ -50,6 +50,7 @@ let MODIFIER_EDIT_POWER = "Edit Power (watts)"
 // Mirrors the backend structure IntervalSessionSegment
 class IntervalSegment : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
+	var numRepeats: UInt32 = 0
 	var firstValue: Double = 0.0
 	var secondValue: Double = 0.0
 	var firstUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET  // Units for the first part of the description (ex: X secs at Y pace or X sets of Y reps)
@@ -431,7 +432,26 @@ class IntervalSessionsVM : ObservableObject {
 					if let sessionDescription = summaryDict[PARAM_INTERVAL_DESCRIPTION] as? String {
 						summaryObj.description = sessionDescription
 					}
-					
+					if let sessionSegments = summaryDict[PARAM_INTERVAL_SEGMENTS] as? Array<Dictionary<String, Any>> {
+						for sessionSegment in sessionSegments {
+							if let numRepeats = sessionSegment[PARAM_INTERVAL_SEGMENT_REPEAT] as? UInt32,
+							   let firstValue = sessionSegment[PARAM_INTERVAL_SEGMENT_FIRST_VALUE] as? Double,
+							   let firstUnits = sessionSegment[PARAM_INTERVAL_SEGMENT_FIRST_UNITS] as? UInt32,
+							   let secondValue = sessionSegment[PARAM_INTERVAL_SEGMENT_SECOND_VALUE] as? Double,
+							   let secondUnits = sessionSegment[PARAM_INTERVAL_SEGMENT_SECOND_UNITS] as? UInt32 {
+
+								let segmentObj = IntervalSegment()
+								segmentObj.numRepeats = numRepeats
+								segmentObj.firstValue = firstValue
+								segmentObj.firstUnits = IntervalUnit(firstUnits)
+								segmentObj.secondValue = secondValue
+								segmentObj.secondUnits = IntervalUnit(secondUnits)
+
+								summaryObj.segments.append(segmentObj)
+							}
+						}
+					}
+
 					defer {
 						sessionDescPtr.deallocate()
 					}
