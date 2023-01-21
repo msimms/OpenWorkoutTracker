@@ -17,14 +17,16 @@ struct MapWithPolyline: UIViewRepresentable {
 		return mapView
 	}
 
-	func updateUIView(_ view: MKMapView, context: Context) {}
+	func updateUIView(_ view: MKMapView, context: Context) {
+	}
 
 	func makeCoordinator() -> Coordinator {
 		Coordinator(self)
 	}
 	
 	func addOverlay(_ overlay: MKOverlay) -> some View {
-		MKMapView.appearance().addOverlay(overlay)
+		let mapView = MKMapView.appearance()
+		mapView.addOverlay(overlay)
 		return self
 	}
 }
@@ -37,6 +39,10 @@ class Coordinator: NSObject, MKMapViewDelegate {
 	}
 	
 	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+		// Remove old overlays. Not sure why these are sticking around.
+		let overlays = mapView.overlays
+		mapView.removeOverlays(overlays)
+
 		if let routePolyline = overlay as? MKPolyline {
 			let renderer = MKPolylineRenderer(polyline: routePolyline)
 			renderer.strokeColor = UIColor.systemBlue
