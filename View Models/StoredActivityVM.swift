@@ -99,6 +99,8 @@ class StoredActivityVM : ObservableObject {
 		var coordinate: Coordinate = Coordinate()
 		var pointIndex: Int = 0
 		
+		self.locationTrack = []
+
 		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &coordinate, pointIndex: pointIndex) {
 			self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
 			pointIndex += 1
@@ -118,6 +120,7 @@ class StoredActivityVM : ObservableObject {
 		if LoadAllHistoricalActivitySensorData(self.activityIndex) {
 			
 			// Location points
+			self.locationTrack = []
 			let numLocationPoints = GetNumHistoricalActivityLocationPoints(self.activityIndex)
 			if numLocationPoints > 0 {
 				
@@ -137,8 +140,9 @@ class StoredActivityVM : ObservableObject {
 #endif
 				}
 			}
-			
+
 			// Heart rate readings
+			self.heartRate = []
 			let numHeartRateReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_HEART_RATE)
 			if numHeartRateReadings > 0 {
 				
@@ -153,6 +157,7 @@ class StoredActivityVM : ObservableObject {
 			}
 			
 			// Cadence readings
+			self.cadence = []
 			let numCadenceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_CADENCE)
 			if numCadenceReadings > 0 {
 				
@@ -167,6 +172,8 @@ class StoredActivityVM : ObservableObject {
 			}
 			
 			// Pace and speed readings
+			self.pace = []
+			self.speed = []
 			let numPaceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_LOCATION)
 			if numPaceReadings > 0 {
 				
@@ -180,6 +187,7 @@ class StoredActivityVM : ObservableObject {
 			}
 			
 			// Power readings
+			self.power = []
 			let numPowerReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_POWER)
 			if numPowerReadings > 0 {
 				
@@ -194,6 +202,9 @@ class StoredActivityVM : ObservableObject {
 			}
 			
 			// Accelerometer readings
+			self.x = []
+			self.y = []
+			self.z = []
 			let numAccelPoints = GetNumHistoricalActivityAccelerometerReadings(self.activityIndex)
 			if numAccelPoints > 0 {
 				

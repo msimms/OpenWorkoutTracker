@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct EditIntervalSessionView: View {
-	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
 

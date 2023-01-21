@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct EditPacePlanView: View {
-	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject private var pacePlansVM = PacePlansVM.shared
 

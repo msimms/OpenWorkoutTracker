@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-	@Environment(\.colorScheme) var colorScheme
 	private var apiClient = ApiClient.shared
 	private var app = CommonApp.shared
 	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC

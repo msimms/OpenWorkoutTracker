@@ -36,26 +36,27 @@ struct HistoryDetailsView: View {
 		switch self.activityVM.state {
 		case StoredActivityVM.State.loaded:
 			VStack(alignment: .center) {
-				// Map
-				if self.activityVM.isMovingActivity() {
-					let region = MKCoordinateRegion(
-						center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
-						span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-					)
-					
-					MapWithPolyline(region: region, lineCoordinates: self.activityVM.locationTrack)
-						.addOverlay(self.activityVM.trackLine)
-						.ignoresSafeArea()
-						.frame(width: 400, height: 300)
-				}
-				
 				ScrollView() {
+					// Map
+					if self.activityVM.isMovingActivity() {
+						let region = MKCoordinateRegion(
+							center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
+							span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+						)
+						
+						MapWithPolyline(region: region, lineCoordinates: self.activityVM.locationTrack)
+							.addOverlay(self.activityVM.trackLine)
+							.ignoresSafeArea()
+							.frame(width: 400, height: 300)
+					}
+				
 					// Name
 					TextField("Name", text: self.$activityVM.name)
 						.onChange(of: self.activityVM.name) { value in
 							showingUpdateNameError = !self.activityVM.updateActivityName()
 						}
 						.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
+						.padding(10)
 					
 					// Description
 					TextField("Description", text: self.$activityVM.description, axis: .vertical)
@@ -64,50 +65,60 @@ struct HistoryDetailsView: View {
 						}
 						.lineLimit(2...10)
 						.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
-					
+						.padding(10)
+
 					// Attributes Summary
 					ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
 						HStack() {
 							if item == "Heart Rate" {
 								NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Cadence" {
 								NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Pace" {
 								NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Power" {
 								NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Speed" {
 								NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "X Axis" {
 								NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Y Axis" {
 								NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Z Axis" {
 								NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue))
 								Spacer()
+								Image(systemName: "chart.xyaxis.line")
 							}
 							else {
+								let valueStr = self.activityVM.getActivityAttributeValueStr(attributeName: item)
 								Text(item)
 								Spacer()
-								Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+								Text(valueStr)
 							}
 						}
 					}
-					.padding(2)
+					.padding(10)
 					
 					if self.activityVM.isMovingActivity() {
 						let splits = self.activityVM.getSplitStrings()
@@ -118,8 +129,8 @@ struct HistoryDetailsView: View {
 									Text(split)
 									Spacer()
 								}
-								.padding(2)
 							}
+							.padding(10)
 						}
 					}
 				}

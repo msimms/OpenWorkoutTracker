@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct ContentView: View {
-	@Environment(\.colorScheme) var colorScheme
 	@State private var showingActivitySelection: Bool = false
 	@State private var showingViewSelection: Bool = false
 	@State private var showingEditSelection: Bool = false
