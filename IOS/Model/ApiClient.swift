@@ -17,7 +17,7 @@ func unsynchedActivitiesCallback(destination: Optional<UnsafePointer<Int8>>, con
 
 class ApiClient : ObservableObject {
 	static let shared = ApiClient()
-	var loggedIn = false
+	@Published var loggedIn = false
 	
 	/// Singleton constructor
 	private init() {
@@ -46,7 +46,7 @@ class ApiClient : ObservableObject {
 				if method == "POST" {
 					let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
 					let text = String(data: jsonData, encoding: String.Encoding.ascii)!
-					let postLength = String(format: "%lu", data.count)
+					let postLength = String(format: "%lu", text.count)
 					
 					request.setValue(postLength, forHTTPHeaderField:"Content-Length")
 					request.setValue("application/json", forHTTPHeaderField:"Content-Type")
@@ -150,8 +150,6 @@ class ApiClient : ObservableObject {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
-						else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
-						}
 						else if url.contains(REMOTE_API_UPLOAD_ACTIVITY_FILE_URL) {
 						}
 						else if url.contains(REMOTE_API_CREATE_INTERVAL_WORKOUT_URL) {
@@ -159,8 +157,9 @@ class ApiClient : ObservableObject {
 						else if url.contains(REMOTE_API_CREATE_PACE_PLAN_URL) {
 						}
 					}
-				}
-				else {
+					else {
+						NSLog("Error code received from the server.")
+					}
 				}
 			}
 			

@@ -119,18 +119,19 @@ class CommonApp : ObservableObject {
 						if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 							if let sessionDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
 								let sessionCookieStr = sessionDict["cookie"]
-								let sessionExpiry = sessionDict["expiry"]
+								let sessionExpiry = sessionDict["expiry"] as! TimeInterval
 
-								// Dictionary containing the cookie and the associated expiry date.
-								/*let cookieProperties: Dictionary<String, AnyObject> = [:]
-								cookieProperties[NSHTTPCookieName] = SESSION_COOKIE_NAME
-								cookieProperties[NSHTTPCookieValue] = sessionCookieStr
-								cookieProperties[NSHTTPCookiePath] = "/"
-								cookieProperties[NSHTTPCookieDomain] = Preferences.broadcastHostName()
-
-								NSDate* expiryDate = [[NSDate date] initWithTimeIntervalSince1970:[sessionExpiry unsignedIntValue]];
-								[cookieProperties setObject:expiryDate forKey:NSHTTPCookieExpires];
-								[cookieProperties setObject:@"TRUE" forKey:NSHTTPCookieSecure];*/
+								let cookieProperties: Dictionary<HTTPCookiePropertyKey, Any> = [
+									HTTPCookiePropertyKey.domain: Preferences.broadcastHostName(),
+									HTTPCookiePropertyKey.path: "/",
+									HTTPCookiePropertyKey.name: SESSION_COOKIE_NAME,
+									HTTPCookiePropertyKey.value: sessionCookieStr as Any,
+									HTTPCookiePropertyKey.secure: "TRUE",
+									HTTPCookiePropertyKey.expires: NSDate(timeIntervalSince1970: sessionExpiry)
+								]
+								
+								let cookie = HTTPCookie(properties: cookieProperties)
+								HTTPCookieStorage.shared.setCookie(cookie!)
 							}
 						}
 

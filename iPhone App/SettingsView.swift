@@ -25,8 +25,8 @@ struct SettingsView: View {
 			Text("Units")
 				.bold()
 			VStack(alignment: .center) {
-				Toggle("Metric", isOn: $preferMetric)
-					.onChange(of: preferMetric) { value in
+				Toggle("Metric", isOn: self.$preferMetric)
+					.onChange(of: self.preferMetric) { value in
 						Preferences.setPreferredUnitSystem(system: value ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
 						SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
 					}
@@ -36,13 +36,13 @@ struct SettingsView: View {
 			Text("HealthKit")
 				.bold()
 			VStack(alignment: .center) {
-				Toggle("Read Activities From HealthKit", isOn: $readActivitiesFromHealthKit)
-					.onChange(of: readActivitiesFromHealthKit) { value in
-						Preferences.setWillIntegrateHealthKitActivities(value: readActivitiesFromHealthKit)
+				Toggle("Read Activities From HealthKit", isOn: self.$readActivitiesFromHealthKit)
+					.onChange(of: self.readActivitiesFromHealthKit) { value in
+						Preferences.setWillIntegrateHealthKitActivities(value: self.readActivitiesFromHealthKit)
 					}
-				Toggle("Hide Duplicate Activities", isOn: $hideDuplicateActivities)
-					.onChange(of: hideDuplicateActivities) { value in
-						Preferences.setHideHealthKitDuplicates(value: hideDuplicateActivities)
+				Toggle("Hide Duplicate Activities", isOn: self.$hideDuplicateActivities)
+					.onChange(of: self.hideDuplicateActivities) { value in
+						Preferences.setHideHealthKitDuplicates(value: self.hideDuplicateActivities)
 					}
 			}
 			.padding(5)
@@ -50,9 +50,9 @@ struct SettingsView: View {
 			Text("Cloud Services")
 				.bold()
 			VStack(alignment: .center) {
-				Toggle("Auto Save Files to iCloud Drive", isOn: $autoSaveActivitiesToICloudDrive)
-					.onChange(of: autoSaveActivitiesToICloudDrive) { value in
-						Preferences.setAutoSaveToICloudDrive(value: autoSaveActivitiesToICloudDrive)
+				Toggle("Auto Save Files to iCloud Drive", isOn: self.$autoSaveActivitiesToICloudDrive)
+					.onChange(of: self.autoSaveActivitiesToICloudDrive) { value in
+						Preferences.setAutoSaveToICloudDrive(value: self.autoSaveActivitiesToICloudDrive)
 					}
 			}
 			.padding(5)
@@ -60,43 +60,43 @@ struct SettingsView: View {
 			Text("Broadcast")
 				.bold()
 			VStack(alignment: .center) {
-				Toggle("Enabled", isOn: $broadcastEnabled)
-					.onChange(of: broadcastEnabled) { value in
-						Preferences.setBroadcastToServer(value: broadcastEnabled)
+				Toggle("Enabled", isOn: self.$broadcastEnabled)
+					.onChange(of: self.broadcastEnabled) { value in
+						Preferences.setBroadcastToServer(value: self.broadcastEnabled)
 						let _ = self.apiClient.isLoggedIn()
 					}
 				HStack() {
 					Text("Update Rate")
 					Spacer()
-					TextField("Seconds", text: $updateRate.value)
+					TextField("Seconds", text: self.$updateRate.value)
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: updateRate.value) { value in
-							if let value = Int(updateRate.value) {
+						.onChange(of: self.updateRate.value) { value in
+							if let value = Int(self.updateRate.value) {
 								Preferences.setBroadcastRate(value: value)
 							} else {
 							}
 						}
 					Text(" seconds")
 				}
-				Toggle("Use HTTPS", isOn: $useHttps)
-					.onChange(of: useHttps) { value in
+				Toggle("Use HTTPS", isOn: self.$useHttps)
+					.onChange(of: self.useHttps) { value in
 						Preferences.setBroadcastProtocol(value: value ? "https" : "http")
 					}
 				HStack() {
 					Text("Broadcast Server")
 					Spacer()
-					TextField("Server", text: $broadcastServer)
+					TextField("Server", text: self.$broadcastServer)
 						.keyboardType(.URL)
 						.multilineTextAlignment(.trailing)
-						.onChange(of: broadcastServer) { value in
-							Preferences.setBroadcastHostName(value: broadcastServer)
+						.onChange(of: self.broadcastServer) { value in
+							Preferences.setBroadcastHostName(value: self.broadcastServer)
 						}
 				}
-				Toggle("Show Broadcast Icon", isOn: $showBroadcastIcon)
-					.onChange(of: showBroadcastIcon) { value in
-						Preferences.setBroadcastShowIcon(value: showBroadcastIcon)
+				Toggle("Show Broadcast Icon", isOn: self.$showBroadcastIcon)
+					.onChange(of: self.showBroadcastIcon) { value in
+						Preferences.setBroadcastShowIcon(value: self.showBroadcastIcon)
 					}
 			}
 			.padding(5)
@@ -111,13 +111,13 @@ struct SettingsView: View {
 								self.showingLogoutError = true
 							}
 						} label: {
-							Text(self.apiClient.loggedIn ? "Logout" : "Login")
+							Text("Logout")
 								.foregroundColor(.white)
 								.fontWeight(Font.Weight.heavy)
 								.frame(minWidth: 0, maxWidth: .infinity)
 								.padding()
 						}
-						.alert("Failed to logout.", isPresented: $showingLogoutError) {}
+						.alert("Failed to logout.", isPresented: self.$showingLogoutError) {}
 						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 						.opacity(0.8)
 						.bold()
