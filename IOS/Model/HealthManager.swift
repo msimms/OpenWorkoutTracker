@@ -552,10 +552,15 @@ class HealthManager {
 
 		if attributeName == ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED {
 			let qty = workout.totalDistance
-			attr.value.doubleVal = self.quantityInUserPreferredUnits(qty: qty!)
-			attr.valueType = TYPE_DOUBLE
-			attr.measureType = MEASURE_DISTANCE
-			attr.valid = true
+			if qty != nil {
+				attr.value.doubleVal = self.quantityInUserPreferredUnits(qty: qty!)
+				attr.valueType = TYPE_DOUBLE
+				attr.measureType = MEASURE_DISTANCE
+				attr.valid = true
+			}
+			else {
+				attr.valid = false
+			}
 		}
 		else if attributeName == ACTIVITY_ATTRIBUTE_ELAPSED_TIME {
 			let qty = workout.duration
@@ -615,7 +620,7 @@ class HealthManager {
 				attr.valid = false
 			}
 		}
-		return attr;
+		return attr
 	}
 
 	/// @brief Exports the activity with the specified ID to a file of the given format in the given directory..
