@@ -27,7 +27,7 @@ class HistoryVM : ObservableObject {
 		case loaded
 	}
 	
-	@Published private(set) var state = State.empty
+	@Published var state = State.empty
 	var historicalActivities: Array<ActivitySummary> = []
 
 	init() {
@@ -146,6 +146,9 @@ class HistoryVM : ObservableObject {
 
 	/// @brief Loads the activity list from our database as well as HealthKit (if enabled).
 	func buildHistoricalActivitiesList(createAllObjects: Bool) {
+		DispatchQueue.main.async {
+			self.state = State.empty
+		}
 		self.historicalActivities = []
 		self.loadActivitiesFromDatabase()
 		self.loadActivitiesFromHealthKit()
