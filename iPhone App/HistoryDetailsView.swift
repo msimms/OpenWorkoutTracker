@@ -49,23 +49,29 @@ struct HistoryDetailsView: View {
 							.ignoresSafeArea()
 							.frame(width: 400, height: 300)
 					}
-				
+
 					// Name
-					TextField("Name", text: self.$activityVM.name)
-						.onChange(of: self.activityVM.name) { value in
-							showingUpdateNameError = !self.activityVM.updateActivityName()
-						}
-						.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
-						.padding(10)
-					
+					HStack() {
+						TextField("Name", text: self.$activityVM.name)
+							.onChange(of: self.activityVM.name) { value in
+								showingUpdateNameError = !self.activityVM.updateActivityName()
+							}
+							.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
+							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+					}
+					.padding(10)
+
 					// Description
-					TextField("Description", text: self.$activityVM.description, axis: .vertical)
-						.onChange(of: self.activityVM.description) { value in
-							showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
-						}
-						.lineLimit(2...10)
-						.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
-						.padding(10)
+					HStack() {
+						TextField("Description", text: self.$activityVM.description, axis: .vertical)
+							.onChange(of: self.activityVM.description) { value in
+								showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
+							}
+							.lineLimit(2...10)
+							.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
+							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+					}
+					.padding(10)
 
 					// Attributes Summary
 					ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
@@ -117,17 +123,57 @@ struct HistoryDetailsView: View {
 								Text(valueStr)
 							}
 						}
+						.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 					}
 					.padding(10)
-					
+
 					if self.activityVM.isMovingActivity() {
-						let splits = self.activityVM.getSplitStrings()
+						let kmSplits = self.activityVM.getKilometerSplits()
+						let mileSplits = self.activityVM.getMileSplits()
+
+						if kmSplits.count > 0 {
+							let fastestSplit = kmSplits.max()!
+							
+							ForEach(kmSplits.indices, id: \.self) { i in
+								let currentSplit = kmSplits[i]
+								let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
+								
+								GeometryReader { geometry in
+									let barWidth: Double = 0.5 * geometry.size.width
+									let barHeight: Double = 0.9 * geometry.size.height
+									
+									HStack() {
+										Text("KM " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+										Spacer()
+										Rectangle()
+											.frame(width: splitPercentage * barWidth, height: barHeight)
+											.overlay(Rectangle().stroke(Color.blue))
+									}
+									.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+								}
+							}
+							.padding(10)
+						}
 						
-						if splits.count > 0 {
-							ForEach(splits, id: \.self) { split in
-								HStack() {
-									Text(split)
-									Spacer()
+						if mileSplits.count > 0 {
+							let fastestSplit = mileSplits.max()!
+
+							ForEach(mileSplits.indices, id: \.self) { i in
+								let currentSplit = mileSplits[i]
+								let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
+								
+								GeometryReader { geometry in
+									let barWidth: Double = 0.5 * geometry.size.width
+									let barHeight: Double = 0.9 * geometry.size.height
+									
+									HStack() {
+										Text("Mile " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+										Spacer()
+										Rectangle()
+											.frame(width: splitPercentage * barWidth, height: barHeight)
+											.overlay(Rectangle().stroke(Color.red))
+									}
+									.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 								}
 							}
 							.padding(10)

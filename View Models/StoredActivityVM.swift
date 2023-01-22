@@ -298,14 +298,17 @@ class StoredActivityVM : ObservableObject {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + "1"
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var lastSplit: time_t = 0
 		var splitIndex = 1
 		
 		while attribute.valid {
-			result.append(time_t(attribute.value.intVal))
+			let currentSplit = time_t(attribute.value.intVal) - lastSplit
+			result.append(currentSplit)
 			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+			lastSplit = currentSplit
 		}
 		
 		return result
@@ -315,43 +318,22 @@ class StoredActivityVM : ObservableObject {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + "1"
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var lastSplit: time_t = 0
 		var splitIndex = 1
-		
+
 		while attribute.valid {
-			result.append(time_t(attribute.value.intVal))
-			
+			let currentSplit = time_t(attribute.value.intVal) - lastSplit
+			result.append(currentSplit)
+
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+			lastSplit = currentSplit
 		}
 		
 		return result
 	}
-	
-	func getSplitStrings() -> Array<String> {
-		var result: Array<String> = []
-		
-		let kmSplits = self.getKilometerSplits()
-		let mileSplits = self.getMileSplits()
-		
-		var lastSplit: time_t = 0
-		var count = 1
-		for currentSplit in kmSplits {
-			result.append("KM " + String(count) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit - lastSplit))
-			lastSplit = currentSplit
-			count += 1
-		}
-		lastSplit = 0
-		count = 1
-		for currentSplit in mileSplits {
-			result.append("Mile " + String(count) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit - lastSplit))
-			lastSplit = currentSplit
-			count += 1
-		}
-		
-		return result
-	}
-	
+
 	private func formatActivityAttribute(attribute: ActivityAttributeType) -> String {
 		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
 		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
@@ -387,7 +369,17 @@ class StoredActivityVM : ObservableObject {
 		}
 		return startTime
 	}
-	
+
+	func getFastestMile() -> time_t {
+		let fastest = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_FASTEST_MILE)
+		return fastest.value.timeVal
+	}
+
+	func getFastestKm() -> time_t {
+		let fastest = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_FASTEST_KM)
+		return fastest.value.timeVal
+	}
+
 	/// @brief Exports the activity to the specified directory, in the specified file format..
 	func exportActivityToFile(fileFormat: FileFormat, dirName: String) throws -> String {
 		var fileName = ""
