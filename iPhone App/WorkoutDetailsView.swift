@@ -17,7 +17,7 @@ struct WorkoutDetailsView: View {
 			Text(description)
 				.bold()
 			Spacer()
-			BarChartView(bars: [Bar(id: UUID(), value: 5, label: "foo")])
+			BarChartView(bars: [Bar(value: 5, label: "foo")], color: Color.blue)
 		}
     }
 }

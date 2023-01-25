@@ -16,6 +16,8 @@
 #define PARAM_USER_HEIGHT                        "height"
 #define PARAM_USER_WEIGHT                        "weight"
 #define PARAM_USER_FTP                           "ftp"
+#define PARAM_USER_MAX_HR                        "max heart rate"
+#define PARAM_USER_RESTING_HR                    "resting heart rate"
 #define PARAM_TIMESTAMP                          "timestamp"
 
 // Activity Sync

@@ -8,14 +8,6 @@
 #include "FtpCalculator.h"
 #include "ActivityAttribute.h"
 
-FtpCalculator::FtpCalculator()
-{
-}
-
-FtpCalculator::~FtpCalculator()
-{
-}
-
 double FtpCalculator::Estimate(double best20MinPower, double best1HourPower)
 {
 	double max20MinAdjusted = (double)0.0;
@@ -45,7 +37,9 @@ double FtpCalculator::Estimate(const ActivitySummaryList& historicalActivities)
 		if (summary.startTime > cutoffTime)
 		{
 			if ((summary.type.compare(ACTIVITY_TYPE_CYCLING) == 0) ||
-				(summary.type.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0))
+				(summary.type.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0) ||
+				(summary.type.compare(ACTIVITY_TYPE_DUATHLON) == 0) ||
+				(summary.type.compare(ACTIVITY_TYPE_TRIATHLON) == 0))
 			{
 				double best20MinPower = (double)0.0;
 				double best1HourPower = (double)0.0;
@@ -63,7 +57,7 @@ double FtpCalculator::Estimate(const ActivitySummaryList& historicalActivities)
 						best1HourPower = attr.value.doubleVal;
 				}
 
-				double estimate = this->Estimate(best20MinPower, best1HourPower);
+				double estimate = FtpCalculator::Estimate(best20MinPower, best1HourPower);
 
 				if (estimate > bestEstimate)
 				{

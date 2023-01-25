@@ -16,6 +16,8 @@ public:
 	
 	double EstimateVO2MaxFromHeartRate(double maxHR, double restingHR);
 	double EstimateVO2MaxFromRaceDistanceInMeters(double raceDistanceMeters, double raceTimeMinutes);
+	double EstimateVO2MaxFromRaceDistanceInMetersAndHeartRate(double raceDistanceMeters, double raceTimeMinutes, double loadHr, double restingHr, double maxHr);
+	double EstimateVO2MaxUsingCooperTest();
 };
 
 #endif

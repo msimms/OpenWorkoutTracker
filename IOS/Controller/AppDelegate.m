@@ -400,12 +400,12 @@ typedef enum MsgDestinationType
 {
 	ActivityLevel userLevel = [UserProfile activityLevel];
 	Gender userGender       = [UserProfile gender];
-	struct tm userBirthDay  = [UserProfile birthDate];
+	struct tm userBirthday  = [UserProfile birthDate];
 	double userWeightKg     = [UserProfile weightInKg];
 	double userHeightCm     = [UserProfile heightInCm];
 	double userFtp          = [UserProfile ftp];
 
-	SetUserProfile(userLevel, userGender, userBirthDay, userWeightKg, userHeightCm, userFtp);
+	SetUserProfile(userLevel, userGender, gmtime(&userBirthday), userWeightKg, userHeightCm, userFtp);
 }
 
 #pragma mark user profile methods (getters)

@@ -37,6 +37,7 @@ public:
 	void SetActivityLevel(ActivityLevel level) { m_activityLevel = level; };
 	ActivityLevel GetActivityLevel() const { return m_activityLevel; };
 
+	// Formula for calculating BMR.
 	void SetBmrFormula(BmrFormula formula) { m_bmrFormula = formula; };
 	BmrFormula GetBmrFormula() const { return m_bmrFormula; };
 
@@ -45,8 +46,10 @@ public:
 	Gender GetGender() const { return m_gender; };
 
 	// Birth date.
-	void SetBirthDate(struct tm bday) { m_birthDate = bday; };
-	void SetBaseDateForComputingAge(struct tm baseDate) { m_baseDate = baseDate; };
+	void SetBirthDate(time_t bday) { m_birthDate = bday; };
+	
+	// The date we will use as "today" for the purpose of computing age - useful when loading historical activities.
+	void SetBaseDateForComputingAge(time_t baseDate) { m_baseDate = baseDate; };
 	
 	// Current age.
 	double GetAgeInYears() const;
@@ -73,7 +76,15 @@ public:
 	// Functional Threshold Power, for cycling.
 	void SetFtp(double ftp) { m_ftp = ftp; };
 	double GetFtp() const { return m_ftp; };
+
+	// Maximum heart rate.
+	void SetMaxHr(double maxHr) { m_maxHr = maxHr; };
+	double GetMaxHr() const { return m_maxHr; };
 	
+	// Resting heart rate.
+	void SetRestingHr(double restingHr) { m_restingHr = restingHr; };
+	double GetRestingHr() const { return m_restingHr; };
+
 	double ComputeBasalMetabolicRate() const;
 	double ComputeBasalMetabolicRateHarrisBenedict() const;
 	double ComputeBasalMetabolicRateKatchMcArdle() const;
@@ -86,12 +97,14 @@ private:
 	ActivityLevel m_activityLevel;
 	BmrFormula    m_bmrFormula;
 	Gender        m_gender;
-	struct tm     m_birthDate;
-	struct tm     m_baseDate;      // date from which age is calculated
+	time_t        m_birthDate;
+	time_t        m_baseDate;      // date from which age is calculated
 	double        m_heightCm;
 	double        m_weightKg;
 	double        m_leanBodyMassKg;
 	double        m_ftp;
+	double        m_maxHr;
+	double        m_restingHr;
 
 	double EstimateRestingHeartRateMale() const;
 	double EstimateRestingHeartRateFemale() const;

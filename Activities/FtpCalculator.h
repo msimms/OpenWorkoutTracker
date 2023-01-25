@@ -13,11 +13,11 @@
 class FtpCalculator
 {
 public:
-	FtpCalculator();
-	virtual ~FtpCalculator();
+	FtpCalculator() {};
+	virtual ~FtpCalculator() {};
 
-	double Estimate(double best20MinPower, double best1HourPower);
-	double Estimate(const ActivitySummaryList& historicalActivities);
+	static double Estimate(double best20MinPower, double best1HourPower);
+	static double Estimate(const ActivitySummaryList& historicalActivities);
 };
 
 #endif

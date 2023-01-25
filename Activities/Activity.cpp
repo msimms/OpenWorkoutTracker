@@ -651,7 +651,7 @@ std::string Activity::FormatTimeStr(time_t timeVal) const
 
 std::string Activity::FormatTimeOfDayStr(time_t timeVal) const
 {
-	struct tm * timeinfo;
+	struct tm* timeinfo;
 	char buffer[80];
 
 	timeinfo = localtime(&timeVal);

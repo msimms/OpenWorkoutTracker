@@ -15,11 +15,13 @@
 #include "DataImporter.h"
 #include "Distance.h"
 #include "HeatMapGenerator.h"
+#include "HeartRateCalculator.h"
 #include "IntervalSession.h"
 #include "Params.h"
 #include "WorkoutImporter.h"
 #include "WorkoutPlanGenerator.h"
 #include "WorkoutScheduler.h"
+#include "ZonesCalculator.h"
 
 #include "Cycling.h"
 #include "FtpCalculator.h"
@@ -107,6 +109,7 @@ extern "C" {
 	Activity*        g_pCurrentActivity = NULL;
 	ActivityFactory* g_pActivityFactory = NULL;
 	Database*        g_pDatabase = NULL;
+	User             g_user;
 	bool             g_autoStartEnabled = false;
 	std::mutex       g_dbLock;
 	std::mutex       g_historicalActivityLock;
@@ -854,22 +857,23 @@ extern "C" {
 		UnitMgr::SetUnitSystem(system);
 	}
 
-	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp)
+	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double maxHr, double restingHr)
 	{
-		User user;
-		user.SetActivityLevel(level);
-		user.SetGender(gender);
-		user.SetBirthDate(bday);
-		user.SetWeightKg(weightKg);
-		user.SetHeightCm(heightCm);
-		user.SetFtp(ftp);
+		g_user.SetActivityLevel(level);
+		g_user.SetGender(gender);
+		g_user.SetBirthDate(bday);
+		g_user.SetWeightKg(weightKg);
+		g_user.SetHeightCm(heightCm);
+		g_user.SetFtp(ftp);
+		g_user.SetMaxHr(maxHr);
+		g_user.SetRestingHr(restingHr);
 
 		// Both the activity factory and the workout plan generator need to know about the user.
 		if (g_pActivityFactory)
 		{
-			g_pActivityFactory->SetUser(user);
+			g_pActivityFactory->SetUser(g_user);
 		}
-		g_workoutGen.SetUser(user);
+		g_workoutGen.SetUser(g_user);
 	}
 
 	bool GetUsersWeightHistory(WeightCallback callback, void* context)
@@ -3196,8 +3200,48 @@ extern "C" {
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
 	double EstimateFtp(void)
 	{
-		FtpCalculator calc;
-		return calc.Estimate(g_historicalActivityList);
+		return FtpCalculator::Estimate(g_historicalActivityList);
+	}
+
+	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
+	double EstimateMaxHr(void)
+	{
+		return HeartRateCalculator::EstimateMaxHrFromData(g_historicalActivityList);
+	}
+
+	//
+	// Functions for querying training zones.
+	//
+
+	double GetHrZone(uint8_t zoneNum)
+	{
+		if (zoneNum >= NUM_HR_ZONES)
+		{
+			return (double)0.0;
+		}
+
+		double zones[NUM_HR_ZONES];
+
+		ZonesCalculator::CalculateHeartRateZones(g_user.GetRestingHr(), g_user.GetMaxHr(), g_user.GetAgeInYears(), zones);
+		return zones[zoneNum];
+	}
+
+	double GetPowerZone(uint8_t zoneNum)
+	{
+		if (zoneNum >= NUM_POWER_ZONES)
+		{
+			return (double)0.0;
+		}
+
+		double zones[NUM_POWER_ZONES];
+		
+		ZonesCalculator::CalcuatePowerZones(g_user.GetFtp(), zones);
+		return zones[zoneNum];
+	}
+
+	double GetRunTrainingPace(uint8_t paceNum)
+	{
+		return 0.0;
 	}
 
 	//

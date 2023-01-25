@@ -7,10 +7,10 @@ import Foundation
 
 class NumbersOnly: ObservableObject {
 	
-	@Published var value = "" {
+	@Published var value: String = "" {
 		didSet {
-			let filtered = value.filter { $0.isNumber || $0 == "."}
-			
+			let filtered = value.filter { $0.isNumber || $0 == "." }
+
 			if value != filtered {
 				value = filtered
 			}
@@ -26,5 +26,12 @@ class NumbersOnly: ObservableObject {
 	
 	init(initialValue: Int) {
 		self.value = String(format: "%0d", initialValue)
+	}
+	
+	func asDouble() -> Double {
+		if let result = Double(self.value) {
+			return result
+		}
+		return 0.0
 	}
 }

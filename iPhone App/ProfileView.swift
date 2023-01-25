@@ -9,14 +9,16 @@ struct ProfileView: View {
 	@State private var birthdate: Date = Date(timeIntervalSince1970: TimeInterval(Preferences.birthDate()))
 	@State private var showsDatePicker: Bool = false
 	@State private var showingActivityLevelSelection: Bool = false
-	@State private var showingGenderSelection: Bool = false
 	@State private var showingHeightError: Bool = false
 	@State private var showingWeightError: Bool = false
+	@State private var showingGenderSelection: Bool = false
 	@State private var showingFtpError: Bool = false
+	@State private var showingHrError: Bool = false
 	@State private var showingApiError: Bool = false
 	@ObservedObject var height = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedHeight())
 	@ObservedObject var weight = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedWeight())
-	@ObservedObject var ftp = NumbersOnly(initialDoubleValue: Preferences.ftp())
+	@ObservedObject var userDefinedFtp = NumbersOnly(initialDoubleValue: Preferences.userDefinedFtp())
+	@ObservedObject var userDefinedMaxHr = NumbersOnly(initialDoubleValue: Preferences.userDefinedMaxHr())
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -38,6 +40,7 @@ struct ProfileView: View {
 						Button(item) {
 							let activityLevel = ProfileVM.activityLevelStringToType(activityLevelStr: item)
 							Preferences.setActivityLevel(value: activityLevel)
+							CommonApp.shared.setUserProfile()
 						}
 					}
 				}
@@ -63,27 +66,11 @@ struct ProfileView: View {
 					.datePickerStyle(.graphical)
 					.onChange(of: self.birthdate) { value in
 						Preferences.setBirthDate(value: time_t(self.birthdate.timeIntervalSince1970))
+						CommonApp.shared.setUserProfile()
+						showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date())
 					}
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 			}
-			
-			// User's biological gender - needed for calorie estimations.
-			HStack {
-				Button("Biological Gender") {
-					self.showingGenderSelection = true
-				}
-				.confirmationDialog("Please enter your biological gender", isPresented: self.$showingGenderSelection, titleVisibility: .visible) {
-					ForEach([STR_MALE, STR_FEMALE], id: \.self) { item in
-						Button(item) {
-							let gender = ProfileVM.genderStringToType(genderStr: item)
-							Preferences.setBiologicalGender(value: gender)
-						}
-					}
-				}
-				.bold()
-				Spacer()
-				Text(ProfileVM.genderToString(genderType: Preferences.biologicalGender()))
-			}
-			.padding(5)
 
 			// User's height
 			HStack {
@@ -97,6 +84,7 @@ struct ProfileView: View {
 					.onChange(of: self.height.value) { value in
 						if let value = Double(self.height.value) {
 							ProfileVM.setHeight(height: value)
+							CommonApp.shared.setUserProfile()
 							showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
 						} else {
 							self.showingHeightError = true
@@ -120,6 +108,7 @@ struct ProfileView: View {
 					.onChange(of: self.weight.value) { value in
 						if let value = Double(self.weight.value) {
 							ProfileVM.setWeight(weight: value)
+							CommonApp.shared.setUserProfile()
 							showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())
 						} else {
 							self.showingWeightError = true
@@ -131,27 +120,78 @@ struct ProfileView: View {
 			.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 			.padding(5)
 
+			// User's biological gender - needed for calorie estimations.
+			HStack {
+				Button("Biological Gender") {
+					self.showingGenderSelection = true
+				}
+				.confirmationDialog("Please enter your biological gender", isPresented: self.$showingGenderSelection, titleVisibility: .visible) {
+					ForEach([STR_MALE, STR_FEMALE], id: \.self) { item in
+						Button(item) {
+							let gender = ProfileVM.genderStringToType(genderStr: item)
+							CommonApp.shared.setUserProfile()
+							Preferences.setBiologicalGender(value: gender)
+						}
+					}
+				}
+				.bold()
+				Spacer()
+				Text(ProfileVM.genderToString(genderType: Preferences.biologicalGender()))
+			}
+			.padding(5)
+
 			// User's FTP
 			HStack {
 				Text("Functional Threshold Power")
 					.bold()
 				Spacer()
-				TextField("Not set", text: self.$ftp.value)
+				TextField("Not set", text: Binding(
+					get: { self.userDefinedFtp.asDouble() < 1.0 ? "" : self.userDefinedFtp.value },
+					set: {(newValue) in
+						if let value = Double(newValue) {
+							self.userDefinedFtp.value = newValue
+							Preferences.setUserDefinedFtp(value: value)
+							CommonApp.shared.setUserProfile()
+							showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
+						} else {
+							self.userDefinedMaxHr.value = ""
+							self.showingHrError = true
+						}
+					}))
 					.keyboardType(.decimalPad)
 					.multilineTextAlignment(.trailing)
 					.fixedSize()
-					.onChange(of: self.ftp.value) { value in
-						if let value = Double(self.ftp.value) {
-							Preferences.setFtp(value: value)
-							showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
-						} else {
-							self.showingFtpError = true
-						}
-					}
+					.alert("Invalid value!", isPresented: self.$showingFtpError) { }
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 				Text(" watts")
 			}
-			.alert("Invalid value!", isPresented: self.$showingFtpError) { }
-			.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+			.padding(5)
+
+			// User's Max Heart Rate
+			HStack {
+				Text("Maximum Heart Rate")
+					.bold()
+				Spacer()
+				TextField("Not set", text: Binding(
+					get: { self.userDefinedMaxHr.asDouble() < 1.0 ? "" : self.userDefinedMaxHr.value },
+					set: {(newValue) in
+						if let value = Double(newValue) {
+							self.userDefinedMaxHr.value = newValue
+							Preferences.setUserDefinedMaxHr(value: value)
+							CommonApp.shared.setUserProfile()
+							showingApiError = !ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
+						} else {
+							self.userDefinedMaxHr.value = ""
+							self.showingHrError = true
+						}
+					}))
+					.keyboardType(.decimalPad)
+					.multilineTextAlignment(.trailing)
+					.fixedSize()
+					.alert("Invalid value!", isPresented: self.$showingHrError) { }
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+				Text(" bpm")
+			}
 			.padding(5)
 
 			Spacer()

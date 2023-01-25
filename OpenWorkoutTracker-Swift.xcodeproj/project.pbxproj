@@ -216,6 +216,12 @@
 		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
 		27413904292E9FD8008EA7B7 /* GearVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AE28E67C0600293B71 /* GearVM.swift */; };
 		27413905292EA19C008EA7B7 /* WorkoutsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A728E645C300293B71 /* WorkoutsVM.swift */; };
+		2775412E297F651500AE9B86 /* ZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775412D297F651500AE9B86 /* ZonesView.swift */; };
+		27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
+		27754132297FFC9800AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
+		277541342980333400AE9B86 /* ZonesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277541332980333400AE9B86 /* ZonesVM.swift */; };
+		277541382980C3BE00AE9B86 /* HeartRateCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277541372980C3BE00AE9B86 /* HeartRateCalculator.cpp */; };
+		277541392980C3BE00AE9B86 /* HeartRateCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277541372980C3BE00AE9B86 /* HeartRateCalculator.cpp */; };
 		277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */; };
 		277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
 		277EAC2E2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */; };
@@ -591,6 +597,12 @@
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
 		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
 		2752B645295E1B680050CCFC /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = IOS/Controller/Feature.h; sourceTree = "<group>"; };
+		2775412D297F651500AE9B86 /* ZonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesView.swift; sourceTree = "<group>"; };
+		2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZonesCalculator.cpp; path = Activities/ZonesCalculator.cpp; sourceTree = "<group>"; };
+		27754130297FFC7600AE9B86 /* ZonesCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZonesCalculator.h; path = Activities/ZonesCalculator.h; sourceTree = "<group>"; };
+		277541332980333400AE9B86 /* ZonesVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesVM.swift; sourceTree = "<group>"; };
+		277541362980C3BE00AE9B86 /* HeartRateCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeartRateCalculator.h; path = Activities/HeartRateCalculator.h; sourceTree = "<group>"; };
+		277541372980C3BE00AE9B86 /* HeartRateCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HeartRateCalculator.cpp; path = Activities/HeartRateCalculator.cpp; sourceTree = "<group>"; };
 		277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWithPolyline.swift; sourceTree = "<group>"; };
 		277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntervalSessionSegment.cpp; path = Activities/IntervalSessionSegment.cpp; sourceTree = "<group>"; };
 		277EAC32292412C30091ADF6 /* BrightBeep.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = BrightBeep.aif; path = Sounds/BrightBeep.aif; sourceTree = "<group>"; };
@@ -747,6 +759,8 @@
 				2740DFB628E460E200293B71 /* GForceAnalyzerFactory.h */,
 				2740DF9028E460E100293B71 /* Goal.h */,
 				2740DF9528E460E100293B71 /* GoalType.h */,
+				277541372980C3BE00AE9B86 /* HeartRateCalculator.cpp */,
+				277541362980C3BE00AE9B86 /* HeartRateCalculator.h */,
 				2740DFA928E460E100293B71 /* Hike.cpp */,
 				2740DF7528E460E000293B71 /* Hike.h */,
 				2740DF7128E460E000293B71 /* IntensityCalculator.cpp */,
@@ -816,6 +830,8 @@
 				2740DF7428E460E000293B71 /* WorkoutScheduler.cpp */,
 				2740DFAD28E460E100293B71 /* WorkoutScheduler.h */,
 				2740DF8128E460E000293B71 /* WorkoutType.h */,
+				2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */,
+				27754130297FFC7600AE9B86 /* ZonesCalculator.h */,
 			);
 			name = Backend;
 			sourceTree = "<group>";
@@ -990,6 +1006,7 @@
 				2740E11528EF758500293B71 /* ProfileVM.swift */,
 				2740E12128F233A200293B71 /* StoredActivityVM.swift */,
 				2740E0A728E645C300293B71 /* WorkoutsVM.swift */,
+				277541332980333400AE9B86 /* ZonesVM.swift */,
 			);
 			path = "View Models";
 			sourceTree = "<group>";
@@ -1118,6 +1135,7 @@
 				270422552902409C00FD02D4 /* TagsView.swift */,
 				2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */,
 				2740E08B28E6316E00293B71 /* WorkoutsView.swift */,
+				2775412D297F651500AE9B86 /* ZonesView.swift */,
 				278D92C728E38F18003B077C /* Assets.xcassets */,
 				278D92C928E38F18003B077C /* Preview Content */,
 			);
@@ -1513,6 +1531,7 @@
 				2740DFD828E460E200293B71 /* Cycling.cpp in Sources */,
 				277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */,
 				2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */,
+				27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */,
 				2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */,
 				2740DFE028E460E200293B71 /* VO2MaxCalculator.cpp in Sources */,
 				2740E12528F2D3F000293B71 /* ApiClient.swift in Sources */,
@@ -1521,6 +1540,7 @@
 				2740E03228E4CE1C00293B71 /* KmlFileReader.cpp in Sources */,
 				2740DFFF28E4CD0B00293B71 /* UnitConverter.cpp in Sources */,
 				2740DF6028E4600800293B71 /* SettingsView.swift in Sources */,
+				277541382980C3BE00AE9B86 /* HeartRateCalculator.cpp in Sources */,
 				2740E04628E4CFFD00293B71 /* KMeans.cpp in Sources */,
 				2740DFD428E460E200293B71 /* PullUpAnalyzer.cpp in Sources */,
 				2740E11428EDFEB700293B71 /* NumbersOnly.swift in Sources */,
@@ -1546,6 +1566,7 @@
 				2740DF5D28E4600800293B71 /* ActivityView.swift in Sources */,
 				2740DFF028E460E200293B71 /* ChinUpAnalyzer.cpp in Sources */,
 				2740DFE128E460E200293B71 /* Activity.cpp in Sources */,
+				277541342980333400AE9B86 /* ZonesVM.swift in Sources */,
 				2740E07228E4E75000293B71 /* HistoryVM.swift in Sources */,
 				2740DFEB28E460E200293B71 /* Workout.cpp in Sources */,
 				2740E07E28E5DEC500293B71 /* BluetoothScanner.swift in Sources */,
@@ -1577,6 +1598,7 @@
 				2704224F28FCDE1B00FD02D4 /* CreateLoginView.swift in Sources */,
 				2740DFF228E460E200293B71 /* BikePlanGenerator.cpp in Sources */,
 				2740DFEF28E460E200293B71 /* ChinUp.cpp in Sources */,
+				2775412E297F651500AE9B86 /* ZonesView.swift in Sources */,
 				2704225128FDEE0200FD02D4 /* SensorChartView.swift in Sources */,
 				2740E03828E4CE1C00293B71 /* CsvFileWriter.cpp in Sources */,
 				2740E08328E60CFA00293B71 /* ProfileView.swift in Sources */,
@@ -1655,6 +1677,7 @@
 				2740E0C828E7028C00293B71 /* SwimPlanGenerator.cpp in Sources */,
 				2740E0BC28E7028C00293B71 /* ChinUpAnalyzer.cpp in Sources */,
 				2740E0DB28E7029900293B71 /* DataImporter.cpp in Sources */,
+				27754132297FFC9800AE9B86 /* ZonesCalculator.cpp in Sources */,
 				2740E0B328E7028C00293B71 /* IntensityCalculator.cpp in Sources */,
 				278C20A12937F80500828479 /* FriendsVM.swift in Sources */,
 				2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */,
@@ -1695,6 +1718,7 @@
 				2740E0DF28E702AD00293B71 /* XmlFileWriter.cpp in Sources */,
 				2740E10328EB41DB00293B71 /* HeartRateService.swift in Sources */,
 				2740E0EC28E702C600293B71 /* Double.cpp in Sources */,
+				277541392980C3BE00AE9B86 /* HeartRateCalculator.cpp in Sources */,
 				2740E11B28F0E5EC00293B71 /* IntervalSessionsVM.swift in Sources */,
 				278D932728E38FE7003B077C /* WatchApp.swift in Sources */,
 				2740E0C428E7028C00293B71 /* ActivityFactory.cpp in Sources */,

@@ -161,11 +161,10 @@ void ActivityFactory::CreateActivity(ActivitySummary& summary, Database& databas
 		summary.pActivity->SetEndTimeSecs(summary.endTime);
 
 		User user = m_user;
-		struct tm* pStartTime = localtime(&summary.startTime);
 		double userWeightKg = user.GetWeightKg();
 		database.RetrieveNearestWeightMeasurement(summary.startTime, userWeightKg);
 
-		user.SetBaseDateForComputingAge(*pStartTime);
+		user.SetBaseDateForComputingAge(summary.startTime);
 		user.SetWeightKg(userWeightKg);
 		user.SetFtp(user.GetFtp());
 		summary.pActivity->SetAthleteProfile(user);

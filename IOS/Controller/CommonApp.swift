@@ -46,9 +46,12 @@ class CommonApp : ObservableObject {
 
 		// Initialize HealthKit.
 		self.healthMgr.requestAuthorization()
-		
+
 		// Initialize the watch session.
 		self.watchSession.startWatchSession()
+
+		// Send the user's details to the backend.
+		self.setUserProfile()
 
 		// Things we care about knowing from the server.
 		NotificationCenter.default.addObserver(self, selector: #selector(self.loginStatusUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: nil)
@@ -69,6 +72,34 @@ class CommonApp : ObservableObject {
 
 		// Sync with the server.
 		let _ = self.apiClient.syncWithServer()
+	}
+	
+	/// @brief Sends the user's details to the backend. Should be called on application startup as well as whenever the values are changed.
+	func setUserProfile() {
+		let userLevel = Preferences.activityLevel()
+		let userGender = Preferences.biologicalGender()
+		let userBirthdate = Preferences.birthDate()
+		let userWeightKg = Preferences.weightKg()
+		let userHeightCm = Preferences.heightCm()
+		let userDefinedFtp = Preferences.userDefinedFtp()
+		let estimatedFtp = Preferences.estimatedFtp()
+		let userDefinedMaxHr = Preferences.userDefinedMaxHr()
+		let estimatedMaxHr = Preferences.estimatedMaxHr()
+		let restingHr = Preferences.restingHr()
+
+		// If the user specified an FTP then use that one, otherwise use the estimate.
+		var ftpToUse = estimatedFtp
+		if userDefinedFtp > 1.0 {
+			ftpToUse = userDefinedFtp
+		}
+
+		// If the user specified a max hr then use that one, otherwise use the estimate.
+		var maxHrToUse = estimatedMaxHr
+		if userDefinedMaxHr > 1.0 {
+			maxHrToUse = userDefinedMaxHr
+		}
+
+		SetUserProfile(userLevel, userGender, userBirthdate, userWeightKg, userHeightCm, ftpToUse, maxHrToUse, restingHr)
 	}
 
 	func markAsSynchedToWeb(activityId: String) -> Bool {

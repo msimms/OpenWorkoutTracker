@@ -63,7 +63,8 @@ class HealthManager {
 		let heightType = HKObjectType.quantityType(forIdentifier: .height)!
 		let weightType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
 		let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
-		let bikeType = HKObjectType.quantityType(forIdentifier: .distanceCycling)!
+		let restingHeartRateType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)!
+		let cyclingType = HKObjectType.quantityType(forIdentifier: .distanceCycling)!
 		let runType = HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
 		let swimType = HKObjectType.quantityType(forIdentifier: .distanceSwimming)!
 		let activeEnergyBurnType = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
@@ -71,20 +72,21 @@ class HealthManager {
 		let biologicalSexType = HKObjectType.characteristicType(forIdentifier: .biologicalSex)!
 		let routeType = HKObjectType.seriesType(forIdentifier: HKWorkoutRouteTypeIdentifier)!
 		let workoutType = HKObjectType.workoutType()
-		let writeTypes = Set([heightType, weightType, heartRateType, bikeType, runType, swimType, activeEnergyBurnType, workoutType, routeType])
-		let readTypes = Set([heartRateType, heightType, weightType, birthdayType, biologicalSexType, workoutType, routeType])
+		let writeTypes = Set([heartRateType, restingHeartRateType, heightType, weightType, heartRateType, cyclingType, runType, swimType, activeEnergyBurnType, workoutType, routeType])
+		let readTypes = Set([heartRateType, restingHeartRateType, heightType, weightType, birthdayType, biologicalSexType, workoutType, routeType])
 #endif
 		healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { result, error in
 			do {
 				try self.updateUsersAge()
 				try self.updateUsersHeight()
 				try self.updateUsersWeight()
+				try self.updateUsersRestingHr()
 			}
 			catch {
 			}
 		}
 	}
-	
+
 	func mostRecentQuantitySampleOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
 		
 		// Since we are interested in retrieving the user's latest sample, we sort the samples in descending
@@ -174,6 +176,7 @@ class HealthManager {
 			if sample != nil {
 				let heightUnit = HKUnit.meterUnit(with: HKMetricPrefix.centi)
 				let usersHeight = sample!.quantity.doubleValue(for: heightUnit)
+
 				Preferences.setHeightCm(value: usersHeight)
 			}
 		}
@@ -187,11 +190,26 @@ class HealthManager {
 			if sample != nil {
 				let weightUnit = HKUnit.gramUnit(with: HKMetricPrefix.kilo)
 				let usersWeight = sample!.quantity.doubleValue(for: weightUnit)
+
 				Preferences.setWeightKg(value: usersWeight)
 			}
 		}
 	}
+	
+	/// @brief Gets the user's resting heart rate from HealthKit and updates the copy in our database.
+	func updateUsersRestingHr() throws {
+		let hrType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)!
+		
+		self.mostRecentQuantitySampleOfType(quantityType: hrType) { sample, error in
+			if sample != nil {
+				let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+				let restingHr = sample!.quantity.doubleValue(for: hrUnit)
 
+				Preferences.setRestingHr(value: restingHr)
+			}
+		}
+	}
+	
 	func clearWorkoutsList() {
 		self.workouts.removeAll()
 		self.locations.removeAll()

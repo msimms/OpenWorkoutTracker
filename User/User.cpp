@@ -18,31 +18,26 @@ User::~User()
 
 void User::SetToDefaults()
 {
-	memset(&m_birthDate, 0, sizeof(m_birthDate));
-	m_birthDate.tm_year = 80;
-
-	time_t now = time(NULL);
-	struct tm* pToday = localtime(&now);
-	memcpy(&m_baseDate, pToday, sizeof(m_baseDate));
-
 	m_id                = 0;
 	m_activityLevel     = ACTIVITY_LEVEL_MODERATE;
 	m_bmrFormula        = BMR_FORMULA_HARRIS_BENEDICT;
 	m_gender            = GENDER_MALE;
+	m_birthDate         = 315550800; // Jan 1, 1980
+	m_baseDate          = time(NULL);
 	m_heightCm          = 178.2;
 	m_weightKg          = 88.6;
 	m_leanBodyMassKg    = m_weightKg * .83;
 	m_ftp               = 0.0;
+	m_maxHr             = 0.0;
+	m_restingHr         = 0.0;
 }
 
 double User::GetAgeInYears() const
 {
-	double baseMonths = (m_baseDate.tm_year * 12) + m_baseDate.tm_mon;
-	double birthMonths = (m_birthDate.tm_year * 12) + m_birthDate.tm_mon;
+	const uint32_t SECS_PER_DAY  = 86400;
+	const uint32_t SECS_PER_YEAR = SECS_PER_DAY * 365.25;
 
-	if (birthMonths >= baseMonths)
-		return (double)0.0;
-	return (baseMonths - birthMonths) / (double)12.0;
+	return (m_baseDate - m_birthDate) / (double)SECS_PER_YEAR;
 }
 
 double User::EstimateMaxHeartRate() const

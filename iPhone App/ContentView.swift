@@ -42,6 +42,7 @@ struct ContentView: View {
 					NavigationLink("History", destination: HistoryView())
 					NavigationLink("Statistics", destination: StatisticsView())
 					NavigationLink("Workouts", destination: WorkoutsView())
+					NavigationLink("Zones", destination: ZonesView())
 				}
 				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))

@@ -16,7 +16,11 @@ let PREF_NAME_GENDER =                                "Gender"
 let PREF_NAME_HEIGHT_CM =                             "Height"
 let PREF_NAME_WEIGHT_KG =                             "Weight"
 let PREF_NAME_BIRTH_DATE =                            "Birth Date"
-let PREF_NAME_FTP =                                   "FTP"
+let PREF_NAME_USER_DEFINED_FTP =                      "User Defined FTP"
+let PREF_NAME_ESTIMATED_FTP =                         "Estimated FTP"
+let PREF_NAME_USER_DEFINED_MAX_HR =                   "User Defined Max HR"
+let PREF_NAME_ESTIMATED_MAX_HR =                      "Estimated Max HR"
+let PREF_NAME_RESTING_HR =                            "Resting HR"
 let PREF_NAME_AUTOSCALE_MAP =                         "Autoscale Map"
 let PREF_NAME_SCAN_FOR_SENSORS =                      "Scan for Sensors"
 let PREF_NAME_BROADCAST_TO_SERVER =                   "Broadcast Global"
@@ -143,15 +147,35 @@ class Preferences {
 		return mydefaults.integer(forKey: PREF_NAME_BIRTH_DATE)
 	}
 
-	static func ftp() -> Double {
+	static func userDefinedFtp() -> Double {
 		let mydefaults: UserDefaults = UserDefaults.standard
-		return mydefaults.double(forKey: PREF_NAME_FTP)
+		return mydefaults.double(forKey: PREF_NAME_USER_DEFINED_FTP)
+	}
+
+	static func estimatedFtp() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_ESTIMATED_FTP)
+	}
+
+	static func userDefinedMaxHr() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_USER_DEFINED_MAX_HR)
+	}
+
+	static func estimatedMaxHr() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_ESTIMATED_MAX_HR)
+	}
+
+	static func restingHr() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_RESTING_HR)
 	}
 
 	static func preferredUnitSystem() -> UnitSystem {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		let str = mydefaults.string(forKey: PREF_NAME_UNITS)
-		
+
 		if str != nil {
 			if str == PREF_NAME_US_CUSTOMARY {
 				return UNIT_SYSTEM_US_CUSTOMARY
@@ -162,12 +186,12 @@ class Preferences {
 		}
 		return UNIT_SYSTEM_US_CUSTOMARY;
 	}
-	
+
 	static func shouldAutoScaleMap() -> Bool {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.bool(forKey: PREF_NAME_AUTOSCALE_MAP)
 	}
-	
+
 	static func shouldScanForSensors() -> Bool {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.bool(forKey: PREF_NAME_SCAN_FOR_SENSORS)
@@ -477,9 +501,29 @@ class Preferences {
 		mydefaults.set(value, forKey: PREF_NAME_BIRTH_DATE)
 	}
 
-	static func setFtp(value: Double) {
+	static func setUserDefinedFtp(value: Double) {
 		let mydefaults: UserDefaults = UserDefaults.standard
-		mydefaults.set(value, forKey: PREF_NAME_FTP)
+		mydefaults.set(value, forKey: PREF_NAME_USER_DEFINED_FTP)
+	}
+	
+	static func setEstimatedFtp(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_ESTIMATED_FTP)
+	}
+
+	static func setUserDefinedMaxHr(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_USER_DEFINED_MAX_HR)
+	}
+
+	static func setEstimatedMaxHr(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_ESTIMATED_MAX_HR)
+	}
+
+	static func setRestingHr(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_RESTING_HR)
 	}
 	
 	static func setPreferredUnitSystem(system: UnitSystem) {

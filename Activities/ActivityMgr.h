@@ -72,7 +72,7 @@ extern "C" {
 
 	// Functions for controlling user preferences and profile data.
 	void SetPreferredUnitSystem(UnitSystem system);
-	void SetUserProfile(ActivityLevel level, Gender gender, struct tm bday, double weightKg, double heightCm, double ftp);
+	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double maxHr, double restingHr);
 	bool GetUsersWeightHistory(WeightCallback callback, void* context);
 	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg);
 
@@ -199,6 +199,12 @@ extern "C" {
 
 	// Functions for estimating the athlete's fitness.
 	double EstimateFtp(void);
+	double EstimateMaxHr(void);
+
+	// Functions for querying training zones.
+	double GetHrZone(uint8_t zoneNum);
+	double GetPowerZone(uint8_t zoneNum);
+	double GetRunTrainingPace(uint8_t paceNum);
 
 	// Functions for managing suggested workout generation.
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);

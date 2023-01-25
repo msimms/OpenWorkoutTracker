@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct Bar: Identifiable {
-	let id: UUID
+	let id: UUID = UUID()
 	let value: Double
 	let label: String
 }
@@ -14,20 +14,25 @@ struct Bar: Identifiable {
 struct BarChartView: View {
 	let bars: Array<Bar>
 	let max: Double
+	let color: Color
 
-	init(bars: [Bar]) {
+	init(bars: [Bar], color: Color) {
 		self.bars = bars
 		self.max = bars.map { $0.value }.max() ?? 0
+		self.color = color
 	}
 
 	var body: some View {
 		GeometryReader { geometry in
-			HStack(alignment: .bottom, spacing: 0) {
+			HStack(alignment: .bottom) {
 				ForEach(self.bars) { bar in
-					Rectangle()
-						.frame(height: CGFloat(bar.value) / CGFloat(self.max) * geometry.size.height)
-						.overlay(Rectangle().stroke(Color.white))
-						.accessibility(label: Text(bar.label))
+					VStack(alignment: .center) {
+						Rectangle()
+							.frame(height: CGFloat(bar.value) / CGFloat(self.max) * geometry.size.height)
+							.overlay(Rectangle().stroke(self.color).background(self.color))
+							.accessibility(label: Text(bar.label))
+						Text(bar.label)
+					}
 				}
 			}
 		}
