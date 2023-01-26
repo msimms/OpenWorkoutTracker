@@ -21,6 +21,7 @@ let PREF_NAME_ESTIMATED_FTP =                         "Estimated FTP"
 let PREF_NAME_USER_DEFINED_MAX_HR =                   "User Defined Max HR"
 let PREF_NAME_ESTIMATED_MAX_HR =                      "Estimated Max HR"
 let PREF_NAME_RESTING_HR =                            "Resting HR"
+let PREF_NAME_BEST_RECENT_5K_SECS =                   "Best Recent 5K"
 let PREF_NAME_AUTOSCALE_MAP =                         "Autoscale Map"
 let PREF_NAME_SCAN_FOR_SENSORS =                      "Scan for Sensors"
 let PREF_NAME_BROADCAST_TO_SERVER =                   "Broadcast Global"
@@ -170,6 +171,11 @@ class Preferences {
 	static func restingHr() -> Double {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.double(forKey: PREF_NAME_RESTING_HR)
+	}
+	
+	static func bestRecent5KSecs() -> UInt32 {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return UInt32(mydefaults.integer(forKey: PREF_NAME_BEST_RECENT_5K_SECS))
 	}
 
 	static func preferredUnitSystem() -> UnitSystem {
@@ -525,7 +531,12 @@ class Preferences {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_RESTING_HR)
 	}
-	
+
+	static func setBestRecent5KSecs(value: UInt32) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_BEST_RECENT_5K_SECS)
+	}
+
 	static func setPreferredUnitSystem(system: UnitSystem) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		switch system {

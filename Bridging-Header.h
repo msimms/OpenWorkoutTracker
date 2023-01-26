@@ -13,3 +13,4 @@
 #include "Notifications.h"
 #include "Params.h"
 #include "Urls.h"
+#include "WorkoutPlanInputs.h"

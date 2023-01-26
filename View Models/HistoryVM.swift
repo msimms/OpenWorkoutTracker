@@ -82,18 +82,28 @@ class HistoryVM : ObservableObject {
 
 		if LoadAllHistoricalActivitySummaryData() {
 
-			var activityIndex = 0
-			var done = false
+			// Whenever we reload the history we should re-evaluate the user's recent performances.
+			let estimatedFtp = EstimateFtp()
+			let estimatedMaxHr = EstimateMaxHr()
+			let best5KAttr = QueryBestActivityAttributeByActivityType(ACTIVITY_TYPE_RUNNING, ACTIVITY_ATTRIBUTE_FASTEST_5K, true, nil)
+			Preferences.setEstimatedFtp(value: estimatedFtp)
+			Preferences.setEstimatedMaxHr(value: estimatedMaxHr)
+			if best5KAttr.valid {
+				Preferences.setBestRecent5KSecs(value: UInt32(best5KAttr.value.intVal))
+			}
+			CommonApp.shared.setUserProfile()
 
 			// Minor performance optimization, since we know how many items will be in the list.
 			self.historicalActivities.reserveCapacity(GetNumHistoricalActivities())
 
+			// Build our local summary cache.
+			var activityIndex = 0
+			var done = false
 			while !done {
 
+				// Load all data.
 				var startTime: time_t = 0
 				var endTime: time_t = 0
-
-				// Load all data.
 				if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
 
 					if endTime == 0 {

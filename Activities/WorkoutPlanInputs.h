@@ -9,11 +9,11 @@
 */
 
 #define WORKOUT_INPUT_SPEED_RUN_PACE                     "Speed Session Pace"         // Pace for medium distance interfals
-#define WORKOUT_INPUT_TEMPO_RUN_PACE                     "Tempo Run Pace"
 #define WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE            "Short Interval Run Pace"    // Pace for shorter track intervals
 #define WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE          "Functional Threshold Pace"  // Pace that could be held for one hour, max effort
-#define WORKOUT_INPUT_LONG_RUN_PACE                      "Long Run Pace"
+#define WORKOUT_INPUT_TEMPO_RUN_PACE                     "Tempo Run Pace"
 #define WORKOUT_INPUT_EASY_RUN_PACE                      "Easy Run Pace"
+#define WORKOUT_INPUT_LONG_RUN_PACE                      "Long Run Pace"
 #define WORKOUT_INPUT_LONGEST_RUN_WEEK_1                 "Longest Run Week 1"         // Most recent week
 #define WORKOUT_INPUT_LONGEST_RUN_WEEK_2                 "Longest Run Week 2"         // Second most recent week
 #define WORKOUT_INPUT_LONGEST_RUN_WEEK_3                 "Longest Run Week 3"         // Third most recent week

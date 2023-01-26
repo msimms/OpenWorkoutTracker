@@ -857,7 +857,7 @@ extern "C" {
 		UnitMgr::SetUnitSystem(system);
 	}
 
-	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double maxHr, double restingHr)
+	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double maxHr, double restingHr, uint32_t bestRecent5KSecs)
 	{
 		g_user.SetActivityLevel(level);
 		g_user.SetGender(gender);
@@ -867,6 +867,7 @@ extern "C" {
 		g_user.SetFtp(ftp);
 		g_user.SetMaxHr(maxHr);
 		g_user.SetRestingHr(restingHr);
+		g_user.SetBestRecent5KSecs(bestRecent5KSecs);
 
 		// Both the activity factory and the workout plan generator need to know about the user.
 		if (g_pActivityFactory)
@@ -3239,7 +3240,7 @@ extern "C" {
 		return zones[zoneNum];
 	}
 
-	double GetRunTrainingPace(uint8_t paceNum)
+	double GetRunTrainingPace(const char* const paceName)
 	{
 		return 0.0;
 	}
@@ -4366,7 +4367,7 @@ extern "C" {
 		result.unitSystem  = UNIT_SYSTEM_US_CUSTOMARY;
 		result.valid       = false;
 
-		if (!(pAttributeName && pActivityType && pActivityId))
+		if (!(pAttributeName && pActivityType))
 		{
 			return result;
 		}
@@ -4450,7 +4451,7 @@ extern "C" {
 			}
 		}
 		
-		if (result.valid && (activityId.size() > 0))
+		if (result.valid && pActivityId && (activityId.size() > 0))
 		{
 			(*pActivityId) = strdup(activityId.c_str());
 		}

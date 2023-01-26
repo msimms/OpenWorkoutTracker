@@ -6,6 +6,18 @@
 import Foundation
 
 class ZonesVM {
+	static func hasHrData() -> Bool {
+		return Preferences.estimatedMaxHr() > 1.0 || Preferences.userDefinedMaxHr() > 1.0
+	}
+
+	static func hasPowerData() -> Bool {
+		return Preferences.estimatedFtp() > 1.0 || Preferences.userDefinedFtp() > 1.0
+	}
+
+	static func hasRunData() -> Bool {
+		return Preferences.bestRecent5KSecs() > 0
+	}
+
 	static func listHrZones() -> Array<Bar> {
 		var result: Array<Bar> = []
 
@@ -26,9 +38,13 @@ class ZonesVM {
 		return result
 	}
 	
-	static func listRunTrainingPaces() -> Dictionary<String, String> {
-		var result: Dictionary<String, String> = [:]
+	static func listRunTrainingPaces() -> Dictionary<String, Double> {
+		var result: Dictionary<String, Double> = [:]
 		
+		result[WORKOUT_INPUT_LONG_RUN_PACE] = GetRunTrainingPace(WORKOUT_INPUT_LONG_RUN_PACE)
+		result[WORKOUT_INPUT_EASY_RUN_PACE] = GetRunTrainingPace(WORKOUT_INPUT_EASY_RUN_PACE)
+		result[WORKOUT_INPUT_TEMPO_RUN_PACE] = GetRunTrainingPace(WORKOUT_INPUT_TEMPO_RUN_PACE)
+		result[WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE] = GetRunTrainingPace(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE)
 		return result
 	}
 }

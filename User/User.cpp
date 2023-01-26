@@ -30,6 +30,7 @@ void User::SetToDefaults()
 	m_ftp               = 0.0;
 	m_maxHr             = 0.0;
 	m_restingHr         = 0.0;
+	m_bestRecent5KSecs  = 0;
 }
 
 double User::GetAgeInYears() const

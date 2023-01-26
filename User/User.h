@@ -85,6 +85,10 @@ public:
 	void SetRestingHr(double restingHr) { m_restingHr = restingHr; };
 	double GetRestingHr() const { return m_restingHr; };
 
+	// Best (recent) 5K time. Used for pace estimation.
+	void SetBestRecent5KSecs(uint32_t bestRecent5KSecs) { m_bestRecent5KSecs = bestRecent5KSecs; };
+	uint32_t GetBestRecent5KSecs() const { return m_bestRecent5KSecs; };
+
 	double ComputeBasalMetabolicRate() const;
 	double ComputeBasalMetabolicRateHarrisBenedict() const;
 	double ComputeBasalMetabolicRateKatchMcArdle() const;
@@ -105,6 +109,7 @@ private:
 	double        m_ftp;
 	double        m_maxHr;
 	double        m_restingHr;
+	uint32_t      m_bestRecent5KSecs;
 
 	double EstimateRestingHeartRateMale() const;
 	double EstimateRestingHeartRateFemale() const;
