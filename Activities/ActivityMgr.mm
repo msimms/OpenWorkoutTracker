@@ -41,6 +41,35 @@
 // Private utility functions.
 //
 
+std::string FormatTimeAsHHMMSS(uint64_t numSeconds)
+{
+	const uint64_t SECS_PER_DAY = 86400;
+	const uint64_t SECS_PER_HOUR = 3600;
+	const uint64_t SECS_PER_MIN = 60;
+
+	uint64_t tempSeconds = numSeconds;
+	uint64_t days = (tempSeconds / SECS_PER_DAY);
+	tempSeconds -= (days * SECS_PER_DAY);
+	uint64_t hours = (tempSeconds / SECS_PER_HOUR);
+	tempSeconds -= (hours * SECS_PER_HOUR);
+	uint64_t minutes = (tempSeconds / SECS_PER_MIN);
+	tempSeconds -= (minutes * SECS_PER_MIN);
+	uint64_t seconds = (tempSeconds % SECS_PER_MIN);
+	
+	char temp[32]; // Would have prefered to use std::format, but not available in XCode as of this writing.
+
+	if (days > 0) {
+		snprintf(temp, sizeof(temp), "%02llu:%02llu:%02llu:%02llu", days, hours, minutes, seconds);
+		return temp;
+	}
+	else if (hours > 0) {
+		snprintf(temp, sizeof(temp), "%02llu:%02llu:%02llu", hours, minutes, seconds);
+		return temp;
+	}
+	snprintf(temp, sizeof(temp), "%02llu:%02llu", minutes, seconds);
+	return temp;
+}
+
 std::string FormatDouble(double num)
 {
 	char buf[32];
@@ -80,6 +109,11 @@ std::string EscapeString(const std::string& s)
 std::string EscapeAndQuoteString(const std::string& s)
 {
 	return "\"" + EscapeString(s) + "\"";
+}
+
+std::string FormatUnitSystem(UnitSystem unitSystem)
+{
+	return EscapeAndQuoteString(unitSystem == UNIT_SYSTEM_METRIC ? PARAM_UNITS_METRIC : PARAM_UNITS_STANDARD);
 }
 
 std::string MapToJsonStr(const std::map<std::string, std::string>& data)
@@ -1813,10 +1847,10 @@ extern "C" {
 			params.insert(std::make_pair(PARAM_PACE_PLAN_NAME, EscapeAndQuoteString(plan.name)));
 			params.insert(std::make_pair(PARAM_PACE_PLAN_DESCRIPTION, EscapeAndQuoteString(plan.description)));
 			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_DISTANCE, FormatDouble(plan.targetDistance)));
-			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS, FormatInt(plan.distanceUnits)));
-			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_TIME, FormatInt(plan.targetTime)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_DISTANCE_UNITS, FormatUnitSystem(plan.distanceUnits)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_TIME, EscapeAndQuoteString(FormatTimeAsHHMMSS(plan.targetTime))));
 			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_SPLITS, FormatInt(plan.targetSplits)));
-			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_SPLITS_UNITS, FormatInt(plan.splitsUnits)));
+			params.insert(std::make_pair(PARAM_PACE_PLAN_TARGET_SPLITS_UNITS, FormatUnitSystem(plan.splitsUnits)));
 			params.insert(std::make_pair(PARAM_PACE_PLAN_ROUTE, EscapeAndQuoteString(plan.route)));
 			params.insert(std::make_pair(PARAM_PACE_PLAN_LAST_UPDATED_TIME, FormatInt(plan.lastUpdatedTime)));
 			return strdup(MapToJsonStr(params).c_str());

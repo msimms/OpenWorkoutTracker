@@ -12,6 +12,10 @@
 #define PARAM_REALNAME                           "realname"
 #define PARAM_DEVICE                             "device"
 
+// Units
+#define PARAM_UNITS_METRIC                       "metric"
+#define PARAM_UNITS_STANDARD                     "standard"
+
 // User Details
 #define PARAM_USER_HEIGHT                        "height"
 #define PARAM_USER_WEIGHT                        "weight"
