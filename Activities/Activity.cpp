@@ -117,16 +117,7 @@ void Activity::Pause()
 
 uint8_t Activity::HeartRateZone() const
 {
-	double percentage = HeartRatePercentage();
-	if (percentage < (double)0.60)
-		return 1;
-	if (percentage < (double)0.70)
-		return 2;
-	if (percentage < (double)0.80)
-		return 3;
-	if (percentage < (double)0.90)
-		return 4;
-	return 5;
+	return m_athlete.GetZoneForHeartRate(m_currentHeartRateBpm.value.doubleVal);
 }
 
 bool Activity::ProcessSensorReading(const SensorReading& reading)

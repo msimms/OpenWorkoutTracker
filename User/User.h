@@ -16,6 +16,7 @@
 #include "BmrFormula.h"
 #include "Gender.h"
 #include "UnitConverter.h"
+#include "ZonesCalculator.h"
 
 class User
 {
@@ -95,6 +96,14 @@ public:
 
 	double CaloriesBurnedForActivityDuration(double avgHr, double durationSecs, double additionalWeightKg) const;
 
+	void CalculateHeartRateZones();
+	double GetHeartRateZone(uint8_t zoneNum) const;
+	uint8_t GetZoneForHeartRate(double hr) const;
+
+	void CalculatePowerZones();
+	double GetPowerZone(uint8_t zoneNum) const;
+	uint8_t GetZoneForPower(double power) const;
+
 private:
 	uint64_t      m_id;
 	std::string   m_name;
@@ -110,6 +119,8 @@ private:
 	double        m_maxHr;
 	double        m_restingHr;
 	uint32_t      m_bestRecent5KSecs;
+	double        m_heartRateZones[NUM_HR_ZONES]; // heart rate zones
+	double        m_powerZones[NUM_POWER_ZONES];  // power zones
 
 	double EstimateRestingHeartRateMale() const;
 	double EstimateRestingHeartRateFemale() const;

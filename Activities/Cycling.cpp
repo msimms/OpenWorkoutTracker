@@ -453,22 +453,7 @@ double Cycling::NormalizedPower() const
 uint8_t Cycling::CurrentPowerZone() const
 {
 	double power = ThreeSecPower();
-	double ftp = m_athlete.GetFtp();
-	if (ftp < (double)1.0)
-		return 0;
-
-	double percentageOfFtp = power / ftp;
-	if (percentageOfFtp < (double)0.55)
-		return 1;
-	if (percentageOfFtp < (double)0.74)
-		return 2;
-	if (percentageOfFtp < (double)0.89)
-		return 3;
-	if (percentageOfFtp < (double)1.04)
-		return 4;
-	if (percentageOfFtp < (double)1.20)
-		return 5;
-	return 6;
+	return m_athlete.GetZoneForPower(power);
 }
 
 void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const

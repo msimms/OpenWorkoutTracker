@@ -902,6 +902,10 @@ extern "C" {
 		g_user.SetMaxHr(maxHr);
 		g_user.SetRestingHr(restingHr);
 		g_user.SetBestRecent5KSecs(bestRecent5KSecs);
+		
+		// Calculate heart rate and power zones.
+		g_user.CalculateHeartRateZones();
+		g_user.CalculatePowerZones();
 
 		// Both the activity factory and the workout plan generator need to know about the user.
 		if (g_pActivityFactory)
@@ -3250,28 +3254,12 @@ extern "C" {
 
 	double GetHrZone(uint8_t zoneNum)
 	{
-		if (zoneNum >= NUM_HR_ZONES)
-		{
-			return (double)0.0;
-		}
-
-		double zones[NUM_HR_ZONES];
-
-		ZonesCalculator::CalculateHeartRateZones(g_user.GetRestingHr(), g_user.GetMaxHr(), g_user.GetAgeInYears(), zones);
-		return zones[zoneNum];
+		return g_user.GetHeartRateZone(zoneNum);
 	}
 
 	double GetPowerZone(uint8_t zoneNum)
 	{
-		if (zoneNum >= NUM_POWER_ZONES)
-		{
-			return (double)0.0;
-		}
-
-		double zones[NUM_POWER_ZONES];
-		
-		ZonesCalculator::CalcuatePowerZones(g_user.GetFtp(), zones);
-		return zones[zoneNum];
+		return g_user.GetPowerZone(zoneNum);
 	}
 
 	double GetRunTrainingPace(const char* const paceName)

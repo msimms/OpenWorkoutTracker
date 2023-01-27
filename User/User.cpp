@@ -309,3 +309,61 @@ double User::CaloriesBurnedForActivityDuration(double avgHr, double durationSecs
 	}
 	return 0.0;
 }
+
+void User::CalculateHeartRateZones()
+{
+	ZonesCalculator::CalculateHeartRateZones(m_restingHr, m_maxHr, GetAgeInYears(), m_heartRateZones);
+}
+
+double User::GetHeartRateZone(uint8_t zoneNum) const
+{
+	if (zoneNum >= NUM_HR_ZONES)
+	{
+		return (double)0.0;
+	}
+	
+	return m_heartRateZones[zoneNum];
+}
+
+uint8_t User::GetZoneForHeartRate(double hr) const
+{
+	if (hr < m_heartRateZones[0])
+		return 1;
+	if (hr < m_heartRateZones[1])
+		return 2;
+	if (hr < m_heartRateZones[2])
+		return 3;
+	if (hr < m_heartRateZones[3])
+		return 4;
+	return 5;
+}
+
+void User::CalculatePowerZones()
+{
+	ZonesCalculator::CalcuatePowerZones(m_ftp, m_powerZones);
+}
+
+double User::GetPowerZone(uint8_t zoneNum) const
+{
+	if (zoneNum >= NUM_POWER_ZONES)
+	{
+		return (double)0.0;
+	}
+	
+	return m_powerZones[zoneNum];
+}
+
+uint8_t User::GetZoneForPower(double power) const
+{
+	if (power < m_powerZones[0])
+		return 1;
+	if (power < m_powerZones[1])
+		return 2;
+	if (power < m_powerZones[2])
+		return 3;
+	if (power < m_powerZones[3])
+		return 4;
+	if (power < m_powerZones[4])
+		return 5;
+	return 6;
+}
