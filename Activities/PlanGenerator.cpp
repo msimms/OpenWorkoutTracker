@@ -21,9 +21,11 @@ bool PlanGenerator::IsInTaper(double weeksUntilGoal, Goal goal)
 	
 	if (goal != GOAL_FITNESS)
 	{
-		if (weeksUntilGoal <= 2.0 && goal == GOAL_MARATHON_RUN)
+		if (weeksUntilGoal <= 2.0 && (goal == GOAL_50K_RUN || goal == GOAL_50_MILE_RUN))
 			inTaper = true;
-		if (weeksUntilGoal <= 1.0 && goal == GOAL_HALF_MARATHON_RUN)
+		if (weeksUntilGoal <= 2.0 && (goal == GOAL_MARATHON_RUN || goal == GOAL_IRON_DISTANCE_TRIATHLON))
+			inTaper = true;
+		if (weeksUntilGoal <= 1.0 && (goal == GOAL_HALF_MARATHON_RUN || goal == GOAL_HALF_IRON_DISTANCE_TRIATHLON))
 			inTaper = true;
 	}
 	return inTaper;

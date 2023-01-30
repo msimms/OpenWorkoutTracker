@@ -47,6 +47,14 @@ Workout* BikePlanGenerator::GenerateHillRide(void)
 }
 
 /// @brief Utility function for creating an interval workout.
+Workout* BikePlanGenerator::GenerateCadenceDrills(void)
+{
+	// Create the workout object.
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_CADENCE_DRILLS, ACTIVITY_TYPE_CYCLING);
+	return workout;
+}
+
+/// @brief Utility function for creating an interval workout.
 Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 {
 	// Constants.
@@ -249,13 +257,15 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 		// Cross training to support long distance running
 		case GOAL_HALF_MARATHON_RUN:
 		case GOAL_MARATHON_RUN:
-			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			if (!inTaper)
+				workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
 			break;
 
 		// Cross training to support ultra distance running
 		case GOAL_50K_RUN:
 		case GOAL_50_MILE_RUN:
-			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			if (!inTaper)
+				workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
 			break;
 
 		// Short distance triathlons

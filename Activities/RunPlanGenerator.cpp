@@ -323,11 +323,14 @@ Workout* RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, 
 Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance)
 {
 	// Long run should be 10% longer than the previous long run, within the bounds provided by min and max.
+	// No matter what, it should be at least 5K.
 	double longRunDistance = longestRunInFourWeeks * 1.1;
 	if (longRunDistance > minRunDistance)
 		longRunDistance = minRunDistance;
 	if (longRunDistance < minRunDistance)
 		longRunDistance = minRunDistance;
+	if (longRunDistance < (double)5000.0)
+		longRunDistance = (double)5000.0;
 	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(longRunDistance);
 
 	// Create the workout object.
@@ -629,6 +632,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		// Add a long run. No need for a long run if the goal is general fitness.
 		if (!inTaper && goal != GOAL_FITNESS)
 		{
+			
 			Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
 			workouts.push_back(longRunWorkout);
 		}
