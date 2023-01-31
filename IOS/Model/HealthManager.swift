@@ -133,7 +133,7 @@ class HealthManager {
 		self.healthStore.execute(query)
 	}
 
-	func subscribeToQuantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantity?, Date?, Error?) -> ()) {
+	func subscribeToQuantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantity?, Date?, Error?) -> ()) -> HKQuery {
 
 		let datePredicate = HKQuery.predicateForSamples(withStart: Date(), end: nil, options:HKQueryOptions.strictStartDate)
 		let query = HKAnchoredObjectQuery.init(type: quantityType, predicate: datePredicate, anchor: nil, limit: HKObjectQueryNoLimit, resultsHandler: { query, addedObjects, deletedObjects, newAnchor, error in
@@ -157,6 +157,12 @@ class HealthManager {
 		
 		// Execute asynchronously.
 		self.healthStore.execute(query)
+
+		// Background delivery.
+		self.healthStore.enableBackgroundDelivery(for: quantityType, frequency: .immediate, withCompletion: {(succeeded: Bool, error: Error!) in
+		})
+
+		return query
 	}
 
 	/// @brief Gets the user's age from HealthKit and updates the copy in our database.
@@ -738,22 +744,15 @@ class HealthManager {
 		}
 
 		let sampleType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.heartRate)
-		self.hrQuery = HKObserverQuery.init(sampleType: sampleType!, predicate: nil, updateHandler: { query, completionHandler, error in
-			if error == nil {
-				self.subscribeToQuantitySamplesOfType(quantityType: sampleType!, callback: { quantity, date, error in
-					if quantity != nil && date != nil {
-						let heartRateUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
-						let unixTime = date!.timeIntervalSince1970 // Apple Watch processor is 32-bit, so time_t is 32-bit as well
-						self.currentHeartRate = quantity!.doubleValue(for: heartRateUnit)
-						self.heartRateRead = true
-						ProcessHrmReading(self.currentHeartRate, UInt64(unixTime))
-					}
-				})
+		self.hrQuery = self.subscribeToQuantitySamplesOfType(quantityType: sampleType!, callback: { quantity, date, error in
+			if quantity != nil && date != nil {
+				let heartRateUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+				let unixTime = date!.timeIntervalSince1970 // Apple Watch processor is 32-bit, so time_t is 32-bit as well
+				self.currentHeartRate = quantity!.doubleValue(for: heartRateUnit)
+				self.heartRateRead = true
+				ProcessHrmReading(self.currentHeartRate, UInt64(unixTime))
 			}
-			completionHandler()
 		})
-
-		self.healthStore.execute(self.hrQuery!)
 	}
 
 	func unsubscribeFromHeartRateUpdates() {
