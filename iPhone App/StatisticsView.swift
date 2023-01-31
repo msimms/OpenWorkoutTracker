@@ -55,13 +55,19 @@ struct StatisticsView: View {
 										.fontWeight(Font.Weight.heavy)
 								}
 								VStack() {
-									Text("Totals")
-										.bold()
+									HStack() {
+										Text("Totals")
+											.bold()
+										Spacer()
+									}
 									self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
 									self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
 									
-									Text("Bests")
-										.bold()
+									HStack() {
+										Text("Bests")
+											.bold()
+										Spacer()
+									}
 									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, smallestIsBest: false)
 									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, smallestIsBest: false)
 									
