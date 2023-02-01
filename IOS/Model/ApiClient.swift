@@ -288,15 +288,12 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
-	func claimDevice() -> Bool {
+	func claimDevice(deviceId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
-		let deviceId = Preferences.uuid()
-		if deviceId != nil {
-			postDict[PARAM_DEVICE_ID2] = deviceId!
-			let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CLAIM_DEVICE_URL)
-			return self.makeRequest(url: urlStr, method: "POST", data: postDict)
-		}
-		return false
+		postDict[PARAM_DEVICE_ID2] = deviceId
+
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CLAIM_DEVICE_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
 	func setActivityName(activityId: String, name: String) -> Bool {
@@ -494,17 +491,20 @@ class ApiClient : ObservableObject {
 			let now = time(nil)
 			let lastServerSync = Preferences.lastServerSyncTime()
 			if now - lastServerSync > 60 {
-				result = self.listGear()
-				result = result && self.claimDevice()
-				result = result && self.listPlannedWorkouts()
-				result = result && self.listIntervalSessions()
-				result = result && self.listPacePlans()
-				result = result && self.sendUserDetailsToServer()
-				result = result && self.sendMissingActivitiesToServer()
-				result = result && self.sendPacePlansToServer()
-
-				result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
-				Preferences.setLastServerSyncTime(value: now)
+				let deviceId = Preferences.uuid()
+				if deviceId != nil {
+					result = self.claimDevice(deviceId: deviceId!)
+					result = result && self.listGear()
+					result = result && self.listPlannedWorkouts()
+					result = result && self.listIntervalSessions()
+					result = result && self.listPacePlans()
+					result = result && self.sendUserDetailsToServer()
+					result = result && self.sendMissingActivitiesToServer()
+					result = result && self.sendPacePlansToServer()
+					
+					result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
+					Preferences.setLastServerSyncTime(value: now)
+				}
 			}
 		}
 		return result

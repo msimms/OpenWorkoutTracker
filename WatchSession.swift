@@ -39,14 +39,14 @@ class WatchSession : NSObject, WCSessionDelegate {
 		if msgType == WATCH_MSG_SYNC_PREFS {
 		}
 		else if msgType == WATCH_MSG_REGISTER_DEVICE {
-		}
-		else if msgType == WATCH_MSG_PARAM_DEVICE_ID {
+			if let deviceId = message[WATCH_MSG_PARAM_DEVICE_ID] as? String {
+				let _ = ApiClient.shared.claimDevice(deviceId: deviceId)
+			}
 		}
 		else if msgType == WATCH_MSG_REQUEST_SESSION_KEY {
-		}
-		else if msgType == WATCH_MSG_PARAM_SESSION_KEY {
-		}
-		else if msgType == WATCH_MSG_PARAM_SESSION_KEY_EXPIRY {
+			if let sessionKey = message[WATCH_MSG_PARAM_SESSION_KEY] as? String,
+			   let sessionKeyExpiry = message[WATCH_MSG_PARAM_SESSION_KEY_EXPIRY] as? String {
+			}
 		}
 		else if msgType == WATCH_MSG_DOWNLOAD_INTERVAL_SESSIONS {
 		}
@@ -180,6 +180,7 @@ class WatchSession : NSObject, WCSessionDelegate {
 		}
 
 		if numHistoricalActivities > 0 {
+
 			// Check each activity. Loop in reverse order because the most recent activities are probably the most interesting.
 			for i in stride(from: numHistoricalActivities - 1, to: 0, by: -1) {
 				let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(i)) // Returns const char*, no need to dealloc
