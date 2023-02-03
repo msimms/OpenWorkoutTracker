@@ -887,6 +887,10 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		{
 			result = splitTimesIter->second;
 		}
+		else
+		{
+			result.valid = false;
+		}
 	}
 	else if (attributeName.find(ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE) == 0)
 	{
@@ -894,6 +898,10 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		if (splitTimesIter != m_splitTimesMiles.end())
 		{
 			result = splitTimesIter->second;
+		}
+		else
+		{
+			result.valid = false;
 		}
 	}
 	else if (attributeName.find(ACTIVITY_ATTRIBUTE_NUM_KM_SPLITS) == 0)
