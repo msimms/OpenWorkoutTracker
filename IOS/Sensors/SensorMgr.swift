@@ -46,6 +46,13 @@ class SensorMgr : ObservableObject {
 	private init() {
 	}
 
+	func displayMessage(text: String) {
+		var notificationData: Dictionary<String, String> = [:]
+		notificationData[KEY_NAME_MESSAGE] = text
+		let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: notificationData)
+		NotificationCenter.default.post(notification)
+	}
+
 	/// Called when a peripheral is discovered.
 	/// Returns true to indicate that we should connect to this peripheral and discover its services.
 	func peripheralDiscovered(peripheral: CBPeripheral, name: String) -> Bool {
@@ -68,6 +75,7 @@ class SensorMgr : ObservableObject {
 			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
 			shouldDiscoverServices = summary.enabled
 			self.peripherals.append(summary)
+			self.displayMessage(text: name + " connected")
 		}
 		return shouldDiscoverServices
 	}
@@ -203,6 +211,7 @@ class SensorMgr : ObservableObject {
 		for (index, existingPeripheral) in self.peripherals.enumerated() {
 			if existingPeripheral.peripheral == peripheral && existingPeripheral.enabled {
 				self.peripherals.remove(at: index)
+				self.displayMessage(text: existingPeripheral.name + " disconnected")
 				removed = true
 				break
 			}

@@ -20,6 +20,13 @@ struct ActivityIndicator: UIViewRepresentable {
 	}
 }
 
+func displayMessage(text: String) {
+	var notificationData: Dictionary<String, String> = [:]
+	notificationData[KEY_NAME_MESSAGE] = text
+	let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: notificationData)
+	NotificationCenter.default.post(notification)
+}
+
 struct ActivityView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
@@ -530,6 +537,7 @@ struct ActivityView: View {
 						// Lap button
 						Button {
 							self.activityVM.lap()
+							displayMessage(text: "New lap started")
 						} label: {
 							Label("Lap", systemImage: "stopwatch")
 						}
