@@ -37,13 +37,16 @@ struct HistoryDetailsView: View {
 					
 					// Attributes Summary
 					List(self.activityVM.getActivityAttributes(), id: \.self) { item in
-						HStack() {
-							Text(item)
-								.bold()
-							Spacer()
-							Text(self.activityVM.getActivityAttributeValueStr(attributeName: item))
+						let valueStr = self.activityVM.getActivityAttributeValueStr(attributeName: item)
+						if valueStr.count > 0 {
+							HStack() {
+								Text(item)
+									.bold()
+								Spacer()
+								Text(valueStr)
+							}
+							.padding(5)
 						}
-						.padding(5)
 					}
 					.frame(minHeight: minRowHeight * 3)
 					

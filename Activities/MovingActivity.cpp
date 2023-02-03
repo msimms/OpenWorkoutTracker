@@ -996,6 +996,13 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 		result.measureType = MEASURE_ALTITUDE;
 		result.valid = true;
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_NUM_LAPS) == 0)
+	{
+		result.value.intVal = GetLaps().size() + 1;
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_COUNT;
+		result.valid = result.value.intVal > 1;
+	}
 	else
 	{
 		result = Activity::QueryActivityAttribute(attributeName);
@@ -1390,6 +1397,7 @@ void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_LAP_NUMBER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_TOTAL_ASCENT);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_THREAT_COUNT);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_LAPS);
 	Activity::BuildAttributeList(attributes);
 }
 
@@ -1414,6 +1422,7 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	attributes.push_back(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_TOTAL_ASCENT);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_LAPS);
 	Activity::BuildSummaryAttributeList(attributes);
 }
 

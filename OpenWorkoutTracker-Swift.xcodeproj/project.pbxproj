@@ -19,6 +19,7 @@
 		2704225C2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
 		272E77E42910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		272E77E52910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
+		273132B4298C8D0800DEADF0 /* SplitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273132B3298C8D0800DEADF0 /* SplitsView.swift */; };
 		2740DF5C28E4600800293B71 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5528E4600800293B71 /* HistoryView.swift */; };
 		2740DF5D28E4600800293B71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5628E4600800293B71 /* ActivityView.swift */; };
 		2740DF6028E4600800293B71 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF5928E4600800293B71 /* SettingsView.swift */; };
@@ -373,6 +374,7 @@
 		270422552902409C00FD02D4 /* TagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsView.swift; sourceTree = "<group>"; };
 		2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CyclingRadarService.swift; path = LibBluetooth/mac/Source_Swift/CyclingRadarService.swift; sourceTree = "<group>"; };
 		272E77E32910ABE3009AB275 /* WatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSession.swift; sourceTree = "<group>"; };
+		273132B3298C8D0800DEADF0 /* SplitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsView.swift; sourceTree = "<group>"; };
 		273C418429075C9800273B64 /* OpenWorkoutTracker Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "OpenWorkoutTracker Watch App.entitlements"; sourceTree = "<group>"; };
 		2740DF5528E4600800293B71 /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		2740DF5628E4600800293B71 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
@@ -1131,6 +1133,7 @@
 				2704225028FDEE0200FD02D4 /* SensorChartView.swift */,
 				2740E09428E631A000293B71 /* SensorsView.swift */,
 				2740DF5928E4600800293B71 /* SettingsView.swift */,
+				273132B3298C8D0800DEADF0 /* SplitsView.swift */,
 				2740E09728E632CE00293B71 /* StatisticsView.swift */,
 				270422552902409C00FD02D4 /* TagsView.swift */,
 				2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */,
@@ -1529,6 +1532,7 @@
 				2740DFD228E460E200293B71 /* WorkoutPlanGenerator.cpp in Sources */,
 				2740E12028F0E83000293B71 /* EditIntervalSessionView.swift in Sources */,
 				2740DFD828E460E200293B71 /* Cycling.cpp in Sources */,
+				273132B4298C8D0800DEADF0 /* SplitsView.swift in Sources */,
 				277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */,
 				2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */,
 				27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */,

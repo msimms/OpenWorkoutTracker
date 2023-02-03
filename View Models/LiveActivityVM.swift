@@ -60,8 +60,9 @@ class LiveActivityVM : ObservableObject {
 	var isPaused: Bool = false
 	var isStopped: Bool = false // Has been stopped (after being started)
 	var autoStartEnabled: Bool = false
+	var isMovingActivity: Bool = false
 	var countdownSecsRemaining: UInt = 0
-	
+
 #if !os(watchOS)
 	var locationTrack: Array<CLLocationCoordinate2D> = []
 	@Published var currentLat: Double = 0.0
@@ -77,7 +78,7 @@ class LiveActivityVM : ObservableObject {
 	private var activityType: String = ""
 	private var audioPlayer: AVAudioPlayer?
 	private var currentMessageTime: time_t = 0 // timestamp of when the current message was set, allows us to know when to clear it
-	
+
 	init(activityType: String) {
 		self.create(activityType: activityType)
 		self.activityType = activityType
@@ -131,7 +132,7 @@ class LiveActivityVM : ObservableObject {
 		self.sensorMgr.startSensors()
 		
 		// This won't change. Cache it.
-		let isMovingActivity = IsMovingActivity()
+		self.isMovingActivity = IsMovingActivity()
 		
 		// Have we played the start beep yet?
 		var playedStartBeep = false
@@ -184,7 +185,7 @@ class LiveActivityVM : ObservableObject {
 			}
 			
 			// Start and split beeps?
-			if isMovingActivity && self.isInProgress {
+			if self.isMovingActivity && self.isInProgress {
 				
 				// Have we started a new mile or kilometer?
 				var newSplit = false
@@ -236,7 +237,7 @@ class LiveActivityVM : ObservableObject {
 			
 			// Update the location and route.
 #if !os(watchOS)
-			if isMovingActivity && self.isInProgress {
+			if self.isMovingActivity && self.isInProgress {
 				self.currentLat = self.sensorMgr.location.currentLocation.coordinate.latitude
 				self.currentLon = self.sensorMgr.location.currentLocation.coordinate.latitude
 				self.locationTrack.append(CLLocationCoordinate2D(latitude: self.currentLat, longitude: self.currentLon))

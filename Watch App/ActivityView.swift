@@ -330,6 +330,8 @@ struct ActivityView: View {
 					// This is useful for activities like swimming, to prevent accidental presses.
 					if !Preferences.watchTurnCrownToStartStopActivity() {
 						HStack() {
+							
+							// Start/Stop/Pause button
 							Button {
 								self.handleStartStopPauseAction()
 							} label: {
@@ -349,6 +351,16 @@ struct ActivityView: View {
 								} label: {
 									Text("Cancel")
 								}
+							}
+
+							// Lap button
+							if self.activityVM.isInProgress && self.activityVM.isMovingActivity {
+								Button {
+									self.activityVM.lap()
+								} label: {
+									Label("Lap", systemImage: "stopwatch")
+								}
+								.help("Lap")
 							}
 						}
 					}

@@ -56,14 +56,12 @@ ActivityAttributeType PoolSwim::QueryActivityAttribute(const std::string& attrib
 void PoolSwim::BuildAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POOL_LENGTH);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_LAPS);
 	Swim::BuildAttributeList(attributes);
 }
 
 void PoolSwim::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 {
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POOL_LENGTH);
-	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_LAPS);
 	Swim::BuildSummaryAttributeList(attributes);
 }
 

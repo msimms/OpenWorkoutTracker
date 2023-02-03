@@ -471,20 +471,7 @@ struct ActivityView: View {
 		.toolbar {
 			ToolbarItem(placement: .bottomBar) {
 				HStack() {
-					if self.activityVM.isInProgress {
-
-						// Lap button
-						Button {
-							self.activityVM.lap()
-						} label: {
-							Label("Lap", systemImage: "stopwatch")
-						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.opacity(self.activityVM.isInProgress ? 1 : 0)
-						.help("Lap")
-					}
-
-					else {
+					if !self.activityVM.isInProgress {
 
 						// Preferences Edit button
 						NavigationLink(destination: ActivityPreferencesView(activityType: self.activityType)) {
@@ -538,6 +525,18 @@ struct ActivityView: View {
 							.help("Pace plan selection.")
 						}
 					}
+					else if self.activityVM.isMovingActivity {
+
+						// Lap button
+						Button {
+							self.activityVM.lap()
+						} label: {
+							Label("Lap", systemImage: "stopwatch")
+						}
+						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.opacity(self.activityVM.isInProgress ? 1 : 0)
+						.help("Lap")
+					}
 
 					// Page button
 					Button {
@@ -557,6 +556,7 @@ struct ActivityView: View {
 					.help("Will switch between different views/pages.")
 
 					if !self.activityVM.isInProgress {
+
 						// AutoStart button
 						Button {
 							if self.activityVM.setAutoStart() {

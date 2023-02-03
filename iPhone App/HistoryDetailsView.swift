@@ -131,6 +131,13 @@ struct HistoryDetailsView: View {
 						let kmSplits = self.activityVM.getKilometerSplits()
 						let mileSplits = self.activityVM.getMileSplits()
 
+						HStack() {
+							NavigationLink("Splits", destination: SplitsView(activityVM: self.activityVM))
+							Spacer()
+							Image(systemName: "chart.bar.fill")
+						}
+						.padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
+
 						if kmSplits.count > 0 {
 							let fastestSplit = kmSplits.max()!
 							

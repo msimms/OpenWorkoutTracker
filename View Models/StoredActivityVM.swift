@@ -117,7 +117,7 @@ class StoredActivityVM : ObservableObject {
 	
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in our own database.
 	func loadSensorDataFromDb() {
-		if LoadAllHistoricalActivitySensorData(self.activityIndex) {
+		if LoadHistoricalActivityLapData(self.activityIndex) && LoadAllHistoricalActivitySensorData(self.activityIndex) {
 			
 			// Location points
 			self.locationTrack = []
@@ -302,7 +302,7 @@ class StoredActivityVM : ObservableObject {
 		var splitIndex = 1
 		
 		while attribute.valid {
-			let currentSplit = time_t(attribute.value.intVal) - lastSplit
+			let currentSplit = time_t(attribute.value.timeVal) - lastSplit
 			result.append(currentSplit)
 			
 			splitIndex += 1
@@ -322,7 +322,7 @@ class StoredActivityVM : ObservableObject {
 		var splitIndex = 1
 
 		while attribute.valid {
-			let currentSplit = time_t(attribute.value.intVal) - lastSplit
+			let currentSplit = time_t(attribute.value.timeVal) - lastSplit
 			result.append(currentSplit)
 
 			splitIndex += 1
@@ -331,6 +331,25 @@ class StoredActivityVM : ObservableObject {
 			lastSplit = currentSplit
 		}
 		
+		return result
+	}
+	
+	func getLapSplits() -> Array<time_t> {
+		var result: Array<time_t> = []
+		var attributeName = ACTIVITY_ATTRIBUTE_LAP_TIME + "1"
+		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var splitIndex = 1
+		
+		while attribute.valid {
+			if attribute.valid {
+				result.append(attribute.value.timeVal)
+			}
+
+			splitIndex += 1
+			attributeName = ACTIVITY_ATTRIBUTE_LAP_TIME + String(splitIndex)
+			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		}
+
 		return result
 	}
 
