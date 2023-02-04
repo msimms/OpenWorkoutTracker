@@ -31,36 +31,60 @@ struct LineGraphView: View {
     var body: some View {
 		GeometryReader { geometry in
 			let axisWidth: Double = 4.0
-			let canvasMaxX: Double = geometry.size.width
-			let canvasMaxY: Double = geometry.size.height
+			let canvasMinX: Double = 10.0
+			let canvasMinY: Double = 10.0
+			let canvasMaxX: Double = geometry.size.width - canvasMinX
+			let canvasMaxY: Double = geometry.size.height - canvasMinY
+			let hashMarkLength: Double = 5.0
+			var axisYOffset: Double = canvasMaxY
 
+			// Draw the axis lines.
 			Path { path in
-				path.move(to: CGPoint(x: 0, y: canvasMaxY))
+
+				// X axis
+				path.move(to: CGPoint(x: canvasMinX, y: canvasMaxY)) // Origin
 				path.addLine(to: CGPoint(x: canvasMaxX, y: canvasMaxY))
-				path.move(to: CGPoint(x: 0, y: 0))
-				path.addLine(to: CGPoint(x: 0, y: canvasMaxY))
+				
+				// Y axis
+				path.move(to: CGPoint(x: canvasMinX, y: canvasMaxY)) // Origin
+				path.addLine(to: CGPoint(x: canvasMinX, y: canvasMinY))
 			}
 			.stroke(.gray, lineWidth: axisWidth)
 
+			// Draw the Y axis hash marks.
+			Path { path in
+				for _ in 1...10 {
+					let canvasY = canvasMinY + (canvasMaxY - axisYOffset)
+					path.move(to: CGPoint(x: canvasMinX, y: canvasY))
+					path.addLine(to: CGPoint(x: canvasMinX - hashMarkLength, y: canvasY))
+					
+					axisYOffset -= (canvasMaxY / 10)
+				}
+			}
+			.stroke(.gray, lineWidth: axisWidth)
+
+			// Draw the data line.
 			Path { path in
 				let rangeX = self.maxX - self.minX
 				let rangeY = self.maxY - self.minY
+				let canvasSpreadX = canvasMaxX - canvasMinX
+				let canvasSpreadY = canvasMaxY - canvasMinY
 
-				path.move(to: CGPoint(x: 0, y: 0))
+				path.move(to: CGPoint(x: canvasMinX, y: canvasMaxY)) // Origin
 
 				for point in self.points {
 					let offsetX = Double(point.x) - self.minX
 					let percentageX = offsetX / rangeX
-					let canvasX = canvasMaxX * percentageX
+					let canvasX = canvasMinX + (canvasSpreadX * percentageX)
 
 					let offsetY = point.y - self.minY
 					let percentageY = offsetY / rangeY
-					let canvasY = canvasMaxY * (1.0 - percentageY)
+					let canvasY = canvasMinY + (canvasSpreadY * (1.0 - percentageY))
 
 					path.addLine(to: CGPoint(x: canvasX, y: canvasY))
 				}
 			}
-			.stroke(self.color, lineWidth: 2)
+			.stroke(self.color, lineWidth: 3)
 		}
     }
 }

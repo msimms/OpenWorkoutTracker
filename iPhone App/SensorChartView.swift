@@ -16,13 +16,9 @@ struct SensorChartView: View {
 			Text(title)
 				.bold()
 			if self.data.count > 0 {
-				HStack() {
-					Text(self.yLabel)
-						.rotationEffect(Angle(degrees: -90.0))
-					VStack() {
-						LineGraphView(points: self.data, color: color)
-						Text("Elapsed Time")
-					}
+				VStack() {
+					LineGraphView(points: self.data, color: color)
+					Text("Elapsed Time")
 				}
 			}
 			else {

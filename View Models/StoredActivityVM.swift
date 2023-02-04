@@ -181,8 +181,12 @@ class StoredActivityVM : ObservableObject {
 					let pace = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_PACE)
 					let speed = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_SPEED)
 					
-					self.pace.append((UInt64(pointIndex), pace.value.doubleVal))
-					self.speed.append((UInt64(pointIndex), speed.value.doubleVal))
+					if pace.valid {
+						self.pace.append((UInt64(pointIndex), Double(pace.value.timeVal)))
+					}
+					if speed.valid {
+						self.speed.append((UInt64(pointIndex), speed.value.doubleVal))
+					}
 				}
 			}
 			
@@ -298,17 +302,17 @@ class StoredActivityVM : ObservableObject {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + "1"
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
-		var lastSplit: time_t = 0
+		var splitTotal: time_t = 0
 		var splitIndex = 1
 		
 		while attribute.valid {
-			let currentSplit = time_t(attribute.value.timeVal) - lastSplit
+			let currentSplit = time_t(attribute.value.timeVal) - splitTotal
 			result.append(currentSplit)
 			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
-			lastSplit = currentSplit
+			splitTotal += currentSplit
 		}
 		
 		return result
@@ -318,17 +322,17 @@ class StoredActivityVM : ObservableObject {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + "1"
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
-		var lastSplit: time_t = 0
+		var splitTotal: time_t = 0
 		var splitIndex = 1
 
 		while attribute.valid {
-			let currentSplit = time_t(attribute.value.timeVal) - lastSplit
+			let currentSplit = time_t(attribute.value.timeVal) - splitTotal
 			result.append(currentSplit)
 
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
-			lastSplit = currentSplit
+			splitTotal += currentSplit
 		}
 		
 		return result
@@ -357,7 +361,7 @@ class StoredActivityVM : ObservableObject {
 		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
 		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
 	}
-	
+
 	func getActivityAttributeValueStr(attributeName: String) -> String {
 		if self.source == ActivitySummary.Source.database {
 			let attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)

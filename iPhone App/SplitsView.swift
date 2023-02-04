@@ -42,7 +42,7 @@ struct SplitsView: View {
 				HStack() {
 					Spacer()
 					VStack(alignment: .center) {
-						Text("Kiloometer Splits")
+						Text("Kilometer Splits")
 							.bold()
 						let kmSplits = self.activityVM.getKilometerSplits()
 						if kmSplits.count > 0 {
@@ -63,7 +63,7 @@ struct SplitsView: View {
 							.bold()
 						let lapSplits = self.activityVM.getLapSplits()
 						if lapSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: lapSplits), color: Color.green)
+							BarChartView(bars: makeSplitGraphBar(splits: lapSplits), color: Color.blue)
 								.frame(height:256)
 						}
 						else {

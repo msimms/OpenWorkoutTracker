@@ -31,7 +31,9 @@ struct BarChartView: View {
 							.frame(height: CGFloat(bar.value) / CGFloat(self.max) * geometry.size.height)
 							.overlay(Rectangle().stroke(self.color).background(self.color))
 							.accessibility(label: Text(bar.label))
-						Text(bar.label)
+					/*	Text(bar.label)
+							.rotationEffect(Angle(degrees: -90))
+							.offset(y: -50) */
 					}
 				}
 			}
