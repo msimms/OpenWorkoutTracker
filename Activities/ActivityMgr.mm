@@ -3456,37 +3456,6 @@ extern "C" {
 		return result;
 	}
 
-	bool AddWorkoutIntervalByDuration(const char* const workoutId, double pace, uint64_t duration)
-	{
-		bool result = false;
-		
-		g_dbLock.lock();
-		
-		if (g_pDatabase)
-		{
-			Workout workout;
-			
-			if (g_pDatabase->RetrieveWorkout(workoutId, workout))
-			{
-				WorkoutInterval interval;
-				interval.m_repeat = 1;
-				interval.m_duration = duration;
-				interval.m_powerLow = 0.0;
-				interval.m_powerHigh = 0.0;
-				interval.m_distance = 0.0;
-				interval.m_pace = pace;
-				interval.m_recoveryDistance = 0.0;
-				interval.m_recoveryPace = 0.0;
-				
-				result = g_pDatabase->CreateWorkoutInterval(workout, interval);
-			}
-		}
-		
-		g_dbLock.unlock();
-		
-		return result;
-	}
-
 	bool DeleteWorkout(const char* const workoutId)
 	{
 		bool result = false;
