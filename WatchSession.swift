@@ -44,9 +44,6 @@ class WatchSession : NSObject, WCSessionDelegate {
 			}
 		}
 		else if msgType == WATCH_MSG_REQUEST_SESSION_KEY {
-			if let sessionKey = message[WATCH_MSG_PARAM_SESSION_KEY] as? String,
-			   let sessionKeyExpiry = message[WATCH_MSG_PARAM_SESSION_KEY_EXPIRY] as? String {
-			}
 		}
 		else if msgType == WATCH_MSG_DOWNLOAD_INTERVAL_SESSIONS {
 		}
@@ -55,6 +52,33 @@ class WatchSession : NSObject, WCSessionDelegate {
 		else if msgType == WATCH_MSG_PACE_PLAN {
 		}
 		else if msgType == WATCH_MSG_CHECK_ACTIVITY {
+		}
+		else if msgType == WATCH_MSG_REQUEST_ACTIVITY {
+		}
+		else if msgType == WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED {
+		}
+	}
+
+	func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: ([String : Any]) -> Void) {
+		let msgType = message[WATCH_MSG_TYPE] as? String
+
+		if msgType == WATCH_MSG_SYNC_PREFS {
+		}
+		else if msgType == WATCH_MSG_REGISTER_DEVICE {
+		}
+		else if msgType == WATCH_MSG_REQUEST_SESSION_KEY {
+			self.generateWatchSessionKey(replyHandler: replyHandler)
+		}
+		else if msgType == WATCH_MSG_DOWNLOAD_INTERVAL_SESSIONS {
+		}
+		else if msgType == WATCH_MSG_INTERVAL_SESSION {
+		}
+		else if msgType == WATCH_MSG_PACE_PLAN {
+		}
+		else if msgType == WATCH_MSG_CHECK_ACTIVITY {
+			if let activityId = message[WATCH_MSG_PARAM_ACTIVITY_ID] as? String {
+				self.checkForActivity(activityId: activityId, replyHandler: replyHandler)
+			}
 		}
 		else if msgType == WATCH_MSG_REQUEST_ACTIVITY {
 		}
@@ -145,6 +169,21 @@ class WatchSession : NSObject, WCSessionDelegate {
 		}
 	}
 
+	/// @brief Called when the watch is requesting a session key so that it can authenticate with the (optional) server.
+	func generateWatchSessionKey(replyHandler: ([String : Any]) -> Void) {
+		let cookies = HTTPCookieStorage.sharedCookieStorage(forGroupContainerIdentifier: "").cookies
+		if cookies != nil {
+			for cookie in cookies! {
+				if cookie.value(forKey: HTTPCookiePropertyKey.name.rawValue) as! String == SESSION_COOKIE_NAME {
+					var msgData: Dictionary<String,Any> = [:]
+					msgData[WATCH_MSG_PARAM_SESSION_KEY] = cookie.name
+					msgData[WATCH_MSG_PARAM_SESSION_KEY_EXPIRY] = cookie.expiresDate
+					replyHandler(msgData)
+				}
+			}
+		}
+	}
+	
 	/// @brief Sends our unique identifier to the phone.
 	func sendRegisterDeviceMsgToPhone() {
 		var msgData: Dictionary<String,String> = [:]
@@ -165,6 +204,27 @@ class WatchSession : NSObject, WCSessionDelegate {
 	}
 
 	func requestPacePlansFromPhone() {
+	}
+
+	/// @brief Responds to an activity check from the watch. Checks if we have the activity, if we don't then request it from the watch.
+	func checkForActivity(activityId: String, replyHandler: ([String : Any]) -> Void) {
+		// Don't try to import anything when we're in the middle of doing an activity.
+		if IsActivityCreated() {
+			return
+		}
+
+		if IsActivityInDatabase(activityId) {
+			var msgData: Dictionary<String,String> = [:]
+			msgData[WATCH_MSG_TYPE] = WATCH_MSG_MARK_ACTIVITY_AS_SYNCHED
+			msgData[WATCH_MSG_PARAM_ACTIVITY_ID] = activityId
+			replyHandler(msgData)
+		}
+		else {
+			var msgData: Dictionary<String,String> = [:]
+			msgData[WATCH_MSG_TYPE] = WATCH_MSG_REQUEST_ACTIVITY
+			msgData[WATCH_MSG_PARAM_ACTIVITY_ID] = activityId
+			replyHandler(msgData)
+		}
 	}
 
 	/// @brief Called when connecting to the phone so we can determine which activities to send.

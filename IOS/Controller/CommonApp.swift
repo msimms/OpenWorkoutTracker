@@ -240,11 +240,11 @@ class CommonApp : ObservableObject {
 					let fileName = NSUUID().uuidString
 					let fullUrl = NSURL.fileURL(withPathComponents: [directory, fileName])
 
-					try responseData.write(to: fullUrl!, atomically: false, encoding: .utf8)
-					
-//					ImportActivityFromFile(fullUrl?.absoluteString, nil, nil)
-					
-					try FileManager.default.removeItem(at: fullUrl!)
+					if fullUrl != nil {
+						try responseData.write(to: fullUrl!, atomically: false, encoding: .utf8)
+						ImportActivityFromFile(fullUrl?.absoluteString, nil, nil)
+						try FileManager.default.removeItem(at: fullUrl!)
+					}
 				}
 			}
 		}
@@ -439,7 +439,7 @@ class CommonApp : ObservableObject {
 							if tags != nil {
 								let tagsList = tags as? [String]
 								for tag in tagsList! {
-									if (!HasTag(activityId, tag)) {
+									if !HasTag(activityId, tag) {
 										CreateTag(activityId, tag)
 									}
 								}
