@@ -14,6 +14,11 @@ double PlanGenerator::RoundDistance(double distance)
 	return float(ceil(distance / 100.0)) * 100.0;
 }
 
+bool PlanGenerator::IsGoalWeek(Goal goal, double weeksUntilGoal, double goalDistance)
+{
+	return ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1));
+}
+
 /// @brief Taper: 2 weeks for a marathon or more, 1 week for a half marathon or less.
 bool PlanGenerator::IsInTaper(double weeksUntilGoal, Goal goal)
 {

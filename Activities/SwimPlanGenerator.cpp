@@ -90,17 +90,18 @@ std::vector<Workout*> SwimPlanGenerator::GenerateWorkouts(std::map<std::string, 
 	}
 
 	// Is this the goal week? If so, add that event.
-	if ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1))
+	if (this->IsGoalWeek(goal, weeksUntilGoal, goalDistance))
 	{
 		workouts.push_back(GenerateGoalWorkout(goalDistance, goalDate));
 	}
 
+	// If the user has access to a pool then include one technique swim each week.
 	if (hasSwimmingPoolAccess)
 		workouts.push_back(GenerateTechniqueSwim(hasSwimmingPoolAccess));
 	else if (hasOpenWaterSwimAccess)
 		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 
-	// Add the remaining inputs.
+	// Add the remaining workouts.
 	switch (goal)
 	{
 	case GOAL_FITNESS:

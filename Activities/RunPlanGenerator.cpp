@@ -623,7 +623,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		this->ClearIntensityDistribution();
 
 		// Is this the goal week? If so, add that event.
-		if ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1))
+		if (this->IsGoalWeek(goal, weeksUntilGoal, goalDistance))
 		{
 			Workout* goalWorkout = this->GenerateGoalWorkout(goalDistance, goalDate);
 			workouts.push_back(goalWorkout);

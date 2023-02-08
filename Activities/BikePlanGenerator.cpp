@@ -47,6 +47,7 @@ Workout* BikePlanGenerator::GenerateHillRide(void)
 }
 
 /// @brief Utility function for creating an interval workout.
+/// Note: Haven't implemented this, because it only seems to have beneft if the cyclist is not doing strenght work.
 Workout* BikePlanGenerator::GenerateCadenceDrills(void)
 {
 	// Create the workout object.
@@ -58,24 +59,45 @@ Workout* BikePlanGenerator::GenerateCadenceDrills(void)
 Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 {
 	// Constants.
-	const uint8_t NUM_REPS_INDEX = 0;
-	const uint8_t SECONDS_HARD_INDEX = 1;
-	const uint8_t PERCENTAGE_FTP_INDEX = 2;
-	const uint8_t NUM_POSSIBLE_WORKOUTS = 5;
-	
-	// Tabata Intervals
-	// 10x30 seconds hard / 20 seconds easy
-	
-	// V02 Max Intervals
-	// 8x2 minutes hard / 2 min easy
-	// 6x3 minutes hard / 2-3 min easy
-	// 5x4 minutes hard / 2-3 min easy
-	
-	// Longer intervals for sustained power
-	// 4x8 minutes hard / 2-4 min easy
+	const uint8_t MIN_SETS_INDEX = 0;
+	const uint8_t MAX_SETS_INDEX = 1;
+	const uint8_t NUM_REPS_INDEX = 2;
+	const uint8_t SECONDS_HARD_INDEX = 3;
+	const uint8_t SECONDS_EASY_INDEX = 4;
+	const uint8_t PERCENTAGE_FTP_INDEX = 5;
+	const uint8_t NUM_POSSIBLE_WORKOUTS = 8;
 
-	// Build a collection of possible bike interval sessions, sorted by target time. Order is { num reps, seconds hard, percentage of threshold power }.
-	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][3] = { { 10, 30, 170 }, { 8, 120, 140 }, { 6, 180, 130 }, { 5, 240, 120 }, { 4, 480, 120 } };
+	// Notes:
+	// 3-4 minute rests between blocks
+	// 2-4 blocks, based on experience
+
+	// Ronnestad Intervals
+	// 3x (13x (30 seconds hard / 15 seconds easy))
+
+	// 30:30s
+	// 2-4x (30 seconds hard / 30 seconds easy)
+
+	// 40:20s
+	// 2-4x (40 seconds hard / 20 seconds easy)
+
+	// Tabata Intervals
+	// 2-4x (10x (30 seconds hard / 20 seconds easy))
+
+	// V02 Max Intervals
+	// 8x (2 minutes hard / 2 min easy)
+	// 6x (3 minutes hard / 2-3 min easy)
+	// 5x (4 minutes hard / 2-3 min easy)
+
+	// Build a collection of possible bike interval sessions, sorted by target time.
+	// Order is { min sets, max sets, num reps, seconds hard, seconds easy, percentage of threshold power }.
+	uint16_t POSSIBLE_WORKOUTS[NUM_POSSIBLE_WORKOUTS][6] = { { 1, 3, 13, 30, 15, 170 },
+		{ 2, 4, 1, 30, 30, 170 },
+		{ 2, 4, 1, 40, 20, 170 },
+		{ 2, 4, 10, 30, 20, 170 },
+		{ 1, 1, 8, 120, 120, 140 },
+		{ 1, 1, 6, 180, 150, 130 },
+		{ 1, 1, 5, 240, 150, 120 },
+		{ 1, 1, 4, 480, 180, 120 } };
 
 	// Warmup and cooldown duration.
 	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
@@ -88,10 +110,14 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 	uint16_t* selectedIntervalWorkout = POSSIBLE_WORKOUTS[selectedIntervalWorkoutIndex];
 
 	// Fetch the details for this workout.
+	uint16_t minSets = selectedIntervalWorkout[MIN_SETS_INDEX];
+	uint16_t maxSets = selectedIntervalWorkout[MAX_SETS_INDEX];
+	std::uniform_int_distribution<size_t> numSetsDistribution(minSets, maxSets - 1);
+	uint16_t numSets = numSetsDistribution(generator);
 	uint16_t intervalReps = selectedIntervalWorkout[NUM_REPS_INDEX];
 	uint16_t intervalSeconds = selectedIntervalWorkout[SECONDS_HARD_INDEX];
+	uint16_t restSeconds = selectedIntervalWorkout[SECONDS_EASY_INDEX];
 	double intervalPower = (double)selectedIntervalWorkout[PERCENTAGE_FTP_INDEX] / 100.0;
-	uint16_t restSeconds = intervalSeconds / 2;
 	double restPower = (double)0.4;
 
 	// Create the workout object.
@@ -99,7 +125,12 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
-		workout->AddTimeAndPowerInterval(intervalReps, intervalSeconds, intervalPower, restSeconds, restPower);
+		for (uint16_t i = 0; i < numSets; ++i)
+		{
+			workout->AddTimeAndPowerInterval(intervalReps, intervalSeconds, intervalPower, restSeconds, restPower);
+			if (i < numSets - 1)
+				workout->AddTimeAndPowerInterval(1, 120, 0.4, 0, 0);
+		}
 		workout->AddCooldown(cooldownDuration);
 	}
 
@@ -235,7 +266,7 @@ std::vector<Workout*> BikePlanGenerator::GenerateWorkouts(std::map<std::string, 
 	else
 	{
 		// Is this the goal week? If so, add that event.
-		if ((goal != GOAL_FITNESS) && (weeksUntilGoal < (double)1.0) && PlanGenerator::ValidFloat(goalDistance, 0.1))
+		if (this->IsGoalWeek(goal, weeksUntilGoal, goalDistance))
 		{
 			workouts.push_back(GenerateGoalWorkout(goalDistance, goalDate));
 		}
