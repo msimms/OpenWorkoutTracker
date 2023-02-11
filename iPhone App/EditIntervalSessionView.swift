@@ -50,7 +50,7 @@ struct EditIntervalSessionView: View {
 					}
 			}
 			.padding(5)
-				
+
 			Group() {
 				Button(self.tempSession.sport) {
 					self.showingSportSelection = true

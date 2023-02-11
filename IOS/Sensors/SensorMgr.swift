@@ -75,7 +75,7 @@ class SensorMgr : ObservableObject {
 			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
 			shouldDiscoverServices = summary.enabled
 			self.peripherals.append(summary)
-			self.displayMessage(text: name + " connected")
+			self.displayMessage(text: name + (shouldDiscoverServices ? " connected" : " discovered"))
 		}
 		return shouldDiscoverServices
 	}
