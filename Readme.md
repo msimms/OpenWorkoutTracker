@@ -57,7 +57,7 @@ Open `OpenWorkoutTracker-Swift.xcodeproj` with XCode and build.
 2019-06-13 Version 1.0.0 - Initial Release
 
 ## Tech
-This app uses three other source projects to work properly:
+This app uses these source projects to work properly:
 
 * [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS (historical, used by the old, Objective C front end).
 * [LibBluetooth](https://github.com/msimms/LibBluetooth) - Cross-platform Bluetooth library.
@@ -66,9 +66,6 @@ This app uses three other source projects to work properly:
 * [sqlite](https://www.sqlite.org) - Database for storing activities.
 
 The app is written in a combination of Swift/SwiftUI (though previously used Objective-C) and C/C++ and targets the Apple iPhone and Apple Watch.
-
-## Social
-Twitter: [@OpenWorkoutApp](https://twitter.com/OpenWorkoutApp)
 
 ## License
 MPL 2.0 (Mozilla Public License) - There are no restrictions for non-commercial use (i.e. personal or academic). Commercial use of the code in this repository is prohibited by the MPL 2.0 license; however, I still posses the original, unlicensed version of the repository, for whatever that is worth.
