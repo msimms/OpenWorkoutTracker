@@ -27,6 +27,7 @@ protected:
 
 	bool IsGoalWeek(Goal goal, double weeksUntilGoal, double goalDistance);
 	bool IsInTaper(double weeksUntilGoal, Goal goal);
+	bool IsTimeForAnEasyWeek(double totalIntensityWeek1, double totalIntensityWeek2, double totalIntensityWeek3, double totalIntensityWeek4);
 };
 
 #endif

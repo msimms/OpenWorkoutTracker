@@ -262,6 +262,28 @@ Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double 
 	return workout;
 }
 
+/// @brief 4x4 minutes fast with 3 minutes easy jog
+Workout* RunPlanGenerator::GenerateNorwegianRun(double thresholdRunPace, double easyRunPace)
+{
+	// Warmup and cooldown duration.
+	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
+	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
+
+	// Create the workout object.
+	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);
+	if (workout)
+	{
+		workout->AddWarmup(warmupDuration);
+		workout->AddTimeInterval(4, 4 * 60, thresholdRunPace, 3 * 60, easyRunPace);
+		workout->AddCooldown(cooldownDuration);
+		
+		// Update the tally of easy, medium, and hard workouts so we can keep the weekly plan in check.
+		this->m_intensityDistributionWorkouts[INTENSITY_ZONE_INDEX_HIGH] += 1;
+	}
+	
+	return workout;
+}
+
 /// @brief Utility function for creating a speed/interval workout.
 Workout* RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance)
 {
@@ -499,6 +521,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	{
 		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		workouts.push_back(this->GenerateFreeRun(easyRunPace));
+		workouts.push_back(this->GenerateFreeRun(easyRunPace));
 		return workouts;
 	}
 
@@ -540,18 +563,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	bool inTaper = this->IsInTaper(weeksUntilGoal, goal);
 
 	// Is it time for an easy week?
-	bool easyWeek = false;
-	if (!inTaper)
-	{
-		if (PlanGenerator::ValidFloat(totalIntensityWeek1, 0.1) &&
-			PlanGenerator::ValidFloat(totalIntensityWeek2, 0.1) &&
-			PlanGenerator::ValidFloat(totalIntensityWeek3, 0.1) &&
-			PlanGenerator::ValidFloat(totalIntensityWeek4, 0.1))
-		{
-			if (totalIntensityWeek1 >= totalIntensityWeek2 && totalIntensityWeek2 >= totalIntensityWeek3 && totalIntensityWeek3 >= totalIntensityWeek4)
-				easyWeek = true;
-		}
-	}
+	bool easyWeek = this->IsTimeForAnEasyWeek(totalIntensityWeek1, totalIntensityWeek2, totalIntensityWeek3, totalIntensityWeek4);
 
 	// Compute the longest run needed to accomplish the goal.
 	// If the goal distance is a marathon then the longest run should be somewhere between 18 and 22 miles.
@@ -632,7 +644,6 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		// Add a long run. No need for a long run if the goal is general fitness.
 		if (!inTaper && goal != GOAL_FITNESS)
 		{
-			
 			Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
 			workouts.push_back(longRunWorkout);
 		}
@@ -646,8 +657,8 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		workouts.push_back(tempoRunWorkout);
 
 		// The user cares about speed as well as completing the distance. Also note that we should add strikes to one of the other workouts.
-		// We shouldn't schedule any structured speed workouts unless the user is running at least 30km/week.
-		if (goalType == GOAL_TYPE_SPEED && longestRunWeek1 >= 30000)
+		// We shouldn't schedule any structured speed workouts unless the user is running ~30km/week.
+		if (goalType == GOAL_TYPE_SPEED && avgRunDistance >= 30000)
 		{
 			// Decide which workout we're going to do.
 			std::default_random_engine generator;
@@ -655,29 +666,23 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 			uint64_t workoutProbability = distribution(generator);
 			Workout* workout = NULL;
 
-			// Add an interval/speed session.
-			if (workoutProbability < 50)
-			{
+			// Various types of interval/speed sessions.
+			if (workoutProbability < 10)
+				workout = this->GenerateNorwegianRun(shortIntervalRunPace, easyRunPace);
+			else if (workoutProbability < 50)
 				workout = this->GenerateIntervalSession(shortIntervalRunPace, speedRunPace, easyRunPace, goalDistance);
-			}
 
-			// Add a fartlek session.
-			else if (workoutProbability >= 50 && workoutProbability < 60)
-			{
+			// A fartlek session.
+			else if (workoutProbability < 60)
 				workout = this->GenerateFartlekRun();
-			}
 
-			// Add a hill workout session.
-			else if (workoutProbability >= 50 && workoutProbability < 60)
-			{
+			// A hill workout session.
+			else if (workoutProbability < 60)
 				workout = this->GenerateHillRepeats();
-			}
 
-			// Add a threshold session.
+			// A threshold session.
 			else
-			{
 				workout = this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, goalDistance);
-			}
 
 			workouts.push_back(workout);
 		}
