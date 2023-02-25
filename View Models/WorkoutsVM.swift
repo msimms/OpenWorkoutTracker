@@ -64,7 +64,7 @@ class WorkoutsVM : ObservableObject {
 	
 	/// Constructor
 	init() {
-		let _ = buildWorkoutsList()
+		let _ = self.buildWorkoutsList()
 	}
 	
 	func buildWorkoutsList() -> Bool {
@@ -72,7 +72,26 @@ class WorkoutsVM : ObservableObject {
 		
 		// Remove the old workout descriptions.
 		self.workouts = []
-		
+
+		// Add HealthKit activities as inputs to the workout generation algorithm.
+		let healthMgr = HealthManager.shared
+		healthMgr.readAllActivitiesFromHealthStore()
+		if healthMgr.workouts.count > 0 {
+			for i in 0...healthMgr.workouts.count - 1 {
+				let activityId = healthMgr.convertIndexToActivityId(index: i)
+				let activityType = healthMgr.getHistoricalActivityType(activityId: activityId)
+				
+				let currentWorkout = healthMgr.workouts[activityId]
+				if currentWorkout != nil {
+					let startTime: time_t = Int(currentWorkout!.startDate.timeIntervalSince1970)
+					let endTime: time_t = Int(currentWorkout!.endDate.timeIntervalSince1970)
+					let distanceAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, activityId:activityId)
+					
+					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr)
+				}
+			}
+		}
+
 		// Query the backend for the latest workouts.
 		if InitializeWorkoutList() {
 			
@@ -151,7 +170,7 @@ class WorkoutsVM : ObservableObject {
 							Preferences.workoutsCanIncludePoolSwims(),
 							Preferences.workoutsCanIncludeOpenWaterSwims(),
 							Preferences.workoutsCanIncludeBikeRides()) {
-			result = buildWorkoutsList()
+			result = self.buildWorkoutsList()
 		}
 		return result
 	}
