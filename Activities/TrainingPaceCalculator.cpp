@@ -24,6 +24,15 @@ double TrainingPaceCalculator::ConvertToSpeed(double vo2)
 // Give the athlete's VO2Max, returns the suggested long run, easy run, tempo run, and speed run paces.
 std::map<TrainingPaceType, double> TrainingPaceCalculator::CalcFromVO2Max(double vo2max)
 {
+	// Percentage of VO2 Max; from the USATF Coaches Education Program’s
+	// 800 meters 120-136%
+	// 1500 meters 110-112%
+	// 3000 meter 100-102%
+	// 5000 meters 97-100%
+	// 10000 meters 88-92%
+	// Half Marathon 85-88%%
+	// Marathon 82-85%
+
 	double longRunPace = vo2max * 0.6;
 	double easyPace = vo2max * 0.7;
 	double tempoPace = vo2max * 0.88;

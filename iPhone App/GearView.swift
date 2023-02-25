@@ -29,7 +29,6 @@ struct GearView: View {
 					Text("No Bicycles")
 				}
 			}
-			.padding(10)
 			VStack() {
 				let shoes = self.gearVM.listShoes()
 
@@ -47,7 +46,6 @@ struct GearView: View {
 					Text("No Shoes")
 				}
 			}
-			.padding(10)
 		}
 		.padding(10)
 		.toolbar {
