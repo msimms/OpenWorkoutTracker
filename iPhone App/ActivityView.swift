@@ -512,7 +512,7 @@ struct ActivityView: View {
 						}
 						
 						// Pace Plan selection button
-						if self.pacePlansVM.pacePlans.count > 0 {
+						if self.pacePlansVM.pacePlans.count > 0 && self.activityVM.isMovingActivity {
 							Button {
 								self.showingPacePlanSelection = true
 							} label: {
