@@ -52,7 +52,7 @@ void WorkoutPlanGenerator::Reset()
 	m_swimCount = 0;
 }
 
-void WorkoutPlanGenerator::InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
+void WorkoutPlanGenerator::InsertAdditionalAttributes(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
 {
 	std::string tempActivityId = activityId;
 	std::string tempActivityType = activityType;
@@ -64,6 +64,7 @@ void WorkoutPlanGenerator::InsertAdditionalAttributesForWorkoutGeneration(const 
 	activitySummary.type = tempActivityType;
 	activitySummary.summaryAttributes.insert(std::make_pair(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, distanceAttr));
 	activitySummary.pActivity = NULL;
+
 	m_additionalActivitySummaries.insert(std::make_pair(tempActivityId, activitySummary));
 }
 

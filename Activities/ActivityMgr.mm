@@ -3273,7 +3273,7 @@ extern "C" {
 
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
 	{
-		g_workoutGen.InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr);
+		g_workoutGen.InsertAdditionalAttributes(activityId, activityType, startTime, endTime, distanceAttr);
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.

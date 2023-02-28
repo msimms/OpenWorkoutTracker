@@ -30,7 +30,7 @@ public:
 	void SetUser(User user) { m_user = user; };
 
 	/// @brief For adding data that is not in this application's workout database, such as HealthKit, for example.
-	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
+	void InsertAdditionalAttributes(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 
 	/// @brief Looks through the user's activities and generates the inputs that will feed the workout generation algorithm.
 	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);

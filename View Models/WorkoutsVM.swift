@@ -80,13 +80,13 @@ class WorkoutsVM : ObservableObject {
 			for i in 0...healthMgr.workouts.count - 1 {
 				let activityId = healthMgr.convertIndexToActivityId(index: i)
 				let activityType = healthMgr.getHistoricalActivityType(activityId: activityId)
-				
 				let currentWorkout = healthMgr.workouts[activityId]
+
 				if currentWorkout != nil {
 					let startTime: time_t = Int(currentWorkout!.startDate.timeIntervalSince1970)
 					let endTime: time_t = Int(currentWorkout!.endDate.timeIntervalSince1970)
 					let distanceAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, activityId:activityId)
-					
+
 					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr)
 				}
 			}

@@ -30,9 +30,9 @@ struct WorkoutsView: View {
 			// What are you training for?
 			HStack {
 				Button("Goal") {
-					showingGoalSelection = true
+					self.showingGoalSelection = true
 				}
-				.confirmationDialog("What are you training for?", isPresented: $showingGoalSelection, titleVisibility: .visible) {
+				.confirmationDialog("What are you training for?", isPresented: self.$showingGoalSelection, titleVisibility: .visible) {
 					ForEach([STR_FITNESS, STR_5K_RUN, STR_10K_RUN, STR_15K_RUN, STR_HALF_MARATHON_RUN, STR_MARATHON_RUN, STR_50K_RUN, STR_50_MILE_RUN, STR_SPRINT_TRIATHLON, STR_OLYMPIC_TRIATHLON, STR_HALF_IRON_DISTANCE_TRIATHLON, STR_IRON_DISTANCE_TRIATHLON], id: \.self) { item in
 						Button(item) {
 							// Save
@@ -54,9 +54,9 @@ struct WorkoutsView: View {
 			// Are just trying to finish or do well?
 			HStack {
 				Button("Goal Type") {
-					showingGoalTypeSelection = true
+					self.showingGoalTypeSelection = true
 				}
-				.confirmationDialog("Are just trying to finish or do well?", isPresented: $showingGoalTypeSelection, titleVisibility: .visible) {
+				.confirmationDialog("Are just trying to finish or do well?", isPresented: self.$showingGoalTypeSelection, titleVisibility: .visible) {
 					ForEach([STR_COMPLETION, STR_SPEED], id: \.self) { item in
 						Button(item) {
 							// Save
@@ -119,10 +119,10 @@ struct WorkoutsView: View {
 			.padding(5)
 
 			// Other Preferences
-			Toggle("Cycling", isOn: $allowCyclingWorkouts)
-				.onChange(of: allowCyclingWorkouts) { value in
+			Toggle("Cycling", isOn: self.$allowCyclingWorkouts)
+				.onChange(of: self.allowCyclingWorkouts) { value in
 					// Save
-					Preferences.setWorkoutsCanIncludeBikeRides(value: allowCyclingWorkouts)
+					Preferences.setWorkoutsCanIncludeBikeRides(value: self.allowCyclingWorkouts)
 
 					// Regenerate
 					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
@@ -130,10 +130,10 @@ struct WorkoutsView: View {
 				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
-			Toggle("Pool Swims", isOn: $allowPoolSwimWorkouts)
-				.onChange(of: allowPoolSwimWorkouts) { value in
+			Toggle("Pool Swims", isOn: self.$allowPoolSwimWorkouts)
+				.onChange(of: self.allowPoolSwimWorkouts) { value in
 					// Save
-					Preferences.setWorkoutsCanIncludePoolSwims(value: allowPoolSwimWorkouts)
+					Preferences.setWorkoutsCanIncludePoolSwims(value: self.allowPoolSwimWorkouts)
 
 					// Regenerate
 					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
@@ -141,10 +141,10 @@ struct WorkoutsView: View {
 				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
-			Toggle("Open Water Swims", isOn: $allowOpenWaterSwims)
-				.onChange(of: allowOpenWaterSwims) { value in
+			Toggle("Open Water Swims", isOn: self.$allowOpenWaterSwims)
+				.onChange(of: self.allowOpenWaterSwims) { value in
 					// Save
-					Preferences.setWorkoutsCanIncludeOpenWaterSwims(value: allowOpenWaterSwims)
+					Preferences.setWorkoutsCanIncludeOpenWaterSwims(value: self.allowOpenWaterSwims)
 
 					// Regenerate
 					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
