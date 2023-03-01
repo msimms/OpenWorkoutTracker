@@ -27,6 +27,11 @@ func displayMessage(text: String) {
 	NotificationCenter.default.post(notification)
 }
 
+struct WeightDetails: Identifiable {
+	var weight: Double
+	let id = UUID()
+}
+
 struct ActivityView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
@@ -48,6 +53,8 @@ struct ActivityView: View {
 	@State private var showingActivityAttributeSelection8: Bool = false
 	@State private var showingActivityAttributeSelection9: Bool = false
 	@State private var showingStartError: Bool = false
+	@State private var showingExtraWeightAlert: Bool = false
+	@State private var additionalWeight: NumbersOnly = NumbersOnly(initialDoubleValue: 0.0)
 	var sensorMgr = SensorMgr.shared
 	var broadcastMgr = BroadcastManager.shared
 	var activityType: String = ""
@@ -497,7 +504,7 @@ struct ActivityView: View {
 							} label: {
 								Label("Intervals", systemImage: "stopwatch")
 							}
-							.confirmationDialog("Select the interval session to perform", isPresented: $showingIntervalSessionSelection, titleVisibility: .visible) {
+							.confirmationDialog("Select the interval session to perform", isPresented: self.$showingIntervalSessionSelection, titleVisibility: .visible) {
 								ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
 									Button {
 										SetCurrentIntervalSession(item.id.uuidString)
@@ -518,7 +525,7 @@ struct ActivityView: View {
 							} label: {
 								Label("Pace Plan", systemImage: "book.closed")
 							}
-							.confirmationDialog("Select the pace plan to use", isPresented: $showingPacePlanSelection, titleVisibility: .visible) {
+							.confirmationDialog("Select the pace plan to use", isPresented: self.$showingPacePlanSelection, titleVisibility: .visible) {
 								ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in
 									Button {
 										SetCurrentPacePlan(item.id.uuidString)
@@ -530,6 +537,44 @@ struct ActivityView: View {
 							.foregroundColor(colorScheme == .dark ? .white : .black)
 							.opacity(self.activityVM.isInProgress ? 0 : 1)
 							.help("Pace plan selection.")
+						}
+
+						// Additional weight button
+						if !self.activityVM.isMovingActivity {
+							Button {
+								self.showingExtraWeightAlert = true
+							} label: {
+								Label("Weight", systemImage: "scalemass")
+							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.opacity(self.activityVM.isInProgress ? 0 : 1)
+							.help("Additional Weight")
+							.alert("Weight.", isPresented: self.$showingExtraWeightAlert) {
+								VStack() {
+									TextField("Weight", text: self.$additionalWeight.value)
+										.keyboardType(.decimalPad)
+										.multilineTextAlignment(.trailing)
+										.fixedSize()
+										.onChange(of: self.additionalWeight.value) { value in
+										}
+
+									HStack() {
+										Button("OK") {
+											var value: ActivityAttributeType = ActivityAttributeType()
+											value.value.doubleVal = self.additionalWeight.asDouble()
+											value.valueType = TYPE_DOUBLE
+											value.measureType = MEASURE_WEIGHT
+											value.unitSystem = Preferences.preferredUnitSystem()
+											
+											SetLiveActivityAttribute(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT, value)
+										}
+										Button("Cancel") {
+										}
+									}
+								}
+							} message: {
+								Text("Enter additional weight used during this activity.")
+							}
 						}
 					}
 					else if self.activityVM.isMovingActivity {
@@ -593,7 +638,7 @@ struct ActivityView: View {
 						Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
 					}
 					.foregroundColor(colorScheme == .dark ? .white : .black)
-					.confirmationDialog("What would you like to do?", isPresented: $showingStopSelection, titleVisibility: .visible) {
+					.confirmationDialog("What would you like to do?", isPresented: self.$showingStopSelection, titleVisibility: .visible) {
 						NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
 							Text("Stop")
 						}
@@ -603,7 +648,7 @@ struct ActivityView: View {
 							Text("Pause")
 						}
 					}
-					.alert("There was an unspecified error while trying to start the activity.", isPresented: $showingStartError) { }
+					.alert("There was an unspecified error while trying to start the activity.", isPresented: self.$showingStartError) { }
 				}
 			}
 		}

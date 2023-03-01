@@ -447,6 +447,7 @@ void Activity::SetActivityAttribute(const std::string& attributeName, ActivityAt
 {
 	if (attributeName.compare(ACTIVITY_ATTRIBUTE_ADDITIONAL_WEIGHT) == 0)
 	{
+		UnitMgr::ConvertActivityAttributeToMetric(attributeValue);
 		SetAdditionalWeightUsedKg(attributeValue.value.doubleVal);
 	}
 }
