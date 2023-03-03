@@ -5,12 +5,17 @@
 
 import SwiftUI
 import MapKit
+import MessageUI
 
 extension Map {
 	func addOverlay(_ overlay: MKOverlay) -> some View {
 		MKMapView.appearance().addOverlay(overlay)
 		return self
 	}
+}
+
+enum ExportDest {
+	case email, icloud
 }
 
 struct HistoryDetailsView: View {
@@ -25,10 +30,45 @@ struct HistoryDetailsView: View {
 	@State private var showingUpdateNameError: Bool = false
 	@State private var showingUpdateDescriptionError: Bool = false
 	@State private var showingExportFailedError: Bool = false
+	@State private var showingExportSucceededError: Bool = false
+	@State private var exportDestination: ExportDest = ExportDest.icloud
 
 	private func loadDetails() {
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.activityVM.load()
+		}
+	}
+
+	class MailComposeViewController: UIViewController, MFMailComposeViewControllerDelegate {
+		
+		func displayEmailComposerSheet(subjectStr: String, bodyStr: String, fileName: String, mimeType: String) throws {
+			if MFMailComposeViewController.canSendMail() {
+				let mail = MFMailComposeViewController()
+				mail.setEditing(true, animated: true)
+				mail.setSubject(subjectStr)
+				mail.setMessageBody(bodyStr, isHTML: false)
+				mail.mailComposeDelegate = self
+				
+				if fileName.count > 0 {
+					let fileUrl = URL(string: fileName)
+					let data = try Data(contentsOf: fileUrl!)
+					
+					guard fileUrl != nil else {
+						throw ActivityExportException.runtimeError("Export failed!")
+					}
+					guard let justTheFileName = fileUrl?.lastPathComponent else {
+						throw ActivityExportException.runtimeError("Export failed!")
+					}
+					
+					mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
+				}
+				
+				UIApplication.shared.windows.last?.rootViewController?.present(mail, animated: true, completion: nil)
+			}
+		}
+
+		func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+			controller.dismiss(animated: true, completion: nil)
 		}
 	}
 
@@ -198,7 +238,7 @@ struct HistoryDetailsView: View {
 						} label: {
 							Label("Delete", systemImage: "trash")
 						}
-						.alert("Are you sure you want to delete this activity? This cannot be undone.", isPresented: $showingDeleteConfirmation) {
+						.alert("Are you sure you want to delete this activity? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {
 							Button("Delete") {
 								if self.activityVM.deleteActivity() {
 									self.dismiss()
@@ -209,14 +249,16 @@ struct HistoryDetailsView: View {
 						}
 						.foregroundColor(colorScheme == .dark ? .white : .black)
 						.help("Delete this activity")
-						
+
+						Spacer()
+
 						// Trim button
 						Button {
 							self.showingTrimSelection = true
 						} label: {
 							Label("Trim / Correct", systemImage: "pencil")
 						}
-						.confirmationDialog("Trim / Correct", isPresented: $showingTrimSelection, titleVisibility: .visible) {
+						.confirmationDialog("Trim / Correct", isPresented: self.$showingTrimSelection, titleVisibility: .visible) {
 							Button("Delete 1st Second") {
 								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 1) * 1000)
 								TrimActivityData(self.activityVM.activityId, newTime, true)
@@ -261,9 +303,7 @@ struct HistoryDetailsView: View {
 						}
 						.foregroundColor(colorScheme == .dark ? .white : .black)
 						.help("Trim/correct this activity")
-						
-						Spacer()
-						
+
 						// Tags button
 						NavigationLink(destination: TagsView(activityVM: self.activityVM)) {
 							ZStack {
@@ -279,33 +319,88 @@ struct HistoryDetailsView: View {
 						} label: {
 							Label("Export", systemImage: "square.and.arrow.up")
 						}
-						.confirmationDialog("Export", isPresented: $showingExportSelection, titleVisibility: .visible) {
+						.confirmationDialog("Export", isPresented: self.$showingExportSelection, titleVisibility: .visible) {
 							Button("Export via Email") {
+								self.exportDestination = ExportDest.email
 								self.showingFormatSelection = true
 							}
 							Button("Save to Your iCloud Drive") {
+								self.exportDestination = ExportDest.icloud
 								self.showingFormatSelection = true
 							}
 						}
-						.confirmationDialog("Export", isPresented: $showingFormatSelection, titleVisibility: .visible) {
+						.confirmationDialog("Export", isPresented: self.$showingFormatSelection, titleVisibility: .visible) {
 							if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
 								Button("GPX") {
-									do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX) } catch { self.showingExportFailedError = true }
+									do {
+										if self.exportDestination == ExportDest.icloud {
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX)
+											self.showingExportSucceededError = true
+										}
+										else {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
+											let mailController = MailComposeViewController()
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+										}
+									}
+									catch {
+										self.showingExportFailedError = true
+									}
 								}
 								Button("TCX") {
-									do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX) } catch { self.showingExportFailedError = true }
+									do {
+										if self.exportDestination == ExportDest.icloud {
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX)
+											self.showingExportSucceededError = true
+										}
+										else {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_TCX)
+											let mailController = MailComposeViewController()
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+										}
+									}
+									catch {
+										self.showingExportFailedError = true
+									}
 								}
 								Button("FIT") {
-									do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT) } catch { self.showingExportFailedError = true }
+									do {
+										if self.exportDestination == ExportDest.icloud {
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT)
+											self.showingExportSucceededError = true
+										}
+										else {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_FIT)
+											let mailController = MailComposeViewController()
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "application/octet-stream")
+										}
+									}
+									catch {
+										self.showingExportFailedError = true
+									}
 								}
 							}
 							Button("CSV") {
-								do { let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_CSV) } catch { self.showingExportFailedError = true }
+								do {
+									if self.exportDestination == ExportDest.icloud {
+										let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_CSV)
+										self.showingExportSucceededError = true
+									}
+									else {
+										let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_CSV)
+										let mailController = MailComposeViewController()
+										try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/csv")
+									}
+								}
+								catch {
+									self.showingExportFailedError = true
+								}
 							}
 						}
 						.foregroundColor(colorScheme == .dark ? .white : .black)
 						.help("Export this activity")
 						.alert("Export failed!", isPresented: self.$showingExportFailedError) { }
+						.alert("Export succeeded!", isPresented: self.$showingExportSucceededError) { }
 					}
 				}
 			}

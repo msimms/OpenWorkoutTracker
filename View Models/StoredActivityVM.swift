@@ -405,26 +405,21 @@ class StoredActivityVM : ObservableObject {
 
 	/// @brief Exports the activity to the specified directory, in the specified file format..
 	func exportActivityToFile(fileFormat: FileFormat, dirName: String) throws -> String {
-		var fileName = ""
+		var fileName: String = ""
 		
 		if self.source == ActivitySummary.Source.database {
 			let fileNamePtr = UnsafeRawPointer(ExportActivityFromDatabase(self.activityId, fileFormat, dirName))
-			
 			guard fileNamePtr != nil else {
 				throw ActivityExportException.runtimeError("Export failed!")
 			}
-			
+
 			fileName = String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
-			
-			do {
-				fileNamePtr!.deallocate()
-			}
+			fileNamePtr!.deallocate()
 		}
 		else if self.source == ActivitySummary.Source.healthkit {
 			let healthKit = HealthManager.shared
 			fileName = try healthKit.exportActivityToFile(activityId: self.activityId, fileFormat: fileFormat, dirName: dirName)
 		}
-		
 		return fileName
 	}
 	
@@ -439,14 +434,14 @@ class StoredActivityVM : ObservableObject {
 		
 		// Build the URL for the application's directory.
 		var exportDirUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)
-		if exportDirUrl == nil {
+		guard exportDirUrl != nil else {
 			throw ActivityExportException.runtimeError("iCloud storage is disabled.")
 		}
 		exportDirUrl = exportDirUrl?.appendingPathComponent("Documents")
 		try FileManager.default.createDirectory(at: exportDirUrl!, withIntermediateDirectories: true, attributes: nil)
 		
 		// Export the file.
-		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: exportDirUrl!.absoluteString)
+		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: exportDirUrl!.path(percentEncoded: false))
 	}
 	
 	/// @brief Updates the activity name in our database and also the server, if applicable.
