@@ -18,7 +18,7 @@ class CommonApp : ObservableObject {
 	private var broadcastMgr = BroadcastManager.shared
 	private var healthMgr = HealthManager.shared
 	private var apiClient = ApiClient.shared
-	private var watchSession = WatchSession()
+	var watchSession = WatchSession()
 
 	/// Singleton constructor
 	private init() {

@@ -20,5 +20,9 @@
 	<array>
 		<string>iCloud.com.mjs-software.OpenWorkoutTracker</string>
 	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.mjs-software.OpenWorkoutTracker</string>
+	</array>
 </dict>
 </plist>

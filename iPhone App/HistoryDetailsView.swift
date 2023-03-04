@@ -94,7 +94,7 @@ struct HistoryDetailsView: View {
 					HStack() {
 						TextField("Name", text: self.$activityVM.name)
 							.onChange(of: self.activityVM.name) { value in
-								showingUpdateNameError = !self.activityVM.updateActivityName()
+								self.showingUpdateNameError = !self.activityVM.updateActivityName()
 							}
 							.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
 							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
@@ -105,7 +105,7 @@ struct HistoryDetailsView: View {
 					HStack() {
 						TextField("Description", text: self.$activityVM.description, axis: .vertical)
 							.onChange(of: self.activityVM.description) { value in
-								showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
+								self.showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
 							}
 							.lineLimit(2...10)
 							.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }

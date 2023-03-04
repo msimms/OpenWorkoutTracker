@@ -85,13 +85,19 @@ struct ContentView: View {
 				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue", fixedSize: 24))
 				.padding(10)
+				.toolbar {
+					ToolbarItem(placement: .bottomBar) {
+						Image(systemName: "applewatch")
+							.opacity(CommonApp.shared.watchSession.isConnected ? 1 : 0)
+					}
+				}
 			}
 			.opacity(0.5)
 			.background(
 				Image("Background")
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
-					.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+					.aspectRatio(contentMode: .fill)
 			)
 		}
     }
