@@ -25,7 +25,7 @@ struct ContentView: View {
 				Button("Start a Workout") {
 					self.showingActivitySelection = true
 				}
-				.confirmationDialog("Select the workout to perform", isPresented: $showingActivitySelection, titleVisibility: .visible) {
+				.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivitySelection, titleVisibility: .visible) {
 					ForEach(CommonApp.activityTypes, id: \.self) { item in
 						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
 					}
@@ -38,7 +38,7 @@ struct ContentView: View {
 				Button("View") {
 					self.showingViewSelection = true
 				}
-				.confirmationDialog("What would you like to view?", isPresented: $showingViewSelection, titleVisibility: .visible) {
+				.confirmationDialog("What would you like to view?", isPresented: self.$showingViewSelection, titleVisibility: .visible) {
 					NavigationLink("History", destination: HistoryView())
 					NavigationLink("Statistics", destination: StatisticsView())
 					NavigationLink("Workouts", destination: WorkoutsView())
@@ -54,7 +54,7 @@ struct ContentView: View {
 				Button("Edit") {
 					self.showingEditSelection = true
 				}
-				.confirmationDialog("What would you like to edit?", isPresented: $showingEditSelection, titleVisibility: .visible) {
+				.confirmationDialog("What would you like to edit?", isPresented: self.$showingEditSelection, titleVisibility: .visible) {
 					NavigationLink("Profile", destination: ProfileView())
 					NavigationLink("Settings", destination: SettingsView())
 					NavigationLink("Sensors", destination: SensorsView())
@@ -75,7 +75,7 @@ struct ContentView: View {
 				Button("Reset") {
 					self.showingResetConfirmation = true
 				}
-				.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented:$showingResetConfirmation) {
+				.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented: self.$showingResetConfirmation) {
 					Button("Delete") {
 						ResetDatabase()
 					}

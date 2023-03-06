@@ -34,7 +34,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 	var watchSession: WCSession = WCSession.default
 	var timeOfLastMessage: time_t = 0  // Timestamp of the last time we got a message, use this to keep us from spamming
 	@Published var isConnected: Bool = false
-	@Published var isSynchronizing: Bool = false
 
 	func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
 		let msgType = message[WATCH_MSG_TYPE] as? String
@@ -90,8 +89,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 	}
 
 	func session(_ session: WCSession, didReceive file: WCSessionFile) {
-		self.isSynchronizing = true
-
 		do {
 			if let msgMetadata = file.metadata as? Dictionary<String, AnyObject> {
 				let activityId = msgMetadata[WATCH_MSG_PARAM_ACTIVITY_ID] as? String
@@ -119,8 +116,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 		catch {
 			NSLog("Exception when processing a file from the watch.")
 		}
-
-		self.isSynchronizing = false
 	}
 
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
@@ -248,8 +243,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 	func checkIfActivitiesAreUploadedToPhone() throws {
 		var numHistoricalActivities = GetNumHistoricalActivities()
 		var numRequestedSyncs = 0
-		
-		self.isSynchronizing = true
 
 		// Only reload the historical activities list if we really have to as it's rather
 		// computationally expensive for something running on a watch.
@@ -279,8 +272,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 				}
 			}
 		}
-
-		self.isSynchronizing = false
 	}
 
 	/// @brief Returns the "best" file format for exporting an activity of the specified type.
