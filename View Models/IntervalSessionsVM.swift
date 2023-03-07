@@ -100,6 +100,9 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
 				modifiers.append(MODIFIER_ADD_REPS)
 			}
+			else {
+				modifiers.append(MODIFIER_EDIT_REPS)
+			}
 			break;
 		case INTERVAL_UNIT_REPS:
 			modifiers.append(MODIFIER_EDIT_REPS)
@@ -272,7 +275,7 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 		case INTERVAL_UNIT_SETS:
 			return "sets"
 		case INTERVAL_UNIT_REPS:
-			return "repititions"
+			return "repetitions"
 		case INTERVAL_UNIT_SECONDS:
 			return "seconds"
 		case INTERVAL_UNIT_METERS:

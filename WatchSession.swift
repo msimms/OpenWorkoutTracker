@@ -112,6 +112,9 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 
 				try FileManager.default.removeItem(at: file.fileURL)
 			}
+			else {
+				NSLog("Invalid metadata when processing a file from the watch.")
+			}
 		}
 		catch {
 			NSLog("Exception when processing a file from the watch.")

@@ -576,6 +576,8 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 	{
 		SegmentType segment = GradeAdjustedPace();
 		result.value.timeVal = (time_t)segment.value.doubleVal;
+		if (result.value.timeVal < 0)
+			result.value.timeVal = 0;
 		result.valueType = TYPE_TIME;
 		result.measureType = MEASURE_PACE;
 		result.startTime = segment.startTime;

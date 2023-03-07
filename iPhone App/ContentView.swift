@@ -19,7 +19,7 @@ struct ContentView: View {
 				
 				// Filthy hack to move the Start button down a bit.
 				Text(" ")
-					.padding(10)
+					.padding(25)
 				
 				// Workout start button
 				Button("Start a Workout") {
