@@ -10,6 +10,7 @@ struct EditShoesView: View {
 	@State var name: String = ""
 	@State var description: String = ""
 	@State var showingSaveError: Bool = false
+	@State var showingDeleteError: Bool = false
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -28,9 +29,33 @@ struct EditShoesView: View {
 
 			Spacer()
 
-			Button("Save") {
-				let item = GearSummary(id: self.id, name: self.name, description: self.description)
-				showingSaveError = !GearVM.createShoes(item: item)
+			Group() {
+				Button(action: {
+					let item = GearSummary(id: self.id, name: self.name, description: self.description)
+					self.showingSaveError = !GearVM.createShoes(item: item)
+				}) {
+					Text("Save")
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.foregroundColor(.white)
+						.padding()
+				}
+				.alert("Failed to save.", isPresented: self.$showingSaveError) {}
+				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+				.opacity(0.8)
+				.bold()
+
+				Button(action: {
+					self.showingDeleteError = !GearVM.deleteShoes(id: self.id)
+				}) {
+					Text("Delete")
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.foregroundColor(.white)
+						.padding()
+				}
+				.alert("Failed to delete.", isPresented: self.$showingDeleteError) {}
+				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+				.opacity(0.8)
+				.bold()
 			}
 		}
 		.padding(10)

@@ -63,7 +63,7 @@ class GearVM : ObservableObject {
 			var timeAdded: time_t = 0
 			var timeRetired: time_t = 0
 			var lastUpdatedTime: time_t = 0
-
+			
 			if GetBikeProfileByIndex(bikeIndex, &bikeId, &namePtr, &descriptionPtr, &bikeWeight, &wheelCircumference, &timeAdded, &timeRetired, &lastUpdatedTime) {
 				let summary: GearSummary = GearSummary()
 				
@@ -75,7 +75,7 @@ class GearVM : ObservableObject {
 				summary.timeAdded = Date(timeIntervalSince1970: TimeInterval(timeAdded))
 				summary.timeRetired = Date(timeIntervalSince1970: TimeInterval(timeRetired))
 				summary.lastUpdatedTime = Date(timeIntervalSince1970: TimeInterval(lastUpdatedTime))
-
+				
 				bikes.append(summary)
 				bikeIndex += 1
 			}
@@ -109,7 +109,7 @@ class GearVM : ObservableObject {
 				summary.timeAdded = Date(timeIntervalSince1970: TimeInterval(timeAdded))
 				summary.timeRetired = Date(timeIntervalSince1970: TimeInterval(timeRetired))
 				summary.lastUpdatedTime = Date(timeIntervalSince1970: TimeInterval(lastUpdatedTime))
-
+				
 				shoes.append(summary)
 				shoeIndex += 1
 			}
@@ -134,10 +134,10 @@ class GearVM : ObservableObject {
 		}
 		return UpdateShoeProfile(item.id, item.name, item.description, time_t(item.timeAdded.timeIntervalSince1970), time_t(item.timeRetired.timeIntervalSince1970), time_t(item.lastUpdatedTime.timeIntervalSince1970))
 	}
-
+	
 	func updateGearFromDict(dict: Dictionary<String, AnyObject>) {
 		let summary: GearSummary = GearSummary()
-
+		
 		if let name = dict[PARAM_GEAR_NAME] as? String {
 			summary.name = name
 		}
@@ -153,7 +153,7 @@ class GearVM : ObservableObject {
 		if let lastUpdatedTime = dict[PARAM_GEAR_LAST_UPDATED_TIME] as? UInt {
 			summary.lastUpdatedTime = Date(timeIntervalSince1970: TimeInterval(lastUpdatedTime))
 		}
-
+		
 		if let type = dict[PARAM_GEAR_TYPE] as? String {
 			if type == "bike" {
 				summary.id = GetBikeIdFromName(summary.name)
@@ -164,5 +164,13 @@ class GearVM : ObservableObject {
 				let _ = GearVM.createShoes(item: summary)
 			}
 		}
+	}
+
+	static func deleteBike(id: UInt64) -> Bool {
+		return DeleteBikeProfile(id)
+	}
+	
+	static func deleteShoes(id: UInt64) -> Bool {
+		return DeleteShoeProfile(id)
 	}
 }

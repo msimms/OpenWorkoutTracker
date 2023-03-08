@@ -218,7 +218,6 @@ struct EditIntervalSessionView: View {
 						.foregroundColor(.red)
 						.padding()
 				}
-				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {
 					Button("Delete") {
 						if self.intervalSessionsVM.deleteIntervalSession(intervalSessionId: self.tempSession.id) {
@@ -232,6 +231,7 @@ struct EditIntervalSessionView: View {
 					}
 				}
 				.alert("Failed to delete the interval session.", isPresented: self.$showingDeleteFailedAlert) {}
+				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
 			}
