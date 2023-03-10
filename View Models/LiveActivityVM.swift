@@ -229,9 +229,12 @@ class LiveActivityVM : ObservableObject {
 					self.currentMessage = "The interval session is complete."
 				}
 				else {
-					let segment: IntervalSessionSegment = IntervalSessionSegment()
-					let segmentVm: IntervalSegment = IntervalSegment()
-					self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
+					var segment: IntervalSessionSegment = IntervalSessionSegment()
+
+					if GetCurrentIntervalSessionSegment(&segment) {
+						let segmentVm: IntervalSegment = IntervalSegment()
+						self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
+					}
 				}
 			}
 			

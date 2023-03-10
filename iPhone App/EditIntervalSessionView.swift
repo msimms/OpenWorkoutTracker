@@ -169,8 +169,7 @@ struct EditIntervalSessionView: View {
 					}
 					Button("Sets") {
 						let newSegment = IntervalSegment()
-						newSegment.firstValue = 3
-						newSegment.firstUnits = INTERVAL_UNIT_SETS
+						newSegment.sets = 1
 						self.tempSession.segments.append(newSegment)
 					}
 				}

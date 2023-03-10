@@ -43,6 +43,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 
 				IntervalSessionSegment dbSegment;
 				dbSegment.segmentId = segmentId;
+				dbSegment.sets = 1;
 				dbSegment.firstValue = 0.1;
 				dbSegment.secondValue = 0.0;
 				dbSegment.firstUnits = INTERVAL_UNIT_SECONDS;
@@ -60,7 +61,7 @@ bool WorkoutImporter::ImportZwoFile(const std::string& fileName, const std::stri
 				const FileLib::ZwoInterval* intervalSegment = dynamic_cast<const FileLib::ZwoInterval*>(fileSegment);
 				if (intervalSegment)
 				{
-					dbSegment.repeat = intervalSegment->repeat;
+					dbSegment.reps = intervalSegment->repeat;
 					if (warmupSegment->powerHigh > 0.1)
 						dbSegment.secondValue = warmupSegment->powerHigh;
 					else

@@ -502,7 +502,7 @@ struct ActivityView: View {
 							Button {
 								self.showingIntervalSessionSelection = true
 							} label: {
-								Label("Intervals", systemImage: "stopwatch")
+								Label("Intervals", systemImage: "i.circle")
 							}
 							.confirmationDialog("Select the interval session to perform", isPresented: self.$showingIntervalSessionSelection, titleVisibility: .visible) {
 								ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
@@ -523,7 +523,7 @@ struct ActivityView: View {
 							Button {
 								self.showingPacePlanSelection = true
 							} label: {
-								Label("Pace Plan", systemImage: "book.closed")
+								Label("Pace Plan", systemImage: "p.circle")
 							}
 							.confirmationDialog("Select the pace plan to use", isPresented: self.$showingPacePlanSelection, titleVisibility: .visible) {
 								ForEach(self.pacePlansVM.pacePlans, id: \.self) { item in

@@ -32,7 +32,8 @@ struct PacePlansView: View {
 				.listStyle(.plain)
 			}
 			else {
-				Text("No Pace Plans")
+				Text("No Pace Plans\n(Click the + sign to create one)")
+					.multilineTextAlignment(.center)
 			}
 		}
 		.padding(10)

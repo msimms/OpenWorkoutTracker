@@ -49,7 +49,7 @@ struct EditShoesView: View {
 				}) {
 					Text("Delete")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
+						.foregroundColor(.red)
 						.padding()
 				}
 				.alert("Failed to delete.", isPresented: self.$showingDeleteError) {}

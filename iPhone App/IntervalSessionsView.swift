@@ -32,7 +32,8 @@ struct IntervalSessionsView: View {
 				.listStyle(.plain)
 			}
 			else {
-				Text("No Interval Sessions")
+				Text("No Interval Sessions\n(Click the + sign to create one)")
+					.multilineTextAlignment(.center)
 			}
 		}
 		.padding(10)

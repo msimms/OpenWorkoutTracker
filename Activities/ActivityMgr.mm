@@ -1607,7 +1607,8 @@ extern "C" {
 						segmentsStr.append(",");
 					}
 
-					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_REPEAT, FormatInt(segment.repeat)));
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_NUM_SETS, FormatInt(segment.sets)));
+					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_NUM_REPS, FormatInt(segment.reps)));
 					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_FIRST_VALUE, FormatDouble(segment.firstValue)));
 					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_FIRST_UNITS, FormatInt(segment.firstUnits)));
 					segmentParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_SECOND_VALUE, FormatDouble(segment.secondValue)));
@@ -3372,7 +3373,7 @@ extern "C" {
 				const WorkoutInterval& interval = (*interIter);
 				std::map<std::string, std::string> tempParams;
 
-				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_REPEAT, FormatInt((uint64_t)interval.m_repeat)));
+				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_NUM_REPS, FormatInt((uint64_t)interval.m_repeat)));
 				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_DURATION, FormatDouble(interval.m_duration)));
 				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_DISTANCE, FormatDouble(interval.m_distance)));
 				tempParams.insert(std::make_pair(PARAM_INTERVAL_SEGMENT_PACE, FormatDouble(interval.m_pace)));

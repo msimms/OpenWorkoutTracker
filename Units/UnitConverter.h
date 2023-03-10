@@ -27,6 +27,7 @@ public:
 	static double MetersToFurlongs(double m);
 	static double MetersToFeet(double m);
 	static double FeetToMeters(double ft);
+	static double YardsToMeters(double y);
 
 	static double CentimetersToInches(double cm);
 	static double InchesToCentimeters(double inches);

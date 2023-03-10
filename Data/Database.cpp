@@ -87,11 +87,6 @@ bool Database::CreateTables()
 		sql = "create table shoe (id integer primary key, name text, description text, time_added unsigned big int, time_retired unsigned big int, last_updated_time big int)";
 		queries.push_back(sql);
 	}
-	else if (!DoesTableHaveColumn("shoe", "last_updated_time"))
-	{
-		sql = "alter table shoe add column last_updated_time big int";
-		queries.push_back(sql);
-	}
 	if (!DoesTableExist("interval_session"))
 	{
 		sql = "create table interval_session (id integer primary key, session_id text, name text, sport text, description text, last_updated_time big int)";
@@ -99,7 +94,7 @@ bool Database::CreateTables()
 	}
 	if (!DoesTableExist("interval_session_segment"))
 	{
-		sql = "create table interval_session_segment (id integer primary key, session_id text, repeat integer, first_value double, second_value double, first_units int, second_units int, position int)";
+		sql = "create table interval_session_segment (id integer primary key, session_id text, sets integer, reps integer, first_value double, second_value double, first_units int, second_units int, position int)";
 		queries.push_back(sql);
 	}
 	if (!DoesTableExist("workout"))
@@ -648,16 +643,17 @@ bool Database::CreateIntervalSegment(const std::string& sessionId, const Interva
 {
 	sqlite3_stmt* statement = NULL;
 
-	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?,?)", -1, &statement, 0);
+	int result = sqlite3_prepare_v2(m_pDb, "insert into interval_session_segment values (NULL,?,?,?,?,?,?,?,?)", -1, &statement, 0);
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(statement, 2, segment.repeat);
-		sqlite3_bind_double(statement, 3, segment.firstValue);
-		sqlite3_bind_double(statement, 4, segment.secondValue);
-		sqlite3_bind_int64(statement, 5, segment.firstUnits);
-		sqlite3_bind_int64(statement, 6, segment.secondUnits);
-		sqlite3_bind_int(statement, 7, segment.position);
+		sqlite3_bind_int(statement, 2, segment.sets);
+		sqlite3_bind_int(statement, 3, segment.reps);
+		sqlite3_bind_double(statement, 4, segment.firstValue);
+		sqlite3_bind_double(statement, 5, segment.secondValue);
+		sqlite3_bind_int64(statement, 6, segment.firstUnits);
+		sqlite3_bind_int64(statement, 7, segment.secondUnits);
+		sqlite3_bind_int(statement, 8, segment.position);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -669,7 +665,7 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 	bool result = false;
 	sqlite3_stmt* statement = NULL;
 
-	if (sqlite3_prepare_v2(m_pDb, "select id, repeat, first_value, second_value, first_units, second_units, position from interval_session_segment where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
+	if (sqlite3_prepare_v2(m_pDb, "select id, sets, reps, first_value, second_value, first_units, second_units, position from interval_session_segment where session_id = ? order by id", -1, &statement, 0) == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, sessionId.c_str(), -1, SQLITE_TRANSIENT);
 		
@@ -678,12 +674,13 @@ bool Database::RetrieveIntervalSegments(const std::string& sessionId, std::vecto
 			IntervalSessionSegment segment;
 			
 			segment.segmentId = sqlite3_column_int64(statement, 0);
-			segment.repeat = (uint8_t)sqlite3_column_int(statement, 1);
-			segment.firstValue = (double)sqlite3_column_double(statement, 2);
-			segment.secondValue = (double)sqlite3_column_double(statement, 3);
-			segment.firstUnits = (IntervalUnit)sqlite3_column_int64(statement, 4);
-			segment.secondUnits = (IntervalUnit)sqlite3_column_int64(statement, 5);
-			segment.position = (uint8_t)sqlite3_column_int(statement, 6);
+			segment.sets = (uint8_t)sqlite3_column_int(statement, 1);
+			segment.reps = (uint8_t)sqlite3_column_int(statement, 2);
+			segment.firstValue = (double)sqlite3_column_double(statement, 3);
+			segment.secondValue = (double)sqlite3_column_double(statement, 4);
+			segment.firstUnits = (IntervalUnit)sqlite3_column_int64(statement, 5);
+			segment.secondUnits = (IntervalUnit)sqlite3_column_int64(statement, 6);
+			segment.position = (uint8_t)sqlite3_column_int(statement, 7);
 			segments.push_back(segment);
 		}
 		

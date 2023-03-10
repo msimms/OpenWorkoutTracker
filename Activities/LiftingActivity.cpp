@@ -214,7 +214,8 @@ void LiftingActivity::BuildSummaryAttributeList(std::vector<std::string>& attrib
 
 bool LiftingActivity::CheckSetsInterval()
 {
-	if ((m_intervalSession.sessionId.size() > 0) ||
+	// If a session is not specified or is already complete then just return.
+	if ((m_intervalSession.sessionId.size() == 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size()))
 	{
 		return false;
@@ -233,7 +234,8 @@ bool LiftingActivity::CheckSetsInterval()
 
 bool LiftingActivity::CheckRepsInterval()
 {
-	if ((m_intervalSession.sessionId.size() > 0) ||
+	// If a session is not specified or is already complete then just return.
+	if ((m_intervalSession.sessionId.size() == 0) ||
 		(m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size()))
 	{
 		return false;

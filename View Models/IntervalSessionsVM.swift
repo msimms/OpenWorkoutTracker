@@ -50,11 +50,12 @@ let MODIFIER_EDIT_POWER = "Edit Power (watts)"
 // Mirrors the backend structure IntervalSessionSegment
 class IntervalSegment : Identifiable, Hashable, Equatable {
 	var id: UUID = UUID()
-	var numRepeats: UInt32 = 0
+	var sets: UInt8 = 1
+	var reps: UInt8 = 1
 	var firstValue: Double = 0.0
 	var secondValue: Double = 0.0
-	var firstUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET  // Units for the first part of the description (ex: X secs at Y pace or X sets of Y reps)
-	var secondUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET // Units for the first second of the description (ex: X secs at Y pace or X sets of Y reps)
+	var firstUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET  // Units for the first part of the description (ex: X secs at Y pace)
+	var secondUnits: IntervalUnit = INTERVAL_UNIT_NOT_SET // Units for the first second of the description (ex: X secs at Y pace)
 
 	/// Constructor
 	init() {
@@ -74,6 +75,8 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	
 	func toBackendStruct() -> IntervalSessionSegment {
 		var result: IntervalSessionSegment = IntervalSessionSegment()
+		result.sets = self.sets
+		result.reps = self.reps
 		result.firstValue = self.firstValue
 		result.secondValue = self.secondValue
 		result.firstUnits = self.firstUnits
@@ -85,6 +88,9 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	func validModifiers(activityType: String) -> Array<String> {
 		var modifiers: Array<String> = []
 
+		modifiers.append(MODIFIER_EDIT_SETS)
+		modifiers.append(MODIFIER_EDIT_REPS)
+
 		switch self.firstUnits {
 		case INTERVAL_UNIT_NOT_SET:
 			modifiers.append(MODIFIER_ADD_DURATION)
@@ -93,19 +99,10 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 			modifiers.append(MODIFIER_ADD_DISTANCE_FEET)
 			modifiers.append(MODIFIER_ADD_DISTANCE_YARDS)
 			modifiers.append(MODIFIER_ADD_DISTANCE_MILES)
-			modifiers.append(MODIFIER_ADD_SETS)
 			break
 		case INTERVAL_UNIT_SETS:
-			modifiers.append(MODIFIER_EDIT_SETS)
-			if self.secondUnits == INTERVAL_UNIT_NOT_SET {
-				modifiers.append(MODIFIER_ADD_REPS)
-			}
-			else {
-				modifiers.append(MODIFIER_EDIT_REPS)
-			}
 			break;
 		case INTERVAL_UNIT_REPS:
-			modifiers.append(MODIFIER_EDIT_REPS)
 			break
 		case INTERVAL_UNIT_SECONDS:
 			modifiers.append(MODIFIER_EDIT_DURATION)
@@ -190,34 +187,58 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	
 	func applyModifier(key: String, value: Double) {
 
-		if key.contains(MODIFIER_ADD_SETS) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_SETS
+		if key.contains(MODIFIER_ADD_SETS) || key.contains(MODIFIER_EDIT_SETS) {
+			self.sets = UInt8(value)
 		}
-		else if key.contains(MODIFIER_EDIT_SETS) {
-			if self.firstUnits == INTERVAL_UNIT_SETS {
-				self.firstValue = value
-			}
-			else {
-				self.secondValue = value
-			}
+		if key.contains(MODIFIER_ADD_REPS) || key.contains(MODIFIER_EDIT_REPS) {
+			self.reps = UInt8(value)
 		}
-		else if key.contains(MODIFIER_ADD_REPS) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_REPS
-		}
-		else if key.contains(MODIFIER_EDIT_REPS) {
-			if self.firstUnits == INTERVAL_UNIT_REPS {
-				self.firstValue = value
-			}
-			else {
-				self.secondValue = value
-			}
-		}
+
 		else if key.contains(MODIFIER_ADD_DURATION) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_SECONDS
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_SECONDS
 		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_METERS) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_METERS
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_KILOMETERS) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_KILOMETERS
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_FEET) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_FEET
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_YARDS) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_YARDS
+		}
+		else if key.contains(MODIFIER_ADD_DISTANCE_MILES) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_MILES
+		}
+		else if key.contains(MODIFIER_ADD_PACE_US_CUSTOMARY) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_PACE_US_CUSTOMARY
+		}
+		else if key.contains(MODIFIER_ADD_PACE_METRIC) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_PACE_METRIC
+		}
+		else if key.contains(MODIFIER_ADD_SPEED_US_CUSTOMARY) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_SPEED_US_CUSTOMARY
+		}
+		else if key.contains(MODIFIER_ADD_SPEED_METRIC) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_PACE_METRIC
+		}
+		else if key.contains(MODIFIER_ADD_POWER) {
+			self.firstValue = value
+			self.firstUnits = INTERVAL_UNIT_WATTS
+		}
+
 		else if key.contains(MODIFIER_EDIT_DURATION) {
 			if self.firstUnits == INTERVAL_UNIT_SECONDS {
 				self.firstValue = value
@@ -226,45 +247,45 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 				self.secondValue = value
 			}
 		}
-		else if key.contains(MODIFIER_ADD_DISTANCE_METERS) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_METERS
+		else if key.contains(MODIFIER_EDIT_DISTANCE_METERS) {
+			if self.firstUnits == INTERVAL_UNIT_METERS {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
-		else if key.contains(MODIFIER_ADD_DISTANCE_KILOMETERS) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_KILOMETERS
+		else if key.contains(MODIFIER_EDIT_DISTANCE_KILOMETERS) {
+			if self.firstUnits == INTERVAL_UNIT_KILOMETERS {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
-		else if key.contains(MODIFIER_ADD_DISTANCE_FEET) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_FEET
+		else if key.contains(MODIFIER_EDIT_DISTANCE_FEET) {
+			if self.firstUnits == INTERVAL_UNIT_FEET {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
-		else if key.contains(MODIFIER_ADD_DISTANCE_YARDS) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_YARDS
+		else if key.contains(MODIFIER_EDIT_DISTANCE_YARDS) {
+			if self.firstUnits == INTERVAL_UNIT_YARDS {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
-		else if key.contains(MODIFIER_ADD_DISTANCE_MILES) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_MILES
-		}
-		else if key.contains(MODIFIER_ADD_PACE_US_CUSTOMARY) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_PACE_US_CUSTOMARY
-		}
-		else if key.contains(MODIFIER_ADD_PACE_METRIC) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_PACE_METRIC
-		}
-		else if key.contains(MODIFIER_ADD_SPEED_US_CUSTOMARY) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_SPEED_US_CUSTOMARY
-		}
-		else if key.contains(MODIFIER_ADD_SPEED_METRIC) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_PACE_METRIC
-		}
-		else if key.contains(MODIFIER_ADD_POWER) {
-			self.secondValue = value
-			self.secondUnits = INTERVAL_UNIT_WATTS
+		else if key.contains(MODIFIER_EDIT_DISTANCE_MILES) {
+			if self.firstUnits == INTERVAL_UNIT_MILES {
+				self.firstValue = value
+			}
+			else {
+				self.secondValue = value
+			}
 		}
 	}
 
@@ -311,8 +332,17 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	func formatDescription(value1: Double, units1: IntervalUnit, value2: Double, units2: IntervalUnit) -> String {
 		var description: String = ""
 		
+		if self.sets == 1 && self.reps == 1 {
+			description = String(self.sets) + " set of "
+		}
+		if self.sets > 1 {
+			description = String(self.sets) + " sets of "
+		}
+		if self.reps > 1 {
+			description += String(self.reps) + " reps of "
+		}
 		if units1 != INTERVAL_UNIT_NOT_SET {
-			description = self.formatDescriptionFragment(value: value1, units: units1)
+			description += self.formatDescriptionFragment(value: value1, units: units1)
 			
 			if units2 != INTERVAL_UNIT_NOT_SET {
 				if  units2 == INTERVAL_UNIT_PACE_US_CUSTOMARY ||
@@ -437,14 +467,16 @@ class IntervalSessionsVM : ObservableObject {
 					}
 					if let sessionSegments = summaryDict[PARAM_INTERVAL_SEGMENTS] as? Array<Dictionary<String, Any>> {
 						for sessionSegment in sessionSegments {
-							if let numRepeats = sessionSegment[PARAM_INTERVAL_SEGMENT_REPEAT] as? UInt32,
+							if let sets = sessionSegment[PARAM_INTERVAL_SEGMENT_NUM_SETS] as? UInt8,
+							   let reps = sessionSegment[PARAM_INTERVAL_SEGMENT_NUM_REPS] as? UInt8,
 							   let firstValue = sessionSegment[PARAM_INTERVAL_SEGMENT_FIRST_VALUE] as? Double,
 							   let firstUnits = sessionSegment[PARAM_INTERVAL_SEGMENT_FIRST_UNITS] as? UInt32,
 							   let secondValue = sessionSegment[PARAM_INTERVAL_SEGMENT_SECOND_VALUE] as? Double,
 							   let secondUnits = sessionSegment[PARAM_INTERVAL_SEGMENT_SECOND_UNITS] as? UInt32 {
 
 								let segmentObj = IntervalSegment()
-								segmentObj.numRepeats = numRepeats
+								segmentObj.sets = sets
+								segmentObj.reps = reps
 								segmentObj.firstValue = firstValue
 								segmentObj.firstUnits = IntervalUnit(firstUnits)
 								segmentObj.secondValue = secondValue
@@ -479,21 +511,22 @@ class IntervalSessionsVM : ObservableObject {
 	func createIntervalSession(session: IntervalSession) -> Bool {
 		if CreateNewIntervalSession(session.id.uuidString, session.name, session.sport, session.description) {
 			
-			InitializeIntervalSessionList()
-
-			var position: UInt8 = 0
-
-			for segment in session.segments {
-				var tempSegment = segment.toBackendStruct()
-
-				tempSegment.position = position
-				position += 1
+			if InitializeIntervalSessionList() {
 				
-				if !CreateNewIntervalSessionSegment(session.id.uuidString, tempSegment) {
-					return false
+				var position: UInt8 = 0
+				
+				for segment in session.segments {
+					var tempSegment = segment.toBackendStruct()
+					
+					tempSegment.position = position
+					position += 1
+					
+					if !CreateNewIntervalSessionSegment(session.id.uuidString, tempSegment) {
+						return false
+					}
 				}
+				return buildIntervalSessionList()
 			}
-			return buildIntervalSessionList()
 		}
 		return false
 	}
@@ -523,6 +556,7 @@ class IntervalSessionsVM : ObservableObject {
 	
 	func moveSegmentUp(session: IntervalSession, segmentId: UUID) -> Bool {
 		var position = 0
+
 		for segment in session.segments {
 			if segment.id == segmentId {
 				if position > 0 {
@@ -541,6 +575,7 @@ class IntervalSessionsVM : ObservableObject {
 	
 	func moveSegmentDown(session: IntervalSession, segmentId: UUID) -> Bool  {
 		var position = 0
+
 		for segment in session.segments {
 			if segment.id == segmentId {
 				if position < session.segments.count {
@@ -559,6 +594,7 @@ class IntervalSessionsVM : ObservableObject {
 	
 	func deleteSegment(session: IntervalSession, segmentId: UUID) -> Bool  {
 		var position = 0
+
 		for segment in session.segments {
 			if segment.id == segmentId {
 				session.segments.remove(at: position)

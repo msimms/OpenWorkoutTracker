@@ -53,6 +53,11 @@ double UnitConverter::FeetToMeters(double ft)
 	return ft * (double)METERS_PER_FOOT;
 }
 
+double UnitConverter::YardsToMeters(double y)
+{
+	return y * (double)METERS_PER_YARD;
+}
+
 double UnitConverter::CentimetersToInches(double cm)
 {
 	return cm / (double)CENTIMETERS_PER_INCH;
