@@ -332,7 +332,7 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_DESCRIPTION] = activityDesc
 					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_START_TIME] = startTime
 					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_END_TIME] = endTime
-					activityMetaData[WATCH_MSG_PARAM_FILE_FORMAT] = fileFormat
+					activityMetaData[WATCH_MSG_PARAM_FILE_FORMAT] = Int(fileFormat.rawValue)
 
 					let groupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.mjs-software.OpenWorkoutTracker")
 					if groupUrl != nil {
