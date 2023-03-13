@@ -41,6 +41,9 @@ class SensorMgr : ObservableObject {
 	private var lastCrankCountTime: UInt64 = 0
 	private var lastCadenceUpdateTimeMs: UInt64 = 0
 	private var firstCadenceUpdate: Bool = true
+	private var lastHrmUpdate: UInt64 = 0
+	private var lastPowerUpdate: UInt64 = 0
+	private var lastRadarUpdate: UInt64 = 0
 
 	/// Singleton constructor
 	private init() {
@@ -161,25 +164,33 @@ class SensorMgr : ObservableObject {
 	/// Called when a sensor characteristic is updated.
 	func valueUpdated(peripheral: CBPeripheral, serviceId: CBUUID, value: Data) {
 		if Preferences.shouldUsePeripheral(uuid: peripheral.identifier.uuidString) {
+			let now = UInt64(Date().timeIntervalSince1970)
+
 			do {
 				if serviceId == HEART_RATE_SERVICE_ID {
-					self.currentHeartRateBpm = decodeHeartRateReading(data: value)
-					ProcessHrmReading(Double(self.currentHeartRateBpm), UInt64(Date().timeIntervalSince1970))
+					if now - self.lastHrmUpdate >= 1 {
+						self.currentHeartRateBpm = decodeHeartRateReading(data: value)
+						self.lastHrmUpdate = now
+						ProcessHrmReading(Double(self.currentHeartRateBpm), self.lastHrmUpdate)
+					}
 				}
 				else if serviceId == POWER_SERVICE_ID {
-					let powerDict = try decodeCyclingPowerReadingAsDict(data: value)
+					if now - self.lastPowerUpdate >= 1 {
+						let powerDict = try decodeCyclingPowerReadingAsDict(data: value)
 
-					if  let currentPower = powerDict[KEY_NAME_CYCLING_POWER_WATTS] {
-						self.currentPowerWatts = UInt16(currentPower)
-						ProcessPowerMeterReading(Double(self.currentPowerWatts), UInt64(Date().timeIntervalSince1970))
-					}
-
-					// Power meters often send cadence data as well.
-					if  let currentCrankCount = powerDict[KEY_NAME_CYCLING_POWER_CRANK_REVS],
-						let currentCrankTime = powerDict[KEY_NAME_CYCLING_POWER_LAST_CRANK_TIME] {
-						let timestamp = NSDate().timeIntervalSince1970 * 1000
-						self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
-						ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
+						if  let currentPower = powerDict[KEY_NAME_CYCLING_POWER_WATTS] {
+							self.currentPowerWatts = UInt16(currentPower)
+							self.lastPowerUpdate = now
+							ProcessPowerMeterReading(Double(self.currentPowerWatts), self.lastPowerUpdate)
+						}
+						
+						// Power meters often send cadence data as well.
+						if  let currentCrankCount = powerDict[KEY_NAME_CYCLING_POWER_CRANK_REVS],
+							let currentCrankTime = powerDict[KEY_NAME_CYCLING_POWER_LAST_CRANK_TIME] {
+							let timestamp = now * 1000
+							self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
+							ProcessCadenceReading(Double(self.currentCadenceRpm), now)
+						}
 					}
 				}
 				else if serviceId == CADENCE_SERVICE_ID {
@@ -187,16 +198,19 @@ class SensorMgr : ObservableObject {
 					//let currentWheelRevCount = reading[KEY_NAME_WHEEL_REV_COUNT]
 					if  let currentCrankCount = cadenceData[KEY_NAME_WHEEL_CRANK_COUNT],
 						let currentCrankTime = cadenceData[KEY_NAME_WHEEL_CRANK_TIME] {
-						let timestamp = NSDate().timeIntervalSince1970 * 1000
+						let timestamp = now * 1000
 						self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
-						ProcessCadenceReading(Double(self.currentCadenceRpm), UInt64(Date().timeIntervalSince1970))
+						ProcessCadenceReading(Double(self.currentCadenceRpm), now)
 					}
 				}
 				else if serviceId == RUNNING_POWER_SERVICE_ID {
 				}
 				else if serviceId == RADAR_SERVICE_ID {
-					self.radarMeasurements = decodeCyclingRadarReading(data: value)
-					ProcessRadarReading(UInt(self.radarMeasurements.count), UInt64(Date().timeIntervalSince1970))
+					if now - self.lastRadarUpdate >= 1 {
+						self.radarMeasurements = decodeCyclingRadarReading(data: value)
+						self.lastRadarUpdate = now
+						ProcessRadarReading(UInt(self.radarMeasurements.count), self.lastRadarUpdate)
+					}
 				}
 			} catch {
 				NSLog(error.localizedDescription)
