@@ -9,7 +9,6 @@ struct ContentView: View {
 	@State private var showingActivitySelection: Bool = false
 	@State private var showingViewSelection: Bool = false
 	@State private var showingEditSelection: Bool = false
-	@State private var showingResetConfirmation: Bool = false
 	@State private var isBusy: Bool = false
 
 	var body: some View {
@@ -19,7 +18,7 @@ struct ContentView: View {
 				
 				// Filthy hack to move the Start button down a bit.
 				Text(" ")
-					.padding(25)
+					.padding(6)
 				
 				// Workout start button
 				Button("Start a Workout") {
@@ -71,24 +70,10 @@ struct ContentView: View {
 					.foregroundColor(.black)
 					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
 					.padding(10)
-				
-				Button("Reset") {
-					self.showingResetConfirmation = true
-				}
-				.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented: self.$showingResetConfirmation) {
-					Button("Delete") {
-						ResetDatabase()
-					}
-					Button("Cancel") {
-					}
-				}
-				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue", fixedSize: 24))
-				.padding(10)
-				.toolbar {
-					ToolbarItem(placement: .bottomBar) {
-						Image(systemName: "applewatch")
-							.opacity(CommonApp.shared.watchSession.isConnected ? 1 : 0)
+					.toolbar {
+						ToolbarItem(placement: .bottomBar) {
+							Image(systemName: "applewatch")
+								.opacity(CommonApp.shared.watchSession.isConnected ? 1 : 0)
 					}
 				}
 			}

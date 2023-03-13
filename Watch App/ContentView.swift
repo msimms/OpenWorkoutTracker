@@ -7,11 +7,11 @@ import SwiftUI
 
 struct ContentView: View {
 	@State private var showingActivitySelection: Bool = false
-	@State private var showingResetConfirmation: Bool = false
 
 	var body: some View {
 		NavigationStack() {
 			ScrollView() {
+				// Start button
 				Button("Start") {
 					showingActivitySelection = true
 				}
@@ -20,21 +20,27 @@ struct ContentView: View {
 						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
 					}
 				}
+
+				// History button
 				NavigationLink("History", destination: HistoryView())
-				NavigationLink("Settings", destination: SettingsView())
+
+				// Settings and About buttons
 				HStack() {
-					Button("Reset") {
-						self.showingResetConfirmation = true
-					}
-					.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented:$showingResetConfirmation) {
-						Button("Delete") {
-							ResetDatabase()
-						}
-						Button("Cancel") {
+					NavigationLink(destination: SettingsView()) {
+						ZStack {
+							Image(systemName: "gear")
 						}
 					}
-					NavigationLink("About", destination: AboutView())
+					NavigationLink(destination: AboutView()) {
+						ZStack {
+							Image(systemName: "questionmark.circle")
+						}
+					}
 				}
+
+				// iPhone connectivity status
+				Image(systemName: "iphone")
+					.opacity(CommonApp.shared.watchSession.isConnected ? 1 : 0)
 			}
 		}
     }

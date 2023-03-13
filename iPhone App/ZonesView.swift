@@ -69,7 +69,7 @@ struct ZonesView: View {
 							}
 						}
 						else {
-							Text("Run paces are not available because there are no runs of at least 5km in the database.")
+							Text("Run paces are not available because there are no runs of at least 5 km in the database.")
 						}
 					}
 				}

@@ -17,6 +17,7 @@ struct SettingsView: View {
 	@State private var showBroadcastIcon: Bool = Preferences.broadcastShowIcon()
 	@State private var broadcastServer: String = Preferences.broadcastHostName()
 	@State private var showingLogoutError: Bool = false
+	@State private var showingResetConfirmation: Bool = false
 	@ObservedObject var updateRate = NumbersOnly(initialValue: Preferences.broadcastRate())
 
 	var body: some View {
@@ -122,16 +123,39 @@ struct SettingsView: View {
 						.bold()
 					}
 					else {
-						NavigationLink(destination: LoginView()) {
-							Text("Login")
-								.foregroundColor(.white)
-								.fontWeight(Font.Weight.heavy)
-								.frame(minWidth: 0, maxWidth: .infinity)
-								.padding()
+						VStack() {
+							NavigationLink(destination: LoginView()) {
+								Text("Login")
+									.foregroundColor(.white)
+									.fontWeight(Font.Weight.heavy)
+									.frame(minWidth: 0, maxWidth: .infinity)
+									.padding()
+							}
+							.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+							.opacity(0.8)
+							.bold()
+							
+							// Reset button
+							Button {
+								self.showingResetConfirmation = true
+							} label: {
+								Text("Reset")
+									.foregroundColor(.red)
+									.fontWeight(Font.Weight.heavy)
+									.frame(minWidth: 0, maxWidth: .infinity)
+									.padding()
+							}
+							.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented: self.$showingResetConfirmation) {
+								Button("Delete") {
+									ResetDatabase()
+								}
+								Button("Cancel") {
+								}
+							}
+							.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+							.opacity(0.8)
+							.bold()
 						}
-						.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-						.opacity(0.8)
-						.bold()
 					}
 				}
 			}

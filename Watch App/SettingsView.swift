@@ -15,6 +15,7 @@ struct SettingsView: View {
 	@State private var startStopBeeps: Bool = Preferences.watchStartStopBeeps()
 	@State private var allowPressesDuringActivity: Bool = Preferences.watchAllowPressesDuringActivity()
 	@State private var turnCrown: Bool = Preferences.watchTurnCrownToStartStopActivity()
+	@State private var showingResetConfirmation: Bool = false
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -88,6 +89,19 @@ struct SettingsView: View {
 							Preferences.setWatchTurnCrownToStartStopActivity(value: self.turnCrown)
 						}
 						.padding(5)
+				}
+				
+				Group() {
+					Button("Reset") {
+						self.showingResetConfirmation = true
+					}
+					.alert("This will delete all of your data. Do you wish to continue? This cannot be undone.", isPresented:$showingResetConfirmation) {
+						Button("Delete") {
+							ResetDatabase()
+						}
+						Button("Cancel") {
+						}
+					}
 				}
 			}
 		}

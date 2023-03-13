@@ -265,11 +265,14 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 
 					// If it's already been synched then skip it. Otherwise, offer up the activity.
 					if IsActivitySynched(activityId, SYNC_DEST_PHONE) == false {
-						let _ = try self.sendActivityFileToPhone(activityId: activityId)
 						numRequestedSyncs += 1
+						let _ = try self.sendActivityFileToPhone(activityId: activityId)
 					}
 					
 					if numRequestedSyncs >= 1 {
+						break
+					}
+					if IsActivityCreated() {
 						break
 					}
 				}
@@ -324,16 +327,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 				var endTime: time_t = 0
 
 				if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
-					var activityMetaData: Dictionary<String, Any> = [:]
-
-					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_ID] = activityId
-					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_TYPE] = activityType
-					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_NAME] = activityName
-					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_DESCRIPTION] = activityDesc
-					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_START_TIME] = startTime
-					activityMetaData[WATCH_MSG_PARAM_ACTIVITY_END_TIME] = endTime
-					activityMetaData[WATCH_MSG_PARAM_FILE_FORMAT] = Int(fileFormat.rawValue)
-
 					let groupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.mjs-software.OpenWorkoutTracker")
 					if groupUrl != nil {
 						let summary = ActivitySummary()
@@ -341,7 +334,7 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 						summary.type = activityType
 						summary.name = activityName
 						summary.description = activityDesc
-						
+
 						// Load the activity from the database.
 						let storedActivityVM = StoredActivityVM(activitySummary: summary)
 						storedActivityVM.load()
@@ -350,14 +343,22 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 						let groupPath = groupUrl!.path(percentEncoded: false)
 						let fileName = try storedActivityVM.exportActivityToFile(fileFormat: fileFormat, dirName: groupPath)
 						if fileName.count > 0 {
-							let fileUrl = URL(string: fileName)
-							
+							var activityMetaData: Dictionary<String, Any> = [:]
+							activityMetaData[WATCH_MSG_PARAM_ACTIVITY_ID] = activityId
+							activityMetaData[WATCH_MSG_PARAM_ACTIVITY_TYPE] = activityType
+							activityMetaData[WATCH_MSG_PARAM_ACTIVITY_NAME] = activityName
+							activityMetaData[WATCH_MSG_PARAM_ACTIVITY_DESCRIPTION] = activityDesc
+							activityMetaData[WATCH_MSG_PARAM_ACTIVITY_START_TIME] = startTime
+							activityMetaData[WATCH_MSG_PARAM_ACTIVITY_END_TIME] = endTime
+							activityMetaData[WATCH_MSG_PARAM_FILE_FORMAT] = Int(fileFormat.rawValue)
+
 							// Send to the phone.
+							let fileUrl = URL(string: fileName)
 							self.watchSession.transferFile(fileUrl!, metadata: activityMetaData)
-							
+
 							// Delete the temporary file.
 							try FileManager.default.removeItem(at: fileUrl!)
-							
+
 							result = true
 						}
 						else {
