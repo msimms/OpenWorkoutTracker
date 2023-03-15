@@ -156,7 +156,6 @@ extern "C" {
 	std::vector<PacePlan>         g_pacePlans;              // cache of pace plans
 	std::vector<Workout>          g_workouts;               // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
-	std::vector<SensorReading>    g_accelerometerCache;     // accelerometer readings that need to be written to the db, but have otherwise been processed
 
 	//
 	// Functions for managing the database.
@@ -221,12 +220,13 @@ extern "C" {
 		{
 			deleted = g_pDatabase->DeleteActivity(activityId);
 		}
+
+		g_dbLock.unlock();
+
 		if (g_pCurrentActivity && (g_pCurrentActivity->GetId().compare(activityId) == 0))
 		{
 			DestroyCurrentActivity();
 		}
-
-		g_dbLock.unlock();
 
 		return deleted;
 	}
@@ -1657,6 +1657,7 @@ extern "C" {
 			std::string tempDescription;
 
 			result = g_pDatabase->RetrieveIntervalSession(sessionId, tempSessionName, tempSport, tempDescription);
+
 			(*sessionName) = strdup(tempSessionName.c_str());
 			(*sport) = strdup(tempSport.c_str());
 			(*description) = strdup(tempDescription.c_str());
@@ -3933,7 +3934,7 @@ extern "C" {
 		if (pFileName)
 		{
 			std::string fileName = pFileName;
-			std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);;
+			std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);
 			DataImporter importer;
 
 			g_dbLock.lock();

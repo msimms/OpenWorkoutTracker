@@ -140,6 +140,8 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 	func sessionReachabilityDidChange(_ session: WCSession) {
 		do {
 			if session.isReachable {
+				self.isConnected = true
+
 #if os(watchOS)
 				// Startup stuff.
 				if self.timeOfLastMessage == 0 {
@@ -156,7 +158,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 					self.timeOfLastMessage = now
 				}
 #endif
-				self.isConnected = true
 			}
 			else {
 				self.isConnected = false

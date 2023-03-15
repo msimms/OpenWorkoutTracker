@@ -461,7 +461,7 @@ class ApiClient : ObservableObject {
 		pointer.pointee = UnsynchedActivitiesCallbackType(ids: [])
 		GetActivityAttributeNames(attributeNameCallback, pointer)
 
-		if (RetrieveActivityIdsNotSynchedToWeb(unsynchedActivitiesCallback, pointer)) {
+		if RetrieveActivityIdsNotSynchedToWeb(unsynchedActivitiesCallback, pointer) {
 			let activityIds = pointer.pointee.ids
 			var result = true
 
