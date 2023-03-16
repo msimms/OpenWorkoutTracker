@@ -494,13 +494,17 @@ class ApiClient : ObservableObject {
 				let deviceId = Preferences.uuid()
 				if deviceId != nil {
 					result = self.claimDevice(deviceId: deviceId!)
+#if !os(watchOS)
 					result = result && self.listGear()
 					result = result && self.listPlannedWorkouts()
+#endif
 					result = result && self.listIntervalSessions()
 					result = result && self.listPacePlans()
+#if !os(watchOS)
 					result = result && self.sendUserDetailsToServer()
 					result = result && self.sendMissingActivitiesToServer()
 					result = result && self.sendPacePlansToServer()
+#endif
 					
 					result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
 					Preferences.setLastServerSyncTime(value: now)
