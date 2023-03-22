@@ -381,7 +381,19 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 	
 	/// @brief This method is called in response to an activity stopped notification.
 	@objc func activityStopped(notification: NSNotification) {
+#if os(watchOS)
+		// If the watch is connected to the phone then send the activity right now.
 		if self.watchSession.isReachable {
+			do {
+				if let notificationData = notification.object as? Dictionary<String, Any> {
+					if  let activityId = notificationData[KEY_NAME_ACTIVITY_ID] as? String {
+						try self.sendActivityFileToPhone(activityId: activityId)
+					}
+				}
+			}
+			catch {
+			}
 		}
+#endif
 	}
 }
