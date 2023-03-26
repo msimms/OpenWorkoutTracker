@@ -50,16 +50,10 @@ struct HistoryDetailsView: View {
 				mail.mailComposeDelegate = self
 				
 				if fileName.count > 0 {
-					let fileUrl = URL(string: fileName)
-					let data = try Data(contentsOf: fileUrl!)
-					
-					guard fileUrl != nil else {
-						throw ActivityExportException.runtimeError("Export failed!")
-					}
-					guard let justTheFileName = fileUrl?.lastPathComponent else {
-						throw ActivityExportException.runtimeError("Export failed!")
-					}
-					
+					let fileUrl = URL(fileURLWithPath: fileName)
+					let data = try Data(contentsOf: fileUrl)
+					let justTheFileName = fileUrl.lastPathComponent
+
 					mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
 				}
 				

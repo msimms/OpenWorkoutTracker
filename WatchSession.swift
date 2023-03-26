@@ -387,7 +387,7 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 			do {
 				if let notificationData = notification.object as? Dictionary<String, Any> {
 					if  let activityId = notificationData[KEY_NAME_ACTIVITY_ID] as? String {
-						try self.sendActivityFileToPhone(activityId: activityId)
+						let _ = try self.sendActivityFileToPhone(activityId: activityId)
 					}
 				}
 			}
