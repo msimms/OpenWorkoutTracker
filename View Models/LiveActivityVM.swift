@@ -225,7 +225,7 @@ class LiveActivityVM : ObservableObject {
 			// Update the interval session.
 			if CheckCurrentIntervalSession() {
 				
-				if (IsIntervalSessionComplete()) {
+				if IsIntervalSessionComplete() {
 					self.currentMessage = "The interval session is complete."
 				}
 				else {
@@ -279,8 +279,13 @@ class LiveActivityVM : ObservableObject {
 				}
 				
 				let valueStr = LiveActivityVM.formatActivityValue(attribute: attr)
-				let measureStr = LiveActivityVM.formatActivityMeasureType(measureType: attr.measureType)
-				
+				var measureStr = LiveActivityVM.formatActivityMeasureType(measureType: attr.measureType)
+
+				// To keep the spacing even if the unit string is empty then add something so the spacing stays even on the UI
+				if measureStr.count == 0 {
+					measureStr = " "
+				}
+
 				switch index {
 				case 0:
 					self.title1 = activityAttribute
