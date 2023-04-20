@@ -24,15 +24,15 @@ func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optiona
 class LiveActivityVM : ObservableObject {
 	@Published var currentMessage: String = ""
 	
-	@Published var title1: String = "Title"
-	@Published var title2: String = "Title"
-	@Published var title3: String = "Title"
-	@Published var title4: String = "Title"
-	@Published var title5: String = "Title"
-	@Published var title6: String = "Title"
-	@Published var title7: String = "Title"
-	@Published var title8: String = "Title"
-	@Published var title9: String = "Title"
+	@Published var title1: String = ""
+	@Published var title2: String = ""
+	@Published var title3: String = ""
+	@Published var title4: String = ""
+	@Published var title5: String = ""
+	@Published var title6: String = ""
+	@Published var title7: String = ""
+	@Published var title8: String = ""
+	@Published var title9: String = ""
 	
 	@Published var value1: String = ""
 	@Published var value2: String = ""
@@ -44,15 +44,15 @@ class LiveActivityVM : ObservableObject {
 	@Published var value8: String = ""
 	@Published var value9: String = ""
 	
-	@Published var units1: String = "Units"
-	@Published var units2: String = "Units"
-	@Published var units3: String = "Units"
-	@Published var units4: String = "Units"
-	@Published var units5: String = "Units"
-	@Published var units6: String = "Units"
-	@Published var units7: String = "Units"
-	@Published var units8: String = "Units"
-	@Published var units9: String = "Units"
+	@Published var units1: String = ""
+	@Published var units2: String = ""
+	@Published var units3: String = ""
+	@Published var units4: String = ""
+	@Published var units5: String = ""
+	@Published var units6: String = ""
+	@Published var units7: String = ""
+	@Published var units8: String = ""
+	@Published var units9: String = ""
 	
 	@Published var viewType: ActivityViewType = ACTIVITY_VIEW_COMPLEX
 	
@@ -62,7 +62,7 @@ class LiveActivityVM : ObservableObject {
 	var autoStartEnabled: Bool = false
 	var isMovingActivity: Bool = false
 	var countdownSecsRemaining: UInt = 0
-
+	
 #if !os(watchOS)
 	var locationTrack: Array<CLLocationCoordinate2D> = []
 	@Published var currentLat: Double = 0.0
@@ -73,24 +73,26 @@ class LiveActivityVM : ObservableObject {
 	private var autoStartCoordinate: Coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 	private var sensorMgr = SensorMgr.shared
 	private var activityAttributePrefs: Array<String> = []
-	private var timer: Timer = Timer()
+	private var timer: Timer?
 	private var activityId: String = ""
 	private var activityType: String = ""
 	private var audioPlayer: AVAudioPlayer?
 	private var currentMessageTime: time_t = 0 // timestamp of when the current message was set, allows us to know when to clear it
-
+	
 	init(activityType: String) {
 		self.create(activityType: activityType)
-		self.activityType = activityType
 	}
 	
 	func create(activityType: String) {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.messageReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: nil)
-		
+		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
+
+		self.activityType = activityType
+
 		var activityTypeToUse = activityType
 		var orphanedActivityIndex: size_t = 0
-		
+
 		// Perhaps the app shutdown poorly (phone rebooted, etc.).
 		// Check for an existing, in progress, activity.
 		if IsActivityOrphaned(&orphanedActivityIndex) || IsActivityInProgress() {
@@ -144,6 +146,12 @@ class LiveActivityVM : ObservableObject {
 			splitAttrName = ACTIVITY_ATTRIBUTE_NUM_MILE_SPLITS
 		}
 		
+		// Stop the existing timer.
+		if self.timer != nil {
+			self.timer?.invalidate()
+			self.timer = nil
+		}
+		
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
 			
@@ -155,7 +163,7 @@ class LiveActivityVM : ObservableObject {
 					self.currentMessageTime = 0
 				}
 			}
-
+			
 			// Autostart?
 			if !self.isInProgress && self.autoStartEnabled {
 				let MIN_AUTOSTART_DISTANCE = 25.0 // Meters
@@ -230,7 +238,7 @@ class LiveActivityVM : ObservableObject {
 				}
 				else {
 					var segment: IntervalSessionSegment = IntervalSessionSegment()
-
+					
 					if GetCurrentIntervalSessionSegment(&segment) {
 						let segmentVm: IntervalSegment = IntervalSegment()
 						self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
@@ -242,7 +250,7 @@ class LiveActivityVM : ObservableObject {
 #if !os(watchOS)
 			if self.isMovingActivity && self.isInProgress {
 				self.currentLat = self.sensorMgr.location.currentLocation.coordinate.latitude
-				self.currentLon = self.sensorMgr.location.currentLocation.coordinate.latitude
+				self.currentLon = self.sensorMgr.location.currentLocation.coordinate.longitude
 				self.locationTrack.append(CLLocationCoordinate2D(latitude: self.currentLat, longitude: self.currentLon))
 				self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
 			}
@@ -251,6 +259,8 @@ class LiveActivityVM : ObservableObject {
 			// Update the displayed attributes.
 			for (index, activityAttribute) in self.activityAttributePrefs.enumerated() {
 				var attr = QueryLiveActivityAttribute(activityAttribute)
+				
+				// Make sure we're dealing with the units the user wants to see.
 				ConvertToPreferredUnits(&attr)
 				
 				// If the activity hasn't been started yet then we should just grab sensor data directly
@@ -280,12 +290,12 @@ class LiveActivityVM : ObservableObject {
 				
 				let valueStr = LiveActivityVM.formatActivityValue(attribute: attr)
 				var measureStr = LiveActivityVM.formatActivityMeasureType(measureType: attr.measureType)
-
+				
 				// To keep the spacing even if the unit string is empty then add something so the spacing stays even on the UI
 				if measureStr.count == 0 {
 					measureStr = " "
 				}
-
+				
 				switch index {
 				case 0:
 					self.title1 = activityAttribute
@@ -424,7 +434,9 @@ class LiveActivityVM : ObservableObject {
 			notificationData[KEY_NAME_END_TIME] = summary.endTime
 			notificationData[KEY_NAME_DISTANCE] = distance.value.doubleVal
 			notificationData[KEY_NAME_CALORIES] = calories.value.doubleVal
-#if !os(watchOS)
+#if os(watchOS)
+			notificationData[KEY_NAME_LOCATIONS] = []
+#else
 			notificationData[KEY_NAME_LOCATIONS] = self.locationTrack
 #endif
 			let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: notificationData)
@@ -662,6 +674,15 @@ class LiveActivityVM : ObservableObject {
 				self.currentMessage = message
 				self.currentMessageTime = time(nil)
 			}
+		}
+	}
+	
+	/// @brief This method is called in response to an activity stopped notification.
+	@objc func activityStopped(notification: NSNotification) {
+		// Stop the screen refresh timer.
+		if self.timer != nil {
+			self.timer?.invalidate()
+			self.timer = nil
 		}
 	}
 }
