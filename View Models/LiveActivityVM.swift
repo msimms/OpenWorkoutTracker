@@ -65,13 +65,11 @@ class LiveActivityVM : ObservableObject {
 	
 #if !os(watchOS)
 	var locationTrack: Array<CLLocationCoordinate2D> = []
-	@Published var currentLat: Double = 0.0
-	@Published var currentLon: Double = 0.0
 	@Published var trackLine: MKPolyline = MKPolyline()
 #endif
 	
 	private var autoStartCoordinate: Coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
-	private var sensorMgr = SensorMgr.shared
+	private var prevCoordinate: Coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 	private var activityAttributePrefs: Array<String> = []
 	private var timer: Timer?
 	private var activityId: String = ""
@@ -86,7 +84,6 @@ class LiveActivityVM : ObservableObject {
 	func create(activityType: String) {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.messageReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
 
 		self.activityType = activityType
 
@@ -127,11 +124,11 @@ class LiveActivityVM : ObservableObject {
 		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
 		
 		// Configure the location accuracy parameters.
-		self.sensorMgr.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
-		self.sensorMgr.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
+		SensorMgr.shared.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
+		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
 		
 		// Start the sensors.
-		self.sensorMgr.startSensors()
+		SensorMgr.shared.startSensors()
 		
 		// This won't change. Cache it.
 		self.isMovingActivity = IsMovingActivity()
@@ -167,11 +164,11 @@ class LiveActivityVM : ObservableObject {
 			// Autostart?
 			if !self.isInProgress && self.autoStartEnabled {
 				let MIN_AUTOSTART_DISTANCE = 25.0 // Meters
-				
-				let currentLocation = self.sensorMgr.location.currentLocation
+
+				let currentLocation = SensorMgr.shared.location.currentLocation
 				let currentCoordinate: Coordinate = Coordinate(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, altitude: currentLocation.altitude, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
-				
 				let distance = DistanceBetweenCoordinates(currentCoordinate, self.autoStartCoordinate)
+
 				if distance > MIN_AUTOSTART_DISTANCE {
 					if !self.doStart() {
 						NSLog("Failed to start the activity after enough movement to trigger an autostart.")
@@ -246,13 +243,19 @@ class LiveActivityVM : ObservableObject {
 				}
 			}
 			
-			// Update the location and route.
 #if !os(watchOS)
+			// Update the location and route.
 			if self.isMovingActivity && self.isInProgress {
-				self.currentLat = self.sensorMgr.location.currentLocation.coordinate.latitude
-				self.currentLon = self.sensorMgr.location.currentLocation.coordinate.longitude
-				self.locationTrack.append(CLLocationCoordinate2D(latitude: self.currentLat, longitude: self.currentLon))
-				self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
+				let currentLocation = SensorMgr.shared.location.currentLocation
+				let currentCoordinate: Coordinate = Coordinate(latitude: currentLocation.coordinate.latitude, longitude: currentLocation.coordinate.longitude, altitude: currentLocation.altitude, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+				
+				// Performance optimization. Don't add every point to the track.
+				let distance = DistanceBetweenCoordinates(currentCoordinate, self.prevCoordinate)
+				if distance > 10 {
+					self.locationTrack.append(CLLocationCoordinate2D(latitude: currentCoordinate.latitude, longitude: currentCoordinate.longitude))
+					self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
+					self.prevCoordinate = currentCoordinate
+				}
 			}
 #endif
 			
@@ -272,19 +275,19 @@ class LiveActivityVM : ObservableObject {
 						attr.value.intVal = UInt64(HealthManager.shared.currentHeartRate)
 						attr.valid = HealthManager.shared.heartRateRead
 #else
-						attr.value.intVal = UInt64(self.sensorMgr.currentHeartRateBpm)
-						attr.valid = self.sensorMgr.heartRateConnected
+						attr.value.intVal = UInt64(SensorMgr.shared.currentHeartRateBpm)
+						attr.valid = SensorMgr.shared.heartRateConnected
 #endif
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_POWER {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_POWER, UNIT_SYSTEM_METRIC)
-						attr.value.intVal = UInt64(self.sensorMgr.currentPowerWatts)
-						attr.valid = self.sensorMgr.powerConnected
+						attr.value.intVal = UInt64(SensorMgr.shared.currentPowerWatts)
+						attr.valid = SensorMgr.shared.powerConnected
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_CADENCE {
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_RPM, UNIT_SYSTEM_METRIC)
-						attr.value.intVal = UInt64(self.sensorMgr.currentCadenceRpm)
-						attr.valid = self.sensorMgr.cadenceConnected
+						attr.value.intVal = UInt64(SensorMgr.shared.currentCadenceRpm)
+						attr.valid = SensorMgr.shared.cadenceConnected
 					}
 				}
 				
@@ -356,7 +359,7 @@ class LiveActivityVM : ObservableObject {
 		
 		// Remember where we were when the autostart button was pressed.
 		if self.autoStartEnabled {
-			let autoStartLocation = self.sensorMgr.location.currentLocation
+			let autoStartLocation = SensorMgr.shared.location.currentLocation
 			self.autoStartCoordinate = Coordinate(latitude: autoStartLocation.coordinate.latitude, longitude: autoStartLocation.coordinate.longitude, altitude: autoStartLocation.altitude, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 		}
 		
@@ -411,8 +414,14 @@ class LiveActivityVM : ObservableObject {
 			DestroyCurrentActivity();
 			
 			// Stop requesting data from sensors.
-			self.sensorMgr.stopSensors()
+			SensorMgr.shared.stopSensors()
 			
+			// Stop the screen refresh timer.
+			if self.timer != nil {
+				self.timer?.invalidate()
+				self.timer = nil
+			}
+
 			// Update state.
 			self.isInProgress = false
 			self.isPaused = false
@@ -674,15 +683,6 @@ class LiveActivityVM : ObservableObject {
 				self.currentMessage = message
 				self.currentMessageTime = time(nil)
 			}
-		}
-	}
-	
-	/// @brief This method is called in response to an activity stopped notification.
-	@objc func activityStopped(notification: NSNotification) {
-		// Stop the screen refresh timer.
-		if self.timer != nil {
-			self.timer?.invalidate()
-			self.timer = nil
 		}
 	}
 }

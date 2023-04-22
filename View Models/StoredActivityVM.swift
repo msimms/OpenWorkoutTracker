@@ -96,13 +96,21 @@ class StoredActivityVM : ObservableObject {
 		let healthKit = HealthManager.shared
 		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId)
 		
-		var coordinate: Coordinate = Coordinate()
+		var currCoordinate: Coordinate = Coordinate()
+		var prevCoordinate: Coordinate = Coordinate()
 		var pointIndex: Int = 0
 		
 		self.locationTrack = []
 
-		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &coordinate, pointIndex: pointIndex) {
-			self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
+		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &currCoordinate, pointIndex: pointIndex) {
+			let currentCoordinate: Coordinate = Coordinate(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+			
+			// Performance optimization. Don't add every point to the track.
+			let distance = DistanceBetweenCoordinates(currentCoordinate, prevCoordinate)
+			if distance > 10 {
+				self.locationTrack.append(CLLocationCoordinate2D(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude))
+				prevCoordinate = currCoordinate
+			}
 			pointIndex += 1
 		}
 		

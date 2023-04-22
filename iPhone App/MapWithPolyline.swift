@@ -9,11 +9,16 @@ import MapKit
 struct MapWithPolyline: UIViewRepresentable {
 	let region: MKCoordinateRegion
 	let lineCoordinates: [CLLocationCoordinate2D]
+	let trackUser: Bool
 
 	func makeUIView(context: Context) -> MKMapView {
 		let mapView = MKMapView()
+
 		mapView.delegate = context.coordinator
 		mapView.region = region
+		if trackUser {
+			mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+		}
 		return mapView
 	}
 
@@ -26,6 +31,7 @@ struct MapWithPolyline: UIViewRepresentable {
 	
 	func addOverlay(_ overlay: MKOverlay) -> some View {
 		let mapView = MKMapView.appearance()
+
 		mapView.addOverlay(overlay)
 		return self
 	}

@@ -17,9 +17,9 @@ let KEY_NAME_HORIZONTAL_ACCURACY = "Horizontal Accuracy"
 let KEY_NAME_VERTICAL_ACCURACY = "Vertical Accuracy"
 let KEY_NAME_LOCATION_TIMESTAMP_MS = "Time"
 
-class LocationSensor : NSObject, CLLocationManagerDelegate {
+class LocationSensor : NSObject, CLLocationManagerDelegate, ObservableObject {
 	var locationManager: CLLocationManager = CLLocationManager()
-	var currentLocation: CLLocation = CLLocation()
+	@Published var currentLocation: CLLocation = CLLocation()
 	var minAllowedHorizontalAccuracy: CLLocationAccuracy = 0.0
 	var minAllowedVerticalAccuracy: CLLocationAccuracy = 0.0
 	var discardBadDataPoints: Bool = false
