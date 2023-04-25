@@ -8,47 +8,50 @@ import MapKit
 
 struct MapWithPolyline: UIViewRepresentable {
 	let region: MKCoordinateRegion
-	let lineCoordinates: [CLLocationCoordinate2D]
 	let trackUser: Bool
+	let mapView = MKMapView()
 
 	func makeUIView(context: Context) -> MKMapView {
-		let mapView = MKMapView()
-
-		mapView.delegate = context.coordinator
-		mapView.region = region
+		self.mapView.delegate = context.coordinator
+		self.mapView.region = self.region
 		if trackUser {
-			mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
+			self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
 		}
-		return mapView
+		return self.mapView
 	}
 
 	func updateUIView(_ view: MKMapView, context: Context) {
 	}
 
+	func dismantleUIView(_ view: MKMapView, coordinator: Self.Coordinator) {
+	}
+
 	func makeCoordinator() -> Coordinator {
 		Coordinator(self)
 	}
-	
-	func addOverlay(_ overlay: MKOverlay) -> some View {
-		let mapView = MKMapView.appearance()
 
-		mapView.addOverlay(overlay)
+	func setOverlay(_ overlay: MKOverlay) -> some View {
+		// Remove old overlays. Not sure why these are sticking around.
+		let overlays = self.mapView.overlays
+		self.mapView.removeOverlays(overlays)
+		
+		self.mapView.addOverlay(overlay)
 		return self
 	}
 }
 
 class Coordinator: NSObject, MKMapViewDelegate {
 	var parent: MapWithPolyline
-	
+
 	init(_ parent: MapWithPolyline) {
 		self.parent = parent
 	}
 	
-	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-		// Remove old overlays. Not sure why these are sticking around.
-		let overlays = mapView.overlays
-		mapView.removeOverlays(overlays)
+	deinit {
+	}
 
+	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+		// Cast the provided overlay to a polyline, since that's what we're expecting, and add it.
 		if let routePolyline = overlay as? MKPolyline {
 			let renderer = MKPolylineRenderer(polyline: routePolyline)
 			renderer.strokeColor = UIColor.systemBlue

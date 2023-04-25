@@ -426,8 +426,8 @@ struct ActivityView: View {
 									MapWithPolyline(region: MKCoordinateRegion(
 										center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude, longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
 										span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-									), lineCoordinates: self.activityVM.locationTrack, trackUser: true)
-									.addOverlay(self.activityVM.trackLine)
+									), trackUser: true)
+									.setOverlay(self.activityVM.trackLine)
 									.ignoresSafeArea()
 									.frame(width: 400, height: 300)
 									.padding(10)

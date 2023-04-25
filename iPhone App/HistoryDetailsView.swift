@@ -78,8 +78,8 @@ struct HistoryDetailsView: View {
 							span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
 						)
 						
-						MapWithPolyline(region: region, lineCoordinates: self.activityVM.locationTrack, trackUser: false)
-							.addOverlay(self.activityVM.trackLine)
+						MapWithPolyline(region: region, trackUser: false)
+							.setOverlay(self.activityVM.trackLine)
 							.ignoresSafeArea()
 							.frame(width: 400, height: 300)
 					}
