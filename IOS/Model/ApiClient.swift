@@ -229,11 +229,14 @@ class ApiClient : ObservableObject {
 	}
 	
 	func requestActivityMetadata(activityId: String) -> Bool {
-		var postDict: Dictionary<String, String> = [:]
-		postDict[PARAM_ACTIVITY_ID] = activityId
-		
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_ACTIVITY_METADATA_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		if Preferences.shouldBroadcastToServer() && self.loggedIn {
+			var postDict: Dictionary<String, String> = [:]
+			postDict[PARAM_ACTIVITY_ID] = activityId
+			
+			let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_ACTIVITY_METADATA_URL)
+			return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		}
+		return false
 	}
 	
 	func requestWorkoutDetails(workoutId: String) -> Bool {

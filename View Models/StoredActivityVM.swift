@@ -48,7 +48,6 @@ class StoredActivityVM : ObservableObject {
 	var z: Array<(UInt64, Double)> = []             // Z-axis accelerometer readings vs time
 	
 	init(activitySummary: ActivitySummary) {
-		
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
 		
 		self.state = State.empty

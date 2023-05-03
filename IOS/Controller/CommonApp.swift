@@ -19,40 +19,40 @@ class CommonApp : ObservableObject {
 	private var healthMgr = HealthManager.shared
 	private var apiClient = ApiClient.shared
 	var watchSession = WatchSession()
-
+	
 	/// Singleton constructor
 	private init() {
 		// Initialize the backend, including the database.
 		var baseUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].standardizedFileURL
 		baseUrl = baseUrl.appendingPathComponent("Activities.sqlite")
 		Initialize(baseUrl.absoluteString)
-	
+		
 		// Build the list of activity types the backend can handle.
 		CommonApp.activityTypes = []
 		GetActivityTypes(activityTypeCallback, nil, true, true, true)
-	
+		
 		// Do we have a device ID, because we should?
 		if Preferences.uuid() == nil {
 			Preferences.setUuid(value: UUID().uuidString)
 		}
-
+		
 		// Are we supposed to use the optional web server?
 		if Preferences.shouldBroadcastToServer() {
 			let _ = self.apiClient.isLoggedIn()
 		}
-
+		
 		// Set the user's preferred unit system.
 		SetPreferredUnitSystem(Preferences.preferredUnitSystem())
-
+		
 		// Initialize HealthKit.
 		self.healthMgr.requestAuthorization()
-
+		
 		// Initialize the watch session.
 		self.watchSession.startWatchSession()
-
+		
 		// Send the user's details to the backend.
 		self.setUserProfile()
-
+		
 		// Things we care about knowing from the server.
 		NotificationCenter.default.addObserver(self, selector: #selector(self.loginStatusUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.loginProcessed), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_PROCESSED), object: nil)
@@ -69,7 +69,8 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.unsynchedActivitiesListReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.hasActivityResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: nil)
-
+		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
+		
 		// Sync with the server.
 		let _ = self.apiClient.syncWithServer()
 	}
@@ -87,22 +88,22 @@ class CommonApp : ObservableObject {
 		let estimatedMaxHr = Preferences.estimatedMaxHr()
 		let restingHr = Preferences.restingHr()
 		let bestRecent5KSecs = Preferences.bestRecent5KSecs()
-
+		
 		// If the user specified an FTP then use that one, otherwise use the estimate.
 		var ftpToUse = estimatedFtp
 		if userDefinedFtp > 1.0 {
 			ftpToUse = userDefinedFtp
 		}
-
+		
 		// If the user specified a max hr then use that one, otherwise use the estimate.
 		var maxHrToUse = estimatedMaxHr
 		if userDefinedMaxHr > 1.0 {
 			maxHrToUse = userDefinedMaxHr
 		}
-
+		
 		SetUserProfile(userLevel, userGender, userBirthdate, userWeightKg, userHeightCm, ftpToUse, maxHrToUse, restingHr, bestRecent5KSecs)
 	}
-
+	
 	func markAsSynchedToWeb(activityId: String) -> Bool {
 		return CreateActivitySync(activityId, SYNC_DEST_WEB)
 	}
@@ -110,11 +111,11 @@ class CommonApp : ObservableObject {
 	func markAsSynchedToICloudDrive(activityId: String) -> Bool {
 		return CreateActivitySync(activityId, SYNC_DEST_ICLOUD_DRIVE)
 	}
-
+	
 	func markAsSynchedToWatch(activityId: String) -> Bool {
 		return CreateActivitySync(activityId, SYNC_DEST_WATCH)
 	}
-
+	
 	func exportActivityToWeb(activityId: String) throws {
 		let summary = ActivitySummary()
 		summary.id = activityId
@@ -129,7 +130,7 @@ class CommonApp : ObservableObject {
 		
 		try FileManager.default.removeItem(at: fileUrl!)
 	}
-
+	
 	@objc func loginStatusUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -140,19 +141,19 @@ class CommonApp : ObservableObject {
 			}
 		}
 	}
-
+	
 	@objc func loginProcessed(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 					if responseCode.statusCode == 200 {
 						self.apiClient.loggedIn = true
-
+						
 						if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 							if let sessionDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
 								let sessionCookieStr = sessionDict["cookie"]
 								let sessionExpiry = sessionDict["expiry"] as! TimeInterval
-
+								
 								let cookieProperties: Dictionary<HTTPCookiePropertyKey, Any> = [
 									HTTPCookiePropertyKey.domain: Preferences.broadcastHostName(),
 									HTTPCookiePropertyKey.path: "/",
@@ -166,7 +167,7 @@ class CommonApp : ObservableObject {
 								HTTPCookieStorage.shared.setCookie(cookie!)
 							}
 						}
-
+						
 						let _ = self.apiClient.syncWithServer() // re-sync
 					}
 				}
@@ -175,7 +176,7 @@ class CommonApp : ObservableObject {
 		catch {
 		}
 	}
-
+	
 	@objc func createLoginProcessed(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -186,7 +187,7 @@ class CommonApp : ObservableObject {
 			}
 		}
 	}
-
+	
 	@objc func logoutProcessed(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -215,7 +216,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-
+	
 	@objc func requestToFollowResponse(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -231,7 +232,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-
+	
 	@objc func downloadedActivityReceived(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -239,7 +240,7 @@ class CommonApp : ObservableObject {
 					let directory = NSTemporaryDirectory()
 					let fileName = NSUUID().uuidString
 					let fullUrl = NSURL.fileURL(withPathComponents: [directory, fileName])
-
+					
 					if fullUrl != nil {
 						try responseData.write(to: fullUrl!, atomically: false, encoding: .utf8)
 						ImportActivityFromFile(fullUrl?.absoluteString, nil, nil)
@@ -252,7 +253,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-
+	
 	@objc func gearListUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -278,7 +279,7 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let workoutsVM: WorkoutsVM = WorkoutsVM()
 					let workoutsList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
-
+					
 					if workoutsList.count > 0 {
 						
 						// Remove any existing workouts.
@@ -300,7 +301,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-
+	
 	@objc func plannedWorkoutUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -316,7 +317,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-
+	
 	@objc func intervalSessionsUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -335,7 +336,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-
+	
 	@objc func pacePlansUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -383,7 +384,7 @@ class CommonApp : ObservableObject {
 						let codeStr = responseDict[PARAM_CODE]
 						let codeNum = codeStr as? UInt32
 						let code = ActivityMatch(rawValue: codeNum!)
-
+						
 						switch (code) {
 						case ACTIVITY_MATCH_CODE_NO_ACTIVITY:
 							// Send the activity
@@ -423,13 +424,13 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, Any> {
 						let activityId = responseDict[PARAM_ACTIVITY_ID] as? String
-
+						
 						// If we were sent the activity name, description, or tags then update it in the database.
 						if activityId != nil {
 							let activityName = responseDict[PARAM_ACTIVITY_NAME]
 							let activityDesc = responseDict[PARAM_ACTIVITY_DESCRIPTION]
 							let tags = responseDict[PARAM_ACTIVITY_TAGS]
-
+							
 							if activityName != nil {
 								UpdateActivityName(activityId, activityName as? String)
 							}
@@ -444,7 +445,7 @@ class CommonApp : ObservableObject {
 									}
 								}
 							}
-
+							
 							let updatedNotification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: responseDict)
 							NotificationCenter.default.post(updatedNotification)
 						}
@@ -454,6 +455,36 @@ class CommonApp : ObservableObject {
 		}
 		catch {
 			NSLog(error.localizedDescription)
+		}
+	}
+	
+	/// @brief This method is called in response to an activity stopped notification.
+	@objc func activityStopped(notification: NSNotification) {
+		
+		do {
+			if let notificationData = notification.object as? Dictionary<String, Any> {
+				if  let activityId = notificationData[KEY_NAME_ACTIVITY_ID] as? String,
+					let activityType = notificationData[KEY_NAME_ACTIVITY_TYPE] as? String {
+					
+					var description: String = activityType
+
+					let activityNamePtr = UnsafeRawPointer(RetrieveActivityName(activityId))
+					
+					defer {
+						if activityNamePtr != nil {
+							activityNamePtr!.deallocate()
+						}
+					}
+					
+					if activityNamePtr != nil {
+						let activityName = String(cString: activityNamePtr!.assumingMemoryBound(to: CChar.self))
+						description += " "
+						description = activityName
+					}
+					
+					Preferences.setMostRecentActivityDescription(value: description)
+				}
+			}
 		}
 	}
 }

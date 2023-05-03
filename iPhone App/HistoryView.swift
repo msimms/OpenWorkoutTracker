@@ -24,9 +24,9 @@ struct HistoryView: View {
 	var body: some View {
 		Group() {
 			switch self.historyVM.state {
-			case HistoryVM.State.loaded:
+			case HistoryVM.VmState.loaded:
 				VStack(alignment: .center) {
-					if self.historyVM.state == HistoryVM.State.loaded {
+					if self.historyVM.state == HistoryVM.VmState.loaded {
 						if self.historyVM.historicalActivities.count > 0 {
 							List(self.historyVM.historicalActivities, id: \.self) { item in
 								NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
@@ -54,7 +54,7 @@ struct HistoryView: View {
 						}
 					}
 				}
-			case HistoryVM.State.empty:
+			case HistoryVM.VmState.empty:
 				VStack(alignment: .center) {
 					ProgressView("Loading...").onAppear(perform: self.loadHistory)
 						.progressViewStyle(CircularProgressViewStyle(tint: .gray))
@@ -62,7 +62,7 @@ struct HistoryView: View {
 			}
 		}
 		.refreshable {
-			self.historyVM.state = HistoryVM.State.empty
+			self.historyVM.state = HistoryVM.VmState.empty
 		}
     }
 }

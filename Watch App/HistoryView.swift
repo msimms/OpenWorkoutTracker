@@ -24,7 +24,7 @@ struct HistoryView: View {
 
 	var body: some View {
 		switch self.historyVM.state {
-		case HistoryVM.State.loaded:
+		case HistoryVM.VmState.loaded:
 			VStack(alignment: .leading) {
 				if self.historyVM.historicalActivities.count > 0 {
 					List(self.historyVM.historicalActivities, id: \.self) { item in
@@ -50,7 +50,7 @@ struct HistoryView: View {
 					Text("No History")
 				}
 			}
-		case HistoryVM.State.empty:
+		case HistoryVM.VmState.empty:
 			VStack(alignment: .center) {
 				ProgressView("Loading...").onAppear(perform: self.loadHistory)
 					.progressViewStyle(CircularProgressViewStyle(tint: .gray))

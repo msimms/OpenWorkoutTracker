@@ -22,31 +22,33 @@ extension RandomAccessCollection where Element : Comparable {
 }
 
 class HistoryVM : ObservableObject {
-	enum State {
+	enum VmState {
 		case empty
 		case loaded
 	}
 	
-	@Published var state = State.empty
-	var historicalActivities: Array<ActivitySummary> = []
-
+	@Published var state = VmState.empty
+	@Published var historicalActivities: Array<ActivitySummary> = []
+	
 	init() {
-		self.state = State.empty
+		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
+		
+		self.state = VmState.empty
 	}
-
+	
 	/// @brief Loads the activity list from HealthKit (if enabled).
 	private func loadActivitiesFromHealthKit() {
 		if Preferences.willIntegrateHealthKitActivities() {
-
+			
 			// Read all relevant activities from HealthKit.
 			HealthManager.shared.readAllActivitiesFromHealthStore()
-
+			
 			// De-duplicate the list against itself as well as the activities in our database.
 			if Preferences.hideHealthKitDuplicates() {
-
+				
 				// Remove duplicate activities from within the HealthKit list.
 				HealthManager.shared.removeDuplicateActivities()
-
+				
 				// Remove activities that overlap with ones in our database.
 				let numDbActivities = GetNumHistoricalActivities()
 				for activityIndex in 0..<numDbActivities {
@@ -58,7 +60,7 @@ class HistoryVM : ObservableObject {
 					}
 				}
 			}
-
+			
 			// Incorporate HealthKit's list into the master list of activities.
 			for workout in HealthManager.shared.workouts {
 				let summary = ActivitySummary()
@@ -69,19 +71,21 @@ class HistoryVM : ObservableObject {
 				summary.startTime = workout.value.startDate
 				summary.endTime = workout.value.endDate
 				summary.source = ActivitySummary.Source.healthkit
-
-				let index = self.historicalActivities.insertionIndex(of: summary)
-				self.historicalActivities.insert(summary, at: index)
+				
+				DispatchQueue.main.async {
+					let index = self.historicalActivities.insertionIndex(of: summary)
+					self.historicalActivities.insert(summary, at: index)
+				}
 			}
 		}
 	}
-
+	
 	/// @brief Loads the activity list from our database.
 	private func loadActivitiesFromDatabase() {
 		InitializeHistoricalActivityList()
-
+		
 		if LoadAllHistoricalActivitySummaryData() {
-
+			
 			// Whenever we reload the history we should re-evaluate the user's recent performances.
 			let estimatedFtp = EstimateFtp()
 			let estimatedMaxHr = EstimateMaxHr()
@@ -92,47 +96,47 @@ class HistoryVM : ObservableObject {
 				Preferences.setBestRecent5KSecs(value: UInt32(best5KAttr.value.intVal))
 			}
 			CommonApp.shared.setUserProfile()
-
+			
 			// Minor performance optimization, since we know how many items will be in the list.
 			self.historicalActivities.reserveCapacity(GetNumHistoricalActivities())
-
+			
 			// Build our local summary cache.
 			var activityIndex = 0
 			var done = false
 			while !done {
-
+				
 				// Load all data.
 				var startTime: time_t = 0
 				var endTime: time_t = 0
 				if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
-
+					
 					if endTime == 0 {
 						FixHistoricalActivityEndTime(activityIndex)
 					}
-
+					
 					let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(activityIndex)) // this one is a const char*, so don't dealloc it
-
+					
 					let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIndex))
 					let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
 					let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityIndex))
-
+					
 					defer {
 						activityTypePtr!.deallocate()
 						activityNamePtr!.deallocate()
 						activityDescPtr!.deallocate()
 					}
-
+					
 					if activityTypePtr == nil || activityNamePtr == nil || activityDescPtr == nil {
 						done = true
 					}
 					else {
 						let summary = ActivitySummary()
-
+						
 						let activityId = String(cString: activityIdPtr!.assumingMemoryBound(to: CChar.self))
 						let activityName = String(cString: activityNamePtr!.assumingMemoryBound(to: CChar.self))
 						let activityType = String(cString: activityTypePtr!.assumingMemoryBound(to: CChar.self))
 						let activityDesc = String(cString: activityDescPtr!.assumingMemoryBound(to: CChar.self))
-
+						
 						summary.id = activityId
 						summary.name = activityName
 						summary.type = activityType
@@ -141,8 +145,13 @@ class HistoryVM : ObservableObject {
 						summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime))
 						summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime))
 						summary.source = ActivitySummary.Source.database
-
-						self.historicalActivities.insert(summary, at: 0)
+						
+						DispatchQueue.main.async {
+							self.historicalActivities.insert(summary, at: 0)
+						}
+						
+						// Make sure we have the latest name, description, etc.
+						let _  = ApiClient.shared.requestActivityMetadata(activityId: activityId)
 
 						activityIndex += 1
 					}
@@ -153,33 +162,33 @@ class HistoryVM : ObservableObject {
 			}
 		}
 	}
-
+	
 	/// @brief Loads the activity list from our database as well as HealthKit (if enabled).
 	func buildHistoricalActivitiesList(createAllObjects: Bool) {
 		DispatchQueue.main.async {
-			self.state = State.empty
+			self.state = VmState.empty
+			self.historicalActivities = []
 		}
-		self.historicalActivities = []
 		self.loadActivitiesFromDatabase()
 		self.loadActivitiesFromHealthKit()
 		if createAllObjects {
 			CreateAllHistoricalActivityObjects()
 		}
 		DispatchQueue.main.async {
-			self.state = State.loaded
+			self.state = VmState.loaded
 		}
 	}
-
+	
 	func getFormattedTotalActivityAttribute(activityType: String, attributeName: String) -> String {
 		let attr = QueryActivityAttributeTotalByActivityType(attributeName, activityType)
 		return LiveActivityVM.formatActivityValue(attribute: attr)
 	}
-
+	
 	func getFormattedBestActivityAttribute(activityType: String, attributeName: String, smallestIsBest: Bool) -> String {
 		let attr = QueryBestActivityAttributeByActivityType(attributeName, activityType, smallestIsBest, nil)
 		return LiveActivityVM.formatActivityValue(attribute: attr)
 	}
-
+	
 	/// @brief Utility function for getting the image name that corresponds to an activity, such as running, cycling, etc.
 	static func imageNameForActivityType(activityType: String) -> String {
 		if activityType == ACTIVITY_TYPE_BENCH_PRESS {
@@ -231,5 +240,21 @@ class HistoryVM : ObservableObject {
 			return "3.circle"
 		}
 		return "stopwatch"
+	}
+	
+	@objc func activityMetadataUpdated(notification: NSNotification) {
+		if let data = notification.object as? Dictionary<String, AnyObject> {
+			let activityId = data[PARAM_ACTIVITY_ID] as? String
+			if activityId != nil {
+				DispatchQueue.main.async {
+					for item in self.historicalActivities {
+						if item.id == activityId {
+							item.name = data[PARAM_ACTIVITY_NAME] as? String ?? ""
+							item.description = data[PARAM_ACTIVITY_DESCRIPTION] as? String ?? ""
+						}
+					}
+				}
+			}
+		}
 	}
 }

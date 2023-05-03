@@ -41,7 +41,7 @@ struct StatisticsView: View {
 
 	var body: some View {
 		switch self.historyVM.state {
-		case HistoryVM.State.loaded:
+		case HistoryVM.VmState.loaded:
 			ScrollView() {
 				VStack(alignment: .center) {
 					if self.historyVM.historicalActivities.count > 0 {
@@ -109,7 +109,7 @@ struct StatisticsView: View {
 				}
 				.padding(10)
 			}
-		case HistoryVM.State.empty:
+		case HistoryVM.VmState.empty:
 			VStack(alignment: .center) {
 				ProgressView("Loading...").onAppear(perform: self.loadHistory)
 					.progressViewStyle(CircularProgressViewStyle(tint: .gray))
