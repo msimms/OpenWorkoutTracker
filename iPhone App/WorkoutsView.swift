@@ -155,20 +155,30 @@ struct WorkoutsView: View {
 
 			// The workouts
 			VStack(alignment: .leading) {
-				Text("Suggested Workouts")
-					.bold()
-					.padding(5)
-				List(self.workoutsVM.workouts, id: \.self) { item in
-					NavigationLink(destination: WorkoutDetailsView(workoutId: item.id)) {
-						HStack() {
-							Text(item.sportType)
-							Spacer()
-							Text("\(self.dateFormatter.string(from: item.scheduledTime))")
+				HStack() {
+					Text("Suggested Workouts")
+						.bold()
+						.padding(5)
+					Spacer()
+				}
+				if self.workoutsVM.workouts.count > 0 {
+					List(self.workoutsVM.workouts, id: \.self) { item in
+						NavigationLink(destination: WorkoutDetailsView(workoutId: item.id, title: item.sportType, description: item.workoutType, workout: item)) {
+							HStack() {
+								Text(item.sportType)
+								Spacer()
+								Text("\(self.dateFormatter.string(from: item.scheduledTime))")
+							}
 						}
 					}
+					.listStyle(.plain)
+					.padding(5)
 				}
-				.listStyle(.plain)
-				.padding(5)
+				else {
+					Text("None")
+						.padding(5)
+				}
+				Spacer()
 			}
 			.padding(.top, 5)
 		}

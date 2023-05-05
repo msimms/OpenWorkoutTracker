@@ -53,6 +53,7 @@ struct ZonesView: View {
 				.padding(10)
 
 				HStack() {
+					Spacer()
 					VStack(alignment: .center) {
 						Text("Running Paces")
 							.bold()
@@ -72,6 +73,7 @@ struct ZonesView: View {
 							Text("Run paces are not available because there are no runs of at least 5 km in the database.")
 						}
 					}
+					Spacer()
 				}
 				.padding(10)
 			}

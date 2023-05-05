@@ -37,10 +37,10 @@ class WorkoutSummary : Identifiable, Hashable, Equatable {
 	var id: String = ""
 	var sportType: String = ""
 	var workoutType: String = ""
-	var numIntervals: UInt = 0
 	var duration: Double = 0.0
 	var distance: Double = 0.0
 	var scheduledTime: Date = Date()
+	var intervals: Array<Dictionary<String, Any>> = []
 	
 	/// Constructor
 	init() {
@@ -111,6 +111,9 @@ class WorkoutsVM : ObservableObject {
 					if let sportType = summaryDict[PARAM_WORKOUT_SPORT_TYPE] as? String {
 						summaryObj.sportType = sportType
 					}
+					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? String {
+						summaryObj.workoutType = workoutType
+					}
 					if let duration = summaryDict[PARAM_WORKOUT_DURATION] as? Double {
 						summaryObj.duration = duration
 					}
@@ -120,7 +123,10 @@ class WorkoutsVM : ObservableObject {
 					if let scheduledTime = summaryDict[PARAM_WORKOUT_SCHEDULED_TIME] as? UInt {
 						summaryObj.scheduledTime = Date(timeIntervalSince1970: TimeInterval(scheduledTime))
 					}
-					
+					if let intervals = summaryDict[PARAM_WORKOUT_INTERVALS] as? Array<Dictionary<String, Any>> {
+						summaryObj.intervals = intervals
+					}
+
 					defer {
 						workoutJsonStrPtr.deallocate()
 					}
@@ -174,7 +180,7 @@ class WorkoutsVM : ObservableObject {
 		}
 		return result
 	}
-
+	
 	static func workoutGoalToString(goal: Goal) -> String {
 		switch goal {
 		case GOAL_FITNESS:

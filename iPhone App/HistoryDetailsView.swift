@@ -18,6 +18,41 @@ enum ExportDest {
 	case email, icloud
 }
 
+class MailComposeViewController: UIViewController, MFMailComposeViewControllerDelegate {
+	
+	func displayEmailComposerSheet(subjectStr: String, bodyStr: String, fileName: String, mimeType: String) throws {
+		if MFMailComposeViewController.canSendMail() {
+			let mail = MFMailComposeViewController()
+			
+			mail.setEditing(true, animated: true)
+			mail.setSubject(subjectStr)
+			mail.setMessageBody(bodyStr, isHTML: false)
+			mail.mailComposeDelegate = self
+			
+			if fileName.count > 0 {
+				let fileUrl = URL(fileURLWithPath: fileName)
+				let data = try Data(contentsOf: fileUrl)
+				let justTheFileName = fileUrl.lastPathComponent
+				
+				mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
+			}
+
+			UIApplication.shared.keyWindow?.rootViewController?.present(mail, animated: true)
+		}
+		else {
+			let alert = UIAlertController(title: "Error", message: "Sending email is not available on this device.", preferredStyle: .alert)
+			
+			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+			}))
+			UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
+		}
+	}
+	
+	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+		controller.dismiss(animated: true, completion: nil)
+	}
+}
+
 struct HistoryDetailsView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
@@ -36,33 +71,6 @@ struct HistoryDetailsView: View {
 	private func loadDetails() {
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.activityVM.load()
-		}
-	}
-
-	class MailComposeViewController: UIViewController, MFMailComposeViewControllerDelegate {
-		
-		func displayEmailComposerSheet(subjectStr: String, bodyStr: String, fileName: String, mimeType: String) throws {
-			if MFMailComposeViewController.canSendMail() {
-				let mail = MFMailComposeViewController()
-				mail.setEditing(true, animated: true)
-				mail.setSubject(subjectStr)
-				mail.setMessageBody(bodyStr, isHTML: false)
-				mail.mailComposeDelegate = self
-				
-				if fileName.count > 0 {
-					let fileUrl = URL(fileURLWithPath: fileName)
-					let data = try Data(contentsOf: fileUrl)
-					let justTheFileName = fileUrl.lastPathComponent
-
-					mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
-				}
-				
-				UIApplication.shared.windows.last?.rootViewController?.present(mail, animated: true, completion: nil)
-			}
-		}
-
-		func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-			controller.dismiss(animated: true, completion: nil)
 		}
 	}
 
