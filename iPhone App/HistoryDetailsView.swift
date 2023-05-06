@@ -119,42 +119,42 @@ struct HistoryDetailsView: View {
 					ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
 						HStack() {
 							if item == "Heart Rate" {
-								NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red))
+								NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Cadence" {
-								NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green))
+								NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Pace" {
-								NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple))
+								NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: self.activityVM.formatAsHHMMSS))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Power" {
-								NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue))
+								NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Speed" {
-								NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal))
+								NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "X Axis" {
-								NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red))
+								NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Y Axis" {
-								NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green))
+								NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Z Axis" {
-								NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue))
+								NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue, formatter: nil))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
