@@ -10,6 +10,7 @@ struct ContentView: View {
 	@State private var showingViewSelection: Bool = false
 	@State private var showingEditSelection: Bool = false
 	@State private var isBusy: Bool = false
+	private var backgroundImageIndex: Int = Int.random(in: 1..<4)
 
 	var body: some View {
 		NavigationStack() {
@@ -30,7 +31,7 @@ struct ContentView: View {
 					}
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
 				.padding(10)
 
 				// View history and statistics button
@@ -44,7 +45,7 @@ struct ContentView: View {
 					NavigationLink("Zones", destination: ZonesView())
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
 				.padding(10)
 
 				Spacer()
@@ -62,13 +63,13 @@ struct ContentView: View {
 					NavigationLink("Gear", destination: GearView())
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
 				.padding(10)
 				
 				// About button
 				NavigationLink("About", destination: AboutView())
 					.foregroundColor(.black)
-					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
 					.padding(10)
 					.toolbar {
 						ToolbarItem(placement: .bottomBar) {
@@ -77,12 +78,13 @@ struct ContentView: View {
 					}
 				}
 			}
-			.opacity(0.5)
+			.opacity(0.7)
 			.background(
-				Image("Background")
+				Image("Background" + String(backgroundImageIndex))
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
 					.aspectRatio(contentMode: .fill)
+					.opacity(0.7)
 			)
 		}
     }
