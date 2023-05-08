@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+	@Environment(\.colorScheme) var colorScheme
 	private var apiClient = ApiClient.shared
 	private var app = CommonApp.shared
 	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
@@ -112,7 +113,7 @@ struct SettingsView: View {
 							}
 						} label: {
 							Text("Logout")
-								.foregroundColor(.white)
+								.foregroundColor(colorScheme == .dark ? .black : .white)
 								.fontWeight(Font.Weight.heavy)
 								.frame(minWidth: 0, maxWidth: .infinity)
 								.padding()
@@ -126,7 +127,7 @@ struct SettingsView: View {
 						VStack() {
 							NavigationLink(destination: LoginView()) {
 								Text("Login")
-									.foregroundColor(.white)
+									.foregroundColor(colorScheme == .dark ? .black : .white)
 									.fontWeight(Font.Weight.heavy)
 									.frame(minWidth: 0, maxWidth: .infinity)
 									.padding()
