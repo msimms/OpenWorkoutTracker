@@ -136,6 +136,26 @@ std::string MapToJsonStr(const std::map<std::string, std::string>& data)
 	return json;
 }
 
+std::string MapToJsonStr(const std::map<std::string, double>& data)
+{
+	std::string json = "{";
+	bool first = true;
+	
+	for (auto iter = data.begin(); iter != data.end(); ++iter)
+	{
+		if (!first)
+			json += ", ";
+		first = false;
+		
+		json += "\"";
+		json += EscapeString(iter->first);
+		json += "\": ";
+		json += iter->second;
+	}
+	json += "}";
+	return json;
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -156,6 +176,7 @@ extern "C" {
 	std::vector<PacePlan>         g_pacePlans;              // cache of pace plans
 	std::vector<Workout>          g_workouts;               // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
+	std::string                   g_workoutGenInputs;       // for debugging purposes
 
 	//
 	// Functions for managing the database.
@@ -3289,6 +3310,7 @@ extern "C" {
 		{
 			// Calculate inputs from activities in the database.
 			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
+			g_workoutGenInputs = MapToJsonStr(inputs);
 
 			// Generate new workouts.
 			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
@@ -3320,8 +3342,13 @@ extern "C" {
 		return result;
 	}
 
+	const char* const ExportWorkoutGenInputsAsJSON(void)
+	{
+		return g_workoutGenInputs.c_str();
+	}
+
 	//
-	// Functions for managing workout generation.
+	// Functions for managing the list of algorithmically generated workouts.
 	//
 
 	bool InitializeWorkoutList(void)
@@ -3419,38 +3446,6 @@ extern "C" {
 			workout.SetScheduledTime(scheduledTime);
 
 			result = g_pDatabase->CreateWorkout(workout);
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
-	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, uint64_t duration, double recoveryPace, double recoveryDistance, uint64_t recoveryDuration)
-	{
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			Workout workout;
-
-			if (g_pDatabase->RetrieveWorkout(workoutId, workout))
-			{
-				WorkoutInterval interval;
-				interval.m_repeat = repeat;
-				interval.m_duration = duration;
-				interval.m_powerLow = 0.0;
-				interval.m_powerHigh = 0.0;
-				interval.m_distance = distance;
-				interval.m_pace = pace;
-				interval.m_recoveryDistance = recoveryDistance;
-				interval.m_recoveryPace = recoveryPace;
-				interval.m_recoveryDuration = recoveryDuration;
-
-				result = g_pDatabase->CreateWorkoutInterval(workout, interval);
-			}
 		}
 
 		g_dbLock.unlock();
@@ -4082,11 +4077,10 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			time_t mostRecentWeightTime = 0;
 			double mostRecentWeightKg = (double)0.0;
 
 			// Don't store redundant measurements.
-			if (g_pDatabase->RetrieveWeightMeasurementForTime(mostRecentWeightTime, mostRecentWeightKg))
+			if (g_pDatabase->RetrieveWeightMeasurementForTime(timestamp, mostRecentWeightKg))
 			{
 				result = true;
 			}

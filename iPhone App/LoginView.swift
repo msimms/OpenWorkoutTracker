@@ -17,14 +17,14 @@ struct LoginView: View {
 			Group() {
 				Text("Email")
 					.bold()
-				TextField("Email", text: $email)
+				TextField("Email", text: self.$email)
 					.autocapitalization(.none)
 			}
 			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 5, trailing: 0))
 			Group() {
 				Text("Password")
 					.bold()
-				SecureField("Password", text: $password)
+				SecureField("Password", text: self.$password)
 					.bold()
 			}
 			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
@@ -44,7 +44,7 @@ struct LoginView: View {
 					.frame(minWidth: 0, maxWidth: .infinity)
 					.padding()
 			}
-			.alert("Login failed!", isPresented: $showingLoginError) { }
+			.alert("Login failed!", isPresented: self.$showingLoginError) { }
 			.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 			.opacity(0.8)
 			.bold()

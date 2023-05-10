@@ -117,7 +117,7 @@ class HealthManager {
 			
 			// Error case: Call the callback handler, passing nil for the results.
 			if results == nil || results!.count == 0 {
-				callback(nil, error!)
+				callback(nil, error ?? nil)
 			}
 			
 			// Normal case: Call the callback handler with the results.
@@ -440,6 +440,17 @@ class HealthManager {
 		}
 	}
 
+	func updateWeightHistoryFromHealthKit() {
+		let weightType = HKQuantityType.init(HKQuantityTypeIdentifier.bodyMass)
+
+		self.quantitySamplesOfType(quantityType: weightType, callback: { sample, error in
+			guard sample != nil else {
+				return
+			}
+			ProcessWeightReading(sample!.quantity.doubleValue(for: HKUnit.gramUnit(with: HKMetricPrefix.kilo)), time_t(sample!.startDate.timeIntervalSince1970))
+		})
+	}
+
 	func saveHeightIntoHealthStore(height: Double, unitSystem: UnitSystem) {
 		var units = HKUnit.inch()
 		if unitSystem == UNIT_SYSTEM_METRIC {
@@ -576,6 +587,7 @@ class HealthManager {
 
 		if attributeName == ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED {
 			let qty = workout.totalDistance
+
 			if qty != nil {
 				attr.value.doubleVal = self.quantityInUserPreferredUnits(qty: qty!)
 				attr.valueType = TYPE_DOUBLE
@@ -588,6 +600,15 @@ class HealthManager {
 		}
 		else if attributeName == ACTIVITY_ATTRIBUTE_ELAPSED_TIME {
 			let qty = workout.duration
+
+			attr.value.timeVal = time_t(Date(timeIntervalSince1970: qty).timeIntervalSince1970)
+			attr.valueType = TYPE_TIME
+			attr.measureType = MEASURE_TIME
+			attr.valid = true
+		}
+		else if attributeName == ACTIVITY_ATTRIBUTE_MOVING_TIME {
+			let qty = workout.duration
+
 			attr.value.timeVal = time_t(Date(timeIntervalSince1970: qty).timeIntervalSince1970)
 			attr.valueType = TYPE_TIME
 			attr.measureType = MEASURE_TIME
@@ -715,7 +736,7 @@ class HealthManager {
 				let units = HealthManager.unitSystemToHKDistanceUnit(units: Preferences.preferredUnitSystem())
 
 				// HealthKit limitation: Cannot have activities lasting longer than four days.
-				if endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 < 345600 {
+				if endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 < (86400 * 4) {
 					if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
 						self.saveCyclingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
 					}

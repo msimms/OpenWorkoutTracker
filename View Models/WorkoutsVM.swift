@@ -73,25 +73,6 @@ class WorkoutsVM : ObservableObject {
 		// Remove the old workout descriptions.
 		self.workouts = []
 
-		// Add HealthKit activities as inputs to the workout generation algorithm.
-		let healthMgr = HealthManager.shared
-		healthMgr.readAllActivitiesFromHealthStore()
-		if healthMgr.workouts.count > 0 {
-			for i in 0...healthMgr.workouts.count - 1 {
-				let activityId = healthMgr.convertIndexToActivityId(index: i)
-				let activityType = healthMgr.getHistoricalActivityType(activityId: activityId)
-				let currentWorkout = healthMgr.workouts[activityId]
-
-				if currentWorkout != nil {
-					let startTime: time_t = Int(currentWorkout!.startDate.timeIntervalSince1970)
-					let endTime: time_t = Int(currentWorkout!.endDate.timeIntervalSince1970)
-					let distanceAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, activityId:activityId)
-
-					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr)
-				}
-			}
-		}
-
 		// Query the backend for the latest workouts.
 		if InitializeWorkoutList() {
 			
@@ -150,14 +131,24 @@ class WorkoutsVM : ObservableObject {
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
 			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
 			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double,
-			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t
-		{
+			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
 			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
 			CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
 		}
 	}
 
 	func updateWorkoutFromDict(dict: Dictionary<String, Any>) throws {
+		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
+			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
+			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
+			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double,
+			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
+			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
+			
+			if DeleteWorkout(workoutId) {
+				CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
+			}
+		}
 	}
 
 	func deleteAllWorkouts() -> Bool {
@@ -167,6 +158,34 @@ class WorkoutsVM : ObservableObject {
 
 	func regenerateWorkouts() -> Bool {
 		var result = false
+
+		// Add HealthKit activities as inputs to the workout generation algorithm.
+		// We'll de-dupe the list to make sure we're not double-counting anything.
+		let healthMgr = HealthManager.shared
+		healthMgr.readAllActivitiesFromHealthStore()
+		healthMgr.removeDuplicateActivities()
+		if healthMgr.workouts.count > 0 {
+			for i in 0...healthMgr.workouts.count - 1 {
+				let activityId = healthMgr.convertIndexToActivityId(index: i)
+				let activityType = healthMgr.getHistoricalActivityType(activityId: activityId)
+				let currentWorkout = healthMgr.workouts[activityId]
+				
+				if currentWorkout != nil {
+					let startTime: time_t = Int(currentWorkout!.startDate.timeIntervalSince1970)
+					let endTime: time_t = Int(currentWorkout!.endDate.timeIntervalSince1970)
+					
+					let distanceAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, activityId: activityId)
+					let elapsedTimeAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, activityId: activityId)
+					let movingTimeAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_MOVING_TIME, activityId: activityId)
+					let caloriesBurnedAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, activityId: activityId)
+					
+					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr)
+					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, elapsedTimeAttr)
+					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, movingTimeAttr)
+					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, caloriesBurnedAttr)
+				}
+			}
+		}
 
 		// This will remove existing workouts and generate new ones.
 		if GenerateWorkouts(Preferences.workoutGoal(),

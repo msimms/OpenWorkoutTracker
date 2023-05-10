@@ -47,6 +47,11 @@ class CommonApp : ObservableObject {
 		// Initialize HealthKit.
 		self.healthMgr.requestAuthorization()
 		
+#if !os(watchOS)
+		// Update our copy of the user's weight history.
+		self.healthMgr.updateWeightHistoryFromHealthKit()
+#endif
+		
 		// Initialize the watch session.
 		self.watchSession.startWatchSession()
 		
@@ -117,18 +122,19 @@ class CommonApp : ObservableObject {
 	}
 	
 	func exportActivityToWeb(activityId: String) throws {
-		let summary = ActivitySummary()
+		/*let summary = ActivitySummary()
 		summary.id = activityId
 		summary.source = ActivitySummary.Source.database
 		
 		let storedActivityVM = StoredActivityVM(activitySummary: summary)
 		storedActivityVM.load()
+
 		let fileName = try storedActivityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
 		let fileUrl = URL(string: "file://" + fileName)
 		let fileContents = try Data(contentsOf: fileUrl!)
 		let _ = self.apiClient.sendActivity(activityId: summary.id, name: fileUrl!.lastPathComponent, contents: fileContents)
 		
-		try FileManager.default.removeItem(at: fileUrl!)
+		try FileManager.default.removeItem(at: fileUrl!)*/
 	}
 	
 	@objc func loginStatusUpdated(notification: NSNotification) {
@@ -204,6 +210,7 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let friendsVM: FriendsVM = FriendsVM()
 					let friendsList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
+
 					for friend in friendsList {
 						if let friendDict = friend as? Dictionary<String, AnyObject> {
 							friendsVM.updateFriendFromDict(dict: friendDict)
@@ -260,6 +267,7 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let gearVM: GearVM = GearVM()
 					let gearList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
+
 					for gear in gearList {
 						if let gearDict = gear as? Dictionary<String, AnyObject> {
 							gearVM.updateGearFromDict(dict: gearDict)
@@ -324,6 +332,7 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let intervalSessionsVM = IntervalSessionsVM.shared
 					let sessionsList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
+
 					for session in sessionsList {
 						if let sessionDict = session as? Dictionary<String, AnyObject> {
 							intervalSessionsVM.updateIntervalSessionFromDict(dict: sessionDict)
@@ -343,6 +352,7 @@ class CommonApp : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let pacePlansVM = PacePlansVM.shared
 					let planList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
+
 					for plan in planList {
 						if let planDict = plan as? Dictionary<String, AnyObject> {
 							let _ = pacePlansVM.updatePacePlanFromDict(summaryDict: planDict)
@@ -361,6 +371,7 @@ class CommonApp : ObservableObject {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					let activitiesIdList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [String]
+
 					for activityId in activitiesIdList {
 						if IsActivityInDatabase(activityId) {
 							let _ = self.apiClient.exportActivity(activityId: activityId)
@@ -387,23 +398,23 @@ class CommonApp : ObservableObject {
 						
 						switch (code) {
 						case ACTIVITY_MATCH_CODE_NO_ACTIVITY:
-							// Send the activity
+							// Send the activity - server has never heard of this activity.
 							try app.exportActivityToWeb(activityId: activityId)
 							break
 						case ACTIVITY_MATCH_CODE_HASH_NOT_COMPUTED:
-							// Mark it as synced
+							// Mark it as synced - server already has this activity, but it could be different.
 							let _ = app.markAsSynchedToWeb(activityId: activityId)
 							break
 						case ACTIVITY_MATCH_CODE_HASH_DOES_NOT_MATCH:
-							// Mark it as synced
+							// Mark it as synced - server already has this activity, but it is different
 							let _ = app.markAsSynchedToWeb(activityId: activityId)
 							break
 						case ACTIVITY_MATCH_CODE_HASH_MATCHES:
-							// Mark it as synced
+							// Mark it as synced - server already has this activity
 							let _ = app.markAsSynchedToWeb(activityId: activityId)
 							break
 						case ACTIVITY_MATCH_CODE_HASH_NOT_PROVIDED:
-							// Mark it as synced
+							// Mark it as synced - server already has this activity, but it could be different.
 							let _ = app.markAsSynchedToWeb(activityId: activityId)
 							break
 						default:

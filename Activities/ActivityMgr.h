@@ -209,12 +209,12 @@ extern "C" {
 	// Functions for managing suggested workout generation.
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
+	const char* const ExportWorkoutGenInputsAsJSON(void);
 
 	// Functions for managing suggested workout generation.
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime);
-	bool AddWorkoutInterval(const char* const workoutId, uint8_t repeat, double pace, double distance, uint64_t duration, double recoveryPace, double recoveryDistance, uint64_t recoveryDuration);
 	bool DeleteWorkout(const char* const workoutId);
 	bool DeleteAllWorkouts(void);
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);

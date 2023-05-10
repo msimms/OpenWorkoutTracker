@@ -47,7 +47,7 @@ class LocationSensor : NSObject, CLLocationManagerDelegate, ObservableObject {
 			let alt = location.altitude
 			let horizontalAccuracy = location.horizontalAccuracy
 			let verticalAccuracy = location.verticalAccuracy
-			let theTimeMs = location.timestamp.timeIntervalSince1970 * 1000
+			let theTimeMs = location.timestamp.timeIntervalSince1970 * 1000 // in this instance timeIntervalSince1970 is returning seconds as a double
 			var processLocation = true
 			
 			// Check for bad data.

@@ -113,7 +113,7 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 	uint16_t minSets = selectedIntervalWorkout[MIN_SETS_INDEX];
 	uint16_t maxSets = selectedIntervalWorkout[MAX_SETS_INDEX];
 	std::uniform_int_distribution<size_t> numSetsDistribution(minSets, maxSets - 1);
-	uint16_t numSets = numSetsDistribution(generator);
+	uint16_t numSets = maxSets <= 1 ? 1 : numSetsDistribution(generator);
 	uint16_t intervalReps = selectedIntervalWorkout[NUM_REPS_INDEX];
 	uint16_t intervalSeconds = selectedIntervalWorkout[SECONDS_HARD_INDEX];
 	uint16_t restSeconds = selectedIntervalWorkout[SECONDS_EASY_INDEX];

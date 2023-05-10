@@ -9,6 +9,7 @@ struct WorkoutDetailsView: View {
 	var workoutId: String = ""
 	var title: String = ""
 	var description: String = ""
+	var scheduledTime: String = ""
 	var workout: WorkoutSummary
 
 	func workoutToBarChart() -> Array<Bar> {
@@ -33,6 +34,8 @@ struct WorkoutDetailsView: View {
 			Text(self.title)
 				.bold()
 			Text(self.description)
+				.bold()
+			Text(self.scheduledTime)
 				.bold()
 			Spacer()
 			BarChartView(bars: workoutToBarChart(), color: Color.blue)
