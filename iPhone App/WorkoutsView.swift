@@ -18,7 +18,7 @@ struct WorkoutsView: View {
 	@State private var allowPoolSwimWorkouts: Bool = Preferences.workoutsCanIncludePoolSwims()
 	@State private var allowOpenWaterSwims: Bool = Preferences.workoutsCanIncludeOpenWaterSwims()
 	@State private var showingWorkoutGenError: Bool = false
-	@State private var showingWorkoutGenError2: Bool = false
+	@State private var errorStr: String = ""
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -26,6 +26,22 @@ struct WorkoutsView: View {
 		df.timeZone = .current
 		return df
 	}()
+	
+	func regenerateWorkouts() {
+		do {
+			try self.workoutsVM.regenerateWorkouts()
+		}
+		catch WorkoutException.runtimeError(let errorStr) {
+			self.showingWorkoutGenError = true
+			self.errorStr = errorStr
+			NSLog(self.errorStr)
+		}
+		catch {
+			self.showingWorkoutGenError = true
+			self.errorStr = error.localizedDescription
+			NSLog(self.errorStr)
+		}
+	}
 
 	var body: some View {
 		VStack(alignment: .center) {
@@ -43,11 +59,11 @@ struct WorkoutsView: View {
 							Preferences.setWorkoutGoal(value: self.goal)
 							
 							// Regenerate
-							self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
+							self.regenerateWorkouts()
 						}
 					}
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
+				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				Spacer()
 				Text(WorkoutsVM.workoutGoalToString(goal: self.goal))
@@ -68,11 +84,11 @@ struct WorkoutsView: View {
 								Preferences.setWorkoutGoalType(value: goalType)
 								
 								// Regenerate
-								self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
+								self.regenerateWorkouts()
 							}
 						}
 					}
-					.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
+					.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 					.bold()
 					Spacer()
 					Text(WorkoutsVM.workoutGoalTypeToString(goalType: Preferences.workoutGoalType()))
@@ -112,11 +128,11 @@ struct WorkoutsView: View {
 							Preferences.setWorkoutLongRunDay(value: day)
 
 							// Regenerate
-							self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
+							self.regenerateWorkouts()
 						}
 					}
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
+				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				Spacer()
 				Text(WorkoutsVM.dayTypeToString(day: Preferences.workoutLongRunDay()))
@@ -130,9 +146,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludeBikeRides(value: self.allowCyclingWorkouts)
 
 					// Regenerate
-					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
+					self.regenerateWorkouts()
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
+				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
 			Toggle("Pool Swims", isOn: self.$allowPoolSwimWorkouts)
@@ -141,9 +157,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludePoolSwims(value: self.allowPoolSwimWorkouts)
 
 					// Regenerate
-					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
+					self.regenerateWorkouts()
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
+				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
 			Toggle("Open Water Swims", isOn: self.$allowOpenWaterSwims)
@@ -152,9 +168,9 @@ struct WorkoutsView: View {
 					Preferences.setWorkoutsCanIncludeOpenWaterSwims(value: self.allowOpenWaterSwims)
 
 					// Regenerate
-					self.showingWorkoutGenError = !self.workoutsVM.regenerateWorkouts()
+					self.regenerateWorkouts()
 				}
-				.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
+				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				.padding(5)
 
@@ -170,10 +186,20 @@ struct WorkoutsView: View {
 					List(self.workoutsVM.workouts, id: \.self) { item in
 						let timeStr = self.dateFormatter.string(from: item.scheduledTime)
 						NavigationLink(destination: WorkoutDetailsView(workoutId: item.id, title: item.sportType, description: item.workoutType, scheduledTime: timeStr, workout: item)) {
-							HStack() {
-								Text(item.sportType)
-								Spacer()
-								Text(timeStr)
+							VStack() {
+								HStack() {
+									Text(item.sportType)
+										.bold()
+									Spacer()
+									Text(timeStr)
+								}
+								if item.workoutType.count > 0 {
+									HStack() {
+										Text(item.workoutType)
+											.fontWeight(Font.Weight.light)
+										Spacer()
+									}
+								}
 							}
 						}
 					}
@@ -188,19 +214,35 @@ struct WorkoutsView: View {
 			}
 			.padding(.top, 5)
 
-			Button {
-				self.showingWorkoutGenError2 = !self.workoutsVM.regenerateWorkouts()
-			} label: {
-				Text("Regenerate")
-					.foregroundColor(colorScheme == .dark ? .black : .white)
-					.fontWeight(Font.Weight.heavy)
-					.frame(minWidth: 0, maxWidth: .infinity)
-					.padding()
+			HStack() {
+				Button {
+					self.regenerateWorkouts()
+				} label: {
+					Text("Regenerate")
+						.foregroundColor(colorScheme == .dark ? .black : .white)
+						.fontWeight(Font.Weight.heavy)
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.padding()
+				}
+				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
+				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+				.opacity(0.8)
+				.bold()
+				
+				if self.workoutsVM.inputs.count > 0 {
+					Button {
+					} label: {
+						NavigationLink("Debug", destination: DebugView(inputs: self.workoutsVM.inputs))
+							.foregroundColor(colorScheme == .dark ? .black : .white)
+							.fontWeight(Font.Weight.heavy)
+							.frame(minWidth: 0, maxWidth: .infinity)
+							.padding()
+					}
+					.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+					.opacity(0.8)
+					.bold()
+				}
 			}
-			.alert("Error re-generating the workout suggestions!", isPresented: self.$showingWorkoutGenError) { }
-			.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-			.opacity(0.8)
-			.bold()
 		}
 		.padding(10)
 	}

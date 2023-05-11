@@ -35,6 +35,9 @@ public:
 	/// @brief Looks through the user's activities and generates the inputs that will feed the workout generation algorithm.
 	std::map<std::string, double> CalculateInputs(const ActivitySummaryList& historicalActivities, Goal goal, GoalType goalType, time_t goalDate, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
 
+	/// @brief Returns True if calling GenerateWorkouts will actually succeed. Returns False otherwise..
+	bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
+
 	/// @brief Generates a list of suggested workouts for the next week. Workouts are not in any particular order.
 	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
 

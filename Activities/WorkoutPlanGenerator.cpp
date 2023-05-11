@@ -182,6 +182,21 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	return inputs;
 }
 
+bool WorkoutPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inputs)
+{
+	SwimPlanGenerator swimGen;
+	BikePlanGenerator bikeGen;
+	RunPlanGenerator runGen;
+
+	if (!swimGen.IsWorkoutPlanPossible(inputs))
+		return false;
+	if (!bikeGen.IsWorkoutPlanPossible(inputs))
+		return false;
+	if (!runGen.IsWorkoutPlanPossible(inputs))
+		return false;
+	return true;
+}
+
 std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
 {
 	SwimPlanGenerator swimGen;

@@ -29,7 +29,7 @@ let STR_FRIDAY =                       "Friday"
 let STR_SATURDAY =                     "Saturday"
 let STR_SUNDAY =                       "Sunday"
 
-enum WorkoutException: Error {
+enum WorkoutException : Error {
 	case runtimeError(String)
 }
 
@@ -61,15 +61,14 @@ class WorkoutSummary : Identifiable, Hashable, Equatable {
 
 class WorkoutsVM : ObservableObject {
 	@Published var workouts: Array<WorkoutSummary> = []
-	
+	var inputs: Dictionary<String, Any> = [:]
+
 	/// Constructor
 	init() {
-		let _ = self.buildWorkoutsList()
+		self.buildWorkoutsList()
 	}
 	
-	func buildWorkoutsList() -> Bool {
-		var result = false
-		
+	func buildWorkoutsList() {
 		// Remove the old workout descriptions.
 		self.workouts = []
 
@@ -92,8 +91,8 @@ class WorkoutsVM : ObservableObject {
 					if let sportType = summaryDict[PARAM_WORKOUT_SPORT_TYPE] as? String {
 						summaryObj.sportType = sportType
 					}
-					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? String {
-						summaryObj.workoutType = workoutType
+					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? UInt32 {
+						summaryObj.workoutType = WorkoutsVM.workoutTypeEnumToString(typeEnum: WorkoutType(rawValue: workoutType))
 					}
 					if let duration = summaryDict[PARAM_WORKOUT_DURATION] as? Double {
 						summaryObj.duration = duration
@@ -108,24 +107,18 @@ class WorkoutsVM : ObservableObject {
 						summaryObj.intervals = intervals
 					}
 
-					defer {
-						workoutJsonStrPtr.deallocate()
-					}
-					
 					self.workouts.append(summaryObj)
 					workoutIndex += 1
+
+					workoutJsonStrPtr.deallocate()
 				}
 				else {
 					done = true
 				}
 			}
-			
-			result = true
 		}
-		
-		return result
 	}
-	
+
 	func importWorkoutFromDict(dict: Dictionary<String, Any>) throws {
 		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
@@ -156,9 +149,7 @@ class WorkoutsVM : ObservableObject {
 		return DeleteAllWorkouts()
 	}
 
-	func regenerateWorkouts() -> Bool {
-		var result = false
-
+	func regenerateWorkouts() throws {
 		// Add HealthKit activities as inputs to the workout generation algorithm.
 		// We'll de-dupe the list to make sure we're not double-counting anything.
 		let healthMgr = HealthManager.shared
@@ -188,16 +179,32 @@ class WorkoutsVM : ObservableObject {
 		}
 
 		// This will remove existing workouts and generate new ones.
-		if GenerateWorkouts(Preferences.workoutGoal(),
-							Preferences.workoutGoalType(),
-							Preferences.workoutGoalDate(),
-							Preferences.workoutLongRunDay(),
-							Preferences.workoutsCanIncludePoolSwims(),
-							Preferences.workoutsCanIncludeOpenWaterSwims(),
-							Preferences.workoutsCanIncludeBikeRides()) {
-			result = self.buildWorkoutsList()
+		if let workoutGenResultsPtr = UnsafeRawPointer(GenerateWorkouts(Preferences.workoutGoal(),
+																		Preferences.workoutGoalType(),
+																		Preferences.workoutGoalDate(),
+																		Preferences.workoutLongRunDay(),
+																		Preferences.workoutsCanIncludePoolSwims(),
+																		Preferences.workoutsCanIncludeOpenWaterSwims(),
+																		Preferences.workoutsCanIncludeBikeRides())) {
+			let resultsJsonStr = String(cString: workoutGenResultsPtr.assumingMemoryBound(to: CChar.self))
+			if resultsJsonStr.count > 0 {
+				do {
+					self.inputs = try JSONSerialization.jsonObject(with: Data(resultsJsonStr.utf8), options: []) as! [String:Any]
+					self.buildWorkoutsList()
+				}
+				catch {
+					throw WorkoutException.runtimeError(resultsJsonStr)
+				}
+			}
+			else {
+				throw WorkoutException.runtimeError("Unspecified error when generating workouts.")
+			}
+
+			workoutGenResultsPtr.deallocate()
 		}
-		return result
+		else {
+			throw WorkoutException.runtimeError("Unspecified error when generating workouts.")
+		}
 	}
 	
 	static func workoutGoalToString(goal: Goal) -> String {
@@ -341,6 +348,55 @@ class WorkoutsVM : ObservableObject {
 		return DAY_TYPE_SUNDAY
 	}
 	
+	static func workoutTypeEnumToString(typeEnum: WorkoutType) -> String {
+		switch typeEnum {
+		case WORKOUT_TYPE_REST:
+			return WORKOUT_TYPE_STR_REST
+		case WORKOUT_TYPE_EVENT:
+			return WORKOUT_TYPE_STR_EVENT
+		case WORKOUT_TYPE_SPEED_RUN:
+			return WORKOUT_TYPE_STR_SPEED_RUN
+		case WORKOUT_TYPE_THRESHOLD_RUN:
+			return WORKOUT_TYPE_STR_THRESHOLD_RUN
+		case WORKOUT_TYPE_TEMPO_RUN:
+			return WORKOUT_TYPE_STR_TEMPO_RUN
+		case WORKOUT_TYPE_EASY_RUN:
+			return WORKOUT_TYPE_STR_EASY_RUN
+		case WORKOUT_TYPE_LONG_RUN:
+			return WORKOUT_TYPE_STR_LONG_RUN
+		case WORKOUT_TYPE_FREE_RUN:
+			return WORKOUT_TYPE_STR_FREE_RUN
+		case WORKOUT_TYPE_HILL_REPEATS:
+			return WORKOUT_TYPE_STR_HILL_REPEATS
+		case WORKOUT_TYPE_PROGRESSION_RUN:
+			return WORKOUT_TYPE_STR_PROGRESSION_RUN
+		case WORKOUT_TYPE_FARTLEK_RUN:
+			return WORKOUT_TYPE_STR_FARTLEK_RUN
+		case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
+			return WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN
+		case WORKOUT_TYPE_HILL_RIDE:
+			return WORKOUT_TYPE_STR_HILL_RIDE
+		case WORKOUT_TYPE_CADENCE_DRILLS:
+			return WORKOUT_TYPE_STR_CADENCE_DRILLS
+		case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
+			return WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE
+		case WORKOUT_TYPE_TEMPO_RIDE:
+			return WORKOUT_TYPE_STR_TEMPO_RIDE
+		case WORKOUT_TYPE_EASY_RIDE:
+			return WORKOUT_TYPE_STR_EASY_RIDE
+		case WORKOUT_TYPE_SWEET_SPOT_RIDE:
+			return WORKOUT_TYPE_STR_SWEET_SPOT_RIDE
+		case WORKOUT_TYPE_OPEN_WATER_SWIM:
+			return WORKOUT_TYPE_STR_OPEN_WATER_SWIM
+		case WORKOUT_TYPE_POOL_SWIM:
+			return WORKOUT_TYPE_STR_POOL_SWIM
+		case WORKOUT_TYPE_TECHNIQUE_SWIM:
+			return WORKOUT_TYPE_STR_TECHNIQUE_SWIM
+		default:
+			return ""
+		}
+	}
+
 	static func workoutTypeStringToEnum(typeStr: String) throws -> WorkoutType {
 		if typeStr == WORKOUT_TYPE_STR_REST {
 			return WORKOUT_TYPE_REST
@@ -380,6 +436,9 @@ class WorkoutsVM : ObservableObject {
 		}
 		if typeStr == WORKOUT_TYPE_STR_HILL_RIDE {
 			return WORKOUT_TYPE_HILL_RIDE
+		}
+		if typeStr == WORKOUT_TYPE_STR_CADENCE_DRILLS {
+			return WORKOUT_TYPE_CADENCE_DRILLS
 		}
 		if typeStr == WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE {
 			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE

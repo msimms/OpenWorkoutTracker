@@ -150,7 +150,7 @@ std::string MapToJsonStr(const std::map<std::string, double>& data)
 		json += "\"";
 		json += EscapeString(iter->first);
 		json += "\": ";
-		json += iter->second;
+		json += FormatDouble(iter->second);
 	}
 	json += "}";
 	return json;
@@ -176,7 +176,6 @@ extern "C" {
 	std::vector<PacePlan>         g_pacePlans;              // cache of pace plans
 	std::vector<Workout>          g_workouts;               // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
-	std::string                   g_workoutGenInputs;       // for debugging purposes
 
 	//
 	// Functions for managing the database.
@@ -3300,18 +3299,17 @@ extern "C" {
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	bool GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle)
+	char* GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle)
 	{
-		bool result = false;
+		std::string error;
+		std::string result;
 
-		g_dbLock.lock();
-
-		if (g_pDatabase)
+		// Calculate inputs from activities in the database.
+		std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
+		
+		// Can we actually do anything with the workouts we have?
+		if (g_workoutGen.IsWorkoutPlanPossible(inputs))
 		{
-			// Calculate inputs from activities in the database.
-			std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
-			g_workoutGenInputs = MapToJsonStr(inputs);
-
 			// Generate new workouts.
 			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
 			if (plannedWorkouts.size())
@@ -3320,31 +3318,53 @@ extern "C" {
 				WorkoutScheduler scheduler;
 				scheduler.ScheduleWorkouts(plannedWorkouts, scheduler.TimestampOfNextDayOfWeek(DAY_TYPE_MONDAY), preferredLongRunDay);
 				
-				// Delete old workouts.
-				result = g_pDatabase->DeleteAllWorkouts();
+				g_dbLock.lock();
 				
-				// Store the new workouts.
-				for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+				if (g_pDatabase)
 				{
-					Workout* workout = (*iter);
-					
-					if (workout)
+					// Delete old workouts.
+					if (g_pDatabase->DeleteAllWorkouts())
 					{
-						result &= g_pDatabase->CreateWorkout(*workout);
-						delete workout;
+						// Store the new workouts.
+						for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+						{
+							Workout* workout = (*iter);
+							
+							if (workout)
+							{
+								if (!g_pDatabase->CreateWorkout(*workout))
+								{
+									error = "Database Error!";
+								}
+								delete workout;
+							}
+						}
+					}
+					else
+					{
+						error = "Database Error!";
 					}
 				}
+				
+				g_dbLock.unlock();
+				
+				result = MapToJsonStr(inputs);
+			}
+			else
+			{
+				error = "Could not generate workouts!";
 			}
 		}
+		else
+		{
+			error = "A training plan is not possible work the given constraints!";
+		}
 
-		g_dbLock.unlock();
-
-		return result;
-	}
-
-	const char* const ExportWorkoutGenInputsAsJSON(void)
-	{
-		return g_workoutGenInputs.c_str();
+		if (error.length() > 0)
+		{
+			return strdup(error.c_str());
+		}
+		return strdup(result.c_str());
 	}
 
 	//

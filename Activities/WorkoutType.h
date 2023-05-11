@@ -17,6 +17,7 @@
 #define WORKOUT_TYPE_STR_FARTLEK_RUN         "Fartlek Session"     // A run in which the user can vary the pace at will
 #define WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN "Middle Distance Run" // 2 hour run for advanced distance runners
 #define WORKOUT_TYPE_STR_HILL_RIDE           "Hill Ride"           // Hill workout on the bike
+#define WORKOUT_TYPE_STR_CADENCE_DRILLS      "Cadence Drills"      // Cadence drills on the bike
 #define WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE "Speed Interval Ride" // A bike ride with speed intervals
 #define WORKOUT_TYPE_STR_TEMPO_RIDE          "Tempo Ride"          // A bike ride at tempo pace/power
 #define WORKOUT_TYPE_STR_EASY_RIDE           "Easy Ride"           // A bike ride at an easy pace/power

@@ -17,6 +17,7 @@
 		270422562902409C00FD02D4 /* TagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270422552902409C00FD02D4 /* TagsView.swift */; };
 		2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
 		2704225C2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
+		270658722A0D67CB0073B3F6 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270658712A0D67CB0073B3F6 /* DebugView.swift */; };
 		272E77E42910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		272E77E52910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		273132B4298C8D0800DEADF0 /* SplitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273132B3298C8D0800DEADF0 /* SplitsView.swift */; };
@@ -373,6 +374,7 @@
 		2704225028FDEE0200FD02D4 /* SensorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
 		270422552902409C00FD02D4 /* TagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsView.swift; sourceTree = "<group>"; };
 		2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CyclingRadarService.swift; path = LibBluetooth/mac/Source_Swift/CyclingRadarService.swift; sourceTree = "<group>"; };
+		270658712A0D67CB0073B3F6 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		272E77E32910ABE3009AB275 /* WatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSession.swift; sourceTree = "<group>"; };
 		273132B3298C8D0800DEADF0 /* SplitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsView.swift; sourceTree = "<group>"; };
 		273C418429075C9800273B64 /* OpenWorkoutTracker Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "OpenWorkoutTracker Watch App.entitlements"; sourceTree = "<group>"; };
@@ -1115,6 +1117,7 @@
 				2704224A28FB7B2900FD02D4 /* BarChartView.swift */,
 				278D92C528E38F17003B077C /* ContentView.swift */,
 				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
+				270658712A0D67CB0073B3F6 /* DebugView.swift */,
 				2740E12928F4427C00293B71 /* EditBikeView.swift */,
 				2740E11F28F0E83000293B71 /* EditIntervalSessionView.swift */,
 				2740E11C28F0E81400293B71 /* EditPacePlanView.swift */,
@@ -1561,6 +1564,7 @@
 				278D92C628E38F17003B077C /* ContentView.swift in Sources */,
 				2740DFF328E460E200293B71 /* PoolSwim.cpp in Sources */,
 				2740E08C28E6316E00293B71 /* WorkoutsView.swift in Sources */,
+				270658722A0D67CB0073B3F6 /* DebugView.swift in Sources */,
 				2740E0AD28E6758500293B71 /* PacePlansVM.swift in Sources */,
 				2740E03928E4CE1C00293B71 /* GpxFileReader.cpp in Sources */,
 				2740E08928E629CE00293B71 /* GearView.swift in Sources */,
@@ -1982,7 +1986,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "OpenWorkoutTracker Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F42C985T48;
 				ENABLE_PREVIEWS = YES;
@@ -2018,7 +2022,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "OpenWorkoutTracker Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = F42C985T48;
 				ENABLE_PREVIEWS = YES;
@@ -2056,7 +2060,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OpenWorkoutTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"iPhone App/Preview Content\"";
 				DEVELOPMENT_TEAM = F42C985T48;
 				ENABLE_PREVIEWS = YES;
@@ -2098,7 +2102,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = OpenWorkoutTracker.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"iPhone App/Preview Content\"";
 				DEVELOPMENT_TEAM = F42C985T48;
 				ENABLE_PREVIEWS = YES;
@@ -2305,7 +2309,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = F42C985T48;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ActivityWidgets/Info.plist;
@@ -2334,7 +2338,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = F42C985T48;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ActivityWidgets/Info.plist;
@@ -2364,7 +2368,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = F42C985T48;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ActivityComplications/Info.plist;
@@ -2394,7 +2398,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = F42C985T48;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ActivityComplications/Info.plist;

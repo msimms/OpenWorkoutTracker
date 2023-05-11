@@ -212,7 +212,8 @@ class SensorMgr : ObservableObject {
 						ProcessRadarReading(UInt(self.radarMeasurements.count), self.lastRadarUpdate)
 					}
 				}
-			} catch {
+			}
+			catch {
 				NSLog(error.localizedDescription)
 			}
 		}
