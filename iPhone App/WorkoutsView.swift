@@ -185,7 +185,7 @@ struct WorkoutsView: View {
 				if self.workoutsVM.workouts.count > 0 {
 					List(self.workoutsVM.workouts, id: \.self) { item in
 						let timeStr = self.dateFormatter.string(from: item.scheduledTime)
-						NavigationLink(destination: WorkoutDetailsView(workoutId: item.id, title: item.sportType, description: item.workoutType, scheduledTime: timeStr, workout: item)) {
+						NavigationLink(destination: WorkoutDetailsView(workoutId: item.id, title: item.sportType, subtitle: item.workoutType, description: item.description, scheduledTime: timeStr, workout: item)) {
 							VStack() {
 								HStack() {
 									Text(item.sportType)

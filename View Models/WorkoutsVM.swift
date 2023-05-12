@@ -37,6 +37,7 @@ class WorkoutSummary : Identifiable, Hashable, Equatable {
 	var id: String = ""
 	var sportType: String = ""
 	var workoutType: String = ""
+	var description: String = ""
 	var duration: Double = 0.0
 	var distance: Double = 0.0
 	var scheduledTime: Date = Date()
@@ -92,7 +93,9 @@ class WorkoutsVM : ObservableObject {
 						summaryObj.sportType = sportType
 					}
 					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? UInt32 {
-						summaryObj.workoutType = WorkoutsVM.workoutTypeEnumToString(typeEnum: WorkoutType(rawValue: workoutType))
+						let workoutTypeEnum = WorkoutType(rawValue: workoutType)
+						summaryObj.workoutType = WorkoutsVM.workoutTypeEnumToString(typeEnum: workoutTypeEnum)
+						summaryObj.description = WorkoutsVM.workoutDescription(typeEnum: workoutTypeEnum)
 					}
 					if let duration = summaryDict[PARAM_WORKOUT_DURATION] as? Double {
 						summaryObj.duration = duration
@@ -462,5 +465,54 @@ class WorkoutsVM : ObservableObject {
 			return WORKOUT_TYPE_TECHNIQUE_SWIM
 		}
 		throw WorkoutException.runtimeError("Invalid workout type string.")
+	}
+	
+	static func workoutDescription(typeEnum: WorkoutType) -> String {
+		switch typeEnum {
+		case WORKOUT_TYPE_REST:
+			return ""
+		case WORKOUT_TYPE_EVENT:
+			return "Goal Event!\n"
+		case WORKOUT_TYPE_SPEED_RUN:
+			return "Purpose: Speed sessions get you used to running at faster paces.\n"
+		case WORKOUT_TYPE_THRESHOLD_RUN:
+			return "Purpose: Tempo runs build a combination of speed and endurance. They should be performed at a pace you can hold for roughly one hour.\n"
+		case WORKOUT_TYPE_TEMPO_RUN:
+			return "Purpose: Tempo runs build a combination of speed and endurance. They should be performed at a pace slightly slower than your pace for a 5K race.\n"
+		case WORKOUT_TYPE_EASY_RUN:
+			return "Purpose: Easy runs build aerobic capacity while keeping the wear and tear on the body to a minimum. Pacing should be slow enough to stay at or near Heart Rate Zone 2, i.e. conversational pace.\n"
+		case WORKOUT_TYPE_LONG_RUN:
+			return "Purpose: Long runs build and develop endurance.\n"
+		case WORKOUT_TYPE_FREE_RUN:
+			return "Purpose: You should run this at a pace that feels comfortable for you.\n"
+		case WORKOUT_TYPE_HILL_REPEATS:
+			return "Purpose: Hill repeats build strength and improve speed.\n"
+		case WORKOUT_TYPE_PROGRESSION_RUN:
+			return "Purpose: Progression runs teach you to run fast on tired legs.\n"
+		case WORKOUT_TYPE_FARTLEK_RUN:
+			return "Purpose: Fartlek sessions combine speed and endurance without the formal structure of a traditional interval workout.\n"
+		case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
+			return ""
+		case WORKOUT_TYPE_HILL_RIDE:
+			return "Purpose: Hill workouts build the strength needed to tackle hills in a race. This can be done on the indoor trainer or replaced with low gear work if hills are not available.\n"
+		case WORKOUT_TYPE_CADENCE_DRILLS:
+			return WORKOUT_TYPE_STR_CADENCE_DRILLS
+		case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
+			return "Purpose: Speed interval sessions get you used to riding at faster paces.\n"
+		case WORKOUT_TYPE_TEMPO_RIDE:
+			return "Purpose: Tempo rides build a combination of speed and endurance. They should be performed at a pace you can hold for roughly one hour.\n"
+		case WORKOUT_TYPE_EASY_RIDE:
+			return "Purpose: Easy rides build aerobic capacity while keeping the wear and tear on the body to a minimum.\n"
+		case WORKOUT_TYPE_SWEET_SPOT_RIDE:
+			return "Purpose: Sweet spot rides are hard enough to improve fitness while being easy enough to do frequently.\n"
+		case WORKOUT_TYPE_OPEN_WATER_SWIM:
+			return "Purpose: Open water swims get you used to race day conditions.\n"
+		case WORKOUT_TYPE_POOL_SWIM:
+			return "Purpose: Most training is done in the swimming pool.\n"
+		case WORKOUT_TYPE_TECHNIQUE_SWIM:
+			return "Purpose: Develop proper swimming technique.\n"
+		default:
+			return ""
+		}
 	}
 }

@@ -8,6 +8,7 @@ import SwiftUI
 struct WorkoutDetailsView: View {
 	var workoutId: String = ""
 	var title: String = ""
+	var subtitle: String = ""
 	var description: String = ""
 	var scheduledTime: String = ""
 	var workout: WorkoutSummary
@@ -32,9 +33,12 @@ struct WorkoutDetailsView: View {
     var body: some View {
 		VStack() {
 			Text(self.title)
+				.font(.largeTitle)
+				.bold()
+			Text(self.subtitle)
+				.font(.title2)
 				.bold()
 			Text(self.description)
-				.bold()
 			Text(self.scheduledTime)
 				.bold()
 			Spacer()
