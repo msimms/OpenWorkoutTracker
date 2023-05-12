@@ -369,7 +369,7 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 }
 
 /// @brief Utility function for creating a free run workout.
-Workout* RunPlanGenerator::GenerateFreeRun(double easyRunPace)
+Workout* RunPlanGenerator::GenerateFreeRun(void)
 {
 	// Roll the dice to figure out the distance.
 	std::default_random_engine generator;
@@ -484,12 +484,63 @@ double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekFitnessGoal(std::map<std::string, double>& inputs)
+{
+	std::vector<Workout*> workouts;
+
+	// Extract the necessary inputs.
+	double functionalThresholdPace = inputs.at(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE);
+	double easyRunPace = inputs.at(WORKOUT_INPUT_EASY_RUN_PACE);
+	double longestRunWeek1 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_1); // Most recent week
+	double longestRunWeek2 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_2);
+	double longestRunWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_3);
+	double longestRunWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RUN_WEEK_4);
+	double numRuns = inputs.at(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS);
+
+	// Longest run in four weeks.
+	double longestRunInFourWeeks = std::max(std::max(longestRunWeek1, longestRunWeek2), std::max(longestRunWeek3, longestRunWeek4));
+
+	// Handle situation in which the user hasn't run in four weeks.
+	if (!PlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
+	{
+		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun());
+		return workouts;
+	}
+
+	// Handle situation in which the user hasn't run *much* in the last four weeks.
+	if (numRuns < 4)
+	{
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
+	}
+	else
+	{
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
+		workouts.push_back(this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, 5000));
+	}
+
+	// Calculate the total stress for each workout.
+	for (auto workoutIter = workouts.begin(); workoutIter != workouts.end(); ++workoutIter)
+	{
+		(*workoutIter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
+	}
+
+	return workouts;
+}
+
+/// @brief Generates the workouts for the next week, but doesn't schedule them.
+std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
 	std::vector<Workout*> workouts;
 
 	// 3 Critical runs: Speed session, tempo or threshold run, and long run
 
+	// Extract the necessary inputs.
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 	GoalType goalType = (GoalType)inputs.at(WORKOUT_INPUT_GOAL_TYPE);
 	time_t goalDate = (time_t)inputs.at(WORKOUT_INPUT_GOAL_DATE);
@@ -519,18 +570,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	// Handle situation in which the user hasn't run in four weeks.
 	if (!PlanGenerator::ValidFloat(longestRunInFourWeeks, 100.0))
 	{
-		workouts.push_back(this->GenerateFreeRun(easyRunPace));
-		workouts.push_back(this->GenerateFreeRun(easyRunPace));
-		workouts.push_back(this->GenerateFreeRun(easyRunPace));
-		return workouts;
-	}
-
-	// Handle situation in which the user hasn't run *much* in the last four weeks.
-	if (numRuns < 4)
-	{
-		workouts.push_back(this->GenerateFreeRun(easyRunPace));
-		workouts.push_back(this->GenerateFreeRun(easyRunPace));
-		workouts.push_back(this->GenerateFreeRun(easyRunPace));
+		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun());
+		workouts.push_back(this->GenerateFreeRun());
 		return workouts;
 	}
 
@@ -541,6 +583,15 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		  PlanGenerator::ValidFloat(longRunPace, 0.1) &&
 		  PlanGenerator::ValidFloat(easyRunPace, 0.1)))
 	{
+		return workouts;
+	}
+
+	// Handle situation in which the user hasn't run *much* in the last four weeks.
+	if (numRuns < 4)
+	{
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
 		return workouts;
 	}
 
@@ -642,7 +693,7 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 		}
 
 		// Add a long run. No need for a long run if the goal is general fitness.
-		if (!inTaper && goal != GOAL_FITNESS)
+		if (!inTaper)
 		{
 			Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
 			workouts.push_back(longRunWorkout);
@@ -743,4 +794,14 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkouts(std::map<std::string, d
 	}
 
 	return workouts;
+}
+
+/// @brief Generates the workouts for the next week, but doesn't schedule them.
+std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+{
+	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
+	
+	if (goal == GOAL_FITNESS)
+		return GenerateWorkoutsForNextWeekFitnessGoal(inputs);
+	return GenerateWorkoutsForNextWeekEventGoal(inputs, trainingPhilosophy);
 }

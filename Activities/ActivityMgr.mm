@@ -3311,7 +3311,7 @@ extern "C" {
 		if (g_workoutGen.IsWorkoutPlanPossible(inputs))
 		{
 			// Generate new workouts.
-			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkouts(inputs);
+			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkoutsForNextWeek(inputs);
 			if (plannedWorkouts.size())
 			{
 				// Schedule the workouts.

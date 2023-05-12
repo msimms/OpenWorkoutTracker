@@ -197,7 +197,7 @@ bool WorkoutPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& 
 	return true;
 }
 
-std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs)
+std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs)
 {
 	SwimPlanGenerator swimGen;
 	BikePlanGenerator bikeGen;
@@ -212,9 +212,9 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkouts(std::map<std::strin
 	if (!runGen.IsWorkoutPlanPossible(inputs))
 		return workouts;
 
-	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkouts(inputs, trainingIntensityDist);
-	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkouts(inputs, trainingIntensityDist);
-	std::vector<Workout*> runWorkouts = runGen.GenerateWorkouts(inputs, trainingIntensityDist);
+	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
+	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
+	std::vector<Workout*> runWorkouts = runGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
 
 	workouts.insert(workouts.end(), swimWorkouts.begin(), swimWorkouts.end());
 	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());

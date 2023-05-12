@@ -16,7 +16,7 @@ public:
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
 
 	/// @brief Generates the workouts for the next week, but doesn't schedule them.
-	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+	virtual std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 private:
 	Workout* GenerateHillRide(void);

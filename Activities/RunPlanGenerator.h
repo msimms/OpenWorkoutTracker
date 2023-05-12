@@ -23,13 +23,16 @@ public:
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
 
 	/// @brief Generates the workouts for the next week, but doesn't schedule them.
-	virtual std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
-	
+	virtual std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+
 private:
 	double m_cutoffPace1;
 	double m_cutoffPace2;
 	double m_trainingIntensityDistribution[NUM_TRAINING_ZONES];  // Ideal distribution of intensity across training zones
 	uint8_t m_intensityDistributionWorkouts[NUM_TRAINING_ZONES]; // Distribution of the number of workouts in each intensity zone
+
+	std::vector<Workout*> GenerateWorkoutsForNextWeekFitnessGoal(std::map<std::string, double>& inputs);
+	std::vector<Workout*> GenerateWorkoutsForNextWeekEventGoal(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 	static uint64_t NearestIntervalDistance(double distance, double minDistanceInMeters);
 
@@ -45,7 +48,7 @@ private:
 	Workout* GenerateNorwegianRun(double thresholdRunPace, double easyRunPace);
 	Workout* GenerateIntervalSession(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance);
 	Workout* GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance);
-	Workout* GenerateFreeRun(double easyRunPace);
+	Workout* GenerateFreeRun(void);
 	Workout* GenerateHillRepeats(void);
 	Workout* GenerateFartlekRun(void);
 	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);

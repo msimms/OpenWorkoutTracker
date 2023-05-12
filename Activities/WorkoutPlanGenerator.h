@@ -39,7 +39,7 @@ public:
 	bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
 
 	/// @brief Generates a list of suggested workouts for the next week. Workouts are not in any particular order.
-	std::vector<Workout*> GenerateWorkouts(std::map<std::string, double>& inputs);
+	std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs);
 
 private:
 	User   m_user;                        // Tells us what we need to know about the user/athlete

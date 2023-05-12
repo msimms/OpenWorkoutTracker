@@ -71,7 +71,7 @@ Workout* SwimPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> SwimPlanGenerator::GenerateWorkouts(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+std::vector<Workout*> SwimPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
 	std::vector<Workout*> workouts;
 
