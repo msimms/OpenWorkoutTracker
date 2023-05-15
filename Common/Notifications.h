@@ -7,7 +7,6 @@
 #define NOTIFICATION_NAME_FRIEND_LOCATION_UPDATED     "FriendLocationUpdated"
 #define NOTIFICATION_NAME_GEAR_LIST_UPDATED           "GearListUpdated"          // An updated gear list was returned from the (optional) server
 #define NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED    "PlannedWorkoutsUpdated"   // The planned workouts list from the (optional) server was updated
-#define NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED     "PlannedWorkoutUpdated"    // A planned workout from the (optional) server was updated
 #define NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED   "IntervalSessionsUpdated"  // The interval sessions list from the (optional) server was updated
 #define NOTIFICATION_NAME_INTERVAL_UPDATED            "IntervalUpdated"
 #define NOTIFICATION_NAME_INTERVAL_COMPLETE           "IntervalComplete"

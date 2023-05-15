@@ -23,7 +23,7 @@ class ApiClient : ObservableObject {
 	private init() {
 	}
 	
-	func makeRequest(url: String, method: String, data: Dictionary<String,Any>) -> Bool {
+	func makeRequest(url: String, method: String, data: Dictionary<String, Any>) -> Bool {
 
 		guard Preferences.isFeatureEnabled(feature: FEATURE_BROADCAST) else {
 			return true
@@ -48,8 +48,8 @@ class ApiClient : ObservableObject {
 					let text = String(data: jsonData, encoding: String.Encoding.ascii)!
 					let postLength = String(format: "%lu", text.count)
 					
-					request.setValue(postLength, forHTTPHeaderField:"Content-Length")
-					request.setValue("application/json", forHTTPHeaderField:"Content-Type")
+					request.setValue(postLength, forHTTPHeaderField: "Content-Length")
+					request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 					request.httpBody = text.data(using:.utf8)
 				}
 				
@@ -106,10 +106,6 @@ class ApiClient : ObservableObject {
 						}
 						else if url.contains(REMOTE_API_LIST_PLANNED_WORKOUTS_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
-						}
-						else if url.contains(REMOTE_API_REQUEST_WORKOUT_DETAILS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
 						else if url.contains(REMOTE_API_LIST_INTERVAL_WORKOUTS_URL) {
@@ -238,16 +234,7 @@ class ApiClient : ObservableObject {
 		}
 		return false
 	}
-	
-	func requestWorkoutDetails(workoutId: String) -> Bool {
-		var postDict: Dictionary<String, String> = [:]
-		postDict[PARAM_WORKOUT_ID] = workoutId
-		postDict["format"] = "json"
-		
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_WORKOUT_DETAILS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
-	}
-	
+
 	func requestToFollow(target: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TARGET_EMAIL] = target
@@ -255,7 +242,7 @@ class ApiClient : ObservableObject {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_REQUEST_TO_FOLLOW_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
-	
+
 	func exportActivity(activityId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -272,7 +259,7 @@ class ApiClient : ObservableObject {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_DELETE_ACTIVITY_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-	
+
 	func createTag(tag: String, activityId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TAG] = tag
@@ -281,7 +268,7 @@ class ApiClient : ObservableObject {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_TAG_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-	
+
 	func deleteTag(tag: String, activityId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TAG] = tag
@@ -290,7 +277,7 @@ class ApiClient : ObservableObject {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_DELETE_TAG_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-	
+
 	func claimDevice(deviceId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_DEVICE_ID2] = deviceId
@@ -298,7 +285,7 @@ class ApiClient : ObservableObject {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CLAIM_DEVICE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
-	
+
 	func setActivityName(activityId: String, name: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -353,6 +340,12 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
+	func sendPlannedWorkouts(workoutsJson: String) -> Bool {
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_PLANNED_WORKOUTS_URL)
+		let workoutsDict: Dictionary<String, String> = ["workouts": workoutsJson]
+		return self.makeRequest(url: urlStr, method: "POST", data: workoutsDict)
+	}
+
 	func sendIntervalSession(description: Dictionary<String, String>) -> Bool {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_CREATE_INTERVAL_WORKOUT_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: description)

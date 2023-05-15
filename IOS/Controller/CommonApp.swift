@@ -68,7 +68,6 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.downloadedActivityReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUT_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.intervalSessionsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.pacePlansUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.unsynchedActivitiesListReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: nil)
@@ -309,23 +308,7 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-	
-	@objc func plannedWorkoutUpdated(notification: NSNotification) {
-		do {
-			if let data = notification.object as? Dictionary<String, AnyObject> {
-				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
-						let workoutsVM: WorkoutsVM = WorkoutsVM()
-						try workoutsVM.updateWorkoutFromDict(dict: responseDict)
-					}
-				}
-			}
-		}
-		catch {
-			NSLog(error.localizedDescription)
-		}
-	}
-	
+
 	@objc func intervalSessionsUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {

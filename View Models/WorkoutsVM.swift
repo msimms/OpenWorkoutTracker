@@ -75,10 +75,9 @@ class WorkoutsVM : ObservableObject {
 
 		// Query the backend for the latest workouts.
 		if InitializeWorkoutList() {
-			
 			var workoutIndex = 0
 			var done = false
-			
+
 			while !done {
 				if let workoutJsonStrPtr = UnsafeRawPointer(RetrieveWorkoutAsJSON(workoutIndex)) {
 					let summaryObj = WorkoutSummary()
@@ -122,6 +121,35 @@ class WorkoutsVM : ObservableObject {
 		}
 	}
 
+	func sendPlannedWorkoutsToServer() {
+		if InitializeWorkoutList() {
+			var workoutListJsonStr: String = "["
+			var workoutIndex = 0
+			var done = false
+			var first = true
+
+			while !done {
+				if let workoutJsonStrPtr = UnsafeRawPointer(RetrieveWorkoutAsJSON(workoutIndex)) {
+					if !first {
+						workoutListJsonStr += ","
+					}
+					let workoutJsonStr = String(cString: workoutJsonStrPtr.assumingMemoryBound(to: CChar.self))
+					workoutListJsonStr += workoutJsonStr
+					workoutIndex += 1
+					workoutJsonStrPtr.deallocate()
+					first = false
+				}
+				else {
+					done = true
+				}
+			}
+
+			workoutListJsonStr += "]"
+
+			let _ = ApiClient.shared.sendPlannedWorkouts(workoutsJson: workoutListJsonStr)
+		}
+	}
+
 	func importWorkoutFromDict(dict: Dictionary<String, Any>) throws {
 		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
@@ -132,21 +160,6 @@ class WorkoutsVM : ObservableObject {
 			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
 
 			CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
-		}
-	}
-
-	func updateWorkoutFromDict(dict: Dictionary<String, Any>) throws {
-		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
-			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
-			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
-			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
-
-			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double ?? 0.0
-			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
-
-			if DeleteWorkout(workoutId) {
-				CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
-			}
 		}
 	}
 
@@ -197,6 +210,7 @@ class WorkoutsVM : ObservableObject {
 				do {
 					self.inputs = try JSONSerialization.jsonObject(with: Data(resultsJsonStr.utf8), options: []) as! [String:Any]
 					self.buildWorkoutsList()
+					self.sendPlannedWorkoutsToServer()
 				}
 				catch {
 					throw WorkoutException.runtimeError(resultsJsonStr)
