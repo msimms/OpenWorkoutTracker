@@ -126,9 +126,11 @@ class WorkoutsVM : ObservableObject {
 		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
 			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
-			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double,
 			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
+
+			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double ?? 0.0
 			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
+
 			CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
 		}
 	}
@@ -137,10 +139,11 @@ class WorkoutsVM : ObservableObject {
 		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
 			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
-			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double,
 			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
+
+			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double ?? 0.0
 			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
-			
+
 			if DeleteWorkout(workoutId) {
 				CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
 			}
