@@ -55,7 +55,7 @@ struct WorkoutsView: View {
 					ForEach([STR_FITNESS, STR_5K_RUN, STR_10K_RUN, STR_15K_RUN, STR_HALF_MARATHON_RUN, STR_MARATHON_RUN, STR_50K_RUN, STR_50_MILE_RUN, STR_SPRINT_TRIATHLON, STR_OLYMPIC_TRIATHLON, STR_HALF_IRON_DISTANCE_TRIATHLON, STR_IRON_DISTANCE_TRIATHLON], id: \.self) { item in
 						Button(item) {
 							// Save
-							self.goal = WorkoutsVM.workoutStringToGoal(goalStr: item)
+							self.goal = WorkoutsVM.workoutGoalStringToEnum(goalStr: item)
 							Preferences.setWorkoutGoal(value: self.goal)
 							
 							// Regenerate
@@ -66,7 +66,7 @@ struct WorkoutsView: View {
 				.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 				.bold()
 				Spacer()
-				Text(WorkoutsVM.workoutGoalToString(goal: self.goal))
+				Text(WorkoutsVM.workoutGoalEnumToString(goal: self.goal))
 			}
 			.padding(5)
 
@@ -80,9 +80,9 @@ struct WorkoutsView: View {
 						ForEach([STR_COMPLETION, STR_SPEED], id: \.self) { item in
 							Button(item) {
 								// Save
-								let goalType = WorkoutsVM.workoutStringToGoalType(goalStr: item)
+								let goalType = WorkoutsVM.workoutGoalTypeStringToEnum(goalStr: item)
 								Preferences.setWorkoutGoalType(value: goalType)
-								
+
 								// Regenerate
 								self.regenerateWorkouts()
 							}
@@ -91,7 +91,7 @@ struct WorkoutsView: View {
 					.alert(self.errorStr, isPresented: self.$showingWorkoutGenError) { }
 					.bold()
 					Spacer()
-					Text(WorkoutsVM.workoutGoalTypeToString(goalType: Preferences.workoutGoalType()))
+					Text(WorkoutsVM.workoutGoalTypeEnumToString(goalType: Preferences.workoutGoalType()))
 				}
 				.padding(5)
 

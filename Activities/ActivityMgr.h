@@ -217,6 +217,7 @@ extern "C" {
 	bool DeleteWorkout(const char* const workoutId);
 	bool DeleteAllWorkouts(void);
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);
+	const char* WorkoutTypeToString(WorkoutType workoutType);
 	WorkoutType WorkoutTypeStrToEnum(const char* const workoutTypeStr);
 
 	// Functions for converting units.

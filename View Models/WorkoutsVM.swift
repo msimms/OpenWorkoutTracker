@@ -91,10 +91,9 @@ class WorkoutsVM : ObservableObject {
 					if let sportType = summaryDict[PARAM_WORKOUT_SPORT_TYPE] as? String {
 						summaryObj.sportType = sportType
 					}
-					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? UInt32 {
-						let workoutTypeEnum = WorkoutType(rawValue: workoutType)
-						summaryObj.workoutType = WorkoutsVM.workoutTypeEnumToString(typeEnum: workoutTypeEnum)
-						summaryObj.description = WorkoutsVM.workoutDescription(typeEnum: workoutTypeEnum)
+					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? String {
+						summaryObj.workoutType = workoutType
+						summaryObj.description = WorkoutsVM.workoutDescription(typeEnum: WorkoutTypeStrToEnum(workoutType))
 					}
 					if let duration = summaryDict[PARAM_WORKOUT_DURATION] as? Double {
 						summaryObj.duration = duration
@@ -133,11 +132,12 @@ class WorkoutsVM : ObservableObject {
 					if !first {
 						workoutListJsonStr += ","
 					}
+					first = false
+
 					let workoutJsonStr = String(cString: workoutJsonStrPtr.assumingMemoryBound(to: CChar.self))
 					workoutListJsonStr += workoutJsonStr
 					workoutIndex += 1
 					workoutJsonStrPtr.deallocate()
-					first = false
 				}
 				else {
 					done = true
@@ -157,7 +157,7 @@ class WorkoutsVM : ObservableObject {
 			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
 
 			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double ?? 0.0
-			let workoutType = try WorkoutsVM.workoutTypeStringToEnum(typeStr: workoutTypeStr)
+			let workoutType = WorkoutTypeStrToEnum(workoutTypeStr)
 
 			CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
 		}
@@ -227,7 +227,7 @@ class WorkoutsVM : ObservableObject {
 		}
 	}
 	
-	static func workoutGoalToString(goal: Goal) -> String {
+	static func workoutGoalEnumToString(goal: Goal) -> String {
 		switch goal {
 		case GOAL_FITNESS:
 			return STR_FITNESS
@@ -259,7 +259,7 @@ class WorkoutsVM : ObservableObject {
 		return STR_FITNESS
 	}
 	
-	static func workoutStringToGoal(goalStr: String) -> Goal {
+	static func workoutGoalStringToEnum(goalStr: String) -> Goal {
 		if goalStr == STR_FITNESS {
 			return GOAL_FITNESS
 		}
@@ -299,7 +299,7 @@ class WorkoutsVM : ObservableObject {
 		return GOAL_FITNESS
 	}
 	
-	static func workoutGoalTypeToString(goalType: GoalType) -> String {
+	static func workoutGoalTypeEnumToString(goalType: GoalType) -> String {
 		switch goalType {
 		case GOAL_TYPE_SPEED:
 			return STR_SPEED
@@ -311,7 +311,7 @@ class WorkoutsVM : ObservableObject {
 		return STR_COMPLETION
 	}
 	
-	static func workoutStringToGoalType(goalStr: String) -> GoalType {
+	static func workoutGoalTypeStringToEnum(goalStr: String) -> GoalType {
 		if goalStr == STR_SPEED {
 			return GOAL_TYPE_SPEED
 		}
@@ -367,123 +367,7 @@ class WorkoutsVM : ObservableObject {
 		}
 		return DAY_TYPE_SUNDAY
 	}
-	
-	static func workoutTypeEnumToString(typeEnum: WorkoutType) -> String {
-		switch typeEnum {
-		case WORKOUT_TYPE_REST:
-			return WORKOUT_TYPE_STR_REST
-		case WORKOUT_TYPE_EVENT:
-			return WORKOUT_TYPE_STR_EVENT
-		case WORKOUT_TYPE_SPEED_RUN:
-			return WORKOUT_TYPE_STR_SPEED_RUN
-		case WORKOUT_TYPE_THRESHOLD_RUN:
-			return WORKOUT_TYPE_STR_THRESHOLD_RUN
-		case WORKOUT_TYPE_TEMPO_RUN:
-			return WORKOUT_TYPE_STR_TEMPO_RUN
-		case WORKOUT_TYPE_EASY_RUN:
-			return WORKOUT_TYPE_STR_EASY_RUN
-		case WORKOUT_TYPE_LONG_RUN:
-			return WORKOUT_TYPE_STR_LONG_RUN
-		case WORKOUT_TYPE_FREE_RUN:
-			return WORKOUT_TYPE_STR_FREE_RUN
-		case WORKOUT_TYPE_HILL_REPEATS:
-			return WORKOUT_TYPE_STR_HILL_REPEATS
-		case WORKOUT_TYPE_PROGRESSION_RUN:
-			return WORKOUT_TYPE_STR_PROGRESSION_RUN
-		case WORKOUT_TYPE_FARTLEK_RUN:
-			return WORKOUT_TYPE_STR_FARTLEK_RUN
-		case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
-			return WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN
-		case WORKOUT_TYPE_HILL_RIDE:
-			return WORKOUT_TYPE_STR_HILL_RIDE
-		case WORKOUT_TYPE_CADENCE_DRILLS:
-			return WORKOUT_TYPE_STR_CADENCE_DRILLS
-		case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
-			return WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE
-		case WORKOUT_TYPE_TEMPO_RIDE:
-			return WORKOUT_TYPE_STR_TEMPO_RIDE
-		case WORKOUT_TYPE_EASY_RIDE:
-			return WORKOUT_TYPE_STR_EASY_RIDE
-		case WORKOUT_TYPE_SWEET_SPOT_RIDE:
-			return WORKOUT_TYPE_STR_SWEET_SPOT_RIDE
-		case WORKOUT_TYPE_OPEN_WATER_SWIM:
-			return WORKOUT_TYPE_STR_OPEN_WATER_SWIM
-		case WORKOUT_TYPE_POOL_SWIM:
-			return WORKOUT_TYPE_STR_POOL_SWIM
-		case WORKOUT_TYPE_TECHNIQUE_SWIM:
-			return WORKOUT_TYPE_STR_TECHNIQUE_SWIM
-		default:
-			return ""
-		}
-	}
 
-	static func workoutTypeStringToEnum(typeStr: String) throws -> WorkoutType {
-		if typeStr == WORKOUT_TYPE_STR_REST {
-			return WORKOUT_TYPE_REST
-		}
-		if typeStr == WORKOUT_TYPE_STR_EVENT {
-			return WORKOUT_TYPE_EVENT
-		}
-		if typeStr == WORKOUT_TYPE_STR_SPEED_RUN {
-			return WORKOUT_TYPE_SPEED_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_THRESHOLD_RUN {
-			return WORKOUT_TYPE_THRESHOLD_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_TEMPO_RUN {
-			return WORKOUT_TYPE_TEMPO_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_EASY_RUN {
-			return WORKOUT_TYPE_EASY_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_LONG_RUN {
-			return WORKOUT_TYPE_LONG_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_FREE_RUN {
-			return WORKOUT_TYPE_FREE_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_HILL_REPEATS {
-			return WORKOUT_TYPE_HILL_REPEATS
-		}
-		if typeStr == WORKOUT_TYPE_STR_PROGRESSION_RUN {
-			return WORKOUT_TYPE_PROGRESSION_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_FARTLEK_RUN {
-			return WORKOUT_TYPE_FARTLEK_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN {
-			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN
-		}
-		if typeStr == WORKOUT_TYPE_STR_HILL_RIDE {
-			return WORKOUT_TYPE_HILL_RIDE
-		}
-		if typeStr == WORKOUT_TYPE_STR_CADENCE_DRILLS {
-			return WORKOUT_TYPE_CADENCE_DRILLS
-		}
-		if typeStr == WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE {
-			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE
-		}
-		if typeStr == WORKOUT_TYPE_STR_TEMPO_RIDE {
-			return WORKOUT_TYPE_TEMPO_RIDE
-		}
-		if typeStr == WORKOUT_TYPE_STR_EASY_RIDE {
-			return WORKOUT_TYPE_EASY_RIDE
-		}
-		if typeStr == WORKOUT_TYPE_STR_SWEET_SPOT_RIDE {
-			return WORKOUT_TYPE_SWEET_SPOT_RIDE
-		}
-		if typeStr == WORKOUT_TYPE_STR_OPEN_WATER_SWIM {
-			return WORKOUT_TYPE_OPEN_WATER_SWIM
-		}
-		if typeStr == WORKOUT_TYPE_STR_POOL_SWIM {
-			return WORKOUT_TYPE_POOL_SWIM
-		}
-		if typeStr == WORKOUT_TYPE_STR_TECHNIQUE_SWIM {
-			return WORKOUT_TYPE_TECHNIQUE_SWIM
-		}
-		throw WorkoutException.runtimeError("Invalid workout type string.")
-	}
-	
 	static func workoutDescription(typeEnum: WorkoutType) -> String {
 		switch typeEnum {
 		case WORKOUT_TYPE_REST:

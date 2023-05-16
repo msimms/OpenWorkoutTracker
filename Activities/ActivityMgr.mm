@@ -3403,7 +3403,7 @@ extern "C" {
 
 			params.insert(std::make_pair(PARAM_WORKOUT_ID, EscapeAndQuoteString(workout.GetId())));
 			params.insert(std::make_pair(PARAM_WORKOUT_SPORT_TYPE, EscapeAndQuoteString(workout.GetSport())));
-			params.insert(std::make_pair(PARAM_WORKOUT_WORKOUT_TYPE, FormatInt((uint64_t)workout.GetType())));
+			params.insert(std::make_pair(PARAM_WORKOUT_WORKOUT_TYPE, EscapeAndQuoteString(WorkoutTypeToString(workout.GetType()))));
 			params.insert(std::make_pair(PARAM_WORKOUT_NUM_INTERVALS, FormatInt((uint64_t)workout.GetIntervals().size())));
 			params.insert(std::make_pair(PARAM_WORKOUT_DURATION, FormatInt((uint64_t)workout.CalculateDuration())));
 			params.insert(std::make_pair(PARAM_WORKOUT_DISTANCE, FormatDouble(workout.CalculateDistance())));
@@ -3526,6 +3526,57 @@ extern "C" {
 		return NULL;
 	}
 
+	const char* WorkoutTypeToString(WorkoutType workoutType)
+	{
+		switch (workoutType)
+		{
+		case WORKOUT_TYPE_REST:
+			return WORKOUT_TYPE_STR_REST;
+		case WORKOUT_TYPE_EVENT:
+			return WORKOUT_TYPE_STR_EVENT;
+		case WORKOUT_TYPE_SPEED_RUN:
+			return WORKOUT_TYPE_STR_SPEED_RUN;
+		case WORKOUT_TYPE_THRESHOLD_RUN:
+			return WORKOUT_TYPE_STR_THRESHOLD_RUN;
+		case WORKOUT_TYPE_TEMPO_RUN:
+			return WORKOUT_TYPE_STR_TEMPO_RUN;
+		case WORKOUT_TYPE_EASY_RUN:
+			return WORKOUT_TYPE_STR_EASY_RUN;
+		case WORKOUT_TYPE_LONG_RUN:
+			return WORKOUT_TYPE_STR_LONG_RUN;
+		case WORKOUT_TYPE_FREE_RUN:
+			return WORKOUT_TYPE_STR_FREE_RUN;
+		case WORKOUT_TYPE_HILL_REPEATS:
+			return WORKOUT_TYPE_STR_HILL_REPEATS;
+		case WORKOUT_TYPE_PROGRESSION_RUN:
+			return WORKOUT_TYPE_STR_PROGRESSION_RUN;
+		case WORKOUT_TYPE_FARTLEK_RUN:
+			return WORKOUT_TYPE_STR_FARTLEK_RUN;
+		case WORKOUT_TYPE_MIDDLE_DISTANCE_RUN:
+			return WORKOUT_TYPE_STR_MIDDLE_DISTANCE_RUN;
+		case WORKOUT_TYPE_HILL_RIDE:
+			return WORKOUT_TYPE_STR_HILL_RIDE;
+		case WORKOUT_TYPE_CADENCE_DRILLS:
+			return WORKOUT_TYPE_STR_CADENCE_DRILLS;
+		case WORKOUT_TYPE_SPEED_INTERVAL_RIDE:
+			return WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE;
+		case WORKOUT_TYPE_TEMPO_RIDE:
+			return WORKOUT_TYPE_STR_TEMPO_RIDE;
+		case WORKOUT_TYPE_EASY_RIDE:
+			return WORKOUT_TYPE_STR_EASY_RIDE;
+		case WORKOUT_TYPE_SWEET_SPOT_RIDE:
+			return WORKOUT_TYPE_STR_SWEET_SPOT_RIDE;
+		case WORKOUT_TYPE_OPEN_WATER_SWIM:
+			return WORKOUT_TYPE_STR_OPEN_WATER_SWIM;
+		case WORKOUT_TYPE_POOL_SWIM:
+			return WORKOUT_TYPE_STR_POOL_SWIM;
+		case WORKOUT_TYPE_TECHNIQUE_SWIM:
+			return WORKOUT_TYPE_STR_TECHNIQUE_SWIM;
+		default:
+			return "";
+		}
+	}
+
 	WorkoutType WorkoutTypeStrToEnum(const char* const workoutTypeStr)
 	{
 		std::string temp = workoutTypeStr;
@@ -3556,6 +3607,8 @@ extern "C" {
 			return WORKOUT_TYPE_MIDDLE_DISTANCE_RUN;
 		if (temp.compare(WORKOUT_TYPE_STR_HILL_RIDE) == 0)
 			return WORKOUT_TYPE_HILL_RIDE;
+		if (temp.compare(WORKOUT_TYPE_STR_CADENCE_DRILLS) == 0)
+			return WORKOUT_TYPE_CADENCE_DRILLS;
 		if (temp.compare(WORKOUT_TYPE_STR_SPEED_INTERVAL_RIDE) == 0)
 			return WORKOUT_TYPE_SPEED_INTERVAL_RIDE;
 		if (temp.compare(WORKOUT_TYPE_STR_TEMPO_RIDE) == 0)
