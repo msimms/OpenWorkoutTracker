@@ -6,6 +6,7 @@
 #ifndef __ANDROID__
 #include <uuid/uuid.h>
 #endif
+#include <utility>
 
 WorkoutFactory::WorkoutFactory()
 {
@@ -15,7 +16,7 @@ WorkoutFactory::~WorkoutFactory()
 {
 }
 
-Workout* WorkoutFactory::Create(WorkoutType type, const std::string& sport)
+std::unique_ptr<Workout> WorkoutFactory::Create(WorkoutType type, const std::string& sport)
 {
 #ifdef __ANDROID__
 	std::string idStr = ""; // TODO
@@ -40,6 +41,5 @@ Workout* WorkoutFactory::Create(WorkoutType type, const std::string& sport)
 #endif
 
 	// Create the workout object.
-	Workout* newWorkout = new Workout(idStr, type, sport);
-	return newWorkout;
+	return std::unique_ptr<Workout>(new Workout(idStr, type, sport));
 }

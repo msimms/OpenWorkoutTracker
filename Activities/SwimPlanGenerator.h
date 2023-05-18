@@ -16,12 +16,12 @@ public:
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
 
 	/// @brief Generates the workouts for the next week, but doesn't schedule them.
-	virtual std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+	virtual WorkoutList GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 private:
-	Workout* GenerateAerobicSwim(bool hasSwimmingPoolAccess);
-	Workout* GenerateTechniqueSwim(bool hasSwimmingPoolAccess);
-	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
+	std::unique_ptr<Workout> GenerateAerobicSwim(bool hasSwimmingPoolAccess);
+	std::unique_ptr<Workout> GenerateTechniqueSwim(bool hasSwimmingPoolAccess);
+	std::unique_ptr<Workout> GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
 };
 
 #endif

@@ -39,24 +39,24 @@ bool BikePlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inp
 }
 
 /// @brief Utility function for creating an interval workout.
-Workout* BikePlanGenerator::GenerateHillRide(void)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateHillRide(void)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_HILL_RIDE, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_HILL_RIDE, ACTIVITY_TYPE_CYCLING);
 	return workout;
 }
 
 /// @brief Utility function for creating an interval workout.
 /// Note: Haven't implemented this, because it only seems to have beneft if the cyclist is not doing strenght work.
-Workout* BikePlanGenerator::GenerateCadenceDrills(void)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateCadenceDrills(void)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_CADENCE_DRILLS, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_CADENCE_DRILLS, ACTIVITY_TYPE_CYCLING);
 	return workout;
 }
 
 /// @brief Utility function for creating an interval workout.
-Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 {
 	// Constants.
 	const uint8_t MIN_SETS_INDEX = 0;
@@ -121,7 +121,7 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 	double restPower = (double)0.4;
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_INTERVAL_RIDE, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_INTERVAL_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
@@ -139,10 +139,10 @@ Workout* BikePlanGenerator::GenerateIntervalSession(double goalDistance)
 
 /// @brief Utility function for creating an easy ride.
 /// Aerobic rides are typically around 55-75% FTP.
-Workout* BikePlanGenerator::GenerateEasyAerobicRide(double goalDistance, double longestRideInFourWeeks, double avgRideDuration)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateEasyAerobicRide(double goalDistance, double longestRideInFourWeeks, double avgRideDuration)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RIDE, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		// Select the power (% of FTP). Round to the nearest 5 watts
@@ -158,14 +158,14 @@ Workout* BikePlanGenerator::GenerateEasyAerobicRide(double goalDistance, double 
 
 /// @brief Utility function for creating a tempo ride.
 /// Tempo rides are typically around 75-85% FTP.
-Workout* BikePlanGenerator::GenerateTempoRide(void)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateTempoRide(void)
 {
 	// Warmup and cooldown duration.
 	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RIDE, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		// Select the power (% of FTP). Round to the nearest 5 watts
@@ -187,14 +187,14 @@ Workout* BikePlanGenerator::GenerateTempoRide(void)
 
 /// @brief Utility function for creating a sweet spot ride.
 /// Sweet spot rides are typically around 85-95% FTP.
-Workout* BikePlanGenerator::GenerateSweetSpotRide(void)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateSweetSpotRide(void)
 {
 	// Warmup and cooldown duration.
 	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SWEET_SPOT_RIDE, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_SWEET_SPOT_RIDE, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		// Select the power (% of FTP). Round to the nearest 5 watts
@@ -215,10 +215,10 @@ Workout* BikePlanGenerator::GenerateSweetSpotRide(void)
 }
 
 /// @brief Utility function for creating the goal workout/race.
-Workout* BikePlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
+std::unique_ptr<Workout> BikePlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_CYCLING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_CYCLING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
@@ -229,9 +229,9 @@ Workout* BikePlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> BikePlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+WorkoutList BikePlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
-	std::vector<Workout*> workouts;
+	std::vector<std::unique_ptr<Workout>> workouts;
 
 	// Extract the necessary inputs.
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);

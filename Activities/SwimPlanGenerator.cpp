@@ -29,38 +29,38 @@ bool SwimPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& inp
 }
 
 /// @brief Utility function for creating an open water swim.
-Workout* GenerateOpenWaterSwim()
+std::unique_ptr<Workout> GenerateOpenWaterSwim()
 {
 	return NULL;
 }
 
 /// @brief Utility function for creating a pool swim.
-Workout* GeneratePoolSwim()
+std::unique_ptr<Workout> GeneratePoolSwim()
 {
 	return NULL;
 }
 
 /// @brief Utility function for creating an aerobic-focused swim.
-Workout* SwimPlanGenerator::GenerateAerobicSwim(bool hasSwimmingPoolAccess)
+std::unique_ptr<Workout> SwimPlanGenerator::GenerateAerobicSwim(bool hasSwimmingPoolAccess)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_POOL_SWIM, hasSwimmingPoolAccess ? ACTIVITY_TYPE_POOL_SWIMMING : ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_POOL_SWIM, hasSwimmingPoolAccess ? ACTIVITY_TYPE_POOL_SWIMMING : ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
 	return workout;
 }
 
 /// @brief Utility function for creating a technique swim.
-Workout* SwimPlanGenerator::GenerateTechniqueSwim(bool hasSwimmingPoolAccess)
+std::unique_ptr<Workout> SwimPlanGenerator::GenerateTechniqueSwim(bool hasSwimmingPoolAccess)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TECHNIQUE_SWIM, hasSwimmingPoolAccess ? ACTIVITY_TYPE_POOL_SWIMMING : ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_TECHNIQUE_SWIM, hasSwimmingPoolAccess ? ACTIVITY_TYPE_POOL_SWIMMING : ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
 	return workout;
 }
 
 /// @brief Utility function for creating the goal workout/race.
-Workout* SwimPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
+std::unique_ptr<Workout> SwimPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_OPEN_WATER_SWIMMING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
@@ -71,9 +71,9 @@ Workout* SwimPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> SwimPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+WorkoutList SwimPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
-	std::vector<Workout*> workouts;
+	std::vector<std::unique_ptr<Workout>> workouts;
 
 	// Extract the necessary inputs.
 	double goalDistance = inputs.at(WORKOUT_INPUT_GOAL_SWIM_DISTANCE);

@@ -170,7 +170,7 @@ double RunPlanGenerator::CheckIntensityDistribution(void)
 }
 
 /// @brief Utility function for creating an easy run of some random distance between min and max.
-Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance)
 {
 	// An easy run needs to be at least a couple of kilometers.
 	if (minRunDistance < 3000)
@@ -185,7 +185,7 @@ Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance,
 	uint64_t intervalDistanceMeters = (runDistance / 10) * 10; // Get rid of the least significant digit
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_EASY_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, intervalDistanceMeters, pace, 0, 0);
@@ -198,7 +198,7 @@ Workout* RunPlanGenerator::GenerateEasyRun(double pace, uint64_t minRunDistance,
 }
 
 /// @brief Utility function for creating a tempo workout.
-Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance)
 {
 	// Decide on the number of intervals and their distance.
 	uint64_t numIntervals = 1;
@@ -216,7 +216,7 @@ Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunP
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_TEMPO_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
@@ -231,7 +231,7 @@ Workout* RunPlanGenerator::GenerateTempoRun(double tempoRunPace, double easyRunP
 }
 
 /// @brief Utility function for creating a threshold workout.
-Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance)
 {
 	// Decide on the number of intervals and their distance.
 	double tempDistance = 20.0 * thresholdRunPace;
@@ -248,7 +248,7 @@ Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double 
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_THRESHOLD_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_THRESHOLD_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
@@ -263,14 +263,14 @@ Workout* RunPlanGenerator::GenerateThresholdRun(double thresholdRunPace, double 
 }
 
 /// @brief 4x4 minutes fast with 3 minutes easy jog
-Workout* RunPlanGenerator::GenerateNorwegianRun(double thresholdRunPace, double easyRunPace)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateNorwegianRun(double thresholdRunPace, double easyRunPace)
 {
 	// Warmup and cooldown duration.
 	uint64_t warmupDuration = 10 * 60; // Ten minute warmup
 	uint64_t cooldownDuration = 10 * 60; // Ten minute cooldown
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
@@ -285,7 +285,7 @@ Workout* RunPlanGenerator::GenerateNorwegianRun(double thresholdRunPace, double 
 }
 
 /// @brief Utility function for creating a speed/interval workout.
-Workout* RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance)
 {
 	// Constants.
 	const uint8_t MIN_REPS_INDEX = 0;
@@ -327,7 +327,7 @@ Workout* RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, 
 	uint16_t restIntervalDistance = intervalDistance * POSSIBLE_REST_MULTIPLIERS[selectedRestMultiplierIndex];
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_SPEED_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddWarmup(warmupDuration);
@@ -342,7 +342,7 @@ Workout* RunPlanGenerator::GenerateIntervalSession(double shortIntervalRunPace, 
 }
 
 /// @brief Utility function for creating a long run workout.
-Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance)
 {
 	// Long run should be 10% longer than the previous long run, within the bounds provided by min and max.
 	// No matter what, it should be at least 5K.
@@ -356,7 +356,7 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(longRunDistance);
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_LONG_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_LONG_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, intervalDistanceMeters, longRunPace, 0, 0);
@@ -369,7 +369,7 @@ Workout* RunPlanGenerator::GenerateLongRun(double longRunPace, double longestRun
 }
 
 /// @brief Utility function for creating a free run workout.
-Workout* RunPlanGenerator::GenerateFreeRun(void)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateFreeRun(void)
 {
 	// Roll the dice to figure out the distance.
 	std::default_random_engine generator;
@@ -378,7 +378,7 @@ Workout* RunPlanGenerator::GenerateFreeRun(void)
 	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(runDistance);
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_FREE_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_FREE_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, intervalDistanceMeters, 0, 0, 0);
@@ -391,7 +391,7 @@ Workout* RunPlanGenerator::GenerateFreeRun(void)
 }
 
 /// @brief Utility function for creating a hill session.
-Workout* RunPlanGenerator::GenerateHillRepeats(void)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateHillRepeats(void)
 {
 	// Roll the dice to figure out the distance.
 	std::default_random_engine generator;
@@ -400,7 +400,7 @@ Workout* RunPlanGenerator::GenerateHillRepeats(void)
 	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(runDistance);
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_HILL_REPEATS, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_HILL_REPEATS, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, intervalDistanceMeters, 0, 0, 0);
@@ -413,7 +413,7 @@ Workout* RunPlanGenerator::GenerateHillRepeats(void)
 }
 
 /// @brief Utility function for creating a fartlek session.
-Workout* RunPlanGenerator::GenerateFartlekRun(void)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateFartlekRun(void)
 {
 	// Roll the dice to figure out the distance.
 	std::default_random_engine generator;
@@ -422,7 +422,7 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(runDistance);
 
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_FARTLEK_RUN, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_FARTLEK_RUN, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, intervalDistanceMeters, 0, 0, 0);
@@ -435,10 +435,10 @@ Workout* RunPlanGenerator::GenerateFartlekRun(void)
 }
 
 /// @brief Utility function for creating the goal workout/race.
-Workout* RunPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
+std::unique_ptr<Workout> RunPlanGenerator::GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate)
 {
 	// Create the workout object.
-	Workout* workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_RUNNING);
+	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_EVENT, ACTIVITY_TYPE_RUNNING);
 	if (workout)
 	{
 		workout->AddDistanceInterval(1, goalDistanceMeters, 0, 0, 0);
@@ -484,9 +484,9 @@ double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekFitnessGoal(std::map<std::string, double>& inputs)
+WorkoutList RunPlanGenerator::GenerateWorkoutsForNextWeekFitnessGoal(std::map<std::string, double>& inputs)
 {
-	std::vector<Workout*> workouts;
+	std::vector<std::unique_ptr<Workout>> workouts;
 
 	// Extract the necessary inputs.
 	double functionalThresholdPace = inputs.at(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE);
@@ -506,37 +506,40 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekFitnessGoal(s
 		workouts.push_back(this->GenerateFreeRun());
 		workouts.push_back(this->GenerateFreeRun());
 		workouts.push_back(this->GenerateFreeRun());
-		return workouts;
-	}
-
-	// Handle situation in which the user hasn't run *much* in the last four weeks.
-	if (numRuns < 4)
-	{
-		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
-		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
-		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
 	}
 	else
 	{
-		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
-		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
-		workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
-		workouts.push_back(this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, 5000));
+		// Handle situation in which the user hasn't run *much* in the last four weeks.
+		if (numRuns < 4)
+		{
+			workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+			workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+			workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
+		}
+		else
+		{
+			workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 5000));
+			workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
+			workouts.push_back(this->GenerateEasyRun(easyRunPace, 3000, 8000));
+			workouts.push_back(this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, 5000));
+		}
 	}
 
-	// Calculate the total stress for each workout.
-	for (auto workoutIter = workouts.begin(); workoutIter != workouts.end(); ++workoutIter)
+	// Calculate the intensity for each workout.
+	for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
 	{
-		(*workoutIter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
+		(*iter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
 	}
 
 	return workouts;
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+WorkoutList RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
-	std::vector<Workout*> workouts;
+	std::vector<std::unique_ptr<Workout>> workouts;
+	std::vector<std::unique_ptr<Workout>> bestWorkouts;
+	double bestIntensityDistributionScore = (double)0.0;
 
 	// 3 Critical runs: Speed session, tempo or threshold run, and long run
 
@@ -677,8 +680,6 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std
 	}
 
 	size_t iterCount = 0;
-	double bestIntensityDistributionScore = (double)0.0;
-	std::vector<Workout*> bestWorkouts;
 	bool done = false;
 	while (!done)
 	{
@@ -688,24 +689,20 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std
 		// Is this the goal week? If so, add that event.
 		if (this->IsGoalWeek(goal, weeksUntilGoal, goalDistance))
 		{
-			Workout* goalWorkout = this->GenerateGoalWorkout(goalDistance, goalDate);
-			workouts.push_back(goalWorkout);
+			workouts.push_back(this->GenerateGoalWorkout(goalDistance, goalDate));
 		}
 
 		// Add a long run. No need for a long run if the goal is general fitness.
 		if (!inTaper)
 		{
-			Workout* longRunWorkout = this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance);
-			workouts.push_back(longRunWorkout);
+			workouts.push_back(this->GenerateLongRun(longRunPace, longestRunInFourWeeks, minRunDistance, maxLongRunDistance));
 		}
 
 		// Add an easy run.
-		Workout* easyRunWorkout = this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance);
-		workouts.push_back(easyRunWorkout);
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance));
 
 		// Add a tempo run. Run should be 20-30 minutes in duration.
-		Workout* tempoRunWorkout = this->GenerateTempoRun(tempoRunPace, easyRunPace, maxTempoRunDistance);
-		workouts.push_back(tempoRunWorkout);
+		workouts.push_back(this->GenerateTempoRun(tempoRunPace, easyRunPace, maxTempoRunDistance));
 
 		// The user cares about speed as well as completing the distance. Also note that we should add strikes to one of the other workouts.
 		// We shouldn't schedule any structured speed workouts unless the user is running ~30km/week.
@@ -715,36 +712,32 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std
 			std::default_random_engine generator;
 			std::uniform_int_distribution<uint64_t> distribution(0, 100);
 			uint64_t workoutProbability = distribution(generator);
-			Workout* workout = NULL;
 
 			// Various types of interval/speed sessions.
 			if (workoutProbability < 10)
-				workout = this->GenerateNorwegianRun(shortIntervalRunPace, easyRunPace);
+				workouts.push_back(this->GenerateNorwegianRun(shortIntervalRunPace, easyRunPace));
 			else if (workoutProbability < 50)
-				workout = this->GenerateIntervalSession(shortIntervalRunPace, speedRunPace, easyRunPace, goalDistance);
+				workouts.push_back(this->GenerateIntervalSession(shortIntervalRunPace, speedRunPace, easyRunPace, goalDistance));
 
 			// A fartlek session.
 			else if (workoutProbability < 60)
-				workout = this->GenerateFartlekRun();
+				workouts.push_back(this->GenerateFartlekRun());
 
 			// A hill workout session.
 			else if (workoutProbability < 60)
-				workout = this->GenerateHillRepeats();
+				workouts.push_back(this->GenerateHillRepeats());
 
 			// A threshold session.
 			else
-				workout = this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, goalDistance);
-
-			workouts.push_back(workout);
+				workouts.push_back(this->GenerateThresholdRun(functionalThresholdPace, easyRunPace, goalDistance));
 		}
 
 		// Add an easy run.
-		easyRunWorkout = this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance);
-		workouts.push_back(easyRunWorkout);
+		workouts.push_back(this->GenerateEasyRun(easyRunPace, minRunDistance, maxEasyRunDistance));
 
-		// Calculate the total intensity for each workout.
+		// Calculate the total intensity and the intensity for each workout.
 		double totalIntensity = (double)0.0;
-		for (auto iter = bestWorkouts.begin(); iter != bestWorkouts.end(); ++iter)
+		for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
 		{
 			(*iter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
 			totalIntensity = totalIntensity + (*iter)->GetEstimatedIntensityScore();
@@ -768,12 +761,9 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std
 
 			if (iterCount == 0 || intensityDistributionScore < bestIntensityDistributionScore)
 			{
-				for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
-				{
-					delete (*iter);
-				}
 				bestIntensityDistributionScore = intensityDistributionScore;
-				bestWorkouts = workouts;
+				for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
+					bestWorkouts.push_back(std::unique_ptr<Workout>(new Workout(**iter)));
 			}
 		}
 
@@ -793,11 +783,11 @@ std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std
 		(*workoutIter)->CalculateEstimatedIntensityScore(functionalThresholdPace);
 	}
 
-	return workouts;
+	return bestWorkouts;
 }
 
 /// @brief Generates the workouts for the next week, but doesn't schedule them.
-std::vector<Workout*> RunPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
+WorkoutList RunPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy)
 {
 	Goal goal = (Goal)inputs.at(WORKOUT_INPUT_GOAL);
 	

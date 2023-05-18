@@ -11,6 +11,7 @@
 #include "Goal.h"
 #include "TrainingPhilosophyType.h"
 #include "Workout.h"
+#include "WorkoutList.h"
 
 class PlanGenerator
 {
@@ -19,7 +20,7 @@ public:
 	virtual ~PlanGenerator() {};
 
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs) = 0;
-	virtual std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy) = 0;
+	virtual WorkoutList GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy) = 0;
 
 protected:
 	static bool ValidFloat(double num, double minValue);

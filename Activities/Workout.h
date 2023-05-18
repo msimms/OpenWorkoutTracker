@@ -30,6 +30,7 @@ class Workout
 {
 public:
 	Workout();
+	Workout(const Workout& workout);
 	Workout(const std::string& workoutId, WorkoutType type, const std::string& sport);
 	virtual ~Workout();
 

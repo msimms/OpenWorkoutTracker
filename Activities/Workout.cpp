@@ -10,6 +10,16 @@ Workout::Workout()
 	this->m_scheduledTime = 0;
 }
 
+Workout::Workout(const Workout& workout)
+{
+	this->m_id = workout.m_id;
+	this->m_type = workout.m_type;
+	this->m_sport = workout.m_sport;
+	this->m_intervals = workout.m_intervals;
+	this->m_estimatedIntensityScore = workout.m_estimatedIntensityScore;
+	this->m_scheduledTime = workout.m_scheduledTime;
+}
+
 Workout::Workout(const std::string& workoutId, WorkoutType type, const std::string& sport)
 {
 	this->m_id = workoutId;

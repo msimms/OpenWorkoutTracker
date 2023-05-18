@@ -16,16 +16,16 @@ public:
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
 
 	/// @brief Generates the workouts for the next week, but doesn't schedule them.
-	virtual std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+	virtual WorkoutList GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 private:
-	Workout* GenerateHillRide(void);
-	Workout* GenerateCadenceDrills(void);
-	Workout* GenerateIntervalSession(double goalDistance);
-	Workout* GenerateEasyAerobicRide(double goalDistance, double longestRideInFourWeeks, double avgRideDuration);
-	Workout* GenerateTempoRide(void);
-	Workout* GenerateSweetSpotRide(void);
-	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
+	std::unique_ptr<Workout> GenerateHillRide(void);
+	std::unique_ptr<Workout> GenerateCadenceDrills(void);
+	std::unique_ptr<Workout> GenerateIntervalSession(double goalDistance);
+	std::unique_ptr<Workout> GenerateEasyAerobicRide(double goalDistance, double longestRideInFourWeeks, double avgRideDuration);
+	std::unique_ptr<Workout> GenerateTempoRide(void);
+	std::unique_ptr<Workout> GenerateSweetSpotRide(void);
+	std::unique_ptr<Workout> GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
 
 	uint8_t RoundDistance(uint8_t number, uint8_t nearest);
 };

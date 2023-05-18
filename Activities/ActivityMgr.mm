@@ -3311,12 +3311,13 @@ extern "C" {
 		if (g_workoutGen.IsWorkoutPlanPossible(inputs))
 		{
 			// Generate new workouts.
-			std::vector<Workout*> plannedWorkouts = g_workoutGen.GenerateWorkoutsForNextWeek(inputs);
+			WorkoutList plannedWorkouts = g_workoutGen.GenerateWorkoutsForNextWeek(inputs);
 			if (plannedWorkouts.size())
 			{
 				// Schedule the workouts.
 				WorkoutScheduler scheduler;
-				scheduler.ScheduleWorkouts(plannedWorkouts, scheduler.TimestampOfNextDayOfWeek(DAY_TYPE_MONDAY), preferredLongRunDay);
+				time_t scheduleStartTime = scheduler.TimestampOfNextDayOfWeek(DAY_TYPE_MONDAY);
+				WorkoutList scheduledWorkouts = scheduler.ScheduleWorkouts(plannedWorkouts, scheduleStartTime, preferredLongRunDay);
 				
 				g_dbLock.lock();
 				
@@ -3326,17 +3327,13 @@ extern "C" {
 					if (g_pDatabase->DeleteAllWorkouts())
 					{
 						// Store the new workouts.
-						for (auto iter = plannedWorkouts.begin(); iter != plannedWorkouts.end(); ++iter)
+						for (auto iter = scheduledWorkouts.begin(); iter != scheduledWorkouts.end(); ++iter)
 						{
-							Workout* workout = (*iter);
-							
-							if (workout)
+							std::unique_ptr<Workout>& workout = (*iter);
+
+							if (!g_pDatabase->CreateWorkout(*workout))
 							{
-								if (!g_pDatabase->CreateWorkout(*workout))
-								{
-									error = "Database Error!";
-								}
-								delete workout;
+								error = "Database Error!";
 							}
 						}
 					}

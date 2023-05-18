@@ -27,6 +27,13 @@ struct WorkoutsView: View {
 		return df
 	}()
 	
+	func formatDateStr(ts: Date) -> String {
+		if ts.timeIntervalSince1970 > 0 {
+			return self.dateFormatter.string(from: ts)
+		}
+		return ""
+	}
+
 	func regenerateWorkouts() {
 		do {
 			try self.workoutsVM.regenerateWorkouts()
@@ -184,7 +191,7 @@ struct WorkoutsView: View {
 				}
 				if self.workoutsVM.workouts.count > 0 {
 					List(self.workoutsVM.workouts, id: \.self) { item in
-						let timeStr = self.dateFormatter.string(from: item.scheduledTime)
+						let timeStr = self.formatDateStr(ts: item.scheduledTime)
 						NavigationLink(destination: WorkoutDetailsView(workoutId: item.id, title: item.sportType, subtitle: item.workoutType, description: item.description, scheduledTime: timeStr, workout: item)) {
 							VStack() {
 								HStack() {

@@ -15,7 +15,7 @@ public:
 	WorkoutFactory();
 	virtual ~WorkoutFactory();
 
-	static Workout* Create(WorkoutType type, const std::string& sport);
+	static std::unique_ptr<Workout> Create(WorkoutType type, const std::string& sport);
 };
 
 #endif

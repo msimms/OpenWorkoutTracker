@@ -197,13 +197,13 @@ bool WorkoutPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& 
 	return true;
 }
 
-std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs)
+WorkoutList WorkoutPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs)
 {
 	SwimPlanGenerator swimGen;
 	BikePlanGenerator bikeGen;
 	RunPlanGenerator runGen;
 	TrainingPhilosophyType trainingIntensityDist = TRAINING_PHILOSOPHY_POLARIZED;
-	std::vector<Workout*> workouts;
+	std::vector<std::unique_ptr<Workout>> workouts;
 
 	if (!swimGen.IsWorkoutPlanPossible(inputs))
 		return workouts;
@@ -212,13 +212,16 @@ std::vector<Workout*> WorkoutPlanGenerator::GenerateWorkoutsForNextWeek(std::map
 	if (!runGen.IsWorkoutPlanPossible(inputs))
 		return workouts;
 
-	std::vector<Workout*> swimWorkouts = swimGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
-	std::vector<Workout*> bikeWorkouts = bikeGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
-	std::vector<Workout*> runWorkouts = runGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
+	std::vector<std::unique_ptr<Workout>> swimWorkouts = swimGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
+	std::vector<std::unique_ptr<Workout>> bikeWorkouts = bikeGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
+	std::vector<std::unique_ptr<Workout>> runWorkouts = runGen.GenerateWorkoutsForNextWeek(inputs, trainingIntensityDist);
 
-	workouts.insert(workouts.end(), swimWorkouts.begin(), swimWorkouts.end());
-	workouts.insert(workouts.end(), bikeWorkouts.begin(), bikeWorkouts.end());
-	workouts.insert(workouts.end(), runWorkouts.begin(), runWorkouts.end());
+	for (auto iter = swimWorkouts.begin(); iter != swimWorkouts.end(); ++iter)
+		workouts.push_back(std::move(*iter));
+	for (auto iter = bikeWorkouts.begin(); iter != bikeWorkouts.end(); ++iter)
+		workouts.push_back(std::move(*iter));
+	for (auto iter = runWorkouts.begin(); iter != runWorkouts.end(); ++iter)
+		workouts.push_back(std::move(*iter));
 
 	return workouts;
 }

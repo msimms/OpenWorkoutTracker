@@ -23,7 +23,7 @@ public:
 	virtual bool IsWorkoutPlanPossible(std::map<std::string, double>& inputs);
 
 	/// @brief Generates the workouts for the next week, but doesn't schedule them.
-	virtual std::vector<Workout*> GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+	virtual WorkoutList GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 private:
 	double m_cutoffPace1;
@@ -31,8 +31,8 @@ private:
 	double m_trainingIntensityDistribution[NUM_TRAINING_ZONES];  // Ideal distribution of intensity across training zones
 	uint8_t m_intensityDistributionWorkouts[NUM_TRAINING_ZONES]; // Distribution of the number of workouts in each intensity zone
 
-	std::vector<Workout*> GenerateWorkoutsForNextWeekFitnessGoal(std::map<std::string, double>& inputs);
-	std::vector<Workout*> GenerateWorkoutsForNextWeekEventGoal(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
+	WorkoutList GenerateWorkoutsForNextWeekFitnessGoal(std::map<std::string, double>& inputs);
+	WorkoutList GenerateWorkoutsForNextWeekEventGoal(std::map<std::string, double>& inputs, TrainingPhilosophyType trainingPhilosophy);
 
 	static uint64_t NearestIntervalDistance(double distance, double minDistanceInMeters);
 
@@ -42,16 +42,16 @@ private:
 	void ClearIntensityDistribution(void);
 	double CheckIntensityDistribution(void);
 
-	Workout* GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
-	Workout* GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance);
-	Workout* GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance);
-	Workout* GenerateNorwegianRun(double thresholdRunPace, double easyRunPace);
-	Workout* GenerateIntervalSession(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance);
-	Workout* GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance);
-	Workout* GenerateFreeRun(void);
-	Workout* GenerateHillRepeats(void);
-	Workout* GenerateFartlekRun(void);
-	Workout* GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
+	std::unique_ptr<Workout> GenerateEasyRun(double pace, uint64_t minRunDistance, uint64_t maxRunDistance);
+	std::unique_ptr<Workout> GenerateTempoRun(double tempoRunPace, double easyRunPace, uint64_t maxRunDistance);
+	std::unique_ptr<Workout> GenerateThresholdRun(double thresholdRunPace, double easyRunPace, uint64_t maxRunDistance);
+	std::unique_ptr<Workout> GenerateNorwegianRun(double thresholdRunPace, double easyRunPace);
+	std::unique_ptr<Workout> GenerateIntervalSession(double shortIntervalRunPace, double speedRunPace, double easyRunPace, double goalDistance);
+	std::unique_ptr<Workout> GenerateLongRun(double longRunPace, double longestRunInFourWeeks, double minRunDistance, double maxRunDistance);
+	std::unique_ptr<Workout> GenerateFreeRun(void);
+	std::unique_ptr<Workout> GenerateHillRepeats(void);
+	std::unique_ptr<Workout> GenerateFartlekRun(void);
+	std::unique_ptr<Workout> GenerateGoalWorkout(double goalDistanceMeters, time_t goalDate);
 
 	double MaxTaperDistance(Goal raceDistance);
 };
