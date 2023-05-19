@@ -82,10 +82,12 @@ public:
 	// Maximum heart rate.
 	void SetMaxHr(double maxHr) { m_maxHr = maxHr; };
 	double GetMaxHr() const { return m_maxHr; };
-	
+	bool HasMaxHr() const { return m_maxHr > 1.0 && m_maxHr > m_restingHr; };
+
 	// Resting heart rate.
 	void SetRestingHr(double restingHr) { m_restingHr = restingHr; };
 	double GetRestingHr() const { return m_restingHr; };
+	bool HasRestingHr() const { return m_restingHr > 1.0; };
 
 	// Best (recent) 5K time. Used for pace estimation.
 	void SetBestRecent5KSecs(uint32_t bestRecent5KSecs) { m_bestRecent5KSecs = bestRecent5KSecs; };

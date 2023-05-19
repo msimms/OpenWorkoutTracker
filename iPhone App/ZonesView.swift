@@ -57,7 +57,7 @@ struct ZonesView: View {
 					VStack(alignment: .center) {
 						Text("Running Paces")
 							.bold()
-						if ZonesVM.hasRunData() {
+						if ZonesVM.hasRunData() || ZonesVM.hasHrData() {
 							let runPaces = ZonesVM.listRunTrainingPaces()
 							ForEach(runPaces.keys.sorted(), id:\.self) { paceName in
 								HStack() {
