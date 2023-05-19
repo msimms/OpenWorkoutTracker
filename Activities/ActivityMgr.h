@@ -21,6 +21,7 @@
 #include "IntervalSessionSegment.h"
 #include "SensorType.h"
 #include "SyncDestination.h"
+#include "TrainingPaceType.h"
 #include "UnitSystem.h"
 #include "WorkoutType.h"
 
@@ -204,7 +205,7 @@ extern "C" {
 	// Functions for querying training zones.
 	double GetHrZone(uint8_t zoneNum);
 	double GetPowerZone(uint8_t zoneNum);
-	double GetRunTrainingPace(const char* const paceName);
+	double GetRunTrainingPace(TrainingPaceType pace);
 
 	// Functions for managing suggested workout generation.
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);

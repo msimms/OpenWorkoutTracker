@@ -15,6 +15,7 @@
 #include "ActivityLevel.h"
 #include "BmrFormula.h"
 #include "Gender.h"
+#include "TrainingPaceCalculator.h"
 #include "UnitConverter.h"
 #include "ZonesCalculator.h"
 
@@ -103,6 +104,8 @@ public:
 	void CalculatePowerZones();
 	double GetPowerZone(uint8_t zoneNum) const;
 	uint8_t GetZoneForPower(double power) const;
+
+	double GetRunTrainingPace(TrainingPaceType pace);
 
 private:
 	uint64_t      m_id;

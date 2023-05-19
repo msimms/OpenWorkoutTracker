@@ -41,10 +41,10 @@ class ZonesVM {
 	static func listRunTrainingPaces() -> Dictionary<String, Double> {
 		var result: Dictionary<String, Double> = [:]
 		
-		result[WORKOUT_INPUT_LONG_RUN_PACE] = GetRunTrainingPace(WORKOUT_INPUT_LONG_RUN_PACE)
-		result[WORKOUT_INPUT_EASY_RUN_PACE] = GetRunTrainingPace(WORKOUT_INPUT_EASY_RUN_PACE)
-		result[WORKOUT_INPUT_TEMPO_RUN_PACE] = GetRunTrainingPace(WORKOUT_INPUT_TEMPO_RUN_PACE)
-		result[WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE] = GetRunTrainingPace(WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE)
+		result[WORKOUT_INPUT_LONG_RUN_PACE] = GetRunTrainingPace(LONG_RUN_PACE)
+		result[WORKOUT_INPUT_EASY_RUN_PACE] = GetRunTrainingPace(EASY_RUN_PACE)
+		result[WORKOUT_INPUT_TEMPO_RUN_PACE] = GetRunTrainingPace(TEMPO_RUN_PACE)
+		result[WORKOUT_INPUT_FUNCTIONAL_THRESHOLD_PACE] = GetRunTrainingPace(FUNCTIONAL_THRESHOLD_PACE)
 		return result
 	}
 }

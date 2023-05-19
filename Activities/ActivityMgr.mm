@@ -3284,9 +3284,9 @@ extern "C" {
 		return g_user.GetPowerZone(zoneNum);
 	}
 
-	double GetRunTrainingPace(const char* const paceName)
+	double GetRunTrainingPace(TrainingPaceType pace)
 	{
-		return 0.0;
+		return g_user.GetRunTrainingPace(pace);
 	}
 
 	//

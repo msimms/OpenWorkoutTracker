@@ -367,3 +367,15 @@ uint8_t User::GetZoneForPower(double power) const
 		return 5;
 	return 6;
 }
+
+double User::GetRunTrainingPace(TrainingPaceType pace)
+{
+	TrainingPaceCalculator paceCalc;
+	
+	std::map<TrainingPaceType, double> paces = paceCalc.CalcFromRaceDistanceInMeters(m_bestRecent5KSecs, 5000.0);
+	if (paces.find(pace) != paces.end())
+	{
+		return paces.at(pace);
+	}
+	return 0.0;
+}
