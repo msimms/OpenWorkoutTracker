@@ -22,17 +22,19 @@ struct ContentView: View {
 					.padding(6)
 				
 				// Workout start button
-				Button("Start a Workout") {
+				Button("Start a\nWorkout") {
 					self.showingActivitySelection = true
 				}
 				.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivitySelection, titleVisibility: .visible) {
 					ForEach(CommonApp.activityTypes, id: \.self) { item in
-						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item), activityType: item))
+						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item, recreateOrphanedActivities: false), activityType: item))
 					}
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
 				.padding(10)
+
+				Spacer()
 
 				// View history and statistics button
 				Button("View") {
@@ -45,11 +47,9 @@ struct ContentView: View {
 					NavigationLink("Zones", destination: ZonesView())
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
 				.padding(10)
 
-				Spacer()
-				
 				// Edit settings button
 				Button("Edit") {
 					self.showingEditSelection = true
@@ -63,13 +63,13 @@ struct ContentView: View {
 					NavigationLink("Gear", destination: GearView())
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
 				.padding(10)
 				
 				// About button
 				NavigationLink("About", destination: AboutView())
 					.foregroundColor(.black)
-					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 54))
+					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
 					.padding(10)
 					.toolbar {
 						ToolbarItem(placement: .bottomBar) {
