@@ -28,8 +28,9 @@ void User::SetToDefaults()
 	m_weightKg          = 88.6;
 	m_leanBodyMassKg    = m_weightKg * .83;
 	m_ftp               = 0.0;
-	m_maxHr             = 0.0;
 	m_restingHr         = 0.0;
+	m_maxHr             = 0.0;
+	m_vo2Max            = 0.0;
 	m_bestRecent5KSecs  = 0;
 }
 

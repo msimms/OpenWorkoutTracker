@@ -79,15 +79,20 @@ public:
 	void SetFtp(double ftp) { m_ftp = ftp; };
 	double GetFtp() const { return m_ftp; };
 
+	// Resting heart rate.
+	void SetRestingHr(double restingHr) { m_restingHr = restingHr; };
+	double GetRestingHr() const { return m_restingHr; };
+	bool HasRestingHr() const { return m_restingHr > 1.0; };
+	
 	// Maximum heart rate.
 	void SetMaxHr(double maxHr) { m_maxHr = maxHr; };
 	double GetMaxHr() const { return m_maxHr; };
 	bool HasMaxHr() const { return m_maxHr > 1.0 && m_maxHr > m_restingHr; };
 
-	// Resting heart rate.
-	void SetRestingHr(double restingHr) { m_restingHr = restingHr; };
-	double GetRestingHr() const { return m_restingHr; };
-	bool HasRestingHr() const { return m_restingHr > 1.0; };
+	// VO2Max
+	void SetVO2Max(double vo2Max) { m_vo2Max = vo2Max; };
+	double GetVO2Max() const { return m_vo2Max; };
+	bool HasVO2Max() const { return m_vo2Max > 1.0; };
 
 	// Best (recent) 5K time. Used for pace estimation.
 	void SetBestRecent5KSecs(uint32_t bestRecent5KSecs) { m_bestRecent5KSecs = bestRecent5KSecs; };
@@ -121,8 +126,9 @@ private:
 	double        m_weightKg;
 	double        m_leanBodyMassKg;
 	double        m_ftp;
-	double        m_maxHr;
 	double        m_restingHr;
+	double        m_maxHr;
+	double        m_vo2Max;
 	uint32_t      m_bestRecent5KSecs;
 	double        m_heartRateZones[NUM_HR_ZONES]; // heart rate zones
 	double        m_powerZones[NUM_POWER_ZONES];  // power zones

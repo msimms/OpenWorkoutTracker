@@ -86,26 +86,13 @@ class CommonApp : ObservableObject {
 		let userBirthdate = Preferences.birthDate()
 		let userWeightKg = Preferences.weightKg()
 		let userHeightCm = Preferences.heightCm()
-		let userDefinedFtp = Preferences.userDefinedFtp()
-		let estimatedFtp = Preferences.estimatedFtp()
-		let userDefinedMaxHr = Preferences.userDefinedMaxHr()
-		let estimatedMaxHr = Preferences.estimatedMaxHr()
+		let ftp = Preferences.ftp()
 		let restingHr = Preferences.restingHr()
+		let maxHr = Preferences.maxHr()
+		let vo2Max = Preferences.vo2Max()
 		let bestRecent5KSecs = Preferences.bestRecent5KSecs()
-		
-		// If the user specified an FTP then use that one, otherwise use the estimate.
-		var ftpToUse = estimatedFtp
-		if userDefinedFtp > 1.0 {
-			ftpToUse = userDefinedFtp
-		}
-		
-		// If the user specified a max hr then use that one, otherwise use the estimate.
-		var maxHrToUse = estimatedMaxHr
-		if userDefinedMaxHr > 1.0 {
-			maxHrToUse = userDefinedMaxHr
-		}
-		
-		SetUserProfile(userLevel, userGender, userBirthdate, userWeightKg, userHeightCm, ftpToUse, maxHrToUse, restingHr, bestRecent5KSecs)
+
+		SetUserProfile(userLevel, userGender, userBirthdate, userWeightKg, userHeightCm, ftp, restingHr, maxHr, vo2Max, bestRecent5KSecs)
 	}
 	
 	func markAsSynchedToWeb(activityId: String) -> Bool {

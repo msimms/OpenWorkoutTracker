@@ -14,11 +14,14 @@ struct ProfileView: View {
 	@State private var showingGenderSelection: Bool = false
 	@State private var showingFtpError: Bool = false
 	@State private var showingHrError: Bool = false
+	@State private var showingVO2MaxError: Bool = false
 	@State private var showingApiError: Bool = false
 	@ObservedObject var height = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedHeight())
 	@ObservedObject var weight = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedWeight())
-	@ObservedObject var userDefinedFtp = NumbersOnly(initialDoubleValue: Preferences.userDefinedFtp())
-	@ObservedObject var userDefinedMaxHr = NumbersOnly(initialDoubleValue: Preferences.userDefinedMaxHr())
+	@ObservedObject var userDefinedFtp = NumbersOnly(initialDoubleValue: Preferences.ftp())
+	@ObservedObject var userDefinedRestingHr = NumbersOnly(initialDoubleValue: Preferences.restingHr())
+	@ObservedObject var userDefinedMaxHr = NumbersOnly(initialDoubleValue: Preferences.maxHr())
+	@ObservedObject var userDefinedVO2Max = NumbersOnly(initialDoubleValue: Preferences.vo2Max())
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -167,33 +170,89 @@ struct ProfileView: View {
 			}
 			.padding(5)
 
-			// User's Max Heart Rate
-			HStack {
-				Text("Maximum Heart Rate")
-					.bold()
-				Spacer()
-				TextField("Not set", text: Binding(
-					get: { self.userDefinedMaxHr.asDouble() < 1.0 ? "" : self.userDefinedMaxHr.value },
-					set: {(newValue) in
-						if let value = Double(newValue) {
-							self.userDefinedMaxHr.value = newValue
-							Preferences.setUserDefinedMaxHr(value: value)
-							CommonApp.shared.setUserProfile()
-							showingApiError = !ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
-						} else {
-							self.userDefinedMaxHr.value = ""
-							self.showingHrError = true
-						}
-					}))
+			Group() {
+				// User's Resting Rate
+				HStack {
+					Text("Resting Heart Rate")
+						.bold()
+					Spacer()
+					TextField("Not set", text: Binding(
+						get: { self.userDefinedRestingHr.asDouble() < 1.0 ? "" : self.userDefinedRestingHr.value },
+						set: {(newValue) in
+							if let value = Double(newValue) {
+								self.userDefinedRestingHr.value = newValue
+								Preferences.setUserDefinedRestingHr(value: value)
+								CommonApp.shared.setUserProfile()
+								showingApiError = !ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date())
+							} else {
+								self.userDefinedRestingHr.value = ""
+								self.showingHrError = true
+							}
+						}))
 					.keyboardType(.decimalPad)
 					.multilineTextAlignment(.trailing)
 					.fixedSize()
 					.alert("Invalid value!", isPresented: self.$showingHrError) { }
 					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
-				Text(" bpm")
+					Text(" bpm")
+				}
+				.padding(5)
+				
+				// User's Max Heart Rate
+				HStack {
+					Text("Maximum Heart Rate")
+						.bold()
+					Spacer()
+					TextField("Not set", text: Binding(
+						get: { self.userDefinedMaxHr.asDouble() < 1.0 ? "" : self.userDefinedMaxHr.value },
+						set: {(newValue) in
+							if let value = Double(newValue) {
+								self.userDefinedMaxHr.value = newValue
+								Preferences.setUserDefinedMaxHr(value: value)
+								CommonApp.shared.setUserProfile()
+								showingApiError = !ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
+							} else {
+								self.userDefinedMaxHr.value = ""
+								self.showingHrError = true
+							}
+						}))
+					.keyboardType(.decimalPad)
+					.multilineTextAlignment(.trailing)
+					.fixedSize()
+					.alert("Invalid value!", isPresented: self.$showingHrError) { }
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+					Text(" bpm")
+				}
+				.padding(5)
+			}
+
+			// User's VO2Max
+			HStack {
+				Text("VO2Max")
+					.bold()
+				Spacer()
+				TextField("Not set", text: Binding(
+					get: { self.userDefinedVO2Max.asDouble() < 1.0 ? "" : self.userDefinedVO2Max.value },
+					set: {(newValue) in
+						if let value = Double(newValue) {
+							self.userDefinedVO2Max.value = newValue
+							Preferences.setUserDefinedVO2Max(value: value)
+							CommonApp.shared.setUserProfile()
+							showingApiError = !ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date())
+						} else {
+							self.userDefinedVO2Max.value = ""
+							self.showingVO2MaxError = true
+						}
+					}))
+				.keyboardType(.decimalPad)
+				.multilineTextAlignment(.trailing)
+				.fixedSize()
+				.alert("Invalid value!", isPresented: self.$showingVO2MaxError) { }
+				.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+				Text(" ml/kg/min")
 			}
 			.padding(5)
-
+			
 			Spacer()
 		}
 		.padding(10)

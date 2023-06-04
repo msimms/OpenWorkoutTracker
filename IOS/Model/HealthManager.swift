@@ -64,6 +64,7 @@ class HealthManager {
 		let weightType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
 		let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
 		let restingHeartRateType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)!
+		let vo2MaxType = HKObjectType.quantityType(forIdentifier: .vo2Max)!
 		let cyclingType = HKObjectType.quantityType(forIdentifier: .distanceCycling)!
 		let runType = HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
 		let swimType = HKObjectType.quantityType(forIdentifier: .distanceSwimming)!
@@ -72,8 +73,8 @@ class HealthManager {
 		let biologicalSexType = HKObjectType.characteristicType(forIdentifier: .biologicalSex)!
 		let routeType = HKObjectType.seriesType(forIdentifier: HKWorkoutRouteTypeIdentifier)!
 		let workoutType = HKObjectType.workoutType()
-		let writeTypes = Set([heartRateType, restingHeartRateType, heightType, weightType, heartRateType, cyclingType, runType, swimType, activeEnergyBurnType, workoutType, routeType])
-		let readTypes = Set([heartRateType, restingHeartRateType, heightType, weightType, birthdayType, biologicalSexType, workoutType, routeType])
+		let writeTypes = Set([heightType, weightType, heartRateType, restingHeartRateType, vo2MaxType, cyclingType, runType, swimType, activeEnergyBurnType, workoutType, routeType])
+		let readTypes = Set([heightType, weightType, heartRateType, restingHeartRateType, vo2MaxType, birthdayType, biologicalSexType, workoutType, routeType])
 #endif
 		healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { result, error in
 			do {
@@ -81,6 +82,8 @@ class HealthManager {
 				try self.updateUsersHeight()
 				try self.updateUsersWeight()
 				try self.updateUsersRestingHr()
+				try self.updateUsersMaxHr()
+				try self.updateUsersVO2Max()
 			}
 			catch {
 			}
@@ -109,7 +112,32 @@ class HealthManager {
 		// Execute asynchronously.
 		self.healthStore.execute(query)
 	}
-	
+
+	func recentQuantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
+		
+		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - 86400.0 * 7.0 * 26.0)
+		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [.strictStartDate])
+		
+		let query = HKSampleQuery.init(sampleType: quantityType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { query, results, error in
+			
+			// Error case: Call the callback handler, passing nil for the results.
+			if results == nil || results!.count == 0 {
+				callback(nil, error ?? nil)
+			}
+			
+			// Normal case: Call the callback handler with the results.
+			else {
+				for sample in results! {
+					let quantitySample = sample as! HKQuantitySample?
+					callback(quantitySample, error)
+				}
+			}
+		})
+		
+		// Execute asynchronously.
+		self.healthStore.execute(query)
+	}
+
 	func quantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
 		
 		// We are not filtering the data, and so the predicate is set to nil.
@@ -211,11 +239,45 @@ class HealthManager {
 				let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
 				let restingHr = sample!.quantity.doubleValue(for: hrUnit)
 
-				Preferences.setRestingHr(value: restingHr)
+				Preferences.setEstimatedRestingHr(value: restingHr)
 			}
 		}
 	}
 	
+	/// @brief Estimates the user's maximum heart rate from the last six months of HealthKit data.
+	func updateUsersMaxHr() throws {
+		let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)!
+		var maxHr: Double = Preferences.estimatedMaxHr()
+
+		self.recentQuantitySamplesOfType(quantityType: hrType) { sample, error in
+			if sample != nil {
+				let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+				let hrValue = sample!.quantity.doubleValue(for: hrUnit)
+				
+				if hrValue > maxHr {
+					maxHr = hrValue
+					Preferences.setEstimatedMaxHr(value: maxHr)
+				}
+			}
+		}
+	}
+
+	/// @brief Gets the user's VO2Max from HealthKit .
+	func updateUsersVO2Max() throws {
+		let vo2MaxType = HKObjectType.quantityType(forIdentifier: .vo2Max)!
+		
+		self.mostRecentQuantitySampleOfType(quantityType: vo2MaxType) { sample, error in
+			if sample != nil {
+				let kgmin = HKUnit.gramUnit(with: .kilo).unitMultiplied(by: .minute())
+				let mL = HKUnit.literUnit(with: .milli)
+				let vo2MaxUnit = mL.unitDivided(by: kgmin)
+				let vo2Max = sample!.quantity.doubleValue(for: vo2MaxUnit)
+				
+				Preferences.setEstimatedVO2Max(value: vo2Max)
+			}
+		}
+	}
+
 	func clearWorkoutsList() {
 		self.workouts.removeAll()
 		self.locations.removeAll()

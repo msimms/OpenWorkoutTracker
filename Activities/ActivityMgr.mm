@@ -911,7 +911,7 @@ extern "C" {
 		UnitMgr::SetUnitSystem(system);
 	}
 
-	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double maxHr, double restingHr, uint32_t bestRecent5KSecs)
+	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double restingHr, double maxHr, double vo2Max, uint32_t bestRecent5KSecs)
 	{
 		g_user.SetActivityLevel(level);
 		g_user.SetGender(gender);
@@ -919,8 +919,9 @@ extern "C" {
 		g_user.SetWeightKg(weightKg);
 		g_user.SetHeightCm(heightCm);
 		g_user.SetFtp(ftp);
-		g_user.SetMaxHr(maxHr);
 		g_user.SetRestingHr(restingHr);
+		g_user.SetMaxHr(maxHr);
+		g_user.SetVO2Max(vo2Max);
 		g_user.SetBestRecent5KSecs(bestRecent5KSecs);
 		
 		// Calculate heart rate and power zones.

@@ -410,18 +410,9 @@ class ApiClient : ObservableObject {
 
 	func sendUpdatedUserFtp(timestamp: Date) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
-		postDict[PARAM_USER_FTP] = String(format:"%f", Preferences.userDefinedFtp())
+		postDict[PARAM_USER_FTP] = String(format:"%f", Preferences.ftp())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
 
-		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
-	}
-
-	func sendUpdatedUserMaxHr(timestamp: Date) -> Bool {
-		var postDict: Dictionary<String,String> = [:]
-		postDict[PARAM_USER_MAX_HR] = String(format:"%f", Preferences.userDefinedMaxHr())
-		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
-		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
@@ -429,6 +420,24 @@ class ApiClient : ObservableObject {
 	func sendUpdatedUserRestingHr(timestamp: Date) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_RESTING_HR] = String(format:"%f", Preferences.restingHr())
+		postDict[PARAM_TIMESTAMP] = String(format:"%llu", timestamp.timeIntervalSince1970)
+		
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+
+	func sendUpdatedUserMaxHr(timestamp: Date) -> Bool {
+		var postDict: Dictionary<String,String> = [:]
+		postDict[PARAM_USER_MAX_HR] = String(format:"%f", Preferences.maxHr())
+		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
+		
+		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+
+	func sendUpdatedUserVO2Max(timestamp: Date) -> Bool {
+		var postDict: Dictionary<String,String> = [:]
+		postDict[PARAM_USER_VO2MAX] = String(format:"%f", Preferences.vo2Max())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", timestamp.timeIntervalSince1970)
 		
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_UPDATE_PROFILE_URL)

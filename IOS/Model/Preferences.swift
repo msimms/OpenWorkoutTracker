@@ -18,9 +18,12 @@ let PREF_NAME_WEIGHT_KG =                             "Weight"
 let PREF_NAME_BIRTH_DATE =                            "Birth Date"
 let PREF_NAME_USER_DEFINED_FTP =                      "User Defined FTP"
 let PREF_NAME_ESTIMATED_FTP =                         "Estimated FTP"
+let PREF_NAME_USER_DEFINED_RESTING_HR =               "User Defined Resting HR"
+let PREF_NAME_ESTIMATED_RESTING_HR =                  "Resting HR"
 let PREF_NAME_USER_DEFINED_MAX_HR =                   "User Defined Max HR"
 let PREF_NAME_ESTIMATED_MAX_HR =                      "Estimated Max HR"
-let PREF_NAME_RESTING_HR =                            "Resting HR"
+let PREF_NAME_USER_DEFINED_VO2MAX =                   "User Defined VO2Max"
+let PREF_NAME_ESTIMATED_VO2_MAX =                     "Estimated VO2Max"
 let PREF_NAME_BEST_RECENT_5K_SECS =                   "Best Recent 5K"
 let PREF_NAME_AUTOSCALE_MAP =                         "Autoscale Map"
 let PREF_NAME_SCAN_FOR_SENSORS =                      "Scan for Sensors"
@@ -158,6 +161,36 @@ class Preferences {
 		return mydefaults.double(forKey: PREF_NAME_ESTIMATED_FTP)
 	}
 
+	static func ftp() -> Double {
+		// If the user specified a value then use that one, otherwise use the estimate.
+		var valueToUse = Preferences.estimatedFtp()
+		var userDefined = Preferences.userDefinedFtp()
+		if userDefined > 1.0 {
+			valueToUse = userDefined
+		}
+		return valueToUse
+	}
+
+	static func userDefinedRestingHr() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_USER_DEFINED_RESTING_HR)
+	}
+	
+	static func estimatedRestingHr() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_ESTIMATED_RESTING_HR)
+	}
+
+	static func restingHr() -> Double {
+		// If the user specified a value then use that one, otherwise use the estimate.
+		var valueToUse = Preferences.estimatedRestingHr()
+		var userDefined = Preferences.userDefinedRestingHr()
+		if userDefined > 1.0 {
+			valueToUse = userDefined
+		}
+		return valueToUse
+	}
+
 	static func userDefinedMaxHr() -> Double {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.double(forKey: PREF_NAME_USER_DEFINED_MAX_HR)
@@ -168,11 +201,36 @@ class Preferences {
 		return mydefaults.double(forKey: PREF_NAME_ESTIMATED_MAX_HR)
 	}
 
-	static func restingHr() -> Double {
+	static func maxHr() -> Double {
+		// If the user specified a value then use that one, otherwise use the estimate.
+		var valueToUse = Preferences.estimatedMaxHr()
+		var userDefined = Preferences.userDefinedMaxHr()
+		if userDefined > 1.0 {
+			valueToUse = userDefined
+		}
+		return valueToUse
+	}
+
+	static func userDefinedVO2Max() -> Double {
 		let mydefaults: UserDefaults = UserDefaults.standard
-		return mydefaults.double(forKey: PREF_NAME_RESTING_HR)
+		return mydefaults.double(forKey: PREF_NAME_USER_DEFINED_VO2MAX)
 	}
 	
+	static func estimatedVO2Max() -> Double {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.double(forKey: PREF_NAME_ESTIMATED_VO2_MAX)
+	}
+
+	static func vo2Max() -> Double {
+		// If the user specified a value then use that one, otherwise use the estimate.
+		var valueToUse = Preferences.estimatedVO2Max()
+		var userDefined = Preferences.userDefinedVO2Max()
+		if userDefined > 1.0 {
+			valueToUse = userDefined
+		}
+		return valueToUse
+	}
+
 	static func bestRecent5KSecs() -> UInt32 {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return UInt32(mydefaults.integer(forKey: PREF_NAME_BEST_RECENT_5K_SECS))
@@ -517,6 +575,16 @@ class Preferences {
 		mydefaults.set(value, forKey: PREF_NAME_ESTIMATED_FTP)
 	}
 
+	static func setUserDefinedRestingHr(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_USER_DEFINED_RESTING_HR)
+	}
+
+	static func setEstimatedRestingHr(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_ESTIMATED_RESTING_HR)
+	}
+	
 	static func setUserDefinedMaxHr(value: Double) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_USER_DEFINED_MAX_HR)
@@ -527,9 +595,14 @@ class Preferences {
 		mydefaults.set(value, forKey: PREF_NAME_ESTIMATED_MAX_HR)
 	}
 
-	static func setRestingHr(value: Double) {
+	static func setUserDefinedVO2Max(value: Double) {
 		let mydefaults: UserDefaults = UserDefaults.standard
-		mydefaults.set(value, forKey: PREF_NAME_RESTING_HR)
+		mydefaults.set(value, forKey: PREF_NAME_USER_DEFINED_VO2MAX)
+	}
+	
+	static func setEstimatedVO2Max(value: Double) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_ESTIMATED_VO2_MAX)
 	}
 
 	static func setBestRecent5KSecs(value: UInt32) {
