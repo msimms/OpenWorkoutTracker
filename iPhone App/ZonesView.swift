@@ -6,6 +6,23 @@
 import SwiftUI
 
 struct ZonesView: View {
+	func convertPaceToDisplayString(paceMetersMin: Double) -> String {
+		if paceMetersMin > 0.0 {
+			let units = Preferences.preferredUnitSystem()
+
+			if units == UNIT_SYSTEM_METRIC {
+				let paceKmMin = (1000.0 / paceMetersMin) * 60.0
+				return StoredActivityVM.formatAsHHMMSS(numSeconds: paceKmMin) + " min/km"
+			}
+			else if units == UNIT_SYSTEM_US_CUSTOMARY {
+				let METERS_PER_MILE = 1609.34
+				let paceKmMin = (METERS_PER_MILE / paceMetersMin) * 60.0
+				return StoredActivityVM.formatAsHHMMSS(numSeconds: paceKmMin) +  "min/mile"
+			}
+		}
+		return String(paceMetersMin)
+	}
+
 	var body: some View {
 		ScrollView() {
 			VStack(alignment: .center) {
@@ -64,7 +81,7 @@ struct ZonesView: View {
 									Text(paceName)
 										.bold()
 									Spacer()
-									Text(String(runPaces[paceName]!))
+									Text(self.convertPaceToDisplayString(paceMetersMin: runPaces[paceName]!))
 								}
 								.padding(5)
 							}

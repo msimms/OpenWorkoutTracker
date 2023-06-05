@@ -129,7 +129,7 @@ struct HistoryDetailsView: View {
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Pace" {
-								NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: self.activityVM.formatAsHHMMSS))
+								NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: StoredActivityVM.formatAsHHMMSS))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}

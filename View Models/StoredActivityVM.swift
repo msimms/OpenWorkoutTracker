@@ -505,7 +505,7 @@ class StoredActivityVM : ObservableObject {
 	}
 	
 	/// @brief Utility function for converting a number of seconds into HH:MMSS format
-	func formatAsHHMMSS(numSeconds: Double) -> String {
+	static func formatAsHHMMSS(numSeconds: Double) -> String {
 		let SECS_PER_DAY  = 86400
 		let SECS_PER_HOUR = 3600
 		let SECS_PER_MIN  = 60
