@@ -77,12 +77,12 @@ class LiveActivityVM : ObservableObject {
 	private var audioPlayer: AVAudioPlayer?
 	private var currentMessageTime: time_t = 0 // timestamp of when the current message was set, allows us to know when to clear it
 	
-	init(activityType: String) {
-		self.create(activityType: activityType)
+	init(activityType: String, recreateOrphanedActivities: Bool) {
+		self.create(activityType: activityType, recreateOrphanedActivities: recreateOrphanedActivities)
 	}
 	
-	func create(activityType: String) {
-		
+	func create(activityType: String, recreateOrphanedActivities: Bool) {
+
 		NotificationCenter.default.addObserver(self, selector: #selector(self.messageReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: nil)
 
 		self.activityType = activityType
@@ -93,65 +93,70 @@ class LiveActivityVM : ObservableObject {
 		// Perhaps the app shutdown poorly (phone rebooted, etc.).
 		// Check for an existing, in progress, activity.
 		if IsActivityOrphaned(&orphanedActivityIndex) || IsActivityInProgress() {
-			
+
 			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex)) // const char*, no need to dealloc
 			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
-			
+
 			defer {
 				orphanedActivityTypePtr!.deallocate()
 			}
-			
+
 			activityTypeToUse = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
-			ReCreateOrphanedActivity(orphanedActivityIndex)
-			
-			self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
-			self.isInProgress = true
+
+			if recreateOrphanedActivities {
+				ReCreateOrphanedActivity(orphanedActivityIndex)
+				
+				self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
+				self.isInProgress = true
+			}
+			else {
+			}
 		}
-		
+
 		// Create the backend structures needed to do the activity.
 		else {
 			CreateActivityObject(activityTypeToUse)
-			
+
 			// Generate a unique identifier for this activity.
 			self.activityId = NSUUID().uuidString
 		}
-		
+
 		// Which attributes does the user wish to display when doing this activity?
 		let activityPrefs = ActivityPreferences()
 		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: activityTypeToUse)
-		
+
 		// Preferred view layout.
 		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
-		
+
 		// Configure the location accuracy parameters.
 		SensorMgr.shared.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
 		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
-		
+
 		// Start the sensors.
 		SensorMgr.shared.startSensors()
-		
+
 		// This won't change. Cache it.
 		self.isMovingActivity = IsMovingActivity()
-		
+
 		// Have we played the start beep yet?
 		var playedStartBeep = false
-		
+
 		// Used for determining if we need to play the split beep.
 		var lastSplitNum = 0
 		var splitAttrName = ACTIVITY_ATTRIBUTE_NUM_KM_SPLITS
 		if Preferences.preferredUnitSystem() == UNIT_SYSTEM_US_CUSTOMARY {
 			splitAttrName = ACTIVITY_ATTRIBUTE_NUM_MILE_SPLITS
 		}
-		
+
 		// Stop the existing timer.
 		if self.timer != nil {
 			self.timer?.invalidate()
 			self.timer = nil
 		}
-		
+
 		// Timer to periodically refresh the view.
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
-			
+
 			// Clear the message display?
 			if self.currentMessageTime > 0 {
 				let now = time(nil)
