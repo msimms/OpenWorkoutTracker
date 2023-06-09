@@ -5,12 +5,32 @@
 
 import SwiftUI
 
+struct DeviceRotationViewModifier: ViewModifier {
+	let action: (UIDeviceOrientation) -> Void
+	
+	func body(content: Content) -> some View {
+		content
+			.onAppear()
+			.onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+				action(UIDevice.current.orientation)
+			}
+	}
+}
+
+extension View {
+	func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
+		self.modifier(DeviceRotationViewModifier(action: action))
+	}
+}
+
 struct ContentView: View {
 	@State private var showingActivitySelection: Bool = false
 	@State private var showingViewSelection: Bool = false
 	@State private var showingEditSelection: Bool = false
 	@State private var isBusy: Bool = false
-	private var backgroundImageIndex: Int = Int.random(in: 1..<4)
+	@State private var orientation = UIDevice.current.orientation
+	private var backgroundImageIndexPortrait: Int = Int.random(in: 1..<4)
+	private var backgroundImageIndexLandscape: Int = Int.random(in: 4..<5)
 
 	var body: some View {
 		NavigationStack() {
@@ -22,7 +42,7 @@ struct ContentView: View {
 					.padding(6)
 				
 				// Workout start button
-				Button("Start a\nWorkout") {
+				Button(self.orientation.isLandscape ? "Start a Workout" : "Start a\nWorkout") {
 					self.showingActivitySelection = true
 				}
 				.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivitySelection, titleVisibility: .visible) {
@@ -80,12 +100,17 @@ struct ContentView: View {
 			}
 			.opacity(0.7)
 			.background(
-				Image("Background" + String(backgroundImageIndex))
+				Image("Background" + String(self.orientation.isLandscape ? self.backgroundImageIndexLandscape :  self.backgroundImageIndexPortrait))
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
 					.aspectRatio(contentMode: .fill)
 					.opacity(0.7)
+					.onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+					}
 			)
+		}
+		.onRotate { newOrientation in
+			self.orientation = newOrientation
 		}
     }
 }
