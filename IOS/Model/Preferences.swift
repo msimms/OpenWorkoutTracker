@@ -164,7 +164,7 @@ class Preferences {
 	static func ftp() -> Double {
 		// If the user specified a value then use that one, otherwise use the estimate.
 		var valueToUse = Preferences.estimatedFtp()
-		var userDefined = Preferences.userDefinedFtp()
+		let userDefined = Preferences.userDefinedFtp()
 		if userDefined > 1.0 {
 			valueToUse = userDefined
 		}
@@ -184,7 +184,7 @@ class Preferences {
 	static func restingHr() -> Double {
 		// If the user specified a value then use that one, otherwise use the estimate.
 		var valueToUse = Preferences.estimatedRestingHr()
-		var userDefined = Preferences.userDefinedRestingHr()
+		let userDefined = Preferences.userDefinedRestingHr()
 		if userDefined > 1.0 {
 			valueToUse = userDefined
 		}
@@ -204,7 +204,7 @@ class Preferences {
 	static func maxHr() -> Double {
 		// If the user specified a value then use that one, otherwise use the estimate.
 		var valueToUse = Preferences.estimatedMaxHr()
-		var userDefined = Preferences.userDefinedMaxHr()
+		let userDefined = Preferences.userDefinedMaxHr()
 		if userDefined > 1.0 {
 			valueToUse = userDefined
 		}
@@ -224,7 +224,7 @@ class Preferences {
 	static func vo2Max() -> Double {
 		// If the user specified a value then use that one, otherwise use the estimate.
 		var valueToUse = Preferences.estimatedVO2Max()
-		var userDefined = Preferences.userDefinedVO2Max()
+		let userDefined = Preferences.userDefinedVO2Max()
 		if userDefined > 1.0 {
 			valueToUse = userDefined
 		}

@@ -110,7 +110,7 @@ struct LineGraphView: View {
 					let canvasY: Double = self.canvasMinY + (canvasMaxY - canvasYOffset)
 					let axisStep: Double = Double(i) * (self.rangeY / self.numYHashmarks)
 					let axisValue: Double = self.minY + axisStep
-					var formattedValue: String = self.formatYAxisValue(num: axisValue)
+					let formattedValue: String = self.formatYAxisValue(num: axisValue)
 
 					Text(formattedValue)
 						.position(x: self.canvasMinX + 28.0, y: canvasY)
