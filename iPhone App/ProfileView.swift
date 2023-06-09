@@ -228,7 +228,7 @@ struct ProfileView: View {
 
 			// User's VO2Max
 			HStack {
-				Text("VO2Max")
+				Text("VO\u{00B2}Max")
 					.bold()
 				Spacer()
 				TextField("Not set", text: Binding(

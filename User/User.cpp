@@ -369,13 +369,19 @@ uint8_t User::GetZoneForPower(double power) const
 	return 6;
 }
 
-double User::GetRunTrainingPace(TrainingPaceType pace)
+double User::GetRunTrainingPace(TrainingPaceType pace) const
 {
 	TrainingPaceCalculator paceCalc;
 	std::map<TrainingPaceType, double> paces;
 	
-	// Preferred method for determining training paces: results of a recent hard effort.
-	if (m_bestRecent5KSecs > 0)
+	// Preferred method: VO2Max
+	if (this->HasVO2Max())
+	{
+		paces = paceCalc.CalcFromVO2Max(this->m_vo2Max);
+	}
+	
+	// Second choice method: results of a recent hard effort.
+	else if (m_bestRecent5KSecs > 0)
 	{
 		paces = paceCalc.CalcFromRaceDistanceInMeters(m_bestRecent5KSecs, 5000.0);
 	}

@@ -84,6 +84,7 @@ class HealthManager {
 				try self.updateUsersRestingHr()
 				try self.updateUsersMaxHr()
 				try self.updateUsersVO2Max()
+				try self.getBestRecent5KEffort()
 			}
 			catch {
 			}
@@ -115,7 +116,8 @@ class HealthManager {
 
 	func recentQuantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
 		
-		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - 86400.0 * 7.0 * 26.0)
+		let oneYear = (365.25 * 24.0 * 60.0 * 60.0)
+		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - oneYear)
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [.strictStartDate])
 		
 		let query = HKSampleQuery.init(sampleType: quantityType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { query, results, error in
@@ -244,7 +246,7 @@ class HealthManager {
 		}
 	}
 	
-	/// @brief Estimates the user's maximum heart rate from the last six months of HealthKit data.
+	/// @brief Estimates the user's maximum heart rate from the last year of HealthKit data.
 	func updateUsersMaxHr() throws {
 		let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)!
 		var maxHr: Double = Preferences.estimatedMaxHr()
@@ -276,6 +278,44 @@ class HealthManager {
 				Preferences.setEstimatedVO2Max(value: vo2Max)
 			}
 		}
+	}
+
+	/// @brief Gets the user's best 5K effort from the last six months of HealthKit data.
+	func getBestRecent5KEffort() throws {
+		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - 86400.0 * 7.0 * 26.0)
+		let predicate = HKQuery.predicateForWorkouts(with: HKWorkoutActivityType.running)
+		let sortDescriptor = NSSortDescriptor.init(key: HKSampleSortIdentifierStartDate, ascending: false)
+		let quantityType = HKWorkoutType.workoutType()
+		let sampleQuery = HKSampleQuery.init(sampleType: quantityType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: [sortDescriptor], resultsHandler: { query, samples, error in
+			var bestDuration: TimeInterval?
+
+			if samples != nil {
+				for sample in samples! {
+					if let workout = sample as? HKWorkout {
+						if workout.startDate.timeIntervalSince1970 >= startDate.timeIntervalSince1970 {
+							let distance = workout.totalDistance
+							
+							if distance != nil {
+								if (distance?.doubleValue(for: HKUnit.meter()))! >= 5000.0 {
+									if bestDuration == nil || workout.duration < bestDuration! {
+										bestDuration = workout.duration
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if bestDuration != nil {
+				Preferences.setBestRecent5KSecs(value: UInt32(bestDuration!))
+			}
+
+			self.queryGroup.leave()
+		})
+		
+		self.queryGroup.enter()
+		self.healthStore.execute(sampleQuery)
 	}
 
 	func clearWorkoutsList() {

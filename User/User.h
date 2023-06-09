@@ -112,7 +112,7 @@ public:
 	double GetPowerZone(uint8_t zoneNum) const;
 	uint8_t GetZoneForPower(double power) const;
 
-	double GetRunTrainingPace(TrainingPaceType pace);
+	double GetRunTrainingPace(TrainingPaceType pace) const;
 
 private:
 	uint64_t      m_id;
