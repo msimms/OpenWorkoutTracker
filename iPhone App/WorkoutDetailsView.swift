@@ -18,13 +18,13 @@ struct WorkoutDetailsView: View {
 
 		for interval in workout.intervals {
 			if let power = interval[PARAM_INTERVAL_SEGMENT_POWER] as? Double {
-				bars.append(Bar(value: power, label: ""))
+				bars.append(Bar(value: power, label: "", description: ""))
 			}
 			else if let distance = interval[PARAM_INTERVAL_SEGMENT_DISTANCE] as? Double {
-				bars.append(Bar(value: distance, label: ""))
+				bars.append(Bar(value: distance, label: "", description: ""))
 			}
 			else if let duration = interval[PARAM_INTERVAL_SEGMENT_DURATION] as? Double {
-				bars.append(Bar(value: duration, label: ""))
+				bars.append(Bar(value: duration, label: "", description: ""))
 			}
 		}
 		return bars
@@ -42,7 +42,7 @@ struct WorkoutDetailsView: View {
 			Text(self.scheduledTime)
 				.bold()
 			Spacer()
-			BarChartView(bars: workoutToBarChart(), color: Color.blue)
+			BarChartView(bars: workoutToBarChart(), color: Color.blue, units: "")
 		}
 		.padding(10)
     }

@@ -33,12 +33,13 @@ struct ZonesView: View {
 						Text("Heart Rate Zones")
 							.bold()
 						if ZonesVM.hasHrData() {
-							BarChartView(bars: ZonesVM.listHrZones(), color: Color.red)
+							BarChartView(bars: ZonesVM.listHrZones(), color: Color.red, units: "BPM")
 								.frame(height:256)
 							Text("")
 							Text("")
 							Text("BPM")
 								.bold()
+							Text("Note: The Karvonen formula (i.e. heart rate reserve) is used if the resting heart rate is known and maximum heart rate can be calculated.")
 						}
 						else {
 							Text("Heart rate zones are not available because your maximum heart rate has not been set (or estimated from existing data).")
@@ -54,7 +55,7 @@ struct ZonesView: View {
 						Text("Cycling Power Zones")
 							.bold()
 						if ZonesVM.hasPowerData() {
-							BarChartView(bars: ZonesVM.listPowerZones(), color: Color.blue)
+							BarChartView(bars: ZonesVM.listPowerZones(), color: Color.blue, units: "Watts")
 								.frame(height:256)
 							Text("")
 							Text("")

@@ -9,7 +9,7 @@ func makeSplitGraphBar(splits: Array<time_t>) -> Array<Bar> {
 	var result: Array<Bar> = []
 	
 	for split in splits {
-		result.append(Bar(value: Double(split), label: LiveActivityVM.formatSeconds(numSeconds: Int(split))))
+		result.append(Bar(value: Double(split), label: LiveActivityVM.formatSeconds(numSeconds: Int(split)), description: ""))
 	}
 	return result
 }
@@ -28,7 +28,7 @@ struct SplitsView: View {
 							.bold()
 						let mileSplits = self.activityVM.getMileSplits()
 						if mileSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: mileSplits), color: Color.red)
+							BarChartView(bars: makeSplitGraphBar(splits: mileSplits), color: Color.red, units: "")
 								.frame(height:256)
 						}
 						else {
@@ -46,7 +46,7 @@ struct SplitsView: View {
 							.bold()
 						let kmSplits = self.activityVM.getKilometerSplits()
 						if kmSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: kmSplits), color: Color.green)
+							BarChartView(bars: makeSplitGraphBar(splits: kmSplits), color: Color.green, units: "")
 								.frame(height:256)
 						}
 						else {
@@ -63,7 +63,7 @@ struct SplitsView: View {
 							.bold()
 						let lapSplits = self.activityVM.getLapSplits()
 						if lapSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: lapSplits), color: Color.blue)
+							BarChartView(bars: makeSplitGraphBar(splits: lapSplits), color: Color.blue, units: "")
 								.frame(height:256)
 						}
 						else {

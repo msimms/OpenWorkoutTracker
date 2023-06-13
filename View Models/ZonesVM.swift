@@ -20,20 +20,22 @@ class ZonesVM {
 
 	static func listHrZones() -> Array<Bar> {
 		var result: Array<Bar> = []
+		let descriptions = ["Very Light (Recovery)", "Light (Endurance)", "Moderate", "Hard (Speed Endurance)", "Maximum"]
 
 		for zoneNum in 0...4 {
 			let zoneValue = GetHrZone(UInt8(zoneNum))
-			result.append(Bar(value: zoneValue, label: String(Int(zoneValue))))
+			result.append(Bar(value: zoneValue, label: String(Int(zoneValue)), description: descriptions[zoneNum]))
 		}
 		return result
 	}
-	
+
 	static func listPowerZones() -> Array<Bar> {
 		var result: Array<Bar> = []
+		let descriptions = ["Recovery", "Endurance", "Tempo", "Lactate Threshold", "VO2 Max", "Anaerobic Capacity", "Neuromuscular Power"]
 
 		for zoneNum in 0...4 {
 			let zoneValue = GetPowerZone(UInt8(zoneNum))
-			result.append(Bar(value: zoneValue, label: String(Int(zoneValue))))
+			result.append(Bar(value: zoneValue, label: String(Int(zoneValue)), description: descriptions[zoneNum]))
 		}
 		return result
 	}
