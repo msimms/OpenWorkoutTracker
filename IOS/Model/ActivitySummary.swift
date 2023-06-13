@@ -49,4 +49,11 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable {
 	static func < (lhs: ActivitySummary, rhs: ActivitySummary) -> Bool {
 		return lhs.startTime >= rhs.startTime
 	}
+	
+	/// @brief Requests the latest metadata from the server
+	func requestMetadata() {
+		if self.source == ActivitySummary.Source.database {
+			let _  = ApiClient.shared.requestActivityMetadata(activityId: self.id)
+		}
+	}
 }

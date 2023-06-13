@@ -44,10 +44,19 @@ struct HistoryView: View {
 													.bold()
 											}
 										}
+										.onAppear() {
+											item.requestMetadata()
+										}
 									}
 								}
 							}
 							.listStyle(.plain)
+							.gesture(
+								DragGesture().onChanged { value in
+									if value.translation.height > 0 {
+									} else {
+									}
+								})
 						}
 						else {
 							Text("No History")

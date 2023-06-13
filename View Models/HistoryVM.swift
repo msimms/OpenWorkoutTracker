@@ -64,6 +64,7 @@ class HistoryVM : ObservableObject {
 			// Incorporate HealthKit's list into the master list of activities.
 			for workout in HealthManager.shared.workouts {
 				let summary = ActivitySummary()
+
 				summary.id = workout.key
 				summary.name = ""
 				summary.type = HealthManager.healthKitWorkoutToActivityType(workout: workout.value)
@@ -98,7 +99,8 @@ class HistoryVM : ObservableObject {
 			CommonApp.shared.setUserProfile()
 			
 			// Minor performance optimization, since we know how many items will be in the list.
-			self.historicalActivities.reserveCapacity(GetNumHistoricalActivities())
+			let numActivities = GetNumHistoricalActivities()
+			self.historicalActivities.reserveCapacity(numActivities)
 			
 			// Build our local summary cache.
 			var activityIndex = 0
@@ -149,9 +151,6 @@ class HistoryVM : ObservableObject {
 						DispatchQueue.main.async {
 							self.historicalActivities.insert(summary, at: 0)
 						}
-						
-						// Make sure we have the latest name, description, etc.
-						let _  = ApiClient.shared.requestActivityMetadata(activityId: activityId)
 
 						activityIndex += 1
 					}
@@ -169,11 +168,14 @@ class HistoryVM : ObservableObject {
 			self.state = VmState.empty
 			self.historicalActivities = []
 		}
+
 		self.loadActivitiesFromDatabase()
 		self.loadActivitiesFromHealthKit()
+
 		if createAllObjects {
 			CreateAllHistoricalActivityObjects()
 		}
+
 		DispatchQueue.main.async {
 			self.state = VmState.loaded
 		}
