@@ -248,7 +248,7 @@ class Preferences {
 				return UNIT_SYSTEM_METRIC
 			}
 		}
-		return UNIT_SYSTEM_US_CUSTOMARY;
+		return UNIT_SYSTEM_US_CUSTOMARY
 	}
 
 	static func shouldAutoScaleMap() -> Bool {

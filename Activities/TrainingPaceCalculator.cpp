@@ -32,11 +32,14 @@ std::map<TrainingPaceType, double> TrainingPaceCalculator::CalcFromVO2Max(double
 	// 10000 meters 88-92%
 	// Half Marathon 85-88%%
 	// Marathon 82-85%
+	// Long Run Pace 60%
+	// Easy Pace 70%
+	// Tempo Pace 88%
 
 	double longRunPace = vo2max * 0.6;
 	double easyPace = vo2max * 0.7;
 	double tempoPace = vo2max * 0.88;
-	double functionalThresholdPace = vo2max;
+	double functionalThresholdPace = vo2max * 0.90;
 	double speedPace = vo2max * 1.1;
 	double shortIntervalPace = vo2max * 1.15;
 
