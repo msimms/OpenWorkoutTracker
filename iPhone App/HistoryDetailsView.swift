@@ -68,6 +68,26 @@ struct HistoryDetailsView: View {
 	@State private var showingExportSucceededError: Bool = false
 	@State private var exportDestination: ExportDest = ExportDest.icloud
 
+	func hrFormatter(num: Double) -> String {
+		return String(format: "%0.0f", num)
+	}
+	
+	func cadenceFormatter(num: Double) -> String {
+		return String(format: "%0.0f", num)
+	}
+	
+	func powerFormatter(num: Double) -> String {
+		return String(format: "%0.0f", num)
+	}
+	
+	func speedFormatter(num: Double) -> String {
+		return String(format: "%0.1f", num)
+	}
+
+	func accelFormatter(num: Double) -> String {
+		return String(format: "%0.4f", num)
+	}
+
 	private func loadDetails() {
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.activityVM.load()
@@ -119,12 +139,12 @@ struct HistoryDetailsView: View {
 					ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
 						HStack() {
 							if item == "Heart Rate" {
-								NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red, formatter: nil))
+								NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red, formatter: self.hrFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Cadence" {
-								NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green, formatter: nil))
+								NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green, formatter: self.cadenceFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
@@ -134,27 +154,27 @@ struct HistoryDetailsView: View {
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Power" {
-								NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue, formatter: nil))
+								NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue, formatter: self.powerFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Speed" {
-								NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal, formatter: nil))
+								NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal, formatter: self.speedFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "X Axis" {
-								NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red, formatter: nil))
+								NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red, formatter: self.accelFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Y Axis" {
-								NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green, formatter: nil))
+								NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green, formatter: self.accelFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
 							else if item == "Z Axis" {
-								NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue, formatter: nil))
+								NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue, formatter: self.accelFormatter))
 								Spacer()
 								Image(systemName: "chart.xyaxis.line")
 							}
