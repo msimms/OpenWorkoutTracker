@@ -115,6 +115,13 @@ struct LineGraphView: View {
 			let yAxisTop: CGPoint = CGPoint(x: origin.x, y: canvasMinY - axisWidth)
 			var axisXOffset: Double = canvasMaxX
 			var axisYOffset: Double = canvasMaxY
+			let components = UIColor(self.color).cgColor.components!
+			let fadedColor = Color(red: components[0] * 0.5, green: components[1] * 0.5, blue: components[2] * 0.5)
+			let gradient = LinearGradient(
+				gradient: .init(colors: [self.color, fadedColor]),
+				startPoint: .top,
+				endPoint: .bottom
+			)
 
 			Group() {
 
@@ -154,10 +161,10 @@ struct LineGraphView: View {
 					}
 				}
 				.stroke(.gray, lineWidth: axisWidth / 2)
-			
+
 				// Draw the data line.
 				Line(points: self.points, origin: origin)
-					.fill(color)
+					.fill(gradient)
 					.frame(width: xAxisTop.x - origin.x, height: origin.y - yAxisTop.y)
 			}
 
