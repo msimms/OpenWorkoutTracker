@@ -128,15 +128,38 @@ class StoredActivityVM : ObservableObject {
 			
 			// Location points
 			self.locationTrack = []
+			self.pace = []
+			self.speed = []
 			let numLocationPoints = GetNumHistoricalActivityLocationPoints(self.activityIndex)
 			if numLocationPoints > 0 {
-				
-				for pointIndex in 0...numLocationPoints - 1 {
-					var coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+				var prevCoordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+				var speedConversion = 3.6
 
-					if GetHistoricalActivityLocationPoint(self.activityIndex, pointIndex, &coordinate) {
-						self.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
+				if Preferences.preferredUnitSystem() == UNIT_SYSTEM_US_CUSTOMARY {
+					speedConversion = 2.236936
+				}
+
+				for pointIndex in 0...numLocationPoints - 1 {
+					var currentCoordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+
+					if GetHistoricalActivityLocationPoint(self.activityIndex, pointIndex, &currentCoordinate) {
+
+						if self.locationTrack.count > 0 {
+							let distance = DistanceBetweenCoordinates(prevCoordinate, currentCoordinate)
+							let elapsedTimeSec = Double(currentCoordinate.time - prevCoordinate.time) / 1000.0
+							let metersPerSec = distance / elapsedTimeSec
+							if elapsedTimeSec > 0.01 {
+								let currentPace = metersPerSec * 60.0 // Convert to meters/min, chart view will handle the rest
+								let currentSpeed = metersPerSec * speedConversion // Convert to kph
+
+								self.pace.append((UInt64(pointIndex), currentPace))
+								self.speed.append((UInt64(pointIndex), currentSpeed))
+							}
+						}
+
+						self.locationTrack.append(CLLocationCoordinate2D(latitude: currentCoordinate.latitude, longitude: currentCoordinate.longitude))
 					}
+					prevCoordinate = currentCoordinate
 				}
 				
 				if self.locationTrack.count > 0 {
@@ -174,25 +197,6 @@ class StoredActivityVM : ObservableObject {
 					
 					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_CADENCE, pointIndex, &timestamp, &value) {
 						self.cadence.append((UInt64(timestamp), value))
-					}
-				}
-			}
-			
-			// Pace and speed readings
-			self.pace = []
-			self.speed = []
-			let numPaceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_LOCATION)
-			if numPaceReadings > 0 {
-				
-				for pointIndex in 0...numPaceReadings - 1 {
-					let pace = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_PACE)
-					let speed = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_CURRENT_SPEED)
-					
-					if pace.valid {
-						self.pace.append((UInt64(pointIndex), Double(pace.value.timeVal)))
-					}
-					if speed.valid {
-						self.speed.append((UInt64(pointIndex), speed.value.doubleVal))
 					}
 				}
 			}

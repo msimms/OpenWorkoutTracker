@@ -63,8 +63,8 @@ struct Line: Shape {
 			
 			let offsetY = point.y - self.minY
 			let percentageY = offsetY / self.rangeY
-			let canvasY = rect.height + (canvasSpreadY * (1.0 - percentageY))
-			
+			let canvasY = origin.y + (canvasSpreadY * percentageY)
+
 			path.addLine(to: CGPoint(x: canvasX, y: canvasY))
 			lastX = canvasX
 		}
