@@ -5,7 +5,7 @@
 
 import Foundation
 
-class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable {
+class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable, ObservableObject {
 	enum CodingKeys: CodingKey {
 		case index
 		case id

@@ -540,10 +540,14 @@ class StoredActivityVM : ObservableObject {
 				let activityDesc = data[PARAM_ACTIVITY_DESCRIPTION]
 				
 				if activityName != nil {
-					self.name = (activityName as? String)!
+					DispatchQueue.main.async {
+						self.name = (activityName as? String)!
+					}
 				}
 				if activityDesc != nil {
-					self.description = (activityDesc as? String)!
+					DispatchQueue.main.async {
+						self.description = (activityDesc as? String)!
+					}
 				}
 			}
 		}

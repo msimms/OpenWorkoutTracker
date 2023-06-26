@@ -423,14 +423,15 @@ struct ActivityView: View {
 									.padding(.horizontal)
 									Spacer()
 									
-									MapWithPolyline(region: MKCoordinateRegion(
-										center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude, longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
-										span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-									), trackUser: true)
-									.setOverlay(self.activityVM.trackLine)
-									.ignoresSafeArea()
-									.frame(width: 400, height: 300)
-									.padding(10)
+									GeometryReader { reader in
+										MapWithPolyline(region: MKCoordinateRegion(
+											center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude, longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
+											span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+										), trackUser: true)
+										.setOverlay(self.activityVM.trackLine)
+										.ignoresSafeArea()
+										.frame(width: reader.size.width, height: 300)
+									}
 								}
 								.padding(10)
 							}

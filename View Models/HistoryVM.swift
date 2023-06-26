@@ -32,8 +32,9 @@ class HistoryVM : ObservableObject {
 	
 	init() {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
-		
+
 		self.state = VmState.empty
+		self.historicalActivities = []
 	}
 	
 	/// @brief Loads the activity list from HealthKit (if enabled).

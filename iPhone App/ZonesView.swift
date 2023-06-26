@@ -61,6 +61,7 @@ struct ZonesView: View {
 							Text("")
 							Text("Watts")
 								.bold()
+							Text("Based on an FTP of " + String(Preferences.ftp()))
 						}
 						else {
 							Text("Cycling power zones are not available because your FTP has not been set (or estimated from cycling power data).")

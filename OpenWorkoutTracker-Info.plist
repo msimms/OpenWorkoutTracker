@@ -12,7 +12,7 @@
 	</array>
 	<key>NSUbiquitousContainers</key>
 	<dict>
-		<key>iCloud.com.mjs-software.openworkouttracker</key>
+		<key>iCloud.com.mjs-software.OpenWorkoutTracker</key>
 		<dict>
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<true/>

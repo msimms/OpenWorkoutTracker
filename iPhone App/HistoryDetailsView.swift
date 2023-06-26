@@ -181,6 +181,7 @@ struct HistoryDetailsView: View {
 							else {
 								let valueStr = self.activityVM.getActivityAttributeValueStr(attributeName: item)
 								Text(item)
+									.foregroundColor(valueStr.count > 0 ? (colorScheme == .dark ? .white : .black) : Color.gray)
 								Spacer()
 								Text(valueStr)
 							}
