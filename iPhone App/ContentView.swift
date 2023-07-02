@@ -98,7 +98,7 @@ struct ContentView: View {
 					}
 				}
 			}
-			.opacity(0.7)
+			.opacity(0.8)
 			.background(
 				Image("Background" + String(self.orientation.isLandscape ? self.backgroundImageIndexLandscape :  self.backgroundImageIndexPortrait))
 					.resizable()
