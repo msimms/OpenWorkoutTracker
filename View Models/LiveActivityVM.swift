@@ -495,9 +495,7 @@ class LiveActivityVM : ObservableObject {
 		
 		pointer.pointee = AttributeNameCallbackType(names: [])
 		GetActivityAttributeNames(attributeNameCallback, pointer)
-		let attributeNames = pointer.pointee.names
-		
-		return attributeNames
+		return pointer.pointee.names
 	}
 	
 	func setDisplayedActivityAttributeName(position: Int, attributeName: String) {

@@ -19,7 +19,7 @@ struct GearView: View {
 					.bold()
 				if bikes.count > 0 {
 					List(bikes, id: \.self) { item in
-						NavigationLink(destination: EditBikeView(id: item.id, name: item.name, description: item.description)) {
+						NavigationLink(destination: EditBikeView(gearId: item.gearId, name: item.name, description: item.description, serviceHistory: item.serviceHistory)) {
 							Text(item.name)
 						}
 					}
@@ -36,7 +36,7 @@ struct GearView: View {
 					.bold()
 				if shoes.count > 0 {
 					List(self.gearVM.listShoes(), id: \.self) { item in
-						NavigationLink(destination: EditShoesView(id: item.id, name: item.name, description: item.description)) {
+						NavigationLink(destination: EditShoesView(gearId: item.gearId, name: item.name, description: item.description)) {
 							Text(item.name)
 						}
 					}

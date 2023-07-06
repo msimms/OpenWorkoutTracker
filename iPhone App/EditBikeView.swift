@@ -6,32 +6,59 @@
 import SwiftUI
 
 struct EditBikeView: View {
-	@State var id: UInt64 = 0
+	@State var gearId: UUID = UUID()
 	@State var name: String = ""
 	@State var description: String = ""
+	@State var serviceHistory: Array<GearServiceItem> = []
 	@State var showingSaveError: Bool = false
 	@State var showingDeleteError: Bool = false
+
+	let dateFormatter: DateFormatter = {
+		let df = DateFormatter()
+		df.dateStyle = .medium
+		df.timeStyle = .none
+		return df
+	}()
 
 	var body: some View {
 		VStack(alignment: .center) {
 			Group() {
 				Text("Name")
 					.bold()
-				TextField("Name", text: $name)
+				TextField("Name", text: self.$name)
 			}
 
 			Group() {
 				Text("Description")
 					.bold()
-				TextField("Description", text: $description, axis: .vertical)
+				TextField("Description", text: self.$description, axis: .vertical)
 					.lineLimit(2...10)
+			}
+
+			Spacer()
+			
+			Group() {
+				Text("Service History")
+					.bold()
+				if self.serviceHistory.count > 0 {
+					List(self.serviceHistory, id: \.self) { item in
+						VStack(alignment: .leading) {
+							Text("\(self.dateFormatter.string(from: item.servicedTime))")
+							Text(item.description)
+						}
+					}
+					.listStyle(.plain)
+				}
+				else {
+					Text("None")
+				}
 			}
 
 			Spacer()
 
 			Group() {
 				Button(action: {
-					let item = GearSummary(id: self.id, name: self.name, description: self.description)
+					let item = GearSummary(gearId: self.gearId, name: self.name, description: self.description)
 					self.showingSaveError = !GearVM.createBike(item: item)
 				}) {
 					Text("Save")
@@ -45,7 +72,7 @@ struct EditBikeView: View {
 				.bold()
 				
 				Button(action: {
-					self.showingDeleteError = !GearVM.deleteBike(id: self.id)
+					self.showingDeleteError = !GearVM.deleteBike(gearId: self.gearId)
 				}) {
 					Text("Delete")
 						.frame(minWidth: 0, maxWidth: .infinity)

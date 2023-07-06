@@ -48,7 +48,7 @@ Cycling::Cycling() : MovingActivity()
 	m_lastCadenceUpdateTimeMs           = 0;
 	m_lastPowerUpdateTimeMs             = 0;
 
-	m_bike.id                           = BIKE_ID_NOT_SET;
+	m_bike.gearId.clear();
 	m_bike.computedWheelCircumferenceMm = (double)0.0;
 	m_bike.weightKg                     = (double)0.0;
 }

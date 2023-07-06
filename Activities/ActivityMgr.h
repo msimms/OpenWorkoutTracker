@@ -29,7 +29,6 @@
 
 #define ACTIVITY_INDEX_UNKNOWN (size_t)-1
 #define WORKOUT_INDEX_UNKNOWN (size_t)-1
-#define GEAR_NOT_FOUND (uint64_t)-1
 
 #ifdef __cplusplus
 extern "C" {
@@ -50,7 +49,6 @@ extern "C" {
 	bool UpdateActivityType(const char* const activityId, const char* const type);
 
 	// Functions for managing the activity description.
-	char* RetrieveActivityDescription(const char* const activityId);
 	bool UpdateActivityDescription(const char* const activityId, const char* const description);
 
 	// Functions for managing tags.
@@ -73,7 +71,8 @@ extern "C" {
 
 	// Functions for controlling user preferences and profile data.
 	void SetPreferredUnitSystem(UnitSystem system);
-	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double restingHr, double maxHr, double vo2Max, uint32_t bestRecent5KSecs);
+	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm,
+		double ftp, double restingHr, double maxHr, double vo2Max, uint32_t bestRecent5KSecs);
 	bool GetUsersWeightHistory(WeightCallback callback, void* context);
 	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg);
 
@@ -82,40 +81,48 @@ extern "C" {
 
 	// Functions for managing bike profiles.
 	bool InitializeBikeProfileList(void);
-	bool CreateBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
-	bool DeleteBikeProfile(uint64_t bikeId);
-	bool ComputeWheelCircumference(uint64_t bikeId);
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
-	uint64_t GetBikeIdFromName(const char* const name);
+	bool CreateBikeProfile(const char* const gearId, const char* const name, const char* const description,
+		double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
+	bool RetrieveBikeProfileById(const char* const gearId, char** const name, char** const description,
+		double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
+	bool UpdateBikeProfile(const char* const gearId, const char* const name, const char* const description,
+		double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
+	bool DeleteBikeProfile(const char* const gearId);
+	const char* const GetBikeIdFromName(const char* const name);
+	const char* const GetBikeIdFromIndex(size_t index);
+	bool ComputeWheelCircumference(const char* const gearId);
 
 	// Functions for managing shoes.
 	bool InitializeShoeProfileList(void);
-	bool CreateShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
-	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
-	bool DeleteShoeProfile(uint64_t shoeId);
-	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
-	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
-	uint64_t GetShoeIdFromName(const char* const name);
+	bool CreateShoeProfile(const char* const gearId, const char* const name, const char* const description,
+		time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
+	bool RetrieveShoeProfileById(const char* const gearId, char** const name, char** const description,
+		time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime);
+	bool UpdateShoeProfile(const char* const gearId, const char* const name, const char* const description,
+		time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
+	bool DeleteShoeProfile(const char* const gearId);
+	const char* const GetShoeIdFromName(const char* const name);
+	const char* const GetShoeIdFromIndex(size_t index);
+
+	// Functions for managing gear service history.
+	bool CreateServiceHistory(const char* const gearId, const char* const serviceId, time_t timeServiced, const char* const description);
+	bool RetrieveServiceHistoryByIndex(const char* const gearId, size_t serviceIndex, char** const serviceId, time_t* timeServiced, char** const description);
+	bool UpdateServiceHistory(const char* const serviceId, time_t timeServiced, const char* const description);
+	bool DeleteServiceHistory(const char* const serviceId);
 
 	// Functions for managing the currently set interval session.
 	bool SetCurrentIntervalSession(const char* const sessionId);
-	char* GetCurrentIntervalSessionId(void);
 	bool CheckCurrentIntervalSession(void);
 	bool GetCurrentIntervalSessionSegment(IntervalSessionSegment* segment);
 	bool IsIntervalSessionComplete(void);
-	void AdvanceCurrentIntervalSession(void);
 
 	// Functions for managing interval sessions.
 	bool InitializeIntervalSessionList(void);
 	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description);
 	char* RetrieveIntervalSessionAsJSON(size_t sessionIndex);
-	bool RetrieveIntervalSession(const char* const sessionId, char** const sessionName, char** const sport, char** const description);
 	bool DeleteIntervalSession(const char* const sessionId);
 
 	// Functions for managing interval session segments.
-	size_t GetNumSegmentsForIntervalSession(const char* const sessionId);
 	bool CreateNewIntervalSessionSegment(const char* const sessionId, IntervalSessionSegment segment);
 	bool DeleteIntervalSessionSegment(const char* const sessionId, size_t segmentIndex);
 
@@ -123,13 +130,13 @@ extern "C" {
 	bool InitializePacePlanList(void);
 	bool CreateNewPacePlan(const char* const planName, const char* const planId);
 	char* RetrievePacePlanAsJSON(size_t planIndex);
-	bool RetrievePacePlan(const char* const planId, const char** const name, const char** const description, double* targetDistance, time_t* targetTime, time_t* targetSplits, UnitSystem* targetDistanceUnits, UnitSystem* targetSplitsUnits, time_t* lastUpdatedTime);
-	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetDistance, time_t targetTime, time_t targetSplits, UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime);
+	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description,
+		double targetDistance, time_t targetTime, time_t targetSplits,
+		UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime);
 	bool DeletePacePlan(const char* planId);
 
 	// Functions for managing the currently set pace plan.
 	bool SetCurrentPacePlan(const char* const planId);
-	char* GetCurrentPacePlanId(void);
 
 	// Functions for merging historical activities.
 	bool MergeActivities(const char* const activityId1, const char* const activityId2);
@@ -180,8 +187,10 @@ extern "C" {
 
 	// Functions for accessing historical sensor data.
 	size_t GetNumHistoricalSensorReadings(size_t activityIndex, SensorType sensorType);
-	bool GetHistoricalActivitySensorReading(size_t activityIndex, SensorType sensorType, size_t readingIndex, time_t* const readingTime, double* const readingValue);
-	bool GetHistoricalActivityAccelerometerReading(size_t activityIndex, size_t readingIndex, time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue);
+	bool GetHistoricalActivitySensorReading(size_t activityIndex, SensorType sensorType, size_t readingIndex,
+		time_t* const readingTime, double* const readingValue);
+	bool GetHistoricalActivityAccelerometerReading(size_t activityIndex, size_t readingIndex,
+		time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue);
 
 	// Functions for listing locations from the current activity.
 	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate);
@@ -208,8 +217,10 @@ extern "C" {
 	double GetRunTrainingPace(TrainingPaceType pace);
 
 	// Functions for managing suggested workout generation.
-	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
-	char* GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
+	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType,
+		time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
+	char* GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay,
+		bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
 
 	// Functions for managing suggested workout generation.
 	bool InitializeWorkoutList(void);

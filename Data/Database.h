@@ -23,6 +23,7 @@
 #include "MovingActivity.h"
 #include "PacePlan.h"
 #include "SensorReading.h"
+#include "ServiceHistory.h"
 #include "Shoes.h"
 #include "Workout.h"
 
@@ -44,18 +45,25 @@ public:
 	// Methods for managing the bicycle inventory.
 
 	bool CreateBike(const Bike& bike);
-	bool RetrieveBike(uint64_t bikeId, Bike& bike);
-	bool RetrieveBikes(std::vector<Bike>& bikes);
+	bool RetrieveBike(const std::string& gearId, Bike& bike);
+	bool RetrieveAllBikes(std::vector<Bike>& bikes);
 	bool UpdateBike(const Bike& bike);
-	bool DeleteBike(uint64_t bikeId);
+	bool DeleteBike(const std::string& gearId);
 	
 	// Methods for managing the shoe inventory.
 
 	bool CreateShoe(Shoes& shoes);
-	bool RetrieveShoe(uint64_t shoeId, Shoes& shoes);
+	bool RetrieveShoe(const std::string& gearId, Shoes& shoes);
 	bool RetrieveAllShoes(std::vector<Shoes>& allShoes);
 	bool UpdateShoe(Shoes& shoes);
-	bool DeleteShoe(uint64_t shoeId);
+	bool DeleteShoe(const std::string& gearId);
+
+	// Methods for managing gear service history.
+
+	bool CreateServiceHistory(const std::string& gearId, const std::string& serviceId, time_t timeServiced, const std::string& description);
+	bool RetrieveServiceHistory(const std::string& gearId, std::vector<ServiceHistory>& history);
+	bool UpdateServiceHistory(const std::string& serviceId, time_t timeServiced, const std::string& description);
+	bool DeleteServiceHistory(const std::string& serviceId);
 
 	// Methods for interval sessions.
 	
@@ -106,8 +114,6 @@ public:
 	bool UpdateActivityName(const std::string& activityId, const std::string& name);
 
 	bool UpdateActivityType(const std::string& activityId, const std::string& activityType);
-
-	bool RetrieveActivityDescription(const std::string& activityId, std::string& description);
 	bool UpdateActivityDescription(const std::string& activityId, const std::string& description);
 
 	bool CreateLap(const std::string& activityId, const LapSummary& lap);

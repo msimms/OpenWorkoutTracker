@@ -494,8 +494,6 @@
 		2740DFFC28E4CD0B00293B71 /* UnitConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitConverter.cpp; path = Units/UnitConverter.cpp; sourceTree = "<group>"; };
 		2740DFFD28E4CD0B00293B71 /* UnitConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitConverter.h; path = Units/UnitConverter.h; sourceTree = "<group>"; };
 		2740DFFE28E4CD0B00293B71 /* UnitSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitSystem.h; path = Units/UnitSystem.h; sourceTree = "<group>"; };
-		2740E00028E4CD2600293B71 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Shoes/Shoes.h; sourceTree = "<group>"; };
-		2740E00128E4CD3B00293B71 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Bike/Bike.h; sourceTree = "<group>"; };
 		2740E00328E4CDA500293B71 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = User/User.h; sourceTree = "<group>"; };
 		2740E00428E4CDA500293B71 /* ActivityLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActivityLevel.h; path = User/ActivityLevel.h; sourceTree = "<group>"; };
 		2740E00528E4CDA500293B71 /* User.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = User.cpp; path = User/User.cpp; sourceTree = "<group>"; };
@@ -645,6 +643,9 @@
 		278D932328E38FE7003B077C /* HistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		278D932428E38FE7003B077C /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		278D932528E38FE7003B077C /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
+		27E1DCA42A54CFFF0035E608 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Gear/Shoes.h; sourceTree = "<group>"; };
+		27E1DCA52A54CFFF0035E608 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Gear/Bike.h; sourceTree = "<group>"; };
+		27E1DCA62A54D0730035E608 /* ServiceHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ServiceHistory.h; path = Gear/ServiceHistory.h; sourceTree = "<group>"; };
 		27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ActivityWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		27E608E9292C205700401901 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		27E608EB292C205700401901 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -846,20 +847,14 @@
 			name = Backend;
 			sourceTree = "<group>";
 		};
-		2740DFF728E4CCD000293B71 /* Bike */ = {
+		2740DFF728E4CCD000293B71 /* Gear */ = {
 			isa = PBXGroup;
 			children = (
-				2740E00128E4CD3B00293B71 /* Bike.h */,
+				27E1DCA52A54CFFF0035E608 /* Bike.h */,
+				27E1DCA62A54D0730035E608 /* ServiceHistory.h */,
+				27E1DCA42A54CFFF0035E608 /* Shoes.h */,
 			);
-			name = Bike;
-			sourceTree = "<group>";
-		};
-		2740DFF828E4CCED00293B71 /* Shoes */ = {
-			isa = PBXGroup;
-			children = (
-				2740E00028E4CD2600293B71 /* Shoes.h */,
-			);
-			name = Shoes;
+			name = Gear;
 			sourceTree = "<group>";
 		};
 		2740DFF928E4CCFC00293B71 /* Units */ = {
@@ -1072,17 +1067,16 @@
 				277EAC32292412C30091ADF6 /* BrightBeep.aif */,
 				277EAC33292412C30091ADF6 /* Ping.aif */,
 				2740DF6428E460A000293B71 /* Backend */,
-				2740DFF728E4CCD000293B71 /* Bike */,
 				2740E05B28E4D92900293B71 /* Common */,
 				2740E0FC28E90CF100293B71 /* Controller */,
 				2740E04B28E4D0AB00293B71 /* Database */,
 				2740E00D28E4CE0D00293B71 /* FileLib */,
+				2740DFF728E4CCD000293B71 /* Gear */,
 				2740E07628E5DE9C00293B71 /* LibBluetooth */,
 				2740E03A28E4CF9800293B71 /* LibMath */,
 				2740E09A28E633E800293B71 /* Model */,
 				2740E06228E4D96E00293B71 /* PeakFinder */,
 				2740E00928E4CDBA00293B71 /* Sensors */,
-				2740DFF828E4CCED00293B71 /* Shoes */,
 				2740DFF928E4CCFC00293B71 /* Units */,
 				2740E00228E4CD7C00293B71 /* User */,
 				278D92C228E38F17003B077C /* iPhone App */,

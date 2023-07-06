@@ -397,33 +397,6 @@ extern "C" {
 	// Functions for managing the activity description.
 	//
 
-	char* RetrieveActivityDescription(const char* const activityId)
-	{
-		// Sanity checks.
-		if (activityId == NULL)
-		{
-			return NULL;
-		}
-		
-		char* description = NULL;
-		
-		g_dbLock.lock();
-		
-		if (g_pDatabase)
-		{
-			std::string tempDesc;
-			
-			if (g_pDatabase->RetrieveActivityDescription(activityId, tempDesc))
-			{
-				description = strdup(tempDesc.c_str());
-			}
-		}
-		
-		g_dbLock.unlock();
-		
-		return description;
-	}
-
 	bool UpdateActivityDescription(const char* const activityId, const char* const description)
 	{
 		// Sanity checks.
@@ -1007,7 +980,15 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			result = g_pDatabase->RetrieveBikes(g_bikes);
+			result = g_pDatabase->RetrieveAllBikes(g_bikes);
+			
+			if (result)
+			{
+				for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
+				{
+					result &= g_pDatabase->RetrieveServiceHistory((*iter).gearId, (*iter).serviceHistory);
+				}
+			}
 		}
 
 		g_dbLock.unlock();
@@ -1015,10 +996,20 @@ extern "C" {
 		return result;
 	}
 
-	bool CreateBikeProfile(const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
+	bool CreateBikeProfile(const char* const gearId, const char* const name, const char* const description,
+		double weightKg, double wheelCircumferenceMm,
+		time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
 		if (name == NULL)
+		{
+			return false;
+		}
+		if (description == NULL)
 		{
 			return false;
 		}
@@ -1027,11 +1018,12 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			uint64_t existingId = GetBikeIdFromName(name);
+			const char* existingId = GetBikeIdFromName(name);
 
-			if (existingId == GEAR_NOT_FOUND)
+			if (existingId == NULL)
 			{
 				Bike bike;
+				bike.gearId = gearId;
 				bike.name = name;
 				bike.description = description;
 				bike.weightKg = weightKg;
@@ -1054,10 +1046,54 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateBikeProfile(uint64_t bikeId, const char* const name, const char* const description, double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
+	bool RetrieveBikeProfileById(const char* const gearId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
 	{
 		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
+		
+		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
+		{
+			const Bike& bike = (*iter);
+			
+			if (bike.gearId.compare(gearId) == 0)
+			{
+				if (name)
+					(*name) = strdup(bike.name.c_str());
+				if (description)
+					(*description) = strdup(bike.description.c_str());
+				if (weightKg)
+					(*weightKg) = bike.weightKg;
+				if (wheelCircumferenceMm)
+					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
+				if (timeAdded)
+					(*timeAdded) = bike.timeAdded;
+				if (timeRetired)
+					(*timeRetired) = bike.timeRetired;
+				if (lastUpdatedTime)
+					(*lastUpdatedTime) = bike.lastUpdatedTime;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool UpdateBikeProfile(const char* const gearId, const char* const name, const char* const description,
+		double weightKg, double wheelCircumferenceMm,
+		time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
+	{
+		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
 		if (name == NULL)
+		{
+			return false;
+		}
+		if (description == NULL)
 		{
 			return false;
 		}
@@ -1067,7 +1103,7 @@ extern "C" {
 		if (g_pDatabase)
 		{
 			Bike bike;
-			bike.id = bikeId;
+			bike.gearId = gearId;
 			bike.name = name;
 			bike.description = description;
 			bike.weightKg = weightKg;
@@ -1089,14 +1125,20 @@ extern "C" {
 		return result;
 	}
 
-	bool DeleteBikeProfile(uint64_t bikeId)
+	bool DeleteBikeProfile(const char* const gearId)
 	{
+		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		if (g_pDatabase)
 		{
 			g_dbLock.lock();
-			result = g_pDatabase->DeleteBike(bikeId);
+			result = g_pDatabase->DeleteBike(gearId);
 			g_dbLock.unlock();
 
 			if (result)
@@ -1108,8 +1150,44 @@ extern "C" {
 		return result;
 	}
 
-	bool ComputeWheelCircumference(uint64_t bikeId)
+	const char* const GetBikeIdFromName(const char* const name)
 	{
+		// Sanity checks.
+		if (name == NULL)
+		{
+			return NULL;
+		}
+		
+		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
+		{
+			const Bike& bike = (*iter);
+			
+			if (bike.name.compare(name) == 0)
+			{
+				return bike.gearId.c_str();
+			}
+		}
+		return NULL;
+	}
+
+	const char* const GetBikeIdFromIndex(size_t index)
+	{
+		if (index >= g_bikes.size())
+		{
+			return NULL;
+		}
+		
+		return g_bikes.at(index).gearId.c_str();
+	}
+
+	bool ComputeWheelCircumference(const char* const gearId)
+	{
+		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		g_dbLock.lock();
@@ -1124,7 +1202,7 @@ extern "C" {
 			time_t timeRetired = (time_t)0;
 			time_t lastUpdatedTime = (time_t)0;
 
-			if (GetBikeProfileById(bikeId, &bikeName, &description, &weightKg, &wheelCircumferenceMm, &timeAdded, &timeRetired, &lastUpdatedTime))
+			if (RetrieveBikeProfileById(gearId, &bikeName, &description, &weightKg, &wheelCircumferenceMm, &timeAdded, &timeRetired, &lastUpdatedTime))
 			{
 				double circumferenceTotalMm = (double)0.0;
 				uint64_t numSamples = 0;
@@ -1176,7 +1254,7 @@ extern "C" {
 				if (numSamples > 0)
 				{
 					wheelCircumferenceMm = circumferenceTotalMm / numSamples;
-					result = UpdateBikeProfile(bikeId, bikeName, description, weightKg, wheelCircumferenceMm, timeAdded, timeRetired, lastUpdatedTime);
+					result = UpdateBikeProfile(gearId, bikeName, description, weightKg, wheelCircumferenceMm, timeAdded, timeRetired, lastUpdatedTime);
 				}
 			}
 
@@ -1189,81 +1267,6 @@ extern "C" {
 		g_dbLock.unlock();
 
 		return result;
-	}
-
-	bool GetBikeProfileById(uint64_t bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
-	{
-		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
-		{
-			const Bike& bike = (*iter);
-
-			if (bike.id == bikeId)
-			{
-				if (name)
-					(*name) = strdup(bike.name.c_str());
-				if (description)
-					(*description) = strdup(bike.description.c_str());
-				if (weightKg)
-					(*weightKg) = bike.weightKg;
-				if (wheelCircumferenceMm)
-					(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
-				if (timeAdded)
-					(*timeAdded) = bike.timeAdded;
-				if (timeRetired)
-					(*timeRetired) = bike.timeRetired;
-				if (lastUpdatedTime)
-					(*lastUpdatedTime) = bike.lastUpdatedTime;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool GetBikeProfileByIndex(size_t bikeIndex, uint64_t* bikeId, char** const name, char** const description, double* weightKg, double* wheelCircumferenceMm, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
-	{
-		if (bikeIndex < g_bikes.size())
-		{
-			const Bike& bike = g_bikes.at(bikeIndex);
-
-			if (bikeId)
-				(*bikeId) = bike.id;
-			if (name)
-				(*name) = strdup(bike.name.c_str());
-			if (description)
-				(*description) = strdup(bike.description.c_str());
-			if (weightKg)
-				(*weightKg) = bike.weightKg;
-			if (wheelCircumferenceMm)
-				(*wheelCircumferenceMm) = bike.computedWheelCircumferenceMm;
-			if (timeAdded)
-				(*timeAdded) = bike.timeAdded;
-			if (timeRetired)
-				(*timeRetired) = bike.timeRetired;
-			if (lastUpdatedTime)
-				(*lastUpdatedTime) = bike.lastUpdatedTime;
-			return true;
-		}
-		return false;
-	}
-
-	uint64_t GetBikeIdFromName(const char* const name)
-	{
-		// Sanity checks.
-		if (name == NULL)
-		{
-			return GEAR_NOT_FOUND;
-		}
-
-		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
-		{
-			const Bike& bike = (*iter);
-
-			if (bike.name.compare(name) == 0)
-			{
-				return bike.id;
-			}
-		}
-		return GEAR_NOT_FOUND;
 	}
 
 	//
@@ -1287,9 +1290,13 @@ extern "C" {
 		return result;
 	}
 
-	bool CreateShoeProfile(const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
+	bool CreateShoeProfile(const char* const gearId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
 		if (name == NULL)
 		{
 			return false;
@@ -1303,12 +1310,13 @@ extern "C" {
 
 		if (g_pDatabase)
 		{
-			uint64_t existingId = GetShoeIdFromName(name);
+			const char* existingId = GetShoeIdFromName(name);
 
-			if (existingId == GEAR_NOT_FOUND)
+			if (existingId == NULL)
 			{
 				Shoes shoes;
 
+				shoes.gearId = gearId;
 				shoes.name = name;
 				shoes.description = description;
 				shoes.timeAdded = timeAdded;
@@ -1329,9 +1337,42 @@ extern "C" {
 		return result;
 	}
 
-	bool UpdateShoeProfile(uint64_t shoeId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
+	bool RetrieveShoeProfileById(const char* const gearId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
+	{
+		if (gearId == NULL)
+		{
+			return false;
+		}
+		
+		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
+		{
+			const Shoes& shoes = (*iter);
+			
+			if (shoes.gearId.compare(gearId) == 0)
+			{
+				if (name)
+					(*name) = strdup(shoes.name.c_str());
+				if (description)
+					(*description) = strdup(shoes.description.c_str());
+				if (timeAdded)
+					(*timeAdded) = shoes.timeAdded;
+				if (timeRetired)
+					(*timeRetired) = shoes.timeRetired;
+				if (lastUpdatedTime)
+					(*lastUpdatedTime) = shoes.lastUpdatedTime;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool UpdateShoeProfile(const char* const gearId, const char* const name, const char* const description, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
 		if (name == NULL)
 		{
 			return false;
@@ -1347,7 +1388,7 @@ extern "C" {
 		{
 			Shoes shoes;
 
-			shoes.id = shoeId;
+			shoes.gearId = gearId;
 			shoes.name = name;
 			shoes.description = description;
 			shoes.timeAdded = timeAdded;
@@ -1367,14 +1408,19 @@ extern "C" {
 		return result;
 	}
 
-	bool DeleteShoeProfile(uint64_t shoeId)
+	bool DeleteShoeProfile(const char* const gearId)
 	{
+		if (gearId == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 
 		if (g_pDatabase)
 		{
 			g_dbLock.lock();
-			result = g_pDatabase->DeleteShoe(shoeId);
+			result = g_pDatabase->DeleteShoe(gearId);
 			g_dbLock.unlock();
 
 			if (result)
@@ -1386,59 +1432,12 @@ extern "C" {
 		return result;
 	}
 
-	bool GetShoeProfileById(uint64_t shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
-	{
-		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
-		{
-			const Shoes& shoes = (*iter);
-
-			if (shoes.id == shoeId)
-			{
-				if (name)
-					(*name) = strdup(shoes.name.c_str());
-				if (description)
-					(*description) = strdup(shoes.description.c_str());
-				if (timeAdded)
-					(*timeAdded) = shoes.timeAdded;
-				if (timeRetired)
-					(*timeRetired) = shoes.timeRetired;
-				if (lastUpdatedTime)
-					(*lastUpdatedTime) = shoes.lastUpdatedTime;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool GetShoeProfileByIndex(size_t shoeIndex, uint64_t* shoeId, char** const name, char** const description, time_t* timeAdded, time_t* timeRetired, time_t* lastUpdatedTime)
-	{
-		if (shoeIndex < g_shoes.size())
-		{
-			const Shoes& shoes = g_shoes.at(shoeIndex);
-
-			if (shoeId)
-				(*shoeId) = shoes.id;
-			if (name)
-				(*name) = strdup(shoes.name.c_str());
-			if (description)
-				(*description) = strdup(shoes.description.c_str());
-			if (timeAdded)
-				(*timeAdded) = shoes.timeAdded;
-			if (timeRetired)
-				(*timeRetired) = shoes.timeRetired;
-			if (lastUpdatedTime)
-				(*lastUpdatedTime) = shoes.lastUpdatedTime;
-			return true;
-		}
-		return false;
-	}
-
-	uint64_t GetShoeIdFromName(const char* const name)
+	const char* const GetShoeIdFromName(const char* const name)
 	{
 		// Sanity checks.
 		if (name == NULL)
 		{
-			return GEAR_NOT_FOUND;
+			return NULL;
 		}
 
 		for (auto iter = g_shoes.begin(); iter != g_shoes.end(); ++iter)
@@ -1447,10 +1446,141 @@ extern "C" {
 
 			if (shoe.name.compare(name) == 0)
 			{
-				return shoe.id;
+				return shoe.gearId.c_str();
 			}
 		}
-		return GEAR_NOT_FOUND;
+		return NULL;
+	}
+
+	const char* const GetShoeIdFromIndex(size_t index)
+	{
+		if (index >= g_shoes.size())
+		{
+			return NULL;
+		}
+		
+		return g_shoes.at(index).gearId.c_str();
+	}
+
+	//
+	// Functions for managing gear service history.
+	//
+
+	bool CreateServiceHistory(const char* const gearId, const char* const serviceId, time_t timeServiced, const char* const description)
+	{
+		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
+		if (timeServiced == 0)
+		{
+			return false;
+		}
+		if (description == NULL)
+		{
+			return false;
+		}
+
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->CreateServiceHistory(gearId, serviceId, timeServiced, description);
+		}
+		
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
+	bool RetrieveServiceHistoryByIndex(const char* const gearId, size_t serviceIndex, char** const serviceId, time_t* timeServiced, char** const description)
+	{
+		// Sanity checks.
+		if (gearId == NULL)
+		{
+			return false;
+		}
+
+		bool result = false;
+
+		for (auto iter = g_bikes.begin(); iter != g_bikes.end(); ++iter)
+		{
+			const Bike& bike = (*iter);
+			
+			if (bike.gearId.compare(gearId) == 0)
+			{
+				if (serviceIndex < bike.serviceHistory.size())
+				{
+					const ServiceHistory& temp = bike.serviceHistory.at(serviceIndex);
+
+					if (serviceId)
+						(*serviceId) = strdup(temp.serviceId.c_str());
+					if (timeServiced)
+						(*timeServiced) = temp.timeServiced;
+					if (description)
+						(*description) = strdup(temp.description.c_str());
+					result = true;
+				}
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	bool UpdateServiceHistory(const char* const serviceId, time_t timeServiced, const char* const description)
+	{
+		// Sanity checks.
+		if (serviceId == NULL)
+		{
+			return false;
+		}
+		if (timeServiced == 0)
+		{
+			return false;
+		}
+		if (description == NULL)
+		{
+			return false;
+		}
+		
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->UpdateServiceHistory(serviceId, timeServiced, description);
+		}
+		
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
+	bool DeleteServiceHistory(const char* const serviceId)
+	{
+		// Sanity checks.
+		if (serviceId == NULL)
+		{
+			return false;
+		}
+		
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (g_pDatabase)
+		{
+			result = g_pDatabase->DeleteServiceHistory(serviceId);
+		}
+		
+		g_dbLock.unlock();
+		
+		return result;
 	}
 
 	//
@@ -1496,15 +1626,6 @@ extern "C" {
 			}
 		}
 		return false;
-	}
-
-	char* GetCurrentIntervalSessionsId(void)
-	{
-		if (g_pCurrentActivity)
-		{
-			return strdup(g_pCurrentActivity->GetCurrentIntervalSessionId().c_str());
-		}
-		return NULL;
 	}
 
 	bool CheckCurrentIntervalSession()
@@ -1647,48 +1768,6 @@ extern "C" {
 		return NULL;
 	}
 
-	bool RetrieveIntervalSession(const char* const sessionId, char** const sessionName, char** const sport, char** const description)
-	{
-		// Sanity checks.
-		if (sessionId == NULL)
-		{
-			return false;
-		}
-		if (sessionName == NULL)
-		{
-			return false;
-		}
-		if (sport == NULL)
-		{
-			return false;
-		}
-		if (description == NULL)
-		{
-			return false;
-		}
-
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			std::string tempSessionName;
-			std::string tempSport;
-			std::string tempDescription;
-
-			result = g_pDatabase->RetrieveIntervalSession(sessionId, tempSessionName, tempSport, tempDescription);
-
-			(*sessionName) = strdup(tempSessionName.c_str());
-			(*sport) = strdup(tempSport.c_str());
-			(*description) = strdup(tempDescription.c_str());
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
 	bool DeleteIntervalSession(const char* const sessionId)
 	{
 		// Sanity checks.
@@ -1714,33 +1793,6 @@ extern "C" {
 	//
 	// Functions for managing interval sessions.
 	//
-
-	size_t GetNumSegmentsForIntervalSession(const char* const sessionId)
-	{
-		// Sanity checks.
-		if (sessionId == NULL)
-		{
-			return 0;
-		}
-
-		size_t numSegments = 0;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			const IntervalSession* pSession = GetIntervalSession(sessionId);
-
-			if (pSession)
-			{
-				numSegments = pSession->segments.size();
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return numSegments;
-	}
 
 	bool CreateNewIntervalSessionSegment(const char* const sessionId, IntervalSessionSegment segment)
 	{
@@ -1885,42 +1937,6 @@ extern "C" {
 		return NULL;
 	}
 
-	bool RetrievePacePlan(const char* const planId, const char** const name, const char** const description, double* targetDistance, time_t* targetTime, time_t* targetSplits, UnitSystem* targetDistanceUnits, UnitSystem* targetSplitsUnits, time_t* lastUpdatedTime)
-	{
-		// Sanity checks.
-		if (planId == NULL)
-		{
-			return false;
-		}
-
-		for (auto iter = g_pacePlans.begin(); iter != g_pacePlans.end(); ++iter)
-		{
-			const PacePlan& pacePlan = (*iter);
-
-			if (pacePlan.planId.compare(planId) == 0)
-			{
-				if (name)
-					(*name) = strdup(pacePlan.name.c_str());
-				if (description)
-					(*description) = strdup(pacePlan.description.c_str());
-				if (targetDistance)
-					(*targetDistance) = pacePlan.targetDistance;
-				if (targetTime)
-					(*targetTime) = pacePlan.targetTime;
-				if (targetSplits)
-					(*targetSplits) = pacePlan.targetSplits;
-				if (targetDistanceUnits)
-					(*targetDistanceUnits) = pacePlan.distanceUnits;
-				if (targetSplitsUnits)
-					(*targetSplitsUnits) = pacePlan.splitsUnits;
-				if (lastUpdatedTime)
-					(*lastUpdatedTime) = pacePlan.lastUpdatedTime;
-				return true;
-			}
-		}
-		return false;
-	}
-
 	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description, double targetDistance, time_t targetTime, time_t targetSplits, UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime)
 	{
 		// Sanity checks.
@@ -2040,15 +2056,6 @@ extern "C" {
 			}
 		}
 		return false;
-	}
-
-	char* GetCurrentPacePlanId(void)
-	{
-		if (g_pCurrentActivity)
-		{
-			return strdup(g_pCurrentActivity->GetPacePlanId().c_str());
-		}
-		return NULL;
 	}
 
 	//
@@ -3089,6 +3096,7 @@ extern "C" {
 				if (readingIndex < summary.accelerometerReadings.size())
 				{
 					SensorReading& reading = summary.accelerometerReadings.at(readingIndex);
+
 					(*readingTime) = (time_t)reading.time;
 					(*xValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_X);
 					(*yValue) = reading.reading.at(ACTIVITY_ATTRIBUTE_Y);
@@ -3294,19 +3302,22 @@ extern "C" {
 	// Functions for managing workout generation.
 	//
 
-	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType, time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
+	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType,
+		time_t startTime, time_t endTime, ActivityAttributeType distanceAttr)
 	{
 		g_workoutGen.InsertAdditionalAttributes(activityId, activityType, startTime, endTime, distanceAttr);
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
-	char* GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay, bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle)
+	char* GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay,
+		bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle)
 	{
 		std::string error;
 		std::string result;
 
 		// Calculate inputs from activities in the database.
-		std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList, goal, goalType, goalDate, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
+		std::map<std::string, double> inputs = g_workoutGen.CalculateInputs(g_historicalActivityList,
+			goal, goalType, goalDate, hasSwimmingPoolAccess, hasOpenWaterSwimAccess, hasBicycle);
 		
 		// Can we actually do anything with the workouts we have?
 		if (g_workoutGen.IsWorkoutPlanPossible(inputs))
@@ -4225,7 +4236,7 @@ extern "C" {
 			if (pCycling)
 			{
 				Bike bike = pCycling->GetBikeProfile();
-				if (bike.id > BIKE_ID_NOT_SET)
+				if (bike.gearId.size() > 0)
 				{
 					g_pDatabase->UpdateBike(bike);
 				}
