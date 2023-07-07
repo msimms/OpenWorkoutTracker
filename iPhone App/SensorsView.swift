@@ -11,7 +11,7 @@ struct SensorsView: View {
 
 	var body: some View {
 		ScrollView() {
-			VStack() {
+			VStack(alignment: .center) {
 				Toggle("Scan for compatible sensors", isOn: $shouldScan)
 					.onChange(of: shouldScan) { value in
 						Preferences.setScanForSensors(value: shouldScan)

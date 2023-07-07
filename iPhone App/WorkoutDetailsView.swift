@@ -31,7 +31,7 @@ struct WorkoutDetailsView: View {
 	}
 	
     var body: some View {
-		VStack() {
+		VStack(alignment: .center) {
 			Text(self.title)
 				.font(.largeTitle)
 				.bold()

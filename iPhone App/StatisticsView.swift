@@ -47,14 +47,14 @@ struct StatisticsView: View {
 					if self.historyVM.historicalActivities.count > 0 {
 						ForEach(CommonApp.activityTypes, id: \.self) { activityType in
 							if GetNumHistoricalActivitiesByType(activityType) > 0 {
-								VStack() {
+								VStack(alignment: .center) {
 									Image(systemName: HistoryVM.imageNameForActivityType(activityType: activityType))
 										.frame(width: 48)
 									Text(activityType)
 										.bold()
 										.fontWeight(Font.Weight.heavy)
 								}
-								VStack() {
+								VStack(alignment: .center) {
 									HStack() {
 										Text("Totals")
 											.bold()

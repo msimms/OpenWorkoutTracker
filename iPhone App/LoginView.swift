@@ -14,47 +14,45 @@ struct LoginView: View {
 	@State private var showingLoginError: Bool = false
 
 	var body: some View {
-		VStack() {
-			VStack(alignment: .center) {
-				Group() {
-					Text("Email")
-						.bold()
-					TextField("Email", text: self.$email)
-						.foregroundColor(self.colorScheme == .dark ? .white : .black)
-						.background(self.colorScheme == .dark ? .black : .white)
-						.autocapitalization(.none)
-				}
-				.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 5, trailing: 0))
-				Group() {
-					Text("Password")
-						.bold()
-					SecureField("Password", text: self.$password)
-						.foregroundColor(self.colorScheme == .dark ? .white : .black)
-						.background(self.colorScheme == .dark ? .black : .white)
-						.bold()
-				}
-				.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
-				
-				Button {
-					Preferences.setBroadcastUserName(value: self.email)
-					if self.apiClient.login(username: self.email, password: self.password) {
-						self.presentation.wrappedValue.dismiss()
-					}
-					else {
-						self.showingLoginError = true
-					}
-				} label: {
-					Text("Login")
-						.foregroundColor(self.colorScheme == .dark ? .black : .white)
-						.fontWeight(Font.Weight.heavy)
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.padding()
-				}
-				.alert("Login failed!", isPresented: self.$showingLoginError) { }
-				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-				.opacity(0.8)
-				.bold()
+		VStack(alignment: .center) {
+			Group() {
+				Text("Email")
+					.bold()
+				TextField("Email", text: self.$email)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
+					.background(self.colorScheme == .dark ? .black : .white)
+					.autocapitalization(.none)
 			}
+			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 5, trailing: 0))
+			Group() {
+				Text("Password")
+					.bold()
+				SecureField("Password", text: self.$password)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
+					.background(self.colorScheme == .dark ? .black : .white)
+					.bold()
+			}
+			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
+			
+			Button {
+				Preferences.setBroadcastUserName(value: self.email)
+				if self.apiClient.login(username: self.email, password: self.password) {
+					self.presentation.wrappedValue.dismiss()
+				}
+				else {
+					self.showingLoginError = true
+				}
+			} label: {
+				Text("Login")
+					.foregroundColor(self.colorScheme == .dark ? .black : .white)
+					.fontWeight(Font.Weight.heavy)
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.padding()
+			}
+			.alert("Login failed!", isPresented: self.$showingLoginError) { }
+			.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+			.opacity(0.8)
+			.bold()
 		}
 		.padding(10)
     }

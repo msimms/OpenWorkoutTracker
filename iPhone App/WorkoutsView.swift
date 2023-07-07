@@ -193,7 +193,7 @@ struct WorkoutsView: View {
 					List(self.workoutsVM.workouts, id: \.self) { item in
 						let timeStr = self.formatDateStr(ts: item.scheduledTime)
 						NavigationLink(destination: WorkoutDetailsView(workoutId: item.id, title: item.sportType, subtitle: item.workoutType, description: item.description, scheduledTime: timeStr, workout: item)) {
-							VStack() {
+							VStack(alignment: .center) {
 								HStack() {
 									Text(item.sportType)
 										.bold()

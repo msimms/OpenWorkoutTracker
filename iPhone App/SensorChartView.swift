@@ -17,7 +17,7 @@ struct SensorChartView: View {
 			Text(title)
 				.bold()
 			if self.data.count > 0 {
-				VStack() {
+				VStack(alignment: .center) {
 					LineGraphView(points: self.data, color: self.color, formatter: self.formatter)
 					Text("Elapsed Time")
 				}

@@ -124,7 +124,7 @@ struct SettingsView: View {
 						.bold()
 					}
 					else {
-						VStack() {
+						VStack(alignment: .center) {
 							NavigationLink(destination: LoginView()) {
 								Text("Login")
 									.foregroundColor(self.colorScheme == .dark ? .black : .white)
