@@ -113,7 +113,7 @@ struct SettingsView: View {
 							}
 						} label: {
 							Text("Logout")
-								.foregroundColor(colorScheme == .dark ? .black : .white)
+								.foregroundColor(self.colorScheme == .dark ? .black : .white)
 								.fontWeight(Font.Weight.heavy)
 								.frame(minWidth: 0, maxWidth: .infinity)
 								.padding()
@@ -127,7 +127,7 @@ struct SettingsView: View {
 						VStack() {
 							NavigationLink(destination: LoginView()) {
 								Text("Login")
-									.foregroundColor(colorScheme == .dark ? .black : .white)
+									.foregroundColor(self.colorScheme == .dark ? .black : .white)
 									.fontWeight(Font.Weight.heavy)
 									.frame(minWidth: 0, maxWidth: .infinity)
 									.padding()

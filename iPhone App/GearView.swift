@@ -20,7 +20,9 @@ struct GearView: View {
 				if bikes.count > 0 {
 					List(bikes, id: \.self) { item in
 						NavigationLink(destination: EditBikeView(gearId: item.gearId, name: item.name, description: item.description, serviceHistory: item.serviceHistory)) {
+							let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
 							Text(item.name)
+								.foregroundColor(textColor)
 						}
 					}
 					.listStyle(.plain)
@@ -37,7 +39,9 @@ struct GearView: View {
 				if shoes.count > 0 {
 					List(self.gearVM.listShoes(), id: \.self) { item in
 						NavigationLink(destination: EditShoesView(gearId: item.gearId, name: item.name, description: item.description)) {
+							let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
 							Text(item.name)
+								.foregroundColor(textColor)
 						}
 					}
 					.listStyle(.plain)
@@ -59,7 +63,7 @@ struct GearView: View {
 					} label: {
 						Label("+", systemImage: "plus")
 					}
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 				}
 				.confirmationDialog("What would you like to add?", isPresented: $showingAddSelection, titleVisibility: .visible) {
 					NavigationLink("Bicycle", destination: EditBikeView())

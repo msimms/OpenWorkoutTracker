@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct EditBikeView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@State var gearId: UUID = UUID()
 	@State var name: String = ""
 	@State var description: String = ""
@@ -36,14 +37,14 @@ struct EditBikeView: View {
 			}
 
 			Spacer()
-			
+
 			Group() {
 				Text("Service History")
 					.bold()
 				if self.serviceHistory.count > 0 {
 					List(self.serviceHistory, id: \.self) { item in
 						VStack(alignment: .leading) {
-							Text("\(self.dateFormatter.string(from: item.servicedTime))")
+							Text("\(self.dateFormatter.string(from: item.timeServiced))")
 							Text(item.description)
 						}
 					}
@@ -57,20 +58,31 @@ struct EditBikeView: View {
 			Spacer()
 
 			Group() {
+				NavigationLink(destination: GearServiceItemView(gearId: self.gearId)) {
+					Text("Add Service Record")
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
+						.fontWeight(Font.Weight.heavy)
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.padding()
+				}
+				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+				.opacity(0.8)
+				.bold()
+
 				Button(action: {
 					let item = GearSummary(gearId: self.gearId, name: self.name, description: self.description)
 					self.showingSaveError = !GearVM.createBike(item: item)
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
 						.padding()
 				}
 				.alert("Failed to save.", isPresented: self.$showingSaveError) {}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
-				
+
 				Button(action: {
 					self.showingDeleteError = !GearVM.deleteBike(gearId: self.gearId)
 				}) {

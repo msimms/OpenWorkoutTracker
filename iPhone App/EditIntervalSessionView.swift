@@ -85,7 +85,7 @@ struct EditIntervalSessionView: View {
 						ForEach(self.tempSession.segments, id: \.self) { segment in
 							HStack() {
 								// Move up button
-								Button(action : {
+								Button(action: {
 									self.showingMoveSegmentUpAlert = !self.intervalSessionsVM.moveSegmentUp(session: self.tempSession, segmentId: segment.id)
 								}) {
 									Image(systemName: "arrow.up.square")
@@ -132,7 +132,7 @@ struct EditIntervalSessionView: View {
 								Spacer()
 								
 								// Move down button
-								Button(action : {
+								Button(action: {
 									self.showingMoveSegmentDownAlert = !self.intervalSessionsVM.moveSegmentDown(session: self.tempSession, segmentId: segment.id)
 								}) {
 									Image(systemName: "arrow.down.square")

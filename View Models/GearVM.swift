@@ -7,19 +7,24 @@ import Foundation
 
 class GearServiceItem : Identifiable, Hashable, Equatable {
 	var serviceId: String = ""
-	var servicedTime: Date = Date()
+	var timeServiced: Date = Date()
 	var description: String = ""
 
 	/// Constructor
 	init() {
 	}
-	init(serviceId: String, servicedTime: time_t, description: String) {
-		self.serviceId = serviceId
-		self.servicedTime = Date(timeIntervalSince1970: TimeInterval(servicedTime))
+	init(serviceId: UUID, timeServiced: Date, description: String) {
+		self.serviceId = serviceId.uuidString
+		self.timeServiced = timeServiced
 		self.description = description
 	}
-	init(servicedTime: time_t, description: String) {
-		self.servicedTime = Date(timeIntervalSince1970: TimeInterval(servicedTime))
+	init(serviceId: String, timeServiced: time_t, description: String) {
+		self.serviceId = serviceId
+		self.timeServiced = Date(timeIntervalSince1970: TimeInterval(timeServiced))
+		self.description = description
+	}
+	init(timeServiced: time_t, description: String) {
+		self.timeServiced = Date(timeIntervalSince1970: TimeInterval(timeServiced))
 		self.description = description
 	}
 	init(json: Decodable) {
@@ -119,7 +124,8 @@ class GearVM : ObservableObject {
 					while RetrieveServiceHistoryByIndex(gearId, serviceIndex, &serviceIdPtr, &timeServiced, &descriptionPtr) {
 						let serviceId = String.init(cString: serviceIdPtr)
 						let description = String.init(cString: descriptionPtr)
-						let serviceItem = GearServiceItem(serviceId: serviceId, servicedTime: timeServiced, description: description)
+						let serviceItem = GearServiceItem(serviceId: serviceId, timeServiced: timeServiced, description: description)
+
 						summary.serviceHistory.append(serviceItem)
 						serviceIndex += 1
 						serviceIdPtr.deallocate()
@@ -193,7 +199,7 @@ class GearVM : ObservableObject {
 				for serviceItem in item.serviceHistory {
 					if CreateServiceHistory(item.gearId.uuidString,
 											serviceItem.serviceId,
-											time_t(serviceItem.servicedTime.timeIntervalSince1970),
+											time_t(serviceItem.timeServiced.timeIntervalSince1970),
 											serviceItem.description) == false {
 						return false
 					}
@@ -209,7 +215,7 @@ class GearVM : ObservableObject {
 				for serviceItem in item.serviceHistory {
 					if CreateServiceHistory(item.gearId.uuidString,
 											serviceItem.serviceId,
-											time_t(serviceItem.servicedTime.timeIntervalSince1970),
+											time_t(serviceItem.timeServiced.timeIntervalSince1970),
 											serviceItem.description) == false {
 						return false
 					}
@@ -231,6 +237,10 @@ class GearVM : ObservableObject {
 								 time_t(item.timeAdded.timeIntervalSince1970),
 								 time_t(item.timeRetired.timeIntervalSince1970),
 								 time_t(item.lastUpdatedTime.timeIntervalSince1970))
+	}
+	
+	static func createServiceRecord(gearId: UUID, item: GearServiceItem) -> Bool {
+		return CreateServiceHistory(gearId.uuidString, item.serviceId, Int(item.timeServiced.timeIntervalSince1970), item.description)
 	}
 
 	func updateGearFromDict(dict: Dictionary<String, AnyObject>) {
@@ -257,9 +267,9 @@ class GearVM : ObservableObject {
 		if let serviceHistory = dict[PARAM_GEAR_SERVICE_HISTORY] as? Array<Dictionary<String, AnyObject>> {
 			for serviceItem in serviceHistory {
 				if let tempServiceId = serviceItem[PARAM_GEAR_SERVICE_ID] as? String,
-				   let tempServicedTime = serviceItem[PARAM_GEAR_SERVICE_TIME] as? time_t,
+				   let tempTimeServiced = serviceItem[PARAM_GEAR_SERVICE_TIME] as? time_t,
 				   let tempDescription = serviceItem[PARAM_GEAR_DESCRIPTION] as? String {
-					let tempServiceItem = GearServiceItem(serviceId: tempServiceId, servicedTime: tempServicedTime, description: tempDescription)
+					let tempServiceItem = GearServiceItem(serviceId: tempServiceId, timeServiced: tempTimeServiced, description: tempDescription)
 					summary.serviceHistory.append(tempServiceItem)
 				}
 			}

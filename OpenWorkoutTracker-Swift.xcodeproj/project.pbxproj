@@ -259,6 +259,7 @@
 		278D932A28E38FE7003B077C /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932328E38FE7003B077C /* HistoryView.swift */; };
 		278D932B28E38FE7003B077C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932428E38FE7003B077C /* SettingsView.swift */; };
 		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
+		27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1DCA72A5778410035E608 /* GearServiceItemView.swift */; };
 		27E608EA292C205700401901 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608E9292C205700401901 /* WidgetKit.framework */; };
 		27E608EC292C205700401901 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608EB292C205700401901 /* SwiftUI.framework */; };
 		27E608EF292C205700401901 /* ActivityWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E608EE292C205700401901 /* ActivityWidgetsBundle.swift */; };
@@ -646,6 +647,7 @@
 		27E1DCA42A54CFFF0035E608 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Gear/Shoes.h; sourceTree = "<group>"; };
 		27E1DCA52A54CFFF0035E608 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Gear/Bike.h; sourceTree = "<group>"; };
 		27E1DCA62A54D0730035E608 /* ServiceHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ServiceHistory.h; path = Gear/ServiceHistory.h; sourceTree = "<group>"; };
+		27E1DCA72A5778410035E608 /* GearServiceItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearServiceItemView.swift; sourceTree = "<group>"; };
 		27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ActivityWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		27E608E9292C205700401901 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		27E608EB292C205700401901 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -1123,6 +1125,7 @@
 				2740E11C28F0E81400293B71 /* EditPacePlanView.swift */,
 				2740E12728F4425A00293B71 /* EditShoesView.swift */,
 				2740E08828E629CE00293B71 /* GearView.swift */,
+				27E1DCA72A5778410035E608 /* GearServiceItemView.swift */,
 				2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */,
 				2740DF5528E4600800293B71 /* HistoryView.swift */,
 				2740E09128E6319700293B71 /* IntervalSessionsView.swift */,
@@ -1542,6 +1545,7 @@
 				2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */,
 				2740DFE028E460E200293B71 /* VO2MaxCalculator.cpp in Sources */,
 				2740E12528F2D3F000293B71 /* ApiClient.swift in Sources */,
+				27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */,
 				2740E04A28E4CFFD00293B71 /* Distance.cpp in Sources */,
 				2740DFF128E460E200293B71 /* LiftingActivity.cpp in Sources */,
 				2740E03228E4CE1C00293B71 /* KmlFileReader.cpp in Sources */,
