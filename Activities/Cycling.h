@@ -24,38 +24,38 @@ public:
 	Cycling();
 	virtual ~Cycling();
 
-	static std::string Type() { return ACTIVITY_TYPE_CYCLING; };
-	virtual std::string GetType() const { return Cycling::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_CYCLING; };
+	virtual std::string GetType(void) const { return Cycling::Type(); };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
 	virtual void SetBikeProfile(const Bike& bike) { m_bike = bike; };
-	virtual Bike GetBikeProfile() const { return m_bike; };
+	virtual Bike GetBikeProfile(void) const { return m_bike; };
 
-	virtual SegmentType CurrentSpeedFromWheelSpeed() const;
-	virtual double DistanceFromWheelRevsInMeters() const;
+	virtual SegmentType CurrentSpeedFromWheelSpeed(void) const;
+	virtual double DistanceFromWheelRevsInMeters(void) const;
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 
-	virtual double CurrentCadence() const { return m_currentCadence; };
-	virtual double AverageCadence() const { return m_numCadenceReadings > 0 ? (m_totalCadenceReadings / m_numCadenceReadings) : (double)0.0; };
-	virtual double MaximumCadence() const { return m_maximumCadence; };
+	virtual double CurrentCadence(void) const { return m_currentCadence; };
+	virtual double AverageCadence(void) const { return m_numCadenceReadings > 0 ? (m_totalCadenceReadings / m_numCadenceReadings) : (double)0.0; };
+	virtual double MaximumCadence(void) const { return m_maximumCadence; };
 
-	virtual double CurrentPower() const { return m_currentPower; };
-	virtual double AveragePower() const { return m_numPowerReadings > 0 ? (m_totalPowerReadings / m_numPowerReadings) : (double)0.0; };
-	virtual double NormalizedPower() const;
-	virtual double MaximumPower() const { return m_maximumPower; };
-	virtual double ThreeSecPower() const { return m_3SecPower; };
-	virtual double TwentyMinPower() const { return m_20MinPower; };
-	virtual double OneHourPower() const { return m_1HourPower; };
-	virtual double HighestThreeSecPower() const { return m_highest3SecPower; };
-	virtual double HighestTwentyMinPower() const { return m_highest20MinPower; };
-	virtual double HighestOneHourPower() const { return m_highest1HourPower; };
-	virtual uint8_t CurrentPowerZone() const;
+	virtual double CurrentPower(void) const { return m_currentPower; };
+	virtual double AveragePower(void) const { return m_numPowerReadings > 0 ? (m_totalPowerReadings / m_numPowerReadings) : (double)0.0; };
+	virtual double NormalizedPower(void) const;
+	virtual double MaximumPower(void) const { return m_maximumPower; };
+	virtual double ThreeSecPower(void) const { return m_3SecPower; };
+	virtual double TwentyMinPower(void) const { return m_20MinPower; };
+	virtual double OneHourPower(void) const { return m_1HourPower; };
+	virtual double HighestThreeSecPower(void) const { return m_highest3SecPower; };
+	virtual double HighestTwentyMinPower(void) const { return m_highest20MinPower; };
+	virtual double HighestOneHourPower(void) const { return m_highest1HourPower; };
+	virtual uint8_t CurrentPowerZone(void) const;
 
-	virtual uint16_t NumWheelRevolutions() const { return m_currentWheelSpeedReading - m_firstWheelSpeedReading; };
+	virtual uint16_t NumWheelRevolutions(void) const { return m_currentWheelSpeedReading - m_firstWheelSpeedReading; };
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;

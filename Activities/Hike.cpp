@@ -22,7 +22,7 @@ bool Hike::ProcessAccelerometerReading(const SensorReading& reading)
 	return false;
 }
 
-double Hike::CaloriesBurned() const
+double Hike::CaloriesBurned(void) const
 {
 	double avgHeartRate = AverageHeartRate();
 

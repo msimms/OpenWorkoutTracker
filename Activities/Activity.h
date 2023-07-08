@@ -41,70 +41,71 @@ public:
 	virtual ~Activity();
 
 	virtual void SetId(const std::string& id) { m_id = id; };
-	virtual std::string GetId() const { return m_id; };
-	virtual const char* const GetIdCStr() const { return m_id.c_str(); };
+	virtual std::string GetId(void) const { return m_id; };
+	virtual const char* const GetIdCStr(void) const { return m_id.c_str(); };
 
-	virtual std::string GetType() const = 0;
+	virtual std::string GetType(void) const = 0;
 
 	virtual void SetAthleteProfile(const User& athlete) { m_athlete = athlete; };
 	virtual void SetIntervalWorkout(const IntervalSession& session) { m_intervalSession = session; };
 	virtual void SetPacePlan(const PacePlan& pacePlan) { m_pacePlan = pacePlan; };
-	virtual std::string GetPacePlanId() const { return m_pacePlan.planId; };
+	virtual std::string GetPacePlanId(void) const { return m_pacePlan.planId; };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const = 0;
 
 	virtual void SetStartTimeSecs(time_t startTime);
 	virtual void SetEndTimeSecs(time_t endTime);
 
-	virtual time_t GetStartTimeSecs() const { return m_startTimeSecs; };
-	virtual time_t GetEndTimeSecs() const { return m_endTimeSecs; };
+	virtual time_t GetStartTimeSecs(void) const { return m_startTimeSecs; };
+	virtual time_t GetEndTimeSecs(void) const { return m_endTimeSecs; };
 
-	virtual uint64_t GetStartTimeMs() const { return (uint64_t)GetStartTimeSecs() * 1000; };
-	virtual uint64_t GetEndTimeMs() const { return (uint64_t)GetEndTimeSecs() * 1000; };
+	virtual uint64_t GetStartTimeMs(void) const { return (uint64_t)GetStartTimeSecs() * 1000; };
+	virtual uint64_t GetEndTimeMs(void) const { return (uint64_t)GetEndTimeSecs() * 1000; };
 
-	virtual bool SetEndTimeFromSensorReadings();
+	virtual bool SetEndTimeFromSensorReadings(void);
 
-	virtual bool Start();
-	virtual bool Stop();
-	virtual void Pause();
+	virtual bool Start(void);
+	virtual bool Stop(void);
+	virtual void Pause(void);
 
-	virtual bool IsPaused() const { return m_isPaused; };
+	virtual bool IsPaused(void) const { return m_isPaused; };
 
-	virtual bool HasStarted() const { return GetStartTimeSecs() != 0; };
-	virtual bool HasStopped() const { return GetEndTimeSecs() != 0; };
+	virtual bool HasStarted(void) const { return GetStartTimeSecs() != 0; };
+	virtual bool HasStopped(void) const { return GetEndTimeSecs() != 0; };
 
 	virtual bool ProcessSensorReading(const SensorReading& reading);
-	virtual void OnFinishedLoadingSensorData() {}; // Called when done loading sensor data from the database
+	virtual void OnFinishedLoadingSensorData(void) {}; // Called when done loading sensor data from the database
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 	virtual void SetActivityAttribute(const std::string& attributeName, ActivityAttributeType attributeValue);
 
-	virtual double CaloriesBurned() const = 0;
+	virtual double CaloriesBurned(void) const = 0;
 
-	virtual double AdditionalWeightUsedKg() const { return m_additionalWeightKg; };
+	virtual double AdditionalWeightUsedKg(void) const { return m_additionalWeightKg; };
 	virtual void SetAdditionalWeightUsedKg(double weightKg) { m_additionalWeightKg = weightKg; }
 
-	virtual SegmentType CurrentHeartRate() const { return m_currentHeartRateBpm; };
-	virtual double AverageHeartRate() const { return m_numHeartRateReadings > 0 ? (m_totalHeartRateReadings / m_numHeartRateReadings) : (double)0.0; };
-	virtual SegmentType MaxHeartRate() const { return m_maxHeartRateBpm; };
-	virtual double HeartRatePercentage() const { return m_currentHeartRateBpm.value.doubleVal / m_athlete.EstimateMaxHeartRate(); };
-	virtual uint8_t HeartRateZone() const;
+	virtual SegmentType CurrentHeartRate(void) const { return m_currentHeartRateBpm; };
+	virtual double AverageHeartRate(void) const { return m_numHeartRateReadings > 0 ? (m_totalHeartRateReadings / m_numHeartRateReadings) : (double)0.0; };
+	virtual SegmentType MaxHeartRate(void) const { return m_maxHeartRateBpm; };
+	virtual double HeartRatePercentage(void) const { return m_currentHeartRateBpm.value.doubleVal / m_athlete.EstimateMaxHeartRate(); };
+	virtual uint8_t HeartRateZone(void) const;
 
-	virtual time_t NumSecondsPaused() const;
-	virtual time_t ElapsedTimeInMinutes() const { return ElapsedTimeInSeconds() / (double)60.0; };
-	virtual time_t ElapsedTimeInSeconds() const { return (time_t)(ElapsedTimeInMs() / 1000); };
-	virtual uint64_t ElapsedTimeInMs() const;
+	virtual time_t NumSecondsPaused(void) const { return NumMillisecondsPaused() / (double)1000.0; };
+	virtual time_t NumMillisecondsPaused(void) const;
+	virtual time_t ElapsedTimeInMinutes(void) const { return ElapsedTimeInSeconds() / (double)60.0; };
+	virtual time_t ElapsedTimeInSeconds(void) const { return (time_t)(ElapsedTimeInMs() / 1000); };
+	virtual uint64_t ElapsedTimeInMs(void) const;
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const; // Returns the attributes that are still valid after the activity has ended.
 
-	SensorReading GetMostRecentSensorReading() const { return m_mostRecentSensorReading; };
+	SensorReading GetMostRecentSensorReading(void) const { return m_mostRecentSensorReading; };
 
-	virtual std::string GetCurrentIntervalSessionId() const { return m_intervalSession.sessionId; };
-	virtual bool CheckIntervalSession();
+	virtual std::string GetCurrentIntervalSessionId(void) const { return m_intervalSession.sessionId; };
+	virtual bool CheckIntervalSession(void);
 	virtual bool GetCurrentIntervalSessionSegment(IntervalSessionSegment& segment);
-	virtual bool IsIntervalSessionComplete();
-	virtual void UserWantsToAdvanceIntervalState() { m_intervalWorkoutState.shouldAdvance = true; };
+	virtual bool IsIntervalSessionComplete(void);
+	virtual void UserWantsToAdvanceIntervalState(void) { m_intervalWorkoutState.shouldAdvance = true; };
 
 protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
@@ -116,14 +117,14 @@ protected:
 	virtual bool ProcessFootPodReading(const SensorReading& reading);
 	virtual bool ProcessRadarReading(const SensorReading& reading);
 
-	virtual bool CheckTimeInterval();
-	virtual bool CheckPositionInterval() { return false; };
-	virtual bool CheckSetsInterval() { return false; };
-	virtual bool CheckRepsInterval() { return false; };
-	virtual void AdvanceIntervalState();
+	virtual bool CheckTimeInterval(void);
+	virtual bool CheckPositionInterval(void) { return false; };
+	virtual bool CheckSetsInterval(void) { return false; };
+	virtual bool CheckRepsInterval(void) { return false; };
+	virtual void AdvanceIntervalState(void);
 
-	virtual time_t CurrentTimeInSeconds() const { return (time_t)(CurrentTimeInMs() / 1000); };
-	virtual uint64_t CurrentTimeInMs() const;
+	virtual time_t CurrentTimeInSeconds(void) const { return (time_t)(CurrentTimeInMs() / 1000); };
+	virtual uint64_t CurrentTimeInMs(void) const;
 
 	std::string FormatTimeStr(time_t timeVal) const;
 	std::string FormatTimeOfDayStr(time_t timeVal) const;
@@ -144,8 +145,8 @@ protected:
 	time_t               m_endTimeSecs;               // clock time at end
 	bool                 m_isPaused;                  // TRUE if activity is paused, FALSE otherwise
 	bool                 m_firstIteration;            // used in managing interval sessions
-	time_t               m_timeWhenLastPaused;        // clock time when last paused
-	time_t               m_secsPreviouslySpentPaused; // number of seconds spent paused
+	time_t               m_timeWhenPausedMs;          // clock time when last paused, or zero if not paused
+	time_t               m_msPreviouslySpentPaused;   // number of ms spent paused
 	SensorReading        m_lastAccelReading;          // the oldest accelerometer reading received
 	SensorReading        m_mostRecentSensorReading;   // the youngest sensor reading received
 	uint64_t             m_threatCount;               // threat count, from a radar unit, -1 for not set

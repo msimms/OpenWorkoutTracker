@@ -20,19 +20,19 @@ Swim::~Swim()
 {
 }
 
-bool Swim::Stop()
+bool Swim::Stop(void)
 {
 	CalculateStrokesTaken();
 	return Activity::Stop();
 }
 
-void Swim::Pause()
+void Swim::Pause(void)
 {
 	CalculateStrokesTaken();
 	Activity::Pause();
 }
 
-void Swim::OnFinishedLoadingSensorData()
+void Swim::OnFinishedLoadingSensorData(void)
 {
 	CalculateStrokesTaken();
 	Activity::OnFinishedLoadingSensorData();
@@ -99,7 +99,7 @@ void Swim::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 	MovingActivity::BuildSummaryAttributeList(attributes);
 }
 
-void Swim::CalculateStrokesTaken()
+void Swim::CalculateStrokesTaken(void)
 {
 	Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverStd(m_graphLine, (double)2.0);
 	m_strokesTaken = peaks.size();

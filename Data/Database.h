@@ -34,13 +34,13 @@ public:
 	virtual ~Database();
 
 	bool Open(const std::string& dbFileName);
-	bool Close();
+	bool Close(void);
 
-	bool CreateTables();
-	bool DeleteTables();
-	bool CreateStatements();
-	void DeleteStatements();
-	bool Reset();
+	bool CreateTables(void);
+	bool DeleteTables(void);
+	bool CreateStatements(void);
+	void DeleteStatements(void);
+	bool Reset(void);
 
 	// Methods for managing the bicycle inventory.
 

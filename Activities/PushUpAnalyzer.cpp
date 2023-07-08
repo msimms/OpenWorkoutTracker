@@ -20,7 +20,7 @@ PushUpAnalyzer::~PushUpAnalyzer()
 {
 }
 
-std::string PushUpAnalyzer::PrimaryAxis() const
+std::string PushUpAnalyzer::PrimaryAxis(void) const
 {
 #if TARGET_OS_WATCH
 	return AXIS_NAME_Y;
@@ -29,7 +29,7 @@ std::string PushUpAnalyzer::PrimaryAxis() const
 #endif
 }
 
-std::string PushUpAnalyzer::SecondaryAxis() const
+std::string PushUpAnalyzer::SecondaryAxis(void) const
 {
 #if TARGET_OS_WATCH
 	return AXIS_NAME_X;

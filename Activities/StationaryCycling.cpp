@@ -15,18 +15,18 @@ StationaryCycling::~StationaryCycling()
 {
 }
 
-SegmentType StationaryCycling::CurrentPace() const
+SegmentType StationaryCycling::CurrentPace(void) const
 {
 	SegmentType segment = { 0, 0, 0 };
 	return segment;
 }
 
-SegmentType StationaryCycling::CurrentSpeed() const
+SegmentType StationaryCycling::CurrentSpeed(void) const
 {
 	return CurrentSpeedFromWheelSpeed();
 }
 
-SegmentType StationaryCycling::CurrentVerticalSpeed() const
+SegmentType StationaryCycling::CurrentVerticalSpeed(void) const
 {
 	SegmentType segment = { 0, 0, 0 };
 	return segment;
@@ -37,7 +37,7 @@ bool StationaryCycling::ProcessLocationReading(const SensorReading& reading)
 	return false;
 }
 
-double StationaryCycling::CaloriesBurned() const
+double StationaryCycling::CaloriesBurned(void) const
 {
 	double avgHeartRate = AverageHeartRate();
 	

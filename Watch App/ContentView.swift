@@ -13,9 +13,9 @@ struct ContentView: View {
 			ScrollView() {
 				// Start button
 				Button("Start") {
-					showingActivitySelection = true
+					self.showingActivitySelection = true
 				}
-				.confirmationDialog("Select the workout to perform", isPresented: $showingActivitySelection, titleVisibility: .visible) {
+				.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivitySelection, titleVisibility: .visible) {
 					ForEach(CommonApp.activityTypes, id: \.self) { item in
 						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item, recreateOrphanedActivities: false), activityType: item))
 					}

@@ -44,7 +44,7 @@ public:
 	MovingActivity();
 	virtual ~MovingActivity();
 
-	virtual void StartNewLap();
+	virtual void StartNewLap(void);
 	virtual void SetLaps(const LapSummaryList& laps) { m_laps = laps; };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
@@ -53,65 +53,65 @@ public:
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
-	virtual time_t MovingTimeInSeconds() const;
-	virtual double MovingTimeInMinutes() const { return MovingTimeInSeconds() / (double)60.0; };
+	virtual time_t MovingTimeInSeconds(void) const;
+	virtual double MovingTimeInMinutes(void) const { return MovingTimeInSeconds() / (double)60.0; };
 
-	virtual SegmentType MinimumAltitude() const;
-	virtual SegmentType MaximumAltitude() const;
+	virtual SegmentType MinimumAltitude(void) const;
+	virtual SegmentType MaximumAltitude(void) const;
 
-	virtual double AveragePace() const;
-	virtual double MovingPace() const;
+	virtual double AveragePace(void) const;
+	virtual double MovingPace(void) const;
 
-	virtual SegmentType CurrentPace() const;
-	virtual SegmentType GradeAdjustedPace() const;
-	virtual SegmentType FastestPace() const { return m_fastestPace; };
-	virtual time_t GapToTargetPace() const;
+	virtual SegmentType CurrentPace(void) const;
+	virtual SegmentType GradeAdjustedPace(void) const;
+	virtual SegmentType FastestPace(void) const { return m_fastestPace; };
+	virtual time_t GapToTargetPace(void) const;
 
-	virtual double AverageSpeed() const;
-	virtual double MovingSpeed() const;
+	virtual double AverageSpeed(void) const;
+	virtual double MovingSpeed(void) const;
 
-	virtual SegmentType CurrentSpeed() const;
-	virtual SegmentType FastestSpeed() const { return m_fastestSpeed; };
+	virtual SegmentType CurrentSpeed(void) const;
+	virtual SegmentType FastestSpeed(void) const { return m_fastestSpeed; };
 
-	virtual SegmentType CurrentVerticalSpeed() const;
+	virtual SegmentType CurrentVerticalSpeed(void) const;
 
-	virtual double DistanceTraveled() const;
-	virtual double DistanceTraveledInMeters() const { return m_distanceTraveledRawM; };
-	virtual double PrevDistanceTraveled() const;	// previous value of DistanceTraveled()
-	virtual double PrevDistanceTraveledInMeters() const { return m_prevDistanceTraveledRawM; };
+	virtual double DistanceTraveled(void) const;
+	virtual double DistanceTraveledInMeters(void) const { return m_distanceTraveledRawM; };
+	virtual double PrevDistanceTraveled(void) const;	// previous value of DistanceTraveled()
+	virtual double PrevDistanceTraveledInMeters(void) const { return m_prevDistanceTraveledRawM; };
 	
 	virtual void SetDistanceTraveledInMeters(double distance) { m_distanceTraveledRawM = distance; };
 	virtual void SetPrevDistanceTraveledInMeters(double distance) { m_prevDistanceTraveledRawM = distance; };
 
-	virtual SegmentType CurrentClimb() const;
-	virtual SegmentType BiggestClimb() const { return m_biggestClimbM; };
+	virtual SegmentType CurrentClimb(void) const;
+	virtual SegmentType BiggestClimb(void) const { return m_biggestClimbM; };
 
-	virtual SegmentType FastestCentury() const { return m_fastestCenturySec; };
-	virtual SegmentType FastestMetricCentury() const { return m_fastestMetricCenturySec; };
-	virtual SegmentType FastestMarathon() const { return m_fastestMarathonSec; };
-	virtual SegmentType FastestHalfMarathon() const { return m_fastestHalfMarathonSec; };
-	virtual SegmentType Fastest10K() const { return m_fastest10KSec; };
-	virtual SegmentType Fastest5K() const { return m_fastest5KSec; };
-	virtual SegmentType FastestMile() const { return m_fastestMileSec; };
-	virtual SegmentType FastestKilometer() const { return m_fastestKmSec; };
-	virtual SegmentType Fastest400M() const { return m_fastest400MSec; };
+	virtual SegmentType FastestCentury(void) const { return m_fastestCenturySec; };
+	virtual SegmentType FastestMetricCentury(void) const { return m_fastestMetricCenturySec; };
+	virtual SegmentType FastestMarathon(void) const { return m_fastestMarathonSec; };
+	virtual SegmentType FastestHalfMarathon(void) const { return m_fastestHalfMarathonSec; };
+	virtual SegmentType Fastest10K(void) const { return m_fastest10KSec; };
+	virtual SegmentType Fastest5K(void) const { return m_fastest5KSec; };
+	virtual SegmentType FastestMile(void) const { return m_fastestMileSec; };
+	virtual SegmentType FastestKilometer(void) const { return m_fastestKmSec; };
+	virtual SegmentType Fastest400M(void) const { return m_fastest400MSec; };
 
-	virtual SegmentType LastCentury() const { return m_lastCenturySec; };
-	virtual SegmentType LastMetricCentury() const { return m_lastMetricCenturySec; };
-	virtual SegmentType LastMarathon() const { return m_lastMarathonSec; };
-	virtual SegmentType LastHalfMarathon() const { return m_lastHalfMarathonSec; };
-	virtual SegmentType Last10K() const { return m_last10KSec; };
-	virtual SegmentType Last5K() const { return m_last5KSec; };
-	virtual SegmentType LastMile() const { return m_lastMileSec; };
-	virtual SegmentType LastKilometer() const { return m_lastKmSec; };
-	virtual SegmentType Last400M() const { return m_last400MSec; };
+	virtual SegmentType LastCentury(void) const { return m_lastCenturySec; };
+	virtual SegmentType LastMetricCentury(void) const { return m_lastMetricCenturySec; };
+	virtual SegmentType LastMarathon(void) const { return m_lastMarathonSec; };
+	virtual SegmentType LastHalfMarathon(void) const { return m_lastHalfMarathonSec; };
+	virtual SegmentType Last10K(void) const { return m_last10KSec; };
+	virtual SegmentType Last5K(void) const { return m_last5KSec; };
+	virtual SegmentType LastMile(void) const { return m_lastMileSec; };
+	virtual SegmentType LastKilometer(void) const { return m_lastKmSec; };
+	virtual SegmentType Last400M(void) const { return m_last400MSec; };
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
 
-	const CoordinateList& GetCoordinates() const { return m_coordinates; };
-	const TimeDistancePairList& GetDistances() const { return m_distances; };
-	const LapSummaryList& GetLaps() const { return m_laps; };
+	const CoordinateList& GetCoordinates(void) const { return m_coordinates; };
+	const TimeDistancePairList& GetDistances(void) const { return m_distances; };
+	const LapSummaryList& GetLaps(void) const { return m_laps; };
 
 protected:
 	Coordinate           m_currentLoc;                    // most recent point
@@ -159,13 +159,13 @@ protected:
 protected:
 	virtual bool ProcessLocationReading(const SensorReading& reading);
 	
-	virtual void RecomputeRecordTimes();
-	virtual void UpdateSplitTimes();
+	virtual void RecomputeRecordTimes(void);
+	virtual void UpdateSplitTimes(void);
 
-	virtual bool CheckPositionInterval();
-	virtual void AdvanceIntervalState();
+	virtual bool CheckPositionInterval(void);
+	virtual void AdvanceIntervalState(void);
 
-	virtual double RunningAltitudeAverage() const;
+	virtual double RunningAltitudeAverage(void) const;
 };
 
 #endif

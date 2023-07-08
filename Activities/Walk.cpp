@@ -33,19 +33,19 @@ void Walk::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 	MovingActivity::ListUsableSensors(sensorTypes);
 }
 
-bool Walk::Stop()
+bool Walk::Stop(void)
 {
 	CalculateStepsTaken();
 	return Activity::Stop();
 }
 
-void Walk::Pause()
+void Walk::Pause(void)
 {
 	CalculateStepsTaken();
 	Activity::Pause();
 }
 
-void Walk::OnFinishedLoadingSensorData()
+void Walk::OnFinishedLoadingSensorData(void)
 {
 	CalculateStepsTaken();
 	Activity::OnFinishedLoadingSensorData();
@@ -99,7 +99,7 @@ ActivityAttributeType Walk::QueryActivityAttribute(const std::string& attributeN
 	return result;
 }
 
-double Walk::CaloriesBurned() const
+double Walk::CaloriesBurned(void) const
 {
 	double avgHr = AverageHeartRate();
 	double durationSecs = (double)ElapsedTimeInSeconds();
@@ -122,7 +122,7 @@ void Walk::BuildSummaryAttributeList(std::vector<std::string>& attributes) const
 	MovingActivity::BuildSummaryAttributeList(attributes);
 }
 
-void Walk::CalculateStepsTaken()
+void Walk::CalculateStepsTaken(void)
 {
 	Peaks::GraphPeakList peaks = m_peakFinder.findPeaksOverThreshold(m_graphLine, (double)0.0);
 	m_stepsTaken = 0;

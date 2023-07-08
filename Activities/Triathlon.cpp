@@ -23,7 +23,7 @@ void Triathlon::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 	m_run.ListUsableSensors(sensorTypes);
 }
 
-bool Triathlon::Start()
+bool Triathlon::Start(void)
 {
 	switch (m_currentSport)
 	{
@@ -43,13 +43,13 @@ bool Triathlon::Start()
 	return Activity::Start();
 }
 
-bool Triathlon::Stop()
+bool Triathlon::Stop(void)
 {
 	m_swim.Stop() && m_bike.Stop() && m_run.Stop();
 	return Activity::Stop();
 }
 
-void Triathlon::Pause()
+void Triathlon::Pause(void)
 {
 	m_swim.Pause();
 	m_bike.Pause();
@@ -111,7 +111,7 @@ ActivityAttributeType Triathlon::QueryActivityAttribute(const std::string& attri
 	return attr;
 }
 
-double Triathlon::CaloriesBurned() const
+double Triathlon::CaloriesBurned(void) const
 {
 	double calories = m_swim.CaloriesBurned();
 	calories += m_bike.CaloriesBurned();

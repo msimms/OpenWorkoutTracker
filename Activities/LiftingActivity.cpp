@@ -29,13 +29,13 @@ void LiftingActivity::SetGForceAnalyzer(GForceAnalyzer* const analyzer)
 	}
 }
 
-bool LiftingActivity::Start()
+bool LiftingActivity::Start(void)
 {
 	Clear();
 	return Activity::Start();
 }
 
-void LiftingActivity::Clear()
+void LiftingActivity::Clear(void)
 {
 	if (m_analyzer)
 	{
@@ -175,7 +175,7 @@ void LiftingActivity::SetActivityAttribute(const std::string& attributeName, Act
 	Activity::SetActivityAttribute(attributeName, attributeValue);
 }
 
-uint16_t LiftingActivity::Sets() const
+uint16_t LiftingActivity::Sets(void) const
 {
 	if (m_sets > 0)
 		return m_sets;
@@ -184,7 +184,7 @@ uint16_t LiftingActivity::Sets() const
 	return 0;
 }
 
-time_t LiftingActivity::Pace() const
+time_t LiftingActivity::Pace(void) const
 {
 	uint16_t total = Total();
 	if (total > 0)
@@ -212,7 +212,7 @@ void LiftingActivity::BuildSummaryAttributeList(std::vector<std::string>& attrib
 	Activity::BuildSummaryAttributeList(attributes);
 }
 
-bool LiftingActivity::CheckSetsInterval()
+bool LiftingActivity::CheckSetsInterval(void)
 {
 	// If a session is not specified or is already complete then just return.
 	if ((m_intervalSession.sessionId.size() == 0) ||
@@ -232,7 +232,7 @@ bool LiftingActivity::CheckSetsInterval()
 	return false;
 }
 
-bool LiftingActivity::CheckRepsInterval()
+bool LiftingActivity::CheckRepsInterval(void)
 {
 	// If a session is not specified or is already complete then just return.
 	if ((m_intervalSession.sessionId.size() == 0) ||
@@ -253,7 +253,7 @@ bool LiftingActivity::CheckRepsInterval()
 	return false;
 }
 
-void LiftingActivity::AdvanceIntervalState()
+void LiftingActivity::AdvanceIntervalState(void)
 {
 	m_intervalWorkoutState.lastSetCount = 0;
 	m_intervalWorkoutState.lastRepCount = 0;

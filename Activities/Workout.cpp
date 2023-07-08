@@ -177,7 +177,7 @@ double Workout::CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMi
 }
 
 /// Calculates the duration of the workout, in seconds.
-uint64_t Workout::CalculateDuration() const
+uint64_t Workout::CalculateDuration(void) const
 {
 	uint64_t workoutDurationSecs = 0;
 
@@ -209,7 +209,7 @@ uint64_t Workout::CalculateDuration() const
 }
 
 /// Calculates the distance of the workout, in meters.
-double Workout::CalculateDistance() const
+double Workout::CalculateDistance(void) const
 {
 	double workoutDistanceMeters = 0.0;
 

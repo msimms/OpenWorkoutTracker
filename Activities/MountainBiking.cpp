@@ -16,7 +16,7 @@ MountainBiking::~MountainBiking()
 {
 }
 
-double MountainBiking::CaloriesBurned() const
+double MountainBiking::CaloriesBurned(void) const
 {
 	if (m_totalPowerReadings > 0)
 	{

@@ -17,7 +17,7 @@ Squat::~Squat()
 {
 }
 
-double Squat::CaloriesBurned() const
+double Squat::CaloriesBurned(void) const
 {
 	double avgHr = AverageHeartRate();
 	double durationSecs = (double)ElapsedTimeInSeconds();

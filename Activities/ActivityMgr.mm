@@ -3837,7 +3837,7 @@ extern "C" {
 
 		g_dbLock.lock();
 
-		if (g_pCurrentActivity && g_pCurrentActivity->HasStarted() && g_pDatabase)
+		if (IsActivityInProgressAndNotPaused() && g_pDatabase)
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
 

@@ -28,7 +28,7 @@ bool Database::Open(const std::string& dbFileName)
 	return (sqlite3_open(dbFileName.c_str(), &m_pDb) == SQLITE_OK);
 }
 
-bool Database::Close()
+bool Database::Close(void)
 {
 	bool result = false;
 
@@ -72,7 +72,7 @@ bool Database::DoesTableExist(const std::string& tableName)
 	return (result == SQLITE_ROW);
 }
 
-bool Database::CreateTables()
+bool Database::CreateTables(void)
 {
 	std::vector<std::string> queries;
 	std::string sql;
@@ -229,7 +229,7 @@ bool Database::CreateTables()
 	return (result == SQLITE_OK || result == SQLITE_DONE);
 }
 
-bool Database::DeleteTables()
+bool Database::DeleteTables(void)
 {
 	std::vector<std::string> queries;
 	std::string sql;
@@ -285,7 +285,7 @@ bool Database::DeleteTables()
 	return (result == SQLITE_OK || result == SQLITE_DONE);
 }
 
-bool Database::CreateStatements()
+bool Database::CreateStatements(void)
 {
 	if (sqlite3_prepare_v2(m_pDb, "insert into accelerometer values (NULL,?,?,?,?,?)", -1, &m_accelerometerInsertStatement, 0) != SQLITE_OK)
 		return false;
@@ -312,7 +312,7 @@ bool Database::CreateStatements()
 	return true;
 }
 
-void Database::DeleteStatements()
+void Database::DeleteStatements(void)
 {
 	if (m_accelerometerInsertStatement)
 	{
@@ -360,7 +360,7 @@ void Database::DeleteStatements()
 	}
 }
 
-bool Database::Reset()
+bool Database::Reset(void)
 {
 	bool result = DeleteTables();
 	DeleteStatements();

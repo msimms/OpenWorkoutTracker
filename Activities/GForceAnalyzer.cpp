@@ -25,7 +25,7 @@ GForceAnalyzer::~GForceAnalyzer()
 {
 }
 
-void GForceAnalyzer::Clear()
+void GForceAnalyzer::Clear(void)
 {
 	Peaks::GraphLine x, y, z;
 	m_graphLines[AXIS_NAME_X] = x;

@@ -19,7 +19,7 @@ public:
 	static std::string Type() { return ACTIVITY_TYPE_PUSHUP; };
 	virtual std::string GetType() const { return PushUp::Type(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

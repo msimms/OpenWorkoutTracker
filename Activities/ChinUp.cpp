@@ -17,7 +17,7 @@ ChinUp::~ChinUp()
 {
 }
 
-double ChinUp::CaloriesBurned() const
+double ChinUp::CaloriesBurned(void) const
 {
 	double avgHr = AverageHeartRate();
 	double durationSecs = (double)ElapsedTimeInSeconds();

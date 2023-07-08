@@ -31,8 +31,8 @@ Activity::Activity()
 	m_endTimeSecs = 0;
 	m_isPaused = false;
 	m_firstIteration = true;
-	m_timeWhenLastPaused = 0;
-	m_secsPreviouslySpentPaused = 0;
+	m_timeWhenPausedMs = 0;
+	m_msPreviouslySpentPaused = 0;
 	m_intervalWorkoutState.nextSegmentIndex = 0;
 	m_intervalWorkoutState.lastTimeSecs = 0;
 	m_intervalWorkoutState.lastDistanceMeters = (double)0.0;
@@ -63,7 +63,7 @@ void Activity::SetEndTimeSecs(time_t endTime)
 	}
 }
 
-bool Activity::SetEndTimeFromSensorReadings()
+bool Activity::SetEndTimeFromSensorReadings(void)
 {
 	SensorReading reading = GetMostRecentSensorReading();
 	if (reading.time > 0)
@@ -78,7 +78,7 @@ bool Activity::SetEndTimeFromSensorReadings()
 	return false;
 }
 
-bool Activity::Start()
+bool Activity::Start(void)
 {
 	if (m_startTimeSecs == 0)
 	{
@@ -88,7 +88,7 @@ bool Activity::Start()
 	return false;
 }
 
-bool Activity::Stop()
+bool Activity::Stop(void)
 {
 	if (m_endTimeSecs == 0)
 	{
@@ -101,21 +101,21 @@ bool Activity::Stop()
 	return false;
 }
 
-void Activity::Pause()
+void Activity::Pause(void)
 {
 	if (m_isPaused)
 	{
-		m_secsPreviouslySpentPaused += CurrentTimeInSeconds() - m_timeWhenLastPaused;
-		m_timeWhenLastPaused = 0;
+		m_msPreviouslySpentPaused += CurrentTimeInMs() - m_timeWhenPausedMs;
+		m_timeWhenPausedMs = 0;
 	}
 	else
 	{
-		m_timeWhenLastPaused = CurrentTimeInSeconds();
+		m_timeWhenPausedMs = CurrentTimeInMs();
 	}
 	m_isPaused = !m_isPaused;
 }
 
-uint8_t Activity::HeartRateZone() const
+uint8_t Activity::HeartRateZone(void) const
 {
 	return m_athlete.GetZoneForHeartRate(m_currentHeartRateBpm.value.doubleVal);
 }
@@ -346,7 +346,14 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_ELAPSED_TIME) == 0)
 	{
-		result.value.timeVal = ElapsedTimeInSeconds();
+		result.value.timeVal = ElapsedTimeInSeconds() - NumSecondsPaused();
+		result.valueType = TYPE_TIME;
+		result.measureType = MEASURE_TIME;
+		result.valid = true;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_TIME_PAUSED) == 0)
+	{
+		result.value.timeVal = NumSecondsPaused();
 		result.valueType = TYPE_TIME;
 		result.measureType = MEASURE_TIME;
 		result.valid = true;
@@ -452,7 +459,7 @@ void Activity::SetActivityAttribute(const std::string& attributeName, ActivityAt
 	}
 }
 
-bool Activity::CheckIntervalSession()
+bool Activity::CheckIntervalSession(void)
 {
 	// Is the interval session still in progress?
 	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
@@ -507,7 +514,7 @@ bool Activity::GetCurrentIntervalSessionSegment(IntervalSessionSegment& segment)
 	return true;
 }
 
-bool Activity::IsIntervalSessionComplete()
+bool Activity::IsIntervalSessionComplete(void)
 {
 	// Is the interval session still in progress?
 	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
@@ -517,7 +524,7 @@ bool Activity::IsIntervalSessionComplete()
 	return false;
 }
 
-bool Activity::CheckTimeInterval()
+bool Activity::CheckTimeInterval(void)
 {
 	// Is the interval session still in progress?
 	if (m_intervalWorkoutState.nextSegmentIndex >= m_intervalSession.segments.size())
@@ -543,7 +550,7 @@ bool Activity::CheckTimeInterval()
 	return false;
 }
 
-void Activity::AdvanceIntervalState()
+void Activity::AdvanceIntervalState(void)
 {
 	uint64_t currentTime = ElapsedTimeInSeconds();
 	m_intervalWorkoutState.lastTimeSecs = currentTime;
@@ -551,18 +558,18 @@ void Activity::AdvanceIntervalState()
 	m_intervalWorkoutState.shouldAdvance = false;
 }
 
-time_t Activity::NumSecondsPaused() const
+time_t Activity::NumMillisecondsPaused(void) const
 {
-	time_t numSecsPaused = m_secsPreviouslySpentPaused;
-	if (m_timeWhenLastPaused > 0)
+	time_t msPaused = m_msPreviouslySpentPaused;
+	if (m_timeWhenPausedMs > 0)
 	{
-		uint64_t secsCurrentlyPaused = CurrentTimeInSeconds() - m_timeWhenLastPaused;
-		numSecsPaused += secsCurrentlyPaused;
+		uint64_t msCurrentlyPaused = CurrentTimeInMs() - m_timeWhenPausedMs;
+		msPaused += msCurrentlyPaused;
 	}
-	return numSecsPaused;
+	return msPaused;
 }
 
-uint64_t Activity::ElapsedTimeInMs() const
+uint64_t Activity::ElapsedTimeInMs(void) const
 {
 	if (m_startTimeSecs == 0)
 	{
@@ -589,7 +596,7 @@ uint64_t Activity::ElapsedTimeInMs() const
 	return (endTimeMs - startTimeMs);
 }
 
-uint64_t Activity::CurrentTimeInMs() const
+uint64_t Activity::CurrentTimeInMs(void) const
 {
 	struct timeval time;
 	gettimeofday(&time, NULL);
@@ -606,6 +613,7 @@ void Activity::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_ELAPSED_TIME);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_TIME_PAUSED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
 }
 
@@ -614,6 +622,7 @@ void Activity::BuildSummaryAttributeList(std::vector<std::string>& attributes) c
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_HEART_RATE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_MAX_HEART_RATE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_ELAPSED_TIME);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_TIME_PAUSED);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CALORIES_BURNED);
 }
 

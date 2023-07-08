@@ -21,7 +21,7 @@ void OpenWaterSwim::ListUsableSensors(std::vector<SensorType>& sensorTypes) cons
 	Swim::ListUsableSensors(sensorTypes);
 }
 
-double OpenWaterSwim::CaloriesBurned() const
+double OpenWaterSwim::CaloriesBurned(void) const
 {
 	return (double)0.0;
 }

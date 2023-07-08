@@ -17,10 +17,10 @@ public:
 	Squat(GForceAnalyzer* const analyzer);
 	virtual ~Squat();
 
-	static std::string Type() { return ACTIVITY_TYPE_SQUAT; };
-	virtual std::string GetType() const { return Squat::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_SQUAT; };
+	virtual std::string GetType(void) const { return Squat::Type(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

@@ -89,6 +89,7 @@ class LiveActivityVM : ObservableObject {
 
 		var activityTypeToUse = activityType
 		var orphanedActivityIndex: size_t = 0
+		var isNewActivity: Bool = true
 
 		// Perhaps the app shutdown poorly (phone rebooted, etc.).
 		// Check for an existing, in progress, activity.
@@ -108,13 +109,15 @@ class LiveActivityVM : ObservableObject {
 				
 				self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
 				self.isInProgress = true
+				isNewActivity = false
 			}
 			else {
+				self.loadHistoricalActivityByIndex(activityIndex: orphanedActivityIndex)
 			}
 		}
 
 		// Create the backend structures needed to do the activity.
-		else {
+		if isNewActivity == true {
 			CreateActivityObject(activityTypeToUse)
 
 			// Generate a unique identifier for this activity.
@@ -357,6 +360,34 @@ class LiveActivityVM : ObservableObject {
 		}
 	}
 	
+	func loadHistoricalActivityByIndex(activityIndex: size_t) {
+		// Delete any cached data.
+		FreeHistoricalActivityObject(activityIndex)
+		FreeHistoricalActivitySensorData(activityIndex)
+		
+		// Create the object.
+		CreateHistoricalActivityObject(activityIndex)
+		
+		// Load all data.
+		LoadHistoricalActivitySummaryData(activityIndex)
+		if LoadAllHistoricalActivitySensorData(activityIndex) {
+			var startTime: time_t = 0
+			var endTime: time_t = 0
+			
+			GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime)
+			
+			// If the activity was orphaned then the end time will be zero.
+			if endTime == 0 {
+				FixHistoricalActivityEndTime(activityIndex)
+			}
+			
+			if SaveHistoricalActivitySummaryData(activityIndex) {
+				LoadHistoricalActivitySummaryData(activityIndex)
+				LoadHistoricalActivityLapData(activityIndex)
+			}
+		}
+	}
+
 	/// @brief Enables (or disables) auto start.
 	func setAutoStart() -> Bool {
 		let currentState = IsAutoStartEnabled()
@@ -413,10 +444,10 @@ class LiveActivityVM : ObservableObject {
 			let calories = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
 			
 			// So we don't have to recompute everything each time the activity is loaded, save a summary.
-			SaveActivitySummaryData();
+			SaveActivitySummaryData()
 			
 			// Delete the object.
-			DestroyCurrentActivity();
+			DestroyCurrentActivity()
 			
 			// Stop requesting data from sensors.
 			SensorMgr.shared.stopSensors()

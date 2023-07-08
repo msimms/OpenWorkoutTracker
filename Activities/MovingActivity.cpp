@@ -78,7 +78,7 @@ MovingActivity::~MovingActivity()
 	m_splitTimesMiles.clear();
 }
 
-void MovingActivity::StartNewLap()
+void MovingActivity::StartNewLap(void)
 {
 	LapSummary summary;
 	summary.startTimeMs = CurrentTimeInMs(); // Start time for the new lap
@@ -94,7 +94,7 @@ void MovingActivity::ListUsableSensors(std::vector<SensorType>& sensorTypes) con
 	sensorTypes.push_back(SENSOR_TYPE_RADAR);
 }
 
-void MovingActivity::RecomputeRecordTimes()
+void MovingActivity::RecomputeRecordTimes(void)
 {
 	double   distance  = (double)0.0;
 	uint64_t startTime = 0;
@@ -296,7 +296,7 @@ void MovingActivity::RecomputeRecordTimes()
 	}
 }
 
-void MovingActivity::UpdateSplitTimes()
+void MovingActivity::UpdateSplitTimes(void)
 {
 	double prevMiles = UnitConverter::KilometersToMiles(PrevDistanceTraveledInMeters() / (double)1000.0);
 	double currentMiles = UnitConverter::KilometersToMiles(DistanceTraveledInMeters() / (double)1000.0);
@@ -1020,7 +1020,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 	return result;
 }
 
-time_t MovingActivity::MovingTimeInSeconds() const
+time_t MovingActivity::MovingTimeInSeconds(void) const
 {
 	static time_t lastMovingTimeSecs = 0;
 
@@ -1038,21 +1038,21 @@ time_t MovingActivity::MovingTimeInSeconds() const
 	return 0;
 }
 
-SegmentType MovingActivity::MinimumAltitude() const
+SegmentType MovingActivity::MinimumAltitude(void) const
 {
 	SegmentType result = m_minAltitudeM;
 	result.value.doubleVal = UnitMgr::ConvertToPreferredAltitudeFromMeters(result.value.doubleVal);
 	return result;
 }
 
-SegmentType MovingActivity::MaximumAltitude() const
+SegmentType MovingActivity::MaximumAltitude(void) const
 {
 	SegmentType result = m_maxAltitudeM;
 	result.value.doubleVal = UnitMgr::ConvertToPreferredAltitudeFromMeters(result.value.doubleVal);
 	return result;
 }
 
-double MovingActivity::AveragePace() const
+double MovingActivity::AveragePace(void) const
 {
 	double distance = DistanceTraveled();
 	if (distance > (double)0.00001)
@@ -1060,7 +1060,7 @@ double MovingActivity::AveragePace() const
 	return (double)0.0;
 }
 
-double MovingActivity::MovingPace() const
+double MovingActivity::MovingPace(void) const
 {
 	double distance = DistanceTraveled();
 	if (distance > (double)0.00001)
@@ -1068,7 +1068,7 @@ double MovingActivity::MovingPace() const
 	return (double)0.0;
 }
 
-SegmentType MovingActivity::CurrentPace() const
+SegmentType MovingActivity::CurrentPace(void) const
 {
 	static NumericList values;
 	static uint16_t stationaryMS = 0;
@@ -1137,7 +1137,7 @@ SegmentType MovingActivity::CurrentPace() const
 }
 
 // GAP algorithm from https://journals.physiology.org/doi/pdf/10.1152/japplphysiol.01177.2001
-SegmentType MovingActivity::GradeAdjustedPace() const
+SegmentType MovingActivity::GradeAdjustedPace(void) const
 {
 	SegmentType segment = CurrentPace();
 	double cost = (155.4 * (pow(m_currentGradient, 5))) - (30.4 * pow(m_currentGradient, 4)) - (43.4 * pow(m_currentGradient, 3)) - (46.3 * (m_currentGradient * m_currentGradient)) - (19.5 * m_currentGradient) + 3.6;
@@ -1145,7 +1145,7 @@ SegmentType MovingActivity::GradeAdjustedPace() const
 	return segment;
 }
 
-time_t MovingActivity::GapToTargetPace() const
+time_t MovingActivity::GapToTargetPace(void) const
 {
 	// Make sure a pace plan is selected.
 	if (m_pacePlan.targetDistance > (double)0.01)
@@ -1197,7 +1197,7 @@ time_t MovingActivity::GapToTargetPace() const
 	return 0;
 }
 
-double MovingActivity::AverageSpeed() const
+double MovingActivity::AverageSpeed(void) const
 {
 	time_t secs = ElapsedTimeInSeconds();
 	if (secs > 0)
@@ -1205,7 +1205,7 @@ double MovingActivity::AverageSpeed() const
 	return (double)0.0;
 }
 
-double MovingActivity::MovingSpeed() const
+double MovingActivity::MovingSpeed(void) const
 {
 	time_t secs = MovingTimeInSeconds();
 	if (secs > 0)
@@ -1213,7 +1213,7 @@ double MovingActivity::MovingSpeed() const
 	return (double)0.0;
 }
 
-SegmentType MovingActivity::CurrentSpeed() const
+SegmentType MovingActivity::CurrentSpeed(void) const
 {
 	SegmentType segment = { 0, 0, 0 };
 
@@ -1273,7 +1273,7 @@ SegmentType MovingActivity::CurrentSpeed() const
 	return segment;
 }
 
-SegmentType MovingActivity::CurrentVerticalSpeed() const
+SegmentType MovingActivity::CurrentVerticalSpeed(void) const
 {
 	SegmentType segment = { 0, 0, 0 };
 	
@@ -1320,7 +1320,7 @@ SegmentType MovingActivity::CurrentVerticalSpeed() const
 	return segment;
 }
 
-SegmentType MovingActivity::CurrentClimb() const
+SegmentType MovingActivity::CurrentClimb(void) const
 {
 	SegmentType segment = { 0, 0, 0 };
 	
@@ -1358,12 +1358,12 @@ SegmentType MovingActivity::CurrentClimb() const
 	return segment;
 }
 
-double MovingActivity::DistanceTraveled() const
+double MovingActivity::DistanceTraveled(void) const
 {
 	return UnitMgr::ConvertToPreferredDistanceFromMeters(DistanceTraveledInMeters());
 }
 
-double MovingActivity::PrevDistanceTraveled() const
+double MovingActivity::PrevDistanceTraveled(void) const
 {
 	return UnitMgr::ConvertToPreferredDistanceFromMeters(m_prevDistanceTraveledRawM);
 }
@@ -1436,7 +1436,7 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	Activity::BuildSummaryAttributeList(attributes);
 }
 
-bool MovingActivity::CheckPositionInterval()
+bool MovingActivity::CheckPositionInterval(void)
 {
 	// If a session is not specified or is already complete then just return.
 	if ((m_intervalSession.sessionId.size() == 0) ||
@@ -1460,13 +1460,13 @@ bool MovingActivity::CheckPositionInterval()
 	return false;
 }
 
-void MovingActivity::AdvanceIntervalState()
+void MovingActivity::AdvanceIntervalState(void)
 {
 	m_intervalWorkoutState.lastDistanceMeters = DistanceTraveledInMeters();
 	Activity::AdvanceIntervalState();
 }
 
-double MovingActivity::RunningAltitudeAverage() const
+double MovingActivity::RunningAltitudeAverage(void) const
 {
 	double avg = (double)0.0;
 

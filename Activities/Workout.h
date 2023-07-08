@@ -34,12 +34,12 @@ public:
 	Workout(const std::string& workoutId, WorkoutType type, const std::string& sport);
 	virtual ~Workout();
 
-	std::string GetId() const { return m_id; };
-	std::string GetSport() const { return m_sport; };
-	WorkoutType GetType() const { return m_type; };
-	std::vector<WorkoutInterval> GetIntervals() const { return m_intervals; };
-	time_t GetScheduledTime() const { return m_scheduledTime; };
-	double GetEstimatedIntensityScore() const { return m_estimatedIntensityScore; };
+	std::string GetId(void) const { return m_id; };
+	std::string GetSport(void) const { return m_sport; };
+	WorkoutType GetType(void) const { return m_type; };
+	std::vector<WorkoutInterval> GetIntervals(void) const { return m_intervals; };
+	time_t GetScheduledTime(void) const { return m_scheduledTime; };
+	double GetEstimatedIntensityScore(void) const { return m_estimatedIntensityScore; };
 
 	void SetId(const std::string& workoutId) { m_id = workoutId; };
 	void SetSport(const std::string& sport) { m_sport = sport; };
@@ -55,15 +55,15 @@ public:
 	void AddInterval(const WorkoutInterval& interval);
 
 	double CalculateEstimatedIntensityScore(double thresholdPaceMetersPerMinute);
-	uint64_t CalculateDuration() const;
-	double CalculateDistance() const;
+	uint64_t CalculateDuration(void) const;
+	double CalculateDistance(void) const;
 
 private:
-	std::string m_id; // Unique identifier for the workout
-	std::string m_sport; // Sport being performed in the workout
-	WorkoutType m_type; // Type of workout (easy run, long run, etc.)
+	std::string m_id;                 // Unique identifier for the workout
+	std::string m_sport;              // Sport being performed in the workout
+	WorkoutType m_type;               // Type of workout (easy run, long run, etc.)
 	std::vector<WorkoutInterval> m_intervals;
-	time_t m_scheduledTime; // Time at which the workout is scheduled to be performed.
+	time_t m_scheduledTime;           // Time at which the workout is scheduled to be performed.
 	double m_estimatedIntensityScore; // Estimated amount of stress this workout will place on the athlete (higher is more stressful/more intense)
 
 	double CalculateIntervalDuration(double intervalMeters, double intervalPaceMetersPerMinute) const;

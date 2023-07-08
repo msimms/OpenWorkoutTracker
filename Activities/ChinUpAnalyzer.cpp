@@ -16,12 +16,12 @@ ChinUpAnalyzer::~ChinUpAnalyzer()
 {
 }
 
-std::string ChinUpAnalyzer::PrimaryAxis() const
+std::string ChinUpAnalyzer::PrimaryAxis(void) const
 {
 	return AXIS_NAME_Z;
 }
 
-std::string ChinUpAnalyzer::SecondaryAxis() const
+std::string ChinUpAnalyzer::SecondaryAxis(void) const
 {
 	return AXIS_NAME_X;
 }

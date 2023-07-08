@@ -16,12 +16,12 @@ PullUpAnalyzer::~PullUpAnalyzer()
 {
 }
 
-std::string PullUpAnalyzer::PrimaryAxis() const
+std::string PullUpAnalyzer::PrimaryAxis(void) const
 {
 	return AXIS_NAME_Y;
 }
 
-std::string PullUpAnalyzer::SecondaryAxis() const
+std::string PullUpAnalyzer::SecondaryAxis(void) const
 {
 	return AXIS_NAME_X;
 }

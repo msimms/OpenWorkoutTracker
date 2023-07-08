@@ -17,7 +17,7 @@ PushUp::~PushUp()
 {
 }
 
-double PushUp::CaloriesBurned() const
+double PushUp::CaloriesBurned(void) const
 {
 	double avgHr = AverageHeartRate();
 	double durationSecs = (double)ElapsedTimeInSeconds();

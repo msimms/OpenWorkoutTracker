@@ -20,7 +20,7 @@ public:
 	static std::string Type() { return ACTIVITY_TYPE_PULLUP; };
 	virtual std::string GetType() const { return PullUp::Type(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

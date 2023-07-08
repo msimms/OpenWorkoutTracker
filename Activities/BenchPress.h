@@ -12,10 +12,10 @@ public:
 	BenchPress(GForceAnalyzer* const analyzer);
 	virtual ~BenchPress();
 
-	static std::string Type() { return ACTIVITY_TYPE_BENCH_PRESS; };
-	virtual std::string GetType() const { return BenchPress::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_BENCH_PRESS; };
+	virtual std::string GetType(void) const { return BenchPress::Type(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

@@ -385,7 +385,7 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 	return result;
 }
 
-SegmentType Cycling::CurrentSpeedFromWheelSpeed() const
+SegmentType Cycling::CurrentSpeedFromWheelSpeed(void) const
 {
 	SegmentType result = { 0, 0, 0 };
 	
@@ -408,12 +408,12 @@ SegmentType Cycling::CurrentSpeedFromWheelSpeed() const
 	return result;
 }
 
-double Cycling::DistanceFromWheelRevsInMeters() const
+double Cycling::DistanceFromWheelRevsInMeters(void) const
 {
 	return ((double)NumWheelRevolutions() * m_bike.computedWheelCircumferenceMm) / (double)1000.0;
 }
 
-double Cycling::CaloriesBurned() const
+double Cycling::CaloriesBurned(void) const
 {
 	if (m_totalPowerReadings > 0)
 	{
@@ -430,7 +430,7 @@ double Cycling::CaloriesBurned() const
 	return (double)0.0;
 }
 
-double Cycling::NormalizedPower() const
+double Cycling::NormalizedPower(void) const
 {
 	if (m_normalizedPowerBuffer.size() > 0)
 	{
@@ -450,7 +450,7 @@ double Cycling::NormalizedPower() const
 	return (double)0.0;
 }
 
-uint8_t Cycling::CurrentPowerZone() const
+uint8_t Cycling::CurrentPowerZone(void) const
 {
 	double power = ThreeSecPower();
 	return m_athlete.GetZoneForPower(power);

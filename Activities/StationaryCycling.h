@@ -16,16 +16,16 @@ public:
 	StationaryCycling();
 	virtual ~StationaryCycling();
 	
-	static std::string Type() { return ACTIVITY_TYPE_STATIONARY_BIKE; };
-	virtual std::string GetType() const { return StationaryCycling::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_STATIONARY_BIKE; };
+	virtual std::string GetType(void) const { return StationaryCycling::Type(); };
 
-	virtual SegmentType CurrentPace() const;
-	virtual SegmentType CurrentSpeed() const;
-	virtual SegmentType CurrentVerticalSpeed() const;
+	virtual SegmentType CurrentPace(void) const;
+	virtual SegmentType CurrentSpeed(void) const;
+	virtual SegmentType CurrentVerticalSpeed(void) const;
 
-	virtual double DistanceTraveledInMeters() const { return DistanceFromWheelRevsInMeters(); };
+	virtual double DistanceTraveledInMeters(void) const { return DistanceFromWheelRevsInMeters(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 
 protected:
 	virtual bool ProcessLocationReading(const SensorReading& reading);

@@ -16,8 +16,8 @@ public:
 	Run();
 	virtual ~Run();
 	
-	static std::string Type() { return ACTIVITY_TYPE_RUNNING; };
-	virtual std::string GetType() const { return Run::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_RUNNING; };
+	virtual std::string GetType(void) const { return Run::Type(); };
 };
 
 #endif

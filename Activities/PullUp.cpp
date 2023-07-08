@@ -17,7 +17,7 @@ PullUp::~PullUp()
 {
 }
 
-double PullUp::CaloriesBurned() const
+double PullUp::CaloriesBurned(void) const
 {
 	double avgHr = AverageHeartRate();
 	double durationSecs = (double)ElapsedTimeInSeconds();

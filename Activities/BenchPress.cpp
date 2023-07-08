@@ -13,7 +13,7 @@ BenchPress::~BenchPress()
 {
 }
 
-double BenchPress::CaloriesBurned() const
+double BenchPress::CaloriesBurned(void) const
 {
 	double avgHr = AverageHeartRate();
 	double durationSecs = (double)ElapsedTimeInSeconds();

@@ -19,7 +19,7 @@ public:
 	virtual ~UnitMgr();
 
 	static void SetUnitSystem(UnitSystem system) { m_unitSystem = system; };
-	static UnitSystem GetUnitSystem() { return m_unitSystem; };
+	static UnitSystem GetUnitSystem(void) { return m_unitSystem; };
 
 	static double ConvertToPreferredDistanceFromMeters(double meters);
 	static double ConvertToPreferredAltitudeFromMeters(double meters);

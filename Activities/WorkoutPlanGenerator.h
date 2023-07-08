@@ -62,7 +62,7 @@ private:
 
 	std::map<std::string, ActivitySummary> m_additionalActivitySummaries; // populated by InsertAdditionalAttributesForWorkoutGeneration
 
-	void Reset();
+	void Reset(void);
 	void ProcessActivitySummary(const ActivitySummary& summary);
 	void CalculateRunTrainingPaces(std::map<std::string, double>& inputs);
 	void CalculateGoalDistances(std::map<std::string, double>& inputs);

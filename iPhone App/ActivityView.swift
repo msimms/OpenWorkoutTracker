@@ -94,7 +94,7 @@ struct ActivityView: View {
 
 	var body: some View {
 		ZStack {
-			let bkgndColor = colorScheme == .dark ? Color.black : ActivityPreferences.getBackgroundColor(activityType: self.activityType)
+			let bkgndColor = self.colorScheme == .dark ? Color.black : ActivityPreferences.getBackgroundColor(activityType: self.activityType)
 			bkgndColor
 				.ignoresSafeArea()
 
@@ -135,7 +135,7 @@ struct ActivityView: View {
 									.padding(5)
 								Text(self.activityVM.value1)
 									.font(.custom(self.font, fixedSize: 72))
-									.foregroundColor(colorScheme == .dark ? .white : ActivityPreferences.getTextColor(activityType: self.activityType))
+									.foregroundColor(self.colorScheme == .dark ? .white : ActivityPreferences.getTextColor(activityType: self.activityType))
 									.onTapGesture {
 										self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
 									}
@@ -171,7 +171,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value2)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
 												}
@@ -189,7 +189,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value3)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
 												}
@@ -207,7 +207,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value4)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
 												}
@@ -225,7 +225,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value5)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
 												}
@@ -243,7 +243,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value6)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection6 = self.canShowAttributeMenu()
 												}
@@ -261,7 +261,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value7)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection7 = self.canShowAttributeMenu()
 												}
@@ -279,7 +279,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value8)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection8 = self.canShowAttributeMenu()
 												}
@@ -297,7 +297,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value9)
 												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection9 = self.canShowAttributeMenu()
 												}
@@ -328,7 +328,7 @@ struct ActivityView: View {
 												.padding(5)
 											Text(self.activityVM.value2)
 												.font(.custom(self.font, fixedSize: 64))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
 												}
@@ -350,7 +350,7 @@ struct ActivityView: View {
 												.padding(5)
 											Text(self.activityVM.value3)
 												.font(.custom(self.font, fixedSize: 64))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
 												}
@@ -383,7 +383,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value2)
 												.font(.custom(self.font, fixedSize: 48))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
 												}
@@ -404,7 +404,7 @@ struct ActivityView: View {
 												.foregroundColor(labelColor)
 											Text(self.activityVM.value3)
 												.font(.custom(self.font, fixedSize: 48))
-												.foregroundColor(colorScheme == .dark ? .white : textColor)
+												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 												.onTapGesture {
 													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
 												}
@@ -494,7 +494,7 @@ struct ActivityView: View {
 								Image(systemName: "line.3.horizontal.decrease.circle")
 							}
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
+						.foregroundColor(self.colorScheme == .dark ? .white : .black)
 						.opacity(self.activityVM.isInProgress ? 0 : 1)
 						.help("View preferences")
 						
@@ -514,7 +514,7 @@ struct ActivityView: View {
 									}
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.opacity(self.activityVM.isInProgress ? 0 : 1)
 							.help("Interval session selection.")
 						}
@@ -535,7 +535,7 @@ struct ActivityView: View {
 									}
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.opacity(self.activityVM.isInProgress ? 0 : 1)
 							.help("Pace plan selection.")
 						}
@@ -547,7 +547,7 @@ struct ActivityView: View {
 							} label: {
 								Label("Weight", systemImage: "scalemass")
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.opacity(self.activityVM.isInProgress ? 0 : 1)
 							.help("Additional Weight")
 							.alert("Weight.", isPresented: self.$showingExtraWeightAlert) {
@@ -587,8 +587,8 @@ struct ActivityView: View {
 						} label: {
 							Label("Lap", systemImage: "stopwatch")
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.opacity(self.activityVM.isInProgress ? 1 : 0)
+						.foregroundColor(self.colorScheme == .dark ? .white : .black)
+						.opacity(self.activityVM.isInProgress && !self.activityVM.isPaused ? 1 : 0)
 						.help("Lap")
 					}
 
@@ -606,7 +606,7 @@ struct ActivityView: View {
 					} label: {
 						Label("Page", systemImage: "book")
 					}
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.help("Will switch between different views/pages.")
 
 					if !self.activityVM.isInProgress {
@@ -618,7 +618,7 @@ struct ActivityView: View {
 						} label: {
 							Label("Autostart", systemImage: "play.circle")
 						}
-						.foregroundColor(self.activityVM.autoStartEnabled ? .red : (colorScheme == .dark ? .white : .black))
+						.foregroundColor(self.activityVM.autoStartEnabled ? .red : (self.colorScheme == .dark ? .white : .black))
 						.help("Autostart. Will start when movement is detected.")
 					}
 
@@ -638,7 +638,7 @@ struct ActivityView: View {
 					} label: {
 						Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
 					}
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.confirmationDialog("What would you like to do?", isPresented: self.$showingStopSelection, titleVisibility: .visible) {
 						NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
 							Text("Stop")
@@ -654,6 +654,7 @@ struct ActivityView: View {
 			}
 		}
 		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
+		.opacity(self.activityVM.isPaused ? 0.5 : 1)
 		.onAppear() {
 			if self.activityVM.isStopped {
 				self.dismiss()

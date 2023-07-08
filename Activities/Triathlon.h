@@ -28,20 +28,20 @@ public:
 	Triathlon();
 	virtual ~Triathlon();
 	
-	static std::string Type() { return ACTIVITY_TYPE_TRIATHLON; };
-	virtual std::string GetType() const { return Triathlon::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_TRIATHLON; };
+	virtual std::string GetType(void) const { return Triathlon::Type(); };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
-	virtual bool Start();
-	virtual bool Stop();
-	virtual void Pause();
+	virtual bool Start(void);
+	virtual bool Stop(void);
+	virtual void Pause(void);
 
 	virtual bool ProcessSensorReading(const SensorReading& reading);
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;

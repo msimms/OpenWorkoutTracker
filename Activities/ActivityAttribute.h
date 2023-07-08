@@ -26,7 +26,7 @@
 #define ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER       "Highest 20 Minute Power" // highest power meter reading, averaged over 20 minutes
 #define ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER       "Highest 1 Hour Power"    // highest power meter reading, averaged over 1 hour
 #define ACTIVITY_ATTRIBUTE_AVG_POWER                  "Average Power"           // average power meter reading
-#define ACTIVITY_ATTRIBUTE_NORMALIZED_POWER           "Normalized Power"        // normalized power meter reading
+#define ACTIVITY_ATTRIBUTE_NORMALIZED_POWER           "Normalized Power"        // normalized power calculation
 #define ACTIVITY_ATTRIBUTE_MAX_POWER                  "Maximum Power"           // maximum power meter reading
 #define ACTIVITY_ATTRIBUTE_POWER_ZONE                 "Power Zone"              // current power zone
 #define ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS      "Num. Wheel Revolutions"  // the number of wheel revolutions (from the wheel speed sensor)
@@ -58,7 +58,8 @@
 #define ACTIVITY_ATTRIBUTE_MAX_HEART_RATE             "Maximum Heart Rate"      // highest heart rate (bpm)
 #define ACTIVITY_ATTRIBUTE_HEART_RATE_PERCENTAGE      "Heart Rate Percentage"   // % of maximum heart rate
 #define ACTIVITY_ATTRIBUTE_HEART_RATE_ZONE            "Heart Rate Zone"         // % of maximum heart rate, as a zone
-#define ACTIVITY_ATTRIBUTE_ELAPSED_TIME               "Elapsed Time"            // total elapsed time
+#define ACTIVITY_ATTRIBUTE_ELAPSED_TIME               "Elapsed Time"            // total elapsed time (seconds)
+#define ACTIVITY_ATTRIBUTE_TIME_PAUSED                "Time Paused"             // total time paused (seconds)
 #define ACTIVITY_ATTRIBUTE_LATITUDE                   "Latitude"                // current latitude
 #define ACTIVITY_ATTRIBUTE_LONGITUDE                  "Longitude"               // current longitude
 #define ACTIVITY_ATTRIBUTE_ALTITUDE                   "Altitude"                // current altitude

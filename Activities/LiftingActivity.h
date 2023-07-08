@@ -23,8 +23,8 @@ public:
 	LiftingActivity(GForceAnalyzer* const analyzer);
 	virtual ~LiftingActivity();
 
-	virtual bool Start();
-	virtual void Clear();
+	virtual bool Start(void);
+	virtual void Clear(void);
 	
 	virtual void SetGForceAnalyzer(GForceAnalyzer* const analyzer);
 
@@ -33,15 +33,15 @@ public:
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 	virtual void SetActivityAttribute(const std::string& attributeName, ActivityAttributeType attributeValue);
 
-	virtual time_t ActiveTimeInSeconds() const { return (time_t)(ElapsedTimeInSeconds() - (m_restingTimeMs / 1000)); };
-	virtual double ActiveTimeInMinutes() const { return ActiveTimeInSeconds() / (double)60.0; };
-	virtual time_t RestingTimeInSeconds() const { return (time_t)(m_restingTimeMs / 1000); };
+	virtual time_t ActiveTimeInSeconds(void) const { return (time_t)(ElapsedTimeInSeconds() - (m_restingTimeMs / 1000)); };
+	virtual double ActiveTimeInMinutes(void) const { return ActiveTimeInSeconds() / (double)60.0; };
+	virtual time_t RestingTimeInSeconds(void) const { return (time_t)(m_restingTimeMs / 1000); };
 
-	virtual uint16_t Total() const { return m_repsCorrected > 0 ? m_repsCorrected : ComputedTotal(); };
-	virtual uint16_t ComputedTotal() const { return m_computedRepList.size(); };
-	virtual uint16_t CorrectedTotal() const { return m_repsCorrected; };
-	virtual uint16_t Sets() const;
-	virtual time_t Pace() const;
+	virtual uint16_t Total(void) const { return m_repsCorrected > 0 ? m_repsCorrected : ComputedTotal(); };
+	virtual uint16_t ComputedTotal(void) const { return m_computedRepList.size(); };
+	virtual uint16_t CorrectedTotal(void) const { return m_repsCorrected; };
+	virtual uint16_t Sets(void) const;
+	virtual time_t Pace(void) const;
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
@@ -57,9 +57,9 @@ protected:
 protected:
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 	
-	virtual bool CheckSetsInterval();
-	virtual bool CheckRepsInterval();
-	virtual void AdvanceIntervalState();
+	virtual bool CheckSetsInterval(void);
+	virtual bool CheckRepsInterval(void);
+	virtual void AdvanceIntervalState(void);
 };
 
 #endif

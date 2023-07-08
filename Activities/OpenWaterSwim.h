@@ -22,7 +22,7 @@ public:
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

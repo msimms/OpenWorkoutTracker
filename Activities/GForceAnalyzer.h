@@ -29,12 +29,12 @@ public:
 	GForceAnalyzer();
 	virtual ~GForceAnalyzer();
 
-	void Clear();
+	void Clear(void);
 
 	Peaks::GraphPeakList ProcessAccelerometerReading(const SensorReading& reading);
 
-	virtual std::string PrimaryAxis() const = 0;
-	virtual std::string SecondaryAxis() const = 0;
+	virtual std::string PrimaryAxis(void) const = 0;
+	virtual std::string SecondaryAxis(void) const = 0;
 
 protected:
 	GraphPeakListMap     m_peaks;

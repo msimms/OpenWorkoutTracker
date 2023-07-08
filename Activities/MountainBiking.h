@@ -16,10 +16,10 @@ public:
 	MountainBiking();
 	virtual ~MountainBiking();
 	
-	static std::string Type() { return ACTIVITY_TYPE_MOUNTAIN_BIKING; };
-	virtual std::string GetType() const { return MountainBiking::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_MOUNTAIN_BIKING; };
+	virtual std::string GetType(void) const { return MountainBiking::Type(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

@@ -12,8 +12,8 @@ public:
 	BenchPressAnalyzer();
 	virtual ~BenchPressAnalyzer();
 
-	virtual std::string PrimaryAxis() const;
-	virtual std::string SecondaryAxis() const;
+	virtual std::string PrimaryAxis(void) const;
+	virtual std::string SecondaryAxis(void) const;
 };
 
 #endif

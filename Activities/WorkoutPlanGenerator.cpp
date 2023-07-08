@@ -30,7 +30,7 @@ WorkoutPlanGenerator::~WorkoutPlanGenerator()
 {
 }
 
-void WorkoutPlanGenerator::Reset()
+void WorkoutPlanGenerator::Reset(void)
 {
 	m_best5K = (double)0.0;
 	for (size_t i = 0; i < 4; ++i)

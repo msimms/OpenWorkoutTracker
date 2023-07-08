@@ -18,21 +18,21 @@ public:
 	Walk();
 	virtual ~Walk();
 
-	static std::string Type() { return ACTIVITY_TYPE_WALKING; };
-	virtual std::string GetType() const { return Walk::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_WALKING; };
+	virtual std::string GetType(void) const { return Walk::Type(); };
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
-	virtual bool Stop();
-	virtual void Pause();
+	virtual bool Stop(void);
+	virtual void Pause(void);
 
-	virtual void OnFinishedLoadingSensorData();
+	virtual void OnFinishedLoadingSensorData(void);
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 
-	virtual uint16_t StepsTaken() const { return m_stepsTaken; };
+	virtual uint16_t StepsTaken(void) const { return m_stepsTaken; };
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;

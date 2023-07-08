@@ -16,12 +16,12 @@ SquatAnalyzer::~SquatAnalyzer()
 {
 }
 
-std::string SquatAnalyzer::PrimaryAxis() const
+std::string SquatAnalyzer::PrimaryAxis(void) const
 {
 	return AXIS_NAME_X;
 }
 
-std::string SquatAnalyzer::SecondaryAxis() const
+std::string SquatAnalyzer::SecondaryAxis(void) const
 {
 	return AXIS_NAME_Y;
 }

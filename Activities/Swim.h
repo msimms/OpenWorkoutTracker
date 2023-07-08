@@ -25,12 +25,12 @@ public:
 
 	virtual ActivityAttributeType QueryActivityAttribute(const std::string& attributeName) const;
 
-	virtual bool Stop();
-	virtual void Pause();
+	virtual bool Stop(void);
+	virtual void Pause(void);
 
-	virtual void OnFinishedLoadingSensorData();
+	virtual void OnFinishedLoadingSensorData(void);
 
-	virtual uint16_t StrokesTaken() const { return m_strokesTaken; };
+	virtual uint16_t StrokesTaken(void) const { return m_strokesTaken; };
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes) const;
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes) const;
@@ -45,7 +45,7 @@ protected:
 	uint16_t            m_strokesTaken;
 
 protected:
-	void CalculateStrokesTaken();
+	void CalculateStrokesTaken(void);
 };
 
 #endif

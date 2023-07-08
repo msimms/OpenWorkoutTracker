@@ -17,10 +17,10 @@ public:
 	ChinUp(GForceAnalyzer* const analyzer);
 	virtual ~ChinUp();
 
-	static std::string Type() { return ACTIVITY_TYPE_CHINUP; };
-	virtual std::string GetType() const { return ChinUp::Type(); };
+	static std::string Type(void) { return ACTIVITY_TYPE_CHINUP; };
+	virtual std::string GetType(void) const { return ChinUp::Type(); };
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 };
 
 #endif

@@ -21,9 +21,9 @@ public:
 
 	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
 
-	virtual double CaloriesBurned() const;
+	virtual double CaloriesBurned(void) const;
 	
-	virtual uint16_t StepsTaken() const { return m_stepsTaken; };
+	virtual uint16_t StepsTaken(void) const { return m_stepsTaken; };
 
 	virtual void BuildAttributeList(std::vector<std::string>& attributes);
 	virtual void BuildSummaryAttributeList(std::vector<std::string>& attributes);

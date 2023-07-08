@@ -65,7 +65,7 @@ void PoolSwim::BuildSummaryAttributeList(std::vector<std::string>& attributes) c
 	Swim::BuildSummaryAttributeList(attributes);
 }
 
-double PoolSwim::CaloriesBurned() const
+double PoolSwim::CaloriesBurned(void) const
 {
 	return (double)0.0;
 }

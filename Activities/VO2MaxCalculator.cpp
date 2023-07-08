@@ -34,7 +34,7 @@ double VO2MaxCalculator::EstimateVO2MaxFromRaceDistanceInMetersAndHeartRate(doub
 	return (raceDistanceMeters / raceTimeMinutes * 0.2) / ((loadHr - restingHr) / (maxHr - restingHr)) + 3.5;
 }
 
-double VO2MaxCalculator::EstimateVO2MaxUsingCooperTest()
+double VO2MaxCalculator::EstimateVO2MaxUsingCooperTest(void)
 {
 	return 0.0;
 }
