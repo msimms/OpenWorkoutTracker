@@ -10,3 +10,6 @@
 [submodule "LibBluetooth"]
 	path = LibBluetooth
 	url = https://github.com/msimms/LibBluetooth
+[submodule "SimpleSwiftCharts"]
+	path = SimpleSwiftCharts
+	url = https://github.com/msimms/SimpleSwiftCharts
