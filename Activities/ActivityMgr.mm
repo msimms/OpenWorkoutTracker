@@ -1732,7 +1732,7 @@ extern "C" {
 
 			params.insert(std::make_pair(PARAM_INTERVAL_ID, EscapeAndQuoteString(session.sessionId)));
 			params.insert(std::make_pair(PARAM_INTERVAL_NAME, EscapeAndQuoteString(session.name)));
-			params.insert(std::make_pair(PARAM_INTERVAL_SPORT, EscapeAndQuoteString(session.sport)));
+			params.insert(std::make_pair(PARAM_INTERVAL_ACTIVITY_TYPE, EscapeAndQuoteString(session.activityType)));
 			params.insert(std::make_pair(PARAM_INTERVAL_DESCRIPTION, EscapeAndQuoteString(session.description)));
 
 			if (session.segments.size() > 0)
@@ -3411,7 +3411,7 @@ extern "C" {
 			std::string workoutJson;
 
 			params.insert(std::make_pair(PARAM_WORKOUT_ID, EscapeAndQuoteString(workout.GetId())));
-			params.insert(std::make_pair(PARAM_WORKOUT_SPORT_TYPE, EscapeAndQuoteString(workout.GetSport())));
+			params.insert(std::make_pair(PARAM_WORKOUT_ACTIVITY_TYPE, EscapeAndQuoteString(workout.GetActivityType())));
 			params.insert(std::make_pair(PARAM_WORKOUT_WORKOUT_TYPE, EscapeAndQuoteString(WorkoutTypeToString(workout.GetType()))));
 			params.insert(std::make_pair(PARAM_WORKOUT_NUM_INTERVALS, FormatInt((uint64_t)workout.GetIntervals().size())));
 			params.insert(std::make_pair(PARAM_WORKOUT_DURATION, FormatInt((uint64_t)workout.CalculateDuration())));
@@ -3458,7 +3458,7 @@ extern "C" {
 		return result;
 	}
 
-	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime)
+	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* activityType, double estimatedIntensityScore, time_t scheduledTime)
 	{
 		bool result = false;
 
@@ -3470,7 +3470,7 @@ extern "C" {
 			
 			workout.SetId(workoutId);
 			workout.SetType(type);
-			workout.SetSport(sport);
+			workout.SetActivityType(activityType);
 			workout.SetEstimatedIntensityScore(estimatedIntensityScore);
 			workout.SetScheduledTime(scheduledTime);
 

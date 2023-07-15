@@ -708,7 +708,7 @@ bool Database::RetrieveIntervalSessions(std::vector<IntervalSession>& sessions)
 			
 			session.sessionId.append((const char*)sqlite3_column_text(statement, 0));
 			session.name.append((const char*)sqlite3_column_text(statement, 1));
-			session.sport.append((const char*)sqlite3_column_text(statement, 2));
+			session.activityType.append((const char*)sqlite3_column_text(statement, 2));
 			session.description.append((const char*)sqlite3_column_text(statement, 3));
 			sessions.push_back(session);
 		}
@@ -821,7 +821,7 @@ bool Database::CreateWorkout(const Workout& workout)
 	{
 		sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(statement, 2, workout.GetType());
-		sqlite3_bind_text(statement, 3, workout.GetSport().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 3, workout.GetActivityType().c_str(), -1, SQLITE_TRANSIENT);
 		sqlite3_bind_double(statement, 4, workout.GetEstimatedIntensityScore());
 		sqlite3_bind_int64(statement, 5, workout.GetScheduledTime());
 		result = sqlite3_step(statement) == SQLITE_DONE;
@@ -850,15 +850,15 @@ bool Database::RetrieveWorkout(const std::string& workoutId, Workout& workout)
 
 		if (sqlite3_step(statement) == SQLITE_ROW)
 		{
-			std::string sport;
+			std::string activityType;
 
 			WorkoutType workoutType = (WorkoutType)sqlite3_column_int64(statement, 0);
-			sport.append((const char*)sqlite3_column_text(statement, 1));
+			activityType.append((const char*)sqlite3_column_text(statement, 1));
 			double estimatedStress = (double)sqlite3_column_double(statement, 2);
 			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 3);
 
 			workout.SetId(workoutId);
-			workout.SetSport(sport);
+			workout.SetActivityType(activityType);
 			workout.SetType(workoutType);
 			workout.SetEstimatedIntensityScore(estimatedStress);
 			workout.SetScheduledTime(scheduledTime);
@@ -882,17 +882,17 @@ bool Database::RetrieveWorkouts(std::vector<Workout>& workouts)
 		while (sqlite3_step(statement) == SQLITE_ROW)
 		{
 			std::string workoutId;
-			std::string sport;
+			std::string activityType;
 
 			workoutId.append((const char*)sqlite3_column_text(statement, 0));
 			WorkoutType workoutType = (WorkoutType)sqlite3_column_int64(statement, 1);
-			sport.append((const char*)sqlite3_column_text(statement, 2));
+			activityType.append((const char*)sqlite3_column_text(statement, 2));
 			double estimatedIntensity = (double)sqlite3_column_double(statement, 3);
 			time_t scheduledTime = (time_t)sqlite3_column_int64(statement, 4);
 
 			Workout workoutObj;
 			workoutObj.SetId(workoutId);
-			workoutObj.SetSport(sport);
+			workoutObj.SetActivityType(activityType);
 			workoutObj.SetType(workoutType);
 			workoutObj.SetEstimatedIntensityScore(estimatedIntensity);
 			workoutObj.SetScheduledTime(scheduledTime);

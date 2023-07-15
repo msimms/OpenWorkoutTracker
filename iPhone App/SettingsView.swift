@@ -64,7 +64,7 @@ struct SettingsView: View {
 				Toggle("Enabled", isOn: self.$broadcastEnabled)
 					.onChange(of: self.broadcastEnabled) { value in
 						Preferences.setBroadcastToServer(value: self.broadcastEnabled)
-						let _ = self.apiClient.isLoggedIn()
+						let _ = self.apiClient.checkLoginStatus()
 					}
 				HStack() {
 					Text("Update Rate")
@@ -106,7 +106,7 @@ struct SettingsView: View {
 
 			HStack() {
 				if Preferences.shouldBroadcastToServer() {
-					if self.apiClient.loggedIn {
+					if self.apiClient.isCurrentlyLoggedIn() {
 						Button {
 							if !self.apiClient.logout() {
 								self.showingLogoutError = true

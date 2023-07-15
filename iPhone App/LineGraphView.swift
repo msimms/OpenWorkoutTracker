@@ -201,8 +201,5 @@ struct LineGraphView: View {
 				}
 			}
 		}
-		.onRotate { newOrientation in
-			self.orientation = newOrientation
-		}
     }
 }

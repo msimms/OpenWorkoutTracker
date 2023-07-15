@@ -14,17 +14,17 @@ Workout::Workout(const Workout& workout)
 {
 	this->m_id = workout.m_id;
 	this->m_type = workout.m_type;
-	this->m_sport = workout.m_sport;
+	this->m_activityType = workout.m_activityType;
 	this->m_intervals = workout.m_intervals;
 	this->m_estimatedIntensityScore = workout.m_estimatedIntensityScore;
 	this->m_scheduledTime = workout.m_scheduledTime;
 }
 
-Workout::Workout(const std::string& workoutId, WorkoutType type, const std::string& sport)
+Workout::Workout(const std::string& workoutId, WorkoutType type, const std::string& activityType)
 {
 	this->m_id = workoutId;
 	this->m_type = type;
-	this->m_sport = sport;
+	this->m_activityType = activityType;
 	this->m_estimatedIntensityScore = 0.0;
 	this->m_scheduledTime = 0;
 }

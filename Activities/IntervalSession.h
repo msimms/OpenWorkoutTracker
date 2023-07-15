@@ -20,9 +20,9 @@
 
 typedef struct IntervalSession
 {
-	std::string  sessionId; // Unique identifier
-	std::string  name;      // Displayable name
-	std::string  sport;     // Sport to which this workout applies
+	std::string  sessionId;    // Unique identifier
+	std::string  name;         // Displayable name
+	std::string  activityType; // Activity/sport to which this workout applies
 	std::string  description;
 	std::vector<IntervalSessionSegment> segments;
 } IntervalSession;

@@ -5,6 +5,12 @@
 
 import Foundation
 
+enum LoginStatus : Int {
+	case LOGIN_STATUS_UNKNOWN = 0
+	case LOGIN_STATUS_SUCCESS
+	case LOGIN_STATUS_FAILURE
+}
+
 struct UnsynchedActivitiesCallbackType {
 	var ids: Array<String>
 }
@@ -17,12 +23,16 @@ func unsynchedActivitiesCallback(destination: Optional<UnsafePointer<Int8>>, con
 
 class ApiClient : ObservableObject {
 	static let shared = ApiClient()
-	@Published var loggedIn = false
-	
+	@Published var loginStatus: LoginStatus = LoginStatus.LOGIN_STATUS_UNKNOWN
+
 	/// Singleton constructor
 	private init() {
 	}
 	
+	func isCurrentlyLoggedIn() -> Bool {
+		return self.loginStatus == LoginStatus.LOGIN_STATUS_SUCCESS
+	}
+
 	func makeRequest(url: String, method: String, data: Dictionary<String, Any>) -> Bool {
 
 		guard Preferences.isFeatureEnabled(feature: FEATURE_BROADCAST) else {
@@ -189,7 +199,7 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
-	func isLoggedIn() -> Bool {
+	func checkLoginStatus() -> Bool {
 		let urlStr = String(format: "%@://%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), REMOTE_API_IS_LOGGED_IN_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: [:])
 	}
@@ -225,7 +235,7 @@ class ApiClient : ObservableObject {
 	}
 	
 	func requestActivityMetadata(activityId: String) -> Bool {
-		if Preferences.shouldBroadcastToServer() && self.loggedIn {
+		if Preferences.shouldBroadcastToServer() && self.isCurrentlyLoggedIn() {
 			var postDict: Dictionary<String, String> = [:]
 			postDict[PARAM_ACTIVITY_ID] = activityId
 			
@@ -486,7 +496,7 @@ class ApiClient : ObservableObject {
 	func syncWithServer() -> Bool {
 		var result = true
 
-		if Preferences.shouldBroadcastToServer() && self.loggedIn {
+		if Preferences.shouldBroadcastToServer() && self.isCurrentlyLoggedIn() {
 
 /*			guard let _ = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, Preferences.broadcastHostName()) else {
 				return false

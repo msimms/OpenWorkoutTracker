@@ -88,8 +88,8 @@ class WorkoutsVM : ObservableObject {
 					if let workoutId = summaryDict[PARAM_WORKOUT_ID] as? String {
 						summaryObj.id = workoutId
 					}
-					if let sportType = summaryDict[PARAM_WORKOUT_SPORT_TYPE] as? String {
-						summaryObj.sportType = sportType
+					if let activityType = summaryDict[PARAM_WORKOUT_ACTIVITY_TYPE] as? String {
+						summaryObj.sportType = activityType
 					}
 					if let workoutType = summaryDict[PARAM_WORKOUT_WORKOUT_TYPE] as? String {
 						summaryObj.workoutType = workoutType
@@ -153,13 +153,13 @@ class WorkoutsVM : ObservableObject {
 	func importWorkoutFromDict(dict: Dictionary<String, Any>) throws {
 		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
-			let sportType = dict[PARAM_WORKOUT_SPORT_TYPE] as? String,
+			let activityType = dict[PARAM_WORKOUT_ACTIVITY_TYPE] as? String,
 			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
 
 			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double ?? 0.0
 			let workoutType = WorkoutTypeStrToEnum(workoutTypeStr)
 
-			CreateWorkout(workoutId, workoutType, sportType, estimatedIntensityScore, scheduledTime)
+			CreateWorkout(workoutId, workoutType, activityType, estimatedIntensityScore, scheduledTime)
 		}
 	}
 

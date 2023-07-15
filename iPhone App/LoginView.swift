@@ -22,9 +22,6 @@ struct LoginView: View {
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.background(self.colorScheme == .dark ? .black : .white)
 					.autocapitalization(.none)
-			}
-			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 5, trailing: 0))
-			Group() {
 				Text("Password")
 					.bold()
 				SecureField("Password", text: self.$password)
@@ -33,7 +30,7 @@ struct LoginView: View {
 					.bold()
 			}
 			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
-			
+
 			Button {
 				Preferences.setBroadcastUserName(value: self.email)
 				if self.apiClient.login(username: self.email, password: self.password) {

@@ -31,18 +31,18 @@ class Workout
 public:
 	Workout();
 	Workout(const Workout& workout);
-	Workout(const std::string& workoutId, WorkoutType type, const std::string& sport);
+	Workout(const std::string& workoutId, WorkoutType type, const std::string& activityType);
 	virtual ~Workout();
 
 	std::string GetId(void) const { return m_id; };
-	std::string GetSport(void) const { return m_sport; };
+	std::string GetActivityType(void) const { return m_activityType; };
 	WorkoutType GetType(void) const { return m_type; };
 	std::vector<WorkoutInterval> GetIntervals(void) const { return m_intervals; };
 	time_t GetScheduledTime(void) const { return m_scheduledTime; };
 	double GetEstimatedIntensityScore(void) const { return m_estimatedIntensityScore; };
 
 	void SetId(const std::string& workoutId) { m_id = workoutId; };
-	void SetSport(const std::string& sport) { m_sport = sport; };
+	void SetActivityType(const std::string& activityType) { m_activityType = activityType; };
 	void SetType(WorkoutType type) { m_type = type; };
 	void SetScheduledTime(time_t scheduledTime) { m_scheduledTime = scheduledTime; };
 	void SetEstimatedIntensityScore(double estimatedIntensityScore) { m_estimatedIntensityScore = estimatedIntensityScore; };
@@ -60,7 +60,7 @@ public:
 
 private:
 	std::string m_id;                 // Unique identifier for the workout
-	std::string m_sport;              // Sport being performed in the workout
+	std::string m_activityType;       // Activity being performed in the workout
 	WorkoutType m_type;               // Type of workout (easy run, long run, etc.)
 	std::vector<WorkoutInterval> m_intervals;
 	time_t m_scheduledTime;           // Time at which the workout is scheduled to be performed.

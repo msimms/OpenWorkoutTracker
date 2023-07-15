@@ -38,7 +38,7 @@ class CommonApp : ObservableObject {
 		
 		// Are we supposed to use the optional web server?
 		if Preferences.shouldBroadcastToServer() {
-			let _ = self.apiClient.isLoggedIn()
+			let _ = self.apiClient.checkLoginStatus()
 		}
 		
 		// Set the user's preferred unit system.
@@ -127,8 +127,11 @@ class CommonApp : ObservableObject {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
-					self.apiClient.loggedIn = true
+					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_SUCCESS
 					let _ = self.apiClient.syncWithServer()
+				}
+				else {
+					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_FAILURE
 				}
 			}
 		}
@@ -139,8 +142,8 @@ class CommonApp : ObservableObject {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 					if responseCode.statusCode == 200 {
-						self.apiClient.loggedIn = true
-						
+						ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_SUCCESS
+
 						if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 							if let sessionDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
 								let sessionCookieStr = sessionDict["cookie"]
@@ -162,6 +165,9 @@ class CommonApp : ObservableObject {
 						
 						let _ = self.apiClient.syncWithServer() // re-sync
 					}
+					else {
+						ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_FAILURE
+					}
 				}
 			}
 		}
@@ -173,8 +179,11 @@ class CommonApp : ObservableObject {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
-					self.apiClient.loggedIn = true
+					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_SUCCESS
 					let _ = self.apiClient.syncWithServer() // re-sync
+				}
+				else {
+					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_FAILURE
 				}
 			}
 		}
@@ -184,7 +193,7 @@ class CommonApp : ObservableObject {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
-					self.apiClient.loggedIn = false
+					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_FAILURE
 				}
 			}
 		}

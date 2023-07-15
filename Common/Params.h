@@ -54,8 +54,8 @@
 // Suggested Workouts
 #define PARAM_WORKOUT_ID                         "workout_id"
 #define PARAM_WORKOUT_NUM_INTERVALS              "num intervals"
-#define PARAM_WORKOUT_WORKOUT_TYPE               "type"
-#define PARAM_WORKOUT_SPORT_TYPE                 "sport type"
+#define PARAM_WORKOUT_WORKOUT_TYPE               "workout type"
+#define PARAM_WORKOUT_ACTIVITY_TYPE              "activity type"
 #define PARAM_WORKOUT_URL                        "url"
 #define PARAM_WORKOUT_SCHEDULED_TIME             "scheduled time"
 #define PARAM_WORKOUT_ESTIMATED_INTENSITY        "estimated intensity score"
@@ -69,7 +69,7 @@
 // Interval Session
 #define PARAM_INTERVAL_ID                        "id"
 #define PARAM_INTERVAL_NAME                      "name"
-#define PARAM_INTERVAL_SPORT                     "sport"
+#define PARAM_INTERVAL_ACTIVITY_TYPE             "activity type"
 #define PARAM_INTERVAL_DESCRIPTION               "description"
 #define PARAM_INTERVAL_LAST_UPDATED_TIME         "last updated time"
 #define PARAM_INTERVAL_SEGMENTS                  "intervals"

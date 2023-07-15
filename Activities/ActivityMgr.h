@@ -225,7 +225,7 @@ extern "C" {
 	// Functions for managing suggested workout generation.
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
-	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* sport, double estimatedIntensityScore, time_t scheduledTime);
+	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* activityType, double estimatedIntensityScore, time_t scheduledTime);
 	bool DeleteWorkout(const char* const workoutId);
 	bool DeleteAllWorkouts(void);
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);
