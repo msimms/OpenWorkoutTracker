@@ -63,6 +63,7 @@ This app uses these source projects to work properly:
 * [LibBluetooth](https://github.com/msimms/LibBluetooth) - Cross-platform Bluetooth library.
 * [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities.
 * [PeakFinder](https://github.com/msimms/PeakFinder) - A peak finding algorithm.
+* [SimpleSwiftCharts](https://github.com/msimms/SimpleSwiftCharts) - Charts and graphs code for SwiftUI.
 * [sqlite](https://www.sqlite.org) - Database for storing activities.
 
 The app is written in a combination of Swift/SwiftUI (though previously used Objective-C) and C/C++ and targets the Apple iPhone and Apple Watch.

@@ -9,11 +9,8 @@
 /* Begin PBXBuildFile section */
 		2704224528F84C6400FD02D4 /* ActivityPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */; };
 		2704224728F850A900FD02D4 /* WorkoutDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */; };
-		2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224828FB7B0E00FD02D4 /* LineGraphView.swift */; };
-		2704224B28FB7B2900FD02D4 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224A28FB7B2900FD02D4 /* BarChartView.swift */; };
 		2704224D28FCDDF600FD02D4 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224C28FCDDF600FD02D4 /* LoginView.swift */; };
 		2704224F28FCDE1B00FD02D4 /* CreateLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */; };
-		2704225128FDEE0200FD02D4 /* SensorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225028FDEE0200FD02D4 /* SensorChartView.swift */; };
 		270422562902409C00FD02D4 /* TagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270422552902409C00FD02D4 /* TagsView.swift */; };
 		2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
 		2704225C2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */; };
@@ -23,6 +20,9 @@
 		270658762A151C780073B3F6 /* WorkoutScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2740DF7428E460E000293B71 /* WorkoutScheduler.cpp */; };
 		270658792A156B3B0073B3F6 /* WorkoutList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270658772A156B3B0073B3F6 /* WorkoutList.cpp */; };
 		2706587A2A156B3B0073B3F6 /* WorkoutList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 270658772A156B3B0073B3F6 /* WorkoutList.cpp */; };
+		27091AC22A65BB9B0013AD48 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27091AC02A65BB9B0013AD48 /* BarChartView.swift */; };
+		27091AC32A65BB9B0013AD48 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27091AC12A65BB9B0013AD48 /* LineGraphView.swift */; };
+		27091AC52A65BC7A0013AD48 /* SensorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27091AC42A65BC7A0013AD48 /* SensorChartView.swift */; };
 		272E77E42910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		272E77E52910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		273132B4298C8D0800DEADF0 /* SplitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273132B3298C8D0800DEADF0 /* SplitsView.swift */; };
@@ -370,16 +370,16 @@
 /* Begin PBXFileReference section */
 		2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPreferencesView.swift; sourceTree = "<group>"; };
 		2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailsView.swift; sourceTree = "<group>"; };
-		2704224828FB7B0E00FD02D4 /* LineGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineGraphView.swift; sourceTree = "<group>"; };
-		2704224A28FB7B2900FD02D4 /* BarChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarChartView.swift; sourceTree = "<group>"; };
 		2704224C28FCDDF600FD02D4 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLoginView.swift; sourceTree = "<group>"; };
-		2704225028FDEE0200FD02D4 /* SensorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
 		270422552902409C00FD02D4 /* TagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsView.swift; sourceTree = "<group>"; };
 		2704225A2905DC6300FD02D4 /* CyclingRadarService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CyclingRadarService.swift; path = LibBluetooth/mac/Source_Swift/CyclingRadarService.swift; sourceTree = "<group>"; };
 		270658712A0D67CB0073B3F6 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		270658772A156B3B0073B3F6 /* WorkoutList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WorkoutList.cpp; path = Activities/WorkoutList.cpp; sourceTree = "<group>"; };
 		270658782A156B3B0073B3F6 /* WorkoutList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WorkoutList.h; path = Activities/WorkoutList.h; sourceTree = "<group>"; };
+		27091AC02A65BB9B0013AD48 /* BarChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarChartView.swift; path = SimpleSwiftCharts/BarChartView.swift; sourceTree = SOURCE_ROOT; };
+		27091AC12A65BB9B0013AD48 /* LineGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LineGraphView.swift; path = SimpleSwiftCharts/LineGraphView.swift; sourceTree = SOURCE_ROOT; };
+		27091AC42A65BC7A0013AD48 /* SensorChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
 		272E77E32910ABE3009AB275 /* WatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSession.swift; sourceTree = "<group>"; };
 		273132B3298C8D0800DEADF0 /* SplitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsView.swift; sourceTree = "<group>"; };
 		273C418429075C9800273B64 /* OpenWorkoutTracker Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "OpenWorkoutTracker Watch App.entitlements"; sourceTree = "<group>"; };
@@ -1116,7 +1116,7 @@
 				2740DF5B28E4600800293B71 /* AboutView.swift */,
 				2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */,
 				2740DF5628E4600800293B71 /* ActivityView.swift */,
-				2704224A28FB7B2900FD02D4 /* BarChartView.swift */,
+				27091AC02A65BB9B0013AD48 /* BarChartView.swift */,
 				278D92C528E38F17003B077C /* ContentView.swift */,
 				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
 				270658712A0D67CB0073B3F6 /* DebugView.swift */,
@@ -1129,14 +1129,14 @@
 				2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */,
 				2740DF5528E4600800293B71 /* HistoryView.swift */,
 				2740E09128E6319700293B71 /* IntervalSessionsView.swift */,
-				2704224828FB7B0E00FD02D4 /* LineGraphView.swift */,
+				27091AC12A65BB9B0013AD48 /* LineGraphView.swift */,
 				2704224C28FCDDF600FD02D4 /* LoginView.swift */,
 				277EAC29291F1F330091ADF6 /* MapWithPolyline.swift */,
 				2740E11328EDFEB700293B71 /* NumbersOnly.swift */,
 				2740E08E28E6318000293B71 /* PacePlansView.swift */,
 				278D92C328E38F17003B077C /* PhoneApp.swift */,
 				2740E08228E60CFA00293B71 /* ProfileView.swift */,
-				2704225028FDEE0200FD02D4 /* SensorChartView.swift */,
+				27091AC42A65BC7A0013AD48 /* SensorChartView.swift */,
 				2740E09428E631A000293B71 /* SensorsView.swift */,
 				2740DF5928E4600800293B71 /* SettingsView.swift */,
 				273132B3298C8D0800DEADF0 /* SplitsView.swift */,
@@ -1540,9 +1540,9 @@
 				2740DFD828E460E200293B71 /* Cycling.cpp in Sources */,
 				273132B4298C8D0800DEADF0 /* SplitsView.swift in Sources */,
 				277EAC2D2922E9570091ADF6 /* IntervalSessionSegment.cpp in Sources */,
+				27091AC22A65BB9B0013AD48 /* BarChartView.swift in Sources */,
 				2740E03028E4CE1C00293B71 /* TcxFileReader.cpp in Sources */,
 				27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */,
-				2704224928FB7B0E00FD02D4 /* LineGraphView.swift in Sources */,
 				2740DFE028E460E200293B71 /* VO2MaxCalculator.cpp in Sources */,
 				2740E12528F2D3F000293B71 /* ApiClient.swift in Sources */,
 				27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */,
@@ -1553,6 +1553,7 @@
 				2740DF6028E4600800293B71 /* SettingsView.swift in Sources */,
 				277541382980C3BE00AE9B86 /* HeartRateCalculator.cpp in Sources */,
 				2740E04628E4CFFD00293B71 /* KMeans.cpp in Sources */,
+				27091AC32A65BB9B0013AD48 /* LineGraphView.swift in Sources */,
 				2740DFD428E460E200293B71 /* PullUpAnalyzer.cpp in Sources */,
 				2740E11428EDFEB700293B71 /* NumbersOnly.swift in Sources */,
 				2740DFDB28E460E200293B71 /* PullUp.cpp in Sources */,
@@ -1593,6 +1594,7 @@
 				2740E03728E4CE1C00293B71 /* ZwoFileWriter.cpp in Sources */,
 				278C209D2935425C00828479 /* FriendsVM.swift in Sources */,
 				2740DFD628E460E200293B71 /* FtpCalculator.cpp in Sources */,
+				27091AC52A65BC7A0013AD48 /* SensorChartView.swift in Sources */,
 				2740DFD728E460E200293B71 /* UnitMgr.cpp in Sources */,
 				2740E0A528E644EE00293B71 /* SensorMgr.swift in Sources */,
 				2740DFE328E460E200293B71 /* OpenWaterSwim.cpp in Sources */,
@@ -1611,7 +1613,6 @@
 				2740DFF228E460E200293B71 /* BikePlanGenerator.cpp in Sources */,
 				2740DFEF28E460E200293B71 /* ChinUp.cpp in Sources */,
 				2775412E297F651500AE9B86 /* ZonesView.swift in Sources */,
-				2704225128FDEE0200FD02D4 /* SensorChartView.swift in Sources */,
 				2740E03828E4CE1C00293B71 /* CsvFileWriter.cpp in Sources */,
 				2740E08328E60CFA00293B71 /* ProfileView.swift in Sources */,
 				2740E12828F4425A00293B71 /* EditShoesView.swift in Sources */,
@@ -1645,7 +1646,6 @@
 				2740E02D28E4CE1C00293B71 /* XmlFileWriter.cpp in Sources */,
 				2740E05928E4D0C700293B71 /* DataImporter.cpp in Sources */,
 				27E608F9292C205800401901 /* ActivityWidgets.intentdefinition in Sources */,
-				2704224B28FB7B2900FD02D4 /* BarChartView.swift in Sources */,
 				2740DFED28E460E200293B71 /* MountainBiking.cpp in Sources */,
 				2740E0A828E645C300293B71 /* WorkoutsVM.swift in Sources */,
 				2740E0FD28E913BF00293B71 /* CommonApp.swift in Sources */,
