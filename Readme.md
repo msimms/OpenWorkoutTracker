@@ -59,7 +59,7 @@ Open `OpenWorkoutTracker-Swift.xcodeproj` with XCode and build.
 ## Tech
 This app uses these source projects to work properly:
 
-* [core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS (historical, used by the old, Objective C front end).
+* <s>[core-plot](https://github.com/core-plot/core-plot) - A graph plotting framework for iOS (historical, used by the old, Objective C front end).</s>
 * [LibBluetooth](https://github.com/msimms/LibBluetooth) - Cross-platform Bluetooth library.
 * [LibMath](https://github.com/msimms/LibMath) - A collection of math utilities.
 * [PeakFinder](https://github.com/msimms/PeakFinder) - A peak finding algorithm.
