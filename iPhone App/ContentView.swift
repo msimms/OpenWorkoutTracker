@@ -35,7 +35,7 @@ struct ContentView: View {
 	var body: some View {
 		NavigationStack() {
 			
-			VStack() {
+			VStack(alignment: .center) {
 				
 				// Filthy hack to move the Start button down a bit.
 				Text(" ")

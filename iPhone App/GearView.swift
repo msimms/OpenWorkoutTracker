@@ -12,7 +12,7 @@ struct GearView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
-			VStack() {
+			VStack(alignment: .center) {
 				let bikes = self.gearVM.listBikes()
 
 				Text("Bicycles")
@@ -31,7 +31,7 @@ struct GearView: View {
 					Text("No Bicycles")
 				}
 			}
-			VStack() {
+			VStack(alignment: .center) {
 				let shoes = self.gearVM.listShoes()
 
 				Text("Shoes")
