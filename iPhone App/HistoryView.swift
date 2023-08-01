@@ -42,6 +42,7 @@ struct HistoryView: View {
 											if item.source == ActivitySummary.Source.healthkit {
 												Text("HealthKit")
 													.bold()
+													.foregroundColor(.gray)
 											}
 										}
 										.onAppear() {

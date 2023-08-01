@@ -23,7 +23,8 @@ double HeartRateCalculator::EstimateMaxHrFromData(const ActivitySummaryList& his
 		if (summary.startTime > cutoffTime)
 		{
 			if ((summary.type.compare(ACTIVITY_TYPE_CYCLING) == 0) ||
-				(summary.type.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0) ||
+				(summary.type.compare(ACTIVITY_TYPE_STATIONARY_CYCLING) == 0) ||
+				(summary.type.compare(ACTIVITY_TYPE_VIRTUAL_CYCLING) == 0) ||
 				(summary.type.compare(ACTIVITY_TYPE_DUATHLON) == 0) ||
 				(summary.type.compare(ACTIVITY_TYPE_TRIATHLON) == 0) ||
 				(summary.type.compare(ACTIVITY_TYPE_RUNNING) == 0) ||

@@ -920,7 +920,10 @@ class HealthManager {
 		else if activityType == ACTIVITY_TYPE_SQUAT {
 			return HKWorkoutActivityType.functionalStrengthTraining
 		}
-		else if activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+		else if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			return HKWorkoutActivityType.cycling
+		}
+		else if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 			return HKWorkoutActivityType.cycling
 		}
 		else if activityType == ACTIVITY_TYPE_TREADMILL {
@@ -983,7 +986,10 @@ class HealthManager {
 		else if activityType == ACTIVITY_TYPE_SQUAT {
 			return HKWorkoutSessionLocationType.indoor
 		}
-		else if activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+		else if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			return HKWorkoutSessionLocationType.indoor
+		}
+		else if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 			return HKWorkoutSessionLocationType.indoor
 		}
 		else if activityType == ACTIVITY_TYPE_TREADMILL {

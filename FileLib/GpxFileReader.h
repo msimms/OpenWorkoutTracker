@@ -30,14 +30,20 @@ namespace FileLib
 		typedef bool (*NewLocationFunc)(double lat, double lon, double ele, uint64_t time, void* context);
 		virtual void SetNewLocationCallback(NewLocationFunc func, void* context) { m_newLocCallback = func; m_newLocContext = context; };
 		
+		// Registers the callback that is triggered when the activity type is read.
+		typedef void (*ActivityTypeFunc)(const char* const activityType, void* context);
+		virtual void SetActivityTypeCallback(ActivityTypeFunc func, void* context) { m_activityTypeCallback = func; m_activityTypeContext = context; };
+
 	protected:
-		double          m_curLat;
-		double          m_curLon;
-		double          m_curEle;
-		uint64_t        m_curTime;
-		NewLocationFunc m_newLocCallback;
-		void*           m_newLocContext;
-		
+		double           m_curLat;
+		double           m_curLon;
+		double           m_curEle;
+		uint64_t         m_curTime;
+		NewLocationFunc  m_newLocCallback;
+		void*            m_newLocContext;
+		ActivityTypeFunc m_activityTypeCallback;
+		void*            m_activityTypeContext;
+
 	private:
 		void Clear();
 	};

@@ -13,8 +13,11 @@ namespace FileLib
 	TcxFileReader::TcxFileReader()
 	{
 		Clear();
+
 		m_newLocCallback = NULL;
 		m_newLocContext = 0;
+		m_activityTypeCallback = NULL;
+		m_activityTypeContext = 0;
 	}
 
 	TcxFileReader::~TcxFileReader()
@@ -134,7 +137,14 @@ namespace FileLib
 			attrName = (char*)attr->name;
 		}
 
-		if (state.compare(TCX_TAG_NAME_POSITION) == 0)
+		if (state.compare(TCX_TAG_NAME_ACTIVITY) == 0)
+		{
+			if (m_activityTypeCallback)
+			{
+				m_activityTypeCallback((const char*)attr->children->content, m_activityTypeContext);
+			}
+		}
+		else if (state.compare(TCX_TAG_NAME_POSITION) == 0)
 		{
 			if (attrName.compare(TCX_TAG_NAME_LATITUDE) == 0)
 			{

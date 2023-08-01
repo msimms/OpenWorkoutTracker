@@ -66,10 +66,15 @@ class ApiClient : ObservableObject {
 				// GET method, append the parameters to the URL.
 				else if method == "GET" {
 					var newUrl = url + "?"
+					var first = true
 					for datum in data {
+						if first == false {
+							newUrl = newUrl + "&"
+						}
 						newUrl = newUrl + datum.key
 						newUrl = newUrl + "="
 						newUrl = newUrl + String(describing: datum.value)
+						first = false
 					}
 					request.url = URL(string: newUrl)
 				}
@@ -80,7 +85,7 @@ class ApiClient : ObservableObject {
 				if let httpResponse = responseCode as? HTTPURLResponse {
 
 					var downloadedData: Dictionary<String, Any> = [:]
-					downloadedData[KEY_NAME_URL] = url
+					downloadedData[KEY_NAME_URL] = request.url
 					downloadedData[KEY_NAME_RESPONSE_CODE] = httpResponse
 					downloadedData[KEY_NAME_RESPONSE_DATA] = responseData
 
@@ -508,20 +513,33 @@ class ApiClient : ObservableObject {
 			if now - lastServerSync > 60 {
 				let deviceId = Preferences.uuid()
 				if deviceId != nil {
+					// Associate this device with the user.
 					result = self.claimDevice(deviceId: deviceId!)
+
+					// Get all the things.
 #if !os(watchOS)
 					result = result && self.listGear()
 					result = result && self.listPlannedWorkouts()
 #endif
 					result = result && self.listIntervalSessions()
 					result = result && self.listPacePlans()
+
+					// Send all the things.
 #if !os(watchOS)
 					result = result && self.sendUserDetailsToServer()
 					result = result && self.sendMissingActivitiesToServer()
 					result = result && self.sendPacePlansToServer()
 #endif
 					
-					result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync)))
+					// Ask for the server's activity list from the last week.
+					let ONE_WEEK = 60 * 60 * 24 * 7
+					if lastServerSync > ONE_WEEK {
+						result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync - ONE_WEEK)))
+					}
+					else {
+						result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: 0))
+					}
+
 					Preferences.setLastServerSyncTime(value: now)
 				}
 			}

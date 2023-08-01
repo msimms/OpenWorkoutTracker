@@ -13,8 +13,11 @@ namespace FileLib
 	GpxFileReader::GpxFileReader()
 	{
 		Clear();
+
 		m_newLocCallback = NULL;
 		m_newLocContext = 0;
+		m_activityTypeCallback = NULL;
+		m_activityTypeContext = 0;
 	}
 	
 	GpxFileReader::~GpxFileReader()

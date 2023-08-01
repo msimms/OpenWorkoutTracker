@@ -215,7 +215,10 @@ class HistoryVM : ObservableObject {
 		if activityType == ACTIVITY_TYPE_SQUAT {
 			return "scalemass"
 		}
-		if activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+		if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			return "bicycle"
+		}
+		if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 			return "bicycle"
 		}
 		if activityType == ACTIVITY_TYPE_TREADMILL {

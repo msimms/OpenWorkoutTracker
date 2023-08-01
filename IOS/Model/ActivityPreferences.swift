@@ -169,7 +169,7 @@ class ActivityPreferences {
 		
 		// Default value
 		if mydefaults.object(forKey: keyName) == nil {
-			if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+			if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_STATIONARY_CYCLING || activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 				return ACTIVITY_VIEW_COMPLEX
 			}
 			else if activityType == ACTIVITY_TYPE_HIKING || activityType == ACTIVITY_TYPE_WALKING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
@@ -220,7 +220,10 @@ class ActivityPreferences {
 		if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
 			defaults = self.defaultCyclingLayout
 		}
-		else if activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+		else if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			defaults = self.defaultStationaryBikeLayout
+		}
+		else if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 			defaults = self.defaultStationaryBikeLayout
 		}
 		else if activityType == ACTIVITY_TYPE_TREADMILL {
@@ -549,7 +552,10 @@ class ActivityPreferences {
 		else if activityType == ACTIVITY_TYPE_SQUAT {
 			return Preferences.hasShownSquatHelp()
 		}
-		else if activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+		else if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			return Preferences.hasShownStationaryBikeHelp()
+		}
+		else if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 			return Preferences.hasShownStationaryBikeHelp()
 		}
 		else if activityType == ACTIVITY_TYPE_TREADMILL {
@@ -574,7 +580,10 @@ class ActivityPreferences {
 		else if activityType == ACTIVITY_TYPE_SQUAT {
 			Preferences.setHasShownSquatHelp(value: true)
 		}
-		else if activityType == ACTIVITY_TYPE_STATIONARY_BIKE {
+		else if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			Preferences.setHasShownStationaryBikeHelp(value: true)
+		}
+		else if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
 			Preferences.setHasShownStationaryBikeHelp(value: true)
 		}
 		else if activityType == ACTIVITY_TYPE_TREADMILL {

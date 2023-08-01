@@ -238,15 +238,38 @@ class CommonApp : ObservableObject {
 	@objc func downloadedActivityReceived(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
-				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? String {
-					let directory = NSTemporaryDirectory()
-					let fileName = NSUUID().uuidString
-					let fullUrl = NSURL.fileURL(withPathComponents: [directory, fileName])
+				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data,
+				   let requestUrl = data[KEY_NAME_URL] as? URL {
 					
-					if fullUrl != nil {
-						try responseData.write(to: fullUrl!, atomically: false, encoding: .utf8)
-						ImportActivityFromFile(fullUrl?.absoluteString, nil, nil)
-						try FileManager.default.removeItem(at: fullUrl!)
+					// Parse the URL.
+					let components = URLComponents(url: requestUrl, resolvingAgainstBaseURL: false)!
+
+					if let queryItems = components.queryItems {
+						var activityId: String?
+						var activityType: String = ""
+						var exportFormat: String?
+
+						// Grab the activity ID and file format out of the URL parameters.
+						for queryItem in queryItems {
+							if queryItem.name == PARAM_ACTIVITY_ID {
+								activityId = queryItem.value!
+							}
+							else if queryItem.name == PARAM_EXPORT_FORMAT {
+								exportFormat = queryItem.value!
+							}
+						}
+
+						if activityId != nil && exportFormat != nil {
+							let directory = NSTemporaryDirectory()
+							let fileName = NSUUID().uuidString + "." + exportFormat!
+							let fullUrl = NSURL.fileURL(withPathComponents: [directory, fileName])
+							
+							if fullUrl != nil {
+								try responseData.write(to: fullUrl!)
+								ImportActivityFromFile(fullUrl?.absoluteString, activityType, activityId)
+								try FileManager.default.removeItem(at: fullUrl!)
+							}
+						}
 					}
 				}
 			}
@@ -345,6 +368,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief The app requests a list of activities since a particular timestamp; this method is called for the response, which is a list of activit IDs
 	@objc func unsynchedActivitiesListReceived(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -352,7 +376,7 @@ class CommonApp : ObservableObject {
 					let activitiesIdList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [String]
 
 					for activityId in activitiesIdList {
-						if IsActivityInDatabase(activityId) {
+						if IsActivityInDatabase(activityId) == false {
 							let _ = self.apiClient.exportActivity(activityId: activityId)
 						}
 					}
@@ -364,6 +388,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief The app sends a list of activities to the server; this method is called for each response.
 	@objc func hasActivityResponse(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {

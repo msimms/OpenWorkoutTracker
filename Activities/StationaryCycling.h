@@ -16,7 +16,7 @@ public:
 	StationaryCycling();
 	virtual ~StationaryCycling();
 	
-	static std::string Type(void) { return ACTIVITY_TYPE_STATIONARY_BIKE; };
+	static std::string Type(void) { return ACTIVITY_TYPE_STATIONARY_CYCLING; };
 	virtual std::string GetType(void) const { return StationaryCycling::Type(); };
 
 	virtual SegmentType CurrentPace(void) const;

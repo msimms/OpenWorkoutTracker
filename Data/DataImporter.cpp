@@ -43,6 +43,14 @@ bool OnNewGpxLocation(double lat, double lon, double ele, uint64_t time, void* c
 	return false;
 }
 
+void OnNewActivityType(const char* const activityType, void* context)
+{
+	if (context)
+	{
+		((DataImporter*)context)->SetActivityType(activityType);
+	}
+}
+
 bool DataImporter::ImportFromFit(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
 {
 	return false;
@@ -59,6 +67,7 @@ bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string&
 	m_started = false;
 	m_lastTime = 0;
 
+	reader.SetActivityTypeCallback(OnNewActivityType, this);
 	reader.SetNewLocationCallback(OnNewTcxLocation, this);
 	result = reader.ParseFile(fileName);
 
@@ -81,6 +90,7 @@ bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string&
 	m_started = false;
 	m_lastTime = 0;
 
+	reader.SetActivityTypeCallback(OnNewActivityType, this);
 	reader.SetNewLocationCallback(OnNewGpxLocation, this);
 	result = reader.ParseFile(fileName);
 
@@ -234,4 +244,15 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 
 	m_lastTime = time;
 	return result;
+}
+
+void DataImporter::SetActivityType(const std::string& activityType)
+{
+	m_activityType = activityType;
+	
+	// If we already created the activity in the database then update.
+	if (m_started && m_pDb)
+	{
+		m_pDb->UpdateActivityType(m_activityId, m_activityType);
+	}
 }

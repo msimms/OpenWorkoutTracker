@@ -4008,7 +4008,7 @@ extern "C" {
 	{
 		bool result = false;
 
-		if (pFileName)
+		if (pFileName && pActivityType && activityId)
 		{
 			std::string fileName = pFileName;
 			std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);

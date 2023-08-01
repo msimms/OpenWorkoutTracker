@@ -607,8 +607,10 @@ namespace FileLib
 			return FIT_SPORT_RUNNING;
 		if (sportType.compare(ACTIVITY_TYPE_SQUAT) == 0)
 			return FIT_SPORT_TRAINING;
-		if (sportType.compare(ACTIVITY_TYPE_STATIONARY_BIKE) == 0)
+		if (sportType.compare(ACTIVITY_TYPE_STATIONARY_CYCLING) == 0)
 			return FIT_SPORT_CYCLING;
+		if (sportType.compare(ACTIVITY_TYPE_VIRTUAL_CYCLING) == 0)
+			return FIT_SPORT_CYCLING;		
 		if (sportType.compare(ACTIVITY_TYPE_TREADMILL) == 0)
 			return FIT_SPORT_RUNNING;
 		if (sportType.compare(ACTIVITY_TYPE_PULLUP) == 0)

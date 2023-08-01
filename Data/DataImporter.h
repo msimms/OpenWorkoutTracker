@@ -26,7 +26,8 @@ public:
 	bool ImportFromKml(const std::string& fileName, std::vector<FileLib::KmlPlacemark>& placemarks);
 
 	bool NewLocation(double lat, double lon, double ele, double hr, double power, double cadence, uint64_t time);
-	
+	void SetActivityType(const std::string& activityType);
+
 protected:
 	Database*   m_pDb;
 	std::string m_activityType;
