@@ -249,6 +249,13 @@ struct HistoryDetailsView: View {
 							.padding(10)
 						}
 					}
+					
+					// Photos
+					ForEach(self.activityVM.photoUrls, id: \.self) { item in
+						HStack() {
+							AsyncImage(url: item)
+						}
+					}
 				}
 			}
 			.padding(10)

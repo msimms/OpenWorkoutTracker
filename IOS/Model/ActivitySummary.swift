@@ -20,14 +20,15 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable, 
 		case healthkit
 	}
 	
-	var index: Int = ACTIVITY_INDEX_UNKNOWN
-	var id: String = ""
-	var name: String = ""
-	var description: String = ""
-	var type: String = ""
+	var index: Int = ACTIVITY_INDEX_UNKNOWN // Index into the history cache
+	var id: String = "" // Unique identifier for the activity
+	var userId: String = Preferences.userId() // Unique identifier for the activity owner
+	var name: String = "" // Activity name
+	var description: String = "" // Activity description
+	var type: String = "" // Activity type/sport
 	var startTime: Date = Date()
 	var endTime: Date = Date()
-	var source: Source = Source.database
+	var source: Source = Source.database // Is this from our database or from HealthKit?
 	
 	/// Constructor
 	init() {
@@ -53,7 +54,7 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable, 
 	/// @brief Requests the latest metadata from the server
 	func requestMetadata() {
 		if self.source == ActivitySummary.Source.database {
-			let _  = ApiClient.shared.requestActivityMetadata(activityId: self.id)
+			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.id)
 		}
 	}
 }

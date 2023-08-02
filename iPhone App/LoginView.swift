@@ -8,7 +8,6 @@ import SwiftUI
 struct LoginView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.presentationMode) var presentation
-	private var apiClient = ApiClient.shared
 	@State private var email: String = Preferences.broadcastUserName()
 	@State private var password: String = ""
 	@State private var showingLoginError: Bool = false
@@ -33,7 +32,7 @@ struct LoginView: View {
 
 			Button {
 				Preferences.setBroadcastUserName(value: self.email)
-				if self.apiClient.login(username: self.email, password: self.password) {
+				if ApiClient.shared.login(username: self.email, password: self.password) {
 					self.presentation.wrappedValue.dismiss()
 				}
 				else {
@@ -46,6 +45,7 @@ struct LoginView: View {
 					.frame(minWidth: 0, maxWidth: .infinity)
 					.padding()
 			}
+			.keyboardShortcut(.defaultAction)
 			.alert("Login failed!", isPresented: self.$showingLoginError) { }
 			.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 			.opacity(0.8)

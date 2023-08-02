@@ -10,6 +10,7 @@ import Foundation
 ///
 
 let PREF_NAME_UUID =                                  "UUID"
+let PREF_NAME_USER_ID =                               "User ID"
 let PREF_NAME_UNITS =                                 "Units"
 let PREF_NAME_ACTIVITY_LEVEL =                        "Activity Level"
 let PREF_NAME_GENDER =                                "Gender"
@@ -83,6 +84,8 @@ let DEFAULT_WEIGHT_KG =      77.0
 let DEFAULT_BIRTH_DATE =     315532800 // Jan 1, 1980
 
 class Preferences {
+	
+	/// @brief Unique identifer for this installation.
 	static func uuid() -> String? {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.string(forKey: PREF_NAME_UUID)
@@ -91,6 +94,15 @@ class Preferences {
 	//
 	// Get methods
 	//
+
+	static func userId() -> String {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		let userId = mydefaults.string(forKey: PREF_NAME_USER_ID)
+		if userId == nil {
+			return ""
+		}
+		return userId!
+	}
 
 	static func activityLevel() -> ActivityLevel {
 		let mydefaults: UserDefaults = UserDefaults.standard
@@ -539,7 +551,12 @@ class Preferences {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_UUID)
 	}
-	
+
+	static func setUserId(value: String) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_USER_ID)
+	}
+
 	static func setActivityLevel(value: ActivityLevel) {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value.rawValue, forKey: PREF_NAME_ACTIVITY_LEVEL)

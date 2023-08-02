@@ -21,6 +21,7 @@
 #define REMOTE_API_LIST_INTERVAL_WORKOUTS_URL    "api/1.0/list_interval_workouts"
 #define REMOTE_API_LIST_PACE_PLANS_URL           "api/1.0/list_pace_plans"
 #define REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL "api/1.0/list_unsynched_activities"
+#define REMOTE_API_LIST_ACTIVITY_PHOTOS_URL      "api/1.0/list_activity_photos"
 #define REMOTE_API_HAS_ACTIVITY_URL              "api/1.0/has_activity"
 #define REMOTE_API_REQUEST_ACTIVITY_METADATA_URL "api/1.0/activity_metadata"
 #define REMOTE_API_REQUEST_TO_FOLLOW_URL         "api/1.0/request_to_follow?"

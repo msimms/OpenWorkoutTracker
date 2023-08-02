@@ -7,7 +7,6 @@ import SwiftUI
 
 struct SettingsView: View {
 	@Environment(\.colorScheme) var colorScheme
-	private var apiClient = ApiClient.shared
 	private var app = CommonApp.shared
 	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
 	@State private var readActivitiesFromHealthKit: Bool = Preferences.willIntegrateHealthKitActivities()
@@ -64,7 +63,7 @@ struct SettingsView: View {
 				Toggle("Enabled", isOn: self.$broadcastEnabled)
 					.onChange(of: self.broadcastEnabled) { value in
 						Preferences.setBroadcastToServer(value: self.broadcastEnabled)
-						let _ = self.apiClient.checkLoginStatus()
+						let _ = ApiClient.shared.checkLoginStatus()
 					}
 				HStack() {
 					Text("Update Rate")
@@ -106,9 +105,9 @@ struct SettingsView: View {
 
 			HStack() {
 				if Preferences.shouldBroadcastToServer() {
-					if self.apiClient.isCurrentlyLoggedIn() {
+					if ApiClient.shared.loginStatus == LoginStatus.LOGIN_STATUS_SUCCESS {
 						Button {
-							if !self.apiClient.logout() {
+							if !ApiClient.shared.logout() {
 								self.showingLogoutError = true
 							}
 						} label: {
