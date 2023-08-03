@@ -2075,6 +2075,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
@@ -2117,6 +2118,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
