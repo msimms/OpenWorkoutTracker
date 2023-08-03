@@ -134,7 +134,18 @@ struct SettingsView: View {
 							.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 							.opacity(0.8)
 							.bold()
-							
+
+							NavigationLink(destination: CreateLoginView()) {
+								Text("Create Login")
+									.foregroundColor(self.colorScheme == .dark ? .black : .white)
+									.fontWeight(Font.Weight.heavy)
+									.frame(minWidth: 0, maxWidth: .infinity)
+									.padding()
+							}
+							.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+							.opacity(0.8)
+							.bold()
+
 							// Reset button
 							Button {
 								self.showingResetConfirmation = true

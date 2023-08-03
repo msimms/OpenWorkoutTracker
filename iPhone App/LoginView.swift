@@ -24,6 +24,11 @@ struct LoginView: View {
 				Text("Password")
 					.bold()
 				SecureField("Password", text: self.$password)
+					.onSubmit {
+						if ApiClient.shared.login(username: self.email, password: self.password) {
+							self.presentation.wrappedValue.dismiss()
+						}
+					}
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.background(self.colorScheme == .dark ? .black : .white)
 					.bold()
