@@ -23,6 +23,7 @@
 		27091AC22A65BB9B0013AD48 /* BarChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27091AC02A65BB9B0013AD48 /* BarChartView.swift */; };
 		27091AC32A65BB9B0013AD48 /* LineGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27091AC12A65BB9B0013AD48 /* LineGraphView.swift */; };
 		27091AC52A65BC7A0013AD48 /* SensorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27091AC42A65BC7A0013AD48 /* SensorChartView.swift */; };
+		27091AD72A7C53370013AD48 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27091AD62A7C53370013AD48 /* Launch Screen.storyboard */; };
 		272E77E42910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		272E77E52910ABE3009AB275 /* WatchSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272E77E32910ABE3009AB275 /* WatchSession.swift */; };
 		273132B4298C8D0800DEADF0 /* SplitsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273132B3298C8D0800DEADF0 /* SplitsView.swift */; };
@@ -380,6 +381,7 @@
 		27091AC02A65BB9B0013AD48 /* BarChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BarChartView.swift; path = SimpleSwiftCharts/BarChartView.swift; sourceTree = SOURCE_ROOT; };
 		27091AC12A65BB9B0013AD48 /* LineGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LineGraphView.swift; path = SimpleSwiftCharts/LineGraphView.swift; sourceTree = SOURCE_ROOT; };
 		27091AC42A65BC7A0013AD48 /* SensorChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorChartView.swift; sourceTree = "<group>"; };
+		27091AD62A7C53370013AD48 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "Launch Screen.storyboard"; path = "iPhone App/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		272E77E32910ABE3009AB275 /* WatchSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSession.swift; sourceTree = "<group>"; };
 		273132B3298C8D0800DEADF0 /* SplitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsView.swift; sourceTree = "<group>"; };
 		273C418429075C9800273B64 /* OpenWorkoutTracker Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "OpenWorkoutTracker Watch App.entitlements"; sourceTree = "<group>"; };
@@ -1061,6 +1063,7 @@
 		278D92B728E38F17003B077C = {
 			isa = PBXGroup;
 			children = (
+				27091AD62A7C53370013AD48 /* Launch Screen.storyboard */,
 				273C418429075C9800273B64 /* OpenWorkoutTracker Watch App.entitlements */,
 				2740E11228EB97B800293B71 /* OpenWorkoutTracker-Watch-App-Info.plist */,
 				2740E11128EB90DB00293B71 /* OpenWorkoutTracker-Info.plist */,
@@ -1465,6 +1468,7 @@
 				277EAC3729242E440091ADF6 /* Ping.aif in Resources */,
 				278D92CB28E38F18003B077C /* Preview Assets.xcassets in Resources */,
 				277EAC3629242E440091ADF6 /* BrightBeep.aif in Resources */,
+				27091AD72A7C53370013AD48 /* Launch Screen.storyboard in Resources */,
 				278D92C828E38F18003B077C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2082,6 +2086,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2125,6 +2130,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
