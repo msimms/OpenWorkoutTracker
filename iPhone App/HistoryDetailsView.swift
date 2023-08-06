@@ -135,6 +135,23 @@ struct HistoryDetailsView: View {
 					}
 					.padding(10)
 
+					// Photos
+					ForEach(self.activityVM.photoUrls, id: \.self) { item in
+						HStack() {
+							AsyncImage(
+								url: item,
+								content: { image in
+									image.resizable()
+										.aspectRatio(contentMode: .fit)
+										.frame(maxWidth: UIScreen.main.bounds.size.width - 10, maxHeight: 512)
+								},
+								placeholder: {
+									ProgressView()
+								}
+							)
+						}
+					}
+
 					// Attributes Summary
 					ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
 						HStack() {
@@ -247,13 +264,6 @@ struct HistoryDetailsView: View {
 								}
 							}
 							.padding(10)
-						}
-					}
-					
-					// Photos
-					ForEach(self.activityVM.photoUrls, id: \.self) { item in
-						HStack() {
-							AsyncImage(url: item)
 						}
 					}
 				}
