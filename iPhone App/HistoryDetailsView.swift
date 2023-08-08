@@ -66,7 +66,13 @@ struct HistoryDetailsView: View {
 	@State private var showingUpdateDescriptionError: Bool = false
 	@State private var showingExportFailedError: Bool = false
 	@State private var showingExportSucceededError: Bool = false
+	@State private var showingEditSelection: Bool = false
+	@State private var showingTrimConfirmation: Bool = false
+	@State private var showingPhotoPicker: Bool = false
 	@State private var exportDestination: ExportDest = ExportDest.icloud
+	@State private var activityTrimTime: UInt64 = 0
+	@State private var activityTrimFromStart: Bool = true
+	@State private var selectedImage: UIImage = UIImage()
 
 	func hrFormatter(num: Double) -> String {
 		return String(format: "%0.0f", num)
@@ -100,16 +106,18 @@ struct HistoryDetailsView: View {
 			VStack(alignment: .center) {
 				ScrollView() {
 					// Map
-					if self.activityVM.isMovingActivity() {
-						let region = MKCoordinateRegion(
-							center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
-							span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-						)
-						
-						MapWithPolyline(region: region, trackUser: false)
-							.setOverlay(self.activityVM.trackLine)
-							.ignoresSafeArea()
-							.frame(width: 400, height: 300)
+					Group() {
+						if self.activityVM.isMovingActivity() {
+							let region = MKCoordinateRegion(
+								center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
+								span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+							)
+							
+							MapWithPolyline(region: region, trackUser: false)
+								.setOverlay(self.activityVM.trackLine)
+								.ignoresSafeArea()
+								.frame(width: 400, height: 300)
+						}
 					}
 
 					// Name
@@ -136,134 +144,141 @@ struct HistoryDetailsView: View {
 					.padding(10)
 
 					// Photos
-					ForEach(self.activityVM.photoUrls, id: \.self) { item in
-						HStack() {
-							AsyncImage(
-								url: item,
-								content: { image in
-									image.resizable()
-										.aspectRatio(contentMode: .fit)
-										.frame(maxWidth: UIScreen.main.bounds.size.width - 10, maxHeight: 512)
-								},
-								placeholder: {
-									ProgressView()
-								}
-							)
+					Group() {
+						ForEach(self.activityVM.photoUrls, id: \.self) { item in
+							HStack() {
+								AsyncImage(
+									url: item,
+									content: { image in
+										image.resizable()
+											.aspectRatio(contentMode: .fit)
+											.frame(maxWidth: UIScreen.main.bounds.size.width - 10, maxHeight: 512)
+									},
+									placeholder: {
+										ProgressView()
+									}
+								)
+							}
 						}
 					}
 
 					// Attributes Summary
-					ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
-						HStack() {
-							if item == "Heart Rate" {
-								NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red, formatter: self.hrFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
+					Group() {
+						ForEach(self.activityVM.getActivityAttributesAndCharts(), id: \.self) { item in
+							HStack() {
+								if item == "Heart Rate" {
+									NavigationLink("Heart Rate", destination: SensorChartView(title: "Heart Rate", yLabel: "Heart Rate (bpm)", data: self.activityVM.heartRate, color: .red, formatter: self.hrFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "Cadence" {
+									NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green, formatter: self.cadenceFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "Pace" {
+									NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: StoredActivityVM.formatAsHHMMSS))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "Power" {
+									NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue, formatter: self.powerFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "Speed" {
+									NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal, formatter: self.speedFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "X Axis" {
+									NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red, formatter: self.accelFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "Y Axis" {
+									NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green, formatter: self.accelFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else if item == "Z Axis" {
+									NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue, formatter: self.accelFormatter))
+									Spacer()
+									Image(systemName: "chart.xyaxis.line")
+								}
+								else {
+									let valueStr = self.activityVM.getActivityAttributeValueStr(attributeName: item)
+									Text(item)
+										.foregroundColor(valueStr.count > 0 ? (colorScheme == .dark ? .white : .black) : Color.gray)
+									Spacer()
+									Text(valueStr)
+								}
 							}
-							else if item == "Cadence" {
-								NavigationLink("Cadence", destination: SensorChartView(title: "Cadence", yLabel: "Cadence (rpm)", data: self.activityVM.cadence, color: .green, formatter: self.cadenceFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else if item == "Pace" {
-								NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: StoredActivityVM.formatAsHHMMSS))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else if item == "Power" {
-								NavigationLink("Power", destination: SensorChartView(title: "Power", yLabel: "Power (watts)", data: self.activityVM.power, color: .blue, formatter: self.powerFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else if item == "Speed" {
-								NavigationLink("Speed", destination: SensorChartView(title: "Speed", yLabel: "Speed", data: self.activityVM.speed, color: .teal, formatter: self.speedFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else if item == "X Axis" {
-								NavigationLink("X Axis", destination: SensorChartView(title: "X Axis", yLabel: "Movement (g)", data: self.activityVM.x, color: .red, formatter: self.accelFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else if item == "Y Axis" {
-								NavigationLink("Y Axis", destination: SensorChartView(title: "Y Axis", yLabel: "Movement (g)", data: self.activityVM.y, color: .green, formatter: self.accelFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else if item == "Z Axis" {
-								NavigationLink("Z Axis", destination: SensorChartView(title: "Z Axis", yLabel: "Movement (g)", data: self.activityVM.z, color: .blue, formatter: self.accelFormatter))
-								Spacer()
-								Image(systemName: "chart.xyaxis.line")
-							}
-							else {
-								let valueStr = self.activityVM.getActivityAttributeValueStr(attributeName: item)
-								Text(item)
-									.foregroundColor(valueStr.count > 0 ? (colorScheme == .dark ? .white : .black) : Color.gray)
-								Spacer()
-								Text(valueStr)
-							}
+							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 						}
-						.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+						.padding(10)
 					}
-					.padding(10)
 
-					if self.activityVM.isMovingActivity() {
-						let kmSplits = self.activityVM.getKilometerSplits()
-						let mileSplits = self.activityVM.getMileSplits()
-
-						HStack() {
-							NavigationLink("Splits", destination: SplitsView(activityVM: self.activityVM))
-							Spacer()
-							Image(systemName: "chart.bar.fill")
-						}
-						.padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
-
-						if kmSplits.count > 0 {
-							let fastestSplit = kmSplits.max()!
+					// Splits
+					Group() {
+						if self.activityVM.isMovingActivity() {
+							let kmSplits = self.activityVM.getKilometerSplits()
+							let mileSplits = self.activityVM.getMileSplits()
 							
-							ForEach(kmSplits.indices, id: \.self) { i in
-								let currentSplit = kmSplits[i]
-								let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
-								
-								GeometryReader { geometry in
-									let barWidth: Double = 0.5 * geometry.size.width
-									let barHeight: Double = 0.9 * geometry.size.height
-									
-									HStack() {
-										Text("KM " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
-										Spacer()
-										Rectangle()
-											.frame(width: splitPercentage * barWidth, height: barHeight)
-											.overlay(Rectangle().stroke(Color.blue))
-									}
-									.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-								}
+							HStack() {
+								NavigationLink("Splits", destination: SplitsView(activityVM: self.activityVM))
+								Spacer()
+								Image(systemName: "chart.bar.fill")
 							}
-							.padding(10)
-						}
-						
-						if mileSplits.count > 0 {
-							let fastestSplit = mileSplits.max()!
-
-							ForEach(mileSplits.indices, id: \.self) { i in
-								let currentSplit = mileSplits[i]
-								let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
+							.padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
+							
+							if kmSplits.count > 0 {
+								let fastestSplit = kmSplits.max()!
 								
-								GeometryReader { geometry in
-									let barWidth: Double = 0.5 * geometry.size.width
-									let barHeight: Double = 0.9 * geometry.size.height
+								ForEach(kmSplits.indices, id: \.self) { i in
+									let currentSplit = kmSplits[i]
+									let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
 									
-									HStack() {
-										Text("Mile " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
-										Spacer()
-										Rectangle()
-											.frame(width: splitPercentage * barWidth, height: barHeight)
-											.overlay(Rectangle().stroke(Color.red))
+									GeometryReader { geometry in
+										let barWidth: Double = 0.5 * geometry.size.width
+										let barHeight: Double = 0.9 * geometry.size.height
+										
+										HStack() {
+											Text("KM " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+											Spacer()
+											Rectangle()
+												.frame(width: splitPercentage * barWidth, height: barHeight)
+												.overlay(Rectangle().stroke(Color.blue))
+										}
+										.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 									}
-									.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 								}
+								.padding(10)
 							}
-							.padding(10)
+							
+							if mileSplits.count > 0 {
+								let fastestSplit = mileSplits.max()!
+								
+								ForEach(mileSplits.indices, id: \.self) { i in
+									let currentSplit = mileSplits[i]
+									let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
+									
+									GeometryReader { geometry in
+										let barWidth: Double = 0.5 * geometry.size.width
+										let barHeight: Double = 0.9 * geometry.size.height
+										
+										HStack() {
+											Text("Mile " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+											Spacer()
+											Rectangle()
+												.frame(width: splitPercentage * barWidth, height: barHeight)
+												.overlay(Rectangle().stroke(Color.red))
+										}
+										.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+									}
+								}
+								.padding(10)
+							}
 						}
 					}
 				}
@@ -273,174 +288,223 @@ struct HistoryDetailsView: View {
 				ToolbarItem(placement: .bottomBar) {
 					HStack() {
 						// Delete button
-						Button {
-							self.showingDeleteConfirmation = true
-						} label: {
-							Label("Delete", systemImage: "trash")
-						}
-						.alert("Are you sure you want to delete this activity? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {
-							Button("Delete") {
-								if self.activityVM.deleteActivity() {
-									self.dismiss()
+						Group() {
+							Button {
+								self.showingDeleteConfirmation = true
+							} label: {
+								Label("Delete", systemImage: "trash")
+							}
+							.alert("Are you sure you want to delete this activity? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {
+								Button("Delete") {
+									if self.activityVM.deleteActivity() {
+										self.dismiss()
+									}
+								}
+								Button("Cancel") {
 								}
 							}
-							Button("Cancel") {
-							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.help("Delete this activity")
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.help("Delete this activity")
-
+						
 						Spacer()
+						
+						// Edit button
+						Group() {
+							Button {
+								self.showingEditSelection = true
+							} label: {
+								Label("Edit", systemImage: "pencil")
+							}
+							.confirmationDialog("Edit", isPresented: self.$showingEditSelection, titleVisibility: .visible) {
+								if IsHistoricalActivityLiftingActivity(self.activityVM.activityIndex) {
+									Button("Fix Repetition Count") {
+										let newValue = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_COUNT, UNIT_SYSTEM_METRIC)
+										SetHistoricalActivityAttribute(self.activityVM.activityIndex, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, newValue)
+										SaveHistoricalActivitySummaryData(self.activityVM.activityIndex)
+									}
+								}
+								Button("Change Activity Type") {
+									self.showingActivityTypeSelection = true
+								}
+							}
+							.confirmationDialog("New Activity Type", isPresented: $showingActivityTypeSelection, titleVisibility: .visible) {
+								ForEach(CommonApp.activityTypes, id: \.self) { item in
+									Button(item) {
+										self.activityVM.updateActivityType(newActivityType: item)
+									}
+								}
+							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.help("Edit this activity")
+						}
 
 						// Trim button
-						Button {
-							self.showingTrimSelection = true
-						} label: {
-							Label("Trim / Correct", systemImage: "pencil")
-						}
-						.confirmationDialog("Trim / Correct", isPresented: self.$showingTrimSelection, titleVisibility: .visible) {
-							Button("Delete 1st Second") {
-								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 1) * 1000)
-								TrimActivityData(self.activityVM.activityId, newTime, true)
+						Group() {
+							Button {
+								self.showingTrimSelection = true
+							} label: {
+								Label("Trim / Correct", systemImage: "timeline.selection")
 							}
-							Button("Delete 1st Five Seconds") {
-								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 5) * 1000)
-								TrimActivityData(self.activityVM.activityId, newTime, true)
-							}
-							Button("Delete 1st Thirty Seconds") {
-								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 30) * 1000)
-								TrimActivityData(self.activityVM.activityId, newTime, true)
-							}
-							Button("Delete Last Second") {
-								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 1) * 1000)
-								TrimActivityData(self.activityVM.activityId, newTime, false)
-							}
-							Button("Delete Last Five Seconds") {
-								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 5) * 1000)
-								TrimActivityData(self.activityVM.activityId, newTime, false)
-							}
-							Button("Delete Last Thirty Seconds") {
-								let newTime: UInt64 = UInt64((self.activityVM.getActivityStartTime() + 30) * 1000)
-								TrimActivityData(self.activityVM.activityId, newTime, false)
-							}
-							if IsHistoricalActivityLiftingActivity(self.activityVM.activityIndex) {
-								Button("Fix Repetition Count") {
-									let newValue = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_COUNT, UNIT_SYSTEM_METRIC)
-									SetHistoricalActivityAttribute(self.activityVM.activityIndex, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, newValue)
-									SaveHistoricalActivitySummaryData(self.activityVM.activityIndex)
+							.confirmationDialog("Trim / Correct", isPresented: self.$showingTrimSelection, titleVisibility: .visible) {
+								Button("Delete 1st Second") {
+									self.activityTrimTime = UInt64((self.activityVM.getActivityStartTime() + 1) * 1000)
+									self.activityTrimFromStart = true
+									self.showingTrimConfirmation = true
+								}
+								Button("Delete 1st Five Seconds") {
+									self.activityTrimTime = UInt64((self.activityVM.getActivityStartTime() + 5) * 1000)
+									self.activityTrimFromStart = true
+									self.showingTrimConfirmation = true
+								}
+								Button("Delete 1st Thirty Seconds") {
+									self.activityTrimTime = UInt64((self.activityVM.getActivityStartTime() + 30) * 1000)
+									self.activityTrimFromStart = true
+									self.showingTrimConfirmation = true
+								}
+								Button("Delete Last Second") {
+									self.activityTrimTime = UInt64((self.activityVM.getActivityEndTime() - 1) * 1000)
+									self.activityTrimFromStart = false
+									self.showingTrimConfirmation = true
+								}
+								Button("Delete Last Five Seconds") {
+									self.activityTrimTime = UInt64((self.activityVM.getActivityEndTime() - 5) * 1000)
+									self.activityTrimFromStart = false
+									self.showingTrimConfirmation = true
+								}
+								Button("Delete Last Thirty Seconds") {
+									self.activityTrimTime = UInt64((self.activityVM.getActivityEndTime() - 30) * 1000)
+									self.activityTrimFromStart = false
+									self.showingTrimConfirmation = true
 								}
 							}
-							Button("Change Activity Type") {
-								self.showingActivityTypeSelection = true
-							}
-						}
-						.confirmationDialog("New Activity Type", isPresented: $showingActivityTypeSelection, titleVisibility: .visible) {
-							ForEach(CommonApp.activityTypes, id: \.self) { item in
-								Button(item) {
-									UpdateActivityType(self.activityVM.activityId, item)
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.help("Trim this activity")
+							.alert("Are you sure you want to trim this activity? This cannot be undone.", isPresented: self.$showingTrimConfirmation) {
+								Button("Trim") {
+									self.activityVM.trimActivityData(newTime: self.activityTrimTime, fromStart: self.activityTrimFromStart)
+								}
+								Button("Cancel") {
 								}
 							}
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.help("Trim/correct this activity")
-
-						// Tags button
-						NavigationLink(destination: TagsView(activityVM: self.activityVM)) {
-							ZStack {
-								Image(systemName: "tag")
-							}
-						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.help("Apply a tag to the activity")
 						
-						// Share/Export button
-						Button {
-							self.showingExportSelection = true
-						} label: {
-							Label("Export", systemImage: "square.and.arrow.up")
-						}
-						.confirmationDialog("Export", isPresented: self.$showingExportSelection, titleVisibility: .visible) {
-							Button("Export via Email") {
-								self.exportDestination = ExportDest.email
-								self.showingFormatSelection = true
+						// Photos button
+						Group() {
+							if ApiClient.shared.loginStatus == LoginStatus.LOGIN_STATUS_SUCCESS {
+								Button {
+									self.showingPhotoPicker = true
+								} label: {
+									Label("Attach Photo", systemImage: "photo")
+								}
+								.foregroundColor(colorScheme == .dark ? .white : .black)
+								.sheet(isPresented: self.$showingPhotoPicker) {
+									PhotoPicker(callback: { image in
+										let _ = self.activityVM.uploadPhoto(image: image)
+									})
+								}
 							}
-							Button("Save to Your iCloud Drive") {
-								self.exportDestination = ExportDest.icloud
-								self.showingFormatSelection = true
-							}
 						}
-						.confirmationDialog("Export", isPresented: self.$showingFormatSelection, titleVisibility: .visible) {
-							if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
-								Button("GPX") {
+						
+						// Tags button
+						Group() {
+							NavigationLink(destination: TagsView(activityVM: self.activityVM)) {
+								ZStack {
+									Image(systemName: "tag")
+								}
+							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.help("Apply a tag to the activity")
+							
+							// Share/Export button
+							Button {
+								self.showingExportSelection = true
+							} label: {
+								Label("Export", systemImage: "square.and.arrow.up")
+							}
+							.confirmationDialog("Export", isPresented: self.$showingExportSelection, titleVisibility: .visible) {
+								Button("Export via Email") {
+									self.exportDestination = ExportDest.email
+									self.showingFormatSelection = true
+								}
+								Button("Save to Your iCloud Drive") {
+									self.exportDestination = ExportDest.icloud
+									self.showingFormatSelection = true
+								}
+							}
+							.confirmationDialog("Export", isPresented: self.$showingFormatSelection, titleVisibility: .visible) {
+								if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
+									Button("GPX") {
+										do {
+											if self.exportDestination == ExportDest.icloud {
+												let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX)
+												self.showingExportSucceededError = true
+											}
+											else {
+												let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
+												let mailController = MailComposeViewController()
+												try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+											}
+										}
+										catch {
+											self.showingExportFailedError = true
+										}
+									}
+									Button("TCX") {
+										do {
+											if self.exportDestination == ExportDest.icloud {
+												let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX)
+												self.showingExportSucceededError = true
+											}
+											else {
+												let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_TCX)
+												let mailController = MailComposeViewController()
+												try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+											}
+										}
+										catch {
+											self.showingExportFailedError = true
+										}
+									}
+									Button("FIT") {
+										do {
+											if self.exportDestination == ExportDest.icloud {
+												let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT)
+												self.showingExportSucceededError = true
+											}
+											else {
+												let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_FIT)
+												let mailController = MailComposeViewController()
+												try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "application/octet-stream")
+											}
+										}
+										catch {
+											self.showingExportFailedError = true
+										}
+									}
+								}
+								Button("CSV") {
 									do {
 										if self.exportDestination == ExportDest.icloud {
-											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX)
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_CSV)
 											self.showingExportSucceededError = true
 										}
 										else {
-											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_CSV)
 											let mailController = MailComposeViewController()
-											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/csv")
 										}
 									}
 									catch {
 										self.showingExportFailedError = true
 									}
 								}
-								Button("TCX") {
-									do {
-										if self.exportDestination == ExportDest.icloud {
-											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX)
-											self.showingExportSucceededError = true
-										}
-										else {
-											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_TCX)
-											let mailController = MailComposeViewController()
-											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
-										}
-									}
-									catch {
-										self.showingExportFailedError = true
-									}
-								}
-								Button("FIT") {
-									do {
-										if self.exportDestination == ExportDest.icloud {
-											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT)
-											self.showingExportSucceededError = true
-										}
-										else {
-											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_FIT)
-											let mailController = MailComposeViewController()
-											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "application/octet-stream")
-										}
-									}
-									catch {
-										self.showingExportFailedError = true
-									}
-								}
 							}
-							Button("CSV") {
-								do {
-									if self.exportDestination == ExportDest.icloud {
-										let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_CSV)
-										self.showingExportSucceededError = true
-									}
-									else {
-										let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_CSV)
-										let mailController = MailComposeViewController()
-										try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/csv")
-									}
-								}
-								catch {
-									self.showingExportFailedError = true
-								}
-							}
+							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.help("Export this activity")
+							.alert("Export failed!", isPresented: self.$showingExportFailedError) { }
+							.alert("Export succeeded!", isPresented: self.$showingExportSucceededError) { }
 						}
-						.foregroundColor(colorScheme == .dark ? .white : .black)
-						.help("Export this activity")
-						.alert("Export failed!", isPresented: self.$showingExportFailedError) { }
-						.alert("Export succeeded!", isPresented: self.$showingExportSucceededError) { }
 					}
 				}
 			}

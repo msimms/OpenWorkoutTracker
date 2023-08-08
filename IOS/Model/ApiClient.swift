@@ -388,6 +388,25 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	
+	func uploadActivityPhoto(activityId: String, imageData: Data) -> Bool {
+		let base64Encoded = imageData.base64EncodedString()
+		var postDict: Dictionary<String, String> = [:]
+		postDict[PARAM_ACTIVITY_ID] = activityId
+		postDict[PARAM_UPLOADED_FILE_DATA] = base64Encoded
+
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPLOAD_ACTIVITY_PHOTO_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+	
+	func deleteActivityPhoto(activityId: String, photoId: String) -> Bool {
+		var postDict: Dictionary<String, String> = [:]
+		postDict[PARAM_ACTIVITY_ID] = activityId
+		postDict[PARAM_ACTIVITY_PHOTO_ID] = photoId
+
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_ACTIVITY_PHOTO_URL)
+		return self.makeRequest(url: urlStr, method: "DELETE", data: postDict)
+	}
+	
 	func sendPlannedWorkouts(workoutsJson: String) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_PLANNED_WORKOUTS_URL)
 		let workoutsDict: Dictionary<String, String> = ["workouts": workoutsJson]

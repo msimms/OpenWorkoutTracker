@@ -105,4 +105,5 @@
 #define PARAM_ACTIVITY_TYPE                      "type"
 #define PARAM_ACTIVITY_DESCRIPTION               "description"
 #define PARAM_ACTIVITY_TAGS                      "tags"
+#define PARAM_ACTIVITY_PHOTO_ID                  "photo id"
 #define PARAM_ACTIVITY_PHOTO_IDS                 "photo ids"

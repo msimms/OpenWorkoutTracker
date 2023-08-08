@@ -221,6 +221,7 @@
 		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
 		27413904292E9FD8008EA7B7 /* GearVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AE28E67C0600293B71 /* GearVM.swift */; };
 		27413905292EA19C008EA7B7 /* WorkoutsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A728E645C300293B71 /* WorkoutsVM.swift */; };
+		274AA6322A81736900F77F96 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274AA6312A81736900F77F96 /* PhotoPicker.swift */; };
 		2775412E297F651500AE9B86 /* ZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775412D297F651500AE9B86 /* ZonesView.swift */; };
 		27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
 		27754132297FFC9800AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
@@ -605,6 +606,7 @@
 		2740E12428F2D3F000293B71 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApiClient.swift; path = IOS/Model/ApiClient.swift; sourceTree = "<group>"; };
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
 		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
+		274AA6312A81736900F77F96 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		2752B645295E1B680050CCFC /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = IOS/Controller/Feature.h; sourceTree = "<group>"; };
 		2775412D297F651500AE9B86 /* ZonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesView.swift; sourceTree = "<group>"; };
 		2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZonesCalculator.cpp; path = Activities/ZonesCalculator.cpp; sourceTree = "<group>"; };
@@ -1138,6 +1140,7 @@
 				2740E11328EDFEB700293B71 /* NumbersOnly.swift */,
 				2740E08E28E6318000293B71 /* PacePlansView.swift */,
 				278D92C328E38F17003B077C /* PhoneApp.swift */,
+				274AA6312A81736900F77F96 /* PhotoPicker.swift */,
 				2740E08228E60CFA00293B71 /* ProfileView.swift */,
 				27091AC42A65BC7A0013AD48 /* SensorChartView.swift */,
 				2740E09428E631A000293B71 /* SensorsView.swift */,
@@ -1605,6 +1608,7 @@
 				2740E03428E4CE1C00293B71 /* GpxFileWriter.cpp in Sources */,
 				2740DFEC28E460E200293B71 /* Walk.cpp in Sources */,
 				2740E0AB28E6757300293B71 /* IntervalSessionsVM.swift in Sources */,
+				274AA6322A81736900F77F96 /* PhotoPicker.swift in Sources */,
 				278C20A0293586D800828479 /* ActivityHash.swift in Sources */,
 				278B8F3629411F1600B34161 /* ActivitySummary.swift in Sources */,
 				272E77E42910ABE3009AB275 /* WatchSession.swift in Sources */,
@@ -2083,6 +2087,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Photo library access is required to attach photos to workout descriptions";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -2127,6 +2132,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Location Services are required when performing certain type of workouts.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Photo library access is required to attach photos to workout descriptions";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

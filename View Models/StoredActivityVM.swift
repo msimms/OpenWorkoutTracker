@@ -25,7 +25,7 @@ class StoredActivityVM : ObservableObject {
 		case empty
 		case loaded
 	}
-
+	
 	@Published private(set) var state = State.empty
 	var source: ActivitySummary.Source = ActivitySummary.Source.database
 	var activityIndex: Int = ACTIVITY_INDEX_UNKNOWN // Index into the cache of loaded activities
@@ -52,7 +52,7 @@ class StoredActivityVM : ObservableObject {
 	init(activitySummary: ActivitySummary) {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_LIST), object: nil)
-
+		
 		self.state = State.empty
 		self.source = activitySummary.source
 		self.activityId = activitySummary.id
@@ -82,7 +82,7 @@ class StoredActivityVM : ObservableObject {
 			
 			// Make sure we have the latest name, description, etc.
 			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
-
+			
 			// Retrieve photo URLs.
 			let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
 		}
@@ -91,7 +91,7 @@ class StoredActivityVM : ObservableObject {
 		else if self.source == ActivitySummary.Source.healthkit {
 			self.loadSensorDataFromHealthKit()
 		}
-
+		
 		DispatchQueue.main.async {
 			self.state = State.loaded
 		}
@@ -107,7 +107,7 @@ class StoredActivityVM : ObservableObject {
 		var pointIndex: Int = 0
 		
 		self.locationTrack = []
-
+		
 		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &currCoordinate, pointIndex: pointIndex) {
 			let currentCoordinate: Coordinate = Coordinate(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 			
@@ -141,16 +141,16 @@ class StoredActivityVM : ObservableObject {
 			if numLocationPoints > 0 {
 				var prevCoordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 				var speedConversion = 3.6
-
+				
 				if Preferences.preferredUnitSystem() == UNIT_SYSTEM_US_CUSTOMARY {
 					speedConversion = 2.236936
 				}
-
+				
 				for pointIndex in 0...numLocationPoints - 1 {
 					var currentCoordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
-
+					
 					if GetHistoricalActivityLocationPoint(self.activityIndex, pointIndex, &currentCoordinate) {
-
+						
 						if self.locationTrack.count > 0 {
 							let distance = DistanceBetweenCoordinates(prevCoordinate, currentCoordinate)
 							let elapsedTimeSec = Double(currentCoordinate.time - prevCoordinate.time) / 1000.0
@@ -158,12 +158,12 @@ class StoredActivityVM : ObservableObject {
 							if elapsedTimeSec > 0.01 {
 								let currentPace = metersPerSec * 60.0 // Convert to meters/min, chart view will handle the rest
 								let currentSpeed = metersPerSec * speedConversion // Convert to kph
-
+								
 								self.pace.append((UInt64(pointIndex), currentPace))
 								self.speed.append((UInt64(pointIndex), currentSpeed))
 							}
 						}
-
+						
 						self.locationTrack.append(CLLocationCoordinate2D(latitude: currentCoordinate.latitude, longitude: currentCoordinate.longitude))
 					}
 					prevCoordinate = currentCoordinate
@@ -177,7 +177,7 @@ class StoredActivityVM : ObservableObject {
 #endif
 				}
 			}
-
+			
 			// Heart rate readings
 			self.heartRate = []
 			let numHeartRateReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_HEART_RATE)
@@ -342,11 +342,11 @@ class StoredActivityVM : ObservableObject {
 		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
 		var splitTotal: time_t = 0
 		var splitIndex = 1
-
+		
 		while attribute.valid {
 			let currentSplit = time_t(attribute.value.timeVal) - splitTotal
 			result.append(currentSplit)
-
+			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
@@ -366,20 +366,20 @@ class StoredActivityVM : ObservableObject {
 			if attribute.valid {
 				result.append(attribute.value.timeVal)
 			}
-
+			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_LAP_TIME + String(splitIndex)
 			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
 		}
-
+		
 		return result
 	}
-
+	
 	private func formatActivityAttribute(attribute: ActivityAttributeType) -> String {
 		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
 		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
 	}
-
+	
 	func getActivityAttributeValueStr(attributeName: String) -> String {
 		if self.source == ActivitySummary.Source.database {
 			let attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
@@ -410,17 +410,29 @@ class StoredActivityVM : ObservableObject {
 		}
 		return startTime
 	}
-
+	
+	func getActivityEndTime() -> time_t {
+		var startTime: time_t = 0
+		var endTime: time_t = 0
+		
+		if self.source == ActivitySummary.Source.database {
+			GetHistoricalActivityStartAndEndTime(self.activityIndex, &startTime, &endTime)
+		}
+		else if self.source == ActivitySummary.Source.healthkit {
+		}
+		return endTime
+	}
+	
 	func getFastestMile() -> time_t {
 		let fastest = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_FASTEST_MILE)
 		return fastest.value.timeVal
 	}
-
+	
 	func getFastestKm() -> time_t {
 		let fastest = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_FASTEST_KM)
 		return fastest.value.timeVal
 	}
-
+	
 	/// @brief Exports the activity to the specified directory, in the specified file format..
 	func exportActivityToFile(fileFormat: FileFormat, dirName: String) throws -> String {
 		var fileName: String = ""
@@ -430,7 +442,7 @@ class StoredActivityVM : ObservableObject {
 			guard fileNamePtr != nil else {
 				throw ActivityExportException.runtimeError("Export failed!")
 			}
-
+			
 			fileName = String(cString: fileNamePtr!.assumingMemoryBound(to: CChar.self))
 			fileNamePtr!.deallocate()
 		}
@@ -462,6 +474,16 @@ class StoredActivityVM : ObservableObject {
 		return try self.exportActivityToFile(fileFormat: fileFormat, dirName: exportDirUrl!.path(percentEncoded: false))
 	}
 	
+	func updateActivityType(newActivityType: String) {
+		UpdateActivityType(self.activityId, newActivityType)
+		self.load()
+	}
+	
+	func trimActivityData(newTime: UInt64, fromStart: Bool) {
+		TrimActivityData(self.activityId, newTime, fromStart)
+		self.load()
+	}
+
 	/// @brief Updates the activity name in our database and also the server, if applicable.
 	func updateActivityName() -> Bool {
 		// Only applicable to activities in our own database.
@@ -493,6 +515,18 @@ class StoredActivityVM : ObservableObject {
 			}
 		}
 		return false
+	}
+	
+	func uploadPhoto(image: UIImage) -> Bool {
+		let imageData = image.jpegData(compressionQuality: 0.5)
+		if imageData != nil {
+			return ApiClient.shared.uploadActivityPhoto(activityId: self.activityId, imageData: imageData!)
+		}
+		return false
+	}
+	
+	func deletePhoto(photoId: String) -> Bool {
+		return ApiClient.shared.deleteActivityPhoto(activityId: self.activityId, photoId: photoId)
 	}
 	
 	/// @brief Returns any tags that were applied to this activity.
