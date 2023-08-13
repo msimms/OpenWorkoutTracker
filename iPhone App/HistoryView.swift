@@ -37,12 +37,14 @@ struct HistoryView: View {
 											if item.name.count > 0 {
 												Text(item.name)
 													.bold()
+													.font(Font.headline)
 											}
 											Text("\(self.dateFormatter.string(from: item.startTime))")
 											if item.source == ActivitySummary.Source.healthkit {
 												Text("HealthKit")
 													.bold()
 													.foregroundColor(.gray)
+													.font(Font.subheadline)
 											}
 										}
 										.onAppear() {

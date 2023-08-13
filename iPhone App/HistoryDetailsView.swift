@@ -128,6 +128,7 @@ struct HistoryDetailsView: View {
 							}
 							.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
 							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+							.font(Font.headline)
 					}
 					.padding(10)
 
@@ -140,6 +141,7 @@ struct HistoryDetailsView: View {
 							.lineLimit(2...10)
 							.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
 							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+							.font(Font.body)
 					}
 					.padding(10)
 
