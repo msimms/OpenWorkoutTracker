@@ -77,14 +77,15 @@ class ApiClient : ObservableObject {
 				}
 				
 				// GET method, append the parameters to the URL.
-				else if method == "GET" {
+				else if method == "GET" || method == "DELETE" {
 					var newUrl = url + "?"
 					var first = true
+
 					for datum in data {
 						if first == false {
 							newUrl = newUrl + "&"
 						}
-						newUrl = newUrl + datum.key
+						newUrl = newUrl + datum.key.replacingOccurrences(of: " ", with: "%20")
 						newUrl = newUrl + "="
 						newUrl = newUrl + String(describing: datum.value)
 						first = false
@@ -179,6 +180,16 @@ class ApiClient : ObservableObject {
 							NotificationCenter.default.post(notification)
 						}
 						else if url.contains(REMOTE_API_UPLOAD_ACTIVITY_FILE_URL) {
+						}
+						else if url.contains(REMOTE_API_UPLOAD_ACTIVITY_PHOTO_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_DELETE_ACTIVITY_PHOTO_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_CREATE_PLANNED_WORKOUTS_URL) {
 						}
 						else if url.contains(REMOTE_API_CREATE_INTERVAL_WORKOUT_URL) {
 						}

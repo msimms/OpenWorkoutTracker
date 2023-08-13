@@ -55,7 +55,7 @@ struct HistoryDetailsView: View {
 						self.dismiss()
 					}
 					.bold()
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 				}
 			}
 		case StoredActivityVM.State.empty:
