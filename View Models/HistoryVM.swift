@@ -178,7 +178,9 @@ class HistoryVM : ObservableObject {
 		}
 
 		DispatchQueue.main.async {
-			self.state = VmState.loaded
+			if self.state != VmState.loaded {
+				self.state = VmState.loaded
+			}
 		}
 	}
 	
@@ -251,6 +253,7 @@ class HistoryVM : ObservableObject {
 	@objc func activityMetadataUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			let activityId = data[PARAM_ACTIVITY_ID] as? String
+
 			if activityId != nil {
 				DispatchQueue.main.async {
 					for item in self.historicalActivities {

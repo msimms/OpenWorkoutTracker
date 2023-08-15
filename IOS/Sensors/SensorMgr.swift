@@ -19,6 +19,7 @@ class PeripheralSummary : Identifiable {
 	var peripheral: CBPeripheral! = nil
 	var services: Array<CBUUID> = []
 	var enabled: Bool = false
+	var lastUpdatedTime: time_t = 0
 }
 
 class SensorMgr : ObservableObject {
@@ -41,9 +42,10 @@ class SensorMgr : ObservableObject {
 	private var lastCrankCountTime: UInt64 = 0
 	private var lastCadenceUpdateTimeMs: UInt64 = 0
 	private var firstCadenceUpdate: Bool = true
-	private var lastHrmUpdate: UInt64 = 0
-	private var lastPowerUpdate: UInt64 = 0
-	private var lastRadarUpdate: UInt64 = 0
+	@Published var lastHrmUpdate: UInt64 = 0
+	@Published var lastPowerUpdate: UInt64 = 0
+	@Published var lastRadarUpdate: UInt64 = 0
+	@Published var lastRunningPowerUpdate: UInt64 = 0
 
 	/// Singleton constructor
 	private init() {
@@ -76,6 +78,7 @@ class SensorMgr : ObservableObject {
 			summary.name = name
 			summary.peripheral = peripheral
 			summary.enabled = Preferences.shouldUsePeripheral(uuid: summary.id.uuidString)
+			summary.lastUpdatedTime = time(nil)
 			shouldDiscoverServices = summary.enabled
 			self.peripherals.append(summary)
 			self.displayMessage(text: name + (shouldDiscoverServices ? " connected" : " discovered"))
@@ -188,6 +191,7 @@ class SensorMgr : ObservableObject {
 						if  let currentCrankCount = powerDict[KEY_NAME_CYCLING_POWER_CRANK_REVS],
 							let currentCrankTime = powerDict[KEY_NAME_CYCLING_POWER_LAST_CRANK_TIME] {
 							let timestamp = now * 1000
+
 							self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
 							ProcessCadenceReading(Double(self.currentCadenceRpm), now)
 						}
@@ -195,15 +199,17 @@ class SensorMgr : ObservableObject {
 				}
 				else if serviceId == CADENCE_SERVICE_ID {
 					let cadenceData = try decodeCyclingCadenceReading(data: value)
-					//let currentWheelRevCount = reading[KEY_NAME_WHEEL_REV_COUNT]
+
 					if  let currentCrankCount = cadenceData[KEY_NAME_WHEEL_CRANK_COUNT],
 						let currentCrankTime = cadenceData[KEY_NAME_WHEEL_CRANK_TIME] {
 						let timestamp = now * 1000
+
 						self.calculateCadence(curTimeMs: UInt64(timestamp), currentCrankCount: UInt16(currentCrankCount), currentCrankTime: UInt64(currentCrankTime))
 						ProcessCadenceReading(Double(self.currentCadenceRpm), now)
 					}
 				}
 				else if serviceId == RUNNING_POWER_SERVICE_ID {
+					self.lastRunningPowerUpdate = now
 				}
 				else if serviceId == RADAR_SERVICE_ID {
 					if now - self.lastRadarUpdate >= 1 {

@@ -35,7 +35,7 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 				let fileUrl = URL(fileURLWithPath: fileName)
 				let data = try Data(contentsOf: fileUrl)
 				let justTheFileName = fileUrl.lastPathComponent
-				
+
 				mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
 			}
 
@@ -43,7 +43,7 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 		}
 		else {
 			let alert = UIAlertController(title: "Error", message: "Sending email is not available on this device.", preferredStyle: .alert)
-			
+
 			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 			}))
 			UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
@@ -121,7 +121,7 @@ struct HistoryDetailsView: View {
 								.setOverlay(self.activityVM.trackLine)
 								.ignoresSafeArea()
 								.frame(height: 300)
-								.padding(EdgeInsets(top: 0, leading: 5, bottom: 10, trailing: 5))
+								.padding(INSET)
 						}
 					}
 

@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-	@Environment(\.dismiss) var dismiss
 	@State private var broadcastEnabled: Bool = Preferences.shouldBroadcastToServer()
 	@State private var preferMetric: Bool = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
 	@State private var heartRateEnabled: Bool = Preferences.useWatchHeartRate()

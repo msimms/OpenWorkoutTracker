@@ -94,7 +94,9 @@ class StoredActivityVM : ObservableObject {
 		}
 		
 		DispatchQueue.main.async {
-			self.state = State.loaded
+			if self.state != State.loaded {
+				self.state = State.loaded
+			}
 		}
 	}
 	

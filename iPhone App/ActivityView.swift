@@ -444,19 +444,19 @@ struct ActivityView: View {
 							Image(systemName: "car.circle")
 								.resizable()
 								.frame(width: 32.0, height: 32.0)
-								.opacity(self.sensorMgr.radarConnected ? 1 : 0)
+								.opacity(self.sensorMgr.radarConnected ? (time(nil) - Int(self.sensorMgr.lastHrmUpdate) < 60 ? 1.0 : 0.5) : 0.0)
 						}
 						if self.sensorMgr.powerConnected {
 							Image(systemName: "bolt.circle")
 								.resizable()
 								.frame(width: 32.0, height: 32.0)
-								.opacity(self.sensorMgr.powerConnected ? 1 : 0)
+								.opacity(self.sensorMgr.powerConnected ? (time(nil) - Int(self.sensorMgr.lastPowerUpdate) < 60 ? 1.0 : 0.5) : 0.0)
 						}
 						if self.sensorMgr.heartRateConnected {
 							Image(systemName: "heart.circle")
 								.resizable()
 								.frame(width: 32.0, height: 32.0)
-								.opacity(self.sensorMgr.heartRateConnected ? 1 : 0)
+								.opacity(self.sensorMgr.heartRateConnected ? (time(nil) - Int(self.sensorMgr.lastHrmUpdate) < 60 ? 1.0 : 0.5) : 0.0)
 						}
 						if self.sensorMgr.cadenceConnected {
 							Image(systemName: "c.circle")
@@ -468,8 +468,9 @@ struct ActivityView: View {
 							Image(systemName: "figure.run")
 								.resizable()
 								.frame(width: 32.0, height: 32.0)
-								.opacity(self.sensorMgr.runningPowerConnected ? 1 : 0)
+								.opacity(self.sensorMgr.runningPowerConnected ? (time(nil) - Int(self.sensorMgr.lastRunningPowerUpdate) < 60 ? 1.0 : 0.5) : 0.0)
 						}
+
 						let showBroadcastIcon = self.broadcastMgr.lastSendTime > 0 && Preferences.broadcastShowIcon()
 						if showBroadcastIcon {
 							Image(systemName: "antenna.radiowaves.left.and.right.circle")
