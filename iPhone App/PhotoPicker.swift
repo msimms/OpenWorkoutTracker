@@ -4,43 +4,50 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 typealias PhotoResponse = (_: UIImage) -> ()
 
 struct PhotoPicker: UIViewControllerRepresentable {
 	var callback: PhotoResponse
 
-	final class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-		var parent: PhotoPicker
+	func makeUIViewController(context: Context) -> PHPickerViewController {
+		var config = PHPickerConfiguration()
+		config.selectionLimit = 3
+		config.filter = .images
 
-		init(parent: PhotoPicker) {
+		let picker = PHPickerViewController(configuration: config)
+		picker.delegate = context.coordinator
+
+		return picker
+	}
+
+	func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+	}
+
+	func makeCoordinator() -> Coordinator {
+		Coordinator(self)
+	}
+
+	class Coordinator: NSObject, PHPickerViewControllerDelegate {
+		let parent: PhotoPicker
+		
+		init(_ parent: PhotoPicker) {
 			self.parent = parent
 		}
 		
-		func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-			if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-				self.parent.callback(image)
+		func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+			picker.dismiss(animated: true)
+			
+			guard let provider = results.first?.itemProvider else { return }
+			
+			if provider.canLoadObject(ofClass: UIImage.self) {
+				provider.loadObject(ofClass: UIImage.self) { image, _ in
+					if let tempImage = image as? UIImage {
+						self.parent.callback(tempImage)
+					}
+				}
 			}
-			picker.dismiss(animated: false)
 		}
-
-		func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-			picker.dismiss(animated: false)
-		}
-	}
-	
-	func makeCoordinator() -> Coordinator {
-		return Coordinator(parent: self)
-	}
-	
-	func makeUIViewController(context: UIViewControllerRepresentableContext<PhotoPicker>) -> UIImagePickerController {
-		let imagePicker = UIImagePickerController()
-		imagePicker.allowsEditing = false
-		imagePicker.sourceType = .photoLibrary
-		imagePicker.delegate = context.coordinator
-		return imagePicker
-	}
-	
-	func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<PhotoPicker>) {
 	}
 }
