@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "D793BC94-36BA-47A3-8B36-91ADE4085080",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:OpenWorkoutTracker-Swift.xcodeproj",
+        "identifier" : "278D92CF28E38F18003B077C",
+        "name" : "OpenWorkoutTrackerTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -1,7 +1,5 @@
 //
 //  OpenWorkoutTrackerUITestsLaunchTests.swift
-//  OpenWorkoutTrackerUITests
-//
 //  Created by Michael Simms on 9/27/22.
 //
 
