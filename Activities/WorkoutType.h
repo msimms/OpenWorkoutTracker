@@ -28,7 +28,8 @@
 
 typedef enum WorkoutType
 {
-	WORKOUT_TYPE_REST = 0,
+	WORKOUT_TYPE_UNSPECIFIED = 0,
+	WORKOUT_TYPE_REST,
 	WORKOUT_TYPE_EVENT,               // Goal event, such as a race
 	WORKOUT_TYPE_SPEED_RUN,           // A run with speed intervals
 	WORKOUT_TYPE_THRESHOLD_RUN,       // A run at threshold pace

@@ -3539,6 +3539,8 @@ extern "C" {
 	{
 		switch (workoutType)
 		{
+		case WORKOUT_TYPE_UNSPECIFIED:
+			return "";
 		case WORKOUT_TYPE_REST:
 			return WORKOUT_TYPE_STR_REST;
 		case WORKOUT_TYPE_EVENT:
@@ -3632,7 +3634,7 @@ extern "C" {
 			return WORKOUT_TYPE_POOL_SWIM;
 		if (temp.compare(WORKOUT_TYPE_STR_TECHNIQUE_SWIM) == 0)
 			return WORKOUT_TYPE_TECHNIQUE_SWIM;
-		return WORKOUT_TYPE_REST;
+		return WORKOUT_TYPE_UNSPECIFIED;
 	}
 
 	//
