@@ -2268,11 +2268,11 @@ extern "C" {
 		return result;
 	}
 
+	/// Internal function - not exported because of the mutex around g_historicalActivityList
 	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context)
 	{
 		bool result = false;
 
-		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
@@ -2425,7 +2425,6 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
-		g_historicalActivityLock.unlock();
 
 		return result;
 	}
@@ -2433,6 +2432,8 @@ extern "C" {
 	bool LoadAllHistoricalActivitySensorData(size_t activityIndex)
 	{
 		bool result = true;
+
+		g_historicalActivityLock.lock();
 
 		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -2463,6 +2464,8 @@ extern "C" {
 		{
 			result = false;
 		}
+
+		g_historicalActivityLock.unlock();
 
 		return result;
 	}
