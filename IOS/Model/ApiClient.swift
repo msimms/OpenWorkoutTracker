@@ -68,7 +68,7 @@ class ApiClient : ObservableObject {
 				// POST method, put the dictionary in the HTTP body
 				if method == "POST" {
 					let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-					let text = String(data: jsonData, encoding: String.Encoding.ascii)!
+					let text = String(data: jsonData, encoding: String.Encoding.utf8)!
 					let postLength = String(format: "%lu", text.count)
 					
 					request.setValue(postLength, forHTTPHeaderField: "Content-Length")
