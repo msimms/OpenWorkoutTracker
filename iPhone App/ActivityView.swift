@@ -42,6 +42,7 @@ struct ActivityView: View {
 	@State private var stopping: Bool = false
 	@State private var showingStopSelection: Bool = false
 	@State private var showingIntervalSessionSelection: Bool = false
+	@State private var intervalSessionIsSelected: Bool = false
 	@State private var showingPacePlanSelection: Bool = false
 	@State private var showingActivityAttributeSelection1: Bool = false
 	@State private var showingActivityAttributeSelection2: Bool = false
@@ -510,12 +511,13 @@ struct ActivityView: View {
 								ForEach(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
 									Button {
 										SetCurrentIntervalSession(item.id.uuidString)
+										self.intervalSessionIsSelected = true
 									} label: {
 										Text(item.name)
 									}
 								}
 							}
-							.foregroundColor(self.colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.intervalSessionIsSelected ? .green : (self.colorScheme == .dark ? .white : .black))
 							.opacity(self.activityVM.isInProgress ? 0 : 1)
 							.help("Interval session selection.")
 						}
@@ -654,6 +656,7 @@ struct ActivityView: View {
 				}
 			}
 		}
+		.navigationTitle(self.activityType)
 		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
 		.opacity(self.activityVM.isPaused ? 0.5 : 1)
 		.onAppear() {

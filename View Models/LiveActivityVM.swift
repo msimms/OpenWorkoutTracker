@@ -245,8 +245,11 @@ class LiveActivityVM : ObservableObject {
 					var segment: IntervalSessionSegment = IntervalSessionSegment()
 					
 					if GetCurrentIntervalSessionSegment(&segment) {
-						let segmentVm: IntervalSegment = IntervalSegment()
-						self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
+						let segmentVm: IntervalSegment = IntervalSegment(backendStruct: segment)
+						let description = segmentVm.intervalDescription()
+						let progress = segmentVm.intervalProgressDescription()
+
+						self.currentMessage = description + " " + progress
 					}
 				}
 			}

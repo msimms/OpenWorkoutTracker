@@ -1436,7 +1436,7 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	Activity::BuildSummaryAttributeList(attributes);
 }
 
-bool MovingActivity::CheckPositionInterval(void)
+bool MovingActivity::CheckDistanceInterval(void)
 {
 	// If a session is not specified or is already complete then just return.
 	if ((m_intervalSession.sessionId.size() == 0) ||

@@ -118,7 +118,7 @@ struct EditPacePlanView: View {
 								var mins: Int = 0
 								var secs: Int = 0
 								
-								if self.pacePlansVM.parseHHMMSS(str: self.timeStr, hours: &hours, minutes: &mins, seconds: &secs) == false {
+								if StringUtils.parseHHMMSS(str: self.timeStr, hours: &hours, minutes: &mins, seconds: &secs) == false {
 									self.showingTimeError = true
 								}
 								else {
