@@ -97,21 +97,27 @@ class LiveActivityVM : ObservableObject {
 
 			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex)) // const char*, no need to dealloc
 			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
+			var activityRecreated = false
 
 			defer {
 				orphanedActivityTypePtr!.deallocate()
 			}
 
-			activityTypeToUse = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
+			let orphanedActivityType = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
+			if orphanedActivityType.count > 0 {
+				activityTypeToUse = orphanedActivityType
 
-			if recreateOrphanedActivities {
-				ReCreateOrphanedActivity(orphanedActivityIndex)
-				
-				self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
-				self.isInProgress = true
-				isNewActivity = false
+				if recreateOrphanedActivities {
+					ReCreateOrphanedActivity(orphanedActivityIndex)
+					
+					self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
+					self.isInProgress = true
+					isNewActivity = false
+					activityRecreated = true
+				}
 			}
-			else {
+
+			if activityRecreated == false {
 				self.loadHistoricalActivityByIndex(activityIndex: orphanedActivityIndex)
 			}
 		}
