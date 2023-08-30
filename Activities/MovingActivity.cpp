@@ -1450,9 +1450,12 @@ bool MovingActivity::CheckDistanceInterval(void)
 	if (IsDistanceBasedIntervalSegment(&segment))
 	{
 		double segmentDistanceInMeters = ConvertDistanceIntervalSegmentToMeters(&segment);
+		double totalSegmentDistanceInMeters = segmentDistanceInMeters * segment.reps;
 		double distanceTraveledInMeters = DistanceTraveledInMeters();
+		double currentSegmentDistanceInMeters = distanceTraveledInMeters - m_intervalWorkoutState.lastDistanceMeters;
 
-		if (distanceTraveledInMeters - m_intervalWorkoutState.lastDistanceMeters >= segmentDistanceInMeters)
+		m_intervalWorkoutState.lastRepCount = currentSegmentDistanceInMeters / segmentDistanceInMeters;
+		if (currentSegmentDistanceInMeters >= totalSegmentDistanceInMeters)
 		{
 			return true;
 		}
