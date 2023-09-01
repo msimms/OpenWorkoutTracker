@@ -15,7 +15,7 @@ struct SensorChartView: View {
 	func formatElapsedTime(numSeconds: Double) -> String {
 		if self.data.count > 0 {
 			let elapsedSecs = numSeconds - Double(self.data.first!.0)
-			return StoredActivityVM.formatAsHHMMSS(numSeconds: elapsedSecs)
+			return StringUtils.formatAsHHMMSS(numSeconds: elapsedSecs)
 		}
 		return ""
 	}
