@@ -80,4 +80,28 @@ class StringUtils {
 		}
 		return String(format: "%02d:%02d", minutes, seconds)
 	}
+	
+	/// @brief Utility function for formatting things like Elapsed Time, etc.
+	static func formatSeconds(numSeconds: time_t) -> String {
+		let SECS_PER_DAY  = 86400
+		let SECS_PER_HOUR = 3600
+		let SECS_PER_MIN  = 60
+		
+		var tempSeconds = numSeconds
+		let days = (tempSeconds / SECS_PER_DAY)
+		tempSeconds -= (days * SECS_PER_DAY)
+		let hours = (tempSeconds / SECS_PER_HOUR)
+		tempSeconds -= (hours * SECS_PER_HOUR)
+		let minutes = (tempSeconds / SECS_PER_MIN)
+		tempSeconds -= (minutes * SECS_PER_MIN)
+		let seconds = (tempSeconds % SECS_PER_MIN)
+		
+		if days > 0 {
+			return String(format: "%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
+		}
+		else if hours > 0 {
+			return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+		}
+		return String(format: "%02d:%02d", minutes, seconds)
+	}
 }

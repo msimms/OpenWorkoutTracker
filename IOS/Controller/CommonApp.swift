@@ -28,7 +28,11 @@ class CommonApp : ObservableObject {
 		
 		// Build the list of activity types the backend can handle.
 		CommonApp.activityTypes = []
+#if os(watchOS)
 		GetActivityTypes(activityTypeCallback, nil, true, true, true)
+#else
+		GetActivityTypes(activityTypeCallback, nil, true, false, true)
+#endif
 		
 		// Do we have a device ID, because we should?
 		if Preferences.uuid() == nil {

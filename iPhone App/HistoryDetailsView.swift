@@ -266,7 +266,7 @@ struct HistoryDetailsView: View {
 										let barHeight: Double = 0.9 * geometry.size.height
 										
 										HStack() {
-											Text("KM " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+											Text("KM " + String(i+1) + " Split: " + StringUtils.formatSeconds(numSeconds: currentSplit))
 											Spacer()
 											Rectangle()
 												.frame(width: splitPercentage * barWidth, height: barHeight)
@@ -289,7 +289,7 @@ struct HistoryDetailsView: View {
 										let barHeight: Double = 0.9 * geometry.size.height
 										
 										HStack() {
-											Text("Mile " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+											Text("Mile " + String(i+1) + " Split: " + StringUtils.formatSeconds(numSeconds: currentSplit))
 											Spacer()
 											Rectangle()
 												.frame(width: splitPercentage * barWidth, height: barHeight)

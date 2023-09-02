@@ -414,6 +414,13 @@ class LiveActivityVM : ObservableObject {
 	
 	/// @brief Helper function for starting an activity..
 	func doStart() -> Bool {
+		// If this is a pool swimming activity then we want to set the pool length
+		if self.activityType == ACTIVITY_TYPE_POOL_SWIMMING {
+			let poolLength = Preferences.poolLength()
+			let poolLengthUnits = Preferences.poolLengthUnits()
+			SetPoolLength(UInt16(poolLength), poolLengthUnits)
+		}
+
 		if StartActivity(self.activityId) {
 			
 			// Update state.
@@ -552,31 +559,7 @@ class LiveActivityVM : ObservableObject {
 	func getWatchActivityAttributeColor(attributeName: String) -> Color {
 		return ActivityPreferences.getActivityAttributeColor(activityType: self.activityType, attributeName: attributeName)
 	}
-	
-	/// @brief Utility function for formatting things like Elapsed Time, etc.
-	static func formatSeconds(numSeconds: time_t) -> String {
-		let SECS_PER_DAY  = 86400
-		let SECS_PER_HOUR = 3600
-		let SECS_PER_MIN  = 60
-		
-		var tempSeconds = numSeconds
-		let days = (tempSeconds / SECS_PER_DAY)
-		tempSeconds -= (days * SECS_PER_DAY)
-		let hours = (tempSeconds / SECS_PER_HOUR)
-		tempSeconds -= (hours * SECS_PER_HOUR)
-		let minutes = (tempSeconds / SECS_PER_MIN)
-		tempSeconds -= (minutes * SECS_PER_MIN)
-		let seconds = (tempSeconds % SECS_PER_MIN)
-		
-		if days > 0 {
-			return String(format: "%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
-		}
-		else if hours > 0 {
-			return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-		}
-		return String(format: "%02d:%02d", minutes, seconds)
-	}
-	
+
 	/// @brief Utility function for converting an activity attribute structure to something human readable.
 	static func formatActivityValue(attribute: ActivityAttributeType) -> String {
 		if attribute.valid {
@@ -584,10 +567,13 @@ class LiveActivityVM : ObservableObject {
 			case TYPE_NOT_SET:
 				return VALUE_NOT_SET_STR
 			case TYPE_TIME:
-				return LiveActivityVM.formatSeconds(numSeconds: attribute.value.timeVal)
+				return StringUtils.formatSeconds(numSeconds: attribute.value.timeVal)
 			case TYPE_DOUBLE:
 				if attribute.measureType == MEASURE_DISTANCE {
 					return String(format: "%0.2f", attribute.value.doubleVal)
+				}
+				else if attribute.measureType == MEASURE_POOL_DISTANCE {
+					return String(format: "%0.0f", attribute.value.doubleVal)
 				}
 				else if attribute.measureType == MEASURE_DEGREES {
 					return String(format: "%0.6f", attribute.value.doubleVal)
@@ -650,6 +636,15 @@ class LiveActivityVM : ObservableObject {
 			}
 			else if preferredUnits == UNIT_SYSTEM_US_CUSTOMARY {
 				return "miles"
+			}
+			return ""
+		case MEASURE_POOL_DISTANCE:
+			let preferredUnits = Preferences.preferredUnitSystem()
+			if preferredUnits == UNIT_SYSTEM_METRIC {
+				return "meters"
+			}
+			else if preferredUnits == UNIT_SYSTEM_US_CUSTOMARY {
+				return "yards"
 			}
 			return ""
 		case MEASURE_WEIGHT:

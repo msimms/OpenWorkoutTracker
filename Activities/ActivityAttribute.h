@@ -50,6 +50,7 @@
 #define ACTIVITY_ATTRIBUTE_CURRENT_SPEED              "Current Speed"           // current speed (instantaneous)
 #define ACTIVITY_ATTRIBUTE_FASTEST_SPEED              "Fastest Speed"           // best speed
 #define ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED          "Distance"                // total distance traveled
+#define ACTIVITY_ATTRIBUTE_POOL_DISTANCE_TRAVELED     "Pool Distance"           // total distance traveled in a swimming pool
 #define ACTIVITY_ATTRIBUTE_SMOOTHED_DISTANCE_TRAVELED "Smoothed Distance"       // total distance traveled (with algorithmic smoothing)
 #define ACTIVITY_ATTRIBUTE_PREVIOUS_DISTANCE_TRAVELED "Previous Distance"       // total distance traveled (second most recent value)
 #define ACTIVITY_ATTRIBUTE_STEPS_TAKEN                "Steps Taken"             // number of foot strikes

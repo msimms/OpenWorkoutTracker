@@ -32,6 +32,10 @@ struct ActivityView: View {
 	@State private var showingActivityColorSelection5: Bool = false
 	@State private var showingActivityColorSelection6: Bool = false
 	@State private var showingActivityColorSelection7: Bool = false
+	@State private var showingPoolLengthSelection: Bool = false
+	@State private var poolLengths: Array<String> = ["25 Yards", "25 Meters", "50 Yards", "50 Meters"]
+	@State private var poolLength = Preferences.poolLength()
+	@State private var poolLengthUnits = Preferences.poolLengthUnits()
 	@State private var crownValue = MIN_CROWN_VALUE
 
 	var activityType: String
@@ -329,38 +333,62 @@ struct ActivityView: View {
 					// If we're using the crown to start and stop the activity then hide the button.
 					// This is useful for activities like swimming, to prevent accidental presses.
 					if !Preferences.watchTurnCrownToStartStopActivity() {
-						HStack() {
-							
-							// Start/Stop/Pause button
-							Button {
-								self.handleStartStopPauseAction()
-							} label: {
-								Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
-							}
-							.foregroundColor(self.activityVM.isInProgress ? .red : .green)
-							.confirmationDialog("What would you like to do?", isPresented: self.$showingStopSelection, titleVisibility: .visible) {
-								NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
-									Text("Stop")
-								}
+						VStack() {
+							HStack() {
+								
+								// Start/Stop/Pause button
 								Button {
-									self.activityVM.pause()
+									self.handleStartStopPauseAction()
 								} label: {
-									Label("Pause", systemImage: "pause")
+									Label(self.activityVM.isInProgress ? "Stop" : "Start", systemImage: self.activityVM.isInProgress ? (self.activityVM.isPaused ? "pause" : "stop") : "play")
 								}
-								Button {
-								} label: {
-									Text("Cancel")
+								.foregroundColor(self.activityVM.isInProgress ? .red : .green)
+								.confirmationDialog("What would you like to do?", isPresented: self.$showingStopSelection, titleVisibility: .visible) {
+									NavigationLink(destination: HistoryDetailsView(activityVM: self.stop())) {
+										Text("Stop")
+									}
+									Button {
+										self.activityVM.pause()
+									} label: {
+										Label("Pause", systemImage: "pause")
+									}
+									Button {
+									} label: {
+										Text("Cancel")
+									}
+								}
+								
+								// Lap button
+								if self.activityVM.isInProgress && self.activityVM.isMovingActivity {
+									Button {
+										self.activityVM.lap()
+									} label: {
+										Label("Lap", systemImage: "stopwatch")
+									}
+									.help("Lap")
 								}
 							}
 
-							// Lap button
-							if self.activityVM.isInProgress && self.activityVM.isMovingActivity {
-								Button {
-									self.activityVM.lap()
-								} label: {
-									Label("Lap", systemImage: "stopwatch")
+							HStack() {
+
+								// Pool Length button
+								if !self.activityVM.isInProgress && self.activityType == ACTIVITY_TYPE_POOL_SWIMMING {
+									Button {
+										self.showingPoolLengthSelection = true
+									} label: {
+										Label("Pool Length", systemImage: "ruler")
+									}
+									.confirmationDialog("Set the pool length", isPresented: self.$showingPoolLengthSelection, titleVisibility: .visible) {
+										ForEach(self.poolLengths, id: \.self) { item in
+											Button {
+												Preferences.setPoolLength(poolLengthDescription: item)
+											} label: {
+												Text(item)
+											}
+										}
+									}
+									.help("Set the pool length")
 								}
-								.help("Lap")
 							}
 						}
 					}

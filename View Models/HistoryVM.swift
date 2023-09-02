@@ -236,10 +236,10 @@ class HistoryVM : ObservableObject {
 			return "figure.walk"
 		}
 		if activityType == ACTIVITY_TYPE_OPEN_WATER_SWIMMING {
-			return "stopwatch"
+			return "figure.open.water.swim"
 		}
 		if activityType == ACTIVITY_TYPE_POOL_SWIMMING {
-			return "stopwatch"
+			return "figure.pool.swim"
 		}
 		if activityType == ACTIVITY_TYPE_DUATHLON {
 			return "2.circle"

@@ -58,6 +58,11 @@ double UnitConverter::YardsToMeters(double y)
 	return y * (double)METERS_PER_YARD;
 }
 
+double UnitConverter::MetersToYards(double m)
+{
+	return m / (double)METERS_PER_YARD;
+}
+
 double UnitConverter::CentimetersToInches(double cm)
 {
 	return cm / (double)CENTIMETERS_PER_INCH;

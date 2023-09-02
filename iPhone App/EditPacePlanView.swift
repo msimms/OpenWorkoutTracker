@@ -36,7 +36,7 @@ struct EditPacePlanView: View {
 		_tempSplitsUnits = State(initialValue: pacePlan.splitsUnits)
 
 		self.distanceEntry.value = String(format: "%.2lf", pacePlan.distance)
-		let tempTimeStr = LiveActivityVM.formatSeconds(numSeconds: pacePlan.time)
+		let tempTimeStr = StringUtils.formatSeconds(numSeconds: pacePlan.time)
 		_timeStr = State(initialValue: tempTimeStr)
 	}
 
