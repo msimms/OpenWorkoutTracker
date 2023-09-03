@@ -15,10 +15,19 @@ struct AttributeNameCallbackType {
 	var names: Array<String>
 }
 
+struct SensorTypeCallbackType {
+	var types: Array<SensorType>
+}
+
 func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let attributeName = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
 	let typedPointer = context!.bindMemory(to: AttributeNameCallbackType.self, capacity: 1)
 	typedPointer.pointee.names.append(attributeName)
+}
+
+func sensorTypeCallback(type: SensorType, context: Optional<UnsafeMutableRawPointer>) {
+	let typedPointer = context!.bindMemory(to: SensorTypeCallbackType.self, capacity: 1)
+	typedPointer.pointee.types.append(type)
 }
 
 class LiveActivityVM : ObservableObject {
@@ -137,12 +146,15 @@ class LiveActivityVM : ObservableObject {
 		// Preferred view layout.
 		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
 
+		// Which sensors are useful?
+		let sensorTypes = getUsableSensorTypes()
+
 		// Configure the location accuracy parameters.
 		SensorMgr.shared.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
 		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
 
 		// Start the sensors.
-		SensorMgr.shared.startSensors()
+		SensorMgr.shared.startSensors(usableSensors: sensorTypes)
 
 		// This won't change. Cache it.
 		self.isMovingActivity = IsMovingActivity()
@@ -544,7 +556,20 @@ class LiveActivityVM : ObservableObject {
 		GetActivityAttributeNames(attributeNameCallback, pointer)
 		return pointer.pointee.names
 	}
-	
+
+	func getUsableSensorTypes() -> Array<SensorType> {
+		let pointer = UnsafeMutablePointer<SensorTypeCallbackType>.allocate(capacity: 1)
+		
+		defer {
+			pointer.deinitialize(count: 1)
+			pointer.deallocate()
+		}
+		
+		pointer.pointee = SensorTypeCallbackType(types: [])
+		GetUsableSensorTypes(sensorTypeCallback, pointer)
+		return pointer.pointee.types
+	}
+
 	func setDisplayedActivityAttributeName(position: Int, attributeName: String) {
 		self.activityAttributePrefs.remove(at: position)
 		self.activityAttributePrefs.insert(attributeName, at: position)

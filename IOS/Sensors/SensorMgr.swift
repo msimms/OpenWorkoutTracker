@@ -274,7 +274,7 @@ class SensorMgr : ObservableObject {
 		}
 	}
 
-	func startSensors() {
+	func startSensors(usableSensors: Array<SensorType>) {
 		if Preferences.shouldScanForSensors() {
 			let interestingServices = [ HEART_RATE_SERVICE_ID,
 										POWER_SERVICE_ID,
@@ -288,9 +288,16 @@ class SensorMgr : ObservableObject {
 												  valueUpdatedCallbacks: [valueUpdated],
 												  peripheralDisconnectedCallbacks: [peripheralDisconnected])
 		}
+		
+		let useLocation = usableSensors.count == 0 || usableSensors.contains(SENSOR_TYPE_LOCATION)
+		let useAccelerometer = usableSensors.count == 0 || usableSensors.contains(SENSOR_TYPE_ACCELEROMETER)
 
-		self.location.start()
-		self.accelerometer.start()
+		if useLocation {
+			self.location.start()
+		}
+		if useAccelerometer {
+			self.accelerometer.start()
+		}
 
 #if os(watchOS)
 		if Preferences.useWatchHeartRate() {

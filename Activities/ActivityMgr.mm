@@ -3254,7 +3254,7 @@ extern "C" {
 
 	void GetUsableSensorTypes(SensorTypeCallback callback, void* context)
 	{
-		if (g_pCurrentActivity)
+		if (g_pCurrentActivity && context)
 		{
 			std::vector<SensorType> sensorTypes;
 
