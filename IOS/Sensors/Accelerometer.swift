@@ -28,8 +28,7 @@ class Accelerometer {
 
 			self.motionManager.startAccelerometerUpdates(to: OperationQueue.main, withHandler: { accelerometerData, error in
 				let rawData = self.motionManager.accelerometerData
-				let now = UInt64(Date().timeIntervalSince1970)
-				let theTimeMs = now * 1000
+				let theTimeMs = Date().timeIntervalSince1970 * 1000
 				var accelData: Dictionary<String, Double> = [:]
 				accelData[KEY_NAME_ACCEL_X] = rawData?.acceleration.x
 				accelData[KEY_NAME_ACCEL_Y] = rawData?.acceleration.y
