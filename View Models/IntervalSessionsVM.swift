@@ -578,7 +578,7 @@ class IntervalSessionsVM : ObservableObject {
 
 		for segment in session.segments {
 			if segment.id == segmentId {
-				if position < session.segments.count {
+				if position < (session.segments.count - 1) {
 					session.segments.swapAt(position, position + 1)
 					break
 				}
