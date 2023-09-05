@@ -221,6 +221,8 @@
 		2740E12A28F4427C00293B71 /* EditBikeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E12928F4427C00293B71 /* EditBikeView.swift */; };
 		27413904292E9FD8008EA7B7 /* GearVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0AE28E67C0600293B71 /* GearVM.swift */; };
 		27413905292EA19C008EA7B7 /* WorkoutsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E0A728E645C300293B71 /* WorkoutsVM.swift */; };
+		27460FAE2A9BC144002E368D /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27460FAD2A9BC144002E368D /* StringUtils.swift */; };
+		27460FAF2A9BC144002E368D /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27460FAD2A9BC144002E368D /* StringUtils.swift */; };
 		274AA6322A81736900F77F96 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274AA6312A81736900F77F96 /* PhotoPicker.swift */; };
 		2775412E297F651500AE9B86 /* ZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775412D297F651500AE9B86 /* ZonesView.swift */; };
 		27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
@@ -262,6 +264,12 @@
 		278D932B28E38FE7003B077C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932428E38FE7003B077C /* SettingsView.swift */; };
 		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
 		27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1DCA72A5778410035E608 /* GearServiceItemView.swift */; };
+		27E30B6B2A969A9A00236EAB /* GpxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6A2A969A9A00236EAB /* GpxTests.swift */; };
+		27E30B6D2A969C3600236EAB /* TcxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6C2A969C3600236EAB /* TcxTests.swift */; };
+		27E30B6F2A969C7B00236EAB /* FitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6E2A969C7B00236EAB /* FitTests.swift */; };
+		27E30B712A969CB200236EAB /* PeakFindingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B702A969CB200236EAB /* PeakFindingTests.swift */; };
+		27E30B732A969EA300236EAB /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B722A969EA300236EAB /* Downloader.swift */; };
+		27E30B752A9802F500236EAB /* TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 27E30B742A9802F500236EAB /* TestPlan.xctestplan */; };
 		27E608EA292C205700401901 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608E9292C205700401901 /* WidgetKit.framework */; };
 		27E608EC292C205700401901 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E608EB292C205700401901 /* SwiftUI.framework */; };
 		27E608EF292C205700401901 /* ActivityWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E608EE292C205700401901 /* ActivityWidgetsBundle.swift */; };
@@ -606,6 +614,7 @@
 		2740E12428F2D3F000293B71 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ApiClient.swift; path = IOS/Model/ApiClient.swift; sourceTree = "<group>"; };
 		2740E12728F4425A00293B71 /* EditShoesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoesView.swift; sourceTree = "<group>"; };
 		2740E12928F4427C00293B71 /* EditBikeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBikeView.swift; sourceTree = "<group>"; };
+		27460FAD2A9BC144002E368D /* StringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StringUtils.swift; path = IOS/Utilities/StringUtils.swift; sourceTree = "<group>"; };
 		274AA6312A81736900F77F96 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		2752B645295E1B680050CCFC /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = IOS/Controller/Feature.h; sourceTree = "<group>"; };
 		2775412D297F651500AE9B86 /* ZonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesView.swift; sourceTree = "<group>"; };
@@ -652,6 +661,12 @@
 		27E1DCA52A54CFFF0035E608 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Gear/Bike.h; sourceTree = "<group>"; };
 		27E1DCA62A54D0730035E608 /* ServiceHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ServiceHistory.h; path = Gear/ServiceHistory.h; sourceTree = "<group>"; };
 		27E1DCA72A5778410035E608 /* GearServiceItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearServiceItemView.swift; sourceTree = "<group>"; };
+		27E30B6A2A969A9A00236EAB /* GpxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GpxTests.swift; sourceTree = "<group>"; };
+		27E30B6C2A969C3600236EAB /* TcxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TcxTests.swift; sourceTree = "<group>"; };
+		27E30B6E2A969C7B00236EAB /* FitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitTests.swift; sourceTree = "<group>"; };
+		27E30B702A969CB200236EAB /* PeakFindingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeakFindingTests.swift; sourceTree = "<group>"; };
+		27E30B722A969EA300236EAB /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		27E30B742A9802F500236EAB /* TestPlan.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 		27E608E8292C205700401901 /* ActivityWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ActivityWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		27E608E9292C205700401901 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		27E608EB292C205700401901 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -1062,6 +1077,14 @@
 			name = Controller;
 			sourceTree = "<group>";
 		};
+		27460FB02A9BC152002E368D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				27460FAD2A9BC144002E368D /* StringUtils.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		278D92B728E38F17003B077C = {
 			isa = PBXGroup;
 			children = (
@@ -1070,6 +1093,7 @@
 				2740E11228EB97B800293B71 /* OpenWorkoutTracker-Watch-App-Info.plist */,
 				2740E11128EB90DB00293B71 /* OpenWorkoutTracker-Info.plist */,
 				2740E11028EB908400293B71 /* OpenWorkoutTracker.entitlements */,
+				27E30B742A9802F500236EAB /* TestPlan.xctestplan */,
 				2740E07528E4F77400293B71 /* Bridging-Header.h */,
 				277EAC32292412C30091ADF6 /* BrightBeep.aif */,
 				277EAC33292412C30091ADF6 /* Ping.aif */,
@@ -1084,6 +1108,7 @@
 				2740E09A28E633E800293B71 /* Model */,
 				2740E06228E4D96E00293B71 /* PeakFinder */,
 				2740E00928E4CDBA00293B71 /* Sensors */,
+				27460FB02A9BC152002E368D /* Utils */,
 				2740DFF928E4CCFC00293B71 /* Units */,
 				2740E00228E4CD7C00293B71 /* User */,
 				278D92C228E38F17003B077C /* iPhone App */,
@@ -1169,6 +1194,11 @@
 			isa = PBXGroup;
 			children = (
 				278D92D428E38F18003B077C /* OpenWorkoutTrackerTests.swift */,
+				27E30B722A969EA300236EAB /* Downloader.swift */,
+				27E30B6E2A969C7B00236EAB /* FitTests.swift */,
+				27E30B6A2A969A9A00236EAB /* GpxTests.swift */,
+				27E30B6C2A969C3600236EAB /* TcxTests.swift */,
+				27E30B702A969CB200236EAB /* PeakFindingTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -1480,6 +1510,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27E30B752A9802F500236EAB /* TestPlan.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1628,6 +1659,7 @@
 				2740E10E28EB5B4C00293B71 /* CyclingCadenceService.swift in Sources */,
 				2740E07C28E5DEC500293B71 /* BluetoothServices.swift in Sources */,
 				2740E04728E4CFFD00293B71 /* Double.cpp in Sources */,
+				27460FAE2A9BC144002E368D /* StringUtils.swift in Sources */,
 				277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */,
 				2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */,
 				2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */,
@@ -1679,6 +1711,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				278D92D528E38F18003B077C /* OpenWorkoutTrackerTests.swift in Sources */,
+				27E30B712A969CB200236EAB /* PeakFindingTests.swift in Sources */,
+				27E30B732A969EA300236EAB /* Downloader.swift in Sources */,
+				27E30B6B2A969A9A00236EAB /* GpxTests.swift in Sources */,
+				27E30B6D2A969C3600236EAB /* TcxTests.swift in Sources */,
+				27E30B6F2A969C7B00236EAB /* FitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1701,6 +1738,7 @@
 				2740E0DB28E7029900293B71 /* DataImporter.cpp in Sources */,
 				27754132297FFC9800AE9B86 /* ZonesCalculator.cpp in Sources */,
 				2740E0B328E7028C00293B71 /* IntensityCalculator.cpp in Sources */,
+				27460FAF2A9BC144002E368D /* StringUtils.swift in Sources */,
 				278C20A12937F80500828479 /* FriendsVM.swift in Sources */,
 				2740E11A28F0E5E900293B71 /* PacePlansVM.swift in Sources */,
 				2740E0E228E702AD00293B71 /* GpxFileReader.cpp in Sources */,
@@ -2170,6 +2208,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWorkoutTracker";
@@ -2191,6 +2230,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenWorkoutTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenWorkoutTracker";

@@ -36,7 +36,7 @@ struct EditPacePlanView: View {
 		_tempSplitsUnits = State(initialValue: pacePlan.splitsUnits)
 
 		self.distanceEntry.value = String(format: "%.2lf", pacePlan.distance)
-		let tempTimeStr = LiveActivityVM.formatSeconds(numSeconds: pacePlan.time)
+		let tempTimeStr = StringUtils.formatSeconds(numSeconds: pacePlan.time)
 		_timeStr = State(initialValue: tempTimeStr)
 	}
 
@@ -118,7 +118,7 @@ struct EditPacePlanView: View {
 								var mins: Int = 0
 								var secs: Int = 0
 								
-								if self.pacePlansVM.parseHHMMSS(str: self.timeStr, hours: &hours, minutes: &mins, seconds: &secs) == false {
+								if StringUtils.parseHHMMSS(str: self.timeStr, hours: &hours, minutes: &mins, seconds: &secs) == false {
 									self.showingTimeError = true
 								}
 								else {

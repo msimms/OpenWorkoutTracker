@@ -226,7 +226,7 @@ struct WorkoutsView: View {
 					self.regenerateWorkouts()
 				} label: {
 					Text("Regenerate")
-						.foregroundColor(colorScheme == .dark ? .black : .white)
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
 						.fontWeight(Font.Weight.heavy)
 						.frame(minWidth: 0, maxWidth: .infinity)
 						.padding()
@@ -240,7 +240,7 @@ struct WorkoutsView: View {
 					Button {
 					} label: {
 						NavigationLink("Debug", destination: DebugView(inputs: self.workoutsVM.inputs))
-							.foregroundColor(colorScheme == .dark ? .black : .white)
+							.foregroundColor(self.colorScheme == .dark ? .black : .white)
 							.fontWeight(Font.Weight.heavy)
 							.frame(minWidth: 0, maxWidth: .infinity)
 							.padding()

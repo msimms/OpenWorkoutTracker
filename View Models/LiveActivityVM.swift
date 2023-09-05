@@ -15,10 +15,19 @@ struct AttributeNameCallbackType {
 	var names: Array<String>
 }
 
+struct SensorTypeCallbackType {
+	var types: Array<SensorType>
+}
+
 func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let attributeName = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
 	let typedPointer = context!.bindMemory(to: AttributeNameCallbackType.self, capacity: 1)
 	typedPointer.pointee.names.append(attributeName)
+}
+
+func sensorTypeCallback(type: SensorType, context: Optional<UnsafeMutableRawPointer>) {
+	let typedPointer = context!.bindMemory(to: SensorTypeCallbackType.self, capacity: 1)
+	typedPointer.pointee.types.append(type)
 }
 
 class LiveActivityVM : ObservableObject {
@@ -97,21 +106,27 @@ class LiveActivityVM : ObservableObject {
 
 			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex)) // const char*, no need to dealloc
 			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
+			var activityRecreated = false
 
 			defer {
 				orphanedActivityTypePtr!.deallocate()
 			}
 
-			activityTypeToUse = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
+			let orphanedActivityType = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
+			if orphanedActivityType.count > 0 {
+				activityTypeToUse = orphanedActivityType
 
-			if recreateOrphanedActivities {
-				ReCreateOrphanedActivity(orphanedActivityIndex)
-				
-				self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
-				self.isInProgress = true
-				isNewActivity = false
+				if recreateOrphanedActivities {
+					ReCreateOrphanedActivity(orphanedActivityIndex)
+					
+					self.activityId = String(cString: orphanedActivityIdPtr!.assumingMemoryBound(to: CChar.self))
+					self.isInProgress = true
+					isNewActivity = false
+					activityRecreated = true
+				}
 			}
-			else {
+
+			if activityRecreated == false {
 				self.loadHistoricalActivityByIndex(activityIndex: orphanedActivityIndex)
 			}
 		}
@@ -131,12 +146,15 @@ class LiveActivityVM : ObservableObject {
 		// Preferred view layout.
 		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
 
+		// Which sensors are useful?
+		let sensorTypes = getUsableSensorTypes()
+
 		// Configure the location accuracy parameters.
 		SensorMgr.shared.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
 		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
 
 		// Start the sensors.
-		SensorMgr.shared.startSensors()
+		SensorMgr.shared.startSensors(usableSensors: sensorTypes)
 
 		// This won't change. Cache it.
 		self.isMovingActivity = IsMovingActivity()
@@ -245,8 +263,11 @@ class LiveActivityVM : ObservableObject {
 					var segment: IntervalSessionSegment = IntervalSessionSegment()
 					
 					if GetCurrentIntervalSessionSegment(&segment) {
-						let segmentVm: IntervalSegment = IntervalSegment()
-						self.currentMessage = segmentVm.formatDescription(value1: segment.firstValue, units1: segment.firstUnits, value2: segment.secondValue, units2: segment.secondUnits)
+						let segmentVm: IntervalSegment = IntervalSegment(backendStruct: segment)
+						let description = segmentVm.intervalDescription()
+						let progress = segmentVm.intervalProgressDescription()
+
+						self.currentMessage = description + " " + progress
 					}
 				}
 			}
@@ -405,6 +426,13 @@ class LiveActivityVM : ObservableObject {
 	
 	/// @brief Helper function for starting an activity..
 	func doStart() -> Bool {
+		// If this is a pool swimming activity then we want to set the pool length
+		if self.activityType == ACTIVITY_TYPE_POOL_SWIMMING {
+			let poolLength = Preferences.poolLength()
+			let poolLengthUnits = Preferences.poolLengthUnits()
+			SetPoolLength(UInt16(poolLength), poolLengthUnits)
+		}
+
 		if StartActivity(self.activityId) {
 			
 			// Update state.
@@ -528,7 +556,20 @@ class LiveActivityVM : ObservableObject {
 		GetActivityAttributeNames(attributeNameCallback, pointer)
 		return pointer.pointee.names
 	}
-	
+
+	func getUsableSensorTypes() -> Array<SensorType> {
+		let pointer = UnsafeMutablePointer<SensorTypeCallbackType>.allocate(capacity: 1)
+		
+		defer {
+			pointer.deinitialize(count: 1)
+			pointer.deallocate()
+		}
+		
+		pointer.pointee = SensorTypeCallbackType(types: [])
+		GetUsableSensorTypes(sensorTypeCallback, pointer)
+		return pointer.pointee.types
+	}
+
 	func setDisplayedActivityAttributeName(position: Int, attributeName: String) {
 		self.activityAttributePrefs.remove(at: position)
 		self.activityAttributePrefs.insert(attributeName, at: position)
@@ -543,31 +584,7 @@ class LiveActivityVM : ObservableObject {
 	func getWatchActivityAttributeColor(attributeName: String) -> Color {
 		return ActivityPreferences.getActivityAttributeColor(activityType: self.activityType, attributeName: attributeName)
 	}
-	
-	/// @brief Utility function for formatting things like Elapsed Time, etc.
-	static func formatSeconds(numSeconds: time_t) -> String {
-		let SECS_PER_DAY  = 86400
-		let SECS_PER_HOUR = 3600
-		let SECS_PER_MIN  = 60
-		
-		var tempSeconds = numSeconds
-		let days = (tempSeconds / SECS_PER_DAY)
-		tempSeconds -= (days * SECS_PER_DAY)
-		let hours = (tempSeconds / SECS_PER_HOUR)
-		tempSeconds -= (hours * SECS_PER_HOUR)
-		let minutes = (tempSeconds / SECS_PER_MIN)
-		tempSeconds -= (minutes * SECS_PER_MIN)
-		let seconds = (tempSeconds % SECS_PER_MIN)
-		
-		if days > 0 {
-			return String(format: "%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
-		}
-		else if hours > 0 {
-			return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-		}
-		return String(format: "%02d:%02d", minutes, seconds)
-	}
-	
+
 	/// @brief Utility function for converting an activity attribute structure to something human readable.
 	static func formatActivityValue(attribute: ActivityAttributeType) -> String {
 		if attribute.valid {
@@ -575,10 +592,13 @@ class LiveActivityVM : ObservableObject {
 			case TYPE_NOT_SET:
 				return VALUE_NOT_SET_STR
 			case TYPE_TIME:
-				return LiveActivityVM.formatSeconds(numSeconds: attribute.value.timeVal)
+				return StringUtils.formatSeconds(numSeconds: attribute.value.timeVal)
 			case TYPE_DOUBLE:
 				if attribute.measureType == MEASURE_DISTANCE {
 					return String(format: "%0.2f", attribute.value.doubleVal)
+				}
+				else if attribute.measureType == MEASURE_POOL_DISTANCE {
+					return String(format: "%0.0f", attribute.value.doubleVal)
 				}
 				else if attribute.measureType == MEASURE_DEGREES {
 					return String(format: "%0.6f", attribute.value.doubleVal)
@@ -641,6 +661,15 @@ class LiveActivityVM : ObservableObject {
 			}
 			else if preferredUnits == UNIT_SYSTEM_US_CUSTOMARY {
 				return "miles"
+			}
+			return ""
+		case MEASURE_POOL_DISTANCE:
+			let preferredUnits = Preferences.preferredUnitSystem()
+			if preferredUnits == UNIT_SYSTEM_METRIC {
+				return "meters"
+			}
+			else if preferredUnits == UNIT_SYSTEM_US_CUSTOMARY {
+				return "yards"
 			}
 			return ""
 		case MEASURE_WEIGHT:

@@ -162,7 +162,7 @@ protected:
 	virtual void RecomputeRecordTimes(void);
 	virtual void UpdateSplitTimes(void);
 
-	virtual bool CheckPositionInterval(void);
+	virtual bool CheckDistanceInterval(void);
 	virtual void AdvanceIntervalState(void);
 
 	virtual double RunningAltitudeAverage(void) const;

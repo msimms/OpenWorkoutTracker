@@ -40,7 +40,7 @@ struct SensorsView: View {
 			.padding(10)
 		}
 		.onAppear() {
-			SensorMgr.shared.startSensors()
+			SensorMgr.shared.startSensors(usableSensors: [])
 		}
 		.onDisappear() {
 			SensorMgr.shared.stopSensors()

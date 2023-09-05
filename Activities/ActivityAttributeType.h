@@ -29,6 +29,7 @@ typedef enum ActivityAttributeMeasureType
 	MEASURE_PACE,              // minutes/mile or minute/km
 	MEASURE_SPEED,             // mph or kph
 	MEASURE_DISTANCE,          // miles or kilometers
+	MEASURE_POOL_DISTANCE,     // yards or meters
 	MEASURE_WEIGHT,            // pounds or kilograms
 	MEASURE_HEIGHT,            // inches or centimeters
 	MEASURE_ALTITUDE,          // feet or meters

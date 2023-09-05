@@ -22,7 +22,7 @@ public:
 
 	virtual void ListUsableSensors(std::vector<SensorType>& sensorTypes) const;
 
-	virtual void SetPoolLength(uint16_t poolLength, UnitSystem units) { m_poolLength = poolLength; m_poolLengthUnits = units; };
+	virtual void SetPoolLength(uint16_t poolLength, UnitSystem units);
 
 	virtual uint16_t NumLaps(void) const { return m_numLaps; };
 	virtual uint16_t PoolLength(void) const { return m_poolLength; };
@@ -35,10 +35,14 @@ public:
 
 	virtual double CaloriesBurned(void) const;
 
+protected:
+	virtual bool ProcessAccelerometerReading(const SensorReading& reading);
+
 private:
 	uint16_t m_numLaps;
-	uint16_t m_poolLength;      // The length of the pool
-	uint16_t m_poolLengthUnits; // The units for 'm_poolLength'
+	uint16_t m_poolLength;       // The length of the pool
+	uint16_t m_poolLengthMetric; // The length of the pool in metric
+	uint16_t m_poolLengthUnits;  // The units for 'm_poolLength'
 };
 
 #endif

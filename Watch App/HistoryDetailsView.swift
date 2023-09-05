@@ -23,17 +23,19 @@ struct HistoryDetailsView: View {
 		case StoredActivityVM.State.loaded:
 			ScrollView() {
 				VStack(alignment: .center) {
-					// Map
-					Map(
-						coordinateRegion: .constant(
-							MKCoordinateRegion(
-								center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
-								span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+					if self.activityVM.isMovingActivity() {
+						// Map
+						Map(
+							coordinateRegion: .constant(
+								MKCoordinateRegion(
+									center: CLLocationCoordinate2D(latitude: self.activityVM.startingLat, longitude: self.activityVM.startingLon),
+									span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+								)
 							)
 						)
-					)
-					.frame(height: 100)
-					.padding(5)
+						.frame(height: 100)
+						.padding(5)
+					}
 					
 					// Attributes Summary
 					List(self.activityVM.getActivityAttributes(), id: \.self) { item in
@@ -55,7 +57,7 @@ struct HistoryDetailsView: View {
 						self.dismiss()
 					}
 					.bold()
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 				}
 			}
 		case StoredActivityVM.State.empty:

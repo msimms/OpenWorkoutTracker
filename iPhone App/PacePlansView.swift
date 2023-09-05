@@ -43,7 +43,7 @@ struct PacePlansView: View {
 			}
 			ToolbarItem(placement: .bottomBar) {
 				NavigationLink("+", destination: EditPacePlanView(pacePlan: PacePlan()))
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 			}
 		}
 	}

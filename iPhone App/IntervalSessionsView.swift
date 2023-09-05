@@ -43,7 +43,7 @@ struct IntervalSessionsView: View {
 			}
 			ToolbarItem(placement: .bottomBar) {
 				NavigationLink("+", destination: EditIntervalSessionView(session: IntervalSession()))
-					.foregroundColor(colorScheme == .dark ? .white : .black)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 			}
 		}
 	}

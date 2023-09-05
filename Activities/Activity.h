@@ -118,7 +118,7 @@ protected:
 	virtual bool ProcessRadarReading(const SensorReading& reading);
 
 	virtual bool CheckTimeInterval(void);
-	virtual bool CheckPositionInterval(void) { return false; };
+	virtual bool CheckDistanceInterval(void) { return false; };
 	virtual bool CheckSetsInterval(void) { return false; };
 	virtual bool CheckRepsInterval(void) { return false; };
 	virtual void AdvanceIntervalState(void);

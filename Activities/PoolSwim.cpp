@@ -12,6 +12,7 @@ PoolSwim::PoolSwim()
 {
 	m_numLaps = 0;
 	m_poolLength = 0;
+	m_poolLengthMetric = 0;
 	m_poolLengthUnits = UNIT_SYSTEM_METRIC;
 }
 
@@ -25,6 +26,22 @@ void PoolSwim::ListUsableSensors(std::vector<SensorType>& sensorTypes) const
 	sensorTypes.push_back(SENSOR_TYPE_HEART_RATE);
 }
 
+void PoolSwim::SetPoolLength(uint16_t poolLength, UnitSystem units)
+{
+	m_poolLength = poolLength;
+	if (units == UNIT_SYSTEM_US_CUSTOMARY)
+		m_poolLengthMetric = UnitConverter::YardsToMeters(poolLength);
+	else
+		m_poolLengthMetric = poolLength;
+	m_poolLengthUnits = units;
+}
+
+bool PoolSwim::ProcessAccelerometerReading(const SensorReading& reading)
+{
+	// TODO: Look for wall push-off
+	return Swim::ProcessAccelerometerReading(reading);
+}
+
 ActivityAttributeType PoolSwim::QueryActivityAttribute(const std::string& attributeName) const
 {
 	ActivityAttributeType result;
@@ -36,7 +53,7 @@ ActivityAttributeType PoolSwim::QueryActivityAttribute(const std::string& attrib
 	{
 		result.value.intVal = PoolLength();
 		result.valueType = TYPE_INTEGER;
-		result.measureType = MEASURE_DISTANCE;
+		result.measureType = MEASURE_POOL_DISTANCE;
 		result.valid = true;
 	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_NUM_LAPS) == 0)
@@ -44,6 +61,13 @@ ActivityAttributeType PoolSwim::QueryActivityAttribute(const std::string& attrib
 		result.value.intVal = NumLaps();
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_COUNT;
+		result.valid = true;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_POOL_DISTANCE_TRAVELED) == 0)
+	{
+		result.value.doubleVal = m_poolLengthMetric * m_numLaps;
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POOL_DISTANCE;
 		result.valid = true;
 	}
 	else

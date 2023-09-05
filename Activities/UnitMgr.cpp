@@ -128,6 +128,10 @@ void UnitMgr::ConvertActivityAttributeToMetric(ActivityAttributeType& value)
 					value.value.doubleVal = UnitConverter::MilesToKilometers(value.value.doubleVal);
 					value.unitSystem = UNIT_SYSTEM_METRIC;
 					break;
+				case MEASURE_POOL_DISTANCE:
+					value.value.doubleVal = UnitConverter::YardsToMeters(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_METRIC;
+					break;
 				case MEASURE_WEIGHT:
 					value.value.doubleVal = UnitConverter::PoundsToKilograms(value.value.doubleVal);
 					value.unitSystem = UNIT_SYSTEM_METRIC;
@@ -177,6 +181,10 @@ void UnitMgr::ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& va
 					break;
 				case MEASURE_DISTANCE:
 					value.value.doubleVal = UnitConverter::KilometersToMiles(value.value.doubleVal);
+					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
+					break;
+				case MEASURE_POOL_DISTANCE:
+					value.value.doubleVal = UnitConverter::MetersToYards(value.value.doubleVal);
 					value.unitSystem = UNIT_SYSTEM_US_CUSTOMARY;
 					break;
 				case MEASURE_WEIGHT:

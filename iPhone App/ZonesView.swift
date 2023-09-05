@@ -14,12 +14,12 @@ struct ZonesView: View {
 
 			if units == UNIT_SYSTEM_METRIC {
 				let paceKmMin = (1000.0 / paceMetersMin) * 60.0
-				return StoredActivityVM.formatAsHHMMSS(numSeconds: paceKmMin) + " min/km"
+				return StringUtils.formatAsHHMMSS(numSeconds: paceKmMin) + " min/km"
 			}
 			else if units == UNIT_SYSTEM_US_CUSTOMARY {
 				let METERS_PER_MILE = 1609.34
 				let paceKmMin = (METERS_PER_MILE / paceMetersMin) * 60.0
-				return StoredActivityVM.formatAsHHMMSS(numSeconds: paceKmMin) +  "min/mile"
+				return StringUtils.formatAsHHMMSS(numSeconds: paceKmMin) +  "min/mile"
 			}
 		}
 		return String(paceMetersMin)

@@ -98,7 +98,7 @@ struct EditIntervalSessionView: View {
 								Button(action: {
 									self.showingSegmentEditSelection = true
 								}) {
-									Text(segment.description())
+									Text(segment.intervalDescription())
 										.frame(minWidth: 0, maxWidth: .infinity)
 										.foregroundColor(segment.color())
 										.padding()
@@ -122,7 +122,18 @@ struct EditIntervalSessionView: View {
 								.alert(self.keyBeingEdited, isPresented: self.$showingValueEditAlert, actions: {
 									TextField("10", text: self.$valueBeingEdited)
 									Button("Ok", action: {
-										self.tempSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: Double(self.valueBeingEdited)!)
+										var hours: Int = 0
+										var mins: Int = 0
+										var secs: Int = 0
+										var value: Double = 0.0
+										
+										if StringUtils.parseHHMMSS(str: self.valueBeingEdited, hours: &hours, minutes: &mins, seconds: &secs) {
+											value = Double(mins) + (Double(secs) / 60.0)
+										}
+										else {
+											value = Double(self.valueBeingEdited) ?? 0.0
+										}
+										self.tempSession.segments.last!.applyModifier(key: self.keyBeingEdited, value: value)
 									})
 									Button("Cancel", role: .cancel, action: {})
 								}, message: {

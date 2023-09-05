@@ -152,7 +152,6 @@ extern "C" {
 	bool CreateHistoricalActivityObject(size_t activityIndex);
 	bool CreateAllHistoricalActivityObjects(void);
 	bool LoadHistoricalActivityLapData(size_t activityIndex);
-	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context);
 	bool LoadAllHistoricalActivitySensorData(size_t activityIndex);
 	bool LoadAllHistoricalActivitySummaryData(void);
 	bool LoadHistoricalActivitySummaryData(size_t activityIndex);

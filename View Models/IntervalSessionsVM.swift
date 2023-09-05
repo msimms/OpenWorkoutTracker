@@ -62,6 +62,14 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	}
 	init(json: Decodable) {
 	}
+	init(backendStruct: IntervalSessionSegment) {
+		self.sets = backendStruct.sets
+		self.reps = backendStruct.reps
+		self.firstValue = backendStruct.firstValue
+		self.secondValue = backendStruct.secondValue
+		self.firstUnits = backendStruct.firstUnits
+		self.secondUnits = backendStruct.secondUnits
+	}
 	
 	/// Hashable overrides
 	func hash(into hasher: inout Hasher) {
@@ -88,11 +96,10 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 	func validModifiers(activityType: String) -> Array<String> {
 		var modifiers: Array<String> = []
 
-		modifiers.append(MODIFIER_EDIT_SETS)
-		modifiers.append(MODIFIER_EDIT_REPS)
-
 		switch self.firstUnits {
 		case INTERVAL_UNIT_NOT_SET:
+			modifiers.append(MODIFIER_EDIT_SETS)
+			modifiers.append(MODIFIER_EDIT_REPS)
 			modifiers.append(MODIFIER_ADD_DURATION)
 			modifiers.append(MODIFIER_ADD_DISTANCE_METERS)
 			modifiers.append(MODIFIER_ADD_DISTANCE_KILOMETERS)
@@ -101,8 +108,12 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 			modifiers.append(MODIFIER_ADD_DISTANCE_MILES)
 			break
 		case INTERVAL_UNIT_SETS:
+			modifiers.append(MODIFIER_EDIT_SETS)
+			modifiers.append(MODIFIER_EDIT_REPS)
 			break;
 		case INTERVAL_UNIT_REPS:
+			modifiers.append(MODIFIER_EDIT_SETS)
+			modifiers.append(MODIFIER_EDIT_REPS)
 			break
 		case INTERVAL_UNIT_SECONDS:
 			modifiers.append(MODIFIER_EDIT_DURATION)
@@ -185,6 +196,38 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 		return modifiers
 	}
 	
+	private func isDistanceUnit(unit: IntervalUnit) -> Bool {
+		switch unit {
+		case INTERVAL_UNIT_METERS:
+			return true
+		case INTERVAL_UNIT_KILOMETERS:
+			return true
+		case INTERVAL_UNIT_FEET:
+			return true
+		case INTERVAL_UNIT_YARDS:
+			return true
+		case INTERVAL_UNIT_MILES:
+			return true
+		default:
+			return false
+		}
+	}
+	
+	private func isPaceOrSpeedUnit(unit: IntervalUnit) -> Bool {
+		switch unit {
+		case INTERVAL_UNIT_PACE_METRIC:
+			return true
+		case INTERVAL_UNIT_PACE_US_CUSTOMARY:
+			return true
+		case INTERVAL_UNIT_SPEED_METRIC:
+			return true
+		case INTERVAL_UNIT_SPEED_US_CUSTOMARY:
+			return true
+		default:
+			return false
+		}
+	}
+	
 	func applyModifier(key: String, value: Double) {
 
 		if key.contains(MODIFIER_ADD_SETS) || key.contains(MODIFIER_EDIT_SETS) {
@@ -199,44 +242,94 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 			self.firstUnits = INTERVAL_UNIT_SECONDS
 		}
 		else if key.contains(MODIFIER_ADD_DISTANCE_METERS) {
+			if self.isPaceOrSpeedUnit(unit: self.firstUnits) {
+				self.secondValue = self.firstValue
+				self.secondUnits = self.firstUnits
+			}
 			self.firstValue = value
 			self.firstUnits = INTERVAL_UNIT_METERS
 		}
 		else if key.contains(MODIFIER_ADD_DISTANCE_KILOMETERS) {
+			if self.isPaceOrSpeedUnit(unit: self.firstUnits) {
+				self.secondValue = self.firstValue
+				self.secondUnits = self.firstUnits
+			}
 			self.firstValue = value
 			self.firstUnits = INTERVAL_UNIT_KILOMETERS
 		}
 		else if key.contains(MODIFIER_ADD_DISTANCE_FEET) {
+			if self.isPaceOrSpeedUnit(unit: self.firstUnits) {
+				self.secondValue = self.firstValue
+				self.secondUnits = self.firstUnits
+			}
 			self.firstValue = value
 			self.firstUnits = INTERVAL_UNIT_FEET
 		}
 		else if key.contains(MODIFIER_ADD_DISTANCE_YARDS) {
+			if self.isPaceOrSpeedUnit(unit: self.firstUnits) {
+				self.secondValue = self.firstValue
+				self.secondUnits = self.firstUnits
+			}
 			self.firstValue = value
 			self.firstUnits = INTERVAL_UNIT_YARDS
 		}
 		else if key.contains(MODIFIER_ADD_DISTANCE_MILES) {
+			if self.isPaceOrSpeedUnit(unit: self.firstUnits) {
+				self.secondValue = self.firstValue
+				self.secondUnits = self.firstUnits
+			}
 			self.firstValue = value
 			self.firstUnits = INTERVAL_UNIT_MILES
 		}
 		else if key.contains(MODIFIER_ADD_PACE_US_CUSTOMARY) {
-			self.firstValue = value
-			self.firstUnits = INTERVAL_UNIT_PACE_US_CUSTOMARY
+			if self.isDistanceUnit(unit: self.firstUnits) || self.firstUnits == INTERVAL_UNIT_SECONDS {
+				self.secondValue = value
+				self.secondUnits = INTERVAL_UNIT_PACE_US_CUSTOMARY
+			}
+			else {
+				self.firstValue = value
+				self.firstUnits = INTERVAL_UNIT_PACE_US_CUSTOMARY
+			}
 		}
 		else if key.contains(MODIFIER_ADD_PACE_METRIC) {
-			self.firstValue = value
-			self.firstUnits = INTERVAL_UNIT_PACE_METRIC
+			if self.isDistanceUnit(unit: self.firstUnits) || self.firstUnits == INTERVAL_UNIT_SECONDS {
+				self.secondValue = value
+				self.secondUnits = INTERVAL_UNIT_PACE_METRIC
+			}
+			else {
+				self.firstValue = value
+				self.firstUnits = INTERVAL_UNIT_PACE_METRIC
+			}
 		}
 		else if key.contains(MODIFIER_ADD_SPEED_US_CUSTOMARY) {
-			self.firstValue = value
-			self.firstUnits = INTERVAL_UNIT_SPEED_US_CUSTOMARY
+			if self.isDistanceUnit(unit: self.firstUnits) || self.firstUnits == INTERVAL_UNIT_SECONDS {
+				self.secondValue = value
+				self.secondUnits = INTERVAL_UNIT_SPEED_US_CUSTOMARY
+			}
+			else {
+				self.firstValue = value
+				self.firstUnits = INTERVAL_UNIT_SPEED_US_CUSTOMARY
+			}
 		}
 		else if key.contains(MODIFIER_ADD_SPEED_METRIC) {
-			self.firstValue = value
-			self.firstUnits = INTERVAL_UNIT_PACE_METRIC
+			if self.isDistanceUnit(unit: self.firstUnits) || self.firstUnits == INTERVAL_UNIT_SECONDS {
+				self.secondValue = value
+				self.secondUnits = INTERVAL_UNIT_PACE_METRIC
+			}
+			else {
+				self.firstValue = value
+				self.firstUnits = INTERVAL_UNIT_PACE_METRIC
+			}
 		}
 		else if key.contains(MODIFIER_ADD_POWER) {
-			self.firstValue = value
-			self.firstUnits = INTERVAL_UNIT_WATTS
+			if self.isDistanceUnit(unit: self.firstUnits) || self.firstUnits == INTERVAL_UNIT_SECONDS {
+				self.secondValue = value
+				self.secondUnits = INTERVAL_UNIT_WATTS
+			}
+			else {
+				self.firstValue = value
+				self.firstUnits = INTERVAL_UNIT_WATTS
+			}
 		}
 
 		else if key.contains(MODIFIER_EDIT_DURATION) {
@@ -329,42 +422,50 @@ class IntervalSegment : Identifiable, Hashable, Equatable {
 		return String(format: "%0.1lf %@", value, self.unitsStr(units: units))
 	}
 
-	func formatDescription(value1: Double, units1: IntervalUnit, value2: Double, units2: IntervalUnit) -> String {
+	func intervalDescription() -> String {
 		var description: String = ""
 		
-		if self.sets == 1 && self.reps == 1 {
-			description = String(self.sets) + " set of "
+		if self.firstUnits == INTERVAL_UNIT_NOT_SET {
+			if self.sets == 1 && self.reps == 1 {
+				description = "1 set of 1 rep"
+			}
+			else {
+				if self.sets > 1 {
+					description = String(self.sets) + " sets of "
+				}
+				if self.reps > 1 {
+					description += String(self.reps) + " reps "
+				}
+			}
 		}
-		if self.sets > 1 {
-			description = String(self.sets) + " sets of "
-		}
-		if self.reps > 1 {
-			description += String(self.reps) + " reps of "
-		}
-		if units1 != INTERVAL_UNIT_NOT_SET {
-			description += self.formatDescriptionFragment(value: value1, units: units1)
+		else {
+			if self.reps > 1 {
+				description += String(self.reps) + " reps of "
+			}
 			
-			if units2 != INTERVAL_UNIT_NOT_SET {
-				if  units2 == INTERVAL_UNIT_PACE_US_CUSTOMARY ||
-					units2 == INTERVAL_UNIT_PACE_METRIC ||
-					units2 == INTERVAL_UNIT_SPEED_US_CUSTOMARY ||
-					units2 == INTERVAL_UNIT_SPEED_METRIC ||
-					units2 == INTERVAL_UNIT_WATTS {
+			description += self.formatDescriptionFragment(value: self.firstValue, units: self.firstUnits)
+			
+			if self.secondUnits != INTERVAL_UNIT_NOT_SET {
+				if  self.secondUnits == INTERVAL_UNIT_PACE_US_CUSTOMARY ||
+					self.secondUnits == INTERVAL_UNIT_PACE_METRIC ||
+					self.secondUnits == INTERVAL_UNIT_SPEED_US_CUSTOMARY ||
+					self.secondUnits == INTERVAL_UNIT_SPEED_METRIC ||
+					self.secondUnits == INTERVAL_UNIT_WATTS {
 					description += " at "
 				}
-				else if units2 == INTERVAL_UNIT_REPS {
+				else if self.secondUnits == INTERVAL_UNIT_REPS {
 					description += " of "
 				}
-				description += self.formatDescriptionFragment(value: value2, units: units2)
+				description += self.formatDescriptionFragment(value: self.secondValue, units: self.secondUnits)
 			}
 		}
 		return description
 	}
-
-	func description() -> String {
-		return self.formatDescription(value1: self.firstValue, units1: self.firstUnits, value2: self.secondValue, units2: self.secondUnits)
-	}
 	
+	func intervalProgressDescription() -> String {
+		return ""
+	}
+
 	func color() -> Color {
 		switch self.firstUnits {
 		case INTERVAL_UNIT_NOT_SET:

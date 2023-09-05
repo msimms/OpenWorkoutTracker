@@ -18,6 +18,8 @@ enum ExportDest {
 	case email, icloud
 }
 
+let INSET = EdgeInsets(top: 0, leading: 5, bottom: 5, trailing: 10)
+
 class MailComposeViewController: UIViewController, MFMailComposeViewControllerDelegate {
 	
 	func displayEmailComposerSheet(subjectStr: String, bodyStr: String, fileName: String, mimeType: String) throws {
@@ -33,7 +35,7 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 				let fileUrl = URL(fileURLWithPath: fileName)
 				let data = try Data(contentsOf: fileUrl)
 				let justTheFileName = fileUrl.lastPathComponent
-				
+
 				mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
 			}
 
@@ -41,7 +43,7 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 		}
 		else {
 			let alert = UIAlertController(title: "Error", message: "Sending email is not available on this device.", preferredStyle: .alert)
-			
+
 			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 			}))
 			UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
@@ -58,6 +60,7 @@ struct HistoryDetailsView: View {
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: StoredActivityVM
 	@State private var showingDeleteConfirmation: Bool = false
+	@State private var showingDeletePhotoConfirmation: Bool = false
 	@State private var showingTrimSelection: Bool = false
 	@State private var showingActivityTypeSelection: Bool = false
 	@State private var showingExportSelection: Bool = false
@@ -73,6 +76,7 @@ struct HistoryDetailsView: View {
 	@State private var activityTrimTime: UInt64 = 0
 	@State private var activityTrimFromStart: Bool = true
 	@State private var selectedImage: UIImage = UIImage()
+	@ObservedObject private var apiClient = ApiClient.shared
 
 	func hrFormatter(num: Double) -> String {
 		return String(format: "%0.0f", num)
@@ -116,7 +120,8 @@ struct HistoryDetailsView: View {
 							MapWithPolyline(region: region, trackUser: false)
 								.setOverlay(self.activityVM.trackLine)
 								.ignoresSafeArea()
-								.frame(width: 400, height: 300)
+								.frame(height: 300)
+								.padding(INSET)
 						}
 					}
 
@@ -127,9 +132,9 @@ struct HistoryDetailsView: View {
 								self.showingUpdateNameError = !self.activityVM.updateActivityName()
 							}
 							.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
-							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+							.font(Font.headline)
 					}
-					.padding(10)
+					.padding(INSET)
 
 					// Description
 					HStack() {
@@ -139,16 +144,16 @@ struct HistoryDetailsView: View {
 							}
 							.lineLimit(2...10)
 							.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
-							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
+							.font(Font.body)
 					}
-					.padding(10)
+					.padding(INSET)
 
 					// Photos
 					Group() {
-						ForEach(self.activityVM.photoUrls, id: \.self) { item in
+						ForEach(self.activityVM.photoIds, id: \.self) { item in
 							HStack() {
 								AsyncImage(
-									url: item,
+									url:  URL(string: ApiClient.shared.buildPhotoRequestUrlStr(userId: self.activityVM.userId, photoId: item)),
 									content: { image in
 										image.resizable()
 											.aspectRatio(contentMode: .fit)
@@ -158,7 +163,25 @@ struct HistoryDetailsView: View {
 										ProgressView()
 									}
 								)
+
+								Button {
+									self.showingDeletePhotoConfirmation = true
+								} label: {
+									Image(systemName: "trash")
+										.foregroundColor(.red)
+								}
+								.alert("Are you sure you want to delete this photo? This cannot be undone.", isPresented: self.$showingDeletePhotoConfirmation) {
+									Button("Delete") {
+										if self.activityVM.deletePhoto(photoId: item) {
+										}
+									}
+									Button("Cancel") {
+									}
+								}
+								.foregroundColor(self.colorScheme == .dark ? .white : .black)
+								.help("Delete this photo")
 							}
+							.padding(INSET)
 						}
 					}
 
@@ -177,7 +200,7 @@ struct HistoryDetailsView: View {
 									Image(systemName: "chart.xyaxis.line")
 								}
 								else if item == "Pace" {
-									NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: StoredActivityVM.formatAsHHMMSS))
+									NavigationLink("Pace", destination: SensorChartView(title: "Pace", yLabel: "Pace", data: self.activityVM.pace, color: .purple, formatter: StringUtils.formatAsHHMMSS))
 									Spacer()
 									Image(systemName: "chart.xyaxis.line")
 								}
@@ -214,9 +237,8 @@ struct HistoryDetailsView: View {
 									Text(valueStr)
 								}
 							}
-							.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 						}
-						.padding(10)
+						.padding(INSET)
 					}
 
 					// Splits
@@ -230,8 +252,8 @@ struct HistoryDetailsView: View {
 								Spacer()
 								Image(systemName: "chart.bar.fill")
 							}
-							.padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
-							
+							.padding(INSET)
+
 							if kmSplits.count > 0 {
 								let fastestSplit = kmSplits.max()!
 								
@@ -244,16 +266,15 @@ struct HistoryDetailsView: View {
 										let barHeight: Double = 0.9 * geometry.size.height
 										
 										HStack() {
-											Text("KM " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+											Text("KM " + String(i+1) + " Split: " + StringUtils.formatSeconds(numSeconds: currentSplit))
 											Spacer()
 											Rectangle()
 												.frame(width: splitPercentage * barWidth, height: barHeight)
 												.overlay(Rectangle().stroke(Color.blue))
 										}
-										.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 									}
 								}
-								.padding(10)
+								.padding(INSET)
 							}
 							
 							if mileSplits.count > 0 {
@@ -268,16 +289,15 @@ struct HistoryDetailsView: View {
 										let barHeight: Double = 0.9 * geometry.size.height
 										
 										HStack() {
-											Text("Mile " + String(i+1) + " Split: " + LiveActivityVM.formatSeconds(numSeconds: currentSplit))
+											Text("Mile " + String(i+1) + " Split: " + StringUtils.formatSeconds(numSeconds: currentSplit))
 											Spacer()
 											Rectangle()
 												.frame(width: splitPercentage * barWidth, height: barHeight)
 												.overlay(Rectangle().stroke(Color.red))
 										}
-										.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
 									}
 								}
-								.padding(10)
+								.padding(INSET)
 							}
 						}
 					}
@@ -303,7 +323,7 @@ struct HistoryDetailsView: View {
 								Button("Cancel") {
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.help("Delete this activity")
 						}
 						
@@ -335,7 +355,7 @@ struct HistoryDetailsView: View {
 									}
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.help("Edit this activity")
 						}
 
@@ -378,7 +398,7 @@ struct HistoryDetailsView: View {
 									self.showingTrimConfirmation = true
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.help("Trim this activity")
 							.alert("Are you sure you want to trim this activity? This cannot be undone.", isPresented: self.$showingTrimConfirmation) {
 								Button("Trim") {
@@ -391,13 +411,13 @@ struct HistoryDetailsView: View {
 						
 						// Photos button
 						Group() {
-							if ApiClient.shared.loginStatus == LoginStatus.LOGIN_STATUS_SUCCESS {
+							if self.apiClient.loginStatus == LoginStatus.LOGIN_STATUS_SUCCESS {
 								Button {
 									self.showingPhotoPicker = true
 								} label: {
 									Label("Attach Photo", systemImage: "photo")
 								}
-								.foregroundColor(colorScheme == .dark ? .white : .black)
+								.foregroundColor(self.colorScheme == .dark ? .white : .black)
 								.sheet(isPresented: self.$showingPhotoPicker) {
 									PhotoPicker(callback: { image in
 										let _ = self.activityVM.uploadPhoto(image: image)
@@ -413,7 +433,7 @@ struct HistoryDetailsView: View {
 									Image(systemName: "tag")
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.help("Apply a tag to the activity")
 							
 							// Share/Export button
@@ -500,7 +520,7 @@ struct HistoryDetailsView: View {
 									}
 								}
 							}
-							.foregroundColor(colorScheme == .dark ? .white : .black)
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 							.help("Export this activity")
 							.alert("Export failed!", isPresented: self.$showingExportFailedError) { }
 							.alert("Export succeeded!", isPresented: self.$showingExportSucceededError) { }

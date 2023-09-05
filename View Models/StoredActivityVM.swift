@@ -20,7 +20,7 @@ func tagsCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeM
 	typedPointer.pointee.tags.append(tag)
 }
 
-class StoredActivityVM : ObservableObject {
+class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	enum State {
 		case empty
 		case loaded
@@ -47,11 +47,12 @@ class StoredActivityVM : ObservableObject {
 	var x: Array<(UInt64, Double)> = []             // X-axis accelerometer readings vs time
 	var y: Array<(UInt64, Double)> = []             // Y-axis accelerometer readings vs time
 	var z: Array<(UInt64, Double)> = []             // Z-axis accelerometer readings vs time
-	@Published var photoUrls: Array<URL> = []       // URLs of any photos associated with this activity
+	@Published var photoIds: Array<String> = []     // Unique identifiers for any photos associated with this activity
 	
 	init(activitySummary: ActivitySummary) {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_LIST), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosListReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_LIST), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: nil)
 		
 		self.state = State.empty
 		self.source = activitySummary.source
@@ -60,6 +61,17 @@ class StoredActivityVM : ObservableObject {
 		self.name = activitySummary.name
 		self.description = activitySummary.description
 		self.activityIndex = activitySummary.index
+	}
+	
+	/// @brief Hashable overrides
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(self.activityId)
+		hasher.combine(self.state)
+	}
+	
+	/// @brief Equatable overrides
+	static func == (lhs: StoredActivityVM, rhs: StoredActivityVM) -> Bool {
+		return lhs.activityId == rhs.activityId && lhs.state == rhs.state
 	}
 	
 	func load() {
@@ -93,7 +105,9 @@ class StoredActivityVM : ObservableObject {
 		}
 		
 		DispatchQueue.main.async {
-			self.state = State.loaded
+			if self.state != State.loaded {
+				self.state = State.loaded
+			}
 		}
 	}
 	
@@ -548,30 +562,6 @@ class StoredActivityVM : ObservableObject {
 		}
 		return tags
 	}
-	
-	/// @brief Utility function for converting a number of seconds into HH:MMSS format
-	static func formatAsHHMMSS(numSeconds: Double) -> String {
-		let SECS_PER_DAY  = 86400
-		let SECS_PER_HOUR = 3600
-		let SECS_PER_MIN  = 60
-		var tempSeconds   = Int(numSeconds)
-
-		let days     = (tempSeconds / SECS_PER_DAY)
-		tempSeconds -= (days * SECS_PER_DAY)
-		let hours    = (tempSeconds / SECS_PER_HOUR)
-		tempSeconds -= (hours * SECS_PER_HOUR)
-		let minutes  = (tempSeconds / SECS_PER_MIN)
-		tempSeconds -= (minutes * SECS_PER_MIN)
-		let seconds  = (tempSeconds % SECS_PER_MIN)
-
-		if days > 0 {
-			return String(format: "%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
-		}
-		else if hours > 0 {
-			return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-		}
-		return String(format: "%02d:%02d", minutes, seconds)
-	}
 
 	@objc func activityMetadataUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -601,7 +591,7 @@ class StoredActivityVM : ObservableObject {
 		}
 	}
 
-	@objc func activityPhotosListUpdated(notification: NSNotification) {
+	@objc func activityPhotosListReceived(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				let requestUrl = data[KEY_NAME_URL] as? URL
@@ -617,12 +607,8 @@ class StoredActivityVM : ObservableObject {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
 					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, Any> {
 						if let photoIds = responseDict[PARAM_ACTIVITY_PHOTO_IDS] as? Array<String> {
-							self.photoUrls = []
-							for photoId in photoIds {
-								let imageUrl = URL(string: ApiClient.shared.buildPhotoRequestUrlStr(userId: self.userId, photoId: photoId))
-								if imageUrl != nil {
-									self.photoUrls.append(imageUrl!)
-								}
+							DispatchQueue.main.async {
+								self.photoIds = photoIds
 							}
 						}
 					}
@@ -631,5 +617,10 @@ class StoredActivityVM : ObservableObject {
 		}
 		catch {
 		}
+	}
+	
+	@objc func activityPhotosUpdated(notification: NSNotification) {
+		// Retrieve photo URLs.
+		let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
 	}
 }

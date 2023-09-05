@@ -71,17 +71,18 @@ let PREF_NAME_US_CUSTOMARY = "units_us_customary"
 /// Default preference values
 ///
 
-let MIN_BROADCAST_RATE =     60
-let MAX_BROADCAST_RATE =     5
+let MIN_BROADCAST_RATE = 60
+let MAX_BROADCAST_RATE = 5
 
-let DEFAULT_BROADCAST_RATE = 30
-let DEFAULT_PROTOCOL =       "https"
-let DEFAULT_HOST_NAME =      "openworkout.cloud"
-let DEFAULT_POOL_LENGTH =    MEASURE_NOT_SET
+let DEFAULT_BROADCAST_RATE =    30
+let DEFAULT_PROTOCOL =          "https"
+let DEFAULT_HOST_NAME =         "openworkout.cloud"
+let DEFAULT_POOL_LENGTH =       25
+let DEFAULT_POOL_LENGTH_UNITS = UNIT_SYSTEM_METRIC
 
-let DEFAULT_HEIGHT_CM =      178.0
-let DEFAULT_WEIGHT_KG =      77.0
-let DEFAULT_BIRTH_DATE =     315532800 // Jan 1, 1980
+let DEFAULT_HEIGHT_CM =  178.0
+let DEFAULT_WEIGHT_KG =  77.0
+let DEFAULT_BIRTH_DATE = 315532800 // Jan 1, 1980
 
 class Preferences {
 	
@@ -525,11 +526,22 @@ class Preferences {
 	
 	static func poolLength() -> Int {
 		let mydefaults: UserDefaults = UserDefaults.standard
+
+		// Default value.
+		if mydefaults.object(forKey: PREF_NAME_POOL_LENGTH) == nil {
+			return DEFAULT_POOL_LENGTH
+		}
 		return mydefaults.integer(forKey: PREF_NAME_POOL_LENGTH)
 	}
 	
 	static func poolLengthUnits() -> UnitSystem {
 		let mydefaults: UserDefaults = UserDefaults.standard
+
+		// Default value.
+		if mydefaults.object(forKey: PREF_NAME_POOL_LENGTH_UNITS) == nil {
+			return DEFAULT_POOL_LENGTH_UNITS
+		}
+
 		let poolLengthUnits = mydefaults.integer(forKey: PREF_NAME_POOL_LENGTH_UNITS)
 		
 		if poolLengthUnits == UNIT_SYSTEM_METRIC.rawValue {
@@ -807,9 +819,14 @@ class Preferences {
 		mydefaults.set(value, forKey: PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING)
 	}
 	
-	static func setPoolLength(poolLength: Int) {
+	static func setPoolLength(poolLengthDescription: String) {
+		let parts = poolLengthDescription.components(separatedBy: " ")
+		let poolLength = Int(parts[0])
+		let poolLengthUnits = parts[1] == "Yards" ? UNIT_SYSTEM_US_CUSTOMARY : UNIT_SYSTEM_METRIC
 		let mydefaults: UserDefaults = UserDefaults.standard
+
 		mydefaults.set(poolLength, forKey: PREF_NAME_POOL_LENGTH)
+		mydefaults.set(poolLengthUnits.rawValue, forKey: PREF_NAME_POOL_LENGTH_UNITS)
 	}
 	
 	static func setPoolLengthUnits(poolLengthUnits: UnitSystem) {

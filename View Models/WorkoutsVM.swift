@@ -370,6 +370,8 @@ class WorkoutsVM : ObservableObject {
 
 	static func workoutDescription(typeEnum: WorkoutType) -> String {
 		switch typeEnum {
+		case WORKOUT_TYPE_UNSPECIFIED:
+			return ""
 		case WORKOUT_TYPE_REST:
 			return ""
 		case WORKOUT_TYPE_EVENT:

@@ -1436,7 +1436,7 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	Activity::BuildSummaryAttributeList(attributes);
 }
 
-bool MovingActivity::CheckPositionInterval(void)
+bool MovingActivity::CheckDistanceInterval(void)
 {
 	// If a session is not specified or is already complete then just return.
 	if ((m_intervalSession.sessionId.size() == 0) ||
@@ -1450,9 +1450,12 @@ bool MovingActivity::CheckPositionInterval(void)
 	if (IsDistanceBasedIntervalSegment(&segment))
 	{
 		double segmentDistanceInMeters = ConvertDistanceIntervalSegmentToMeters(&segment);
+		double totalSegmentDistanceInMeters = segmentDistanceInMeters * segment.reps;
 		double distanceTraveledInMeters = DistanceTraveledInMeters();
+		double currentSegmentDistanceInMeters = distanceTraveledInMeters - m_intervalWorkoutState.lastDistanceMeters;
 
-		if (distanceTraveledInMeters - m_intervalWorkoutState.lastDistanceMeters >= segmentDistanceInMeters)
+		m_intervalWorkoutState.lastRepCount = currentSegmentDistanceInMeters / segmentDistanceInMeters;
+		if (currentSegmentDistanceInMeters >= totalSegmentDistanceInMeters)
 		{
 			return true;
 		}

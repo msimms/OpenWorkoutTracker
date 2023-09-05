@@ -52,19 +52,19 @@ struct ActivityPreferencesView: View {
 			Group() {
 				Text("Default Layout")
 					.bold()
-				Toggle("Screen Auto-Locking", isOn: $screenAutoLocking)
+				Toggle("Screen Auto-Locking", isOn: self.$screenAutoLocking)
 					.onChange(of: screenAutoLocking) { value in
 						ActivityPreferences.setScreenAutoLocking(activityType: self.activityType, value: value)
 					}
-				Toggle("Allow Screen Presses During Activity", isOn: $allowScreenPresses)
+				Toggle("Allow Screen Presses During Activity", isOn: self.$allowScreenPresses)
 					.onChange(of: allowScreenPresses) { value in
 						ActivityPreferences.setAllowScreenPressesDuringActivity(activityType: self.activityType, value: value)
 					}
-				Toggle("Countdown Timer", isOn: $countdownTimer)
+				Toggle("Countdown Timer", isOn: self.$countdownTimer)
 					.onChange(of: countdownTimer) { value in
 						ActivityPreferences.setCountdown(activityType: self.activityType, value: value)
 					}
-				Toggle("Show Heart Rate as Percentage", isOn: $showHeartRateAsPercentage)
+				Toggle("Show Heart Rate as Percentage", isOn: self.$showHeartRateAsPercentage)
 					.onChange(of: showHeartRateAsPercentage) { value in
 						ActivityPreferences.setShowHeartRatePercent(activityType: self.activityType, value: value)
 					}
@@ -78,7 +78,7 @@ struct ActivityPreferencesView: View {
 					Button(ActivityPreferences.getBackgroundColorName(activityType: self.activityType)) {
 						self.showingBackgroundColorSelection = true
 					}
-					.confirmationDialog("Which color?", isPresented: $showingBackgroundColorSelection, titleVisibility: .visible) {
+					.confirmationDialog("Which color?", isPresented: self.$showingBackgroundColorSelection, titleVisibility: .visible) {
 						ForEach(self.colorNames, id: \.self) { item in
 							Button(item) {
 								ActivityPreferences.setBackgroundColor(activityType: self.activityType, colorName: item)
@@ -92,7 +92,7 @@ struct ActivityPreferencesView: View {
 					Button(ActivityPreferences.getLabelColorName(activityType: self.activityType)) {
 						self.showingLabelColorSelection = true
 					}
-					.confirmationDialog("Which color?", isPresented: $showingLabelColorSelection, titleVisibility: .visible) {
+					.confirmationDialog("Which color?", isPresented: self.$showingLabelColorSelection, titleVisibility: .visible) {
 						ForEach(self.colorNames, id: \.self) { item in
 							Button(item) {
 								ActivityPreferences.setLabelColor(activityType: self.activityType, colorName: item)
@@ -106,7 +106,7 @@ struct ActivityPreferencesView: View {
 					Button(ActivityPreferences.getTextColorName(activityType: self.activityType)) {
 						self.showingTextColorSelection = true
 					}
-					.confirmationDialog("Which color?", isPresented: $showingTextColorSelection, titleVisibility: .visible) {
+					.confirmationDialog("Which color?", isPresented: self.$showingTextColorSelection, titleVisibility: .visible) {
 						ForEach(self.colorNames, id: \.self) { item in
 							Button(item) {
 								ActivityPreferences.setTextColor(activityType: self.activityType, colorName: item)
@@ -118,11 +118,11 @@ struct ActivityPreferencesView: View {
 			Group() {
 				Text("Sounds")
 					.bold()
-				Toggle("Start/Stop Beep", isOn: $startStopBeep)
+				Toggle("Start/Stop Beep", isOn: self.$startStopBeep)
 					.onChange(of: startStopBeep) { value in
 						ActivityPreferences.setStartStopBeepEnabled(activityType: self.activityType, value: value)
 					}
-				Toggle("Split Beep", isOn: $splitBeep)
+				Toggle("Split Beep", isOn: self.$splitBeep)
 					.onChange(of: splitBeep) { value in
 						ActivityPreferences.setSplitBeepEnabled(activityType: self.activityType, value: value)
 					}
@@ -133,22 +133,22 @@ struct ActivityPreferencesView: View {
 				HStack() {
 					Text("Horizontal Accuracy")
 					Spacer()
-					TextField("Distance", text: $horizontalAccuracy.value)
+					TextField("Distance", text: self.$horizontalAccuracy.value)
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: horizontalAccuracy.value) { value in
+						.onChange(of: self.horizontalAccuracy.value) { value in
 						}
 					Text("Meters")
 				}
 				HStack() {
 					Text("Vertical Accuracy")
 					Spacer()
-					TextField("Distance", text: $verticalAccuracy.value)
+					TextField("Distance", text: self.$verticalAccuracy.value)
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: verticalAccuracy.value) { value in
+						.onChange(of: self.verticalAccuracy.value) { value in
 						}
 					Text("Meters")
 				}
@@ -171,7 +171,7 @@ struct ActivityPreferencesView: View {
 		/*	Group() {
 				Text("Radar")
 					.bold()
-				Toggle("Show Threat Speed", isOn: $showThreatSpeed)
+				Toggle("Show Threat Speed", isOn: self.$showThreatSpeed)
 					.onChange(of: showThreatSpeed) { value in
 						ActivityPreferences.setShowThreatSpeed(activityType: self.activityType, value: value)
 					}

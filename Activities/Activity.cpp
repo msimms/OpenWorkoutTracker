@@ -477,11 +477,12 @@ bool Activity::CheckIntervalSession(void)
 	
 	try
 	{
-		shouldAdvance  = CheckTimeInterval();
-		shouldAdvance |= CheckPositionInterval();
-		shouldAdvance |= CheckSetsInterval();
-		shouldAdvance |= CheckRepsInterval();
+		bool timeComplete = CheckTimeInterval();
+		bool distanceComplete = CheckDistanceInterval();
+		bool setsComplete = CheckSetsInterval();
+		bool repsComplete = CheckRepsInterval();
 
+		shouldAdvance = timeComplete || distanceComplete || setsComplete || repsComplete;
 		if (shouldAdvance)
 		{
 			AdvanceIntervalState();
