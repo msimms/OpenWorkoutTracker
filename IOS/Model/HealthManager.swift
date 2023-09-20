@@ -811,21 +811,6 @@ class HealthManager {
 		return newFileName
 	}
 
-	/// @brief This method is called in response to a heart rate updated notification. It saves the heart rate to the health store.
-	@objc func heartRateUpdated(notification: NSNotification) {
-
-		if let notificationData = notification.object as? Dictionary<String, Any> {
-
-			if  let idStr = notificationData[KEY_NAME_PERIPHERAL_OBJ] as? String,
-				let rate = notificationData[KEY_NAME_HEART_RATE] as? Double {
-				
-				if Preferences.shouldUsePeripheral(uuid: idStr) {
-					self.saveHeartRateIntoHealthStore(beats: rate)
-				}
-			}
-		}
-	}
-
 	/// @brief This method is called in response to an activity stopped notification.
 	@objc func activityStopped(notification: NSNotification) {
 		
