@@ -440,6 +440,9 @@ class LiveActivityVM : ObservableObject {
 			self.isPaused = false
 			self.autoStartEnabled = false
 			
+			// Start the activity in HealthKit.
+			HealthManager.shared.startWorkout(activityType: self.activityType, startTime: Date())
+
 			// Tell any subscribers that we've started an activity.
 			var notificationData: Dictionary<String, String> = [:]
 			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId
@@ -499,6 +502,9 @@ class LiveActivityVM : ObservableObject {
 			summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime.value.intVal))
 			summary.source = ActivitySummary.Source.database
 			
+			// Stop the activity in HealthKit.
+			HealthManager.shared.stopWorkout(endTime: summary.endTime)
+
 			// Tell any subscribers that we've stopped an activity.
 			var notificationData: Dictionary<String, Any> = [:]
 			notificationData[KEY_NAME_ACTIVITY_ID] = self.activityId

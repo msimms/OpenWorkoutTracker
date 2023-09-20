@@ -36,6 +36,9 @@ class HealthManager {
 	private var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
 	private var locationQueryGroup: DispatchGroup = DispatchGroup() // tracks location/route queries until they are completed
 	private var hrQuery: HKQuery? = nil // the query that reads heart rate on the watch
+#if TARGET_OS_WATCH
+	private var workoutSession: HKWorkoutSession
+#endif
 
 	/// Singleton constructor
 	private init() {
@@ -885,6 +888,41 @@ class HealthManager {
 
 		self.healthStore.stop(self.hrQuery!)
 		self.hrQuery = nil
+	}
+
+	func startWorkout(activityType: String, startTime: Date) {
+		let workoutConfig: HKWorkoutConfiguration = HKWorkoutConfiguration()
+
+		// Convert the activity strings we use internally to Apple's activity type enumeration.
+		workoutConfig.activityType = HealthManager.activityTypeToHKWorkoutType(activityType: activityType)
+
+		// From the activity type, infer the type of location (indoor, outdoor).
+		workoutConfig.locationType = HealthManager.activityTypeToHKWorkoutSessionLocationType(activityType: activityType)
+
+		// Swim specifc configuration.
+		if workoutConfig.activityType == HKWorkoutActivityType.swimming {
+			workoutConfig.swimmingLocationType = HealthManager.activityTypeToHKWorkoutSwimmingLocationType(activityType: activityType)
+			if workoutConfig.locationType == HKWorkoutSessionLocationType.indoor {
+				workoutConfig.lapLength = HealthManager.poolLengthToHKQuantity()
+			}
+		}
+
+#if TARGET_OS_WATCH
+		self.workoutSession = HKWorkoutSession(healthStore: self.healthStore, configuration:workoutConfig)
+		self.workoutSession.delegate = self
+		self.workoutSession.startActivity(with: startTime)
+
+		if Preferences.useWatchHeartRate() {
+			self.subscribeToHeartRateUpdates()
+		}
+#endif
+	}
+
+	func stopWorkout(endTime: Date) {
+#if TARGET_OS_WATCH
+		self.workoutSession.stopActivityWithDate(endTime)
+		self.workoutSession.end
+#endif
 	}
 
 	/// @brief Utility method for converting between the specified unit system and HKUnit.
