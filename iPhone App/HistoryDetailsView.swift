@@ -121,7 +121,6 @@ struct HistoryDetailsView: View {
 								.setOverlay(self.activityVM.trackLine)
 								.ignoresSafeArea()
 								.frame(height: 300)
-								.padding(INSET)
 						}
 					}
 
@@ -131,8 +130,10 @@ struct HistoryDetailsView: View {
 							.onChange(of: self.activityVM.name) { value in
 								self.showingUpdateNameError = !self.activityVM.updateActivityName()
 							}
+							.lineLimit(2...4)
 							.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
 							.font(Font.headline)
+							.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
 					}
 					.padding(INSET)
 
