@@ -23,6 +23,12 @@ let INSET = EdgeInsets(top: 0, leading: 5, bottom: 5, trailing: 10)
 class MailComposeViewController: UIViewController, MFMailComposeViewControllerDelegate {
 	
 	func displayEmailComposerSheet(subjectStr: String, bodyStr: String, fileName: String, mimeType: String) throws {
+		let keyWindow = UIApplication.shared.connectedScenes
+			.filter({$0.activationState == .foregroundActive})
+			.compactMap({$0 as? UIWindowScene})
+			.first?.windows
+			.filter({$0.isKeyWindow}).first
+
 		if MFMailComposeViewController.canSendMail() {
 			let mail = MFMailComposeViewController()
 			
@@ -39,14 +45,14 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 				mail.addAttachmentData(data, mimeType: mimeType, fileName: justTheFileName)
 			}
 
-			UIApplication.shared.keyWindow?.rootViewController?.present(mail, animated: true)
+			keyWindow?.rootViewController?.present(mail, animated: true)
 		}
 		else {
 			let alert = UIAlertController(title: "Error", message: "Sending email is not available on this device.", preferredStyle: .alert)
 
 			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
 			}))
-			UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
+			keyWindow?.rootViewController?.present(alert, animated: true)
 		}
 	}
 	
