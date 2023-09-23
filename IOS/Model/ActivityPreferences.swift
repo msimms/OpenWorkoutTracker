@@ -51,7 +51,7 @@ class ActivityPreferences {
 	var defaultPoolSwimmingLayout: Array<String> = []
 
 	init() {
-#if TARGET_OS_WATCH
+#if os(watchOS)
 		self.defaultCyclingLayout = [ ACTIVITY_ATTRIBUTE_CURRENT_LAP_TIME,
 									  ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
 									  ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
@@ -130,7 +130,7 @@ class ActivityPreferences {
 									  ACTIVITY_ATTRIBUTE_HEART_RATE,
 									  ACTIVITY_ATTRIBUTE_AVG_HEART_RATE,
 									  ACTIVITY_ATTRIBUTE_CALORIES_BURNED ]
-#if TARGET_OS_WATCH
+#if os(watchOS)
 		self.defaultTriathlonLayout = [ ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED,
 										ACTIVITY_ATTRIBUTE_CURRENT_SPEED,
 										ACTIVITY_ATTRIBUTE_MOVING_TIME,

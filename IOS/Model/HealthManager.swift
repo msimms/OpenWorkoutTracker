@@ -36,8 +36,8 @@ class HealthManager {
 	private var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
 	private var locationQueryGroup: DispatchGroup = DispatchGroup() // tracks location/route queries until they are completed
 	private var hrQuery: HKQuery? = nil // the query that reads heart rate on the watch
-#if TARGET_OS_WATCH
-	private var workoutSession: HKWorkoutSession
+#if os(watchOS)
+	private var workoutSession: HKWorkoutSession? = nil
 #endif
 
 	/// Singleton constructor
@@ -53,7 +53,7 @@ class HealthManager {
 		}
 		
 		// Request authorization for things to read and write.
-#if TARGET_OS_WATCH
+#if os(watchOS)
 		let heightType = HKObjectType.quantityType(forIdentifier: .height)!
 		let weightType = HKObjectType.quantityType(forIdentifier: .bodyMass)!
 		let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
@@ -589,6 +589,15 @@ class HealthManager {
 		self.healthStore.save(hrSample, withCompletion: {_,_ in })
 	}
 
+	func savePowerIntoHealthStore(watts: Double) {
+/*		let now = Date()
+		let powerUnit: HKUnit = HKUnit.watt()
+		let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
+		let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingPower)
+		let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
+		self.healthStore.save(powerSample, withCompletion: {_,_ in }) */
+	}
+
 	func saveRunningWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
 		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
 		let workout = HKWorkout(activityType: .running, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
@@ -892,11 +901,19 @@ class HealthManager {
 			}
 		}
 
-#if TARGET_OS_WATCH
-		self.workoutSession = HKWorkoutSession(healthStore: self.healthStore, configuration:workoutConfig)
-		self.workoutSession.delegate = self
-		self.workoutSession.startActivity(with: startTime)
+#if os(watchOS)
+		// Start the session in HealthKit. The app will get put into the background on the watch if we don't do this.
+		do {
+			self.workoutSession = try HKWorkoutSession(healthStore: self.healthStore, configuration:workoutConfig)
+			if let session = self.workoutSession {
+				//session.delegate = self
+				session.startActivity(with: startTime)
+			}
+		}
+		catch {
+		}
 
+		// Subscribe to heart rate updates.
 		if Preferences.useWatchHeartRate() {
 			self.subscribeToHeartRateUpdates()
 		}
@@ -904,11 +921,21 @@ class HealthManager {
 	}
 
 	func stopWorkout(endTime: Date) {
-#if TARGET_OS_WATCH
-		self.workoutSession.stopActivityWithDate(endTime)
-		self.workoutSession.end
+#if os(watchOS)
+		if let session = self.workoutSession {
+			session.stopActivity(with: endTime)
+			session.end()
+		}
 #endif
 	}
+
+#if os(watchOS)
+	func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
+	}
+	
+	func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
+	}
+#endif
 
 	/// @brief Utility method for converting between the specified unit system and HKUnit.
 	static func unitSystemToHKDistanceUnit(units: UnitSystem) -> HKUnit {

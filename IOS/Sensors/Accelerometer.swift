@@ -20,7 +20,7 @@ class Accelerometer {
 
 	func start() {
 		if self.motionManager.isAccelerometerAvailable {
-#if TARGET_OS_WATCH
+#if os(watchOS)
 			self.motionManager.accelerometerUpdateInterval = 0.2
 #else
 			self.motionManager.accelerometerUpdateInterval = 0.1
