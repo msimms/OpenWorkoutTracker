@@ -159,14 +159,16 @@ struct ProfileView: View {
 					TextField("Not set", text: Binding(
 						get: { self.userDefinedFtp.asDouble() < 1.0 ? "" : self.userDefinedFtp.value },
 						set: {(newValue) in
-							if let value = Double(newValue) {
-								self.userDefinedFtp.value = newValue
-								Preferences.setUserDefinedFtp(value: value)
-								CommonApp.shared.setUserProfile()
-								showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
-							} else {
-								self.userDefinedMaxHr.value = ""
-								self.showingHrError = true
+							if newValue.count > 0 {
+								if let value = Double(newValue) {
+									self.userDefinedFtp.value = newValue
+									Preferences.setUserDefinedFtp(value: value)
+									CommonApp.shared.setUserProfile()
+									showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
+								} else {
+									self.userDefinedMaxHr.value = ""
+									self.showingHrError = true
+								}
 							}
 						}))
 						.keyboardType(.decimalPad)
@@ -186,14 +188,16 @@ struct ProfileView: View {
 					TextField("Not set", text: Binding(
 						get: { self.userDefinedRestingHr.asDouble() < 1.0 ? "" : self.userDefinedRestingHr.value },
 						set: {(newValue) in
-							if let value = Double(newValue) {
-								self.userDefinedRestingHr.value = newValue
-								Preferences.setUserDefinedRestingHr(value: value)
-								CommonApp.shared.setUserProfile()
-								showingApiError = !ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date())
-							} else {
-								self.userDefinedRestingHr.value = ""
-								self.showingHrError = true
+							if newValue.count > 0 {
+								if let value = Double(newValue) {
+									self.userDefinedRestingHr.value = newValue
+									Preferences.setUserDefinedRestingHr(value: value)
+									CommonApp.shared.setUserProfile()
+									showingApiError = !ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date())
+								} else {
+									self.userDefinedRestingHr.value = ""
+									self.showingHrError = true
+								}
 							}
 						}))
 					.keyboardType(.decimalPad)
@@ -213,14 +217,16 @@ struct ProfileView: View {
 					TextField("Not set", text: Binding(
 						get: { self.userDefinedMaxHr.asDouble() < 1.0 ? "" : self.userDefinedMaxHr.value },
 						set: {(newValue) in
-							if let value = Double(newValue) {
-								self.userDefinedMaxHr.value = newValue
-								Preferences.setUserDefinedMaxHr(value: value)
-								CommonApp.shared.setUserProfile()
-								showingApiError = !ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
-							} else {
-								self.userDefinedMaxHr.value = ""
-								self.showingHrError = true
+							if newValue.count > 0 {
+								if let value = Double(newValue) {
+									self.userDefinedMaxHr.value = newValue
+									Preferences.setUserDefinedMaxHr(value: value)
+									CommonApp.shared.setUserProfile()
+									showingApiError = !ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
+								} else {
+									self.userDefinedMaxHr.value = ""
+									self.showingHrError = true
+								}
 							}
 						}))
 					.keyboardType(.decimalPad)
@@ -241,14 +247,16 @@ struct ProfileView: View {
 				TextField("Not set", text: Binding(
 					get: { self.userDefinedVO2Max.asDouble() < 1.0 ? "" : self.userDefinedVO2Max.value },
 					set: {(newValue) in
-						if let value = Double(newValue) {
-							self.userDefinedVO2Max.value = newValue
-							Preferences.setUserDefinedVO2Max(value: value)
-							CommonApp.shared.setUserProfile()
-							showingApiError = !ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date())
-						} else {
-							self.userDefinedVO2Max.value = ""
-							self.showingVO2MaxError = true
+						if newValue.count > 0 {
+							if let value = Double(newValue) {
+								self.userDefinedVO2Max.value = newValue
+								Preferences.setUserDefinedVO2Max(value: value)
+								CommonApp.shared.setUserProfile()
+								showingApiError = !ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date())
+							} else {
+								self.userDefinedVO2Max.value = ""
+								self.showingVO2MaxError = true
+							}
 						}
 					}))
 				.keyboardType(.decimalPad)
