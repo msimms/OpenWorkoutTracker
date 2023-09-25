@@ -542,6 +542,14 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	func deletePhoto(photoId: String) -> Bool {
 		return ApiClient.shared.deleteActivityPhoto(activityId: self.activityId, photoId: photoId)
 	}
+
+	func createTag(tag: String) -> Bool {
+		return CreateTag(self.activityId, tag)
+	}
+	
+	func deleteTag(tag: String) -> Bool {
+		return DeleteTag(self.activityId, tag)
+	}
 	
 	/// @brief Returns any tags that were applied to this activity.
 	func listTags() -> Array<String> {
@@ -561,6 +569,28 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			tags = pointer.pointee.tags
 		}
 		return tags
+	}
+	
+	func listValidGearNames() -> Array<String> {
+		var names: Array<String> = []
+		
+		if IsHistoricalActivityMovingActivity(self.activityIndex) {
+			if IsHistoricalActivityFootBased(self.activityIndex) {
+				let gearVM: GearVM = GearVM()
+				let shoes = gearVM.listShoes()
+				for shoe in shoes {
+					names.append(shoe.name)
+				}
+			}
+			else {
+				let gearVM: GearVM = GearVM()
+				let bikes = gearVM.listBikes()
+				for bike in bikes {
+					names.append(bike.name)
+				}
+			}
+		}
+		return names
 	}
 
 	@objc func activityMetadataUpdated(notification: NSNotification) {
