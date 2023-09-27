@@ -544,11 +544,17 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	}
 
 	func createTag(tag: String) -> Bool {
-		return CreateTag(self.activityId, tag)
+		if CreateTag(self.activityId, tag) {
+			return ApiClient.shared.createTag(tag: tag, activityId: self.activityId)
+		}
+		return false
 	}
 	
 	func deleteTag(tag: String) -> Bool {
-		return DeleteTag(self.activityId, tag)
+		if DeleteTag(self.activityId, tag) {
+			return ApiClient.shared.deleteTag(tag: tag, activityId: self.activityId)
+		}
+		return false
 	}
 	
 	/// @brief Returns any tags that were applied to this activity.
@@ -579,14 +585,18 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 				let gearVM: GearVM = GearVM()
 				let shoes = gearVM.listShoes()
 				for shoe in shoes {
-					names.append(shoe.name)
+					if shoe.timeRetired.timeIntervalSince1970 == 0 {
+						names.append(shoe.name)
+					}
 				}
 			}
 			else {
 				let gearVM: GearVM = GearVM()
 				let bikes = gearVM.listBikes()
 				for bike in bikes {
-					names.append(bike.name)
+					if bike.timeRetired.timeIntervalSince1970 == 0 {
+						names.append(bike.name)
+					}
 				}
 			}
 		}
