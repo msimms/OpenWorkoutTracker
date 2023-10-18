@@ -105,7 +105,7 @@ struct ActivityView: View {
 	var body: some View {
 		VStack(alignment: .center) {
 			// Top item
-			VStack() {
+			VStack(alignment: .center) {
 				HStack() {
 					Text("Stopping...")
 						.foregroundColor(.red)
@@ -113,7 +113,8 @@ struct ActivityView: View {
 				}
 				.opacity(self.stopping ? 1 : 0)
 
-				HStack() {
+				VStack(alignment: .center) {
+					Text(self.activityVM.title1).font(.system(size: 12)).multilineTextAlignment(.center)
 					Text(self.activityVM.value1).font(.system(size: 48))
 						.onTapGesture {
 							self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
@@ -418,8 +419,9 @@ struct ActivityView: View {
 				Text("Cancel")
 			}
 		}
-		.navigationTitle(self.activityType)
+		.navigationBarTitle(self.activityType)
 		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
+		.navigationBarTitleDisplayMode(.inline)
 		.opacity(self.activityVM.isPaused ? 0.5 : 1)
 		.onAppear() {
 			if self.activityVM.isStopped {
