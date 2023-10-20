@@ -124,6 +124,9 @@ WorkoutList SwimPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string,
 		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 		workouts.push_back(GenerateAerobicSwim(hasSwimmingPoolAccess));
 		break;
+	case GOAL_100K_BIKE_RIDE:
+	case GOAL_100_MILE_BIKE_RIDE:
+		break;
 	}
 
 	return workouts;

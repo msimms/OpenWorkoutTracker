@@ -479,6 +479,10 @@ double RunPlanGenerator::MaxTaperDistance(Goal goalDistance)
 		return 0.75 * METERS_PER_HALF_MARATHON;
 	case GOAL_IRON_DISTANCE_TRIATHLON:
 		return METERS_PER_HALF_MARATHON;
+	case GOAL_100K_BIKE_RIDE:
+		return 0.0;
+	case GOAL_100_MILE_BIKE_RIDE:
+		return 0.0;
 	}
 	return 0.0;
 }

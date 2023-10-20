@@ -447,6 +447,12 @@ class Preferences {
 		if goal == GOAL_IRON_DISTANCE_TRIATHLON.rawValue {
 			return GOAL_IRON_DISTANCE_TRIATHLON
 		}
+		if goal == GOAL_100K_BIKE_RIDE.rawValue {
+			return GOAL_100K_BIKE_RIDE
+		}
+		if goal == GOAL_100_MILE_BIKE_RIDE.rawValue {
+			return GOAL_100_MILE_BIKE_RIDE
+		}
 		return GOAL_FITNESS
 	}
 	
