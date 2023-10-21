@@ -47,7 +47,7 @@ struct TagsView: View {
 					}
 					.padding()
 					.background(Color.gray)
-					.foregroundColor(.white)
+					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.cornerRadius(10)
 					.buttonStyle(PlainButtonStyle())
 				}
@@ -106,7 +106,7 @@ struct TagsView: View {
 		}
 		.padding()
 		.background(Color.gray)
-		.foregroundColor(.white)
+		.foregroundColor(self.colorScheme == .dark ? .white : .black)
 		.cornerRadius(10)
 		.buttonStyle(PlainButtonStyle())
 	}

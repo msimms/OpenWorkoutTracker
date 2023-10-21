@@ -22,7 +22,6 @@ DataImporter::DataImporter()
 
 DataImporter::~DataImporter()
 {
-	
 }
 
 bool OnNewTcxLocation(double lat, double lon, double ele, uint64_t time, double hr, double power, double cadence, void* context)
@@ -43,6 +42,24 @@ bool OnNewGpxLocation(double lat, double lon, double ele, uint64_t time, void* c
 	return false;
 }
 
+bool OnNewTcxRouteLocation(double lat, double lon, double ele, uint64_t time, double hr, double power, double cadence, void* context)
+{
+	if (context)
+	{
+		return ((DataImporter*)context)->NewRouteLocation(lat, lon, ele);
+	}
+	return false;
+}
+
+bool OnNewGpxRouteLocation(double lat, double lon, double ele, uint64_t time, void* context)
+{
+	if (context)
+	{
+		return ((DataImporter*)context)->NewRouteLocation(lat, lon, ele);
+	}
+	return false;
+}
+
 void OnNewActivityType(const char* const activityType, void* context)
 {
 	if (context)
@@ -51,12 +68,12 @@ void OnNewActivityType(const char* const activityType, void* context)
 	}
 }
 
-bool DataImporter::ImportFromFit(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
+bool DataImporter::ImportFromFit(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase)
 {
 	return false;
 }
 
-bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
+bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase)
 {
 	bool result = false;
 	FileLib::TcxFileReader reader;
@@ -79,7 +96,7 @@ bool DataImporter::ImportFromTcx(const std::string& fileName, const std::string&
 	return result;
 }
 
-bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
+bool DataImporter::ImportFromGpx(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase)
 {
 	bool result = false;
 	FileLib::GpxFileReader reader;
@@ -113,7 +130,7 @@ std::istream& operator>>(std::istream& is, ColumnDelimiter<','>& output)
    return is;
 }
 
-bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase)
+bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase)
 {
 	bool result = false;
 
@@ -178,15 +195,49 @@ bool DataImporter::ImportFromCsv(const std::string& fileName, const std::string&
 	return result;
 }
 
-bool DataImporter::ImportFromKml(const std::string& fileName, std::vector<FileLib::KmlPlacemark>& placemarks)
+bool DataImporter::ImportRouteFromKml(const std::string& fileName, const std::string& routeId, Database* pDatabase)
 {
 	FileLib::KmlFileReader reader;
 
-	if (reader.ParseFile(fileName))
-	{
-		placemarks = reader.GetPlacemarks();
-		return true;
-	}
+	m_pDb = pDatabase;
+	m_started = false;
+	m_routeId = routeId;
+
+	return reader.ParseFile(fileName);
+}
+
+bool DataImporter::ImportRouteFromGpx(const std::string& fileName, const std::string& routeId, Database* pDatabase)
+{
+	bool result = false;
+	FileLib::GpxFileReader reader;
+	
+	m_pDb = pDatabase;
+	m_started = false;
+	m_routeId = routeId;
+	
+	pDatabase->CreateRoute(routeId, "", "");
+	reader.SetNewLocationCallback(OnNewGpxRouteLocation, this);
+	result = reader.ParseFile(fileName);
+	return result;
+}
+
+bool DataImporter::ImportRouteFromTcx(const std::string& fileName, const std::string& routeId, Database* pDatabase)
+{
+	bool result = false;
+	FileLib::TcxFileReader reader;
+	
+	m_pDb = pDatabase;
+	m_started = false;
+	m_routeId = routeId;
+
+	pDatabase->CreateRoute(routeId, "", "");
+	reader.SetNewLocationCallback(OnNewTcxRouteLocation, this);
+	result = reader.ParseFile(fileName);
+	return result;
+}
+
+bool DataImporter::ImportRouteFromFit(const std::string& fileName, const std::string& routeId, Database* pDatabase)
+{
 	return false;
 }
 
@@ -243,6 +294,23 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 	}
 
 	m_lastTime = time;
+	return result;
+}
+
+bool DataImporter::NewRouteLocation(double lat, double lon, double ele)
+{
+	bool result = false;
+	
+	if (m_pDb)
+	{
+		Coordinate coordinate;
+		
+		coordinate.time = 0;
+		coordinate.latitude = lat;
+		coordinate.longitude = lon;
+		coordinate.altitude = ele;
+		result = m_pDb->CreateRoutePoint(m_routeId, coordinate);
+	}
 	return result;
 }
 

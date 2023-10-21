@@ -29,6 +29,7 @@
 #include "LiftingActivity.h"
 #include "MountainBiking.h"
 #include "PoolSwim.h"
+#include "Route.h"
 #include "Run.h"
 #include "Shoes.h"
 #include "UnitMgr.h"
@@ -174,6 +175,7 @@ extern "C" {
 	std::vector<Shoes>            g_shoes;                  // cache of shoe profiles
 	std::vector<IntervalSession>  g_intervalSessions;       // cache of interval sessions
 	std::vector<PacePlan>         g_pacePlans;              // cache of pace plans
+	std::vector<Route>            g_routes;                 // cache of routes
 	std::vector<Workout>          g_workouts;               // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
 
@@ -1871,18 +1873,18 @@ extern "C" {
 		return result;
 	}
 
-	bool CreateNewPacePlan(const char* const planName, const char* planId)
+	bool CreateNewPacePlan(const char* const planId, const char* const name)
 	{
 		// Sanity checks.
-		if (planName == NULL)
-		{
-			return false;
-		}
 		if (planId == NULL)
 		{
 			return false;
 		}
-		
+		if (name == NULL)
+		{
+			return false;
+		}
+
 		bool result = false;
 		
 		g_dbLock.lock();
@@ -1892,7 +1894,7 @@ extern "C" {
 			PacePlan plan;
 			
 			plan.planId = planId;
-			plan.name = planName;
+			plan.name = name;
 			plan.description = "";
 			plan.targetDistance = (double)0.0;
 			plan.targetTime = 0;
@@ -4533,7 +4535,7 @@ extern "C" {
 	}
 
 	//
-	// Functions for importing ZWO files.
+	// Functions for importing ZWO workout files.
 	//
 
 	bool ImportZwoFile(const char* const fileName, const char* const workoutId)
@@ -4543,42 +4545,60 @@ extern "C" {
 	}
 
 	//
-	// Functions for importing KML files.
+	// Functions for importing route files.
 	//
 
-	bool ImportKmlFile(const char* const pFileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, CoordinateCallback coordinateCallback, void* context)
+	bool InitializeRouteList(void)
+	{
+		g_routes.clear();
+		return false;
+	}
+
+	bool ImportRouteFromFile(const char* const routeId, const char* const pFileName)
+	{
+		bool result = false;
+		
+		std::string fileName = pFileName;
+		std::string fileExtension = fileName.substr(fileName.find_last_of(".") + 1);
+		DataImporter importer;
+
+		g_dbLock.lock();
+
+		if (fileExtension.compare("kml") == 0)
+		{
+			result = importer.ImportRouteFromKml(pFileName, routeId, g_pDatabase);
+		}
+		else if (fileExtension.compare("gpx") == 0)
+		{
+			result = importer.ImportRouteFromGpx(pFileName, routeId, g_pDatabase);
+		}
+		else if (fileExtension.compare("tcx") == 0)
+		{
+			result = importer.ImportRouteFromTcx(pFileName, routeId, g_pDatabase);
+		}
+		else if (fileExtension.compare("fit") == 0)
+		{
+			result = importer.ImportRouteFromFit(pFileName, routeId, g_pDatabase);
+		}
+
+		g_dbLock.unlock();
+
+		return result;
+	}
+
+	char* RetrieveRouteInfoAsJSON(size_t routeIndex)
+	{
+		return NULL;
+	}
+
+	bool DeleteRoute(const char* const routeId)
 	{
 		bool result = false;
 
-		DataImporter importer;
-		std::vector<FileLib::KmlPlacemark> placemarks;
-
-		if (importer.ImportFromKml(pFileName, placemarks))
-		{
-			for (auto placemarkIter = placemarks.begin(); placemarkIter != placemarks.end(); ++placemarkIter)
-			{
-				const FileLib::KmlPlacemark& currentPlacemark = (*placemarkIter);
-				placemarkStartCallback(currentPlacemark.name.c_str(), context);
-
-				for (auto coordinateIter = currentPlacemark.coordinates.begin(); coordinateIter != currentPlacemark.coordinates.end(); ++coordinateIter)
-				{
-					const FileLib::KmlCoordinate& currentCoordinate = (*coordinateIter);
-
-					Coordinate coordinate;
-					coordinate.latitude = currentCoordinate.latitude;
-					coordinate.longitude = currentCoordinate.longitude;
-					coordinate.altitude = currentCoordinate.altitude;
-					coordinate.horizontalAccuracy = (double)0.0;
-					coordinate.verticalAccuracy = (double)0.0;
-					coordinate.time = 0;
-					coordinateCallback(coordinate, context);
-				}
-
-				placemarkEndCallback(currentPlacemark.name.c_str(), context);
-			}
-
-			result = true;
-		}
+		g_dbLock.lock();
+		result = g_pDatabase->DeleteRoute(routeId);
+		result &= g_pDatabase->DeleteRouteCoordinates(routeId);
+		g_dbLock.unlock();
 		return result;
 	}
 

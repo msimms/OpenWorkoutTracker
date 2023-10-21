@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct EditIntervalSessionView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
 
@@ -158,13 +159,20 @@ struct EditIntervalSessionView: View {
 			Spacer()
 
 			Group() {
-				Button(action: { self.showingIntervalTypeSelection = true }) {
-					Text("Append")
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
-						.padding()
+				Button(action: {
+					self.showingIntervalTypeSelection = true
+				}) {
+					HStack() {
+						Image(systemName: "doc.append")
+						Text("Append")
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.foregroundColor(self.colorScheme == .dark ? .black : .white)
+					.padding()
 				}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+				.opacity(0.8)
+				.bold()
 				.confirmationDialog("Which type of interval?", isPresented: self.$showingIntervalTypeSelection, titleVisibility: .visible) {
 					Button("Time") {
 						let newSegment = IntervalSegment()
@@ -211,7 +219,7 @@ struct EditIntervalSessionView: View {
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
 						.padding()
 				}
 				.alert("Failed to create the interval session.", isPresented: self.$showingSaveFailedAlert) {}
@@ -222,11 +230,16 @@ struct EditIntervalSessionView: View {
 
 			// Delete
 			Group() {
-				Button(action: { self.showingDeleteConfirmation = true }) {
-					Text("Delete")
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.red)
-						.padding()
+				Button(action: {
+					self.showingDeleteConfirmation = true
+				}) {
+					HStack() {
+						Image(systemName: "trash")
+						Text("Delete")
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.foregroundColor(.red)
+					.padding()
 				}
 				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {
 					Button("Delete") {

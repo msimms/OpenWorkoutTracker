@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct EditShoesView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@State var gearId: UUID = UUID()
 	@State var name: String = ""
 	@State var description: String = ""
@@ -37,7 +38,7 @@ struct EditShoesView: View {
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
 						.padding()
 				}
 				.alert("Failed to save.", isPresented: self.$showingSaveError) {}
@@ -62,10 +63,13 @@ struct EditShoesView: View {
 				Button(action: {
 					self.showingDeleteError = !GearVM.deleteShoes(gearId: self.gearId)
 				}) {
-					Text("Delete")
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.red)
-						.padding()
+					HStack() {
+						Image(systemName: "trash")
+						Text("Delete")
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.foregroundColor(.red)
+					.padding()
 				}
 				.alert("Failed to delete.", isPresented: self.$showingDeleteError) {}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))

@@ -128,7 +128,7 @@ extern "C" {
 
 	// Functions for managing pace plans.
 	bool InitializePacePlanList(void);
-	bool CreateNewPacePlan(const char* const planName, const char* const planId);
+	bool CreateNewPacePlan(const char* const planId, const char* const name);
 	char* RetrievePacePlanAsJSON(size_t planIndex);
 	bool UpdatePacePlan(const char* const planId, const char* const name, const char* const description,
 		double targetDistance, time_t targetTime, time_t targetSplits,
@@ -297,11 +297,14 @@ extern "C" {
 	ActivityAttributeType QueryActivityAttributeTotalByActivityType(const char* const attributeName, const char* const activityType);
 	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, char** const pActivityId);
 
-	// Functions for importing ZWO files.
+	// Functions for importing ZWO workout files.
 	bool ImportZwoFile(const char* const fileName, const char* const workoutId);
 
-	// Functions for importing KML files.
-	bool ImportKmlFile(const char* const fileName, KmlPlacemarkStartCallback placemarkStartCallback, KmlPlacemarkEndCallback placemarkEndCallback, CoordinateCallback coordinateCallback, void* context);
+	// Functions for managing routes.
+	bool InitializeRouteList(void);
+	bool ImportRouteFromFile(const char* const routeId, const char* const fileName);
+	char* RetrieveRouteInfoAsJSON(size_t routeIndex);
+	bool DeleteRoute(const char* const routeId);
 
 	// Functions for creating a heat map.
 	bool CreateHeatMap(HeatMapPointCallback callback, void* context);

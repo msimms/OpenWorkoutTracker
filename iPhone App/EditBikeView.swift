@@ -60,11 +60,13 @@ struct EditBikeView: View {
 
 			Group() {
 				NavigationLink(destination: GearServiceItemView(gearId: self.gearId)) {
-					Text("Add Service Record")
-						.foregroundColor(self.colorScheme == .dark ? .black : .white)
-						.fontWeight(Font.Weight.heavy)
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.padding()
+					HStack() {
+						Image(systemName: "doc.append")
+						Text("Add Service Record")
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.foregroundColor(self.colorScheme == .dark ? .black : .white)
+					.padding()
 				}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
@@ -101,10 +103,13 @@ struct EditBikeView: View {
 				Button(action: {
 					self.showingDeleteError = !GearVM.deleteBike(gearId: self.gearId)
 				}) {
-					Text("Delete")
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.red)
-						.padding()
+					HStack() {
+						Image(systemName: "trash")
+						Text("Delete")
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.foregroundColor(.red)
+					.padding()
 				}
 				.alert("Failed to delete.", isPresented: self.$showingDeleteError) {}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))

@@ -152,7 +152,7 @@ class PacePlansVM : ObservableObject {
 	}
 	
 	func createPacePlan(plan: PacePlan) -> Bool {
-		if CreateNewPacePlan(plan.name, plan.id.uuidString) {
+		if CreateNewPacePlan(plan.id.uuidString, plan.name) {
 			let lastUpdatedTime = time(nil)
 
 			if UpdatePacePlan(plan.id.uuidString, plan.name, plan.description, plan.distance, plan.time, plan.splits, plan.distanceUnits, plan.splitsUnits, lastUpdatedTime) {
@@ -192,7 +192,7 @@ class PacePlansVM : ObservableObject {
 			}
 		}
 		else {
-			if CreateNewPacePlan(summaryObj.name, summaryObj.id.uuidString) {
+			if CreateNewPacePlan(summaryObj.id.uuidString, summaryObj.name) {
 				if UpdatePacePlan(summaryObj.id.uuidString, summaryObj.name, summaryObj.description, summaryObj.distance, summaryObj.time, summaryObj.splits, summaryObj.distanceUnits, summaryObj.splitsUnits, time_t(summaryObj.lastUpdatedTime.timeIntervalSince1970)) {
 					return buildPacePlansList()
 				}

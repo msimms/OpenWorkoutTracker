@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct EditPacePlanView: View {
+	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject private var pacePlansVM = PacePlansVM.shared
 
@@ -186,7 +187,7 @@ struct EditPacePlanView: View {
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.white)
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
 						.padding()
 				}
 				.alert("Failed to create the pace plan.", isPresented: self.$showingSaveError) {}
@@ -195,11 +196,16 @@ struct EditPacePlanView: View {
 				.bold()
 
 				// Delete button
-				Button(action: { self.showingDeleteConfirmation = true }) {
-					Text("Delete")
-						.frame(minWidth: 0, maxWidth: .infinity)
-						.foregroundColor(.red)
-						.padding()
+				Button(action: {
+					self.showingDeleteConfirmation = true
+				}) {
+					HStack() {
+						Image(systemName: "trash")
+						Text("Delete")
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					.foregroundColor(.red)
+					.padding()
 				}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.alert("Are you sure you want to delete this workout? This cannot be undone.", isPresented: self.$showingDeleteConfirmation) {

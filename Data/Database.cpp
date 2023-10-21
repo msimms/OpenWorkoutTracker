@@ -224,6 +224,16 @@ bool Database::CreateTables(void)
 		sql = "create table activity_sync (id integer primary key, activity_id text, destination text, direction integer)";
 		queries.push_back(sql);
 	}
+	if (!DoesTableExist("route"))
+	{
+		sql = "create table route (id integer primary key, route_id text, name text, description text)";
+		queries.push_back(sql);
+	}
+	if (!DoesTableExist("route_coordinate"))
+	{
+		sql = "create table route_coordinate (id integer primary key, route_id text, latitude double, longitude double, altitude double)";
+		queries.push_back(sql);
+	}
 
 	int result = ExecuteQueries(queries);
 	return (result == SQLITE_OK || result == SQLITE_DONE);
@@ -280,7 +290,11 @@ bool Database::DeleteTables(void)
 	queries.push_back(sql);
 	sql = "drop table activity_sync";
 	queries.push_back(sql);
-	
+	sql = "drop table route";
+	queries.push_back(sql);
+	sql = "drop table route_coordinate";
+	queries.push_back(sql);
+
 	int result = ExecuteQueries(queries);
 	return (result == SQLITE_OK || result == SQLITE_DONE);
 }
@@ -1109,6 +1123,123 @@ bool Database::DeletePacePlan(const std::string& planId)
 	if (result == SQLITE_OK)
 	{
 		sqlite3_bind_text(statement, 1, planId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::CreateRoute(const std::string& routeId, const std::string& name, const std::string& description)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "insert into route (id,route_id,name,description) values (NULL,?,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		std::string activityName;
+		
+		sqlite3_bind_text(statement, 1, routeId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 2, name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text(statement, 3, description.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::CreateRoutePoint(const std::string& routeId, const Coordinate& coordinate)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "insert into route_coordinate (id,route_id,latitude,longitude,altitude) values (NULL,?,?,?,?)", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		std::string activityName;
+		
+		sqlite3_bind_text(statement, 1, routeId.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_double(statement, 2, coordinate.latitude);
+		sqlite3_bind_double(statement, 3, coordinate.longitude);
+		sqlite3_bind_double(statement, 4, coordinate.altitude);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::RetrieveRoute(const std::string& routeId)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+
+	if (sqlite3_prepare_v2(m_pDb, "select name,description from route where route_id = ? limit 1", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_text(statement, 1, routeId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
+		{
+			if (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				result = true;
+			}
+		}
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::RetrieveRouteCoordinates(const std::string& routeId, CoordinateList& coordinates)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	coordinates.clear();
+	
+	if (sqlite3_prepare_v2(m_pDb, "select latitude,longitude,altitude from route_coordinate where route_id = ?", -1, &statement, 0) == SQLITE_OK)
+	{
+		if (sqlite3_bind_text(statement, 1, routeId.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
+		{
+			coordinates.reserve(1024);
+
+			while (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				Coordinate coordinate;
+				
+				coordinate.time      = 0;
+				coordinate.latitude  = sqlite3_column_double(statement, 0);
+				coordinate.longitude = sqlite3_column_double(statement, 1);
+				coordinate.altitude  = sqlite3_column_double(statement, 2);
+				coordinate.horizontalAccuracy = (double)0.0;
+				coordinate.verticalAccuracy   = (double)0.0;
+				coordinates.push_back(coordinate);
+			}
+			
+			result = true;
+		}
+		sqlite3_finalize(statement);
+	}
+	return result;
+}
+
+bool Database::DeleteRoute(const std::string& routeId)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "delete from route where route_id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, routeId.c_str(), -1, SQLITE_TRANSIENT);
+		result = sqlite3_step(statement);
+		sqlite3_finalize(statement);
+	}
+	return result == SQLITE_DONE;
+}
+
+bool Database::DeleteRouteCoordinates(const std::string& routeId)
+{
+	sqlite3_stmt* statement = NULL;
+	
+	int result = sqlite3_prepare_v2(m_pDb, "delete from route_coordinate where route_id = ?", -1, &statement, 0);
+	if (result == SQLITE_OK)
+	{
+		sqlite3_bind_text(statement, 1, routeId.c_str(), -1, SQLITE_TRANSIENT);
 		result = sqlite3_step(statement);
 		sqlite3_finalize(statement);
 	}
@@ -2228,7 +2359,7 @@ bool Database::RetrieveSensorReadingsOfType(const std::string& activityId, Senso
 	return false;
 }
 
-bool Database::RetrieveActivityCoordinates(const std::string& activityId, CoordinateList& coordinates)
+bool Database::RetrieveActivityPositionReadings(const std::string& activityId, CoordinateList& coordinates)
 {
 	const size_t SIZE_INCREMENT = 2048;
 	

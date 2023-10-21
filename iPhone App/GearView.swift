@@ -31,6 +31,9 @@ struct GearView: View {
 					Text("No Bicycles")
 				}
 			}
+			Spacer()
+				.frame(minHeight: 10, idealHeight: 40, maxHeight: 80)
+				.fixedSize()
 			VStack(alignment: .center) {
 				let shoes = self.gearVM.listShoes()
 
@@ -61,9 +64,9 @@ struct GearView: View {
 					Button {
 						self.showingAddSelection = true
 					} label: {
-						Label("+", systemImage: "plus")
+						Text("+")
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					}
-					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 				}
 				.confirmationDialog("What would you like to add?", isPresented: $showingAddSelection, titleVisibility: .visible) {
 					NavigationLink("Bicycle", destination: EditBikeView())

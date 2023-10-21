@@ -96,6 +96,15 @@ public:
 	bool RetrievePacePlans(std::vector<PacePlan>& plans);
 	bool UpdatePacePlan(const PacePlan& plan);
 	bool DeletePacePlan(const std::string& planId);
+	
+	// Methods for managing routes.
+	
+	bool CreateRoute(const std::string& routeId, const std::string& name, const std::string& description);
+	bool CreateRoutePoint(const std::string& routeId, const Coordinate& coordinate);
+	bool RetrieveRoute(const std::string& routeId);
+	bool RetrieveRouteCoordinates(const std::string& routeId, CoordinateList& coordinates);
+	bool DeleteRoute(const std::string& routeId);
+	bool DeleteRouteCoordinates(const std::string& routeId);
 
 	// Methods for managing activities.
 
@@ -159,7 +168,7 @@ public:
 
 	bool CreateSensorReading(const std::string& activityId, const SensorReading& reading);
 	bool RetrieveSensorReadingsOfType(const std::string& activityId, SensorType type, SensorReadingList& readings);
-	bool RetrieveActivityCoordinates(const std::string& activityId, CoordinateList& coordinates);
+	bool RetrieveActivityPositionReadings(const std::string& activityId, CoordinateList& coordinates);
 	bool RetrieveActivityPositionReadings(const std::string& activityId, CoordinateCallback coordinateCallback, void* context);
 	bool RetrieveActivityPositionReadings(const std::string& activityId, SensorReadingList& readings);
 	bool RetrieveActivityAccelerometerReadings(const std::string& activityId, SensorReadingList& readings);

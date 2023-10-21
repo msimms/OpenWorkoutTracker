@@ -458,7 +458,7 @@ bool DataExporter::ExportActivityFromDatabaseToGpx(const std::string& fileName, 
 		SensorReadingList cadenceList;
 		SensorReadingList powerList;
 
-		pDatabase->RetrieveActivityCoordinates(activityId, coordinateList);
+		pDatabase->RetrieveActivityPositionReadings(activityId, coordinateList);
 		pDatabase->RetrieveLaps(activityId, lapList);
 		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_HEART_RATE, hrList);
 		pDatabase->RetrieveSensorReadingsOfType(activityId, SENSOR_TYPE_CADENCE, cadenceList);

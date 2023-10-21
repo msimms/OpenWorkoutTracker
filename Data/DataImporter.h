@@ -19,19 +19,26 @@ public:
 	DataImporter();
 	virtual ~DataImporter();
 
-	bool ImportFromFit(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
-	bool ImportFromTcx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
-	bool ImportFromGpx(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
-	bool ImportFromCsv(const std::string& fileName, const std::string& activityType, const char* const activityId, Database* pDatabase);
-	bool ImportFromKml(const std::string& fileName, std::vector<FileLib::KmlPlacemark>& placemarks);
+	bool ImportFromFit(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase);
+	bool ImportFromTcx(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase);
+	bool ImportFromGpx(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase);
+	bool ImportFromCsv(const std::string& fileName, const std::string& activityType, const std::string& activityId, Database* pDatabase);
+
+	bool ImportRouteFromKml(const std::string& fileName, const std::string& routeId, Database* pDatabase);
+	bool ImportRouteFromGpx(const std::string& fileName, const std::string& routeId, Database* pDatabase);
+	bool ImportRouteFromTcx(const std::string& fileName, const std::string& routeId, Database* pDatabase);
+	bool ImportRouteFromFit(const std::string& fileName, const std::string& routeId, Database* pDatabase);
 
 	bool NewLocation(double lat, double lon, double ele, double hr, double power, double cadence, uint64_t time);
+	bool NewRouteLocation(double lat, double lon, double ele);
+
 	void SetActivityType(const std::string& activityType);
 
 protected:
 	Database*   m_pDb;
 	std::string m_activityType;
 	std::string m_activityId;
+	std::string m_routeId;
 	uint64_t    m_lastTime;
 	bool        m_started;
 };
