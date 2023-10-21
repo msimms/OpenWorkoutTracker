@@ -12,46 +12,43 @@ struct GearView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
-			VStack(alignment: .center) {
-				let bikes = self.gearVM.listBikes()
+			let bikes = self.gearVM.listBikes()
+			let shoes = self.gearVM.listShoes()
 
-				Text("Bicycles")
-					.bold()
-				if bikes.count > 0 {
-					List(bikes, id: \.self) { item in
-						NavigationLink(destination: EditBikeView(gearId: item.gearId, name: item.name, description: item.description, serviceHistory: item.serviceHistory)) {
-							let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
-							Text(item.name)
-								.foregroundColor(textColor)
-						}
+			Text("Bicycles")
+				.bold()
+			if bikes.count > 0 {
+				List(bikes, id: \.self) { item in
+					NavigationLink(destination: EditBikeView(gearId: item.gearId, name: item.name, description: item.description, serviceHistory: item.serviceHistory)) {
+						let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
+						Text(item.name)
+							.foregroundColor(textColor)
 					}
-					.listStyle(.plain)
 				}
-				else {
-					Text("No Bicycles")
-				}
+				.listStyle(.plain)
 			}
+			else {
+				Text("No Bicycles")
+			}
+
 			Spacer()
 				.frame(minHeight: 10, idealHeight: 40, maxHeight: 80)
 				.fixedSize()
-			VStack(alignment: .center) {
-				let shoes = self.gearVM.listShoes()
 
-				Text("Shoes")
-					.bold()
-				if shoes.count > 0 {
-					List(self.gearVM.listShoes(), id: \.self) { item in
-						NavigationLink(destination: EditShoesView(gearId: item.gearId, name: item.name, description: item.description)) {
-							let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
-							Text(item.name)
-								.foregroundColor(textColor)
-						}
+			Text("Shoes")
+				.bold()
+			if shoes.count > 0 {
+				List(self.gearVM.listShoes(), id: \.self) { item in
+					NavigationLink(destination: EditShoesView(gearId: item.gearId, name: item.name, description: item.description)) {
+						let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
+						Text(item.name)
+							.foregroundColor(textColor)
 					}
-					.listStyle(.plain)
 				}
-				else {
-					Text("No Shoes")
-				}
+				.listStyle(.plain)
+			}
+			else {
+				Text("No Shoes")
 			}
 		}
 		.padding(10)
