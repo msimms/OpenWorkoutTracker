@@ -43,8 +43,9 @@
 #define PARAM_GEAR_DESCRIPTION                   "description"
 #define PARAM_GEAR_ADD_TIME                      "add_time"
 #define PARAM_GEAR_RETIRE_TIME                   "retire_time"
-#define PARAM_GEAR_LAST_UPDATED_TIME             "last_updated_time"
+#define PARAM_GEAR_INITIAL_DISTANCE              "initial_distance"
 #define PARAM_GEAR_SERVICE_HISTORY               "service_history"
+#define PARAM_GEAR_LAST_UPDATED_TIME             "last_updated_time"
 
 // Gear Service ID
 #define PARAM_GEAR_SERVICE_ID                    "service_id"

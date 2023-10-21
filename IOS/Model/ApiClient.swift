@@ -68,12 +68,12 @@ class ApiClient : ObservableObject {
 				// POST method, put the dictionary in the HTTP body
 				if method == "POST" {
 					let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-					let text = String(data: jsonData, encoding: String.Encoding.utf8)!
-					let postLength = String(format: "%lu", text.count)
+					let jsonString = String(data: jsonData, encoding: String.Encoding.utf8)!
+					let postLength = String(format: "%lu", jsonString.count)
 					
 					request.setValue(postLength, forHTTPHeaderField: "Content-Length")
 					request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-					request.httpBody = text.data(using:.utf8)
+					request.httpBody = jsonString.data(using:.utf8)
 				}
 				
 				// GET method, append the parameters to the URL.
@@ -259,6 +259,32 @@ class ApiClient : ObservableObject {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_GEAR_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: [:])
 	}
+
+	func createGear(item: GearSummary) throws -> Bool {
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_GEAR_URL)
+		let jsonData = try JSONEncoder().encode(item)
+		guard let dictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] else {
+			return false
+		}
+		return self.makeRequest(url: urlStr, method: "POST", data: dictionary)
+	}
+
+	func updateGear(item: GearSummary) throws -> Bool {
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_GEAR_URL)
+		let jsonData = try JSONEncoder().encode(item)
+		guard let dictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] else {
+			return false
+		}
+		return self.makeRequest(url: urlStr, method: "POST", data: dictionary)
+	}
+
+	func deleteGear(gearId: UUID) -> Bool {
+		var deleteDict: Dictionary<String, String> = [:]
+		deleteDict[PARAM_GEAR_ID] = gearId.uuidString
+
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_GEAR_URL)
+		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict)
+	}
 	
 	func listPlannedWorkouts() -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_PLANNED_WORKOUTS_URL)
@@ -410,12 +436,12 @@ class ApiClient : ObservableObject {
 	}
 	
 	func deleteActivityPhoto(activityId: String, photoId: String) -> Bool {
-		var postDict: Dictionary<String, String> = [:]
-		postDict[PARAM_ACTIVITY_ID] = activityId
-		postDict[PARAM_ACTIVITY_PHOTO_ID] = photoId
+		var deleteDict: Dictionary<String, String> = [:]
+		deleteDict[PARAM_ACTIVITY_ID] = activityId
+		deleteDict[PARAM_ACTIVITY_PHOTO_ID] = photoId
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_ACTIVITY_PHOTO_URL)
-		return self.makeRequest(url: urlStr, method: "DELETE", data: postDict)
+		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict)
 	}
 	
 	func sendPlannedWorkouts(workoutsJson: String) -> Bool {

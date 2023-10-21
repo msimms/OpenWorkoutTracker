@@ -5,7 +5,13 @@
 
 import Foundation
 
-class GearServiceItem : Identifiable, Hashable, Equatable {
+class GearServiceItem : Identifiable, Hashable, Equatable, Encodable {
+	enum CodingKeys: CodingKey {
+		case serviceId
+		case timeServiced
+		case description
+	}
+
 	var serviceId: String = ""
 	var timeServiced: Date = Date()
 	var description: String = ""
@@ -41,17 +47,29 @@ class GearServiceItem : Identifiable, Hashable, Equatable {
 	}
 }
 
-class GearSummary : Identifiable, Hashable, Equatable {
+class GearSummary : Identifiable, Hashable, Equatable, Encodable {
+	enum CodingKeys: String, CodingKey {
+		case gearId
+		case name
+		case description
+		case weightKg
+		case wheelCircumferenceMm
+		case timeAdded
+		case timeRetired
+		case serviceHistory
+		case lastUpdatedTime
+	}
+
 	var gearId: UUID = UUID()
 	var name: String = ""
 	var description: String = ""
 	var weightKg: Double = 0.0
 	var wheelCircumferenceMm = 0.0
 	var timeAdded: Date = Date()
-	var timeRetired: Date = Date()
+	var timeRetired: Date = Date(timeIntervalSince1970: 0)
 	var serviceHistory: Array<GearServiceItem> = []
 	var lastUpdatedTime: Date = Date()
-
+	
 	/// Constructor
 	init() {
 	}
@@ -62,7 +80,7 @@ class GearSummary : Identifiable, Hashable, Equatable {
 		self.name = name
 		self.description = description
 	}
-
+	
 	/// Hashable overrides
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(self.gearId)
@@ -71,6 +89,12 @@ class GearSummary : Identifiable, Hashable, Equatable {
 	/// Equatable overrides
 	static func == (lhs: GearSummary, rhs: GearSummary) -> Bool {
 		return lhs.gearId == rhs.gearId
+	}
+	
+	var dict : [String: Any]? {
+		guard let data = try? JSONEncoder().encode(self) else { return nil }
+		guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] else { return nil }
+		return json
 	}
 }
 
@@ -191,11 +215,20 @@ class GearVM : ObservableObject {
 	}
 	
 	static func createBike(item: GearSummary) -> Bool {
+		// Does this already exist?
 		if GetBikeIdFromName(item.name) == nil {
-			if CreateBikeProfile(item.gearId.uuidString, item.name, item.description, item.weightKg, item.wheelCircumferenceMm,
+
+			// Create in the local database.
+			if CreateBikeProfile(item.gearId.uuidString,
+								 item.name,
+								 item.description,
+								 item.weightKg,
+								 item.wheelCircumferenceMm,
 								 time_t(item.timeAdded.timeIntervalSince1970),
 								 time_t(item.timeRetired.timeIntervalSince1970),
 								 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
+
+				// Add the service history.
 				for serviceItem in item.serviceHistory {
 					if CreateServiceHistory(item.gearId.uuidString,
 											serviceItem.serviceId,
@@ -204,14 +237,25 @@ class GearVM : ObservableObject {
 						return false
 					}
 				}
-				return true
+
+				do {
+					return try ApiClient.shared.createGear(item: item)
+				}
+				catch { }
 			}
 		}
 		else {
-			if UpdateBikeProfile(item.gearId.uuidString, item.name, item.description, item.weightKg, item.wheelCircumferenceMm,
+			// Update in the local database.
+			if UpdateBikeProfile(item.gearId.uuidString,
+								 item.name,
+								 item.description,
+								 item.weightKg,
+								 item.wheelCircumferenceMm,
 								 time_t(item.timeAdded.timeIntervalSince1970),
 								 time_t(item.timeRetired.timeIntervalSince1970),
 								 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
+				
+				// Add the service history.
 				for serviceItem in item.serviceHistory {
 					if CreateServiceHistory(item.gearId.uuidString,
 											serviceItem.serviceId,
@@ -220,23 +264,53 @@ class GearVM : ObservableObject {
 						return false
 					}
 				}
-				return true
+
+				// Update the optional server.
+				do {
+					return try ApiClient.shared.updateGear(item: item)
+				}
+				catch { }
 			}
 		}
 		return false
 	}
 
 	static func createShoes(item: GearSummary) -> Bool {
+		// Does this already exist?
 		if GetShoeIdFromName(item.name) == nil {
-			return CreateShoeProfile(item.gearId.uuidString, item.name, item.description,
-									 time_t(item.timeAdded.timeIntervalSince1970),
-									 time_t(item.timeRetired.timeIntervalSince1970),
-									 time_t(item.lastUpdatedTime.timeIntervalSince1970))
-		}
-		return UpdateShoeProfile(item.gearId.uuidString, item.name, item.description,
+
+			// Create in the local database.
+			if CreateShoeProfile(item.gearId.uuidString,
+								 item.name,
+								 item.description,
 								 time_t(item.timeAdded.timeIntervalSince1970),
 								 time_t(item.timeRetired.timeIntervalSince1970),
-								 time_t(item.lastUpdatedTime.timeIntervalSince1970))
+								 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
+
+				// Update the optional server.
+				do {
+					return try ApiClient.shared.createGear(item: item)
+				}
+				catch { }
+			}
+			return false
+		}
+
+		// Update in the local database.
+		if UpdateShoeProfile(item.gearId.uuidString,
+							 item.name,
+							 item.description,
+							 time_t(item.timeAdded.timeIntervalSince1970),
+							 time_t(item.timeRetired.timeIntervalSince1970),
+							 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
+
+			// Update the optional server.
+			do {
+				return try ApiClient.shared.updateGear(item: item)
+			}
+			catch { }
+		}
+		return false
 	}
 	
 	static func createServiceRecord(gearId: UUID, item: GearServiceItem) -> Bool {
@@ -285,11 +359,63 @@ class GearVM : ObservableObject {
 		}
 	}
 
+	static func retireBike(item: GearSummary) -> Bool {
+		// Update in the local database.
+		item.timeRetired = Date()
+
+		// Update in the local database.
+		if UpdateBikeProfile(item.gearId.uuidString,
+							 item.name,
+							 item.description,
+							 item.weightKg,
+							 item.wheelCircumferenceMm,
+							 time_t(item.timeAdded.timeIntervalSince1970),
+							 time_t(item.timeRetired.timeIntervalSince1970),
+							 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
+
+			// Update the optional server.
+			do {
+				return try ApiClient.shared.updateGear(item: item)
+			}
+			catch { }
+		}
+		return false
+	}
+	
+	static func retireShoes(item: GearSummary) -> Bool {
+		// Set the retired date to now.
+		item.timeRetired = Date()
+
+		// Update in the local database.
+		if UpdateShoeProfile(item.gearId.uuidString,
+							 item.name,
+							 item.description,
+							 time_t(item.timeAdded.timeIntervalSince1970),
+							 time_t(item.timeRetired.timeIntervalSince1970),
+							 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
+
+			// Update the optional server.
+			do {
+				return try ApiClient.shared.updateGear(item: item)
+			}
+			catch { }
+		}
+		return false
+	}
+
 	static func deleteBike(gearId: UUID) -> Bool {
-		return DeleteBikeProfile(gearId.uuidString)
+		// Delete from the database and then from the optional server.
+		if DeleteBikeProfile(gearId.uuidString) {
+			return ApiClient.shared.deleteGear(gearId: gearId)
+		}
+		return false
 	}
 	
 	static func deleteShoes(gearId: UUID) -> Bool {
-		return DeleteShoeProfile(gearId.uuidString)
+		// Delete from the database and then from the optional server.
+		if DeleteShoeProfile(gearId.uuidString) {
+			return ApiClient.shared.deleteGear(gearId: gearId)
+		}
+		return false
 	}
 }

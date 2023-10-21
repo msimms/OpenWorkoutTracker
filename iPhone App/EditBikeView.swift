@@ -12,6 +12,7 @@ struct EditBikeView: View {
 	@State var description: String = ""
 	@State var serviceHistory: Array<GearServiceItem> = []
 	@State var showingSaveError: Bool = false
+	@State var showingRetireError: Bool = false
 	@State var showingDeleteError: Bool = false
 
 	let dateFormatter: DateFormatter = {
@@ -79,6 +80,20 @@ struct EditBikeView: View {
 						.padding()
 				}
 				.alert("Failed to save.", isPresented: self.$showingSaveError) {}
+				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+				.opacity(0.8)
+				.bold()
+
+				Button(action: {
+					let item = GearSummary(gearId: self.gearId, name: self.name, description: self.description)
+					self.showingRetireError = !GearVM.retireBike(item: item)
+				}) {
+					Text("Retire")
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.foregroundColor(self.colorScheme == .dark ? .black : .white)
+						.padding()
+				}
+				.alert("Failed to retire.", isPresented: self.$showingRetireError) {}
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
