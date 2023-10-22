@@ -1166,6 +1166,31 @@ bool Database::CreateRoutePoint(const std::string& routeId, const Coordinate& co
 	return result == SQLITE_DONE;
 }
 
+bool Database::RetrieveRoutes(std::vector<Route>& routes)
+{
+	bool result = false;
+	sqlite3_stmt* statement = NULL;
+	
+	if (sqlite3_prepare_v2(m_pDb, "select route_id,name,description from route", -1, &statement, 0) == SQLITE_OK)
+	{
+		while (sqlite3_step(statement) == SQLITE_ROW)
+		{
+			Route route;
+			
+			route.routeId.append((const char*)sqlite3_column_text(statement, 0));
+			route.name.append((const char*)sqlite3_column_text(statement, 1));
+			route.description.append((const char*)sqlite3_column_text(statement, 2));
+			this->RetrieveRouteCoordinates(route.routeId, route.coordinates);
+			
+			routes.push_back(route);
+		}
+		
+		sqlite3_finalize(statement);
+		result = true;
+	}
+	return result;
+}
+
 bool Database::RetrieveRoute(const std::string& routeId)
 {
 	bool result = false;

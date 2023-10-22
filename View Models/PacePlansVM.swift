@@ -128,7 +128,6 @@ class PacePlansVM : ObservableObject {
 			while !done {
 				if let rawPacePlanDescPtr = RetrievePacePlanAsJSON(pacePlanIndex) {
 					let pacePlanDescPtr = UnsafeRawPointer(rawPacePlanDescPtr)
-
 					let pacePlanDesc = String(cString: pacePlanDescPtr.assumingMemoryBound(to: CChar.self))
 					let summaryDict = try! JSONSerialization.jsonObject(with: Data(pacePlanDesc.utf8), options: []) as! [String:AnyObject]
 					let summaryObj = self.dictToObj(summaryDict: summaryDict)

@@ -4,12 +4,15 @@
 //
 
 import Foundation
+import MapKit
 
 class RouteSummary : Identifiable, Hashable, Equatable {
 	var routeId: UUID = UUID()
 	var name: String = ""
 	var description: String = ""
-	
+	var locationTrack: Array<CLLocationCoordinate2D> = []
+	var trackLine: MKPolyline = MKPolyline()
+
 	/// Constructor
 	init() {
 	}
@@ -33,17 +36,29 @@ class RouteSummary : Identifiable, Hashable, Equatable {
 }
 
 class RoutesVM : ObservableObject {
-	@Published var gear: Array<RouteSummary> = []
+	@Published var routes: Array<RouteSummary> = []
 
 	init() {
-		self.buildRouteList()
-	}
-
-	func buildRouteList() {
+		self.routes = self.listRoutes()
 	}
 	
 	func importRouteFromFile(fileName: String) -> Bool {
 		return ImportRouteFromFile(UUID().uuidString, fileName)
+	}
+
+	private func dictToObj(summaryDict: Dictionary<String, AnyObject>) -> RouteSummary {
+		let summaryObj = RouteSummary()
+		
+		if let routeId = summaryDict[PARAM_ROUTE_ID] as? String {
+			summaryObj.routeId = UUID(uuidString: routeId)!
+		}
+		if let routeName = summaryDict[PARAM_ROUTE_NAME] as? String {
+			summaryObj.name = routeName
+		}
+		if let routeDescription = summaryDict[PARAM_ROUTE_DESCRIPTION] as? String {
+			summaryObj.description = routeDescription
+		}
+		return summaryObj
 	}
 
 	func listRoutes() -> Array<RouteSummary> {
@@ -55,8 +70,32 @@ class RoutesVM : ObservableObject {
 			
 			while !done {
 				if let rawRouteInfoPtr = RetrieveRouteInfoAsJSON(routeIndex) {
-					var namePtr: UnsafeMutablePointer<CChar>!
-					var descriptionPtr: UnsafeMutablePointer<CChar>!
+					let routeInfoPtr = UnsafeRawPointer(rawRouteInfoPtr)
+					let routeInfoDsc = String(cString: routeInfoPtr.assumingMemoryBound(to: CChar.self))
+					let summaryDict = try! JSONSerialization.jsonObject(with: Data(routeInfoDsc.utf8), options: []) as! [String:AnyObject]
+					let summaryObj = self.dictToObj(summaryDict: summaryDict)
+					
+					// Retrieve the locations.
+					var coordinateIndex = 0
+					var gotLocation: Bool = true
+					while gotLocation {
+						var coordinate: Coordinate = Coordinate()
+						gotLocation = RetrieveRouteCoordinate(routeIndex, coordinateIndex, &coordinate)
+						if gotLocation {
+							summaryObj.locationTrack.append(CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude))
+						}
+						coordinateIndex += 1
+					}
+					if coordinateIndex > 0 {
+						summaryObj.trackLine = MKPolyline(coordinates: summaryObj.locationTrack, count: summaryObj.locationTrack.count)
+					}
+					
+					defer {
+						routeInfoPtr.deallocate()
+					}
+					
+					routes.append(summaryObj)
+					routeIndex += 1
 				}
 				else {
 					done = true

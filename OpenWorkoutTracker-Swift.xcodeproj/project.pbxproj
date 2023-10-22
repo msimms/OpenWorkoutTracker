@@ -265,7 +265,6 @@
 		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
 		27A2083B2AD863CE0044E954 /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A2083A2AD863CE0044E954 /* RoutesView.swift */; };
 		27A2083D2AD89F380044E954 /* RoutesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A2083C2AD89F380044E954 /* RoutesVM.swift */; };
-		27A208402ADB39890044E954 /* SelectFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A2083F2ADB39890044E954 /* SelectFileView.swift */; };
 		27A208422ADB3C770044E954 /* ImportRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A208412ADB3C770044E954 /* ImportRouteView.swift */; };
 		27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1DCA72A5778410035E608 /* GearServiceItemView.swift */; };
 		27E30B6B2A969A9A00236EAB /* GpxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6A2A969A9A00236EAB /* GpxTests.swift */; };
@@ -663,7 +662,6 @@
 		278D932528E38FE7003B077C /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
 		27A2083A2AD863CE0044E954 /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
 		27A2083C2AD89F380044E954 /* RoutesVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesVM.swift; sourceTree = "<group>"; };
-		27A2083F2ADB39890044E954 /* SelectFileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectFileView.swift; sourceTree = "<group>"; };
 		27A208412ADB3C770044E954 /* ImportRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRouteView.swift; sourceTree = "<group>"; };
 		27A208432ADE03DA0044E954 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Route.h; path = Activities/Route.h; sourceTree = "<group>"; };
 		27E1DCA42A54CFFF0035E608 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Gear/Shoes.h; sourceTree = "<group>"; };
@@ -1180,7 +1178,6 @@
 				274AA6312A81736900F77F96 /* PhotoPicker.swift */,
 				2740E08228E60CFA00293B71 /* ProfileView.swift */,
 				27A2083A2AD863CE0044E954 /* RoutesView.swift */,
-				27A2083F2ADB39890044E954 /* SelectFileView.swift */,
 				27091AC42A65BC7A0013AD48 /* SensorChartView.swift */,
 				2740E09428E631A000293B71 /* SensorsView.swift */,
 				2740DF5928E4600800293B71 /* SettingsView.swift */,
@@ -1710,7 +1707,6 @@
 				2704224D28FCDDF600FD02D4 /* LoginView.swift in Sources */,
 				2740DFF428E460E200293B71 /* RunPlanGenerator.cpp in Sources */,
 				2740E04928E4CFFD00293B71 /* Statistics.cpp in Sources */,
-				27A208402ADB39890044E954 /* SelectFileView.swift in Sources */,
 				2740E00828E4CDA500293B71 /* User.cpp in Sources */,
 				2740DFD528E460E200293B71 /* WorkoutScheduler.cpp in Sources */,
 				2740E05828E4D0C700293B71 /* WorkoutImporter.cpp in Sources */,

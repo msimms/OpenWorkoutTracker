@@ -81,6 +81,7 @@ struct ContentView: View {
 					NavigationLink("Interval Sessions", destination: IntervalSessionsView())
 					NavigationLink("Pace Plans", destination: PacePlansView())
 					NavigationLink("Gear", destination: GearView())
+					NavigationLink("Routes", destination: RoutesView())
 				}
 				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))

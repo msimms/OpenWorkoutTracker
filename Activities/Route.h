@@ -9,6 +9,7 @@
 
 typedef struct Route
 {
+	std::string             routeId;
 	std::string             name;
 	std::string             description;
 	std::vector<Coordinate> coordinates;

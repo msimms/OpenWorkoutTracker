@@ -304,6 +304,7 @@ extern "C" {
 	bool InitializeRouteList(void);
 	bool ImportRouteFromFile(const char* const routeId, const char* const fileName);
 	char* RetrieveRouteInfoAsJSON(size_t routeIndex);
+	bool RetrieveRouteCoordinate(size_t routeIndex, size_t coordinateIndex, Coordinate* const coordinate);
 	bool DeleteRoute(const char* const routeId);
 
 	// Functions for creating a heat map.

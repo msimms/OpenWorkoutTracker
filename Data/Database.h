@@ -22,6 +22,7 @@
 #include "IntervalSession.h"
 #include "MovingActivity.h"
 #include "PacePlan.h"
+#include "Route.h"
 #include "SensorReading.h"
 #include "ServiceHistory.h"
 #include "Shoes.h"
@@ -101,6 +102,7 @@ public:
 	
 	bool CreateRoute(const std::string& routeId, const std::string& name, const std::string& description);
 	bool CreateRoutePoint(const std::string& routeId, const Coordinate& coordinate);
+	bool RetrieveRoutes(std::vector<Route>& routes);
 	bool RetrieveRoute(const std::string& routeId);
 	bool RetrieveRouteCoordinates(const std::string& routeId, CoordinateList& coordinates);
 	bool DeleteRoute(const std::string& routeId);

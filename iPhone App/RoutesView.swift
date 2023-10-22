@@ -8,17 +8,15 @@ import SwiftUI
 struct RoutesView: View {
 	@Environment(\.colorScheme) var colorScheme
 	@StateObject var routesVM: RoutesVM = RoutesVM()
-	@State private var showingAddSelection: Bool = false
 
 	var body: some View {
 		VStack(alignment: .center) {
 			Group() {
-				let routes = self.routesVM.listRoutes()
-				
-				if routes.count > 0 {
-					List(routes, id: \.self) { item in
-						NavigationLink(destination: RoutesView()) {
+				if self.routesVM.routes.count > 0 {
+					List(self.routesVM.routes, id: \.self) { item in
+						NavigationLink(destination: ImportRouteView(route: item)) {
 							Text(item.name)
+								.bold()
 						}
 					}
 					.listStyle(.plain)
@@ -34,7 +32,7 @@ struct RoutesView: View {
 				Spacer()
 			}
 			ToolbarItem(placement: .bottomBar) {
-				NavigationLink("+", destination: ImportRouteView())
+				NavigationLink("+", destination: ImportRouteView(route: RouteSummary()))
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 			}
 		}

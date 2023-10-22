@@ -4550,8 +4550,13 @@ extern "C" {
 
 	bool InitializeRouteList(void)
 	{
+		bool result = false;
+
 		g_routes.clear();
-		return false;
+		g_dbLock.lock();
+		result = g_pDatabase->RetrieveRoutes(g_routes);
+		g_dbLock.unlock();
+		return result;
 	}
 
 	bool ImportRouteFromFile(const char* const routeId, const char* const pFileName)
@@ -4588,7 +4593,32 @@ extern "C" {
 
 	char* RetrieveRouteInfoAsJSON(size_t routeIndex)
 	{
+		if (routeIndex < g_routes.size())
+		{
+			const Route& route = g_routes.at(routeIndex);
+			std::map<std::string, std::string> params;
+			
+			params.insert(std::make_pair(PARAM_ROUTE_ID, EscapeAndQuoteString(route.routeId)));
+			params.insert(std::make_pair(PARAM_ROUTE_NAME, EscapeAndQuoteString(route.name)));
+			params.insert(std::make_pair(PARAM_ROUTE_DESCRIPTION, EscapeAndQuoteString(route.description)));
+			return strdup(MapToJsonStr(params).c_str());
+		}
 		return NULL;
+	}
+
+	bool RetrieveRouteCoordinate(size_t routeIndex, size_t coordinateIndex, Coordinate* const coordinate)
+	{
+		if (routeIndex < g_routes.size())
+		{
+			const Route& route = g_routes.at(routeIndex);
+			
+			if (coordinateIndex < route.coordinates.size())
+			{
+				(*coordinate) = route.coordinates.at(coordinateIndex);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	bool DeleteRoute(const char* const routeId)

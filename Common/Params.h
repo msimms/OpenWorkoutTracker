@@ -101,6 +101,12 @@
 #define PARAM_PACE_PLAN_ROUTE                    "route"
 #define PARAM_PACE_PLAN_LAST_UPDATED_TIME        "last updated time"
 
+// Routes
+#define PARAM_ROUTE_ID                           "id"
+#define PARAM_ROUTE_NAME                         "name"
+#define PARAM_ROUTE_DESCRIPTION                  "description"
+#define PARAM_ROUTE_COORDINATES                  "coordinates"
+
 // Activities
 #define PARAM_ACTIVITY_NAME                      "name"
 #define PARAM_ACTIVITY_TYPE                      "type"

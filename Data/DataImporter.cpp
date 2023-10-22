@@ -215,7 +215,7 @@ bool DataImporter::ImportRouteFromGpx(const std::string& fileName, const std::st
 	m_started = false;
 	m_routeId = routeId;
 	
-	pDatabase->CreateRoute(routeId, "", "");
+	pDatabase->CreateRoute(routeId, fileName, "");
 	reader.SetNewLocationCallback(OnNewGpxRouteLocation, this);
 	result = reader.ParseFile(fileName);
 	return result;
@@ -230,7 +230,7 @@ bool DataImporter::ImportRouteFromTcx(const std::string& fileName, const std::st
 	m_started = false;
 	m_routeId = routeId;
 
-	pDatabase->CreateRoute(routeId, "", "");
+	pDatabase->CreateRoute(routeId, fileName, "");
 	reader.SetNewLocationCallback(OnNewTcxRouteLocation, this);
 	result = reader.ParseFile(fileName);
 	return result;
