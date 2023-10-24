@@ -39,11 +39,31 @@ class RoutesVM : ObservableObject {
 	@Published var routes: Array<RouteSummary> = []
 
 	init() {
+		self.rebuildRouteList()
+	}
+	
+	func rebuildRouteList() {
 		self.routes = self.listRoutes()
 	}
 	
+	func importRouteFromUrl(url: URL) -> Bool {
+		let fileStr = url.path()
+		var result = false
+
+		if url.startAccessingSecurityScopedResource() {
+			result = ImportRouteFromFile(UUID().uuidString, fileStr)
+			url.stopAccessingSecurityScopedResource()
+			self.rebuildRouteList()
+		}
+		return result
+	}
+
 	func importRouteFromFile(fileName: String) -> Bool {
-		return ImportRouteFromFile(UUID().uuidString, fileName)
+		if ImportRouteFromFile(UUID().uuidString, fileName) {
+			self.rebuildRouteList()
+			return true
+		}
+		return false
 	}
 
 	private func dictToObj(summaryDict: Dictionary<String, AnyObject>) -> RouteSummary {
@@ -106,7 +126,11 @@ class RoutesVM : ObservableObject {
 		return routes
 	}
 
-	static func deleteRoute(routeId: UUID) -> Bool {
-		return DeleteRoute(routeId.uuidString)
+	func deleteRoute(routeId: UUID) -> Bool {
+		if DeleteRoute(routeId.uuidString) {
+			self.rebuildRouteList()
+			return true
+		}
+		return false
 	}
 }

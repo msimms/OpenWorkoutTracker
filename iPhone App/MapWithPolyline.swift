@@ -34,8 +34,17 @@ struct MapWithPolyline: UIViewRepresentable {
 		// Remove old overlays. Not sure why these are sticking around.
 		let overlays = self.mapView.overlays
 		self.mapView.removeOverlays(overlays)
-		
 		self.mapView.addOverlay(overlay)
+		return self
+	}
+	
+	func setOverlays(_ overlays: [MKOverlay]) -> some View {
+		// Remove old overlays. Not sure why these are sticking around.
+		let overlays = self.mapView.overlays
+		self.mapView.removeOverlays(overlays)
+		for overlay in overlays {
+			self.mapView.addOverlay(overlay)
+		}
 		return self
 	}
 }

@@ -38,12 +38,15 @@ struct ActivityView: View {
 	@StateObject var activityVM: LiveActivityVM
 	@StateObject private var pacePlansVM = PacePlansVM.shared
 	@StateObject private var intervalSessionsVM = IntervalSessionsVM.shared
+	@StateObject private var routesVM: RoutesVM = RoutesVM()
+	@State private var selectedRoute: RouteSummary = RouteSummary()
 	@State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
 	@State private var stopping: Bool = false
 	@State private var showingStopSelection: Bool = false
 	@State private var showingIntervalSessionSelection: Bool = false
 	@State private var intervalSessionIsSelected: Bool = false
 	@State private var showingPacePlanSelection: Bool = false
+	@State private var showingRouteSelection: Bool = false
 	@State private var showingActivityAttributeSelection1: Bool = false
 	@State private var showingActivityAttributeSelection2: Bool = false
 	@State private var showingActivityAttributeSelection3: Bool = false
@@ -429,7 +432,8 @@ struct ActivityView: View {
 											center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude, longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
 											span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
 										), trackUser: true)
-										.setOverlay(self.activityVM.trackLine)
+//										.setOverlay(self.activityVM.trackLine)
+										.setOverlays([self.activityVM.trackLine, self.selectedRoute.trackLine])
 										.ignoresSafeArea()
 										.frame(width: reader.size.width, height: 300)
 									}
@@ -543,6 +547,27 @@ struct ActivityView: View {
 							.help("Pace plan selection.")
 						}
 
+						// Route button
+						if self.routesVM.routes.count > 0 && self.activityVM.isMovingActivity {
+							Button {
+								self.showingRouteSelection = true
+							} label: {
+								Label("Route", systemImage: "mappin.circle")
+							}
+							.confirmationDialog("Select the route to use", isPresented: self.$showingRouteSelection, titleVisibility: .visible) {
+								ForEach(self.routesVM.routes, id: \.self) { item in
+									Button {
+										self.selectedRoute = item
+									} label: {
+										Text(item.name)
+									}
+								}
+							}
+							.foregroundColor(self.colorScheme == .dark ? .white : .black)
+							.opacity(self.activityVM.isInProgress ? 0 : 1)
+							.help("Route")
+						}
+						
 						// Additional weight button
 						if !self.activityVM.isMovingActivity {
 							Button {

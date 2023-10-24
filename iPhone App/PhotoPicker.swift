@@ -25,28 +25,28 @@ struct PhotoPicker: UIViewControllerRepresentable {
 	func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
 	}
 
-	func makeCoordinator() -> Coordinator {
-		Coordinator(self)
+	func makeCoordinator() -> PhotoPickerCoordinator {
+		PhotoPickerCoordinator(self)
 	}
+}
 
-	class Coordinator: NSObject, PHPickerViewControllerDelegate {
-		let parent: PhotoPicker
+class PhotoPickerCoordinator: NSObject, PHPickerViewControllerDelegate {
+	let parent: PhotoPicker
+	
+	init(_ parent: PhotoPicker) {
+		self.parent = parent
+	}
+	
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
 		
-		init(_ parent: PhotoPicker) {
-			self.parent = parent
-		}
-		
-		func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-			picker.dismiss(animated: true)
+		for result in results {
+			let provider = result.itemProvider
 			
-			for result in results {
-				let provider = result.itemProvider
-
-				if provider.canLoadObject(ofClass: UIImage.self) {
-					provider.loadObject(ofClass: UIImage.self) { image, _ in
-						if let tempImage = image as? UIImage {
-							self.parent.callback(tempImage)
-						}
+			if provider.canLoadObject(ofClass: UIImage.self) {
+				provider.loadObject(ofClass: UIImage.self) { image, _ in
+					if let tempImage = image as? UIImage {
+						self.parent.callback(tempImage)
 					}
 				}
 			}

@@ -265,7 +265,8 @@
 		278D932C28E38FE7003B077C /* HistoryDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278D932528E38FE7003B077C /* HistoryDetailsView.swift */; };
 		27A2083B2AD863CE0044E954 /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A2083A2AD863CE0044E954 /* RoutesView.swift */; };
 		27A2083D2AD89F380044E954 /* RoutesVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A2083C2AD89F380044E954 /* RoutesVM.swift */; };
-		27A208422ADB3C770044E954 /* ImportRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A208412ADB3C770044E954 /* ImportRouteView.swift */; };
+		27A208422ADB3C770044E954 /* EditRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A208412ADB3C770044E954 /* EditRouteView.swift */; };
+		27BF1A922AE7498200BDA339 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF1A912AE7498200BDA339 /* DocumentPicker.swift */; };
 		27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1DCA72A5778410035E608 /* GearServiceItemView.swift */; };
 		27E30B6B2A969A9A00236EAB /* GpxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6A2A969A9A00236EAB /* GpxTests.swift */; };
 		27E30B6D2A969C3600236EAB /* TcxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6C2A969C3600236EAB /* TcxTests.swift */; };
@@ -662,8 +663,9 @@
 		278D932528E38FE7003B077C /* HistoryDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailsView.swift; sourceTree = "<group>"; };
 		27A2083A2AD863CE0044E954 /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
 		27A2083C2AD89F380044E954 /* RoutesVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesVM.swift; sourceTree = "<group>"; };
-		27A208412ADB3C770044E954 /* ImportRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportRouteView.swift; sourceTree = "<group>"; };
+		27A208412ADB3C770044E954 /* EditRouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditRouteView.swift; sourceTree = "<group>"; };
 		27A208432ADE03DA0044E954 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Route.h; path = Activities/Route.h; sourceTree = "<group>"; };
+		27BF1A912AE7498200BDA339 /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		27E1DCA42A54CFFF0035E608 /* Shoes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shoes.h; path = Gear/Shoes.h; sourceTree = "<group>"; };
 		27E1DCA52A54CFFF0035E608 /* Bike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bike.h; path = Gear/Bike.h; sourceTree = "<group>"; };
 		27E1DCA62A54D0730035E608 /* ServiceHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ServiceHistory.h; path = Gear/ServiceHistory.h; sourceTree = "<group>"; };
@@ -1159,15 +1161,16 @@
 				278D92C528E38F17003B077C /* ContentView.swift */,
 				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
 				270658712A0D67CB0073B3F6 /* DebugView.swift */,
+				27BF1A912AE7498200BDA339 /* DocumentPicker.swift */,
 				2740E12928F4427C00293B71 /* EditBikeView.swift */,
 				2740E11F28F0E83000293B71 /* EditIntervalSessionView.swift */,
 				2740E11C28F0E81400293B71 /* EditPacePlanView.swift */,
+				27A208412ADB3C770044E954 /* EditRouteView.swift */,
 				2740E12728F4425A00293B71 /* EditShoesView.swift */,
 				2740E08828E629CE00293B71 /* GearView.swift */,
 				27E1DCA72A5778410035E608 /* GearServiceItemView.swift */,
 				2740DF5A28E4600800293B71 /* HistoryDetailsView.swift */,
 				2740DF5528E4600800293B71 /* HistoryView.swift */,
-				27A208412ADB3C770044E954 /* ImportRouteView.swift */,
 				2740E09128E6319700293B71 /* IntervalSessionsView.swift */,
 				27091AC12A65BB9B0013AD48 /* LineGraphView.swift */,
 				2704224C28FCDDF600FD02D4 /* LoginView.swift */,
@@ -1693,7 +1696,7 @@
 				27A2083D2AD89F380044E954 /* RoutesVM.swift in Sources */,
 				2740DF5C28E4600800293B71 /* HistoryView.swift in Sources */,
 				2740E03528E4CE1C00293B71 /* XmlFileReader.cpp in Sources */,
-				27A208422ADB3C770044E954 /* ImportRouteView.swift in Sources */,
+				27A208422ADB3C770044E954 /* EditRouteView.swift in Sources */,
 				2740DFD928E460E200293B71 /* PlanGenerator.cpp in Sources */,
 				2740E09528E631A000293B71 /* SensorsView.swift in Sources */,
 				2740E09F28E643FD00293B71 /* ActivityPreferences.swift in Sources */,
@@ -1710,6 +1713,7 @@
 				2740E00828E4CDA500293B71 /* User.cpp in Sources */,
 				2740DFD528E460E200293B71 /* WorkoutScheduler.cpp in Sources */,
 				2740E05828E4D0C700293B71 /* WorkoutImporter.cpp in Sources */,
+				27BF1A922AE7498200BDA339 /* DocumentPicker.swift in Sources */,
 				2740E05728E4D0C700293B71 /* HeatMapGenerator.cpp in Sources */,
 				2740E02F28E4CE1C00293B71 /* ZwoFileReader.cpp in Sources */,
 				2740E10828EB5ABF00293B71 /* LocationSensor.swift in Sources */,

@@ -1,38 +1,39 @@
 //
-//  ImportRouteView.swift
+//  EditRouteView.swift
 //  Created by Michael Simms on 10/14/23.
 //
 
 import SwiftUI
 import MapKit
+import UniformTypeIdentifiers
 
-struct ImportRouteView: View {
+func showFilePicker(callback: @escaping DocumentResponse) -> DocumentPicker {
+	let gpxType = UTType(tag: "gpx", tagClass: .filenameExtension, conformingTo: nil)!
+	let tcxType = UTType(tag: "tcx", tagClass: .filenameExtension, conformingTo: nil)!
+	let fitType = UTType(tag: "fit", tagClass: .filenameExtension, conformingTo: nil)!
+	let contentTypes = [gpxType, tcxType, fitType]
+	
+	return DocumentPicker(contentTypes: contentTypes, callback: callback)
+}
+
+struct EditRouteView: View {
 	@Environment(\.colorScheme) var colorScheme
-	@StateObject var routesVM: RoutesVM = RoutesVM()
+	@Environment(\.dismiss) var dismiss
+	@StateObject private var routesVM: RoutesVM = RoutesVM()
 	@State private var tempRouteSummary: RouteSummary
 	@State private var showingSaveError: Bool = false
 	@State private var urlStr: String = ""
 	@State private var isShowingFileSourceSelection: Bool = false
 	@State private var isShowingUrlSelection: Bool = false
 	@State private var isShowingUrlError: Bool = false
-	@State private var isShowingImportError: Bool = false
+	@State private var isShowingUrlImportError: Bool = false
+	@State private var isShowingFileImportError: Bool = false
+	@State private var isShowingDeleteConfirmation: Bool = false
+	@State private var isShowingDocPicker: Bool = false
+	@State private var isShowingDeleteError: Bool = false
 
 	init(route: RouteSummary) {
 		_tempRouteSummary = State(initialValue: route)
-	}
-
-	func showFilePicker() {
-		let keyWindow = UIApplication.shared.connectedScenes
-			.filter({$0.activationState == .foregroundActive})
-			.compactMap({$0 as? UIWindowScene})
-			.first?.windows
-			.filter({$0.isKeyWindow}).first
-		let allowedExtensions = ["gpx", "tcx", "fit", "kml"]
-		let documentPicker = UIDocumentPickerViewController(documentTypes: allowedExtensions, in: .import)
-		
-		documentPicker.allowsMultipleSelection = false
-		documentPicker.directoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-		keyWindow?.rootViewController?.present(documentPicker, animated: true)
 	}
 	
 	func importRouteFromUrl(url: URL) {
@@ -51,12 +52,12 @@ struct ImportRouteView: View {
 							do {
 								try data.write(to: destFileUrl, options: Data.WritingOptions.atomic)
 								if self.routesVM.importRouteFromFile(fileName: destFileUrl.absoluteString) == false {
-									self.isShowingImportError = true
+									self.isShowingUrlImportError = true
 								}
 								try FileManager.default.removeItem(at: destFileUrl)
 							}
 							catch {
-								self.isShowingImportError = true
+								self.isShowingUrlImportError = true
 							}
 						}
 					}
@@ -112,13 +113,13 @@ struct ImportRouteView: View {
 						.padding()
 					}
 					.alert("Invalid URL!", isPresented: self.$isShowingUrlError) { }
-					.alert("Failed to import a route from the URL!", isPresented: self.$isShowingImportError) { }
+					.alert("Failed to import a route from the URL!", isPresented: self.$isShowingUrlImportError) { }
 					.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 					.opacity(0.8)
 					.bold()
 				}
 
-				if self.tempRouteSummary.locationTrack.first == nil {
+				if self.tempRouteSummary.name.count == 0 {
 					Button(action: {
 						self.isShowingFileSourceSelection = true
 					}) {
@@ -131,11 +132,11 @@ struct ImportRouteView: View {
 						.padding()
 					}
 					.confirmationDialog("Select the source of the file", isPresented: self.$isShowingFileSourceSelection, titleVisibility: .visible) {
-						Button("iCloud Drive") {
-							self.showFilePicker()
-						}
 						Button("URL") {
 							self.isShowingUrlSelection = true
+						}
+						Button("iCloud Drive") {
+							self.isShowingDocPicker = true
 						}
 					}
 					.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -159,6 +160,7 @@ struct ImportRouteView: View {
 				}
 			}
 
+			// Save button
 			Group() {
 				Button(action: {
 				}) {
@@ -171,8 +173,49 @@ struct ImportRouteView: View {
 				.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
 				.opacity(0.8)
 				.bold()
+				.help("Save this route")
+			}
+
+			// Delete button
+			Group() {
+				if self.tempRouteSummary.name.count > 0 {
+					Button(action: {
+						self.isShowingDeleteConfirmation = true
+					}) {
+						HStack() {
+							Image(systemName: "trash")
+							Text("Delete")
+						}
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.foregroundColor(.red)
+						.padding()
+					}
+					.alert("Are you sure you want to delete this route? This cannot be undone.", isPresented: self.$isShowingDeleteConfirmation) {
+						Button("Delete") {
+							if self.routesVM.deleteRoute(routeId: self.tempRouteSummary.routeId) {
+								self.dismiss()
+							}
+							else {
+								self.isShowingDeleteError = true
+							}
+						}
+						Button("Cancel") {
+						}
+					}
+					.alert("Failed to delete.", isPresented: self.$isShowingDeleteError) {}
+					.background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+					.opacity(0.8)
+					.bold()
+					.help("Delete this route")
+				}
 			}
 		}
+		.sheet(isPresented: self.$isShowingDocPicker) {
+			showFilePicker(callback: { url in
+				self.isShowingFileImportError = self.routesVM.importRouteFromUrl(url: url)
+			})
+		}
+		.alert("Failed to import a route from the file!", isPresented: self.$isShowingFileImportError) { }
 		.padding(10)
     }
 }

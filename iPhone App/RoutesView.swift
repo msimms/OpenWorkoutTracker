@@ -14,7 +14,7 @@ struct RoutesView: View {
 			Group() {
 				if self.routesVM.routes.count > 0 {
 					List(self.routesVM.routes, id: \.self) { item in
-						NavigationLink(destination: ImportRouteView(route: item)) {
+						NavigationLink(destination: EditRouteView(route: item)) {
 							Text(item.name)
 								.bold()
 						}
@@ -32,7 +32,7 @@ struct RoutesView: View {
 				Spacer()
 			}
 			ToolbarItem(placement: .bottomBar) {
-				NavigationLink("+", destination: ImportRouteView(route: RouteSummary()))
+				NavigationLink("+", destination: EditRouteView(route: RouteSummary()))
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 			}
 		}

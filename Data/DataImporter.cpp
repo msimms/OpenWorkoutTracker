@@ -13,6 +13,8 @@
 #include "GpxFileReader.h"
 #include "KmlFileReader.h"
 
+#include <filesystem>
+
 DataImporter::DataImporter()
 {
 	m_pDb = NULL;
@@ -214,8 +216,9 @@ bool DataImporter::ImportRouteFromGpx(const std::string& fileName, const std::st
 	m_pDb = pDatabase;
 	m_started = false;
 	m_routeId = routeId;
-	
-	pDatabase->CreateRoute(routeId, fileName, "");
+
+	std::string fileNameOnly = std::filesystem::path(fileName).filename();
+	pDatabase->CreateRoute(routeId, fileNameOnly, "");
 	reader.SetNewLocationCallback(OnNewGpxRouteLocation, this);
 	result = reader.ParseFile(fileName);
 	return result;
@@ -230,7 +233,8 @@ bool DataImporter::ImportRouteFromTcx(const std::string& fileName, const std::st
 	m_started = false;
 	m_routeId = routeId;
 
-	pDatabase->CreateRoute(routeId, fileName, "");
+	std::string fileNameOnly = std::filesystem::path(fileName).filename();
+	pDatabase->CreateRoute(routeId, fileNameOnly, "");
 	reader.SetNewLocationCallback(OnNewTcxRouteLocation, this);
 	result = reader.ParseFile(fileName);
 	return result;
