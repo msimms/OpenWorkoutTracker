@@ -95,6 +95,54 @@ struct ActivityView: View {
 		storedActivityVM.load()
 		return storedActivityVM
 	}
+	
+	func renderItem(position: Int, title: String, value: String, units: String, labelColor: Color, textColor: Color) -> some View {
+		VStack(alignment: .center) {
+			Text(title)
+				.font(.system(size: 16))
+				.foregroundColor(labelColor)
+			Text(value)
+				.font(.custom(self.font, fixedSize: 28))
+				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
+				.onTapGesture {
+					self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
+				}
+				.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
+					selectAttributeToDisplay(position: position)
+				}
+				.allowsTightening(true)
+				.lineLimit(1)
+				.minimumScaleFactor(0.75)
+				.padding(1)
+			Text(units)
+				.font(.system(size: 16))
+				.foregroundColor(labelColor)
+		}
+	}
+
+	func renderLargeItem(position: Int, title: String, value: String, units: String, labelColor: Color, textColor: Color) -> some View {
+		VStack(alignment: .center) {
+			Text(title)
+				.font(.system(size: 16))
+				.foregroundColor(labelColor)
+			Text(value)
+				.font(.custom(self.font, fixedSize: 72))
+				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
+				.onTapGesture {
+					self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
+				}
+				.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
+					selectAttributeToDisplay(position: position)
+				}
+				.allowsTightening(true)
+				.lineLimit(1)
+				.minimumScaleFactor(0.75)
+				.padding(1)
+			Text(units)
+				.font(.system(size: 16))
+				.foregroundColor(labelColor)
+		}
+	}
 
 	var body: some View {
 		ZStack {
@@ -127,31 +175,15 @@ struct ActivityView: View {
 						
 						// Main display.
 						VStack(alignment: .center) {
-							
+							let labelColor = ActivityPreferences.getLabelColor(activityType: self.activityType)
+							let textColor = ActivityPreferences.getTextColor(activityType: self.activityType)
+
 							// Messages
 							Text(self.activityVM.currentMessage)
 							
 							// Main value
 							VStack(alignment: .center) {
-								Text(self.activityVM.title1)
-									.font(.system(size: 16))
-									.foregroundColor(ActivityPreferences.getLabelColor(activityType: self.activityType))
-									.padding(5)
-								Text(self.activityVM.value1)
-									.font(.custom(self.font, fixedSize: 72))
-									.foregroundColor(self.colorScheme == .dark ? .white : ActivityPreferences.getTextColor(activityType: self.activityType))
-									.onTapGesture {
-										self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
-									}
-									.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection1, titleVisibility: .visible) {
-										selectAttributeToDisplay(position: 0)
-									}
-									.allowsTightening(true)
-									.lineLimit(1)
-									.minimumScaleFactor(0.75)
-								Text(self.activityVM.units1)
-									.font(.system(size: 16))
-									.foregroundColor(ActivityPreferences.getLabelColor(activityType: self.activityType))
+								self.renderLargeItem(position: 0, title: self.activityVM.title1, value: self.activityVM.value1, units: self.activityVM.units1, labelColor: labelColor, textColor: textColor)
 							}
 							.padding(20)
 							
@@ -164,155 +196,16 @@ struct ActivityView: View {
 							
 							// Complex view
 							else if self.activityVM.viewType == ACTIVITY_VIEW_COMPLEX {
-								let labelColor = ActivityPreferences.getLabelColor(activityType: self.activityType)
-								let textColor = ActivityPreferences.getTextColor(activityType: self.activityType)
-								
 								ScrollView(.vertical, showsIndicators: false) {
 									LazyVGrid(columns: self.items, spacing: 20) {
-										VStack(alignment: .center) {
-											Text(self.activityVM.title2)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value2)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 1)
-												}
-												.padding(1)
-											Text(self.activityVM.units2)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value3)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 2)
-												}
-												.padding(1)
-											Text(self.activityVM.units3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title4)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value4)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection4, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 3)
-												}
-												.padding(1)
-											Text(self.activityVM.units4)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title5)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value5)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 4)
-												}
-												.padding(1)
-											Text(self.activityVM.units5)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title6)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value6)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection6 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection6, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 5)
-												}
-												.padding(1)
-											Text(self.activityVM.units6)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title7)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value7)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection7 = self.canShowAttributeMenu()
-												}
-												.padding(1)
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection7, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 6)
-												}
-											Text(self.activityVM.units7)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title8)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value8)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection8 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection8, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 7)
-												}
-												.padding(1)
-											Text(self.activityVM.units8)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title9)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value9)
-												.font(.custom(self.font, fixedSize: 28))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection9 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection9, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 8)
-												}
-												.padding(1)
-											Text(self.activityVM.units9)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
+										self.renderItem(position: 1, title: self.activityVM.title2, value: self.activityVM.value2, units: self.activityVM.units2, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 2, title: self.activityVM.title3, value: self.activityVM.value3, units: self.activityVM.units3, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 3, title: self.activityVM.title4, value: self.activityVM.value4, units: self.activityVM.units4, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 4, title: self.activityVM.title5, value: self.activityVM.value5, units: self.activityVM.units5, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 5, title: self.activityVM.title6, value: self.activityVM.value6, units: self.activityVM.units6, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 6, title: self.activityVM.title7, value: self.activityVM.value7, units: self.activityVM.units7, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 7, title: self.activityVM.title8, value: self.activityVM.value8, units: self.activityVM.units8, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 8, title: self.activityVM.title9, value: self.activityVM.value9, units: self.activityVM.units9, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 								}
@@ -320,122 +213,38 @@ struct ActivityView: View {
 							
 							// Simple view
 							else if self.activityVM.viewType == ACTIVITY_VIEW_SIMPLE {
-								let labelColor = ActivityPreferences.getLabelColor(activityType: self.activityType)
-								let textColor = ActivityPreferences.getTextColor(activityType: self.activityType)
-								
 								ScrollView(.vertical, showsIndicators: false) {
 									VStack(alignment: .center) {
-										VStack(alignment: .center) {
-											Text(self.activityVM.title2)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-												.padding(5)
-											Text(self.activityVM.value2)
-												.font(.custom(self.font, fixedSize: 64))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 1)
-												}
-												.allowsTightening(true)
-												.lineLimit(1)
-												.minimumScaleFactor(0.75)
-											Text(self.activityVM.units2)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										.padding(5)
-										VStack(alignment: .center) {
-											Text(self.activityVM.title3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-												.padding(5)
-											Text(self.activityVM.value3)
-												.font(.custom(self.font, fixedSize: 64))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 2)
-												}
-												.allowsTightening(true)
-												.lineLimit(1)
-												.minimumScaleFactor(0.75)
-											Text(self.activityVM.units3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										.padding(5)
+										self.renderLargeItem(position: 1, title: self.activityVM.title2, value: self.activityVM.value2, units: self.activityVM.units2, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(position: 2, title: self.activityVM.title3, value: self.activityVM.value3, units: self.activityVM.units3, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(position: 3, title: self.activityVM.title4, value: self.activityVM.value4, units: self.activityVM.units4, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
+									Spacer()
 								}
 							}
 							
 							// Mapped view
 							else if self.activityVM.viewType == ACTIVITY_VIEW_MAPPED {
-								let labelColor = ActivityPreferences.getLabelColor(activityType: self.activityType)
-								let textColor = ActivityPreferences.getTextColor(activityType: self.activityType)
-								
 								ScrollView(.vertical, showsIndicators: false) {
 									LazyVGrid(columns: self.items, spacing: 20) {
-										VStack(alignment: .center) {
-											Text(self.activityVM.title2)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value2)
-												.font(.custom(self.font, fixedSize: 48))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection2, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 1)
-												}
-												.allowsTightening(true)
-												.lineLimit(1)
-												.minimumScaleFactor(0.75)
-												.padding(1)
-											Text(self.activityVM.units2)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
-										VStack(alignment: .center) {
-											Text(self.activityVM.title3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-											Text(self.activityVM.value3)
-												.font(.custom(self.font, fixedSize: 48))
-												.foregroundColor(self.colorScheme == .dark ? .white : textColor)
-												.onTapGesture {
-													self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
-												}
-												.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection3, titleVisibility: .visible) {
-													selectAttributeToDisplay(position: 2)
-												}
-												.allowsTightening(true)
-												.lineLimit(1)
-												.minimumScaleFactor(0.75)
-												.padding(1)
-											Text(self.activityVM.units3)
-												.font(.system(size: 16))
-												.foregroundColor(labelColor)
-										}
+										self.renderItem(position: 1, title: self.activityVM.title2, value: self.activityVM.value2, units: self.activityVM.units2, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 2, title: self.activityVM.title3, value: self.activityVM.value3, units: self.activityVM.units3, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 3, title: self.activityVM.title4, value: self.activityVM.value4, units: self.activityVM.units4, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 4, title: self.activityVM.title5, value: self.activityVM.value5, units: self.activityVM.units5, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 									Spacer()
 									
 									GeometryReader { reader in
 										MapWithPolyline(region: MKCoordinateRegion(
-											center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude, longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
+											center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude,
+																		   longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
 											span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
 										), trackUser: true)
-//										.setOverlay(self.activityVM.trackLine)
 										.setOverlays([self.activityVM.trackLine, self.selectedRoute.trackLine])
 										.ignoresSafeArea()
-										.frame(width: reader.size.width, height: 300)
+										.frame(height: 300)
 									}
 								}
 								.padding(10)
@@ -552,7 +361,12 @@ struct ActivityView: View {
 							Button {
 								self.showingRouteSelection = true
 							} label: {
-								Label("Route", systemImage: "mappin.circle")
+								if self.selectedRoute.trackLine.pointCount  == 0 {
+									Label("Route", systemImage: "mappin.circle")
+								}
+								else {
+									Label("Route", systemImage: "mappin.circle.fill")
+								}
 							}
 							.confirmationDialog("Select the route to use", isPresented: self.$showingRouteSelection, titleVisibility: .visible) {
 								ForEach(self.routesVM.routes, id: \.self) { item in

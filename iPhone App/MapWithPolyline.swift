@@ -14,6 +14,8 @@ struct MapWithPolyline: UIViewRepresentable {
 	func makeUIView(context: Context) -> MKMapView {
 		self.mapView.delegate = context.coordinator
 		self.mapView.region = self.region
+		self.mapView.isZoomEnabled = true
+		self.mapView.isScrollEnabled = true
 		if trackUser {
 			self.mapView.setUserTrackingMode(MKUserTrackingMode.follow, animated: false)
 		}
