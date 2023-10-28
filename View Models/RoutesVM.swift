@@ -108,6 +108,7 @@ class RoutesVM : ObservableObject {
 					}
 					if coordinateIndex > 0 {
 						summaryObj.trackLine = MKPolyline(coordinates: summaryObj.locationTrack, count: summaryObj.locationTrack.count)
+						summaryObj.trackLine.title = "Route"
 					}
 					
 					defer {

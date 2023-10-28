@@ -241,8 +241,7 @@ struct ActivityView: View {
 											center: CLLocationCoordinate2D(latitude: SensorMgr.shared.location.currentLocation.coordinate.latitude,
 																		   longitude: SensorMgr.shared.location.currentLocation.coordinate.longitude),
 											span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-										), trackUser: true)
-										.setOverlays([self.activityVM.trackLine, self.selectedRoute.trackLine])
+										), trackUser: true, updates: true, overlays: [self.activityVM.trackLine, self.selectedRoute.trackLine])
 										.ignoresSafeArea()
 										.frame(height: 300)
 									}

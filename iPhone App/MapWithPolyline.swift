@@ -8,7 +8,9 @@ import MapKit
 
 struct MapWithPolyline: UIViewRepresentable {
 	let region: MKCoordinateRegion
-	let trackUser: Bool
+	let trackUser: Bool  // True if the map should follow the user
+	let updates: Bool  // True if the map should update beyond the initial paint
+	var overlays: [MKOverlay] = []
 	let mapView = MKMapView()
 
 	func makeUIView(context: Context) -> MKMapView {
@@ -23,35 +25,38 @@ struct MapWithPolyline: UIViewRepresentable {
 	}
 
 	func updateUIView(_ view: MKMapView, context: Context) {
+		if self.updates {
+			view.removeOverlays(view.overlays)
+			view.addOverlays(self.overlays)
+		}
 	}
 
 	func dismantleUIView(_ view: MKMapView, coordinator: Self.Coordinator) {
 	}
 
-	func makeCoordinator() -> Coordinator {
-		Coordinator(self)
+	func makeCoordinator() -> MapCoordinator {
+		MapCoordinator(self)
 	}
 
 	func setOverlay(_ overlay: MKOverlay) -> some View {
 		// Remove old overlays. Not sure why these are sticking around.
-		let overlays = self.mapView.overlays
-		self.mapView.removeOverlays(overlays)
+		self.mapView.removeOverlays(self.mapView.overlays)
 		self.mapView.addOverlay(overlay)
 		return self
 	}
 	
-	func setOverlays(_ overlays: [MKOverlay]) -> some View {
-		// Remove old overlays. Not sure why these are sticking around.
-		let overlays = self.mapView.overlays
-		self.mapView.removeOverlays(overlays)
-		for overlay in overlays {
-			self.mapView.addOverlay(overlay)
+	func colorForPolyline(polyline: MKPolyline) -> UIColor {
+		if polyline.title == "Track" {
+			return UIColor.blue
 		}
-		return self
+		if polyline.title == "Route" {
+			return UIColor.red
+		}
+		return UIColor.blue
 	}
 }
 
-class Coordinator: NSObject, MKMapViewDelegate {
+class MapCoordinator: NSObject, MKMapViewDelegate {
 	var parent: MapWithPolyline
 
 	init(_ parent: MapWithPolyline) {
@@ -61,11 +66,22 @@ class Coordinator: NSObject, MKMapViewDelegate {
 	deinit {
 	}
 
+	func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+		if let annotationView = views.first, let annotation = annotationView.annotation {
+			if annotation is MKUserLocation {
+				let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+				mapView.setRegion(region, animated: true)
+			}
+		}
+	}
+
 	func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
 		// Cast the provided overlay to a polyline, since that's what we're expecting, and add it.
 		if let routePolyline = overlay as? MKPolyline {
 			let renderer = MKPolylineRenderer(polyline: routePolyline)
-			renderer.strokeColor = UIColor.systemBlue
+			let color = self.parent.colorForPolyline(polyline: routePolyline)
+			renderer.fillColor = color.withAlphaComponent(0.5)
+			renderer.strokeColor = color.withAlphaComponent(0.8)
 			renderer.lineWidth = 8
 			return renderer
 		}

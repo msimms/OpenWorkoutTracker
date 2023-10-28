@@ -148,14 +148,16 @@ struct EditRouteView: View {
 			Group() {
 				if self.tempRouteSummary.locationTrack.first != nil {
 					GeometryReader { reader in
-						MapWithPolyline(region: MKCoordinateRegion(
+						let region = MKCoordinateRegion(
 							center: CLLocationCoordinate2D(latitude: self.tempRouteSummary.locationTrack.first!.latitude,
 														   longitude: self.tempRouteSummary.locationTrack.first!.longitude),
 							span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-						), trackUser: false)
-						.setOverlay(self.tempRouteSummary.trackLine)
-						.ignoresSafeArea()
-						.frame(width: reader.size.width, height: 300)
+						)
+
+						MapWithPolyline(region: region, trackUser: false, updates: false)
+							.setOverlay(self.tempRouteSummary.trackLine)
+							.ignoresSafeArea()
+							.frame(width: reader.size.width, height: 300)
 					}
 				}
 			}

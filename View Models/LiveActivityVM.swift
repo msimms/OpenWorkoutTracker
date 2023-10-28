@@ -283,6 +283,7 @@ class LiveActivityVM : ObservableObject {
 				if distance > 10 {
 					self.locationTrack.append(CLLocationCoordinate2D(latitude: currentCoordinate.latitude, longitude: currentCoordinate.longitude))
 					self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
+					self.trackLine.title = "Track"
 					self.prevCoordinate = currentCoordinate
 				}
 			}
