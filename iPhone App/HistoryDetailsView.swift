@@ -62,6 +62,11 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 }
 
 struct HistoryDetailsView: View {
+	enum Field: Hashable {
+		case name
+		case description
+	}
+
 	@Environment(\.colorScheme) var colorScheme
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: StoredActivityVM
@@ -83,6 +88,7 @@ struct HistoryDetailsView: View {
 	@State private var activityTrimFromStart: Bool = true
 	@State private var selectedImage: UIImage = UIImage()
 	@ObservedObject private var apiClient = ApiClient.shared
+	@FocusState private var focusedField: Field?
 
 	func hrFormatter(num: Double) -> String {
 		return String(format: "%0.0f", num)
@@ -137,9 +143,10 @@ struct HistoryDetailsView: View {
 								self.showingUpdateNameError = !self.activityVM.updateActivityName()
 							}
 							.lineLimit(2...4)
+							.focused(self.$focusedField, equals: .name)
 							.alert("Failed to update the name!", isPresented: self.$showingUpdateNameError) { }
 							.font(Font.headline)
-							.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
+							.padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0))
 					}
 					.padding(INSET)
 
@@ -150,6 +157,7 @@ struct HistoryDetailsView: View {
 								self.showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
 							}
 							.lineLimit(2...10)
+							.focused(self.$focusedField, equals: .description)
 							.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
 							.font(Font.body)
 					}
@@ -312,6 +320,11 @@ struct HistoryDetailsView: View {
 			}
 			.padding(10)
 			.toolbar {
+				ToolbarItem(placement: .keyboard) {
+					Button("Done") {
+						self.focusedField = nil
+					}
+				}
 				ToolbarItem(placement: .bottomBar) {
 					HStack() {
 						// Delete button
