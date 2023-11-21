@@ -419,7 +419,6 @@ struct ActivityView: View {
 				Text("Cancel")
 			}
 		}
-		.navigationBarTitle(self.activityType)
 		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
 		.navigationBarTitleDisplayMode(.inline)
 		.opacity(self.activityVM.isPaused ? 0.5 : 1)
