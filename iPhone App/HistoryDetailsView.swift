@@ -18,7 +18,7 @@ enum ExportDest {
 	case email, icloud
 }
 
-let INSET = EdgeInsets(top: 0, leading: 5, bottom: 5, trailing: 10)
+let INSET = EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 5)
 
 class MailComposeViewController: UIViewController, MFMailComposeViewControllerDelegate {
 	
@@ -159,7 +159,8 @@ struct HistoryDetailsView: View {
 							.lineLimit(2...10)
 							.focused(self.$focusedField, equals: .description)
 							.alert("Failed to update the description!", isPresented: self.$showingUpdateDescriptionError) { }
-							.font(Font.body)
+							.font(Font.subheadline)
+							.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0))
 					}
 					.padding(INSET)
 
