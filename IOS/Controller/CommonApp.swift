@@ -111,7 +111,7 @@ class CommonApp : ObservableObject {
 	}
 	
 	func exportActivityToWeb(activityId: String) throws {
-		/*let summary = ActivitySummary()
+		let summary = ActivitySummary()
 		summary.id = activityId
 		summary.source = ActivitySummary.Source.database
 		
@@ -121,9 +121,9 @@ class CommonApp : ObservableObject {
 		let fileName = try storedActivityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
 		let fileUrl = URL(string: "file://" + fileName)
 		let fileContents = try Data(contentsOf: fileUrl!)
-		let _ = self.apiClient.sendActivity(activityId: summary.id, name: fileUrl!.lastPathComponent, contents: fileContents)
+		let _ = ApiClient.shared.sendActivity(activityId: summary.id, name: fileUrl!.lastPathComponent, contents: fileContents)
 		
-		try FileManager.default.removeItem(at: fileUrl!)*/
+		try FileManager.default.removeItem(at: fileUrl!)
 	}
 	
 	@objc func loginStatusUpdated(notification: NSNotification) {
@@ -253,7 +253,6 @@ class CommonApp : ObservableObject {
 
 					if let queryItems = components.queryItems {
 						var activityId: String?
-						var activityType: String = ""
 						var exportFormat: String?
 
 						// Grab the activity ID and file format out of the URL parameters.
@@ -273,7 +272,7 @@ class CommonApp : ObservableObject {
 							
 							if fullUrl != nil {
 								try responseData.write(to: fullUrl!)
-								ImportActivityFromFile(fullUrl?.absoluteString, activityType, activityId)
+								ImportActivityFromFile(fullUrl?.absoluteString, "", activityId)
 								try FileManager.default.removeItem(at: fullUrl!)
 							}
 						}
