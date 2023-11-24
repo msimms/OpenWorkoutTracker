@@ -110,7 +110,7 @@ class CommonApp : ObservableObject {
 		return CreateActivitySync(activityId, SYNC_DEST_WATCH)
 	}
 	
-	func exportActivityToWeb(activityId: String) throws {
+	func exportActivityToWeb(activityId: String) async throws {
 		let summary = ActivitySummary()
 		summary.id = activityId
 		summary.source = ActivitySummary.Source.database
@@ -409,7 +409,12 @@ class CommonApp : ObservableObject {
 						switch (code) {
 						case ACTIVITY_MATCH_CODE_NO_ACTIVITY:
 							// Send the activity - server has never heard of this activity.
-							try app.exportActivityToWeb(activityId: activityId)
+							Task.init {
+								do {
+									try await app.exportActivityToWeb(activityId: activityId)
+								} catch {
+								}
+							}
 							break
 						case ACTIVITY_MATCH_CODE_HASH_NOT_COMPUTED:
 							// Mark it as synced - server already has this activity, but it could be different.

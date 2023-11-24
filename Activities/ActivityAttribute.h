@@ -68,9 +68,9 @@
 #define ACTIVITY_ATTRIBUTE_VERTICAL_ACCURACY          "Vertical Accuracy"       // vertical accuracy, in meters
 #define ACTIVITY_ATTRIBUTE_STARTING_LATITUDE          "Starting Latitude"       // initial latitude
 #define ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE         "Starting Longitude"      // initial longitude
-#define ACTIVITY_ATTRIBUTE_X                          "X"                       // current acceleromter value
-#define ACTIVITY_ATTRIBUTE_Y                          "Y"                       // current acceleromter value
-#define ACTIVITY_ATTRIBUTE_Z                          "Z"                       // current acceleromter value
+#define ACTIVITY_ATTRIBUTE_X                          "x"                       // current acceleromter value
+#define ACTIVITY_ATTRIBUTE_Y                          "y"                       // current acceleromter value
+#define ACTIVITY_ATTRIBUTE_Z                          "z"                       // current acceleromter value
 #define ACTIVITY_ATTRIBUTE_FASTEST_CENTURY            "Fastest Century"         // best 100 miles
 #define ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY     "Fastest Metric Century"  // best 100 K
 #define ACTIVITY_ATTRIBUTE_FASTEST_MARATHON           "Fastest Marathon"        // best 26.2 miles

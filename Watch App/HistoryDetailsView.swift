@@ -29,11 +29,11 @@ struct HistoryDetailsView: View {
 	}
 	
 	private func sendToServer() {
-		do {
-			try CommonApp.shared.exportActivityToWeb(activityId: self.activityVM.activityId)
-		}
-		catch {
-			NSLog(error.localizedDescription)
+		Task.init {
+			do {
+				try await CommonApp.shared.exportActivityToWeb(activityId: self.activityVM.activityId)
+			} catch {
+			}
 		}
 	}
 
