@@ -2140,6 +2140,7 @@
 				INFOPLIST_FILE = "OpenWorkoutTracker-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is required to read from sensors such as heart rate monitor and cycling power meters";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
@@ -2185,6 +2186,7 @@
 				INFOPLIST_FILE = "OpenWorkoutTracker-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = OpenWorkoutTracker;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is required to read from sensors such as heart rate monitor and cycling power meters";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "HealthKit access is required to read and write health and workout data.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location Services are required when performing certain type of workouts.";
