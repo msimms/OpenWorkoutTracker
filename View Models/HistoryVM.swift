@@ -206,7 +206,7 @@ class HistoryVM : ObservableObject {
 			return "bicycle"
 		}
 		if activityType == ACTIVITY_TYPE_HIKING {
-			return "figure.walk"
+			return "figure.hiking"
 		}
 		if activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
 			return "bicycle"
