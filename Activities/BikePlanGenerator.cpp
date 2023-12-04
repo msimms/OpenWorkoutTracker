@@ -318,6 +318,17 @@ WorkoutList BikePlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string,
 			else
 				workouts.push_back(GenerateIntervalSession(goalDistance));
 			break;
+
+		// Long bike ride
+		case GOAL_100K_BIKE_RIDE:
+		case GOAL_100_MILE_BIKE_RIDE:
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			if (inTaper || goalType == GOAL_TYPE_COMPLETION)
+				workouts.push_back(GenerateEasyAerobicRide(goalDistance, longestRideInFourWeeks, avgRideDuration));
+			else
+				workouts.push_back(GenerateIntervalSession(goalDistance));
+			break;
 		}
 	}
 
