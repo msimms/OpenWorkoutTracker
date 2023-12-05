@@ -12,6 +12,12 @@ struct SensorsView: View {
 	var body: some View {
 		ScrollView() {
 			VStack(alignment: .center) {
+				HStack() {
+					Image(systemName: "questionmark.circle")
+					Text("Bluetooth heart rate monitors, cycling power meters, and cadence sensors can all be connected.")
+				}
+				.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
+
 				Toggle("Scan for compatible sensors", isOn: $shouldScan)
 					.onChange(of: shouldScan) { value in
 						Preferences.setScanForSensors(value: shouldScan)

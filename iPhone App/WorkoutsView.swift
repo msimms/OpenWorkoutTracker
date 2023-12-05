@@ -211,7 +211,6 @@ struct WorkoutsView: View {
 						}
 					}
 					.listStyle(.plain)
-					.padding(5)
 				}
 				else {
 					Text("None")

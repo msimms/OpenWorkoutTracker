@@ -18,6 +18,12 @@ struct IntervalSessionsView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
+			HStack() {
+				Image(systemName: "questionmark.circle")
+				Text("This view is for managing interval sessions. You'll receive messages on the activity screen when it's time to perform the next interval.")
+			}
+			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
+
 			if self.intervalSessionsVM.intervalSessions.count > 0 {
 				List(self.intervalSessionsVM.intervalSessions, id: \.self) { item in
 					NavigationLink(destination: EditIntervalSessionView(session: item)) {

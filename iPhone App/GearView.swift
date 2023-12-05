@@ -12,6 +12,12 @@ struct GearView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
+			HStack() {
+				Image(systemName: "questionmark.circle")
+				Text("Keep track of your shoes and bicycles. Tag activities with the gear used.")
+			}
+			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
+
 			let bikes = self.gearVM.listBikes()
 			let shoes = self.gearVM.listShoes()
 

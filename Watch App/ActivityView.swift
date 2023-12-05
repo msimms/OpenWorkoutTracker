@@ -8,6 +8,7 @@ import SwiftUI
 let NUM_SCREENS: UInt = 4
 let MIN_CROWN_VALUE: Double = 1.0
 let MAX_CROWN_VALUE: Double = MIN_CROWN_VALUE + Double(NUM_SCREENS) + 1 // The number of screens, plus one for the start/stop
+let MINOR_FONT_SIZE: CGFloat = 10.0
 
 struct ActivityView: View {
 	@Environment(\.dismiss) var dismiss
@@ -114,7 +115,7 @@ struct ActivityView: View {
 				.opacity(self.stopping ? 1 : 0)
 
 				VStack(alignment: .center) {
-					Text(self.activityVM.title1).font(.system(size: 12)).multilineTextAlignment(.center)
+					Text(self.activityVM.title1).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 					Text(self.activityVM.value1).font(.system(size: 48))
 						.onTapGesture {
 							self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
@@ -150,7 +151,7 @@ struct ActivityView: View {
 					// Screen 1
 					if self.crownValue >= MIN_CROWN_VALUE && self.crownValue < MIN_CROWN_VALUE + 1.0 {
 						VStack(alignment: .center) {
-							Text(self.activityVM.title2).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.title2).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 							Text(self.activityVM.value2).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
@@ -168,10 +169,10 @@ struct ActivityView: View {
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units2).font(.system(size: 12))
+							Text(self.activityVM.units2).font(.system(size: MINOR_FONT_SIZE))
 						}
 						VStack(alignment: .center) {
-							Text(self.activityVM.title3).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.title3).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 							Text(self.activityVM.value3).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
@@ -189,14 +190,14 @@ struct ActivityView: View {
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units3).font(.system(size: 12))
+							Text(self.activityVM.units3).font(.system(size: MINOR_FONT_SIZE))
 						}
 					}
 
 					// Screen 2
 					else if self.crownValue >= MIN_CROWN_VALUE + 1.0 && self.crownValue < MIN_CROWN_VALUE + 2.0 {
 						VStack(alignment: .center) {
-							Text(self.activityVM.title4).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.title4).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 							Text(self.activityVM.value4).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
@@ -214,10 +215,10 @@ struct ActivityView: View {
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units4).font(.system(size: 12))
+							Text(self.activityVM.units4).font(.system(size: MINOR_FONT_SIZE))
 						}
 						VStack(alignment: .center) {
-							Text(self.activityVM.title5).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.title5).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 							Text(self.activityVM.value5).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
@@ -235,14 +236,14 @@ struct ActivityView: View {
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units5).font(.system(size: 12))
+							Text(self.activityVM.units5).font(.system(size: MINOR_FONT_SIZE))
 						}
 					}
 
 					// Screen 3
 					else if self.crownValue >= MIN_CROWN_VALUE + 2.0 && self.crownValue < MIN_CROWN_VALUE + 3.0 {
 						VStack(alignment: .center) {
-							Text(self.activityVM.title6).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.title6).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 							Text(self.activityVM.value6).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection6 = self.canShowAttributeMenu()
@@ -260,10 +261,10 @@ struct ActivityView: View {
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units6).font(.system(size: 12))
+							Text(self.activityVM.units6).font(.system(size: MINOR_FONT_SIZE))
 						}
 						VStack(alignment: .center) {
-							Text(self.activityVM.title7).font(.system(size: 12)).multilineTextAlignment(.center)
+							Text(self.activityVM.title7).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
 							Text(self.activityVM.value7).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection7 = self.canShowAttributeMenu()
@@ -281,7 +282,7 @@ struct ActivityView: View {
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units7).font(.system(size: 12))
+							Text(self.activityVM.units7).font(.system(size: MINOR_FONT_SIZE))
 						}
 					}
 					
