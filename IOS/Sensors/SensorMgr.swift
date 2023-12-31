@@ -131,7 +131,7 @@ class SensorMgr : ObservableObject {
 		var elapsedSecs: Double = 0.0
 
 		// Sensor has reset
-		if currentCrankCount == 0 {
+		if currentCrankCount == 0 || currentCrankTime == 0 {
 			self.firstCadenceUpdate = true
 		}
 	
@@ -147,7 +147,7 @@ class SensorMgr : ObservableObject {
 		if self.firstCadenceUpdate {
 			self.currentCadenceRpm = 0
 		}
-		else if elapsedSecs > 0.0 {
+		else if elapsedSecs > 0.1 {
 			let newCrankCount = currentCrankCount - self.lastCrankCount
 			self.currentCadenceRpm = UInt16((Double(newCrankCount) / elapsedSecs) * 60.0)
 		}
