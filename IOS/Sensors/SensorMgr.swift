@@ -168,22 +168,27 @@ class SensorMgr : ObservableObject {
 	func valueUpdated(peripheral: CBPeripheral, serviceId: CBUUID, value: Data) {
 		if Preferences.shouldUsePeripheral(uuid: peripheral.identifier.uuidString) {
 			let now = UInt64(Date().timeIntervalSince1970)
+			let hrDiff = now - self.lastHrmUpdate
+			let powerDiff = now - self.lastPowerUpdate
+			let radarDiff = now - self.lastRadarUpdate
 
 			do {
 				if serviceId == HEART_RATE_SERVICE_ID {
-					if now - self.lastHrmUpdate >= 1 {
+					if hrDiff >= 1 {
 						self.currentHeartRateBpm = decodeHeartRateReading(data: value)
 						self.lastHrmUpdate = now
+						self.heartRateConnected = true
 						ProcessHrmReading(Double(self.currentHeartRateBpm), self.lastHrmUpdate)
 					}
 				}
 				else if serviceId == POWER_SERVICE_ID {
-					if now - self.lastPowerUpdate >= 1 {
+					if powerDiff >= 1 {
 						let powerDict = try decodeCyclingPowerReadingAsDict(data: value)
 
 						if  let currentPower = powerDict[KEY_NAME_CYCLING_POWER_WATTS] {
 							self.currentPowerWatts = UInt16(currentPower)
 							self.lastPowerUpdate = now
+							self.powerConnected = true
 							ProcessPowerMeterReading(Double(self.currentPowerWatts), self.lastPowerUpdate)
 						}
 						
@@ -212,11 +217,23 @@ class SensorMgr : ObservableObject {
 					self.lastRunningPowerUpdate = now
 				}
 				else if serviceId == RADAR_SERVICE_ID {
-					if now - self.lastRadarUpdate >= 1 {
+					if radarDiff >= 1 {
 						self.radarMeasurements = decodeCyclingRadarReading(data: value)
 						self.lastRadarUpdate = now
+						self.radarConnected = true
 						ProcessRadarReading(UInt(self.radarMeasurements.count), self.lastRadarUpdate)
 					}
+				}
+				
+				// Look for lost sensors, perhaps ones that didn't disconnect properly.
+				if hrDiff > 30 {
+					self.heartRateConnected = false
+				}
+				if powerDiff > 30 {
+					self.powerConnected = false
+				}
+				if radarDiff > 30 {
+					self.radarConnected = false
 				}
 			}
 			catch {
