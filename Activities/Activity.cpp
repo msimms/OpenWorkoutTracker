@@ -44,6 +44,7 @@ Activity::Activity()
 	m_mostRecentSensorReading.time = 0;
 	m_mostRecentSensorReading.type = SENSOR_TYPE_UNKNOWN;
 	m_threatCount = (uint64_t)-1;
+	m_totalThreatCount = 0;
 }
 
 Activity::~Activity()
@@ -243,6 +244,7 @@ bool Activity::ProcessRadarReading(const SensorReading& reading)
 		if (reading.reading.count(ACTIVITY_ATTRIBUTE_THREAT_COUNT) > 0)
 		{
 			m_threatCount = reading.reading.at(ACTIVITY_ATTRIBUTE_THREAT_COUNT);
+			m_totalThreatCount += m_threatCount;
 		}
 	}
 	catch (...)
@@ -441,6 +443,13 @@ ActivityAttributeType Activity::QueryActivityAttribute(const std::string& attrib
 		result.valueType = TYPE_INTEGER;
 		result.measureType = MEASURE_COUNT;
 		result.valid = m_threatCount != (uint64_t)-1;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_TOTAL_THREAT_COUNT) == 0)
+	{
+		result.value.intVal = m_totalThreatCount;
+		result.valueType = TYPE_INTEGER;
+		result.measureType = MEASURE_COUNT;
+		result.valid = true;
 	}
 	else
 	{

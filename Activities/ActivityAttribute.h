@@ -106,5 +106,6 @@
 #define ACTIVITY_ATTRIBUTE_TOTAL_ASCENT               "Total Ascent"            // 
 #define ACTIVITY_ATTRIBUTE_SWIM_STROKES               "Swim Strokes"            // the number of swim strokes taken
 #define ACTIVITY_ATTRIBUTE_THREAT_COUNT               "Threat Count"            // threat count (as from a rear-facing radar unit)
+#define ACTIVITY_ATTRIBUTE_TOTAL_THREAT_COUNT         "Total Threat Count"      // sum of all threat counts (as from a rear-facing radar unit)
 
 #endif

@@ -1487,6 +1487,7 @@ void MovingActivity::BuildSummaryAttributeList(std::vector<std::string>& attribu
 	attributes.push_back(ACTIVITY_ATTRIBUTE_STARTING_LONGITUDE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_BIGGEST_CLIMB);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_TOTAL_ASCENT);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_TOTAL_THREAT_COUNT);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_LAPS);
 	Activity::BuildSummaryAttributeList(attributes);
 }
