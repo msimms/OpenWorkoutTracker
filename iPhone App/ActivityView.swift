@@ -47,15 +47,7 @@ struct ActivityView: View {
 	@State private var intervalSessionIsSelected: Bool = false
 	@State private var showingPacePlanSelection: Bool = false
 	@State private var showingRouteSelection: Bool = false
-	@State private var showingActivityAttributeSelection1: Bool = false
-	@State private var showingActivityAttributeSelection2: Bool = false
-	@State private var showingActivityAttributeSelection3: Bool = false
-	@State private var showingActivityAttributeSelection4: Bool = false
-	@State private var showingActivityAttributeSelection5: Bool = false
-	@State private var showingActivityAttributeSelection6: Bool = false
-	@State private var showingActivityAttributeSelection7: Bool = false
-	@State private var showingActivityAttributeSelection8: Bool = false
-	@State private var showingActivityAttributeSelection9: Bool = false
+	@State private var showingActivityAttributeSelection: Bool = false
 	@State private var showingStartError: Bool = false
 	@State private var showingExtraWeightAlert: Bool = false
 	@State private var additionalWeight: NumbersOnly = NumbersOnly(initialDoubleValue: 0.0)
@@ -105,9 +97,9 @@ struct ActivityView: View {
 				.font(.custom(self.font, fixedSize: 28))
 				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 				.onTapGesture {
-					self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
+					self.showingActivityAttributeSelection = self.canShowAttributeMenu()
 				}
-				.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
+				.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection, titleVisibility: .visible) {
 					selectAttributeToDisplay(position: position)
 				}
 				.allowsTightening(true)
@@ -129,9 +121,9 @@ struct ActivityView: View {
 				.font(.custom(self.font, fixedSize: 72))
 				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 				.onTapGesture {
-					self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
+					self.showingActivityAttributeSelection = self.canShowAttributeMenu()
 				}
-				.confirmationDialog("Select the attribute to display", isPresented: $showingActivityAttributeSelection5, titleVisibility: .visible) {
+				.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection, titleVisibility: .visible) {
 					selectAttributeToDisplay(position: position)
 				}
 				.allowsTightening(true)
