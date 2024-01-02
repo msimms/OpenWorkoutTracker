@@ -155,6 +155,7 @@ void UnitMgr::ConvertActivityAttributeToMetric(ActivityAttributeType& value)
 				case MEASURE_LOCATION_ACCURACY:
 				case MEASURE_INDEX:
 				case MEASURE_ID:
+				case MEASURE_POWER_TO_WEIGHT:
 					break;
 			}
 			break;
@@ -210,6 +211,7 @@ void UnitMgr::ConvertActivityAttributeToCustomaryUnits(ActivityAttributeType& va
 				case MEASURE_LOCATION_ACCURACY:
 				case MEASURE_INDEX:
 				case MEASURE_ID:
+				case MEASURE_POWER_TO_WEIGHT:
 					break;
 			}
 			break;

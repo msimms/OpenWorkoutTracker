@@ -43,7 +43,8 @@ typedef enum ActivityAttributeMeasureType
 	MEASURE_RPM,               // revolutions per minute
 	MEASURE_LOCATION_ACCURACY, // meters
 	MEASURE_INDEX,
-	MEASURE_ID
+	MEASURE_ID,
+	MEASURE_POWER_TO_WEIGHT    // watts/kg
 } ActivityAttributeMeasureType;
 
 typedef struct ActivityAttributeType

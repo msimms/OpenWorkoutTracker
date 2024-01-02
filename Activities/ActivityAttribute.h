@@ -29,6 +29,7 @@
 #define ACTIVITY_ATTRIBUTE_NORMALIZED_POWER           "Normalized Power"        // normalized power calculation
 #define ACTIVITY_ATTRIBUTE_MAX_POWER                  "Maximum Power"           // maximum power meter reading
 #define ACTIVITY_ATTRIBUTE_POWER_ZONE                 "Power Zone"              // current power zone
+#define ACTIVITY_ATTRIBUTE_POWER_TO_WEIGHT            "Power To Weight"         // current power to weight (watts/kg)
 #define ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS      "Num. Wheel Revolutions"  // the number of wheel revolutions (from the wheel speed sensor)
 #define ACTIVITY_ATTRIBUTE_WHEEL_SPEED                "Wheel Speed"             // wheel speed
 #define ACTIVITY_ATTRIBUTE_REPS                       "Repetitions"             // number of repetitions (either computed or from theuser)

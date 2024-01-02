@@ -728,6 +728,8 @@ class LiveActivityVM : ObservableObject {
 			return ""
 		case MEASURE_ID:
 			return ""
+		case MEASURE_POWER_TO_WEIGHT:
+			return "watts/kg";
 		default:
 			return ""
 		}

@@ -359,6 +359,22 @@ ActivityAttributeType Cycling::QueryActivityAttribute(const std::string& attribu
 		result.measureType = MEASURE_NOT_SET;
 		result.valid = (zone > 0) && (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
 	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_POWER_TO_WEIGHT) == 0)
+	{
+		uint64_t timeSinceLastUpdate = 0;
+		if (!HasStopped())
+			timeSinceLastUpdate = CurrentTimeInMs() - m_lastPowerUpdateTimeMs;
+
+		double weightKg = m_athlete.GetWeightKg();
+		if (weightKg < (double)0.1)
+			result.value.doubleVal = ThreeSecPower() / weightKg;
+		else
+			result.value.doubleVal = (double)0.0;
+
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_POWER_TO_WEIGHT;
+		result.valid = (m_numPowerReadings > 0) && (timeSinceLastUpdate < 3000);
+	}
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS) == 0)
 	{
 		result.value.intVal = NumWheelRevolutions();
@@ -470,6 +486,7 @@ void Cycling::BuildAttributeList(std::vector<std::string>& attributes) const
 	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_20_MIN_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_HIGHEST_1_HOUR_POWER);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER_ZONE);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_POWER_TO_WEIGHT);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_METRIC_CENTURY);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_NUM_WHEEL_REVOLUTIONS);
