@@ -298,9 +298,9 @@ class SensorMgr : ObservableObject {
 										CADENCE_SERVICE_ID,
 										RUNNING_POWER_SERVICE_ID,
 										RADAR_SERVICE_ID ]
-			
+
 			self.scanner.startScanningForServices(serviceIdsToScanFor: interestingServices,
-												  peripheralCallbacks: [peripheralDiscovered],
+												  peripheralDiscoveredCallbacks: [peripheralDiscovered],
 												  serviceCallbacks: [serviceDiscovered],
 												  valueUpdatedCallbacks: [valueUpdated],
 												  peripheralDisconnectedCallbacks: [peripheralDisconnected])
