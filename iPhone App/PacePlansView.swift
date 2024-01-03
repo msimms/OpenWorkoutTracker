@@ -18,6 +18,12 @@ struct PacePlansView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
+			HStack() {
+				Image(systemName: "questionmark.circle")
+				Text("Create and manage pace plans. Set a target time and distance and know whether you are moving too fast or too slow.")
+			}
+			.padding(INFO_INSETS)
+
 			if self.pacePlansVM.pacePlans.count > 0 {
 				List(self.pacePlansVM.pacePlans, id: \.self) { item in
 					NavigationLink(destination: EditPacePlanView(pacePlan: item)) {

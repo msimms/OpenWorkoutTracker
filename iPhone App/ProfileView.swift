@@ -32,6 +32,12 @@ struct ProfileView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
+			HStack() {
+				Image(systemName: "questionmark.circle")
+				Text("Information about the athlete, used for calorie calculations, etc.")
+			}
+			.padding(INFO_INSETS)
+
 			Group() {
 				Text("Biological Profile")
 					.bold()

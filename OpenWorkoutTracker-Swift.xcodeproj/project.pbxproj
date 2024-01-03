@@ -237,6 +237,7 @@
 		277EAC35292412C30091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
 		277EAC3629242E440091ADF6 /* BrightBeep.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC32292412C30091ADF6 /* BrightBeep.aif */; };
 		277EAC3729242E440091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
+		2782EA2B2B44BDD800016A16 /* CommonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2A2B44BDD800016A16 /* CommonView.swift */; };
 		278B8F3629411F1600B34161 /* ActivitySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278B8F3529411F1600B34161 /* ActivitySummary.swift */; };
 		278B8F3729411F1600B34161 /* ActivitySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278B8F3529411F1600B34161 /* ActivitySummary.swift */; };
 		278C209D2935425C00828479 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209C2935425C00828479 /* FriendsVM.swift */; };
@@ -631,6 +632,7 @@
 		277EAC2C2922E9570091ADF6 /* IntervalSessionSegment.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = IntervalSessionSegment.cpp; path = Activities/IntervalSessionSegment.cpp; sourceTree = "<group>"; };
 		277EAC32292412C30091ADF6 /* BrightBeep.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = BrightBeep.aif; path = Sounds/BrightBeep.aif; sourceTree = "<group>"; };
 		277EAC33292412C30091ADF6 /* Ping.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ping.aif; path = Sounds/Ping.aif; sourceTree = "<group>"; };
+		2782EA2A2B44BDD800016A16 /* CommonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonView.swift; sourceTree = "<group>"; };
 		278B8F342940EF9D00B34161 /* ActivityMatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActivityMatch.h; path = Common/ActivityMatch.h; sourceTree = "<group>"; };
 		278B8F3529411F1600B34161 /* ActivitySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ActivitySummary.swift; path = IOS/Model/ActivitySummary.swift; sourceTree = "<group>"; };
 		278C209C2935425C00828479 /* FriendsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsVM.swift; sourceTree = "<group>"; };
@@ -1158,6 +1160,7 @@
 				2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */,
 				2740DF5628E4600800293B71 /* ActivityView.swift */,
 				27091AC02A65BB9B0013AD48 /* BarChartView.swift */,
+				2782EA2A2B44BDD800016A16 /* CommonView.swift */,
 				278D92C528E38F17003B077C /* ContentView.swift */,
 				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
 				270658712A0D67CB0073B3F6 /* DebugView.swift */,
@@ -1616,6 +1619,7 @@
 				2740DFD028E460E200293B71 /* PushUpAnalyzer.cpp in Sources */,
 				2740E04828E4CFFD00293B71 /* Signals.cpp in Sources */,
 				2740DFF628E460E200293B71 /* GForceAnalyzer.cpp in Sources */,
+				2782EA2B2B44BDD800016A16 /* CommonView.swift in Sources */,
 				2740DFEA28E460E200293B71 /* Swim.cpp in Sources */,
 				2740DFE428E460E200293B71 /* ActivityFactory.cpp in Sources */,
 				278D92C628E38F17003B077C /* ContentView.swift in Sources */,

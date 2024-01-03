@@ -13,9 +13,9 @@ struct RoutesView: View {
 		VStack(alignment: .center) {
 			HStack() {
 				Image(systemName: "questionmark.circle")
-				Text("This view is for managing routes. Routes can be overlayed on the maps for bike rides, runs, hikes, etc.")
+				Text("Manage routes. Routes can be overlayed on the maps for bike rides, runs, hikes, etc.")
 			}
-			.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
+			.padding(INFO_INSETS)
 
 			if self.routesVM.routes.count > 0 {
 				List(self.routesVM.routes, id: \.self) { item in

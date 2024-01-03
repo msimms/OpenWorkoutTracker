@@ -16,7 +16,7 @@ struct SensorsView: View {
 					Image(systemName: "questionmark.circle")
 					Text("Bluetooth heart rate monitors, cycling power meters, and cadence sensors can all be connected.")
 				}
-				.padding(EdgeInsets.init(top: 5, leading: 0, bottom: 20, trailing: 0))
+				.padding(INFO_INSETS)
 
 				Toggle("Scan for compatible sensors", isOn: $shouldScan)
 					.onChange(of: shouldScan) { value in

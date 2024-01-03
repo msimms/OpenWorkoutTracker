@@ -23,6 +23,12 @@ struct SettingsView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
+			HStack() {
+				Image(systemName: "questionmark.circle")
+				Text("Preferences that affect how information is displayed and which features are enabled.")
+			}
+			.padding(INFO_INSETS)
+
 			Text("Units")
 				.bold()
 			VStack(alignment: .center) {

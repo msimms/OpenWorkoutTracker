@@ -5,6 +5,8 @@
 
 import SwiftUI
 
+let PREFS_INSET = EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)
+
 struct ActivityPreferencesView: View {
 	var activityType: String = ""
 	var colorNames: Array<String> = [COLOR_NAME_WHITE, COLOR_NAME_GRAY, COLOR_NAME_BLACK, COLOR_NAME_RED, COLOR_NAME_GREEN, COLOR_NAME_BLUE, COLOR_NAME_YELLOW]
@@ -85,6 +87,7 @@ struct ActivityPreferencesView: View {
 							}
 						}
 					}
+					.padding(PREFS_INSET)
 				}
 				HStack() {
 					Text("Label Color")
@@ -99,6 +102,7 @@ struct ActivityPreferencesView: View {
 							}
 						}
 					}
+					.padding(PREFS_INSET)
 				}
 				HStack() {
 					Text("Text Color")
@@ -113,6 +117,7 @@ struct ActivityPreferencesView: View {
 							}
 						}
 					}
+					.padding(PREFS_INSET)
 				}
 			}
 			Group() {
