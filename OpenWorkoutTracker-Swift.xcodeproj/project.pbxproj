@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27034CD42B4DC10100EA3FE5 /* LapIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2F2B4CB8A800016A16 /* LapIntent.swift */; };
+		27034CD52B4DC11000EA3FE5 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA312B4CCF6700016A16 /* AppShortcuts.swift */; };
+		27034CD62B4DC11B00EA3FE5 /* MyStartWorkoutIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2D2B4766E700016A16 /* MyStartWorkoutIntent.swift */; };
 		2704224528F84C6400FD02D4 /* ActivityPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */; };
 		2704224728F850A900FD02D4 /* WorkoutDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */; };
 		2704224D28FCDDF600FD02D4 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224C28FCDDF600FD02D4 /* LoginView.swift */; };
@@ -238,6 +241,9 @@
 		277EAC3629242E440091ADF6 /* BrightBeep.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC32292412C30091ADF6 /* BrightBeep.aif */; };
 		277EAC3729242E440091ADF6 /* Ping.aif in Resources */ = {isa = PBXBuildFile; fileRef = 277EAC33292412C30091ADF6 /* Ping.aif */; };
 		2782EA2B2B44BDD800016A16 /* CommonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2A2B44BDD800016A16 /* CommonView.swift */; };
+		2782EA2E2B4766E700016A16 /* MyStartWorkoutIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2D2B4766E700016A16 /* MyStartWorkoutIntent.swift */; };
+		2782EA302B4CB8A800016A16 /* LapIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2F2B4CB8A800016A16 /* LapIntent.swift */; };
+		2782EA322B4CCF6700016A16 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA312B4CCF6700016A16 /* AppShortcuts.swift */; };
 		278B8F3629411F1600B34161 /* ActivitySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278B8F3529411F1600B34161 /* ActivitySummary.swift */; };
 		278B8F3729411F1600B34161 /* ActivitySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278B8F3529411F1600B34161 /* ActivitySummary.swift */; };
 		278C209D2935425C00828479 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278C209C2935425C00828479 /* FriendsVM.swift */; };
@@ -633,6 +639,9 @@
 		277EAC32292412C30091ADF6 /* BrightBeep.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = BrightBeep.aif; path = Sounds/BrightBeep.aif; sourceTree = "<group>"; };
 		277EAC33292412C30091ADF6 /* Ping.aif */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ping.aif; path = Sounds/Ping.aif; sourceTree = "<group>"; };
 		2782EA2A2B44BDD800016A16 /* CommonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonView.swift; sourceTree = "<group>"; };
+		2782EA2D2B4766E700016A16 /* MyStartWorkoutIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStartWorkoutIntent.swift; sourceTree = "<group>"; };
+		2782EA2F2B4CB8A800016A16 /* LapIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapIntent.swift; sourceTree = "<group>"; };
+		2782EA312B4CCF6700016A16 /* AppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcuts.swift; sourceTree = "<group>"; };
 		278B8F342940EF9D00B34161 /* ActivityMatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ActivityMatch.h; path = Common/ActivityMatch.h; sourceTree = "<group>"; };
 		278B8F3529411F1600B34161 /* ActivitySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ActivitySummary.swift; path = IOS/Model/ActivitySummary.swift; sourceTree = "<group>"; };
 		278C209C2935425C00828479 /* FriendsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsVM.swift; sourceTree = "<group>"; };
@@ -1098,6 +1107,16 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		2782EA2C2B4766C500016A16 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				2782EA312B4CCF6700016A16 /* AppShortcuts.swift */,
+				2782EA2F2B4CB8A800016A16 /* LapIntent.swift */,
+				2782EA2D2B4766E700016A16 /* MyStartWorkoutIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		278D92B728E38F17003B077C = {
 			isa = PBXGroup;
 			children = (
@@ -1116,6 +1135,7 @@
 				2740E04B28E4D0AB00293B71 /* Database */,
 				2740E00D28E4CE0D00293B71 /* FileLib */,
 				2740DFF728E4CCD000293B71 /* Gear */,
+				2782EA2C2B4766C500016A16 /* Intents */,
 				2740E07628E5DE9C00293B71 /* LibBluetooth */,
 				2740E03A28E4CF9800293B71 /* LibMath */,
 				2740E09A28E633E800293B71 /* Model */,
@@ -1636,6 +1656,7 @@
 				27A2083B2AD863CE0044E954 /* RoutesView.swift in Sources */,
 				2740DFF028E460E200293B71 /* ChinUpAnalyzer.cpp in Sources */,
 				2740DFE128E460E200293B71 /* Activity.cpp in Sources */,
+				2782EA2E2B4766E700016A16 /* MyStartWorkoutIntent.swift in Sources */,
 				277541342980333400AE9B86 /* ZonesVM.swift in Sources */,
 				2740E07228E4E75000293B71 /* HistoryVM.swift in Sources */,
 				2740DFEB28E460E200293B71 /* Workout.cpp in Sources */,
@@ -1682,11 +1703,13 @@
 				277EAC2A291F1F330091ADF6 /* MapWithPolyline.swift in Sources */,
 				2704225B2905DC6300FD02D4 /* CyclingRadarService.swift in Sources */,
 				2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */,
+				2782EA322B4CCF6700016A16 /* AppShortcuts.swift in Sources */,
 				2740E03628E4CE1C00293B71 /* TextFileReader.cpp in Sources */,
 				2740E05628E4D0C700293B71 /* Database.cpp in Sources */,
 				2740E09C28E6344400293B71 /* Preferences.swift in Sources */,
 				2740E10B28EB5AD600293B71 /* Accelerometer.swift in Sources */,
 				2740DF6228E4600800293B71 /* AboutView.swift in Sources */,
+				2782EA302B4CB8A800016A16 /* LapIntent.swift in Sources */,
 				2704224528F84C6400FD02D4 /* ActivityPreferencesView.swift in Sources */,
 				270658792A156B3B0073B3F6 /* WorkoutList.cpp in Sources */,
 				2740E09228E6319700293B71 /* IntervalSessionsView.swift in Sources */,
@@ -1778,14 +1801,17 @@
 				2740E0E728E702AD00293B71 /* FitFileWriter.cpp in Sources */,
 				2740E0F228E702DD00293B71 /* Peaks.cpp in Sources */,
 				2740E0BF28E7028C00293B71 /* PushUpAnalyzer.cpp in Sources */,
+				27034CD52B4DC11000EA3FE5 /* AppShortcuts.swift in Sources */,
 				278D932B28E38FE7003B077C /* SettingsView.swift in Sources */,
 				2740E0BE28E7028C00293B71 /* Hike.cpp in Sources */,
 				2740E06D28E4E5BA00293B71 /* LiveActivityVM.swift in Sources */,
 				2740E0BB28E7028C00293B71 /* VO2MaxCalculator.cpp in Sources */,
 				2740E09D28E6344400293B71 /* Preferences.swift in Sources */,
+				27034CD42B4DC10100EA3FE5 /* LapIntent.swift in Sources */,
 				2740E0CE28E7028C00293B71 /* FtpCalculator.cpp in Sources */,
 				2740E0C028E7028C00293B71 /* PullUp.cpp in Sources */,
 				2740E0A028E643FD00293B71 /* ActivityPreferences.swift in Sources */,
+				27034CD62B4DC11B00EA3FE5 /* MyStartWorkoutIntent.swift in Sources */,
 				2740E0D528E7028C00293B71 /* Walk.cpp in Sources */,
 				2740E12328F233A200293B71 /* StoredActivityVM.swift in Sources */,
 				2740E0EB28E702C600293B71 /* Distance.cpp in Sources */,

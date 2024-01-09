@@ -249,8 +249,11 @@ extern "C" {
 	bool StartActivityWithTimestamp(const char* const activityId, time_t startTime);
 	bool StopCurrentActivity(void);
 	bool PauseCurrentActivity(void);
-	bool StartNewLap(void);
 	bool SaveActivitySummaryData(void);
+
+	// Lap-related functions for the current activity.
+	bool StartNewLap(void);
+	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, double* startingDistanceMeters, double* startingCalorieCount);
 
 	// Functions for managing the autostart state.
 	bool IsAutoStartEnabled(void);

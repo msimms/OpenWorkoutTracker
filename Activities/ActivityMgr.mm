@@ -3838,36 +3838,6 @@ extern "C" {
 		return result;
 	}
 
-	bool StartNewLap()
-	{
-		bool result = false;
-
-		g_dbLock.lock();
-
-		if (IsActivityInProgressAndNotPaused() && g_pDatabase)
-		{
-			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
-
-			// Laps are only meaningful for moving activities.
-			if (pMovingActivity)
-			{
-				pMovingActivity->StartNewLap();
-
-				// Write it to the database so we can recall it easily.
-				const LapSummaryList& laps = pMovingActivity->GetLaps();
-				if (laps.size() > 0)
-				{
-					const LapSummary& lap = laps.at(laps.size() - 1);
-					result = g_pDatabase->CreateLap(g_pCurrentActivity->GetId(), lap);
-				}
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return result;
-	}
-
 	bool SaveActivitySummaryData()
 	{
 		bool result = false;
@@ -3892,6 +3862,70 @@ extern "C" {
 		}
 
 		g_dbLock.unlock();
+
+		return result;
+	}
+
+	//
+	// Lap-related functions for the current activity.
+	//
+
+	bool StartNewLap()
+	{
+		bool result = false;
+		
+		g_dbLock.lock();
+		
+		if (IsActivityInProgressAndNotPaused() && g_pDatabase)
+		{
+			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
+			
+			// Laps are only meaningful for moving activities.
+			if (pMovingActivity)
+			{
+				pMovingActivity->StartNewLap();
+				
+				// Write it to the database so we can recall it easily.
+				const LapSummaryList& laps = pMovingActivity->GetLaps();
+				if (laps.size() > 0)
+				{
+					const LapSummary& lap = laps.at(laps.size() - 1);
+					result = g_pDatabase->CreateLap(g_pCurrentActivity->GetId(), lap);
+				}
+			}
+		}
+		
+		g_dbLock.unlock();
+		
+		return result;
+	}
+
+	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, double* startingDistanceMeters, double* startingCalorieCount)
+	{
+		bool result = false;
+		
+		if (IsActivityInProgressAndNotPaused() && g_pDatabase)
+		{
+			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
+			
+			// Laps are only meaningful for moving activities.
+			if (pMovingActivity)
+			{
+				const LapSummaryList& laps = pMovingActivity->GetLaps();
+
+				if (lapNum < laps.size())
+				{
+					const LapSummary& lap = laps.at(lapNum);
+
+					if (startTimeMs != NULL)
+						(*startTimeMs) = lap.startTimeMs;
+					if (startingDistanceMeters != NULL)
+						(*startingDistanceMeters) = lap.startingDistanceMeters;
+					if (startingCalorieCount != NULL)
+						(*startingCalorieCount) = lap.startingCalorieCount;
+				}
+			}
+		}
 
 		return result;
 	}
