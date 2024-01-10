@@ -10,6 +10,7 @@
 		27034CD42B4DC10100EA3FE5 /* LapIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2F2B4CB8A800016A16 /* LapIntent.swift */; };
 		27034CD52B4DC11000EA3FE5 /* AppShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA312B4CCF6700016A16 /* AppShortcuts.swift */; };
 		27034CD62B4DC11B00EA3FE5 /* MyStartWorkoutIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2782EA2D2B4766E700016A16 /* MyStartWorkoutIntent.swift */; };
+		27034CDC2B4DF4FC00EA3FE5 /* GradientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27034CDB2B4DF4FC00EA3FE5 /* GradientTests.swift */; };
 		2704224528F84C6400FD02D4 /* ActivityPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */; };
 		2704224728F850A900FD02D4 /* WorkoutDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */; };
 		2704224D28FCDDF600FD02D4 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2704224C28FCDDF600FD02D4 /* LoginView.swift */; };
@@ -389,6 +390,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		27034CDB2B4DF4FC00EA3FE5 /* GradientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientTests.swift; sourceTree = "<group>"; };
 		2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityPreferencesView.swift; sourceTree = "<group>"; };
 		2704224628F850A900FD02D4 /* WorkoutDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailsView.swift; sourceTree = "<group>"; };
 		2704224C28FCDDF600FD02D4 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -1234,6 +1236,7 @@
 				27E30B722A969EA300236EAB /* Downloader.swift */,
 				27E30B6E2A969C7B00236EAB /* FitTests.swift */,
 				27E30B6A2A969A9A00236EAB /* GpxTests.swift */,
+				27034CDB2B4DF4FC00EA3FE5 /* GradientTests.swift */,
 				27E30B6C2A969C3600236EAB /* TcxTests.swift */,
 				27E30B702A969CB200236EAB /* PeakFindingTests.swift */,
 			);
@@ -1757,6 +1760,7 @@
 			files = (
 				278D92D528E38F18003B077C /* OpenWorkoutTrackerTests.swift in Sources */,
 				27E30B712A969CB200236EAB /* PeakFindingTests.swift in Sources */,
+				27034CDC2B4DF4FC00EA3FE5 /* GradientTests.swift in Sources */,
 				27E30B732A969EA300236EAB /* Downloader.swift in Sources */,
 				27E30B6B2A969A9A00236EAB /* GpxTests.swift in Sources */,
 				27E30B6D2A969C3600236EAB /* TcxTests.swift in Sources */,

@@ -17,7 +17,8 @@ final class GpxTests: XCTestCase {
 
     func testGpxImport() throws {
 		// Downloads files from the test files repository and imports them into a temporary database.
-		
+
+		var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
 		let downloader = Downloader()
 
 		// Test files are stored here.
@@ -33,6 +34,8 @@ final class GpxTests: XCTestCase {
 		testFileNames.append("20170308_intra_run_club.gpx")
 		testFileNames.append("20180831_beach_run_runkeeper.gpx")
 
+		queryGroup.enter()
+
 		for testFileName in testFileNames {
 			let sourceFileName = sourcePath.appending(testFileName)
 			let sourceFileUrl = URL(string: sourceFileName)
@@ -40,18 +43,21 @@ final class GpxTests: XCTestCase {
 
 			downloader.download(source: sourceFileUrl!, destination: destFileUrl, completion: { error in
 				
+				// Make sure the download succeeded.
+				XCTAssert(error == nil)
+
 				// Make up an activity ID.
 				let activityId = UUID()
-				
+
 				// Load the activity into the database.
 				XCTAssert(ImportActivityFromFile(destFileUrl.absoluteString, ACTIVITY_TYPE_RUNNING, activityId.uuidString))
-				
+
 				// Refresh the database metadata.
 				InitializeHistoricalActivityList()
 				let activityIndex = ConvertActivityIdToActivityIndex(activityId.uuidString)
 				XCTAssert(CreateHistoricalActivityObject(activityIndex))
 				XCTAssert(LoadAllHistoricalActivitySensorData(activityIndex))
-				
+
 				// Clean up.
 				XCTAssert(DeleteActivityFromDatabase(activityId.uuidString))
 				do {
@@ -60,6 +66,18 @@ final class GpxTests: XCTestCase {
 				catch {
 				}
 			})
+
+			queryGroup.leave()
+		}
+
+		queryGroup.wait()
+
+		// Clean up.
+		do {
+			CloseDatabase()
+			try FileManager.default.removeItem(at: dbFileUrl)
+		}
+		catch {
 		}
 	}
 }

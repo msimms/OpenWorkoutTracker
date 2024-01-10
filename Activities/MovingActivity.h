@@ -125,6 +125,7 @@ protected:
 	double                  m_distanceTraveledSmoothedM;     // total distance (in meters)
 	double                  m_totalAscentM;                  // sum of all ascents (in meters)
 	double                  m_currentGradient;               // last computed gradient
+	double                  m_avgGradient;                   // average gradient for the entire course
 	std::vector<double>     m_altitudeBuffer;                // for computing a running average of altitude
 	uint64_t                m_stoppedTimeMS;                 // amount of time spent not moving (in milliseconds)
 	SegmentType             m_minAltitudeM;                  // lowest altitude so far, units are in meters

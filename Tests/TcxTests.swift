@@ -18,6 +18,7 @@ final class TcxTests: XCTestCase {
     func testTcxImport() throws {
 		// Downloads files from the test files repository and imports them into a temporary database.
 		
+		var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
 		let downloader = Downloader()
 		
 		// Test files are stored here.
@@ -33,6 +34,8 @@ final class TcxTests: XCTestCase {
 		testFileNames.append("20210119_run_garmin_fenix6_sapphire.tcx")
 		testFileNames.append("20180331_run_garmin_fenix_3_hr.tcx")
 		
+		queryGroup.enter()
+
 		for testFileName in testFileNames {
 			let sourceFileName = sourcePath.appending(testFileName)
 			let sourceFileUrl = URL(string: sourceFileName)
@@ -40,6 +43,9 @@ final class TcxTests: XCTestCase {
 			
 			downloader.download(source: sourceFileUrl!, destination: destFileUrl, completion: { error in
 				
+				// Make sure the download succeeded.
+				XCTAssert(error == nil)
+
 				// Make up an activity ID.
 				let activityId = UUID()
 				
@@ -60,6 +66,18 @@ final class TcxTests: XCTestCase {
 				catch {
 				}
 			})
+
+			queryGroup.leave()
+		}
+
+		queryGroup.wait()
+
+		// Clean up.
+		do {
+			CloseDatabase()
+			try FileManager.default.removeItem(at: dbFileUrl)
+		}
+		catch {
 		}
 	}
 }

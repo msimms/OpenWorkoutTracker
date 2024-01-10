@@ -44,6 +44,7 @@
 #define ACTIVITY_ATTRIBUTE_CURRENT_PACE               "Current Pace"            // current pace (instantaneous)
 #define ACTIVITY_ATTRIBUTE_FASTEST_PACE               "Fastest Pace"            // best pace
 #define ACTIVITY_ATTRIBUTE_GRADIENT                   "Gradient"                // current gradient
+#define ACTIVITY_ATTRIBUTE_AVG_GRADIENT               "Average Gradient"        // average gradient
 #define ACTIVITY_ATTRIBUTE_GRADE_ADJUSTED_PACE        "Grade Adjusted Pace"     // grade adjusted pace (pace accounting for changes in grade)
 #define ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE         "Gap to Target Pace"      // difference between the current pace and the target pace
 #define ACTIVITY_ATTRIBUTE_AVG_SPEED                  "Average Speed"           // average speed (using elapsed time)

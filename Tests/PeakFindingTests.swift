@@ -19,16 +19,17 @@ final class PeakFindingTests: XCTestCase {
 		// Downloads accelerometer data from the test files repository and runs them through the same peak
 		// peak finding code used when performing pullup and pushup exercises.
 
+		var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
 		let downloader = Downloader()
-		
+
 		// Test files are stored here.
 		let sourcePath = "https://raw.githubusercontent.com/msimms/TestFilesForFitnessApps/master/tcx/"
 		let tempUrl = FileManager.default.temporaryDirectory
-		
+
 		// Create a test database.
-		let dbFileUrl = tempUrl.appendingPathComponent("test.db")
+		let dbFileUrl = tempUrl.appendingPathComponent("peak_tests.db")
 		XCTAssert(Initialize(dbFileUrl.absoluteString));
-		
+
 		// Test files to download.
 		var testFileNames: Array<String> = []
 		testFileNames.append("10_pullups_accelerometer_iphone_4s_01.csv")
@@ -39,12 +40,15 @@ final class PeakFindingTests: XCTestCase {
 			let sourceFileName = sourcePath.appending(testFileName)
 			let sourceFileUrl = URL(string: sourceFileName)
 			let destFileUrl = tempUrl.appendingPathComponent(testFileName)
-			
+
 			downloader.download(source: sourceFileUrl!, destination: destFileUrl, completion: { error in
-				
+
+				// Make sure the download succeeded.
+				XCTAssert(error == nil)
+
 				// Make up an activity ID.
 				let activityId = UUID()
-				
+
 				// Attempt to figure out the activity type from the input file name.
 				var activityType = ""
 				if sourceFileName.contains("pullup") {
@@ -56,7 +60,7 @@ final class PeakFindingTests: XCTestCase {
 
 				// Load the activity into the database.
 				XCTAssert(ImportActivityFromFile(destFileUrl.absoluteString, activityType, activityId.uuidString))
-				
+
 				// Refresh the database metadata.
 				InitializeHistoricalActivityList()
 				let activityIndex = ConvertActivityIdToActivityIndex(activityId.uuidString)
@@ -72,14 +76,18 @@ final class PeakFindingTests: XCTestCase {
 				catch {
 				}
 			})
+
+			queryGroup.leave()
 		}
-    }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
+		queryGroup.wait()
 
+		// Clean up.
+		do {
+			CloseDatabase()
+			try FileManager.default.removeItem(at: dbFileUrl)
+		}
+		catch {
+		}
+}
 }

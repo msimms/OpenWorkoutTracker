@@ -485,13 +485,23 @@ bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 		}
 		
 		// Update current gradient.
-		if (distanceInfo.distanceM > 0.00001)
+		if (distanceInfo.distanceM > 0.001)
 		{
 			m_currentGradient = distanceInfo.verticalDistanceM / distanceInfo.distanceM;
 		}
 		else
 		{
 			m_currentGradient = (double)0.0;
+		}
+		
+		// Update the average gradient for the course.
+		if (m_coordinates.size() > 0)
+		{
+			m_avgGradient = (m_currentLoc.altitude - m_coordinates.at(0).altitude) / m_distanceTraveledRawM;
+		}
+		else
+		{
+			m_avgGradient = (double)0.0;
 		}
 
 		RecomputeRecordTimes();
@@ -614,6 +624,13 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_GRADIENT) == 0)
 	{
 		result.value.doubleVal = m_currentGradient;
+		result.valueType = TYPE_DOUBLE;
+		result.measureType = MEASURE_PERCENTAGE;
+		result.valid = true;
+	}
+	else if (attributeName.compare(ACTIVITY_ATTRIBUTE_AVG_GRADIENT) == 0)
+	{
+		result.value.doubleVal = m_avgGradient;
 		result.valueType = TYPE_DOUBLE;
 		result.measureType = MEASURE_PERCENTAGE;
 		result.valid = true;
@@ -1432,6 +1449,7 @@ void MovingActivity::BuildAttributeList(std::vector<std::string>& attributes) co
 	attributes.push_back(ACTIVITY_ATTRIBUTE_CURRENT_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_FASTEST_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_GRADIENT);
+	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_GRADIENT);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_GRADE_ADJUSTED_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_GAP_TO_TARGET_PACE);
 	attributes.push_back(ACTIVITY_ATTRIBUTE_AVG_SPEED);
