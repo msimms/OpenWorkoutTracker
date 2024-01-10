@@ -390,8 +390,8 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	}
 	
 	private func formatActivityAttribute(attribute: ActivityAttributeType) -> String {
-		let result = LiveActivityVM.formatActivityValue(attribute: attribute)
-		return result + " " + LiveActivityVM.formatActivityMeasureType(measureType: attribute.measureType)
+		let result = StringUtils.formatActivityValue(attribute: attribute)
+		return result + " " + StringUtils.formatActivityMeasureType(measureType: attribute.measureType)
 	}
 	
 	func getActivityAttributeValueStr(attributeName: String) -> String {
