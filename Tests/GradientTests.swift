@@ -50,6 +50,10 @@ final class GradientTests: XCTestCase {
 			// Query the average gradient.
 			let avgGradient = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_AVG_GRADIENT)
 			XCTAssert(avgGradient.valid && fabs(avgGradient.value.doubleVal - 0.039) < 0.1)
+			
+			// Query the total ascent.
+			let totalAscent = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_TOTAL_ASCENT)
+			XCTAssert(totalAscent.valid && fabs(totalAscent.value.doubleVal - 31.0) < 0.1)
 
 			// Clean up.
 			XCTAssert(DeleteActivityFromDatabase(activityId.uuidString))

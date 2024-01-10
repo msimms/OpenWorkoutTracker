@@ -427,18 +427,18 @@ bool MovingActivity::ProcessLocationReading(const SensorReading& reading)
 
 	double currAlt = RunningAltitudeAverage();
 
-	// Update the total ascent.
-	if (currAlt > prevAlt)
-	{
-		m_totalAscentM += currAlt - prevAlt;
-	}
-
 	m_coordinates.push_back(m_currentLoc);
 
 	if (m_previousLocSet)
 	{
 		TimeDistancePair distanceInfo;
 
+		// Update the total ascent.
+		if (currAlt > prevAlt)
+		{
+			m_totalAscentM += currAlt - prevAlt;
+		}
+		
 		// Compute the raw distance.
 		distanceInfo.verticalDistanceM = m_currentLoc.altitude - m_previousLoc.altitude;
 		distanceInfo.distanceM = LibMath::Distance::haversineDistance(m_previousLoc.latitude, m_previousLoc.longitude, m_previousLoc.altitude, m_currentLoc.latitude, m_currentLoc.longitude, m_currentLoc.altitude);
