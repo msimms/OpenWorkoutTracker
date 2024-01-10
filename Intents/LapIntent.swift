@@ -11,11 +11,26 @@ struct LapIntent: AppIntent {
 	
 	func perform() async throws -> some IntentResult & ProvidesDialog {
 		if !IsActivityInProgressAndNotPaused() {
-			return .result(dialog: "Activity not in progress")
+			return .result(dialog: "Activity not in progress!")
 		}
 		if !StartNewLap() {
-			return .result(dialog: "Internal error")
+			return .result(dialog: "Internal error!")
 		}
-		return .result(dialog: "Lap started")
+
+		let lapNum = NumLaps()
+		var startTimeMs: UInt64 = 0
+		var elapsedTimeMs: UInt64 = 0
+		var startingDistanceMeters: Double = 0.0
+		var startingCalorieCount: Double = 0.0
+		if MetaDataForLap(lapNum, &startTimeMs, &elapsedTimeMs, &startingDistanceMeters, &startingCalorieCount) {
+			if elapsedTimeMs == 0 {
+				return .result(dialog: "Lap started!")
+			}
+			else {
+				let elapsedTimeStr = StringUtils.formatSeconds(numSeconds: time_t(elapsedTimeMs / 1000))
+				return .result(dialog: "Lap started! Previous lap was \(elapsedTimeStr).")
+			}
+		}
+		return .result(dialog: "Lap started!")
 	}
 }

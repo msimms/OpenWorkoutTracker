@@ -253,7 +253,8 @@ extern "C" {
 
 	// Lap-related functions for the current activity.
 	bool StartNewLap(void);
-	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, double* startingDistanceMeters, double* startingCalorieCount);
+	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, uint64_t* elapsedTimeMs, double* startingDistanceMeters, double* startingCalorieCount);
+	size_t NumLaps(void);
 
 	// Functions for managing the autostart state.
 	bool IsAutoStartEnabled(void);

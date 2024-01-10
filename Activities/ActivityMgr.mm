@@ -3900,7 +3900,7 @@ extern "C" {
 		return result;
 	}
 
-	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, double* startingDistanceMeters, double* startingCalorieCount)
+	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, uint64_t* elapsedTimeMs, double* startingDistanceMeters, double* startingCalorieCount)
 	{
 		bool result = false;
 		
@@ -3912,10 +3912,11 @@ extern "C" {
 			if (pMovingActivity)
 			{
 				const LapSummaryList& laps = pMovingActivity->GetLaps();
+				size_t currentLapIndex = lapNum - 1;
 
-				if (lapNum < laps.size())
+				if (currentLapIndex < laps.size())
 				{
-					const LapSummary& lap = laps.at(lapNum);
+					const LapSummary& lap = laps.at(currentLapIndex);
 
 					if (startTimeMs != NULL)
 						(*startTimeMs) = lap.startTimeMs;
@@ -3923,11 +3924,39 @@ extern "C" {
 						(*startingDistanceMeters) = lap.startingDistanceMeters;
 					if (startingCalorieCount != NULL)
 						(*startingCalorieCount) = lap.startingCalorieCount;
+					
+					// If this is not the first lap then compute the elapsed time.
+					if (currentLapIndex > 0)
+					{
+						const LapSummary& prevLap = laps.at(currentLapIndex - 1);
+						
+						if (elapsedTimeMs != NULL)
+							(*elapsedTimeMs) = lap.startTimeMs - prevLap.startTimeMs;
+					}
+					result = true;
 				}
 			}
 		}
 
 		return result;
+	}
+
+	size_t NumLaps(void)
+	{
+		bool result = false;
+		
+		if (IsActivityInProgressAndNotPaused() && g_pDatabase)
+		{
+			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
+			
+			// Laps are only meaningful for moving activities.
+			if (pMovingActivity)
+			{
+				const LapSummaryList& laps = pMovingActivity->GetLaps();
+				return laps.size();
+			}
+		}
+		return 0;
 	}
 
 	//
