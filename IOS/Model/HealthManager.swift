@@ -359,12 +359,17 @@ class HealthManager {
 	func readCyclingWorkoutsFromHealthStore() {
 		self.readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType.cycling)
 	}
+	
+	func readSwimWorkoutsFromHealthStore() {
+		self.readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType.swimming)
+	}
 
 	func readAllActivitiesFromHealthStore() {
 		self.clearWorkoutsList()
 		self.readRunningWorkoutsFromHealthStore()
 		self.readWalkingWorkoutsFromHealthStore()
 		self.readCyclingWorkoutsFromHealthStore()
+		self.readSwimWorkoutsFromHealthStore()
 		self.waitForHealthKitQueries()
 	}
 
@@ -670,16 +675,7 @@ class HealthManager {
 		let workout = self.workouts[activityId]
 
 		if workout != nil {
-			switch workout!.workoutActivityType {
-			case HKWorkoutActivityType.cycling:
-				return ACTIVITY_TYPE_CYCLING
-			case HKWorkoutActivityType.running:
-				return ACTIVITY_TYPE_RUNNING
-			case HKWorkoutActivityType.walking:
-				return ACTIVITY_TYPE_WALKING
-			default:
-				break
-			}
+			return HealthManager.healthKitWorkoutToActivityType(workout: workout!)
 		}
 		return ""
 	}
@@ -868,6 +864,7 @@ class HealthManager {
 			if quantity != nil && date != nil {
 				let heartRateUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
 				let unixTime = date!.timeIntervalSince1970 // Apple Watch processor is 32-bit, so time_t is 32-bit as well
+
 				self.currentHeartRate = quantity!.doubleValue(for: heartRateUnit)
 				self.heartRateRead = true
 				ProcessHrmReading(self.currentHeartRate, UInt64(unixTime))

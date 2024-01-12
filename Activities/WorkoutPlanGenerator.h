@@ -43,22 +43,27 @@ public:
 	WorkoutList GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs);
 
 private:
-	User   m_user;                        // Tells us what we need to know about the user/athlete
-	double m_best5K;                      // Needed to compute training paces.
-	double m_longestRunsByWeek[4];        // Longest run for each of the recent four weeks
-	double m_longestRidesByWeek[4];       // Longest bike rides for each of the recent four weeks
-	double m_longestSwimsByWeek[4];       // Longest swims for each of the recent four weeks
-	double m_runIntensityByWeek[4];       // Total training intensity for each of the recent four weeks
-	double m_cyclingIntensityByWeek[4];   // Total training intensity for each of the recent four weeks
-	double m_swimIntensityByWeek[4];      // Total training intensity for each of the recent four weeks
+	User   m_user;                         // Tells us what we need to know about the user/athlete
+	double m_best5KPace;                   // Needed to compute training paces.
+	time_t m_best5KDurationSecs;           // Also needed to compute training paces.
+	double m_best5KActualDistanceMeters;   // Also needed to compute training paces.
+	double m_best12MinuteEffort;           // Alternative method for computing training paces.
+	double m_longestRunsByWeek[4];         // Longest run for each of the recent four weeks
+	double m_longestRidesByWeek[4];        // Longest bike rides for each of the recent four weeks
+	double m_longestSwimsByWeek[4];        // Longest swims for each of the recent four weeks
+	double m_runIntensityByWeek[4];        // Total training intensity for each of the recent four weeks
+	double m_cyclingIntensityByWeek[4];    // Total training intensity for each of the recent four weeks
+	double m_swimIntensityByWeek[4];       // Total training intensity for each of the recent four weeks
 	size_t m_numRunsWeek[4];
 	size_t m_numBikesWeek[4];
-	double m_avgRunningDistanceFourWeeks;
-	double m_avgCyclingDistanceFourWeeks;
+	size_t m_numSwimsWeek[4];
+	double m_avgRunningDistanceFourWeeks;  // Average run distance over the last four weeks (meters)
+	double m_avgCyclingDistanceFourWeeks;  // Average bike distance over the last four weeks (meters)
+	double m_avgSwimmingDistanceFourWeeks; // Average swim distance over the last four weeks (meters)
 	double m_avgCyclingDurationFourWeeks;
-	size_t m_runCount;                    // For average run distance
-	size_t m_bikeCount;                   // For average bike distance
-	size_t m_swimCount;
+	size_t m_runCount;                     // For average run distance
+	size_t m_bikeCount;                    // For average bike distance
+	size_t m_swimCount;                    // For average swim distance
 
 	std::map<std::string, ActivitySummary> m_additionalActivitySummaries; // populated by InsertAdditionalAttributesForWorkoutGeneration
 

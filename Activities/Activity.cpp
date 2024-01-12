@@ -111,7 +111,7 @@ void Activity::Pause(void)
 	}
 	else
 	{
-		m_timeWhenPausedMs = CurrentTimeInMs();
+		m_timeWhenPausedMs = (time_t)CurrentTimeInMs();
 	}
 	m_isPaused = !m_isPaused;
 }

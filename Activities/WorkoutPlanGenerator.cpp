@@ -32,7 +32,10 @@ WorkoutPlanGenerator::~WorkoutPlanGenerator()
 
 void WorkoutPlanGenerator::Reset(void)
 {
-	m_best5K = (double)0.0;
+	m_best5KPace = (double)0.0;
+	m_best5KDurationSecs = 0;
+	m_best5KActualDistanceMeters = (double)0.0;
+	m_best12MinuteEffort = (double)0.0;
 	for (size_t i = 0; i < 4; ++i)
 	{
 		m_longestRunsByWeek[i] = 0.0;
@@ -43,9 +46,11 @@ void WorkoutPlanGenerator::Reset(void)
 		m_swimIntensityByWeek[i] = 0.0;
 		m_numRunsWeek[i] = 0;
 		m_numBikesWeek[i] = 0;
+		m_numSwimsWeek[i] = 0;
 	}
 	m_avgRunningDistanceFourWeeks = (double)0.0;
 	m_avgCyclingDistanceFourWeeks = (double)0.0;
+	m_avgSwimmingDistanceFourWeeks = (double)0.0;
 	m_avgCyclingDurationFourWeeks = (double)0.0;
 	m_runCount = 0;
 	m_bikeCount = 0;
@@ -96,18 +101,6 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_WEEKS_UNTIL_GOAL, weeksUntilGoal));	
 
 	//
-	// Need cycling FTP and run training paces.
-	//
-
-	// Append run training paces.
-	this->CalculateRunTrainingPaces(inputs);
-
-	// Get the user's current estimated cycling FTP.
-	FtpCalculator ftpCalc;
-	double thresholdPower = ftpCalc.Estimate(historicalActivities);
-	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, thresholdPower));
-
-	//
 	// Need last four weeks averages and bests.
 	//
 
@@ -134,7 +127,23 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	{
 		m_avgCyclingDistanceFourWeeks /= (double)m_bikeCount;
 	}
+	if (m_swimCount > 0)
+	{
+		m_avgSwimmingDistanceFourWeeks /= (double)m_swimCount;
+	}
 
+	//
+	// Need cycling FTP and run training paces.
+	//
+	
+	// Append run training paces.
+	this->CalculateRunTrainingPaces(inputs);
+	
+	// Get the user's current estimated cycling FTP.
+	FtpCalculator ftpCalc;
+	double thresholdPower = ftpCalc.Estimate(historicalActivities);
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_THRESHOLD_POWER, thresholdPower));
+	
 	//
 	// Need information about the user.
 	//
@@ -171,6 +180,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4, m_runIntensityByWeek[3] + m_cyclingIntensityByWeek[3] + m_swimIntensityByWeek[3]));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS, m_avgRunningDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS, m_avgCyclingDistanceFourWeeks));
+	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_SWIMMING_DISTANCE_IN_FOUR_WEEKS, m_avgSwimmingDistanceFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_AVG_CYCLING_DURATION_IN_FOUR_WEEKS, m_avgCyclingDurationFourWeeks));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS, m_runCount));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_NUM_RIDES_LAST_FOUR_WEEKS, m_bikeCount));
@@ -230,6 +240,7 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 {
 	const uint64_t SECS_PER_WEEK = 7.0 * 24.0 * 60.0 * 60.0;
 	size_t now = time(NULL);
+	time_t activityDurationSecs = summary.endTime - summary.startTime;
 
 	time_t week4CutoffTime = now - (4.0 * SECS_PER_WEEK); // last four weeks
 	time_t week3CutoffTime = now - (3.0 * SECS_PER_WEEK); // last three weeks
@@ -244,40 +255,53 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 		{
 			if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED) != summary.summaryAttributes.end())
 			{
-				ActivityAttributeType attr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+				ActivityAttributeType distanceAttr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
 
-				if (attr.valid)
+				if (distanceAttr.valid)
 				{
-					UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
-					double activityDistance = attr.value.doubleVal * 1000.0; // km to meters
-
-					if (summary.startTime > week3CutoffTime)
-					{
-						if (activityDistance > m_longestRunsByWeek[3])
-							m_longestRunsByWeek[3] = activityDistance;
-						m_numRunsWeek[3] = m_numRunsWeek[3] + 1;
-					}
-					else if ((summary.startTime > week2CutoffTime) && (summary.startTime < week3CutoffTime))
-					{
-						if (activityDistance > m_longestRunsByWeek[2])
-							m_longestRunsByWeek[2] = activityDistance;
-						m_numRunsWeek[2] = m_numRunsWeek[2] + 1;
-					}
-					else if ((summary.startTime > week1CutoffTime) && (summary.startTime < week2CutoffTime))
-					{
-						if (activityDistance > m_longestRunsByWeek[1])
-							m_longestRunsByWeek[1] = activityDistance;
-						m_numRunsWeek[1] = m_numRunsWeek[1] + 1;
-					}
+					UnitMgr::ConvertActivityAttributeToMetric(distanceAttr); // make sure this is in metric
+					double activityDistanceMeters = distanceAttr.value.doubleVal * 1000.0; // km to meters
+					double pace = (double)activityDurationSecs / activityDistanceMeters;
+					size_t index = (size_t)-1;
+					
+					if ((summary.startTime < week3CutoffTime) && (summary.startTime >= week4CutoffTime))
+						index = 3;
+					else if ((summary.startTime < week2CutoffTime) && (summary.startTime >= week3CutoffTime))
+						index = 2;
+					else if ((summary.startTime < week1CutoffTime) && (summary.startTime >= week2CutoffTime))
+						index = 1;
 					else
+						index = 0;
+					
+					if (index != (size_t)-1)
 					{
-						if (activityDistance > m_longestRunsByWeek[0])
-							m_longestRunsByWeek[0] = activityDistance;
-						m_numRunsWeek[0] = m_numRunsWeek[0] + 1;
+						if (activityDistanceMeters > m_longestRunsByWeek[index])
+							m_longestRunsByWeek[index] = activityDistanceMeters;
+						m_numRunsWeek[index] = m_numRunsWeek[index] + 1;
 					}
 
-					m_avgRunningDistanceFourWeeks += activityDistance;
+					m_avgRunningDistanceFourWeeks += activityDistanceMeters;
 					++m_runCount;
+
+					// Is this our best recent 5K?
+					if (activityDistanceMeters >= 5000.0)
+					{
+						if (m_best5KDurationSecs == 0 || pace <= m_best5KPace)
+						{
+							m_best5KPace = pace;
+							m_best5KDurationSecs = activityDurationSecs;
+							m_best5KActualDistanceMeters = activityDistanceMeters;
+						}
+					}
+
+					// Is this our best recent 12 minute effort? Effort has to be between 12:00 and 12:10 in duration.
+					if (activityDurationSecs >= (12 * 60) && activityDurationSecs <= (12 * 60) + 10)
+					{
+						if (m_best12MinuteEffort < 0.01 || activityDistanceMeters >= m_best12MinuteEffort)
+						{
+							m_best12MinuteEffort = activityDistanceMeters;
+						}
+					}
 				}
 			}
 		}
@@ -293,38 +317,66 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 				if (attr.valid)
 				{
 					UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
-					double activityDistance = attr.value.doubleVal * 1000.0; // km to meters
+					double activityDistanceMeters = attr.value.doubleVal * 1000.0; // km to meters
+					size_t index = (size_t)-1;
 
-					if (summary.startTime > week3CutoffTime)
-					{
-						if (activityDistance > m_longestRidesByWeek[3])
-							m_longestRidesByWeek[3] = activityDistance;
-						m_numBikesWeek[3] = m_numBikesWeek[3] + 1;
-					}
-					else if ((summary.startTime > week2CutoffTime) && (summary.startTime < week3CutoffTime))
-					{
-						if (activityDistance > m_longestRidesByWeek[2])
-							m_longestRidesByWeek[2] = activityDistance;
-						m_numBikesWeek[2] = m_numBikesWeek[2] + 1;
-					}
-					else if ((summary.startTime > week1CutoffTime) && (summary.startTime < week2CutoffTime))
-					{
-						if (activityDistance > m_longestRidesByWeek[1])
-							m_longestRidesByWeek[1] = activityDistance;
-						m_numBikesWeek[1] = m_numBikesWeek[1] + 1;
-					}
+					if ((summary.startTime < week3CutoffTime) && (summary.startTime >= week4CutoffTime))
+						index = 3;
+					else if ((summary.startTime < week2CutoffTime) && (summary.startTime >= week3CutoffTime))
+						index = 2;
+					else if ((summary.startTime < week1CutoffTime) && (summary.startTime >= week2CutoffTime))
+						index = 1;
 					else
+						index = 0;
+					
+					if (index != (size_t)-1)
 					{
-						if (activityDistance > m_longestRidesByWeek[0])
-							m_longestRidesByWeek[0] = activityDistance;
-						m_numBikesWeek[0] = m_numBikesWeek[0] + 1;
+						if (activityDistanceMeters > m_longestRidesByWeek[index])
+							m_longestRidesByWeek[index] = activityDistanceMeters;
+						m_numBikesWeek[index] = m_numBikesWeek[index] + 1;
 					}
 
-					m_avgCyclingDistanceFourWeeks += activityDistance;
+					m_avgCyclingDistanceFourWeeks += activityDistanceMeters;
 					++m_bikeCount;
 				}
 			}
 
+			// Examine cycling activity.
+			else if (summary.type.compare(PoolSwim::Type()) == 0)
+			{
+				// Distance
+				if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED) != summary.summaryAttributes.end())
+				{
+					ActivityAttributeType attr = summary.summaryAttributes.at(ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED);
+					
+					if (attr.valid)
+					{
+						UnitMgr::ConvertActivityAttributeToMetric(attr); // make sure this is in metric
+						double activityDistanceMeters = attr.value.doubleVal * 1000.0; // km to meters
+						size_t index = (size_t)-1;
+						
+						if ((summary.startTime < week3CutoffTime) && (summary.startTime >= week4CutoffTime))
+							index = 3;
+						else if ((summary.startTime < week2CutoffTime) && (summary.startTime >= week3CutoffTime))
+							index = 2;
+						else if ((summary.startTime < week1CutoffTime) && (summary.startTime >= week2CutoffTime))
+							index = 1;
+						else
+							index = 0;
+						
+						if (index != (size_t)-1)
+						{
+							if (activityDistanceMeters > m_longestSwimsByWeek[index])
+								m_longestSwimsByWeek[index] = activityDistanceMeters;
+							m_numSwimsWeek[index] = m_numSwimsWeek[index] + 1;
+						}
+						
+						m_avgSwimmingDistanceFourWeeks += activityDistanceMeters;
+						++m_swimCount;
+					}
+				}
+			}
+				
 			// Time
 			if (summary.summaryAttributes.find(ACTIVITY_ATTRIBUTE_MOVING_TIME) != summary.summaryAttributes.end())
 			{
@@ -346,8 +398,9 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 void WorkoutPlanGenerator::CalculateRunTrainingPaces(std::map<std::string, double>& inputs)
 {
 	TrainingPaceCalculator paceCalc;
+	double best5KDurationMin = m_best5KDurationSecs / (double)60.0;
 
-	std::map<TrainingPaceType, double> paces = paceCalc.CalcFromRaceDistanceInMeters(m_best5K, 5000.0);
+	std::map<TrainingPaceType, double> paces = paceCalc.CalcFromRaceDistanceInMeters(m_best5KActualDistanceMeters, best5KDurationMin);
 
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONG_RUN_PACE, paces.at(LONG_RUN_PACE)));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EASY_RUN_PACE, paces.at(EASY_RUN_PACE)));
@@ -372,14 +425,18 @@ void WorkoutPlanGenerator::CalculateGoalDistances(std::map<std::string, double>&
 	{
 	case GOAL_FITNESS:
 		{
+			double avgRunningDistanceFourWeeks = inputs.at(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS);
+			double avgCyclingDistanceFourWeeks = inputs.at(WORKOUT_INPUT_AVG_CYCLING_DISTANCE_IN_FOUR_WEEKS);
+			double avgSwimmingDistanceFourWeeks = inputs.at(WORKOUT_INPUT_AVG_SWIMMING_DISTANCE_IN_FOUR_WEEKS);
+
 			bool hasSwimmingPoolAccess = inputs.at(WORKOUT_INPUT_HAS_SWIMMING_POOL_ACCESS);
 			bool hasBicycle = inputs.at(WORKOUT_INPUT_HAS_BICYCLE);
 
 			if (hasSwimmingPoolAccess)
-				inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = 500.0;
+				inputs[WORKOUT_INPUT_GOAL_SWIM_DISTANCE] = avgSwimmingDistanceFourWeeks > 500.0 ? avgSwimmingDistanceFourWeeks : 500.0;
 			if (hasBicycle)
-				inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = 20000.0;
-			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = 5000.0;
+				inputs[WORKOUT_INPUT_GOAL_BIKE_DISTANCE] = avgCyclingDistanceFourWeeks > 20000.0 ? avgCyclingDistanceFourWeeks : 20000.0;
+			inputs[WORKOUT_INPUT_GOAL_RUN_DISTANCE] = avgRunningDistanceFourWeeks > 5000 ? avgRunningDistanceFourWeeks : 5000.0;
 		}
 		break;
 	case GOAL_5K_RUN:

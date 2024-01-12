@@ -32,17 +32,20 @@ struct WorkoutDetailsView: View {
 	
     var body: some View {
 		VStack(alignment: .center) {
-			Text(self.title)
-				.font(.largeTitle)
-				.bold()
-			Text(self.subtitle)
-				.font(.title2)
-				.bold()
-			Text(self.description)
-			Text(self.scheduledTime)
-				.bold()
-			Spacer()
-			BarChartView(bars: workoutToBarChart(), color: Color.blue, units: "")
+			ScrollView() {
+				Text(self.title)
+					.font(.largeTitle)
+					.bold()
+				Text(self.subtitle)
+					.font(.title2)
+					.bold()
+				Text(self.description)
+				Text(self.scheduledTime)
+					.bold()
+				Spacer()
+				BarChartView(bars: workoutToBarChart(), color: Color.blue, units: "")
+					.frame(height:256)
+			}
 		}
 		.padding(10)
     }

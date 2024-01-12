@@ -171,6 +171,9 @@ class WorkoutsVM : ObservableObject {
 	}
 
 	func regenerateWorkouts() throws {
+		// Load activities from the database.
+		InitializeHistoricalActivityList()
+
 		// Add HealthKit activities as inputs to the workout generation algorithm.
 		// We'll de-dupe the list to make sure we're not double-counting anything.
 		let healthMgr = HealthManager.shared

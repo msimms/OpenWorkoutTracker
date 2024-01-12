@@ -3943,8 +3943,6 @@ extern "C" {
 
 	size_t NumLaps(void)
 	{
-		bool result = false;
-		
 		if (IsActivityInProgressAndNotPaused() && g_pDatabase)
 		{
 			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);

@@ -197,7 +197,7 @@ class ApiClient : ObservableObject {
 						}
 					}
 					else {
-						NSLog("Error code received from the server for " + url)
+						NSLog("Error code \(httpResponse.statusCode) received from the server for \(url)")
 					}
 				}
 			}
