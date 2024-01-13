@@ -6,17 +6,13 @@
 import SwiftUI
 
 struct WorkoutDetailsView: View {
-	var workoutId: String = ""
-	var title: String = ""
-	var subtitle: String = ""
-	var description: String = ""
 	var scheduledTime: String = ""
 	var workout: WorkoutSummary
 
 	func workoutToBarChart() -> Array<Bar> {
 		var bars: Array<Bar> = []
 
-		for interval in workout.intervals {
+		for interval in self.workout.intervals {
 			if let power = interval[PARAM_INTERVAL_SEGMENT_POWER] as? Double {
 				bars.append(Bar(value: power, label: "", description: ""))
 			}
@@ -33,18 +29,21 @@ struct WorkoutDetailsView: View {
     var body: some View {
 		VStack(alignment: .center) {
 			ScrollView() {
-				Text(self.title)
+				Text(self.workout.sportType)
 					.font(.largeTitle)
 					.bold()
-				Text(self.subtitle)
+				Text(self.workout.workoutType)
 					.font(.title2)
 					.bold()
-				Text(self.description)
+				Text(self.workout.description)
 				Text(self.scheduledTime)
 					.bold()
 				Spacer()
-				BarChartView(bars: workoutToBarChart(), color: Color.blue, units: "")
+				BarChartView(bars: self.workoutToBarChart(), color: Color.blue, units: "")
 					.frame(height:256)
+				if self.workout.duration > 0 {
+					Text("Total Duration: " + StringUtils.formatSeconds(numSeconds: time_t(self.workout.duration)))
+				}
 			}
 		}
 		.padding(10)
