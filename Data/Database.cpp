@@ -986,23 +986,24 @@ bool Database::RetrieveWorkoutIntervals(Workout& workout)
 
 	if (sqlite3_prepare_v2(m_pDb, "select repeat, duration, power_low, power_high, distance, pace, recovery_duration, recovery_distance, recovery_pace from workout_interval where workout_id = ?", -1, &statement, 0) == SQLITE_OK)
 	{
-		sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT);
-
-		while (sqlite3_step(statement) == SQLITE_ROW)
+		if (sqlite3_bind_text(statement, 1, workout.GetId().c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK)
 		{
-			WorkoutInterval interval;
-
-			interval.m_repeat = (uint8_t)sqlite3_column_int(statement, 0);
-			interval.m_duration = (uint64_t)sqlite3_column_int64(statement, 1);
-			interval.m_powerLow = (double)sqlite3_column_double(statement, 2);
-			interval.m_powerHigh = (double)sqlite3_column_double(statement, 3);
-			interval.m_distance = (double)sqlite3_column_double(statement, 4);
-			interval.m_pace = (double)sqlite3_column_double(statement, 5);
-			interval.m_recoveryDuration = (uint64_t)sqlite3_column_int64(statement, 6);
-			interval.m_recoveryDistance = (double)sqlite3_column_double(statement, 7);
-			interval.m_recoveryPace = (double)sqlite3_column_double(statement, 8);
-
-			workout.AddInterval(interval);
+			while (sqlite3_step(statement) == SQLITE_ROW)
+			{
+				WorkoutInterval interval;
+				
+				interval.m_repeat = (uint8_t)sqlite3_column_int(statement, 0);
+				interval.m_duration = (uint64_t)sqlite3_column_int64(statement, 1);
+				interval.m_powerLow = (double)sqlite3_column_double(statement, 2);
+				interval.m_powerHigh = (double)sqlite3_column_double(statement, 3);
+				interval.m_distance = (double)sqlite3_column_double(statement, 4);
+				interval.m_pace = (double)sqlite3_column_double(statement, 5);
+				interval.m_recoveryDuration = (uint64_t)sqlite3_column_int64(statement, 6);
+				interval.m_recoveryDistance = (double)sqlite3_column_double(statement, 7);
+				interval.m_recoveryPace = (double)sqlite3_column_double(statement, 8);
+				
+				workout.AddInterval(interval);
+			}
 		}
 
 		sqlite3_finalize(statement);

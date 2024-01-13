@@ -888,6 +888,14 @@ extern "C" {
 
 	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double restingHr, double maxHr, double vo2Max, uint32_t bestRecent5KSecs)
 	{
+		// Sanity checks
+		if (restingHr < 0.1)
+			restingHr = g_user.EstimateRestingHeartRate();
+		if (maxHr < 0.1)
+			maxHr = EstimateMaxHr();
+		if (ftp < 0.1)
+			ftp = EstimateFtp();
+
 		g_user.SetActivityLevel(level);
 		g_user.SetGender(gender);
 		g_user.SetBirthDate(bday);
@@ -3275,13 +3283,25 @@ extern "C" {
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
 	double EstimateFtp(void)
 	{
-		return FtpCalculator::Estimate(g_historicalActivityList);
+		// First look through actual data.
+		double ftp = FtpCalculator::Estimate(g_historicalActivityList);
+		
+		// If we didn't get anything meaningful from actual data, fall back on a 1.0 w/kg estimate.
+		if (ftp < 0.1)
+			ftp = g_user.GetWeightKg();
+		return ftp;
 	}
 
 	// InitializeHistoricalActivityList and LoadAllHistoricalActivitySummaryData should be called before calling this.
 	double EstimateMaxHr(void)
 	{
-		return HeartRateCalculator::EstimateMaxHrFromData(g_historicalActivityList);
+		// First look through actual data.
+		double hr = HeartRateCalculator::EstimateMaxHrFromData(g_historicalActivityList);
+		
+		// If we didn't get anything meaningful from actual data, fall back on industry standard estimates.
+		if (hr < 0.1)
+			hr = g_user.EstimateMaxHeartRate();
+		return hr;
 	}
 
 	//

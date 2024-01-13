@@ -399,8 +399,18 @@ void WorkoutPlanGenerator::CalculateRunTrainingPaces(std::map<std::string, doubl
 {
 	TrainingPaceCalculator paceCalc;
 	double best5KDurationMin = m_best5KDurationSecs / (double)60.0;
+	double maxHR = m_user.GetMaxHr();
+	double restingHR = m_user.GetRestingHr();
+	std::map<TrainingPaceType, double> paces;
 
-	std::map<TrainingPaceType, double> paces = paceCalc.CalcFromRaceDistanceInMeters(m_best5KActualDistanceMeters, best5KDurationMin);
+	if (m_best5KActualDistanceMeters > 0 && best5KDurationMin > 0.1)
+	{
+		paces = paceCalc.CalcFromRaceDistanceInMeters(m_best5KActualDistanceMeters, best5KDurationMin);
+	}
+	else if (restingHR > 0.1 && maxHR > 0.1)
+	{
+		paces = paceCalc.CalcFromHR(maxHR, restingHR);
+	}
 
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_LONG_RUN_PACE, paces.at(LONG_RUN_PACE)));
 	inputs.insert(std::pair<std::string, double>(WORKOUT_INPUT_EASY_RUN_PACE, paces.at(EASY_RUN_PACE)));

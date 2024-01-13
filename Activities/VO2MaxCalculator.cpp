@@ -18,12 +18,26 @@ VO2MaxCalculator::~VO2MaxCalculator()
 
 double VO2MaxCalculator::EstimateVO2MaxFromHeartRate(double maxHR, double restingHR)
 {
+	// Sanity checks
+	if (maxHR < 0.1)
+		return 0.0;
+	if (restingHR < 0.1)
+		return 0.0;
+	if (maxHR < restingHR)
+		return 0.0;
+
 	return 15.3 * (maxHR / restingHR);
 }
 
 /// @brief "Daniels and Gilbert VO2 Max formula
 double VO2MaxCalculator::EstimateVO2MaxFromRaceDistanceInMeters(double raceDistanceMeters, double raceTimeMinutes)
 {
+	// Sanity checks
+	if (raceDistanceMeters < 0.1)
+		return 0.0;
+	if (raceTimeMinutes < 0.1)
+		return 0.0;
+
 	double t = raceTimeMinutes;
 	double v = raceDistanceMeters / t;
 	return (-4.60 + 0.182258 * v + 0.000104 * pow(v, 2.0)) / (0.8 + 0.1894393 * pow(exp(1), -0.012778 * t) + 0.2989558 * pow(exp(1), -0.1932605 * t));
