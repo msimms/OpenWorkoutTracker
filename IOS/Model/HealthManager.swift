@@ -84,7 +84,10 @@ class HealthManager {
 		if #available(iOS 17.0, *) {
 #if os(watchOS)
 #else
+			let powerType = HKObjectType.quantityType(forIdentifier: .cyclingPower)!
 			let ftpType = HKObjectType.quantityType(forIdentifier: .cyclingFunctionalThresholdPower)!
+
+			writeTypes.insert(powerType)
 			writeTypes.insert(ftpType)
 			readTypes.insert(ftpType)
 #endif
@@ -262,6 +265,16 @@ class HealthManager {
 		}
 	}
 	
+	func setRestingHr(hr: Double) {
+		let now = Date()
+		let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+		let hrQuantity = HKQuantity.init(unit: hrUnit, doubleValue: hr)
+		let hrType = HKQuantityType.init(HKQuantityTypeIdentifier.restingHeartRate)
+		let hrSample = HKQuantitySample.init(type: hrType, quantity: hrQuantity, start: now, end: now)
+		self.healthStore.save(hrSample, withCompletion: { result, error in
+		})
+	}
+	
 	/// @brief Estimates the user's maximum heart rate from the last year of HealthKit data.
 	func estimateMaxHr() throws {
 		let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)!
@@ -296,9 +309,14 @@ class HealthManager {
 		}
 	}
 
+	func setVO2Max(vo2Max: Double) {
+	}
+
 	/// @brief Gets the user's cycling FTP from HealthKit  and updates the copy in our database.
 	func getFtp() throws {
 #if os(watchOS)
+		if #available(watchOS 10.0, *) {
+		}
 #else
 		if #available(iOS 17.0, *) {
 			let powerType = HKObjectType.quantityType(forIdentifier: .cyclingFunctionalThresholdPower)!
@@ -307,9 +325,25 @@ class HealthManager {
 				if let powerSample = sample {
 					let powerUnit: HKUnit = HKUnit.watt()
 					let ftp = powerSample.quantity.doubleValue(for: powerUnit)
+
 					Preferences.setEstimatedFtp(value: ftp)
 				}
 			}
+		}
+#endif
+	}
+
+	func setFtp(ftp: Double) {
+#if os(watchOS)
+		if #available(watchOS 10.0, *) {
+		}
+#else
+		if #available(iOS 17.0, *) {
+			let now = Date()
+			let powerQuantity = HKQuantity.init(unit: HKUnit.watt(), doubleValue: ftp)
+			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingFunctionalThresholdPower)
+			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
+			self.healthStore.save(powerSample, withCompletion: {_,_ in })
 		}
 #endif
 	}
@@ -410,8 +444,8 @@ class HealthManager {
 		for (index, distance2) in distances.enumerated() {
 			if index > 0 {
 				let distance1 = distances[index - 1]
-				
 				let speed = distance2 - distance1;
+
 				speeds.append(speed)
 			}
 		}
@@ -622,11 +656,21 @@ class HealthManager {
 		let hrQuantity = HKQuantity.init(unit: hrUnit, doubleValue: beats)
 		let hrType = HKQuantityType.init(HKQuantityTypeIdentifier.heartRate)
 		let hrSample = HKQuantitySample.init(type: hrType, quantity: hrQuantity, start: now, end: now)
-		self.healthStore.save(hrSample, withCompletion: {_,_ in })
+		self.healthStore.save(hrSample, withCompletion: { result, error in
+		})
 	}
 
 	func saveCyclingPowerIntoHealthStore(watts: Double) {
 #if os(watchOS)
+		if #available(watchOS 10.0, *) {
+			let now = Date()
+			let powerUnit: HKUnit = HKUnit.watt()
+			let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
+			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingPower)
+			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
+			self.healthStore.save(powerSample, withCompletion: { result, error in
+			})
+		}
 #else
 		if #available(iOS 17.0, *) {
 			let now = Date()
@@ -634,7 +678,8 @@ class HealthManager {
 			let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
 			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingPower)
 			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
-			self.healthStore.save(powerSample, withCompletion: {_,_ in })
+			self.healthStore.save(powerSample, withCompletion: { result, error in
+			})
 		}
 #endif
 	}

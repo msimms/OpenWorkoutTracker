@@ -6,6 +6,15 @@
 import SwiftUI
 
 struct ProfileView: View {
+	enum Field: Hashable {
+		case height
+		case weight
+		case ftp
+		case restingHr
+		case maxHr
+		case vo2max
+	}
+
 	@State private var birthdate: Date = Date(timeIntervalSince1970: TimeInterval(Preferences.birthDate()))
 	@State private var showsDatePicker: Bool = false
 	@State private var showingActivityLevelSelection: Bool = false
@@ -22,6 +31,7 @@ struct ProfileView: View {
 	@ObservedObject var userDefinedRestingHr = NumbersOnly(initialDoubleValue: Preferences.restingHr())
 	@ObservedObject var userDefinedMaxHr = NumbersOnly(initialDoubleValue: Preferences.maxHr())
 	@ObservedObject var userDefinedVO2Max = NumbersOnly(initialDoubleValue: Preferences.vo2Max())
+	@FocusState private var focusedField: Field?
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -58,8 +68,8 @@ struct ProfileView: View {
 						.datePickerStyle(.graphical)
 						.onChange(of: self.birthdate) { value in
 							Preferences.setBirthDate(value: time_t(self.birthdate.timeIntervalSince1970))
-							CommonApp.shared.setUserProfile()
-							showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date())
+							CommonApp.shared.updateUserProfile()
+							self.showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date())
 						}
 						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 				}
@@ -76,12 +86,12 @@ struct ProfileView: View {
 						.onChange(of: self.height.value) { value in
 							if let value = Double(self.height.value) {
 								ProfileVM.setHeight(height: value)
-								CommonApp.shared.setUserProfile()
-								showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
+								self.showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
 							} else {
 								self.showingHeightError = true
 							}
 						}
+						.focused(self.$focusedField, equals: .height)
 					Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
 				}
 				.alert("Invalid value!", isPresented: self.$showingHeightError) { }
@@ -100,12 +110,12 @@ struct ProfileView: View {
 						.onChange(of: self.weight.value) { value in
 							if let value = Double(self.weight.value) {
 								ProfileVM.setWeight(weight: value)
-								CommonApp.shared.setUserProfile()
-								showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())
+								self.showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())
 							} else {
 								self.showingWeightError = true
 							}
 						}
+						.focused(self.$focusedField, equals: .weight)
 					Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
 				}
 				.alert("Invalid value!", isPresented: self.$showingWeightError) { }
@@ -121,8 +131,7 @@ struct ProfileView: View {
 						ForEach([STR_MALE, STR_FEMALE], id: \.self) { item in
 							Button(item) {
 								let gender = ProfileVM.genderStringToType(genderStr: item)
-								CommonApp.shared.setUserProfile()
-								Preferences.setBiologicalGender(value: gender)
+								ProfileVM.setBiologicalGender(gender: gender)
 							}
 						}
 					}
@@ -146,8 +155,7 @@ struct ProfileView: View {
 						ForEach([STR_SEDENTARY, STR_LIGHT, STR_MODERATELY_ACTIVE, STR_HIGHLY_ACTIVE, STR_EXTREMELY_ACTIVE], id: \.self) { item in
 							Button(item) {
 								let activityLevel = ProfileVM.activityLevelStringToType(activityLevelStr: item)
-								Preferences.setActivityLevel(value: activityLevel)
-								CommonApp.shared.setUserProfile()
+								ProfileVM.setActivityLevel(activityLevel: activityLevel)
 							}
 						}
 					}
@@ -168,9 +176,7 @@ struct ProfileView: View {
 							if newValue.count > 0 {
 								if let value = Double(newValue) {
 									self.userDefinedFtp.value = newValue
-									Preferences.setUserDefinedFtp(value: value)
-									CommonApp.shared.setUserProfile()
-									showingApiError = !ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
+									self.showingApiError = !ProfileVM.setFtp(ftp: value)
 								} else {
 									self.userDefinedMaxHr.value = ""
 									self.showingHrError = true
@@ -182,6 +188,7 @@ struct ProfileView: View {
 						.fixedSize()
 						.alert("Invalid value!", isPresented: self.$showingFtpError) { }
 						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+						.focused(self.$focusedField, equals: .ftp)
 					Text(" watts")
 				}
 				.padding(5)
@@ -197,20 +204,19 @@ struct ProfileView: View {
 							if newValue.count > 0 {
 								if let value = Double(newValue) {
 									self.userDefinedRestingHr.value = newValue
-									Preferences.setUserDefinedRestingHr(value: value)
-									CommonApp.shared.setUserProfile()
-									showingApiError = !ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date())
+									self.showingApiError = !ProfileVM.setRestingHr(hr: value)
 								} else {
 									self.userDefinedRestingHr.value = ""
 									self.showingHrError = true
 								}
 							}
 						}))
-					.keyboardType(.decimalPad)
-					.multilineTextAlignment(.trailing)
-					.fixedSize()
-					.alert("Invalid value!", isPresented: self.$showingHrError) { }
-					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+						.keyboardType(.decimalPad)
+						.multilineTextAlignment(.trailing)
+						.fixedSize()
+						.alert("Invalid value!", isPresented: self.$showingHrError) { }
+						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+						.focused(self.$focusedField, equals: .restingHr)
 					Text(" bpm")
 				}
 				.padding(5)
@@ -226,20 +232,19 @@ struct ProfileView: View {
 							if newValue.count > 0 {
 								if let value = Double(newValue) {
 									self.userDefinedMaxHr.value = newValue
-									Preferences.setUserDefinedMaxHr(value: value)
-									CommonApp.shared.setUserProfile()
-									showingApiError = !ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
+									self.showingApiError = !ProfileVM.setMaxHr(hr: value)
 								} else {
 									self.userDefinedMaxHr.value = ""
 									self.showingHrError = true
 								}
 							}
 						}))
-					.keyboardType(.decimalPad)
-					.multilineTextAlignment(.trailing)
-					.fixedSize()
-					.alert("Invalid value!", isPresented: self.$showingHrError) { }
-					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+						.keyboardType(.decimalPad)
+						.multilineTextAlignment(.trailing)
+						.fixedSize()
+						.alert("Invalid value!", isPresented: self.$showingHrError) { }
+						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+						.focused(self.$focusedField, equals: .maxHr)
 					Text(" bpm")
 				}
 				.padding(5)
@@ -256,25 +261,31 @@ struct ProfileView: View {
 						if newValue.count > 0 {
 							if let value = Double(newValue) {
 								self.userDefinedVO2Max.value = newValue
-								Preferences.setUserDefinedVO2Max(value: value)
-								CommonApp.shared.setUserProfile()
-								showingApiError = !ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date())
+								self.showingApiError = !ProfileVM.setVO2Max(vo2Max: value)
 							} else {
 								self.userDefinedVO2Max.value = ""
 								self.showingVO2MaxError = true
 							}
 						}
 					}))
-				.keyboardType(.decimalPad)
-				.multilineTextAlignment(.trailing)
-				.fixedSize()
-				.alert("Invalid value!", isPresented: self.$showingVO2MaxError) { }
-				.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+					.keyboardType(.decimalPad)
+					.multilineTextAlignment(.trailing)
+					.fixedSize()
+					.alert("Invalid value!", isPresented: self.$showingVO2MaxError) { }
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+					.focused(self.$focusedField, equals: .vo2max)
 				Text(" ml/kg/min")
 			}
 			.padding(5)
 			
 			Spacer()
+		}
+		.toolbar {
+			ToolbarItem(placement: .keyboard) {
+				Button("Done") {
+					self.focusedField = nil
+				}
+			}
 		}
 		.padding(10)
     }

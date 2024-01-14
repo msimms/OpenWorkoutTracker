@@ -276,6 +276,7 @@
 		27A208422ADB3C770044E954 /* EditRouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A208412ADB3C770044E954 /* EditRouteView.swift */; };
 		27BF1A922AE7498200BDA339 /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF1A912AE7498200BDA339 /* DocumentPicker.swift */; };
 		27E1DCA82A5778410035E608 /* GearServiceItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1DCA72A5778410035E608 /* GearServiceItemView.swift */; };
+		27E2A2D02B544BB100AFF586 /* ProfileVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2740E11528EF758500293B71 /* ProfileVM.swift */; };
 		27E30B6B2A969A9A00236EAB /* GpxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6A2A969A9A00236EAB /* GpxTests.swift */; };
 		27E30B6D2A969C3600236EAB /* TcxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6C2A969C3600236EAB /* TcxTests.swift */; };
 		27E30B6F2A969C7B00236EAB /* FitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E30B6E2A969C7B00236EAB /* FitTests.swift */; };
@@ -1869,6 +1870,7 @@
 				2740E0DC28E7029900293B71 /* HeatMapGenerator.cpp in Sources */,
 				2740E0E628E702AD00293B71 /* XmlFileReader.cpp in Sources */,
 				2740E0E128E702AD00293B71 /* CsvFileWriter.cpp in Sources */,
+				27E2A2D02B544BB100AFF586 /* ProfileVM.swift in Sources */,
 				2740E0DD28E7029900293B71 /* WorkoutImporter.cpp in Sources */,
 				278D932928E38FE7003B077C /* ActivityView.swift in Sources */,
 				2740E0D628E7028C00293B71 /* BenchPress.cpp in Sources */,

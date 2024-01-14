@@ -59,7 +59,7 @@ class CommonApp : ObservableObject {
 		self.watchSession.startWatchSession()
 		
 		// Send the user's details to the backend.
-		self.setUserProfile()
+		self.updateUserProfile()
 		
 		// Things we care about knowing from the server.
 		NotificationCenter.default.addObserver(self, selector: #selector(self.loginStatusUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: nil)
@@ -83,7 +83,7 @@ class CommonApp : ObservableObject {
 	}
 	
 	/// @brief Sends the user's details to the backend. Should be called on application startup as well as whenever the values are changed.
-	func setUserProfile() {
+	func updateUserProfile() {
 		let userLevel = Preferences.activityLevel()
 		let userGender = Preferences.biologicalGender()
 		let userBirthdate = Preferences.birthDate()

@@ -89,15 +89,7 @@ class HistoryVM : ObservableObject {
 		if LoadAllHistoricalActivitySummaryData() {
 			
 			// Whenever we reload the history we should re-evaluate the user's recent performances.
-			let estimatedFtp = EstimateFtp()
-			let estimatedMaxHr = EstimateMaxHr()
-			let best5KAttr = QueryBestActivityAttributeByActivityType(ACTIVITY_TYPE_RUNNING, ACTIVITY_ATTRIBUTE_FASTEST_5K, true, nil)
-			Preferences.setEstimatedFtp(value: estimatedFtp)
-			Preferences.setEstimatedMaxHr(value: estimatedMaxHr)
-			if best5KAttr.valid {
-				Preferences.setBestRecent5KSecs(value: UInt32(best5KAttr.value.intVal))
-			}
-			CommonApp.shared.setUserProfile()
+			ProfileVM.updateEstimations()
 			
 			// Minor performance optimization, since we know how many items will be in the list.
 			let numActivities = GetNumHistoricalActivities()

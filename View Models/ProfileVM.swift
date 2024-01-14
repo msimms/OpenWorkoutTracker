@@ -32,7 +32,7 @@ class ProfileVM {
 		}
 		return STR_MODERATELY_ACTIVE
 	}
-
+	
 	static func activityLevelStringToType(activityLevelStr: String) -> ActivityLevel {
 		if activityLevelStr == STR_SEDENTARY {
 			return ACTIVITY_LEVEL_SEDENTARY
@@ -51,7 +51,7 @@ class ProfileVM {
 		}
 		return ACTIVITY_LEVEL_MODERATE
 	}
-
+	
 	static func genderToString(genderType: Gender) -> String {
 		switch genderType {
 		case GENDER_MALE:
@@ -63,7 +63,7 @@ class ProfileVM {
 		}
 		return STR_COMPLETION
 	}
-
+	
 	static func genderStringToType(genderStr: String) -> Gender {
 		if genderStr == STR_MALE {
 			return GENDER_MALE
@@ -73,7 +73,7 @@ class ProfileVM {
 		}
 		return GENDER_MALE
 	}
-
+	
 	static func getDisplayedHeight() -> Double {
 		var attr: ActivityAttributeType = ActivityAttributeType()
 		attr.value.doubleVal = Preferences.heightCm()
@@ -97,24 +97,82 @@ class ProfileVM {
 	}
 	
 	static func setHeight(height: Double) {
+		let unitSystem = Preferences.preferredUnitSystem()
 		var attr: ActivityAttributeType = ActivityAttributeType()
 		attr.value.doubleVal = height
 		attr.valueType = TYPE_DOUBLE
 		attr.measureType = MEASURE_HEIGHT
-		attr.unitSystem = Preferences.preferredUnitSystem()
+		attr.unitSystem = unitSystem
 		attr.valid = true
 		ConvertToMetric(&attr)
+		
 		Preferences.setHeightCm(value: attr.value.doubleVal)
+		HealthManager.shared.saveHeightIntoHealthStore(height: height, unitSystem: unitSystem)
+		CommonApp.shared.updateUserProfile()
 	}
 	
 	static func setWeight(weight: Double) {
+		let unitSystem = Preferences.preferredUnitSystem()
 		var attr: ActivityAttributeType = ActivityAttributeType()
 		attr.value.doubleVal = weight
 		attr.valueType = TYPE_DOUBLE
 		attr.measureType = MEASURE_WEIGHT
-		attr.unitSystem = Preferences.preferredUnitSystem()
+		attr.unitSystem = unitSystem
 		attr.valid = true
 		ConvertToMetric(&attr)
+		
 		Preferences.setWeightKg(value: attr.value.doubleVal)
+		HealthManager.shared.saveWeightIntoHealthStore(weight: weight, unitSystem: unitSystem)
+		CommonApp.shared.updateUserProfile()
+	}
+	
+	static func setBiologicalGender(gender: Gender) {
+		Preferences.setBiologicalGender(value: gender)
+		CommonApp.shared.updateUserProfile()
+	}
+	
+	static func setActivityLevel(activityLevel: ActivityLevel) {
+		Preferences.setActivityLevel(value: activityLevel)
+		CommonApp.shared.updateUserProfile()
+	}
+	
+	static func setFtp(ftp: Double) -> Bool {
+		Preferences.setUserDefinedFtp(value: ftp)
+		HealthManager.shared.setFtp(ftp: ftp)
+		CommonApp.shared.updateUserProfile()
+		return ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
+	}
+	
+	static func setRestingHr(hr: Double) -> Bool {
+		Preferences.setUserDefinedRestingHr(value: hr)
+		HealthManager.shared.setRestingHr(hr: hr)
+		CommonApp.shared.updateUserProfile()
+		return ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date())
+	}
+	
+	static func setMaxHr(hr: Double) -> Bool {
+		Preferences.setUserDefinedMaxHr(value: hr)
+		CommonApp.shared.updateUserProfile()
+		return ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
+	}
+	
+	static func setVO2Max(vo2Max: Double) -> Bool {
+		Preferences.setUserDefinedVO2Max(value: vo2Max)
+		HealthManager.shared.setVO2Max(vo2Max: vo2Max)
+		CommonApp.shared.updateUserProfile()
+		return ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date())
+	}
+	
+	static func updateEstimations() {
+		let estimatedFtp = EstimateFtp()
+		let estimatedMaxHr = EstimateMaxHr()
+		let best5KAttr = QueryBestActivityAttributeByActivityType(ACTIVITY_TYPE_RUNNING, ACTIVITY_ATTRIBUTE_FASTEST_5K, true, nil)
+
+		Preferences.setEstimatedFtp(value: estimatedFtp)
+		Preferences.setEstimatedMaxHr(value: estimatedMaxHr)
+		if best5KAttr.valid {
+			Preferences.setBestRecent5KSecs(value: UInt32(best5KAttr.value.intVal))
+		}
+		CommonApp.shared.updateUserProfile()
 	}
 }
