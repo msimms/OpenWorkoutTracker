@@ -81,16 +81,13 @@ class HealthManager {
 #endif
 
 		// Have to do this down here since there's a version check.
-		if #available(iOS 17.0, *) {
-#if os(watchOS)
-#else
+		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
 			let powerType = HKObjectType.quantityType(forIdentifier: .cyclingPower)!
 			let ftpType = HKObjectType.quantityType(forIdentifier: .cyclingFunctionalThresholdPower)!
 
 			writeTypes.insert(powerType)
 			writeTypes.insert(ftpType)
 			readTypes.insert(ftpType)
-#endif
 		}
 
 		// Request authorization for all the things we need from HealthKit.
@@ -314,11 +311,7 @@ class HealthManager {
 
 	/// @brief Gets the user's cycling FTP from HealthKit  and updates the copy in our database.
 	func getFtp() throws {
-#if os(watchOS)
-		if #available(watchOS 10.0, *) {
-		}
-#else
-		if #available(iOS 17.0, *) {
+		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
 			let powerType = HKObjectType.quantityType(forIdentifier: .cyclingFunctionalThresholdPower)!
 			
 			self.mostRecentQuantitySampleOfType(quantityType: powerType) { sample, error in
@@ -330,22 +323,16 @@ class HealthManager {
 				}
 			}
 		}
-#endif
 	}
 
 	func setFtp(ftp: Double) {
-#if os(watchOS)
-		if #available(watchOS 10.0, *) {
-		}
-#else
-		if #available(iOS 17.0, *) {
+		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
 			let now = Date()
 			let powerQuantity = HKQuantity.init(unit: HKUnit.watt(), doubleValue: ftp)
 			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingFunctionalThresholdPower)
 			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
 			self.healthStore.save(powerSample, withCompletion: {_,_ in })
 		}
-#endif
 	}
 
 	/// @brief Gets the user's best 5K effort from the last six months of HealthKit data.
@@ -661,8 +648,7 @@ class HealthManager {
 	}
 
 	func saveCyclingPowerIntoHealthStore(watts: Double) {
-#if os(watchOS)
-		if #available(watchOS 10.0, *) {
+		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
 			let now = Date()
 			let powerUnit: HKUnit = HKUnit.watt()
 			let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
@@ -671,17 +657,6 @@ class HealthManager {
 			self.healthStore.save(powerSample, withCompletion: { result, error in
 			})
 		}
-#else
-		if #available(iOS 17.0, *) {
-			let now = Date()
-			let powerUnit: HKUnit = HKUnit.watt()
-			let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
-			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingPower)
-			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
-			self.healthStore.save(powerSample, withCompletion: { result, error in
-			})
-		}
-#endif
 	}
 
 	func saveRunningWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
