@@ -39,7 +39,7 @@ struct WorkoutDetailsView: View {
 				Text(self.scheduledTime)
 					.bold()
 				Spacer()
-				BarChartView(bars: self.workoutToBarChart(), color: Color.blue, units: "")
+				BarChartView(bars: self.workoutToBarChart(), color: Color.blue, units: "", description: "")
 					.frame(height:256)
 				if self.workout.duration > 0 {
 					Text("Total Duration: " + StringUtils.formatSeconds(numSeconds: time_t(self.workout.duration)))

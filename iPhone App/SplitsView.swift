@@ -28,7 +28,7 @@ struct SplitsView: View {
 							.bold()
 						let mileSplits = self.activityVM.getMileSplits()
 						if mileSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: mileSplits), color: Color.red, units: "")
+							BarChartView(bars: makeSplitGraphBar(splits: mileSplits), color: Color.red, units: "", description: "")
 								.frame(height:256)
 						}
 						else {
@@ -46,7 +46,7 @@ struct SplitsView: View {
 							.bold()
 						let kmSplits = self.activityVM.getKilometerSplits()
 						if kmSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: kmSplits), color: Color.green, units: "")
+							BarChartView(bars: makeSplitGraphBar(splits: kmSplits), color: Color.green, units: "", description: "")
 								.frame(height:256)
 						}
 						else {
@@ -63,7 +63,7 @@ struct SplitsView: View {
 							.bold()
 						let lapSplits = self.activityVM.getLapSplits()
 						if lapSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: lapSplits), color: Color.blue, units: "")
+							BarChartView(bars: makeSplitGraphBar(splits: lapSplits), color: Color.blue, units: "", description: "")
 								.frame(height:256)
 						}
 						else {

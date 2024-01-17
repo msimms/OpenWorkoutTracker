@@ -36,7 +36,7 @@ struct ZonesView: View {
 							.bold()
 						if self.zonesVM.hasHrData() {
 							let hrZonesResult = self.zonesVM.listHrZones()
-							BarChartView(bars: hrZonesResult, color: Color.red, units: "BPM")
+							BarChartView(bars: hrZonesResult, color: Color.red, units: "BPM", description: "")
 								.frame(height:256)
 							Text("")
 							Text("")
@@ -58,7 +58,7 @@ struct ZonesView: View {
 						Text("Cycling Power Zones")
 							.bold()
 						if self.zonesVM.hasPowerData() {
-							BarChartView(bars: self.zonesVM.listPowerZones(), color: Color.blue, units: "Watts")
+							BarChartView(bars: self.zonesVM.listPowerZones(), color: Color.blue, units: "Watts", description: "")
 								.frame(height:256)
 							Text("")
 							Text("")
