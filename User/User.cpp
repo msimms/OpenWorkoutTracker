@@ -368,7 +368,7 @@ uint8_t User::GetZoneForPower(double power) const
 		return 5;
 	if (power < m_powerZones[5])
 		return 6;
-	return 6;
+	return 7;
 }
 
 double User::GetRunTrainingPace(TrainingPaceType pace) const
@@ -376,20 +376,20 @@ double User::GetRunTrainingPace(TrainingPaceType pace) const
 	TrainingPaceCalculator paceCalc;
 	std::map<TrainingPaceType, double> paces;
 	
-	// First choice method: results of a recent hard effort.
+	// First choice method: the results of a recent hard effort.
 	if (m_bestRecentRunPerfSecs > 0)
 	{
 		paces = paceCalc.CalcFromRaceDistanceInMeters(m_bestRecentRunPerfMeters, m_bestRecentRunPerfSecs / 60.0);
 	}
 	
-	// Second choice method: from heart rate.
+	// Second choice method: calculated from resting and maximum heart rates.
 	else if (this->HasRestingHr() && this->HasMaxHr())
 	{
 		paces = paceCalc.CalcFromHR(this->m_maxHr, this->m_restingHr);
 	}
 
-	// Preferred method: VO2Max
-	// This is only last because watch VO2Max can be kinda bad.
+	// This is only last because VO2Max from watch estimations can be all over the place,
+	// so we'll prefer things that are easier to measure such as race results and heart rate.
 	else if (this->HasVO2Max())
 	{
 		paces = paceCalc.CalcFromVO2Max(this->m_vo2Max);
