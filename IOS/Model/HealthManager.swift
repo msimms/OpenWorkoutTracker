@@ -27,15 +27,16 @@ class HealthManager {
 	
 	private var authorized = false
 	private let healthStore = HKHealthStore();
-	public var workouts: Dictionary<String, HKWorkout> = [:] // summaries of workouts stored in the health store, key is the activity ID which is generated automatically
+	public var workouts: Dictionary<String, HKWorkout> = [:] // Summaries of workouts stored in the health store, key is the activity ID which is generated automatically
 	public var currentHeartRate: Double = 0.0 // Most recent heart rate reading (Apple Watch)
 	public var heartRateRead: Bool = false // True if we are receiving heart rate data (Apple Watch)
-	private var locations: Dictionary<String, Array<CLLocation>> = [:] // arrays of locations stored in the health store, key is the activity ID
-	private var distances: Dictionary<String, Array<Double>> = [:] // arrays of distances computed from the locations array, key is the activity ID
-	private var speeds: Dictionary<String, Array<Double>> = [:] // arrays of speeds computed from the distances array, key is the activity ID
-	private var queryGroup: DispatchGroup = DispatchGroup() // tracks queries until they are completed
-	private var locationQueryGroup: DispatchGroup = DispatchGroup() // tracks location/route queries until they are completed
-	private var hrQuery: HKQuery? = nil // the query that reads heart rate on the watch
+	private var locations: Dictionary<String, Array<CLLocation>> = [:] // Arrays of locations stored in the health store, key is the activity ID
+	private var distances: Dictionary<String, Array<Double>> = [:] // Arrays of distances computed from the locations array, key is the activity ID
+	private var speeds: Dictionary<String, Array<Double>> = [:] // Arrays of speeds computed from the distances array, key is the activity ID
+	private var hrSampleBuf: [Double] = [] // For estimating maximum heart rate
+	private var queryGroup: DispatchGroup = DispatchGroup() // Tracks queries until they are completed
+	private var locationQueryGroup: DispatchGroup = DispatchGroup() // Tracks location/route queries until they are completed
+	private var hrQuery: HKQuery? = nil // The query that reads heart rate on the watch
 #if os(watchOS)
 	private var workoutSession: HKWorkoutSession? = nil
 #endif
@@ -268,6 +269,7 @@ class HealthManager {
 		let hrQuantity = HKQuantity.init(unit: hrUnit, doubleValue: hr)
 		let hrType = HKQuantityType.init(HKQuantityTypeIdentifier.restingHeartRate)
 		let hrSample = HKQuantitySample.init(type: hrType, quantity: hrQuantity, start: now, end: now)
+
 		self.healthStore.save(hrSample, withCompletion: { result, error in
 		})
 	}
@@ -275,16 +277,30 @@ class HealthManager {
 	/// @brief Estimates the user's maximum heart rate from the last year of HealthKit data.
 	func estimateMaxHr() throws {
 		let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)!
-		var maxHr: Double = Preferences.estimatedMaxHr()
+		let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
+		var estimatedMaxHr: Double = 0.0
 
 		self.recentQuantitySamplesOfType(quantityType: hrType) { sample, error in
 			if let hrSample = sample {
-				let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
 				let hrValue = hrSample.quantity.doubleValue(for: hrUnit)
 
-				if hrValue > maxHr {
-					maxHr = hrValue
-					Preferences.setEstimatedMaxHr(value: maxHr)
+				// In an attempt to filter out bad data, take the average of the
+				// highest HR readings.
+				let MAX_BUF_SIZE = 64
+				if self.hrSampleBuf.count == 0 || hrValue > self.hrSampleBuf[0] {
+					self.hrSampleBuf.append(hrValue)
+					self.hrSampleBuf.sort()
+					if self.hrSampleBuf.count > MAX_BUF_SIZE {
+						self.hrSampleBuf.remove(at: 0)
+					}
+					
+					let bufSum = self.hrSampleBuf.reduce(0, +)
+					let bufAvg = bufSum / Double(self.hrSampleBuf.count)
+					
+					if bufAvg > estimatedMaxHr {
+						estimatedMaxHr = hrValue
+						Preferences.setEstimatedMaxHr(value: estimatedMaxHr)
+					}
 				}
 			}
 		}
@@ -331,6 +347,7 @@ class HealthManager {
 			let powerQuantity = HKQuantity.init(unit: HKUnit.watt(), doubleValue: ftp)
 			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingFunctionalThresholdPower)
 			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
+
 			self.healthStore.save(powerSample, withCompletion: {_,_ in })
 		}
 	}
