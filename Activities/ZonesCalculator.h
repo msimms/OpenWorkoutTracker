@@ -5,7 +5,7 @@
 #define __VO2MAXCALCULATOR__
 
 #define NUM_HR_ZONES 5
-#define NUM_POWER_ZONES 5
+#define NUM_POWER_ZONES 6
 
 class ZonesCalculator
 {

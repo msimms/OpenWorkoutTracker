@@ -40,9 +40,12 @@ void ZonesCalculator::CalculateHeartRateZones(double restingHr, double maxHr, do
 
 void ZonesCalculator::CalcuatePowerZones(double ftp, double zones[NUM_POWER_ZONES])
 {
+	// Dr. Andy Coggan 7 zone model, Zone 6 is anything over 120%,
+	// Zone 7 is neuromuscular (i.e., shorts sprints at no specific power)
 	zones[0] = ftp * 0.55;
 	zones[1] = ftp * 0.75;
 	zones[2] = ftp * 0.90;
 	zones[3] = ftp * 1.05;
 	zones[4] = ftp * 1.20;
+	zones[5] = ftp * 1.50;
 }

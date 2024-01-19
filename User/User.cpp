@@ -18,20 +18,20 @@ User::~User()
 
 void User::SetToDefaults()
 {
-	m_id                = 0;
-	m_activityLevel     = ACTIVITY_LEVEL_MODERATE;
-	m_bmrFormula        = BMR_FORMULA_HARRIS_BENEDICT;
-	m_gender            = GENDER_MALE;
-	m_birthDate         = 315550800; // Jan 1, 1980
-	m_baseDate          = time(NULL);
-	m_heightCm          = 178.2;
-	m_weightKg          = 88.6;
-	m_leanBodyMassKg    = m_weightKg * .83;
-	m_ftp               = 0.0;
-	m_restingHr         = 0.0;
-	m_maxHr             = 0.0;
-	m_vo2Max            = 0.0;
-	m_bestRecent5KSecs  = 0;
+	m_activityLevel           = ACTIVITY_LEVEL_MODERATE;
+	m_bmrFormula              = BMR_FORMULA_HARRIS_BENEDICT;
+	m_gender                  = GENDER_MALE;
+	m_birthDate               = 315550800; // Jan 1, 1980
+	m_baseDate                = time(NULL);
+	m_heightCm                = 178.2;
+	m_weightKg                = 88.6;
+	m_leanBodyMassKg          = m_weightKg * .83;
+	m_ftp                     = 0.0;
+	m_restingHr               = 0.0;
+	m_maxHr                   = 0.0;
+	m_vo2Max                  = 0.0;
+	m_bestRecentRunPerfSecs   = 0;
+	m_bestRecentRunPerfMeters = 0.0;
 }
 
 double User::GetAgeInYears() const
@@ -366,6 +366,8 @@ uint8_t User::GetZoneForPower(double power) const
 		return 4;
 	if (power < m_powerZones[4])
 		return 5;
+	if (power < m_powerZones[5])
+		return 6;
 	return 6;
 }
 
@@ -374,16 +376,10 @@ double User::GetRunTrainingPace(TrainingPaceType pace) const
 	TrainingPaceCalculator paceCalc;
 	std::map<TrainingPaceType, double> paces;
 	
-	// Preferred method: VO2Max
-	if (this->HasVO2Max())
+	// First choice method: results of a recent hard effort.
+	if (m_bestRecentRunPerfSecs > 0)
 	{
-		paces = paceCalc.CalcFromVO2Max(this->m_vo2Max);
-	}
-	
-	// Second choice method: results of a recent hard effort.
-	else if (m_bestRecent5KSecs > 0)
-	{
-		paces = paceCalc.CalcFromRaceDistanceInMeters(m_bestRecent5KSecs, 5000.0);
+		paces = paceCalc.CalcFromRaceDistanceInMeters(m_bestRecentRunPerfMeters, m_bestRecentRunPerfSecs / 60.0);
 	}
 	
 	// Second choice method: from heart rate.
@@ -392,6 +388,13 @@ double User::GetRunTrainingPace(TrainingPaceType pace) const
 		paces = paceCalc.CalcFromHR(this->m_maxHr, this->m_restingHr);
 	}
 
+	// Preferred method: VO2Max
+	// This is only last because watch VO2Max can be kinda bad.
+	else if (this->HasVO2Max())
+	{
+		paces = paceCalc.CalcFromVO2Max(this->m_vo2Max);
+	}
+	
 	// Did we calculate anything?
 	if (paces.find(pace) != paces.end())
 	{

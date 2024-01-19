@@ -95,7 +95,7 @@ class CommonApp : ObservableObject {
 		let vo2Max = Preferences.vo2Max()
 		let bestRecent5KSecs = Preferences.bestRecent5KSecs()
 
-		SetUserProfile(userLevel, userGender, userBirthdate, userWeightKg, userHeightCm, ftp, restingHr, maxHr, vo2Max, bestRecent5KSecs)
+		SetUserProfile(userLevel, userGender, userBirthdate, userWeightKg, userHeightCm, ftp, restingHr, maxHr, vo2Max, bestRecent5KSecs, 5000.0)
 	}
 	
 	func markAsSynchedToWeb(activityId: String) -> Bool {

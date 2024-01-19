@@ -22,39 +22,56 @@ class ZonesVM : ObservableObject {
 	}
 
 	func listHrZones() -> Array<Bar> {
-		var result: Array<Bar> = []
+		var zoneBars: Array<Bar> = []
 		let descriptions = ["Very Light (Recovery)", "Light (Endurance)", "Moderate", "Hard (Speed Endurance)", "Maximum"]
-
+		var lastValue = 1
+		
 		self.hrZonesDescription = ""
 		for zoneNum in 0...4 {
-			let zoneValue = GetHrZone(UInt8(zoneNum))
-			result.append(Bar(value: zoneValue, label: String(Int(zoneValue)), description: descriptions[zoneNum]))
-
+			let zoneMaxValue = GetHrZone(UInt8(zoneNum))
+			let printableValue = Int(zoneMaxValue)
+			let zoneLabel = "\(lastValue) to \(printableValue) BPM"
+			zoneBars.append(Bar(value: zoneMaxValue, label: zoneLabel, description: descriptions[zoneNum]))
+			
 			self.hrZonesDescription += "Zone "
 			self.hrZonesDescription += String(zoneNum + 1)
 			self.hrZonesDescription += " : "
 			self.hrZonesDescription += descriptions[zoneNum]
 			self.hrZonesDescription += "\n"
+			
+			lastValue = printableValue
 		}
-		return result
+		return zoneBars
 	}
 
 	func listPowerZones() -> Array<Bar> {
-		var result: Array<Bar> = []
+		var zoneBars: Array<Bar> = []
 		let descriptions = ["Recovery", "Endurance", "Tempo", "Lactate Threshold", "VO2 Max", "Anaerobic Capacity", "Neuromuscular Power"]
-
+		var lastValue = 1
+		
 		self.powerZonesDescription = ""
-		for zoneNum in 0...4 {
+		for zoneNum in 0...5 {
 			let zoneValue = GetPowerZone(UInt8(zoneNum))
-			result.append(Bar(value: zoneValue, label: String(Int(zoneValue)), description: descriptions[zoneNum]))
-
+			let printableValue = Int(zoneValue)
+			var zoneLabel = ""
+			
+			if zoneNum == 5 {
+				zoneLabel = "> \(lastValue) Watts"
+			}
+			else {
+				zoneLabel = "\(lastValue) to \(printableValue) Watts"
+			}
+			zoneBars.append(Bar(value: zoneValue, label: zoneLabel, description: descriptions[zoneNum]))
+			
 			self.powerZonesDescription += "Zone "
 			self.powerZonesDescription += String(zoneNum + 1)
 			self.powerZonesDescription += " : "
 			self.powerZonesDescription += descriptions[zoneNum]
 			self.powerZonesDescription += "\n"
+			
+			lastValue = printableValue
 		}
-		return result
+		return zoneBars
 	}
 
 	func listRunTrainingPaces() -> Dictionary<String, Double> {
