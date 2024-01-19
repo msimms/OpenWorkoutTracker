@@ -158,6 +158,7 @@ class LiveActivityVM : ObservableObject {
 
 		// This won't change. Cache it.
 		self.isMovingActivity = IsMovingActivity()
+		let isCyclingActivity = IsCyclingActivity()
 
 		// Have we played the start beep yet?
 		var playedStartBeep = false
@@ -289,6 +290,21 @@ class LiveActivityVM : ObservableObject {
 			}
 #endif
 			
+			// Add heart rate and power into the health store.
+			// Adding heart rate would be redundant on the Apple Watch.
+#if !os(watchOS)
+			let hrAttr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_HEART_RATE)
+			if hrAttr.valid {
+				HealthManager.shared.saveHeartRateIntoHealthStore(beats: hrAttr.value.doubleVal)
+			}
+#endif
+			if isCyclingActivity {
+				let powerAttr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_POWER)
+				if powerAttr.valid {
+					HealthManager.shared.saveCyclingPowerIntoHealthStore(watts: powerAttr.value.doubleVal)
+				}
+			}
+
 			// Update the displayed attributes.
 			for (index, activityAttribute) in self.activityAttributePrefs.enumerated() {
 				var attr = QueryLiveActivityAttribute(activityAttribute)
@@ -300,18 +316,20 @@ class LiveActivityVM : ObservableObject {
 				// instead of looking in the database.
 				if !self.isInProgress {
 					if activityAttribute == ACTIVITY_ATTRIBUTE_HEART_RATE {
+						let hr = SensorMgr.shared.currentHeartRateBpm
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_BPM, UNIT_SYSTEM_METRIC)
 #if os(watchOS)
-						attr.value.intVal = UInt64(HealthManager.shared.currentHeartRate)
+						attr.value.intVal = UInt64(hr)
 						attr.valid = HealthManager.shared.heartRateRead
 #else
-						attr.value.intVal = UInt64(SensorMgr.shared.currentHeartRateBpm)
+						attr.value.intVal = UInt64(hr)
 						attr.valid = SensorMgr.shared.heartRateConnected
 #endif
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_POWER {
+						let watts = SensorMgr.shared.currentPowerWatts
 						attr = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_POWER, UNIT_SYSTEM_METRIC)
-						attr.value.intVal = UInt64(SensorMgr.shared.currentPowerWatts)
+						attr.value.intVal = UInt64(watts)
 						attr.valid = SensorMgr.shared.powerConnected
 					}
 					else if activityAttribute == ACTIVITY_ATTRIBUTE_CADENCE {
