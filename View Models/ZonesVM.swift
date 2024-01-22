@@ -71,6 +71,11 @@ class ZonesVM : ObservableObject {
 			
 			lastValue = printableValue
 		}
+
+		self.powerZonesDescription += "Zone 7 : "
+		self.powerZonesDescription += descriptions[6]
+		self.powerZonesDescription += "\n"
+
 		return zoneBars
 	}
 

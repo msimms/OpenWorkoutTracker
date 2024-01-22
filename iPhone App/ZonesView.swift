@@ -106,6 +106,7 @@ struct ZonesView: View {
 										.bold()
 									Spacer()
 									Text(self.convertPaceToDisplayString(paceMetersMin: runPaces[paceName]!))
+										.font(.system(.body, design: .monospaced))
 								}
 								.padding(2.5)
 							}
