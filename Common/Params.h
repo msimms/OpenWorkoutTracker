@@ -114,3 +114,6 @@
 #define PARAM_ACTIVITY_TAGS                      "tags"
 #define PARAM_ACTIVITY_PHOTO_ID                  "photo id"
 #define PARAM_ACTIVITY_PHOTO_IDS                 "photo ids"
+
+// Laps
+#define PARAM_LAP_START_TIME                     "lap start time"

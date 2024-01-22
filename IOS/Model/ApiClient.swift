@@ -171,6 +171,8 @@ class ApiClient : ObservableObject {
 						}
 						else if url.contains(REMOTE_API_UPDATE_ACTIVITY_METADATA_URL) {
 						}
+						else if url.contains(REMOTE_API_CREATE_NEW_LAP_URL) {
+						}
 						else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
 							NotificationCenter.default.post(notification)
@@ -369,6 +371,15 @@ class ApiClient : ObservableObject {
 		postDict[PARAM_ACTIVITY_NAME] = name
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+	}
+	
+	func startNewLap(activityId: String, startTimeMs: UInt64) -> Bool {
+		var postDict: Dictionary<String, String> = [:]
+		postDict[PARAM_ACTIVITY_ID] = activityId
+		postDict[PARAM_LAP_START_TIME] = String(startTimeMs)
+
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_NEW_LAP_URL)
 		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
 	}
 	

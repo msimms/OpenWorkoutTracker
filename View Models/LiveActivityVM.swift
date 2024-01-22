@@ -31,6 +31,8 @@ func sensorTypeCallback(type: SensorType, context: Optional<UnsafeMutableRawPoin
 }
 
 class LiveActivityVM : ObservableObject {
+	static var shared: LiveActivityVM? = nil
+
 	@Published var currentMessage: String = ""
 	
 	@Published var title1: String = ""
@@ -81,15 +83,20 @@ class LiveActivityVM : ObservableObject {
 	private var prevCoordinate: Coordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 	private var activityAttributePrefs: Array<String> = []
 	private var timer: Timer?
-	private var activityId: String = ""
+	public var activityId: String = ""
 	private var activityType: String = ""
 	private var audioPlayer: AVAudioPlayer?
 	private var currentMessageTime: time_t = 0 // timestamp of when the current message was set, allows us to know when to clear it
 	
 	init(activityType: String, recreateOrphanedActivities: Bool) {
 		self.create(activityType: activityType, recreateOrphanedActivities: recreateOrphanedActivities)
+		LiveActivityVM.shared = self
 	}
 	
+	deinit {
+		LiveActivityVM.shared = nil
+	}
+
 	func create(activityType: String, recreateOrphanedActivities: Bool) {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(self.messageReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: nil)
@@ -549,7 +556,13 @@ class LiveActivityVM : ObservableObject {
 	
 	/// @brief Starts a new lap.
 	func lap() {
-		StartNewLap()
+		if StartNewLap() {
+			var startTimeMs: UInt64 = 0
+
+			if MetaDataForLap(NumLaps(), &startTimeMs, nil, nil, nil) {
+				let _ = ApiClient.shared.startNewLap(activityId: self.activityId, startTimeMs: startTimeMs)
+			}
+		}
 	}
 	
 	func getCurrentActivityType() -> String {

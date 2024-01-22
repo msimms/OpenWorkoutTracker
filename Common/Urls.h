@@ -36,6 +36,7 @@
 #define REMOTE_API_CLAIM_DEVICE_URL              "api/1.0/claim_device"
 #define REMOTE_API_UPDATE_PROFILE_URL            "api/1.0/update_profile"
 #define REMOTE_API_UPDATE_ACTIVITY_METADATA_URL  "api/1.0/update_activity_metadata"
+#define REMOTE_API_CREATE_NEW_LAP_URL            "api/1.0/create_new_lap"
 #define REMOTE_API_UPLOAD_ACTIVITY_FILE_URL      "api/1.0/upload_activity_file"
 #define REMOTE_API_UPLOAD_ACTIVITY_PHOTO_URL     "api/1.0/upload_activity_photo"
 #define REMOTE_API_DELETE_ACTIVITY_PHOTO_URL     "api/1.0/delete_activity_photo"
