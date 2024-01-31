@@ -45,6 +45,7 @@ struct ZonesView: View {
 
 							BarChartView(bars: hrZonesResult, color: Color.red, units: "BPM", description: "")
 								.frame(height:256)
+								.font(.system(.caption))
 							Text("")
 							Text("")
 							Text("BPM")
@@ -72,6 +73,7 @@ struct ZonesView: View {
 						if self.zonesVM.hasPowerData() {
 							BarChartView(bars: self.zonesVM.listPowerZones(), color: Color.blue, units: "Watts", description: "")
 								.frame(height:256)
+								.font(.system(.caption))
 							Text("")
 							Text("")
 							Text("Watts")

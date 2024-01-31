@@ -31,7 +31,7 @@ class ZonesVM : ObservableObject {
 			let zoneMaxValue = GetHrZone(UInt8(zoneNum))
 			let printableValue = Int(zoneMaxValue)
 			let zoneLabel = "\(lastValue) to \(printableValue) BPM"
-			zoneBars.append(Bar(value: zoneMaxValue, label: zoneLabel, description: descriptions[zoneNum]))
+			zoneBars.append(Bar(value: zoneMaxValue, bodyLabel: zoneLabel, axisLabel: String(zoneNum+1), description: descriptions[zoneNum]))
 			
 			self.hrZonesDescription += "Zone "
 			self.hrZonesDescription += String(zoneNum + 1)
@@ -61,7 +61,7 @@ class ZonesVM : ObservableObject {
 			else {
 				zoneLabel = "\(lastValue) to \(printableValue) Watts"
 			}
-			zoneBars.append(Bar(value: zoneValue, label: zoneLabel, description: descriptions[zoneNum]))
+			zoneBars.append(Bar(value: zoneValue, bodyLabel: zoneLabel, axisLabel: String(zoneNum+1), description: descriptions[zoneNum]))
 			
 			self.powerZonesDescription += "Zone "
 			self.powerZonesDescription += String(zoneNum + 1)

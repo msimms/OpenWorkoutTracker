@@ -9,7 +9,7 @@ func makeSplitGraphBar(splits: Array<time_t>) -> Array<Bar> {
 	var result: Array<Bar> = []
 	
 	for split in splits {
-		result.append(Bar(value: Double(split), label: StringUtils.formatSeconds(numSeconds: Int(split)), description: ""))
+		result.append(Bar(value: Double(split), bodyLabel: StringUtils.formatSeconds(numSeconds: Int(split)), axisLabel: "", description: ""))
 	}
 	return result
 }

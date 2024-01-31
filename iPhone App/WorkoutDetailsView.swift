@@ -14,13 +14,13 @@ struct WorkoutDetailsView: View {
 
 		for interval in self.workout.intervals {
 			if let power = interval[PARAM_INTERVAL_SEGMENT_POWER] as? Double {
-				bars.append(Bar(value: power, label: "", description: ""))
+				bars.append(Bar(value: power, bodyLabel: "", axisLabel: "", description: ""))
 			}
 			else if let distance = interval[PARAM_INTERVAL_SEGMENT_DISTANCE] as? Double {
-				bars.append(Bar(value: distance, label: "", description: ""))
+				bars.append(Bar(value: distance, bodyLabel: "", axisLabel: "", description: ""))
 			}
 			else if let duration = interval[PARAM_INTERVAL_SEGMENT_DURATION] as? Double {
-				bars.append(Bar(value: duration, label: "", description: ""))
+				bars.append(Bar(value: duration, bodyLabel: "", axisLabel: "", description: ""))
 			}
 		}
 		return bars
