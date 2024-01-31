@@ -92,10 +92,6 @@ class LiveActivityVM : ObservableObject {
 		self.create(activityType: activityType, recreateOrphanedActivities: recreateOrphanedActivities)
 		LiveActivityVM.shared = self
 	}
-	
-	deinit {
-		LiveActivityVM.shared = nil
-	}
 
 	func create(activityType: String, recreateOrphanedActivities: Bool) {
 

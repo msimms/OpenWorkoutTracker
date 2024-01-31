@@ -39,12 +39,18 @@ struct MyStartStopWorkoutIntent: StartWorkoutIntent {
 
 	// Define the method that the system calls when it triggers this event.
 	func perform() async throws -> some IntentResult & ProvidesDialog {
+		guard LiveActivityVM.shared != nil else {
+			return .result(dialog: "Activity not in progress!")
+		}
 		if IsActivityInProgressAndNotPaused() {
-			StopCurrentActivity()
+			let _ = LiveActivityVM.shared?.stop()
 		}
 		if !IsActivityCreated() {
-			return .result(dialog: "Activity not created")
+			return .result(dialog: "Activity not created!")
 		}
-		return .result(dialog: "Internal error")
+		if LiveActivityVM.shared?.start() != nil {
+			return .result(dialog: "Activity started!")
+		}
+		return .result(dialog: "Internal error!")
 	}
 }
