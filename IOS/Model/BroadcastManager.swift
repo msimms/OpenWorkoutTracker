@@ -4,6 +4,11 @@
 //
 
 import Foundation
+#if os(iOS)
+import UIKit
+#elseif os(watchOS)
+import WatchKit
+#endif
 
 class BroadcastManager {
 	static let shared = BroadcastManager()
@@ -130,6 +135,13 @@ class BroadcastManager {
 		
 		// Add the activity type to the JSON string.
 		post += String(format: ",\n\"%@\":\"%@\"", KEY_NAME_ACTIVITY_TYPE, self.currentActivityType)
+		
+		// Add the battery level to the JSON string.
+#if os(iOS)
+		post += String(format: ",\n\"%@\":\"%.1f\"", KEY_NAME_BATTERY_LEVEL, UIDevice.current.batteryLevel)
+#elseif os(watchOS)
+		post += String(format: ",\n\"%@\":\"%.1f\"", KEY_NAME_BATTERY_LEVEL, WKInterfaceDevice.current().batteryLevel)
+#endif
 		
 		// Add the user name to the JSON string.
 		let userName = Preferences.broadcastUserName()
