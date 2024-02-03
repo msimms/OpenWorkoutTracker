@@ -10,7 +10,7 @@ struct AboutView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
-			Text("Copyright (c) 2023 by MJ Simms Software, LLC")
+			Text("Copyright (c) 2015-2024, by Michael Simms. All rights reserved.")
 			Button("Close") {
 				self.dismiss()
 			}

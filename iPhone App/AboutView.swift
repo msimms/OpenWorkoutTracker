@@ -8,10 +8,10 @@ import SwiftUI
 struct AboutView: View {
     var body: some View {
 		ScrollView() {
-			Text("Copyright (c) 2015-2023, by MJ Simms Software, LLC. All rights reserved.\n\n")
+			Text("Copyright (c) 2015-2024, by Michael Simms. All rights reserved.\n")
 				.bold()
-			Text("Normalized Power® (NP®) is a registered trademarks of Peaksware, LLC.\n\n")
-			Text("End User License Agreement\n\n")
+			Text("Normalized Power® (NP®) is a registered trademarks of Peaksware, LLC.\n")
+			Text("End User License Agreement\n")
 				.bold()
 			Text("This End User License Agreement (\"EULA\") is a legal agreement between you (either an individual or a single entity) and the Developer(s) with regard to the copyrighted Software (herein referred to as the \"Software\") provided with this EULA. The Software includes computer software and any \"online\" or electronic documentation. Use of any software and related documentation (\"Software\") provided to you by the Developer(s) in whatever form or media, will constitute your acceptance of these terms.\n")
 			Text("1. THE SOFTWARE IS LICENSED, NOT SOLD. YOU ACKNOWLEDGE THAT NO TITLE TO THE INTELLECTUAL PROPERTY IN THE SOFTWARE IS TRANSFERRED TO YOU. YOU FURTHER ACKNOWLEDGE THAT TITLE AND FULL OWNERSHIP RIGHTS TO THE SOFTWARE WILL REMAIN THE EXCLUSIVE PROPERTY OF THE DEVELOPER(S), AND YOU WILL NOT ACQUIRE ANY RIGHTS TO THE SOFTWARE, EXCEPT AS EXPRESSLY SET FORTH ABOVE. THE SOFTWARE IS PROTECTED BY COPYRIGHT LAWS AND INTERNATIONAL TREATY PROVISIONS.\n")
