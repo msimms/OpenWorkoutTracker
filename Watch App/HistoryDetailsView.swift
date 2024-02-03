@@ -29,6 +29,7 @@ struct HistoryDetailsView: View {
 	}
 	
 	private func sendToServer() {
+		// Create a task for this to keep the app responsive.
 		Task.init {
 			do {
 				try await CommonApp.shared.exportActivityToWeb(activityId: self.activityVM.activityId)

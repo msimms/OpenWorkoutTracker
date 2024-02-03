@@ -82,21 +82,22 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			// The activity index will be zero because it will be the only activity loaded.
 			if self.activityIndex == ACTIVITY_INDEX_UNKNOWN {
 				LoadHistoricalActivity(self.activityId)
-				CreateHistoricalActivityObject(0)
-				self.activityIndex = 0 // Is now the first item in the list
+				self.activityIndex = ConvertActivityIdToActivityIndex(self.activityId)
 			}
-			else {
+			
+			// Should never happen, but just in case.
+			if self.activityIndex != ACTIVITY_INDEX_UNKNOWN {
 				CreateHistoricalActivityObject(self.activityIndex)
+				
+				// Retrieve all the sensor and location data.
+				self.loadSensorDataFromDb()
+				
+				// Make sure we have the latest name, description, etc.
+				let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
+				
+				// Retrieve photo URLs.
+				let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
 			}
-			
-			// Retrieve all the sensor and location data.
-			self.loadSensorDataFromDb()
-			
-			// Make sure we have the latest name, description, etc.
-			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
-			
-			// Retrieve photo URLs.
-			let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
 		}
 		
 		// Activity is from HealthKit.

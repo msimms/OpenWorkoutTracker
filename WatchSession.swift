@@ -144,7 +144,8 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 
 #if os(watchOS)
 				// Startup stuff.
-				if self.timeOfLastMessage == 0 {
+				let now = time(nil)
+				if now - self.timeOfLastMessage > 600 {
 					self.sendRegisterDeviceMsgToPhone()
 					self.sendRequestSessionKeyMsgToPhone()
 					self.requestIntervalWorkoutsFromPhone()
@@ -152,7 +153,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 				}
 				
 				// Rate limit the server synchronizations. Let's not be spammy.
-				let now = time(nil)
 				if now - self.timeOfLastMessage > 300 {
 					try self.checkIfActivitiesAreUploadedToPhone()
 					self.timeOfLastMessage = now
