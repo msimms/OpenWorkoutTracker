@@ -3500,6 +3500,16 @@ extern "C" {
 			workout.SetScheduledTime(scheduledTime);
 
 			result = g_pDatabase->CreateWorkout(workout);
+			
+			if (result)
+			{
+				std::vector<WorkoutInterval> intervals = workout.GetIntervals();
+
+				for (auto iter = intervals.begin(); iter != intervals.end(); ++iter)
+				{
+					g_pDatabase->CreateWorkoutInterval(workout, (*iter));
+				}
+			}
 		}
 
 		g_dbLock.unlock();
