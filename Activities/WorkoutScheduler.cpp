@@ -152,23 +152,7 @@ void WorkoutScheduler::RandomScheduler(WorkoutList& workouts, WorkoutList week[D
 		// If this workout is not currently scheduled.
 		if (workout != nullptr && workout->GetScheduledTime() == 0)
 		{
-			uint8_t possibleDays[DAYS_PER_WEEK] = { (uint8_t)-1 };
-			size_t dayIndex = 0;
-
-			// Walk the weeks list and find a list of possible days on which to do the workout.
-			ListSchedulableDays(week, possibleDays);
-
-			// Pick one of the days from the candidate list.
-			// If all the days are booked, then pick a random day.
-			size_t numSchedulableDays = CountNumDaysSet(possibleDays);
-			if (numSchedulableDays > 0)
-			{
-				dayIndex = (size_t)generator() % numSchedulableDays;
-			}
-			else
-			{
-				dayIndex = (size_t)generator() % 6;
-			}
+			size_t dayIndex = (size_t)generator() % 6;
 			workout->SetScheduledTime(startTime + (dayIndex * SECS_PER_DAY));
 			week[dayIndex].push_back(std::unique_ptr<Workout>(new Workout(*workout)));
 		}
