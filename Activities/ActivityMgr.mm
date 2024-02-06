@@ -2165,8 +2165,6 @@ extern "C" {
 	/// Loads a single historical activity summary
 	void LoadHistoricalActivity(const char* const activityId)
 	{
-		FreeHistoricalActivityList();
-		
 		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 		
