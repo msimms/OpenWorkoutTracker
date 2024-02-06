@@ -126,6 +126,7 @@ std::map<std::string, double> WorkoutPlanGenerator::CalculateInputs(const Activi
 	if (m_bikeCount > 0)
 	{
 		m_avgCyclingDistanceFourWeeks /= (double)m_bikeCount;
+		m_avgCyclingDurationFourWeeks /= (double)m_bikeCount;
 	}
 	if (m_swimCount > 0)
 	{
@@ -207,6 +208,7 @@ bool WorkoutPlanGenerator::IsWorkoutPlanPossible(std::map<std::string, double>& 
 	return true;
 }
 
+/// @brief Call after generating inputs to generate suggested workouts for the week after the current one.
 WorkoutList WorkoutPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string, double>& inputs)
 {
 	SwimPlanGenerator swimGen;
@@ -236,6 +238,7 @@ WorkoutList WorkoutPlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::stri
 	return workouts;
 }
 
+/// @brief Update workout generator inputs based on the provided activity.
 void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary)
 {
 	const uint64_t SECS_PER_WEEK = 7.0 * 24.0 * 60.0 * 60.0;
@@ -334,6 +337,7 @@ void WorkoutPlanGenerator::ProcessActivitySummary(const ActivitySummary& summary
 						if (activityDistanceMeters > m_longestRidesByWeek[index])
 							m_longestRidesByWeek[index] = activityDistanceMeters;
 						m_numBikesWeek[index] = m_numBikesWeek[index] + 1;
+						m_avgCyclingDurationFourWeeks += activityDurationSecs;
 					}
 
 					m_avgCyclingDistanceFourWeeks += activityDistanceMeters;
