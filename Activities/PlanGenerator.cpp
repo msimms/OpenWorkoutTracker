@@ -4,14 +4,20 @@
 #include "PlanGenerator.h"
 #include <math.h>
 
+#include "UnitMgr.h"
+
 bool PlanGenerator::ValidFloat(double num, double minValue)
 {
 	return num > minValue;
 }
 
-double PlanGenerator::RoundDistance(double distance)
+/// @brief Converts the distance to something that looks sane in the user's preferred system.
+/// We're assuming the user doesn't want to see a run distance of 5.7234667 miles, but 5.5 miles, or 6.0 miles, etc.
+double PlanGenerator::RoundDistance(double meters)
 {
-	return float(ceil(distance / 100.0)) * 100.0;
+	double userUnits = UnitMgr::ConvertToPreferredDistanceFromMeters(meters);
+	userUnits = double(ceil(userUnits));
+	return UnitMgr::ConvertFromPreferredDistanceToMeters(userUnits);
 }
 
 bool PlanGenerator::IsGoalWeek(Goal goal, double weeksUntilGoal, double goalDistance)

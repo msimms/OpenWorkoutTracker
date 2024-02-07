@@ -24,7 +24,7 @@ public:
 
 protected:
 	static bool ValidFloat(double num, double minValue);
-	static double RoundDistance(double distance);
+	double RoundDistance(double distance);
 
 	bool IsGoalWeek(Goal goal, double weeksUntilGoal, double goalDistance);
 	bool IsInTaper(double weeksUntilGoal, Goal goal);

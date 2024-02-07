@@ -105,6 +105,17 @@ class StringUtils {
 		return String(format: "%02d:%02d", minutes, seconds)
 	}
 
+	static func formatDistanceInUserUnits(meters: Double) -> String {
+		var attr: ActivityAttributeType = ActivityAttributeType()
+		attr.value.doubleVal = meters / 1000.0
+		attr.valueType = TYPE_DOUBLE
+		attr.measureType = MEASURE_DISTANCE
+		attr.unitSystem = UNIT_SYSTEM_METRIC
+		attr.valid = true
+		ConvertToPreferredUnits(&attr)
+		return String(format: "%0.2f", attr.value.doubleVal)
+	}
+
 	/// @brief Utility function for converting an activity attribute structure to something human readable.
 	static func formatActivityValue(attribute: ActivityAttributeType) -> String {
 		if attribute.valid {

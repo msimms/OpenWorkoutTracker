@@ -151,7 +151,7 @@ std::unique_ptr<Workout> BikePlanGenerator::GenerateEasyAerobicRide(double goalD
 		uint8_t intervalPower = powerDistribution(generator);
 		intervalPower = RoundDistance(intervalPower, 5);
 
-		workout->AddTimeAndPowerInterval(1, avgRideDuration, intervalPower, 0, 0);
+		workout->AddTimeAndPowerInterval(1, avgRideDuration, intervalPower / 100.0, 0, 0);
 	}
 	return workout;
 }
@@ -179,7 +179,7 @@ std::unique_ptr<Workout> BikePlanGenerator::GenerateTempoRide(void)
 		uint64_t numIntervalSeconds = intervalDistribution(generator) * 5 * 60;
 
 		workout->AddWarmup(warmupDuration);
-		workout->AddTimeAndPowerInterval(1, numIntervalSeconds, intervalPower, 0, 0);
+		workout->AddTimeAndPowerInterval(1, numIntervalSeconds, intervalPower / 100.0, 0, 0);
 		workout->AddCooldown(cooldownDuration);
 	}
 	return workout;
@@ -208,7 +208,7 @@ std::unique_ptr<Workout> BikePlanGenerator::GenerateSweetSpotRide(void)
 		uint64_t numIntervalSeconds = intervalDistribution(generator) * 5 * 60;
 
 		workout->AddWarmup(warmupDuration);
-		workout->AddTimeAndPowerInterval(1, numIntervalSeconds, intervalPower, 0, 0);
+		workout->AddTimeAndPowerInterval(1, numIntervalSeconds, intervalPower / 100.0, 0, 0);
 		workout->AddCooldown(cooldownDuration);
 	}
 	return workout;
@@ -244,6 +244,7 @@ WorkoutList BikePlanGenerator::GenerateWorkoutsForNextWeek(std::map<std::string,
 	double longestRideWeek3 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_3);
 	double longestRideWeek4 = inputs.at(WORKOUT_INPUT_LONGEST_RIDE_WEEK_4);
 	double avgRideDuration = inputs.at(WORKOUT_INPUT_AVG_CYCLING_DURATION_IN_FOUR_WEEKS);
+	//double ftp = inputs.at(WORKOUT_INPUT_THRESHOLD_POWER);
 	bool hasBicycle = inputs.at(WORKOUT_INPUT_HAS_BICYCLE);
 
 	// The user doesn't have a bicycle, so return.

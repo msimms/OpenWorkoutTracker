@@ -79,7 +79,6 @@ struct ZonesView: View {
 							Text("Watts")
 								.bold()
 							Text(self.zonesVM.powerZonesDescription)
-							Text("")
 							Text("Based on an FTP of " + String(format: "%0.0lf", Preferences.ftp()) + " Watts")
 						}
 						else {

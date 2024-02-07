@@ -353,7 +353,7 @@ std::unique_ptr<Workout> RunPlanGenerator::GenerateLongRun(double longRunPace, d
 		longRunDistance = minRunDistance;
 	if (longRunDistance < (double)5000.0)
 		longRunDistance = (double)5000.0;
-	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(longRunDistance);
+	double intervalDistanceMeters = RoundDistance(longRunDistance);
 
 	// Create the workout object.
 	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_LONG_RUN, ACTIVITY_TYPE_RUNNING);
@@ -375,7 +375,7 @@ std::unique_ptr<Workout> RunPlanGenerator::GenerateFreeRun(void)
 	std::default_random_engine generator;
 	std::uniform_int_distribution<uint64_t> distribution(3000, 10000);
 	uint64_t runDistance = distribution(generator);
-	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(runDistance);
+	double intervalDistanceMeters = RoundDistance(runDistance);
 
 	// Create the workout object.
 	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_FREE_RUN, ACTIVITY_TYPE_RUNNING);
@@ -397,7 +397,7 @@ std::unique_ptr<Workout> RunPlanGenerator::GenerateHillRepeats(void)
 	std::default_random_engine generator;
 	std::uniform_int_distribution<uint64_t> distribution(3000, 10000);
 	uint64_t runDistance = distribution(generator);
-	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(runDistance);
+	double intervalDistanceMeters = RoundDistance(runDistance);
 
 	// Create the workout object.
 	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_HILL_REPEATS, ACTIVITY_TYPE_RUNNING);
@@ -419,7 +419,7 @@ std::unique_ptr<Workout> RunPlanGenerator::GenerateFartlekRun(void)
 	std::default_random_engine generator;
 	std::uniform_int_distribution<uint64_t> distribution(3000, 10000);
 	uint64_t runDistance = distribution(generator);
-	double intervalDistanceMeters = RunPlanGenerator::RoundDistance(runDistance);
+	double intervalDistanceMeters = RoundDistance(runDistance);
 
 	// Create the workout object.
 	std::unique_ptr<Workout> workout = WorkoutFactory::Create(WORKOUT_TYPE_FARTLEK_RUN, ACTIVITY_TYPE_RUNNING);

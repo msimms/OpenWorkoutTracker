@@ -3442,6 +3442,7 @@ extern "C" {
 			params.insert(std::make_pair(PARAM_WORKOUT_DURATION, FormatInt((uint64_t)workout.CalculateDuration())));
 			params.insert(std::make_pair(PARAM_WORKOUT_DISTANCE, FormatDouble(workout.CalculateDistance())));
 			params.insert(std::make_pair(PARAM_WORKOUT_SCHEDULED_TIME, FormatInt((uint64_t)workout.GetScheduledTime())));
+			params.insert(std::make_pair(PARAM_WORKOUT_ESTIMATED_INTENSITY, FormatDouble(workout.GetEstimatedIntensityScore())));
 
 			std::string subHeading = ", \"";
 			subHeading += PARAM_INTERVAL_SEGMENTS;
