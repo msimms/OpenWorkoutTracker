@@ -56,6 +56,9 @@ struct TagsView: View {
 						if self.activityVM.deleteTag(tag: self.tagToDelete) {
 							self.presentation.wrappedValue.dismiss()
 						}
+						else {
+							NSLog("Delete tag failed.")
+						}
 					}
 					Button("Cancel") {
 					}

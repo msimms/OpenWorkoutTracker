@@ -424,8 +424,12 @@ class LiveActivityVM : ObservableObject {
 			}
 			
 			if SaveHistoricalActivitySummaryData(activityIndex) {
-				LoadHistoricalActivitySummaryData(activityIndex)
-				LoadHistoricalActivityLapData(activityIndex)
+				if LoadHistoricalActivitySummaryData(activityIndex) == false {
+					NSLog("Failed to load historical activity summary data.")
+				}
+				if LoadHistoricalActivityLapData(activityIndex) == false {
+					NSLog("Failed to load historical activity lap data.")
+				}
 			}
 		}
 	}

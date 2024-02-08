@@ -166,7 +166,9 @@ class HistoryVM : ObservableObject {
 		self.loadActivitiesFromHealthKit()
 
 		if createAllObjects {
-			CreateAllHistoricalActivityObjects()
+			if CreateAllHistoricalActivityObjects() == false {
+				NSLog("Failed to create historical activity objects.")
+			}
 		}
 
 		DispatchQueue.main.async {

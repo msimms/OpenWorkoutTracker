@@ -106,8 +106,12 @@ class GearVM : ObservableObject {
 	}
 	
 	func buildGearList() {
-		InitializeBikeProfileList()
-		InitializeShoeProfileList()
+		if InitializeBikeProfileList() == false {
+			NSLog("Failed to initialize the bike profile list.")
+		}
+		if InitializeShoeProfileList() == false {
+			NSLog("Failed to initialize the shoe profile list.")
+		}
 	}
 	
 	func listBikes() -> Array<GearSummary> {
@@ -271,6 +275,9 @@ class GearVM : ObservableObject {
 				}
 				catch { }
 			}
+			else {
+				NSLog("Failed to update the bike profile.")
+			}
 		}
 		return false
 	}
@@ -293,6 +300,9 @@ class GearVM : ObservableObject {
 				}
 				catch { }
 			}
+			else {
+				NSLog("Failed to update the shoe profile.")
+			}
 			return false
 		}
 
@@ -309,6 +319,9 @@ class GearVM : ObservableObject {
 				return try ApiClient.shared.updateGear(item: item)
 			}
 			catch { }
+		}
+		else {
+			NSLog("Failed to update the shoe profile.")
 		}
 		return false
 	}
@@ -379,6 +392,9 @@ class GearVM : ObservableObject {
 			}
 			catch { }
 		}
+		else {
+			NSLog("Failed to update the bike profile.")
+		}
 		return false
 	}
 	
@@ -408,6 +424,9 @@ class GearVM : ObservableObject {
 		if DeleteBikeProfile(gearId.uuidString) {
 			return ApiClient.shared.deleteGear(gearId: gearId)
 		}
+		else {
+			NSLog("Failed to delete the bike profile.")
+		}
 		return false
 	}
 	
@@ -415,6 +434,9 @@ class GearVM : ObservableObject {
 		// Delete from the database and then from the optional server.
 		if DeleteShoeProfile(gearId.uuidString) {
 			return ApiClient.shared.deleteGear(gearId: gearId)
+		}
+		else {
+			NSLog("Failed to delete the shoe profile.")
 		}
 		return false
 	}

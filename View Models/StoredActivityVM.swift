@@ -528,6 +528,9 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			if DeleteActivityFromDatabase(self.activityId) {
 				return ApiClient.shared.deleteActivity(activityId: self.activityId)
 			}
+			else {
+				NSLog("Delete activity failed.")
+			}
 		}
 		return false
 	}
@@ -572,7 +575,9 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			}
 			
 			pointer.pointee = TagsCallbackType(tags: [])
-			RetrieveTags(self.activityId, tagsCallback, pointer)
+			if RetrieveTags(self.activityId, tagsCallback, pointer) == false {
+				NSLog("Retrieve tags failed.")
+			}
 			tags = pointer.pointee.tags
 		}
 		return tags

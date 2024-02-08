@@ -103,8 +103,12 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 
 				// An activity file is received from the watch app.
 				if ImportActivityFromFile(file.fileURL.absoluteString, activityType, activityId) {
-					UpdateActivityName(activityId, activityName)
-					UpdateActivityDescription(activityId, activityDesc)
+					if UpdateActivityName(activityId, activityName) == false {
+						NSLog("Update activity name failed.");
+					}
+					if UpdateActivityDescription(activityId, activityDesc) == false {
+						NSLog("Update activity description failed.");
+					}
 				}
 				else {
 					NSLog("Failed to import an activity from the watch.");

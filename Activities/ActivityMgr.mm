@@ -630,33 +630,6 @@ extern "C" {
 		return result;
 	}
 
-	char* GetActivityIdByHash(const char* const hash)
-	{
-		// Sanity checks.
-		if (hash == NULL)
-		{
-			return NULL;
-		}
-
-		char* activityId = NULL;
-
-		g_dbLock.lock();
-
-		if (g_pDatabase)
-		{
-			std::string activityIdStr;
-
-			if (g_pDatabase->RetrieveActivityIdFromHash(hash, activityIdStr))
-			{
-				activityId = strdup(activityIdStr.c_str());
-			}
-		}
-
-		g_dbLock.unlock();
-
-		return activityId;
-	}
-
 	char* GetHashForActivityId(const char* const activityId)
 	{
 		// Sanity checks.
@@ -3119,31 +3092,6 @@ extern "C" {
 			}
 
 			g_historicalActivityLock.unlock();
-		}
-		return result;
-	}
-
-	//
-	// Functions for listing locations from the current activity.
-	//
-
-	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate)
-	{
-		bool result = false;
-		
-		if (coordinate == NULL)
-		{
-			return false;
-		}
-
-		if (g_pCurrentActivity)
-		{
-			MovingActivity* pMovingActivity = dynamic_cast<MovingActivity*>(g_pCurrentActivity);
-
-			if (pMovingActivity)
-			{
-				result = pMovingActivity->GetCoordinate(pointIndex, coordinate);
-			}
 		}
 		return result;
 	}

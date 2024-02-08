@@ -60,7 +60,6 @@ extern "C" {
 
 	// Functions for managing the activity hash.
 	bool CreateOrUpdateActivityHash(const char* const activityId, const char* const hash);
-	char* GetActivityIdByHash(const char* const hash);
 	char* GetHashForActivityId(const char* const activityId);
 
 	// Methods for managing the activity sync status.
@@ -190,9 +189,6 @@ extern "C" {
 		time_t* const readingTime, double* const readingValue);
 	bool GetHistoricalActivityAccelerometerReading(size_t activityIndex, size_t readingIndex,
 		time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue);
-
-	// Functions for listing locations from the current activity.
-	bool GetCurrentActivityPoint(size_t pointIndex, Coordinate* const coordinate);
 
 	// Functions for modifying historical activity.
 	bool TrimActivityData(const char* const activityId, uint64_t newTime, bool fromStart);

@@ -24,8 +24,10 @@ class CommonApp : ObservableObject {
 		// Initialize the backend, including the database.
 		var baseUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].standardizedFileURL
 		baseUrl = baseUrl.appendingPathComponent("Activities.sqlite")
-		Initialize(baseUrl.absoluteString)
-		
+		if Initialize(baseUrl.absoluteString) == false {
+			NSLog("Initialize failed.")
+		}
+
 		// Build the list of activity types the backend can handle.
 		CommonApp.activityTypes = []
 #if os(watchOS)
@@ -272,7 +274,10 @@ class CommonApp : ObservableObject {
 							
 							if fullUrl != nil {
 								try responseData.write(to: fullUrl!)
-								ImportActivityFromFile(fullUrl?.absoluteString, "", activityId)
+
+								if ImportActivityFromFile(fullUrl?.absoluteString, "", activityId) == false {
+									NSLog("Import failed!")
+								}
 								try FileManager.default.removeItem(at: fullUrl!)
 							}
 						}
@@ -458,16 +463,22 @@ class CommonApp : ObservableObject {
 							let tags = responseDict[PARAM_ACTIVITY_TAGS]
 							
 							if activityName != nil {
-								UpdateActivityName(activityId, activityName as? String)
+								if UpdateActivityName(activityId, activityName as? String) == false {
+									NSLog("Update activity name failed.")
+								}
 							}
 							if activityDesc != nil {
-								UpdateActivityDescription(activityId, activityDesc as? String)
+								if UpdateActivityDescription(activityId, activityDesc as? String) == false {
+									NSLog("Update activity description failed.")
+								}
 							}
 							if tags != nil {
 								let tagsList = tags as? [String]
 								for tag in tagsList! {
 									if !HasTag(activityId, tag) {
-										CreateTag(activityId, tag)
+										if CreateTag(activityId, tag) == false {
+											NSLog("Create tag failed.")
+										}
 									}
 								}
 							}
