@@ -37,6 +37,7 @@ struct ActivityView: View {
 	@State private var poolLengths: Array<String> = ["25 Yards", "25 Meters", "50 Yards", "50 Meters"]
 	@State private var poolLength = Preferences.poolLength()
 	@State private var poolLengthUnits = Preferences.poolLengthUnits()
+	@State private var allowScreenPressesDuringActivity = Preferences.watchAllowPressesDuringActivity()
 	@State private var crownValue = MIN_CROWN_VALUE
 
 	var activityType: String
@@ -80,7 +81,7 @@ struct ActivityView: View {
 		if !IsActivityInProgress() {
 			return true
 		}
-		return Preferences.watchAllowPressesDuringActivity()
+		return self.allowScreenPressesDuringActivity
 	}
 
 	func stop() -> StoredActivityVM {
@@ -361,7 +362,7 @@ struct ActivityView: View {
 								}
 								
 								// Lap button
-								if self.activityVM.isInProgress && self.activityVM.isMovingActivity {
+								if self.allowScreenPressesDuringActivity && self.activityVM.isInProgress && self.activityVM.isMovingActivity {
 									Button {
 										self.activityVM.lap()
 									} label: {
