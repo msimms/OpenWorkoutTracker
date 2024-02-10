@@ -40,9 +40,16 @@ void ZonesCalculator::CalculateHeartRateZones(double restingHr, double maxHr, do
 
 void ZonesCalculator::CalcuatePowerZones(double ftp, double zones[NUM_POWER_ZONES])
 {
-	// Dr. Andy Coggan 7 zone model, Zone 6 is anything over 120%,
+	// Dr. Andy Coggan 7 zone model
+	// Zone 1 - Active Recovery - Less than 55% of FTP
+	// Zone 2 - Endurance - 55% to 74% of FTP
+	// Zone 3 - Tempo - 75% to 89% of FTP
+	// Zone 4 - Lactate Threshold - 90% to 104% of FTP
+	// Zone 5 - VO2 Max - 105% to 120% of FTP
+	// Zone 6 - Anaerobic Capacity - More than 120% of FTP
+	// Zone 6 is really anything over 120%,
 	// Zone 7 is neuromuscular (i.e., shorts sprints at no specific power)
-	zones[0] = ftp * 0.55;
+	zones[0] = ftp * 0.549;
 	zones[1] = ftp * 0.75;
 	zones[2] = ftp * 0.90;
 	zones[3] = ftp * 1.05;
