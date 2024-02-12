@@ -27,13 +27,19 @@ class HealthManager {
 	
 	private var authorized = false
 	private let healthStore = HKHealthStore();
+
 	public var workouts: Dictionary<String, HKWorkout> = [:] // Summaries of workouts stored in the health store, key is the activity ID which is generated automatically
 	public var currentHeartRate: Double = 0.0 // Most recent heart rate reading (Apple Watch)
 	public var heartRateRead: Bool = false // True if we are receiving heart rate data (Apple Watch)
+
+	private var hrTopSampleBuf: [Double] = []
+	private var hrSum: Double = 0.0
+	private var totalHrSamples: UInt64 = 0
+	private var estimatedMaxHr: Double? // Algorithmically estimated maximum heart rate
+
 	private var locations: Dictionary<String, Array<CLLocation>> = [:] // Arrays of locations stored in the health store, key is the activity ID
 	private var distances: Dictionary<String, Array<Double>> = [:] // Arrays of distances computed from the locations array, key is the activity ID
 	private var speeds: Dictionary<String, Array<Double>> = [:] // Arrays of speeds computed from the distances array, key is the activity ID
-	private var hrSampleBuf: [Double] = [] // For estimating maximum heart rate
 	private var queryGroup: DispatchGroup = DispatchGroup() // Tracks queries until they are completed
 	private var locationQueryGroup: DispatchGroup = DispatchGroup() // Tracks location/route queries until they are completed
 	private var hrQuery: HKQuery? = nil // The query that reads heart rate on the watch
@@ -95,15 +101,45 @@ class HealthManager {
 		healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { result, error in
 			do {
 				try self.getAge()
-				try self.getHeight()
-				try self.getWeight()
-				try self.getRestingHr()
-				try self.estimateMaxHr()
-				try self.getVO2Max()
-				try self.getFtp()
-				try self.getBestRecent5KEffort()
 			}
 			catch {
+				NSLog("Failed to read the age from HealthKit.")
+			}
+			do {
+				try self.getHeight()
+				try self.getWeight()
+			}
+			catch {
+				NSLog("Failed to read the height and weight from HealthKit.")
+			}
+			do {
+				try self.getRestingHr()
+#if !os(watchOS)
+				try self.estimateMaxHr()
+#endif
+			}
+			catch {
+				NSLog("Failed to read heart rate information from HealthKit.")
+			}
+			do {
+				try self.getVO2Max()
+			}
+			catch {
+				NSLog("Failed to read the VO2Max from HealthKit.")
+			}
+			do {
+#if !os(watchOS)
+				try self.getBestRecent5KEffort()
+#endif
+			}
+			catch {
+				NSLog("Failed to read the workout history from HealthKit.")
+			}
+			do {
+				try self.getFtp()
+			}
+			catch {
+				NSLog("Failed to read the cycling FTP from HealthKit.")
 			}
 		}
 	}
@@ -135,7 +171,8 @@ class HealthManager {
 		
 		let oneYear = (365.25 * 24.0 * 60.0 * 60.0)
 		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - oneYear)
-		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: nil, options: [.strictStartDate])
+		let endDate = Date()
+		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [.strictStartDate])
 		
 		let query = HKSampleQuery.init(sampleType: quantityType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { query, results, error in
 			
@@ -277,29 +314,38 @@ class HealthManager {
 	/// @brief Estimates the user's maximum heart rate from the last year of HealthKit data.
 	func estimateMaxHr() throws {
 		let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)!
-		let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
-		var estimatedMaxHr: Double = 0.0
 
 		self.recentQuantitySamplesOfType(quantityType: hrType) { sample, error in
 			if let hrSample = sample {
+				let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
 				let hrValue = hrSample.quantity.doubleValue(for: hrUnit)
 
-				// In an attempt to filter out bad data, take the average of the
+				self.hrSum += hrValue
+				self.totalHrSamples += 1
+
+				// Filtering out bad data, part 1: Apply the sigmoid squishification
+				// function to each reading, based on their offset from the mean.
+				let mean = self.hrSum / Double(self.totalHrSamples)
+				let offset = hrValue - mean
+				let sig = 1.0 / (1.0 + exp(-offset))
+				let squishedValue = hrValue * sig
+				
+				// Filtering out bad data, part 2: Take the average of the
 				// highest HR readings.
 				let MAX_BUF_SIZE = 64
-				if self.hrSampleBuf.count == 0 || hrValue > self.hrSampleBuf[0] {
-					self.hrSampleBuf.append(hrValue)
-					self.hrSampleBuf.sort()
-					if self.hrSampleBuf.count > MAX_BUF_SIZE {
-						self.hrSampleBuf.remove(at: 0)
+				if self.hrTopSampleBuf.count == 0 || squishedValue > self.hrTopSampleBuf[0] {
+					self.hrTopSampleBuf.append(hrValue)
+					self.hrTopSampleBuf.sort()
+					if self.hrTopSampleBuf.count > MAX_BUF_SIZE {
+						self.hrTopSampleBuf.remove(at: 0)
 					}
 					
-					let bufSum = self.hrSampleBuf.reduce(0, +)
-					let bufAvg = bufSum / Double(self.hrSampleBuf.count)
-					
-					if bufAvg > estimatedMaxHr {
-						estimatedMaxHr = hrValue
-						Preferences.setEstimatedMaxHr(value: estimatedMaxHr)
+					let bufSum = self.hrTopSampleBuf.reduce(0, +)
+					let bufAvg = bufSum / Double(self.hrTopSampleBuf.count)
+
+					if self.estimatedMaxHr == nil || bufAvg > self.estimatedMaxHr! {
+						self.estimatedMaxHr = hrValue
+						Preferences.setEstimatedMaxHr(value: self.estimatedMaxHr!)
 					}
 				}
 			}
@@ -313,8 +359,7 @@ class HealthManager {
 		self.mostRecentQuantitySampleOfType(quantityType: vo2MaxType) { sample, error in
 			if let vo2MaxSample = sample {
 				let kgmin = HKUnit.gramUnit(with: .kilo).unitMultiplied(by: .minute())
-				let mL = HKUnit.literUnit(with: .milli)
-				let vo2MaxUnit = mL.unitDivided(by: kgmin)
+				let vo2MaxUnit = HKUnit.literUnit(with: .milli).unitDivided(by: kgmin)
 				let vo2Max = vo2MaxSample.quantity.doubleValue(for: vo2MaxUnit)
 				
 				Preferences.setEstimatedVO2Max(value: vo2Max)
@@ -323,6 +368,15 @@ class HealthManager {
 	}
 
 	func setVO2Max(vo2Max: Double) {
+		let now = Date()
+		let kgmin = HKUnit.gramUnit(with: .kilo).unitMultiplied(by: .minute())
+		let vo2MaxUnit = HKUnit.literUnit(with: .milli).unitDivided(by: kgmin)
+		let vo2MaxQuantity = HKQuantity.init(unit: vo2MaxUnit, doubleValue: vo2Max)
+		let vo2MaxType = HKObjectType.quantityType(forIdentifier: .vo2Max)!
+		let vo2MaxSample = HKQuantitySample.init(type: vo2MaxType, quantity: vo2MaxQuantity, start: now, end: now)
+		
+		self.healthStore.save(vo2MaxSample, withCompletion: {_,_ in })
+
 	}
 
 	/// @brief Gets the user's cycling FTP from HealthKit  and updates the copy in our database.
