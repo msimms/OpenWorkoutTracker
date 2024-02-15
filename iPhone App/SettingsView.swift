@@ -178,6 +178,16 @@ struct SettingsView: View {
 				}
 			}
 		}
+		.onAppear() {
+			self.preferMetric = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
+			self.readActivitiesFromHealthKit = Preferences.willIntegrateHealthKitActivities()
+			self.autoSaveActivitiesToICloudDrive = Preferences.autoSaveToICloudDrive()
+			self.hideDuplicateActivities = Preferences.hideHealthKitDuplicates()
+			self.broadcastEnabled = Preferences.shouldBroadcastToServer()
+			self.useHttps = Preferences.broadcastProtocol() == "https"
+			self.showBroadcastIcon = Preferences.broadcastShowIcon()
+			self.broadcastServer = Preferences.broadcastHostName()
+		}
 		.padding(10)
     }
 }

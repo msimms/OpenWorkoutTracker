@@ -104,6 +104,16 @@ struct SettingsView: View {
 				}
 			}
 		}
+		.onAppear() {
+			self.broadcastEnabled = Preferences.shouldBroadcastToServer()
+			self.preferMetric = Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC
+			self.heartRateEnabled = Preferences.useWatchHeartRate()
+			self.btSensorsEnabled = Preferences.shouldScanForSensors()
+			self.runSplitBeeps = Preferences.watchRunSplitBeeps()
+			self.startStopBeeps = Preferences.watchStartStopBeeps()
+			self.allowPressesDuringActivity = Preferences.watchAllowPressesDuringActivity()
+			self.turnCrown = Preferences.watchTurnCrownToStartStopActivity()
+		}
 		.padding(10)
     }
 }

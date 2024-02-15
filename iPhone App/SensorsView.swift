@@ -18,9 +18,15 @@ struct SensorsView: View {
 				}
 				.padding(INFO_INSETS)
 
-				Toggle("Scan for compatible sensors", isOn: $shouldScan)
-					.onChange(of: shouldScan) { value in
-						Preferences.setScanForSensors(value: shouldScan)
+				Toggle("Scan for compatible sensors", isOn: self.$shouldScan)
+					.onChange(of: self.shouldScan) { value in
+						Preferences.setScanForSensors(value: self.shouldScan)
+						if self.shouldScan {
+							SensorMgr.shared.startSensors(usableSensors: [])
+						}
+						else {
+							SensorMgr.shared.stopSensors()
+						}
 					}
 				Group() {
 					Text("Sensors")
@@ -46,7 +52,10 @@ struct SensorsView: View {
 			.padding(10)
 		}
 		.onAppear() {
-			SensorMgr.shared.startSensors(usableSensors: [])
+			self.shouldScan = Preferences.shouldScanForSensors()
+			if self.shouldScan {
+				SensorMgr.shared.startSensors(usableSensors: [])
+			}
 		}
 		.onDisappear() {
 			SensorMgr.shared.stopSensors()
