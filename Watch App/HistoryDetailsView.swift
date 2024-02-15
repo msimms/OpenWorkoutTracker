@@ -77,7 +77,7 @@ struct HistoryDetailsView: View {
 						Button("Sync") {
 							self.showingSyncSelection = true
 						}
-						.confirmationDialog("Select the interval session to perform", isPresented: self.$showingSyncSelection, titleVisibility: .visible) {
+						.confirmationDialog("Select the sync destination", isPresented: self.$showingSyncSelection, titleVisibility: .visible) {
 							if CommonApp.shared.watchSession.isConnected {
 								Button {
 									self.sendToPhone()
