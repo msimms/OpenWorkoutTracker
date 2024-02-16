@@ -35,7 +35,10 @@ class HealthManager {
 	private var hrTopSampleBuf: [Double] = []
 	private var hrSum: Double = 0.0
 	private var totalHrSamples: UInt64 = 0
-	private var estimatedMaxHr: Double? // Algorithmically estimated maximum heart rate
+	private var powerSampleBuf: [HKQuantitySample] = [] // Used when estimating the user's FTP from cycling power samples in HealthKit
+
+	public var estimatedMaxHr: Double? // Algorithmically estimated maximum heart rate
+	public var estimatedFtp: Double? // Algorithmically estimated cycling threshold power, in watts
 
 	private var locations: Dictionary<String, Array<CLLocation>> = [:] // Arrays of locations stored in the health store, key is the activity ID
 	private var distances: Dictionary<String, Array<Double>> = [:] // Arrays of distances computed from the locations array, key is the activity ID
@@ -94,6 +97,7 @@ class HealthManager {
 
 			writeTypes.insert(powerType)
 			writeTypes.insert(ftpType)
+			readTypes.insert(powerType)
 			readTypes.insert(ftpType)
 		}
 
@@ -103,14 +107,14 @@ class HealthManager {
 				try self.getAge()
 			}
 			catch {
-				NSLog("Failed to read the age from HealthKit.")
+				NSLog("Failed to read the user's age from HealthKit.")
 			}
 			do {
 				try self.getHeight()
 				try self.getWeight()
 			}
 			catch {
-				NSLog("Failed to read the height and weight from HealthKit.")
+				NSLog("Failed to read the user's height and weight from HealthKit.")
 			}
 			do {
 				try self.getRestingHr()
@@ -137,6 +141,9 @@ class HealthManager {
 			}
 			do {
 				try self.getFtp()
+#if !os(watchOS)
+				try self.estimateFtp()
+#endif
 			}
 			catch {
 				NSLog("Failed to read the cycling FTP from HealthKit.")
@@ -379,6 +386,51 @@ class HealthManager {
 
 	}
 
+	/// @brief Estimates the user's cycling FTP based on cycling power data in HealthKit. Uses 95% of the best recent 20 minute effort.
+	func estimateFtp() throws {
+		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
+			let powerType = HKObjectType.quantityType(forIdentifier: .cyclingPower)!
+			self.powerSampleBuf.removeAll()
+
+			self.recentQuantitySamplesOfType(quantityType: powerType) { sample, error in
+				if let powerSample = sample {
+					let powerUnit: HKUnit = HKUnit.watt()
+					
+					// Add to the sample buffer.
+					self.powerSampleBuf.append(powerSample)
+					if self.powerSampleBuf.count > 1 {
+						
+						// Remove anything that falls outside of our 20 minute window.
+						var startTime = self.powerSampleBuf[0].startDate
+						let endTime = powerSample.endDate
+						while endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 > (20 * 60) && self.powerSampleBuf.count > 1{
+							self.powerSampleBuf.removeFirst()
+							startTime = self.powerSampleBuf[0].startDate
+						}
+						
+						// Make sure we didn't empty the buffer when purging old data.
+						// Also make sure we have something close to 20 mimutes of data.
+						if endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 > (19.5 * 60) && self.powerSampleBuf.count > 1 {
+							
+							// Compute the average.
+							var sum: Double = 0.0
+							for bufSample in self.powerSampleBuf {
+								sum += bufSample.quantity.doubleValue(for: powerUnit)
+							}
+							let avg = sum / Double(self.powerSampleBuf.count)
+							let estimate = avg * 0.95
+							
+							if self.estimatedFtp == nil || estimate > self.estimatedFtp! {
+								self.estimatedFtp = estimate
+								Preferences.setEstimatedFtp(value: estimate)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/// @brief Gets the user's cycling FTP from HealthKit  and updates the copy in our database.
 	func getFtp() throws {
 		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
@@ -389,7 +441,7 @@ class HealthManager {
 					let powerUnit: HKUnit = HKUnit.watt()
 					let ftp = powerSample.quantity.doubleValue(for: powerUnit)
 
-					Preferences.setEstimatedFtp(value: ftp)
+					Preferences.setUserDefinedFtp(value: ftp)
 				}
 			}
 		}

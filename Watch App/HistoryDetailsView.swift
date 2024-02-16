@@ -34,6 +34,7 @@ struct HistoryDetailsView: View {
 			do {
 				try await CommonApp.shared.exportActivityToWeb(activityId: self.activityVM.activityId)
 			} catch {
+				NSLog(error.localizedDescription)
 			}
 		}
 	}

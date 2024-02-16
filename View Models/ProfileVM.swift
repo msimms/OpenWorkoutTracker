@@ -164,8 +164,22 @@ class ProfileVM {
 	}
 	
 	static func updateEstimations() {
-		let estimatedFtp = EstimateFtp()
-		let estimatedMaxHr = EstimateMaxHr()
+		// Pick the best estimate, either the one calculated from our database or the one calculated from HealthKit data.
+		let estimatedFtpFromOurDb = EstimateFtp()
+		let estimatedFtpFromHealthKit = HealthManager.shared.estimatedFtp
+		var estimatedFtp = estimatedFtpFromOurDb
+		if estimatedFtpFromHealthKit != nil && estimatedFtpFromHealthKit! > estimatedFtpFromOurDb {
+			estimatedFtp = estimatedFtpFromHealthKit!
+		}
+
+		// Pick the best estimate, either the one calculated from our database or the one calculated from HealthKit data.
+		let estimatedMaxHrFromOurDb = EstimateMaxHr()
+		let estimatedMaxHrFromHealthKit = HealthManager.shared.estimatedMaxHr
+		var estimatedMaxHr = estimatedMaxHrFromOurDb
+		if estimatedMaxHrFromHealthKit != nil && estimatedMaxHrFromHealthKit! > estimatedMaxHrFromOurDb {
+			estimatedMaxHr = estimatedMaxHrFromHealthKit!
+		}
+
 		let best5KAttr = QueryBestActivityAttributeByActivityType(ACTIVITY_TYPE_RUNNING, ACTIVITY_ATTRIBUTE_FASTEST_5K, true, nil)
 
 		Preferences.setEstimatedFtp(value: estimatedFtp)

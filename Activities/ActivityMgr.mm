@@ -862,11 +862,11 @@ extern "C" {
 	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm, double ftp, double restingHr, double maxHr, double vo2Max, uint32_t bestRecentRunPerfSecs, double bestRecentRunPerfMeters)
 	{
 		// Sanity checks
-		if (restingHr < 0.1)
+		if (restingHr < 0.1) // Estimate only if we weren't provided one
 			restingHr = g_user.EstimateRestingHeartRate();
-		if (maxHr < 0.1)
+		if (maxHr < 0.1) // Estimate only if we weren't provided one
 			maxHr = EstimateMaxHr();
-		if (ftp < 0.1)
+		if (ftp < 0.1) // Estimate only if we weren't provided one
 			ftp = EstimateFtp();
 
 		g_user.SetActivityLevel(level);
