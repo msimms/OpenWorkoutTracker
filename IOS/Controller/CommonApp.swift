@@ -38,7 +38,7 @@ class CommonApp : ObservableObject {
 #else
 		GetActivityTypes(activityTypeCallback, nil, true, false, true)
 #endif
-		
+
 		// Enable battery monitoring.
 #if os(watchOS)
 		WKInterfaceDevice.current().isBatteryMonitoringEnabled = true
