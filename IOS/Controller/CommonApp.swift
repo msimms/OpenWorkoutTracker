@@ -4,6 +4,9 @@
 //
 
 import Foundation
+#if os(watchOS)
+import SwiftUI // for WKInterfaceDevice
+#endif
 
 func activityTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let activityType = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
@@ -36,6 +39,11 @@ class CommonApp : ObservableObject {
 		GetActivityTypes(activityTypeCallback, nil, true, false, true)
 #endif
 		
+		// Enable battery monitoring.
+#if os(watchOS)
+		WKInterfaceDevice.current().isBatteryMonitoringEnabled = true
+#endif
+
 		// Do we have a device ID, because we should?
 		if Preferences.uuid() == nil {
 			Preferences.setUuid(value: UUID().uuidString)

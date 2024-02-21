@@ -13,15 +13,16 @@ import WatchKit
 class BroadcastManager {
 	static let shared = BroadcastManager()
 	
-	var locationCache: Array<String> = []      // Locations to be sent
-	var accelerometerCache: Array<String> = [] // Accelerometer readings to be sent
-	var lastCacheFlushTime: UInt64 = 0         // Unix time of the most recent cache flush
-	var lastSendTime: UInt64 = 0               // Unix time of the most recent transmission
-	var deviceId: String? = Preferences.uuid() // Unique identifier for the device doing the sending
-	var dataBeingSent: String = ""             // Formatted data to be sent
-	var errorSending: Bool = false             // Whether or not the last send was successful
-	var currentActivityId: String = ""         // Cached for performance reasons
-	var currentActivityType: String = ""       // Cached for performance reasons
+	var locationCache: Array<String> = []       // Locations to be sent
+	var accelerometerCache: Array<String> = []  // Accelerometer readings to be sent
+	var lastCacheFlushTime: UInt64 = 0          // Unix time of the most recent cache flush
+	var lastSendTime: UInt64 = 0                // Unix time of the most recent transmission
+	var deviceId: String? = Preferences.uuid()  // Unique identifier for the device doing the sending
+	var dataBeingSent: String = ""              // Formatted data to be sent
+	var errorSending: Bool = false              // Whether or not the last send was successful
+	var currentActivityId: String = ""          // Cached for performance reasons
+	var currentActivityType: String = ""        // Cached for performance reasons
+	let rate: Int = Preferences.broadcastRate() // Rate at which we should broadcast, in seconds
 
 	/// Singleton constructor
 	private init() {
@@ -158,11 +159,15 @@ class BroadcastManager {
 	}
 	
 	func broadcast() {
-		// Flush at the user-specified interval. Default to 60 seconds if one was not specified.
-		let rate = Preferences.broadcastRate()
-		
+		// Flush at the user-specified interval. Defaults to 60 seconds if one was not specified.
+		// If we're in low power mode then slow down.
+		var broadcastRate = self.rate
+		if ProcessInfo.processInfo.isLowPowerModeEnabled {
+			broadcastRate = self.rate * 2
+		}
+
 		// If we have data to send and it's been long enough since we last sent then flush the cache.
-		if ((self.locationCache.count > 0 || self.accelerometerCache.count > 0) && (UInt64(time(nil)) - self.lastCacheFlushTime > rate)) {
+		if ((self.locationCache.count > 0 || self.accelerometerCache.count > 0) && (UInt64(time(nil)) - self.lastCacheFlushTime > broadcastRate)) {
 			self.flushGlobalBroadcastCacheRest(isStopped: false)
 		}
 	}
