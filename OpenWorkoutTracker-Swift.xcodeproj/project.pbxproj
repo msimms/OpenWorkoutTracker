@@ -228,6 +228,8 @@
 		27460FAE2A9BC144002E368D /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27460FAD2A9BC144002E368D /* StringUtils.swift */; };
 		27460FAF2A9BC144002E368D /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27460FAD2A9BC144002E368D /* StringUtils.swift */; };
 		274AA6322A81736900F77F96 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274AA6312A81736900F77F96 /* PhotoPicker.swift */; };
+		276AB0C52B86759B00FA94DC /* VirtualCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */; };
+		276AB0C62B86759B00FA94DC /* VirtualCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */; };
 		2775412E297F651500AE9B86 /* ZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775412D297F651500AE9B86 /* ZonesView.swift */; };
 		27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
 		27754132297FFC9800AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
@@ -631,6 +633,8 @@
 		27460FAD2A9BC144002E368D /* StringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StringUtils.swift; path = IOS/Utilities/StringUtils.swift; sourceTree = "<group>"; };
 		274AA6312A81736900F77F96 /* PhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		2752B645295E1B680050CCFC /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = IOS/Controller/Feature.h; sourceTree = "<group>"; };
+		276AB0C32B86759B00FA94DC /* VirtualCycling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VirtualCycling.h; path = Activities/VirtualCycling.h; sourceTree = "<group>"; };
+		276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VirtualCycling.cpp; path = Activities/VirtualCycling.cpp; sourceTree = "<group>"; };
 		2775412D297F651500AE9B86 /* ZonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesView.swift; sourceTree = "<group>"; };
 		2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZonesCalculator.cpp; path = Activities/ZonesCalculator.cpp; sourceTree = "<group>"; };
 		27754130297FFC7600AE9B86 /* ZonesCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZonesCalculator.h; path = Activities/ZonesCalculator.h; sourceTree = "<group>"; };
@@ -870,6 +874,8 @@
 				2740DFBD28E460E200293B71 /* Triathlon.h */,
 				2740DF7928E460E000293B71 /* UnitMgr.cpp */,
 				2740DF9428E460E100293B71 /* UnitMgr.h */,
+				276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */,
+				276AB0C32B86759B00FA94DC /* VirtualCycling.h */,
 				2740DF9628E460E100293B71 /* VO2MaxCalculator.cpp */,
 				2740DFA828E460E100293B71 /* VO2MaxCalculator.h */,
 				2740DFB128E460E100293B71 /* Walk.cpp */,
@@ -1709,6 +1715,7 @@
 				2740DFD328E460E200293B71 /* IntensityCalculator.cpp in Sources */,
 				2782EA322B4CCF6700016A16 /* AppShortcuts.swift in Sources */,
 				2740E03628E4CE1C00293B71 /* TextFileReader.cpp in Sources */,
+				276AB0C52B86759B00FA94DC /* VirtualCycling.cpp in Sources */,
 				2740E05628E4D0C700293B71 /* Database.cpp in Sources */,
 				2740E09C28E6344400293B71 /* Preferences.swift in Sources */,
 				2740E10B28EB5AD600293B71 /* Accelerometer.swift in Sources */,
@@ -1837,6 +1844,7 @@
 				278D932728E38FE7003B077C /* WatchApp.swift in Sources */,
 				2740E0C428E7028C00293B71 /* ActivityFactory.cpp in Sources */,
 				278B8F3729411F1600B34161 /* ActivitySummary.swift in Sources */,
+				276AB0C62B86759B00FA94DC /* VirtualCycling.cpp in Sources */,
 				2740E0D228E7028C00293B71 /* SquatAnalyzer.cpp in Sources */,
 				2740E0B728E7028C00293B71 /* PlanGenerator.cpp in Sources */,
 				2740E0D028E7028C00293B71 /* StationaryCycling.cpp in Sources */,

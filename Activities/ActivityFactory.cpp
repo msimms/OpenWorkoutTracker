@@ -26,6 +26,7 @@
 #include "StationaryCycling.h"
 #include "Treadmill.h"
 #include "Triathlon.h"
+#include "VirtualCycling.h"
 #include "Walk.h"
 
 ActivityFactory::ActivityFactory()
@@ -133,6 +134,10 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 	else if (type.compare(Triathlon::Type()) == 0)
 	{
 		pActivity = new Triathlon();
+	}
+	else if (type.compare(VirtualCycling::Type()) == 0)
+	{
+		pActivity = new VirtualCycling();
 	}
 	else if (type.compare(Walk::Type()) == 0)
 	{
