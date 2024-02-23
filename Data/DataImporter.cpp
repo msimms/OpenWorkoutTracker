@@ -277,6 +277,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 
 			hrReading.type = SENSOR_TYPE_HEART_RATE;
 			hrReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_HEART_RATE, hr));
+			hrReading.time = time;
 			result = m_pDb->CreateSensorReading(m_activityId, hrReading);
 		}
 		if (power >= (double)0.0)
@@ -285,6 +286,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 
 			powerReading.type = SENSOR_TYPE_HEART_RATE;
 			powerReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_POWER, power));
+			powerReading.time = time;
 			result = m_pDb->CreateSensorReading(m_activityId, powerReading);
 		}
 		if (cadence >= (double)0.0)
@@ -293,6 +295,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 
 			cadenceReading.type = SENSOR_TYPE_HEART_RATE;
 			cadenceReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_CADENCE, cadence));
+			cadenceReading.time = time;
 			result = m_pDb->CreateSensorReading(m_activityId, cadenceReading);
 		}
 	}
