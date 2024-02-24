@@ -52,7 +52,11 @@ struct WorkoutsView: View {
 
 	var body: some View {
 		VStack(alignment: .center) {
-			
+			Text("Parameters")
+				.font(.system(size: 24))
+				.bold()
+				.padding(TOP_INSETS)
+
 			// What are you training for?
 			HStack {
 				Button("Goal") {
@@ -182,13 +186,11 @@ struct WorkoutsView: View {
 				.padding(5)
 
 			// The workouts
-			VStack(alignment: .leading) {
-				HStack() {
-					Text("Suggested Workouts")
-						.bold()
-						.padding(5)
-					Spacer()
-				}
+			VStack(alignment: .center) {
+				Text("Suggested Workouts")
+					.font(.system(size: 24))
+					.bold()
+					.padding(TOP_INSETS)
 				if self.workoutsVM.workouts.count > 0 {
 					List(self.workoutsVM.workouts, id: \.self) { item in
 						let timeStr = self.formatDateStr(ts: item.scheduledTime)
