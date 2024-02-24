@@ -30,6 +30,7 @@ struct SettingsView: View {
 			.padding(INFO_INSETS)
 
 			Text("Units")
+				.font(.system(size: 24))
 				.bold()
 			VStack(alignment: .center) {
 				Toggle("Metric", isOn: self.$preferMetric)
@@ -41,6 +42,7 @@ struct SettingsView: View {
 			.padding(5)
 
 			Text("HealthKit")
+				.font(.system(size: 24))
 				.bold()
 			VStack(alignment: .center) {
 				Toggle("Read Activities From HealthKit", isOn: self.$readActivitiesFromHealthKit)
@@ -55,6 +57,7 @@ struct SettingsView: View {
 			.padding(5)
 
 			Text("Cloud Services")
+				.font(.system(size: 24))
 				.bold()
 			VStack(alignment: .center) {
 				Toggle("Auto Save Files to iCloud Drive", isOn: self.$autoSaveActivitiesToICloudDrive)
@@ -65,6 +68,7 @@ struct SettingsView: View {
 			.padding(5)
 
 			Text("Broadcast")
+				.font(.system(size: 24))
 				.bold()
 			VStack(alignment: .center) {
 				Toggle("Enabled", isOn: self.$broadcastEnabled)

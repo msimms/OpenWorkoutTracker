@@ -30,22 +30,28 @@ struct SensorsView: View {
 					}
 				Group() {
 					Text("Sensors")
+						.font(.system(size: 24))
 						.bold()
-					ForEach(self.sensorMgr.peripherals) { sensor in
-						HStack() {
-							Text(sensor.name)
-							Spacer()
-							Button(sensor.enabled ? "Disconnect" : "Connect") {
-								sensor.enabled = !sensor.enabled
-								if sensor.enabled {
-									Preferences.addPeripheralToUse(uuid: sensor.id.uuidString)
+					if self.sensorMgr.peripherals.count > 0 {
+						ForEach(self.sensorMgr.peripherals) { sensor in
+							HStack() {
+								Text(sensor.name)
+								Spacer()
+								Button(sensor.enabled ? "Disconnect" : "Connect") {
+									sensor.enabled = !sensor.enabled
+									if sensor.enabled {
+										Preferences.addPeripheralToUse(uuid: sensor.id.uuidString)
+									}
+									else {
+										Preferences.removePeripheralFromUseList(uuid: sensor.id.uuidString)
+									}
 								}
-								else {
-									Preferences.removePeripheralFromUseList(uuid: sensor.id.uuidString)
-								}
+								.padding(5)
 							}
-							.padding(5)
 						}
+					}
+					else {
+						Text("No sensors found.")
 					}
 				}
 			}

@@ -24,7 +24,7 @@ struct EditIntervalSessionView: View {
 	@State private var showingIntervalRepsValueSelection: Bool = false
 	@State private var showingSegmentEditSelection: Bool = false
 	@State private var showingDeleteConfirmation: Bool = false
-	@State private var showingSportSelection: Bool = false
+	@State private var showingActivityTypeSelection: Bool = false
 	@State private var showingSaveFailedAlert: Bool = false
 	@State private var showingDeleteFailedAlert: Bool = false
 	@State private var showingValueEditAlert: Bool = false
@@ -44,20 +44,26 @@ struct EditIntervalSessionView: View {
 
 			Group() {
 				Text("Name")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Name", text: self.$tempName)
 					.onChange(of: self.tempName) { value in
 						self.tempSession.name = value
 					}
 			}
-			.padding(5)
+			.padding(SIDE_INSETS)
 
 			Group() {
+				Text("Activity Type")
+					.font(.system(size: 24))
+					.bold()
 				Button(self.tempSession.sport) {
-					self.showingSportSelection = true
+					self.showingActivityTypeSelection = true
 				}
+				.padding(TOP_INSETS)
+				.font(.system(size: 18))
 				.bold()
-				.confirmationDialog("Select the workout to perform", isPresented: self.$showingSportSelection, titleVisibility: .visible) {
+				.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivityTypeSelection, titleVisibility: .visible) {
 					ForEach(CommonApp.activityTypes, id: \.self) { item in
 						Button(item) {
 							self.tempSession.sport = item
@@ -65,10 +71,11 @@ struct EditIntervalSessionView: View {
 					}
 				}
 			}
-			.padding(5)
+			.padding(SIDE_INSETS)
 
 			Group() {
 				Text("Description")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Description", text: self.$tempDescription, axis: .vertical)
 					.lineLimit(2...10)
@@ -76,7 +83,7 @@ struct EditIntervalSessionView: View {
 						self.tempSession.description = value
 					}
 			}
-			.padding(5)
+			.padding(SIDE_INSETS)
 
 			Spacer()
 

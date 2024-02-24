@@ -50,6 +50,7 @@ struct ProfileView: View {
 
 			Group() {
 				Text("Biological Profile")
+					.font(.system(size: 24))
 					.bold()
 				
 				// How old is the user?
@@ -144,6 +145,7 @@ struct ProfileView: View {
 
 			Group() {
 				Text("Performance Profile")
+					.font(.system(size: 24))
 					.bold()
 
 				// How active is the user?

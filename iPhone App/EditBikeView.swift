@@ -26,26 +26,32 @@ struct EditBikeView: View {
 		VStack(alignment: .center) {
 			Group() {
 				Text("Name")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Name", text: self.$name)
 			}
+			.padding(SIDE_INSETS)
 
 			Group() {
 				Text("Description")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Description", text: self.$description, axis: .vertical)
 					.lineLimit(2...10)
 			}
+			.padding(SIDE_INSETS)
 
 			Spacer()
 
 			Group() {
 				Text("Service History")
+					.font(.system(size: 24))
 					.bold()
 				if self.serviceHistory.count > 0 {
 					List(self.serviceHistory, id: \.self) { item in
 						VStack(alignment: .leading) {
 							Text("\(self.dateFormatter.string(from: item.timeServiced))")
+								.italic()
 							Text(item.description)
 						}
 					}

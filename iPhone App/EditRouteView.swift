@@ -71,18 +71,24 @@ struct EditRouteView: View {
 		VStack(alignment: .center) {
 			Group() {
 				Text("Name")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Name", text: self.$tempRouteSummary.name)
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.background(self.colorScheme == .dark ? .black : .white)
-				
+			}
+			.padding(SIDE_INSETS)
+
+			Group() {
 				Text("Description")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Description", text: self.$tempRouteSummary.description)
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.background(self.colorScheme == .dark ? .black : .white)
 			}
-	
+			.padding(SIDE_INSETS)
+
 			Group() {
 				if self.isShowingUrlSelection == true {
 					Text("File Location (URL)")

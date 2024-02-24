@@ -22,6 +22,7 @@ struct GearView: View {
 			let shoes = self.gearVM.listShoes()
 
 			Text("Bicycles")
+				.font(.system(size: 24))
 				.bold()
 			if bikes.count > 0 {
 				List(bikes, id: \.self) { item in
@@ -42,6 +43,7 @@ struct GearView: View {
 				.fixedSize()
 
 			Text("Shoes")
+				.font(.system(size: 24))
 				.bold()
 			if shoes.count > 0 {
 				List(self.gearVM.listShoes(), id: \.self) { item in

@@ -18,16 +18,20 @@ struct EditShoesView: View {
 		VStack(alignment: .center) {
 			Group() {
 				Text("Name")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Name", text: self.$name)
 			}
+			.padding(SIDE_INSETS)
 
 			Group() {
 				Text("Description")
+					.font(.system(size: 24))
 					.bold()
 				TextField("Description", text: self.$description, axis: .vertical)
 					.lineLimit(2...10)
 			}
+			.padding(SIDE_INSETS)
 
 			Spacer()
 
