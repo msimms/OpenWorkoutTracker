@@ -108,7 +108,7 @@ class LiveActivityVM : ObservableObject {
 		if IsActivityOrphaned(&orphanedActivityIndex) || IsActivityInProgress() {
 
 			let orphanedActivityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(orphanedActivityIndex)) // const char*, no need to dealloc
-			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIndex))
+			let orphanedActivityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(orphanedActivityIdPtr))
 			var activityRecreated = false
 
 			defer {
@@ -130,7 +130,7 @@ class LiveActivityVM : ObservableObject {
 			}
 
 			if activityRecreated == false {
-				self.loadHistoricalActivityByIndex(activityIndex: orphanedActivityIndex)
+				self.loadHistoricalActivity(activityIndex: orphanedActivityIndex)
 			}
 		}
 
@@ -402,32 +402,32 @@ class LiveActivityVM : ObservableObject {
 		}
 	}
 	
-	func loadHistoricalActivityByIndex(activityIndex: size_t) {
+	func loadHistoricalActivity(activityIndex: size_t) {
 		// Delete any cached data.
-		FreeHistoricalActivityObject(activityIndex)
-		FreeHistoricalActivitySensorData(activityIndex)
+		FreeHistoricalActivityObject(self.activityId)
+		FreeHistoricalActivitySensorData(self.activityId)
 		
 		// Create the object.
-		CreateHistoricalActivityObject(activityIndex)
+		CreateHistoricalActivityObject(self.activityId)
 		
 		// Load all data.
-		LoadHistoricalActivitySummaryData(activityIndex)
-		if LoadAllHistoricalActivitySensorData(activityIndex) {
+		LoadHistoricalActivitySummaryData(self.activityId)
+		if LoadAllHistoricalActivitySensorData(self.activityId) {
 			var startTime: time_t = 0
 			var endTime: time_t = 0
 			
-			GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime)
+			GetHistoricalActivityStartAndEndTime(self.activityId, &startTime, &endTime)
 			
 			// If the activity was orphaned then the end time will be zero.
 			if endTime == 0 {
-				FixHistoricalActivityEndTime(activityIndex)
+				FixHistoricalActivityEndTime(self.activityId)
 			}
 			
-			if SaveHistoricalActivitySummaryData(activityIndex) {
-				if LoadHistoricalActivitySummaryData(activityIndex) == false {
+			if SaveHistoricalActivitySummaryData(self.activityId) {
+				if LoadHistoricalActivitySummaryData(self.activityId) == false {
 					NSLog("Failed to load historical activity summary data.")
 				}
-				if LoadHistoricalActivityLapData(activityIndex) == false {
+				if LoadHistoricalActivityLapData(self.activityId) == false {
 					NSLog("Failed to load historical activity lap data.")
 				}
 			}

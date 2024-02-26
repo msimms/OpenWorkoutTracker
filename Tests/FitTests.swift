@@ -53,10 +53,9 @@ final class FitTests: XCTestCase {
 				
 				// Refresh the database metadata.
 				InitializeHistoricalActivityList()
-				let activityIndex = ConvertActivityIdToActivityIndex(activityId.uuidString)
-				XCTAssert(CreateHistoricalActivityObject(activityIndex))
+				XCTAssert(CreateHistoricalActivityObject(activityId.uuidString))
 				XCTAssert((ExportActivityFromDatabase(activityId.uuidString, FILE_FIT, tempUrl.absoluteString) != nil))
-				XCTAssert(LoadAllHistoricalActivitySensorData(activityIndex))
+				XCTAssert(LoadAllHistoricalActivitySensorData(activityId.uuidString))
 				
 				// Clean up.
 				XCTAssert(DeleteActivityFromDatabase(activityId.uuidString))

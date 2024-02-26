@@ -7,7 +7,6 @@ import Foundation
 
 class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable, ObservableObject {
 	enum CodingKeys: CodingKey {
-		case index
 		case id
 		case name
 		case description
@@ -20,7 +19,6 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable, 
 		case healthkit
 	}
 	
-	var index: Int = ACTIVITY_INDEX_UNKNOWN // Index into the history cache
 	var id: String = "" // Unique identifier for the activity
 	var userId: String = Preferences.userId() // Unique identifier for the activity owner
 	var name: String = "" // Activity name

@@ -38,6 +38,8 @@
 #include <time.h>
 #include <sys/time.h>
 
+#define ACTIVITY_INDEX_UNKNOWN (size_t)-1
+
 //
 // Private utility functions.
 //
@@ -178,6 +180,11 @@ extern "C" {
 	std::vector<Route>            g_routes;                 // cache of routes
 	std::vector<Workout>          g_workouts;               // cache of planned workouts
 	WorkoutPlanGenerator          g_workoutGen;             // suggests workouts for the next week
+
+	bool ValidActivityIndex(size_t activityIndex)
+	{
+		return (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN);
+	}
 
 	//
 	// Functions for managing the database.
@@ -2079,7 +2086,7 @@ extern "C" {
 
 	const char* const ConvertActivityIndexToActivityId(size_t activityIndex)
 	{
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		if (ValidActivityIndex(activityIndex))
 		{
 			return g_historicalActivityList.at(activityIndex).activityId.c_str();
 		}
@@ -2117,12 +2124,14 @@ extern "C" {
 			// Get the activities from of the database.
 			if (g_pDatabase->RetrieveActivities(g_historicalActivityList))
 			{
-				for (size_t activityIndex = 0; activityIndex < g_historicalActivityList.size(); ++activityIndex)
+				size_t activityIndex = 0;
+
+				for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 				{
-					ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+					ActivitySummary& summary = (*iter);
 
 					// Build the activity id to index hash map.
-					g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex));
+					g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, activityIndex++));
 
 					// Load cached summary data because this is quicker than recreated the activity
 					// object and recomputing everything.
@@ -2151,8 +2160,8 @@ extern "C" {
 				g_historicalActivityList.push_back(summary);
 
 				// Build the activity id to index hash map.
-				g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, 0));
-				
+				g_activityIdMap.insert(std::pair<std::string, size_t>(summary.activityId, g_historicalActivityList.size()));
+
 				// Load cached summary data because this is quicker than recreated the activity
 				// object and recomputing everything.
 				g_pDatabase->RetrieveSummaryData(summary.activityId, summary.summaryAttributes);
@@ -2174,14 +2183,16 @@ extern "C" {
 		return initialized;
 	}
 
-	bool CreateHistoricalActivityObject(size_t activityIndex)
+	bool CreateHistoricalActivityObject(const char* const activityId)
 	{
 		bool result = false;
 
 		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
-		if (g_pActivityFactory && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (g_pActivityFactory && ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2198,36 +2209,27 @@ extern "C" {
 		return result;
 	}
 
-	bool CreateHistoricalActivityObjectById(const char* activityId)
-	{
-		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
-
-		if (activityIndex != ACTIVITY_INDEX_UNKNOWN)
-		{
-			return CreateHistoricalActivityObject(activityIndex);
-		}
-		return false;
-	}
-
 	bool CreateAllHistoricalActivityObjects()
 	{
 		bool result = true;
 
-		for (size_t i = 0; i < g_historicalActivityList.size(); ++i)
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
-			result &= CreateHistoricalActivityObject(i);
+			result &= CreateHistoricalActivityObject(iter->activityId.c_str());
 		}
 		return result;
 	}
 
-	bool LoadHistoricalActivityLapData(size_t activityIndex)
+	bool LoadHistoricalActivityLapData(const char* const activityId)
 	{
 		bool result = false;
 
 		g_historicalActivityLock.lock();		
 		g_dbLock.lock();
 
-		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (g_pDatabase && ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2252,13 +2254,15 @@ extern "C" {
 	}
 
 	/// Internal function - not exported because of the mutex around g_historicalActivityList
-	bool LoadHistoricalActivitySensorData(size_t activityIndex, SensorType sensor, SensorDataCallback callback, void* context)
+	bool LoadHistoricalActivitySensorData(const char* const activityId, SensorType sensor, SensorDataCallback callback, void* context)
 	{
 		bool result = false;
 
 		g_dbLock.lock();
 
-		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (g_pDatabase && ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2412,13 +2416,15 @@ extern "C" {
 		return result;
 	}
 
-	bool LoadAllHistoricalActivitySensorData(size_t activityIndex)
+	bool LoadAllHistoricalActivitySensorData(const char* const activityId)
 	{
 		bool result = true;
 
 		g_historicalActivityLock.lock();
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2430,7 +2436,7 @@ extern "C" {
 
 				for (auto iter = sensorTypes.begin(); iter != sensorTypes.end() && result; ++iter)
 				{
-					if (!LoadHistoricalActivitySensorData(activityIndex, (*iter), NULL, NULL))
+					if (!LoadHistoricalActivitySensorData(activityId, (*iter), NULL, NULL))
 					{
 						result = false;
 					}
@@ -2453,14 +2459,16 @@ extern "C" {
 		return result;
 	}
 
-	bool LoadHistoricalActivitySummaryData(size_t activityIndex)
+	bool LoadHistoricalActivitySummaryData(const char* const activityId)
 	{
 		bool result = false;
 
 		g_historicalActivityLock.lock();
 		g_dbLock.lock();
 
-		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (g_pDatabase && ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2491,19 +2499,21 @@ extern "C" {
 	{
 		bool result = true;
 
-		for (size_t i = 0; i < g_historicalActivityList.size(); ++i)
+		for (auto iter = g_historicalActivityList.begin(); iter != g_historicalActivityList.end(); ++iter)
 		{
-			result &= LoadHistoricalActivitySummaryData(i);
+			result &= LoadHistoricalActivitySummaryData(iter->activityId.c_str());
 		}
 		return result;
 	}
 
-	bool SaveHistoricalActivitySummaryData(size_t activityIndex)
+	bool SaveHistoricalActivitySummaryData(const char* const activityId)
 	{
 		bool result = false;
 
 		g_historicalActivityLock.lock();
 		g_dbLock.lock();
+
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
 
 		if (g_pDatabase && (activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
 		{
@@ -2567,9 +2577,11 @@ extern "C" {
 		g_historicalActivityLock.unlock();
 	}
 
-	void FreeHistoricalActivityObject(size_t activityIndex)
+	void FreeHistoricalActivityObject(const char* const activityId)
 	{
 		g_historicalActivityLock.lock();
+
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
 
 		if (activityIndex < g_historicalActivityList.size())
 		{
@@ -2585,11 +2597,13 @@ extern "C" {
 		g_historicalActivityLock.unlock();
 	}
 
-	void FreeHistoricalActivitySensorData(size_t activityIndex)
+	void FreeHistoricalActivitySensorData(const char* const activityId)
 	{
 		g_historicalActivityLock.lock();
 
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2603,13 +2617,16 @@ extern "C" {
 		g_historicalActivityLock.unlock();
 	}
 
-	void FreeHistoricalActivitySummaryData(size_t activityIndex)
+	void FreeHistoricalActivitySummaryData(const char* const activityId)
 	{
 		g_historicalActivityLock.lock();
 
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
 			summary.summaryAttributes.clear();
 		}
 
@@ -2620,13 +2637,13 @@ extern "C" {
 	// Functions for accessing historical data.
 	//
 
-	bool GetHistoricalActivityStartAndEndTime(size_t activityIndex, time_t* const startTime, time_t* const endTime)
+	bool GetHistoricalActivityStartAndEndTimeByIndex(size_t activityIndex, time_t* const startTime, time_t* const endTime)
 	{
 		bool result = false;
-
+		
 		g_historicalActivityLock.lock();
-
-		if (activityIndex < g_historicalActivityList.size())
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			if (startTime)
 				(*startTime) = g_historicalActivityList.at(activityIndex).startTime;
@@ -2634,19 +2651,27 @@ extern "C" {
 				(*endTime) = g_historicalActivityList.at(activityIndex).endTime;
 			result = true;
 		}
-
+		
 		g_historicalActivityLock.unlock();
-
+		
 		return result;
+	}
+
+	bool GetHistoricalActivityStartAndEndTime(const char* const activityId, time_t* const startTime, time_t* const endTime)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		return GetHistoricalActivityStartAndEndTimeByIndex(activityIndex, startTime, endTime);
 	}
 
 	// Finds the most recent sensor reading and uses it as the end time for the activity.
 	// This is useful if the activity was not ended properly (app crash, phone reboot, etc.)
-	void FixHistoricalActivityEndTime(size_t activityIndex)
+	void FixHistoricalActivityEndTime(const char* const activityId)
 	{
 		g_historicalActivityLock.lock();
 
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2669,13 +2694,15 @@ extern "C" {
 		g_historicalActivityLock.unlock();
 	}
 
-	char* GetHistoricalActivityType(size_t activityIndex)
+	char* GetHistoricalActivityType(const char* const activityId)
 	{
 		char* result = NULL;
 
 		g_historicalActivityLock.lock();
 
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			result = strdup(g_historicalActivityList.at(activityIndex).type.c_str());
 		}
@@ -2685,13 +2712,15 @@ extern "C" {
 		return result;
 	}
 
-	char* GetHistoricalActivityName(size_t activityIndex)
+	char* GetHistoricalActivityName(const char* const activityId)
 	{
 		char* result = NULL;
 
 		g_historicalActivityLock.lock();
 
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			result = strdup(g_historicalActivityList.at(activityIndex).name.c_str());
 		}
@@ -2701,13 +2730,15 @@ extern "C" {
 		return result;
 	}
 
-	char* GetHistoricalActivityDescription(size_t activityIndex)
+	char* GetHistoricalActivityDescription(const char* const activityId)
 	{
 		char* result = NULL;
 		
 		g_historicalActivityLock.lock();
 		
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			result = strdup(g_historicalActivityList.at(activityIndex).description.c_str());
 		}
@@ -2717,9 +2748,11 @@ extern "C" {
 		return result;
 	}
 
-	char* GetHistoricalActivityAttributeName(size_t activityIndex, size_t attributeNameIndex)
+	char* GetHistoricalActivityAttributeName(const char* const activityId, size_t attributeNameIndex)
 	{
-		if (activityIndex < g_historicalActivityList.size())
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2739,11 +2772,13 @@ extern "C" {
 		return NULL;
 	}
 
-	ActivityAttributeType QueryHistoricalActivityAttribute(size_t activityIndex, const char* const pAttributeName)
+	ActivityAttributeType QueryHistoricalActivityAttribute(const char* const activityId, const char* const pAttributeName)
 	{
 		ActivityAttributeType result;
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2765,13 +2800,15 @@ extern "C" {
 		return result;
 	}
 
-	size_t GetNumHistoricalActivityAccelerometerReadings(size_t activityIndex)
+	size_t GetNumHistoricalActivityAccelerometerReadings(const char* const activityId)
 	{
 		size_t result = 0;
 
 		g_historicalActivityLock.lock();
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			result = summary.accelerometerReadings.size();
@@ -2782,13 +2819,15 @@ extern "C" {
 		return result;
 	}
 
-	size_t GetNumHistoricalActivityAttributes(size_t activityIndex)
+	size_t GetNumHistoricalActivityAttributes(const char* const activityId)
 	{
 		size_t result = 0;
 
 		g_historicalActivityLock.lock();
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2838,11 +2877,13 @@ extern "C" {
 		return numActivities;
 	}
 
-	void SetHistoricalActivityAttribute(size_t activityIndex, const char* const attributeName, ActivityAttributeType attributeValue)
+	void SetHistoricalActivityAttribute(const char* const activityId, const char* const attributeName, ActivityAttributeType attributeValue)
 	{
 		g_historicalActivityLock.lock();
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2855,9 +2896,11 @@ extern "C" {
 		g_historicalActivityLock.unlock();
 	}
 
-	bool IsHistoricalActivityFootBased(size_t activityIndex)
+	bool IsHistoricalActivityFootBased(const char* const activityId)
 	{
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2870,9 +2913,11 @@ extern "C" {
 		return false;
 	}
 
-	bool IsHistoricalActivityMovingActivity(size_t activityIndex)
+	bool IsHistoricalActivityMovingActivity(const char* const activityId)
 	{
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			
@@ -2885,9 +2930,11 @@ extern "C" {
 		return false;
 	}
 
-	bool IsHistoricalActivityLiftingActivity(size_t activityIndex)
+	bool IsHistoricalActivityLiftingActivity(const char* const activityId)
 	{
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			
@@ -2904,13 +2951,15 @@ extern "C" {
 	// Functions for accessing historical routes.
 	//
 
-	size_t GetNumHistoricalActivityLocationPoints(size_t activityIndex)
+	size_t GetNumHistoricalActivityLocationPoints(const char* const activityId)
 	{
 		size_t result = 0;
 
 		g_historicalActivityLock.lock();
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+		
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 			result = summary.locationPoints.size();
@@ -2921,7 +2970,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetHistoricalActivityLocationPoint(size_t activityIndex, size_t pointIndex, Coordinate* const coordinate)
+	bool GetHistoricalActivityLocationPoint(const char* const activityId, size_t pointIndex, Coordinate* const coordinate)
 	{
 		bool result = false;
 
@@ -2929,7 +2978,9 @@ extern "C" {
 		{
 			g_historicalActivityLock.lock();
 
-			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+			size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+			
+			if (ValidActivityIndex(activityIndex))
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -2954,13 +3005,15 @@ extern "C" {
 	// Functions for accessing historical sensor data.
 	//
 
-	size_t GetNumHistoricalSensorReadings(size_t activityIndex, SensorType sensorType)
+	size_t GetNumHistoricalSensorReadings(const char* const activityId, SensorType sensorType)
 	{
 		size_t result = 0;
 
 		g_historicalActivityLock.lock();
 
-		if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
 		{
 			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -3002,7 +3055,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetHistoricalActivitySensorReading(size_t activityIndex, SensorType sensorType, size_t readingIndex, time_t* const readingTime, double* const readingValue)
+	bool GetHistoricalActivitySensorReading(const char* const activityId, SensorType sensorType, size_t readingIndex, time_t* const readingTime, double* const readingValue)
 	{
 		bool result = false;
 		
@@ -3010,7 +3063,9 @@ extern "C" {
 		{
 			g_historicalActivityLock.lock();
 
-			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+			size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+			if (ValidActivityIndex(activityIndex))
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 				
@@ -3067,7 +3122,7 @@ extern "C" {
 		return result;
 	}
 
-	bool GetHistoricalActivityAccelerometerReading(size_t activityIndex, size_t readingIndex, time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue)
+	bool GetHistoricalActivityAccelerometerReading(const char* const activityId, size_t readingIndex, time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue)
 	{
 		bool result = false;
 		
@@ -3075,7 +3130,9 @@ extern "C" {
 		{
 			g_historicalActivityLock.lock();
 
-			if ((activityIndex < g_historicalActivityList.size()) && (activityIndex != ACTIVITY_INDEX_UNKNOWN))
+			size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+			if (ValidActivityIndex(activityIndex))
 			{
 				ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
@@ -3691,8 +3748,8 @@ extern "C" {
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
 				g_pCurrentActivity = summary.pActivity;
 
-				LoadHistoricalActivityLapData(activityIndex);
-				LoadAllHistoricalActivitySensorData(activityIndex);
+				LoadHistoricalActivityLapData(summary.activityId.c_str());
+				LoadAllHistoricalActivitySensorData(summary.activityId.c_str());
 				
 				summary.pActivity = NULL;
 			}
@@ -3986,7 +4043,7 @@ extern "C" {
 			time_t endTime = 0;
 
 			(*activityIndex) = numActivities - 1;
-			GetHistoricalActivityStartAndEndTime((*activityIndex), &startTime, &endTime);
+			GetHistoricalActivityStartAndEndTimeByIndex((*activityIndex), &startTime, &endTime);
 			result = (endTime == 0);
 		}
 		return result;
@@ -4098,7 +4155,7 @@ extern "C" {
 			{
 				if (!current.pActivity)
 				{
-					CreateHistoricalActivityObjectById(activityId);
+					CreateHistoricalActivityObject(activityId);
 				}
 				pActivity = current.pActivity;
 				break;

@@ -63,10 +63,9 @@ final class PeakFindingTests: XCTestCase {
 
 				// Refresh the database metadata.
 				InitializeHistoricalActivityList()
-				let activityIndex = ConvertActivityIdToActivityIndex(activityId.uuidString)
-				XCTAssert(CreateHistoricalActivityObject(activityIndex))
-				XCTAssert(SaveHistoricalActivitySummaryData(activityIndex))
-				XCTAssert(LoadAllHistoricalActivitySensorData(activityIndex))
+				XCTAssert(CreateHistoricalActivityObject(activityId.uuidString))
+				XCTAssert(SaveHistoricalActivitySummaryData(activityId.uuidString))
+				XCTAssert(LoadAllHistoricalActivitySensorData(activityId.uuidString))
 
 				// Clean up.
 				XCTAssert(DeleteActivityFromDatabase(activityId.uuidString))

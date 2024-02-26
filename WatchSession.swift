@@ -306,9 +306,9 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 
 		if numHistoricalActivities > 0 {
 			let activityIndex = ConvertActivityIdToActivityIndex(activityId)
-			let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIndex))
-			let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
-			let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityIndex))
+			let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityId))
+			let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityId))
+			let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityId))
 
 			defer {
 				if activityTypePtr != nil {
@@ -331,7 +331,7 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 				var startTime: time_t = 0
 				var endTime: time_t = 0
 
-				if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
+				if GetHistoricalActivityStartAndEndTime(activityId, &startTime, &endTime) {
 					let groupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.mjs-software.OpenWorkoutTracker")
 					if groupUrl != nil {
 						let summary = ActivitySummary()

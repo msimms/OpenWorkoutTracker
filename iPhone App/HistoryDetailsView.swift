@@ -358,11 +358,11 @@ struct HistoryDetailsView: View {
 								Label("Edit", systemImage: "pencil")
 							}
 							.confirmationDialog("Edit", isPresented: self.$showingEditSelection, titleVisibility: .visible) {
-								if IsHistoricalActivityLiftingActivity(self.activityVM.activityIndex) {
+								if IsHistoricalActivityLiftingActivity(self.activityVM.activityId) {
 									Button("Fix Repetition Count") {
 										let newValue = InitializeActivityAttribute(TYPE_INTEGER, MEASURE_COUNT, UNIT_SYSTEM_METRIC)
-										SetHistoricalActivityAttribute(self.activityVM.activityIndex, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, newValue)
-										SaveHistoricalActivitySummaryData(self.activityVM.activityIndex)
+										SetHistoricalActivityAttribute(self.activityVM.activityId, ACTIVITY_ATTRIBUTE_REPS_CORRECTED, newValue)
+										SaveHistoricalActivitySummaryData(self.activityVM.activityId)
 									}
 								}
 								Button("Change Activity Type") {
@@ -474,7 +474,7 @@ struct HistoryDetailsView: View {
 								}
 							}
 							.confirmationDialog("Export", isPresented: self.$showingFormatSelection, titleVisibility: .visible) {
-								if IsHistoricalActivityMovingActivity(self.activityVM.activityIndex) {
+								if IsHistoricalActivityMovingActivity(self.activityVM.activityId) {
 									Button("GPX") {
 										do {
 											if self.exportDestination == ExportDest.icloud {

@@ -56,7 +56,7 @@ class HistoryVM : ObservableObject {
 					var startTime: time_t = 0
 					var endTime: time_t = 0
 					
-					if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
+					if GetHistoricalActivityStartAndEndTimeByIndex(activityIndex, &startTime, &endTime) {
 						HealthManager.shared.removeActivitiesThatOverlapWithStartTime(startTime: startTime, endTime:endTime)
 					}
 				}
@@ -69,7 +69,6 @@ class HistoryVM : ObservableObject {
 				summary.id = workout.key
 				summary.name = ""
 				summary.type = HealthManager.healthKitWorkoutToActivityType(workout: workout.value)
-				summary.index = ACTIVITY_INDEX_UNKNOWN
 				summary.startTime = workout.value.startDate
 				summary.endTime = workout.value.endDate
 				summary.source = ActivitySummary.Source.healthkit
@@ -103,17 +102,17 @@ class HistoryVM : ObservableObject {
 				// Load all data.
 				var startTime: time_t = 0
 				var endTime: time_t = 0
-				if GetHistoricalActivityStartAndEndTime(activityIndex, &startTime, &endTime) {
-					
-					if endTime == 0 {
-						FixHistoricalActivityEndTime(activityIndex)
-					}
+				if GetHistoricalActivityStartAndEndTimeByIndex(activityIndex, &startTime, &endTime) {
 					
 					let activityIdPtr = UnsafeRawPointer(ConvertActivityIndexToActivityId(activityIndex)) // this one is a const char*, so don't dealloc it
 					
-					let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIndex))
-					let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIndex))
-					let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityIndex))
+					let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityIdPtr))
+					let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityIdPtr))
+					let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityIdPtr))
+					
+					if endTime == 0 {
+						FixHistoricalActivityEndTime(activityIdPtr)
+					}
 					
 					defer {
 						activityTypePtr!.deallocate()
@@ -136,7 +135,6 @@ class HistoryVM : ObservableObject {
 						summary.name = activityName
 						summary.type = activityType
 						summary.description = activityDesc
-						summary.index = activityIndex
 						summary.startTime = Date(timeIntervalSince1970: TimeInterval(startTime))
 						summary.endTime = Date(timeIntervalSince1970: TimeInterval(endTime))
 						summary.source = ActivitySummary.Source.database

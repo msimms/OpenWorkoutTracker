@@ -28,7 +28,6 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	
 	@Published private(set) var state = State.empty
 	var source: ActivitySummary.Source = ActivitySummary.Source.database
-	var activityIndex: Int = ACTIVITY_INDEX_UNKNOWN // Index into the cache of loaded activities
 	var activityId: String = ""                     // Unique identifier for the activity
 	var userId: String = ""                         // Unique identifier for the activity owner
 	@Published var name: String = ""                // Name of the activity
@@ -60,7 +59,6 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		self.userId = activitySummary.userId
 		self.name = activitySummary.name
 		self.description = activitySummary.description
-		self.activityIndex = activitySummary.index
 	}
 	
 	/// @brief Hashable overrides
@@ -78,26 +76,14 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		// Activity is from the app database.
 		if self.source == ActivitySummary.Source.database {
 			
-			// If a database index wasn't provided then we probably needed to load the activity summary from the database.
-			// The activity index will be zero because it will be the only activity loaded.
-			if self.activityIndex == ACTIVITY_INDEX_UNKNOWN {
-				LoadHistoricalActivity(self.activityId)
-				self.activityIndex = ConvertActivityIdToActivityIndex(self.activityId)
-			}
+			// Retrieve all the sensor and location data.
+			self.loadActivityFromDb()
 			
-			// Should never happen, but just in case.
-			if self.activityIndex != ACTIVITY_INDEX_UNKNOWN {
-				CreateHistoricalActivityObject(self.activityIndex)
-				
-				// Retrieve all the sensor and location data.
-				self.loadSensorDataFromDb()
-				
-				// Make sure we have the latest name, description, etc.
-				let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
-				
-				// Retrieve photo URLs.
-				let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
-			}
+			// Make sure we have the latest name, description, etc.
+			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
+			
+			// Retrieve photo URLs.
+			let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
 		}
 		
 		// Activity is from HealthKit.
@@ -144,15 +130,19 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		}
 	}
 	
-	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in our own database.
-	func loadSensorDataFromDb() {
-		if LoadHistoricalActivityLapData(self.activityIndex) && LoadAllHistoricalActivitySensorData(self.activityIndex) {
+	/// @brief Loads the activity and all associated data (location, heart rate, power, etc.) for activities in our own database.
+	func loadActivityFromDb() {
+		LoadHistoricalActivity(self.activityId)
+		
+		if CreateHistoricalActivityObject(self.activityId) &&
+			LoadHistoricalActivityLapData(self.activityId) &&
+			LoadAllHistoricalActivitySensorData(self.activityId) {
 			
 			// Location points
 			self.locationTrack = []
 			self.pace = []
 			self.speed = []
-			let numLocationPoints = GetNumHistoricalActivityLocationPoints(self.activityIndex)
+			let numLocationPoints = GetNumHistoricalActivityLocationPoints(self.activityId)
 			if numLocationPoints > 0 {
 				var prevCoordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 				var speedConversion = 3.6
@@ -164,7 +154,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 				for pointIndex in 0...numLocationPoints - 1 {
 					var currentCoordinate = Coordinate(latitude: 0.0, longitude: 0.0, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
 					
-					if GetHistoricalActivityLocationPoint(self.activityIndex, pointIndex, &currentCoordinate) {
+					if GetHistoricalActivityLocationPoint(self.activityId, pointIndex, &currentCoordinate) {
 						
 						if self.locationTrack.count > 0 {
 							let distance = DistanceBetweenCoordinates(prevCoordinate, currentCoordinate)
@@ -195,14 +185,14 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			
 			// Heart rate readings
 			self.heartRate = []
-			let numHeartRateReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_HEART_RATE)
+			let numHeartRateReadings = GetNumHistoricalSensorReadings(self.activityId, SENSOR_TYPE_HEART_RATE)
 			if numHeartRateReadings > 0 {
 				
 				for pointIndex in 0...numHeartRateReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
 					
-					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_HEART_RATE, pointIndex, &timestamp, &value) {
+					if GetHistoricalActivitySensorReading(self.activityId, SENSOR_TYPE_HEART_RATE, pointIndex, &timestamp, &value) {
 						self.heartRate.append((UInt64(timestamp), value))
 					}
 				}
@@ -210,14 +200,14 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			
 			// Cadence readings
 			self.cadence = []
-			let numCadenceReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_CADENCE)
+			let numCadenceReadings = GetNumHistoricalSensorReadings(self.activityId, SENSOR_TYPE_CADENCE)
 			if numCadenceReadings > 0 {
 				
 				for pointIndex in 0...numCadenceReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
 					
-					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_CADENCE, pointIndex, &timestamp, &value) {
+					if GetHistoricalActivitySensorReading(self.activityId, SENSOR_TYPE_CADENCE, pointIndex, &timestamp, &value) {
 						self.cadence.append((UInt64(timestamp), value))
 					}
 				}
@@ -225,14 +215,14 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			
 			// Power readings
 			self.power = []
-			let numPowerReadings = GetNumHistoricalSensorReadings(self.activityIndex, SENSOR_TYPE_POWER)
+			let numPowerReadings = GetNumHistoricalSensorReadings(self.activityId, SENSOR_TYPE_POWER)
 			if numPowerReadings > 0 {
 				
 				for pointIndex in 0...numPowerReadings - 1 {
 					var timestamp: time_t = 0
 					var value: Double = 0.0
 					
-					if GetHistoricalActivitySensorReading(self.activityIndex, SENSOR_TYPE_POWER, pointIndex, &timestamp, &value) {
+					if GetHistoricalActivitySensorReading(self.activityId, SENSOR_TYPE_POWER, pointIndex, &timestamp, &value) {
 						self.power.append((UInt64(timestamp), value))
 					}
 				}
@@ -242,7 +232,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			self.x = []
 			self.y = []
 			self.z = []
-			let numAccelPoints = GetNumHistoricalActivityAccelerometerReadings(self.activityIndex)
+			let numAccelPoints = GetNumHistoricalActivityAccelerometerReadings(self.activityId)
 			if numAccelPoints > 0 {
 				
 				for pointIndex in 0...numAccelPoints - 1 {
@@ -251,7 +241,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 					var yValue: Double = 0.0
 					var zValue: Double = 0.0
 					
-					if GetHistoricalActivityAccelerometerReading(self.activityIndex, pointIndex, &timestamp, &xValue, &yValue, &zValue) {
+					if GetHistoricalActivityAccelerometerReading(self.activityId, pointIndex, &timestamp, &xValue, &yValue, &zValue) {
 						self.x.append((UInt64(timestamp), xValue))
 						self.y.append((UInt64(timestamp), xValue))
 						self.z.append((UInt64(timestamp), xValue))
@@ -262,7 +252,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	}
 	
 	func isMovingActivity() -> Bool {
-		return IsHistoricalActivityMovingActivity(self.activityIndex)
+		return IsHistoricalActivityMovingActivity(self.activityId)
 	}
 	
 	/// @brief Returns a list of attributes attribute names that are applicable to this activity.
@@ -270,11 +260,11 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		var attributeList: Array<String> = []
 		
 		if self.source == ActivitySummary.Source.database {
-			let numAttributes = GetNumHistoricalActivityAttributes(self.activityIndex)
+			let numAttributes = GetNumHistoricalActivityAttributes(self.activityId)
 			
 			if numAttributes > 0 {
 				for attributeIndex in 0...numAttributes - 1 {
-					let attributeNamePtr = UnsafeRawPointer(GetHistoricalActivityAttributeName(self.activityIndex, attributeIndex))
+					let attributeNamePtr = UnsafeRawPointer(GetHistoricalActivityAttributeName(self.activityId, attributeIndex))
 					
 					if attributeNamePtr != nil {
 						defer {
@@ -303,7 +293,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		if self.heartRate.count > 0 {
 			attributeList.append("Heart Rate")
 		}
-		if IsHistoricalActivityMovingActivity(self.activityIndex) {
+		if IsHistoricalActivityMovingActivity(self.activityId) {
 			if self.cadence.count > 0 {
 				attributeList.append("Cadence")
 			}
@@ -317,7 +307,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 				attributeList.append("Speed")
 			}
 		}
-		else if IsHistoricalActivityLiftingActivity(self.activityIndex) {
+		else if IsHistoricalActivityLiftingActivity(self.activityId) {
 			if self.x.count > 0 {
 				attributeList.append("X Axis")
 			}
@@ -334,7 +324,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	func getKilometerSplits() -> Array<time_t> {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + "1"
-		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 		var splitTotal: time_t = 0
 		var splitIndex = 1
 		
@@ -344,7 +334,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_KM + String(splitIndex)
-			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+			attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 			splitTotal += currentSplit
 		}
 		
@@ -354,7 +344,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	func getMileSplits() -> Array<time_t> {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + "1"
-		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 		var splitTotal: time_t = 0
 		var splitIndex = 1
 		
@@ -364,7 +354,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_SPLIT_TIME_MILE + String(splitIndex)
-			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+			attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 			splitTotal += currentSplit
 		}
 		
@@ -374,7 +364,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	func getLapSplits() -> Array<time_t> {
 		var result: Array<time_t> = []
 		var attributeName = ACTIVITY_ATTRIBUTE_LAP_TIME + "1"
-		var attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+		var attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 		var splitIndex = 1
 		
 		while attribute.valid {
@@ -384,7 +374,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			
 			splitIndex += 1
 			attributeName = ACTIVITY_ATTRIBUTE_LAP_TIME + String(splitIndex)
-			attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+			attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 		}
 		
 		return result
@@ -397,7 +387,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	
 	func getActivityAttributeValueStr(attributeName: String) -> String {
 		if self.source == ActivitySummary.Source.database {
-			let attribute = QueryHistoricalActivityAttribute(self.activityIndex, attributeName)
+			let attribute = QueryHistoricalActivityAttribute(self.activityId, attributeName)
 			
 			if attribute.valid {
 				return self.formatActivityAttribute(attribute: attribute)
@@ -419,7 +409,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		var endTime: time_t = 0
 		
 		if self.source == ActivitySummary.Source.database {
-			GetHistoricalActivityStartAndEndTime(self.activityIndex, &startTime, &endTime)
+			GetHistoricalActivityStartAndEndTime(self.activityId, &startTime, &endTime)
 		}
 		else if self.source == ActivitySummary.Source.healthkit {
 		}
@@ -431,7 +421,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		var endTime: time_t = 0
 		
 		if self.source == ActivitySummary.Source.database {
-			GetHistoricalActivityStartAndEndTime(self.activityIndex, &startTime, &endTime)
+			GetHistoricalActivityStartAndEndTime(self.activityId, &startTime, &endTime)
 		}
 		else if self.source == ActivitySummary.Source.healthkit {
 		}
@@ -439,12 +429,12 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	}
 	
 	func getFastestMile() -> time_t {
-		let fastest = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_FASTEST_MILE)
+		let fastest = QueryHistoricalActivityAttribute(self.activityId, ACTIVITY_ATTRIBUTE_FASTEST_MILE)
 		return fastest.value.timeVal
 	}
 	
 	func getFastestKm() -> time_t {
-		let fastest = QueryHistoricalActivityAttribute(self.activityIndex, ACTIVITY_ATTRIBUTE_FASTEST_KM)
+		let fastest = QueryHistoricalActivityAttribute(self.activityId, ACTIVITY_ATTRIBUTE_FASTEST_KM)
 		return fastest.value.timeVal
 	}
 	
@@ -586,8 +576,8 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	func listValidGearNames() -> Array<String> {
 		var names: Array<String> = []
 		
-		if IsHistoricalActivityMovingActivity(self.activityIndex) {
-			if IsHistoricalActivityFootBased(self.activityIndex) {
+		if IsHistoricalActivityMovingActivity(self.activityId) {
+			if IsHistoricalActivityFootBased(self.activityId) {
 				let gearVM: GearVM = GearVM()
 				let shoes = gearVM.listShoes()
 				for shoe in shoes {

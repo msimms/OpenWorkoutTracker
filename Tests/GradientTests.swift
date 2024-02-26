@@ -44,8 +44,8 @@ final class GradientTests: XCTestCase {
 			// Refresh the database metadata.
 			InitializeHistoricalActivityList()
 			let activityIndex = ConvertActivityIdToActivityIndex(activityId.uuidString)
-			XCTAssert(CreateHistoricalActivityObject(activityIndex))
-			XCTAssert(LoadAllHistoricalActivitySensorData(activityIndex))
+			XCTAssert(CreateHistoricalActivityObject(activityId.uuidString))
+			XCTAssert(LoadAllHistoricalActivitySensorData(activityId.uuidString))
 			
 			// Query the average gradient.
 			let avgGradient = QueryHistoricalActivityAttribute(activityIndex, ACTIVITY_ATTRIBUTE_AVG_GRADIENT)
