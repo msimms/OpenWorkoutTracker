@@ -78,6 +78,7 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.logoutProcessed), name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGGED_OUT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.friendsListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.requestToFollowResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.requestUserSettingsResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_USER_SETTINGS_RESULT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.downloadedActivityReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: nil)
@@ -141,6 +142,8 @@ class CommonApp : ObservableObject {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_SUCCESS
+					
+					// This will request all the things we need from the server.
 					let _ = ApiClient.shared.syncWithServer()
 				}
 				else {
@@ -180,7 +183,8 @@ class CommonApp : ObservableObject {
 							}
 						}
 						
-						let _ = ApiClient.shared.syncWithServer() // re-sync
+						// This will request all the things we need from the server.
+						let _ = ApiClient.shared.syncWithServer()
 					}
 					else {
 						ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_FAILURE
@@ -197,7 +201,9 @@ class CommonApp : ObservableObject {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
 				if responseCode.statusCode == 200 {
 					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_SUCCESS
-					let _ = ApiClient.shared.syncWithServer() // re-sync
+
+					// This will request all the things we need from the server.
+					let _ = ApiClient.shared.syncWithServer()
 				}
 				else {
 					ApiClient.shared.loginStatus = LoginStatus.LOGIN_STATUS_FAILURE
@@ -243,6 +249,31 @@ class CommonApp : ObservableObject {
 					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, AnyObject> {
 						let friendsVM = FriendsVM()
 						friendsVM.updateFriendRequestFromDict(dict: responseDict)
+					}
+				}
+			}
+		}
+		catch {
+			NSLog(error.localizedDescription)
+		}
+	}
+	
+	@objc func requestUserSettingsResponse(notification: NSNotification) {
+		do {
+			if let data = notification.object as? Dictionary<String, AnyObject> {
+				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					if let responseArray = try JSONSerialization.jsonObject(with: responseData, options: []) as? [Any] {
+						for item in responseArray {
+							if let itemDict = item as? Dictionary<String, AnyObject> {
+								if let firstItem = itemDict.first {
+									if firstItem.key == WORKOUT_INPUT_GOAL_TYPE {
+										if let value = firstItem.value as? String {
+											Preferences.setWorkoutGoal(value: WorkoutsVM.workoutGoalStringToEnum(goalStr: value))
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}

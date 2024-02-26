@@ -87,7 +87,7 @@ class ApiClient : ObservableObject {
 						}
 						newUrl = newUrl + datum.key.replacingOccurrences(of: " ", with: "%20")
 						newUrl = newUrl + "="
-						newUrl = newUrl + String(describing: datum.value)
+						newUrl = newUrl + String(describing: datum.value).replacingOccurrences(of: " ", with: "%20")
 						first = false
 					}
 					request.url = URL(string: newUrl)
@@ -155,6 +155,10 @@ class ApiClient : ObservableObject {
 						}
 						else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
+						else if url.contains(REMOTE_API_REQUEST_USER_SETTINGS_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_USER_SETTINGS_RESULT), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
 						else if url.contains(REMOTE_API_EXPORT_ACTIVITY_URL) {
@@ -322,6 +326,23 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
 	}
 
+	func requestUserSettings(settings: Array<String>) -> Bool {
+		var postDict: Dictionary<String, String> = [:]
+		postDict[PARAM_SETTINGS] = ""
+		
+		var first = true
+		for setting in settings {
+			if !first {
+				postDict[PARAM_SETTINGS]! += ","
+			}
+			postDict[PARAM_SETTINGS]! += setting
+			first = false
+		}
+
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_REQUEST_USER_SETTINGS_URL)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+	}
+	
 	func exportActivity(activityId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -620,6 +641,7 @@ class ApiClient : ObservableObject {
 #if !os(watchOS)
 					result = result && self.listGear()
 					result = result && self.listPlannedWorkouts()
+					result = result && self.requestUserSettings(settings: [WORKOUT_INPUT_GOAL_TYPE])
 #endif
 					result = result && self.listIntervalSessions()
 					result = result && self.listPacePlans()

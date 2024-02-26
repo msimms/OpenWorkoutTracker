@@ -47,9 +47,9 @@ time_t WorkoutScheduler::TimestampOfNextDayOfWeek(DayType firstDayOfWeek)
 	return result;
 }
 
-// Computes a score for the schedule, based on the daily stress scores.
-// A better schedule is one with a more even distribution of stress.
-// Lower is better.
+/// @brief Computes a score for the schedule, based on the daily stress scores.
+/// @param week - list of scheduled workouts, index 0 is the first day of the week
+/// A better schedule is one with a more even distribution of stress.  Lower is better.
 double WorkoutScheduler::ScoreSchedule(const WorkoutList week[DAYS_PER_WEEK])
 {
 	double dailyStressScores[DAYS_PER_WEEK] = { 0.0 };
@@ -84,8 +84,10 @@ size_t WorkoutScheduler::CountNumDaysSet(uint8_t possibleDays[DAYS_PER_WEEK])
 	return count;
 }
 
-// Utility function for listing the days of the week for which no workout is currently schedule.
-void WorkoutScheduler::ListSchedulableDays(const WorkoutList week[DAYS_PER_WEEK], uint8_t possibleDays[DAYS_PER_WEEK])
+/// @brief Utility function for listing the days of the week for which no workout is currently schedule.
+/// @param week - list of scheduled workouts, index 0 is the first day of the week
+/// @param unschedulableDays - list of day indexes for which we should not schedule any (more) workouts
+void WorkoutScheduler::ListSchedulableDays(const WorkoutList week[DAYS_PER_WEEK], const DayIndexList& unschedulableDays, uint8_t possibleDays[DAYS_PER_WEEK])
 {
 	size_t possibleDaysIndex = 0;
 
@@ -97,15 +99,20 @@ void WorkoutScheduler::ListSchedulableDays(const WorkoutList week[DAYS_PER_WEEK]
 	{
 		const WorkoutList& day = week[dayIndex];
 
-		if (day.size() == 0)
+		bool isSchedulable = std::find(unschedulableDays.begin(), unschedulableDays.end(), dayIndex) != unschedulableDays.end();
+		if (day.size() == 0 && isSchedulable)
 		{
 			possibleDays[possibleDaysIndex++] = dayIndex;
 		}
 	}
 }
 
-// Simple deterministic algorithm for scheduling workouts.
-void WorkoutScheduler::DeterministicScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], time_t startTime)
+/// @brief Simple deterministic algorithm for scheduling workouts.
+/// @param workouts - list of workouts that need to be scheduled
+/// @param week - list of scheduled workouts, index 0 is the first day of the week
+/// @param unschedulableDays - list of day indexes for which we should not schedule any (more) workouts
+/// @param startTime - Midnight UTC on the first day of the week
+void WorkoutScheduler::DeterministicScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], const DayIndexList& unschedulableDays, time_t startTime)
 {
 	for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
 	{
@@ -118,7 +125,7 @@ void WorkoutScheduler::DeterministicScheduler(WorkoutList& workouts, WorkoutList
 			size_t dayIndex = 0;
 
 			// Walk the weeks list and find a list of possible days on which to do the workout.
-			ListSchedulableDays(week, possibleDays);
+			ListSchedulableDays(week, unschedulableDays, possibleDays);
 
 			// Pick one of the days from the candidate list.
 			// If all the days are booked, then pick a random day.
@@ -139,8 +146,12 @@ void WorkoutScheduler::DeterministicScheduler(WorkoutList& workouts, WorkoutList
 	}
 }
 
-// Randomly assigns workouts to days.
-void WorkoutScheduler::RandomScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], time_t startTime)
+/// @brief Randomly assigns workouts to days.
+/// @param workouts - list of workouts that need to be scheduled
+/// @param week - list of scheduled workouts, index 0 is the first day of the week
+/// @param unschedulableDays - list of day indexes for which we should not schedule any (more) workouts
+/// @param startTime - Midnight UTC on the first day of the week
+void WorkoutScheduler::RandomScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], const DayIndexList& unschedulableDays, time_t startTime)
 {
 	std::random_device rd;
 	std::mt19937 generator(rd());
@@ -159,7 +170,9 @@ void WorkoutScheduler::RandomScheduler(WorkoutList& workouts, WorkoutList week[D
 	}
 }
 
-// Organizes the workouts into a schedule for the next week. Implements a very basic constraint solving algorithm.
+/// @brief Organizes the workouts into a schedule for the next week. Implements a very basic constraint solving algorithm.
+/// @param workouts - list of workouts that need to be scheduled
+/// @param startTime - Midnight UTC on the first day of the week
 WorkoutList WorkoutScheduler::ScheduleWorkouts(WorkoutList& workouts, time_t startTime, DayType preferredLongRunDay)
 {
 	// Shuffle the deck.
@@ -170,6 +183,9 @@ WorkoutList WorkoutScheduler::ScheduleWorkouts(WorkoutList& workouts, time_t sta
 	WorkoutList week[DAYS_PER_WEEK];
 	WorkoutList bestWeek[DAYS_PER_WEEK];
 	WorkoutList newWeek[DAYS_PER_WEEK];
+	
+	// Do not schedule anything on these days.
+	DayIndexList unschedulableDays;
 
 	// Are there any events this week? If so, add them to the schedule first.
 	for (auto iter = workouts.begin(); iter != workouts.end(); ++iter)
@@ -179,7 +195,9 @@ WorkoutList WorkoutScheduler::ScheduleWorkouts(WorkoutList& workouts, time_t sta
 		if (workout->GetType() == WORKOUT_TYPE_EVENT)
 		{
 			size_t dayIndex = (size_t)((workout->GetScheduledTime() - startTime) / DAYS_PER_WEEK);
+
 			week[dayIndex].push_back(std::unique_ptr<Workout>(new Workout(*workout)));
+			unschedulableDays.push_back(dayIndex);
 		}
 	}
 
@@ -197,6 +215,7 @@ WorkoutList WorkoutScheduler::ScheduleWorkouts(WorkoutList& workouts, time_t sta
 
 			workout->SetScheduledTime(startTime + offsetToLongRunDay);
 			week[dayIndex].push_back(std::unique_ptr<Workout>(new Workout(*workout)));
+			unschedulableDays.push_back(dayIndex);
 			break;
 		}
 	}
@@ -204,7 +223,7 @@ WorkoutList WorkoutScheduler::ScheduleWorkouts(WorkoutList& workouts, time_t sta
 	// Assign workouts to days. Keep track of the one with the best score.
 	// Start with a simple deterministic algorithm and then try to beat it.
 	WorkoutList bestSchedule = CopyWorkoutList(workouts);
-	DeterministicScheduler(bestSchedule, week, startTime);
+	DeterministicScheduler(bestSchedule, week, unschedulableDays, startTime);
 	double bestScheduleScore = ScoreSchedule(week);
 
 	// Try and best the first arrangement, by randomly re-arranging the schedule
@@ -212,7 +231,7 @@ WorkoutList WorkoutScheduler::ScheduleWorkouts(WorkoutList& workouts, time_t sta
 	for (size_t i = 0; i < 10; ++i)
 	{
 		WorkoutList newSchedule = CopyWorkoutList(workouts);
-		RandomScheduler(newSchedule, newWeek, startTime);
+		RandomScheduler(newSchedule, newWeek, unschedulableDays, startTime);
 		double newScheduleScore = ScoreSchedule(newWeek);
 
 		if (newScheduleScore < bestScheduleScore)

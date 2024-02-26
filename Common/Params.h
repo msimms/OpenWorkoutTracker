@@ -117,3 +117,6 @@
 
 // Laps
 #define PARAM_LAP_START_TIME                     "lap start time"
+
+// Settings
+#define PARAM_SETTINGS                           "requested settings"

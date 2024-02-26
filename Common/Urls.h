@@ -28,6 +28,7 @@
 #define REMOTE_API_HAS_ACTIVITY_URL              "api/1.0/has_activity"
 #define REMOTE_API_REQUEST_ACTIVITY_METADATA_URL "api/1.0/activity_metadata"
 #define REMOTE_API_REQUEST_TO_FOLLOW_URL         "api/1.0/request_to_follow?"
+#define REMOTE_API_REQUEST_USER_SETTINGS_URL     "api/1.0/get_user_settings"
 #define REMOTE_API_UPDATE_STATUS_URL             "api/1.0/update_status"
 #define REMOTE_API_EXPORT_ACTIVITY_URL           "api/1.0/export_activity"
 #define REMOTE_API_DELETE_ACTIVITY_URL           "api/1.0/delete_activity?"

@@ -5,8 +5,9 @@
 #define __WORKOUT_PLAN_INPUTS__
 
 /**
-* This is a list of all the things need to run the workout plan generator.
-*/
+ * This is a list of all the things need to run the workout plan generator.
+ * These are the inputs to the model.
+ * */
 
 #define WORKOUT_INPUT_SPEED_RUN_PACE                      "Speed Session Pace"         // Pace for medium distance interfals
 #define WORKOUT_INPUT_SHORT_INTERVAL_RUN_PACE             "Short Interval Run Pace"    // Pace for shorter track intervals

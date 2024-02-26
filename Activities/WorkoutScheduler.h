@@ -14,6 +14,8 @@
 
 #define DAYS_PER_WEEK 7
 
+typedef std::vector<size_t> DayIndexList;
+
 /**
 * Assigns workouts to days, based on user preferences and estimated training stress.
 */
@@ -29,9 +31,9 @@ public:
 private:
 	double ScoreSchedule(const WorkoutList week[DAYS_PER_WEEK]);
 	size_t CountNumDaysSet(uint8_t possibleDays[DAYS_PER_WEEK]);
-	void ListSchedulableDays(const WorkoutList week[DAYS_PER_WEEK], uint8_t possibleDays[DAYS_PER_WEEK]);
-	void DeterministicScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], time_t startTime);
-	void RandomScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], time_t startTime);
+	void ListSchedulableDays(const WorkoutList week[DAYS_PER_WEEK], const DayIndexList& unschedulableDays, uint8_t possibleDays[DAYS_PER_WEEK]);
+	void DeterministicScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], const DayIndexList& unschedulableDays, time_t startTime);
+	void RandomScheduler(WorkoutList& workouts, WorkoutList week[DAYS_PER_WEEK], const DayIndexList& unschedulableDays, time_t startTime);
 };
 
 #endif
