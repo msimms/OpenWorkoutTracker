@@ -249,7 +249,7 @@ struct ActivityView: View {
 							Image(systemName: "car.circle")
 								.resizable()
 								.frame(width: 32.0, height: 32.0)
-								.opacity(self.sensorMgr.radarConnected ? (time(nil) - Int(self.sensorMgr.lastHrmUpdate) < 60 ? 1.0 : 0.5) : 0.0)
+								.opacity(self.sensorMgr.radarConnected ? (time(nil) - Int(self.sensorMgr.lastRadarUpdate) < 60 ? 1.0 : 0.5) : 0.0)
 						}
 						if self.sensorMgr.powerConnected {
 							Image(systemName: "bolt.circle")
