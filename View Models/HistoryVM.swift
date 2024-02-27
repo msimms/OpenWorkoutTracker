@@ -189,37 +189,37 @@ class HistoryVM : ObservableObject {
 	/// @brief Utility function for getting the image name that corresponds to an activity, such as running, cycling, etc.
 	static func imageNameForActivityType(activityType: String) -> String {
 		if activityType == ACTIVITY_TYPE_BENCH_PRESS {
-			return "scalemass"
+			return "figure.strengthtraining.traditional"
 		}
 		if activityType == ACTIVITY_TYPE_CHINUP {
-			return "scalemass"
+			return "figure.play"
 		}
 		if activityType == ACTIVITY_TYPE_CYCLING {
-			return "bicycle"
+			return "figure.outdoor.cycle"
 		}
 		if activityType == ACTIVITY_TYPE_HIKING {
 			return "figure.hiking"
 		}
 		if activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
-			return "bicycle"
+			return "figure.outdoor.cycle"
 		}
 		if activityType == ACTIVITY_TYPE_RUNNING {
-			return "figure.walk"
+			return "figure.run"
 		}
 		if activityType == ACTIVITY_TYPE_SQUAT {
-			return "scalemass"
+			return "figure.strengthtraining.traditional"
 		}
 		if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
-			return "bicycle"
+			return "figure.indoor.cycle"
 		}
 		if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
-			return "bicycle"
+			return "figure.indoor.cycle"
 		}
 		if activityType == ACTIVITY_TYPE_TREADMILL {
 			return "figure.walk"
 		}
 		if activityType == ACTIVITY_TYPE_PULLUP {
-			return "scalemass"
+			return "figure.play"
 		}
 		if activityType == ACTIVITY_TYPE_PUSHUP {
 			return "scalemass"
