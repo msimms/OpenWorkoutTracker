@@ -148,7 +148,15 @@ class SensorMgr : ObservableObject {
 			self.currentCadenceRpm = 0
 		}
 		else if elapsedSecs > 0.1 {
-			let newCrankCount = currentCrankCount - self.lastCrankCount
+			var newCrankCount: UInt16 = 0
+
+			// Check for rollover.
+			if currentCrankCount > self.lastCrankCount {
+				newCrankCount = currentCrankCount - self.lastCrankCount
+			}
+			else {
+				newCrankCount = currentCrankCount
+			}
 			self.currentCadenceRpm = UInt16((Double(newCrankCount) / elapsedSecs) * 60.0)
 		}
 		
