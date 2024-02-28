@@ -151,13 +151,14 @@ class SensorMgr : ObservableObject {
 			var newCrankCount: UInt16 = 0
 
 			// Check for rollover.
-			if currentCrankCount > self.lastCrankCount {
+			if currentCrankCount >= self.lastCrankCount {
 				newCrankCount = currentCrankCount - self.lastCrankCount
 			}
 			else {
 				newCrankCount = currentCrankCount
 			}
 			self.currentCadenceRpm = UInt16((Double(newCrankCount) / elapsedSecs) * 60.0)
+			self.lastCadenceUpdateTimeMs = curTimeMs
 		}
 		
 		// Handle cases where it has been a while since our last update (i.e. the crank is either not
@@ -166,7 +167,6 @@ class SensorMgr : ObservableObject {
 			self.currentCadenceRpm = 0
 		}
 		
-		self.lastCadenceUpdateTimeMs = curTimeMs
 		self.firstCadenceUpdate = false
 		self.lastCrankCount = currentCrankCount
 		self.lastCrankCountTime = currentCrankTime
@@ -176,21 +176,26 @@ class SensorMgr : ObservableObject {
 	func valueUpdated(peripheral: CBPeripheral, serviceId: CBUUID, value: Data) {
 		if Preferences.shouldUsePeripheral(uuid: peripheral.identifier.uuidString) {
 			let now = UInt64(Date().timeIntervalSince1970)
-			let hrDiff = now - self.lastHrmUpdate
-			let powerDiff = now - self.lastPowerUpdate
-			let radarDiff = now - self.lastRadarUpdate
+			let hrTimeDiff = now - self.lastHrmUpdate
+			let powerTimeDiff = now - self.lastPowerUpdate
+			let radarTimeDiff = now - self.lastRadarUpdate
 
 			do {
 				if serviceId == HEART_RATE_SERVICE_ID {
-					if hrDiff >= 1 {
-						self.currentHeartRateBpm = decodeHeartRateReading(data: value)
-						self.lastHrmUpdate = now
+					if hrTimeDiff >= 1 {
+						let currentReading = decodeHeartRateReading(data: value)
 						self.heartRateConnected = true
-						ProcessHrmReading(Double(self.currentHeartRateBpm), self.lastHrmUpdate)
+
+						// Filthy hack to deal with some heart rate monitors that don't comply with the spec
+						if currentReading > 10 {
+							self.lastHrmUpdate = now
+							self.currentHeartRateBpm = currentReading
+							ProcessHrmReading(Double(self.currentHeartRateBpm), self.lastHrmUpdate)
+						}
 					}
 				}
 				else if serviceId == POWER_SERVICE_ID {
-					if powerDiff >= 1 {
+					if powerTimeDiff >= 1 {
 						let powerDict = try decodeCyclingPowerReadingAsDict(data: value)
 
 						if  let currentPower = powerDict[KEY_NAME_CYCLING_POWER_WATTS] {
@@ -225,7 +230,7 @@ class SensorMgr : ObservableObject {
 					self.lastRunningPowerUpdate = now
 				}
 				else if serviceId == RADAR_SERVICE_ID {
-					if radarDiff >= 1 {
+					if radarTimeDiff >= 1 {
 						self.radarMeasurements = decodeCyclingRadarReading(data: value)
 						self.lastRadarUpdate = now
 						self.radarConnected = true
@@ -234,13 +239,13 @@ class SensorMgr : ObservableObject {
 				}
 				
 				// Look for lost sensors, perhaps ones that didn't disconnect properly.
-				if hrDiff > 30 {
+				if hrTimeDiff > 30 {
 					self.heartRateConnected = false
 				}
-				if powerDiff > 30 {
+				if powerTimeDiff > 30 {
 					self.powerConnected = false
 				}
-				if radarDiff > 30 {
+				if radarTimeDiff > 30 {
 					self.radarConnected = false
 				}
 			}
