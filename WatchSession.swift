@@ -305,7 +305,6 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 		}
 
 		if numHistoricalActivities > 0 {
-			let activityIndex = ConvertActivityIdToActivityIndex(activityId)
 			let activityTypePtr = UnsafeRawPointer(GetHistoricalActivityType(activityId))
 			let activityNamePtr = UnsafeRawPointer(GetHistoricalActivityName(activityId))
 			let activityDescPtr = UnsafeRawPointer(GetHistoricalActivityDescription(activityId))

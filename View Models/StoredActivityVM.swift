@@ -88,7 +88,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		
 		// Activity is from HealthKit.
 		else if self.source == ActivitySummary.Source.healthkit {
-			self.loadSensorDataFromHealthKit()
+			self.loadActivityFromHealthKit()
 		}
 		
 		DispatchQueue.main.async {
@@ -99,7 +99,7 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	}
 	
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in HealthKit.
-	func loadSensorDataFromHealthKit() {
+	func loadActivityFromHealthKit() {
 		let healthKit = HealthManager.shared
 		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId)
 		
