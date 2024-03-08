@@ -67,6 +67,13 @@
 #define PARAM_WORKOUT_INTERVALS                  "intervals"
 #define PARAM_WORKOUT_LAST_UPDATED_TIME          "last updated time"
 
+// Goals
+#define PARAM_RACE_ID                            "race id"
+#define PARAM_RACE_DATE                          "race date"
+#define PARAM_RACE_IMPORTANCE                    "race importance"
+#define PARAM_RACE_DISTANCE                      "race distance"
+#define PARAM_RACE_NAME                          "race name"
+
 // Interval Session
 #define PARAM_INTERVAL_ID                        "id"
 #define PARAM_INTERVAL_NAME                      "name"

@@ -81,6 +81,7 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.requestUserSettingsResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_USER_SETTINGS_RESULT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.downloadedActivityReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.raceListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_RACE_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.intervalSessionsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.pacePlansUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: nil)
@@ -291,11 +292,11 @@ class CommonApp : ObservableObject {
 					
 					// Parse the URL.
 					let components = URLComponents(url: requestUrl, resolvingAgainstBaseURL: false)!
-
+					
 					if let queryItems = components.queryItems {
 						var activityId: String?
 						var exportFormat: String?
-
+						
 						// Grab the activity ID and file format out of the URL parameters.
 						for queryItem in queryItems {
 							if queryItem.name == PARAM_ACTIVITY_ID {
@@ -305,7 +306,7 @@ class CommonApp : ObservableObject {
 								exportFormat = queryItem.value!
 							}
 						}
-
+						
 						if activityId != nil && exportFormat != nil {
 							let directory = NSTemporaryDirectory()
 							let fileName = NSUUID().uuidString + "." + exportFormat!
@@ -313,14 +314,39 @@ class CommonApp : ObservableObject {
 							
 							if fullUrl != nil {
 								try responseData.write(to: fullUrl!)
-
-								if ImportActivityFromFile(fullUrl?.absoluteString, "", activityId) == false {
+								
+								if ImportActivityFromFile(fullUrl?.absoluteString, "", activityId) {
+									var startTime: time_t = 0
+									var endTime: time_t = 0
+									
+									LoadHistoricalActivity(activityId)
+									if GetHistoricalActivityStartAndEndTime(activityId, &startTime, &endTime) {
+										let lastSynchedActivityTime = Preferences.lastServerImportTime()
+										
+										if startTime > lastSynchedActivityTime {
+											Preferences.setLastServerImportTime(value: startTime)
+										}
+									}
+								}
+								else {
 									NSLog("Import failed!")
 								}
 								try FileManager.default.removeItem(at: fullUrl!)
 							}
+							else {
+								NSLog("Cannot find the downloaded file!")
+							}
+						}
+						else {
+							NSLog("Activity ID and Export Format not provided!")
 						}
 					}
+					else {
+						NSLog("Cannot parse downloaded file URL!")
+					}
+				}
+				else {
+					NSLog("Response URL or Response Data not provided!")
 				}
 			}
 		}
@@ -349,6 +375,26 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	@objc func raceListUpdated(notification: NSNotification) {
+		do {
+			if let data = notification.object as? Dictionary<String, AnyObject> {
+				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
+					let workoutsVM: WorkoutsVM = WorkoutsVM()
+					let raceList = try JSONSerialization.jsonObject(with: responseData, options: []) as! [Any]
+					
+					for race in raceList {
+						if let raceDict = race as? Dictionary<String, AnyObject> {
+							workoutsVM.importRaceCalendar(dict: raceDict)
+						}
+					}
+				}
+			}
+		}
+		catch {
+			NSLog(error.localizedDescription)
+		}
+	}
+
 	@objc func plannedWorkoutsUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {

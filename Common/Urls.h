@@ -20,6 +20,7 @@
 #define REMOTE_API_CREATE_GEAR_URL               "api/1.0/create_gear"
 #define REMOTE_API_UPDATE_GEAR_URL               "api/1.0/update_gear"
 #define REMOTE_API_DELETE_GEAR_URL               "api/1.0/delete_gear"
+#define REMOTE_API_LIST_RACES_URL                "api/1.0/list_races"
 #define REMOTE_API_LIST_PLANNED_WORKOUTS_URL     "api/1.0/list_planned_workouts"
 #define REMOTE_API_LIST_INTERVAL_WORKOUTS_URL    "api/1.0/list_interval_workouts"
 #define REMOTE_API_LIST_PACE_PLANS_URL           "api/1.0/list_pace_plans"

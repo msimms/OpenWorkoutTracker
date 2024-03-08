@@ -155,13 +155,32 @@ class WorkoutsVM : ObservableObject {
 	func importWorkoutFromDict(dict: Dictionary<String, Any>) throws {
 		if  let workoutId = dict[PARAM_WORKOUT_ID] as? String,
 			let workoutTypeStr = dict[PARAM_WORKOUT_WORKOUT_TYPE] as? String,
-			let activityType = dict[PARAM_WORKOUT_ACTIVITY_TYPE] as? String,
+			let activityTypeStr = dict[PARAM_WORKOUT_ACTIVITY_TYPE] as? String,
 			let scheduledTime = dict[PARAM_WORKOUT_SCHEDULED_TIME] as? time_t {
 
 			let estimatedIntensityScore = dict[PARAM_WORKOUT_ESTIMATED_INTENSITY] as? Double ?? 0.0
 			let workoutType = WorkoutTypeStrToEnum(workoutTypeStr)
 
-			CreateWorkout(workoutId, workoutType, activityType, estimatedIntensityScore, scheduledTime)
+			CreateWorkout(workoutId, workoutType, activityTypeStr, estimatedIntensityScore, scheduledTime)
+		}
+	}
+	
+	func importRaceCalendar(dict: Dictionary<String, Any>) {
+		if  let raceDate = dict[PARAM_RACE_DATE] as? time_t,
+			let raceDistance = dict[PARAM_RACE_DISTANCE] as? String {
+
+			// Ignore anything that has already passed.
+			let now = Date()
+			if raceDate > time_t(now.timeIntervalSince1970) {
+				let goal = WorkoutsVM.workoutGoalStringToEnum(goalStr: raceDistance)
+				let currentGoal = Preferences.workoutGoal()
+				let currentGoalDate = Preferences.workoutGoalDate()
+
+				if currentGoal == GOAL_FITNESS || raceDate < currentGoalDate {
+					Preferences.setWorkoutGoal(value: goal)
+					Preferences.setWorkoutGoalDate(value: raceDate)
+				}
+			}
 		}
 	}
 

@@ -7,6 +7,7 @@ import SwiftUI
 
 struct HistoryView: View {
 	@ObservedObject private var historyVM = HistoryVM()
+	@State var displayedDates : Set<Date> = []
 
 	let dateFormatter: DateFormatter = {
 		let df = DateFormatter()
@@ -17,6 +18,9 @@ struct HistoryView: View {
 
 	private func loadHistory() {
 		DispatchQueue.global(qos: .userInitiated).async {
+			if let updatesSince = self.displayedDates.min() {
+				let _ = ApiClient.shared.requestUpdatesSince(timestamp: updatesSince)
+			}
 			self.historyVM.buildHistoricalActivitiesList(createAllObjects: false)
 		}
 	}
@@ -62,6 +66,10 @@ struct HistoryView: View {
 									}
 									.onAppear() {
 										item.requestMetadata()
+										self.displayedDates.insert(item.startTime)
+									}
+									.onDisappear {
+										self.displayedDates.remove(item.startTime)
 									}
 								}
 							}

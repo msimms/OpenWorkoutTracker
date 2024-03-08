@@ -133,6 +133,10 @@ class ApiClient : ObservableObject {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
+						else if url.contains(REMOTE_API_LIST_RACES_URL) {
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_RACE_LIST_UPDATED), object: downloadedData)
+							NotificationCenter.default.post(notification)
+						}
 						else if url.contains(REMOTE_API_LIST_PLANNED_WORKOUTS_URL) {
 							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
 							NotificationCenter.default.post(notification)
@@ -292,6 +296,11 @@ class ApiClient : ObservableObject {
 		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict)
 	}
 	
+	func listRaces() -> Bool {
+		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_RACES_URL)
+		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+	}
+
 	func listPlannedWorkouts() -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_PLANNED_WORKOUTS_URL)
 		return self.makeRequest(url: urlStr, method: "GET", data: [:])
@@ -634,12 +643,14 @@ class ApiClient : ObservableObject {
 			if now - lastServerSync > 60 {
 				let deviceId = Preferences.uuid()
 				if deviceId != nil {
+
 					// Associate this device with the user.
 					result = self.claimDevice(deviceId: deviceId!)
 
 					// Get all the things.
 #if !os(watchOS)
 					result = result && self.listGear()
+					result = result && self.listRaces()
 					result = result && self.listPlannedWorkouts()
 					result = result && self.requestUserSettings(settings: [WORKOUT_INPUT_GOAL_TYPE])
 #endif
@@ -653,14 +664,9 @@ class ApiClient : ObservableObject {
 					result = result && self.sendPacePlansToServer()
 #endif
 					
-					// Ask for the server's activity list from the last week.
-					let ONE_WEEK = 60 * 60 * 24 * 7
-					if lastServerSync > ONE_WEEK {
-						result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerSync - ONE_WEEK)))
-					}
-					else {
-						result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: 0))
-					}
+					// Ask for the server's activity list, from the time of the last activity received.
+					let lastServerImport = Preferences.lastServerImportTime()
+					result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerImport)))
 
 					Preferences.setLastServerSyncTime(value: now)
 				}

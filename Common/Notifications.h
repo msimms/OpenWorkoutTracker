@@ -4,6 +4,7 @@
 #define NOTIFICATION_NAME_ACTIVITY_STARTED             "ActivityStarted"            // The user has started an activity
 #define NOTIFICATION_NAME_ACTIVITY_STOPPED             "ActivityStopped"            // The user has stopped an activity
 #define NOTIFICATION_NAME_GEAR_LIST_UPDATED            "GearListUpdated"            // An updated gear list was returned from the (optional) server
+#define NOTIFICATION_NAME_RACE_LIST_UPDATED            "RaceListUpdated"            // The race calendar from the (optional) server was updated
 #define NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED     "PlannedWorkoutsUpdated"     // The planned workouts list from the (optional) server was updated
 #define NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED    "IntervalSessionsUpdated"    // The interval sessions list from the (optional) server was updated
 #define NOTIFICATION_NAME_INTERVAL_UPDATED             "IntervalUpdated"

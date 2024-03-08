@@ -62,6 +62,7 @@ let PREF_NAME_WORKOUTS_CAN_INCLUDE_RUNNING =          "Workouts Can Include Runn
 let PREF_NAME_POOL_LENGTH =                           "Pool Length"
 let PREF_NAME_POOL_LENGTH_UNITS =                     "Pool Length Units"
 let PREF_NAME_LAST_SERVER_SYNC_TIME =                 "Last Server Sync Time"
+let PREF_NAME_LAST_SERVER_IMPORT_TIME =               "Last Server Import Time"
 let PREF_NAME_MOST_RECENT_ACTIVITY_DESCRIPTION =      "Most Recent Activity Description"
 
 let PREF_NAME_METRIC =       "units_metric"
@@ -560,7 +561,12 @@ class Preferences {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		return mydefaults.integer(forKey: PREF_NAME_LAST_SERVER_SYNC_TIME)
 	}
-	
+
+	static func lastServerImportTime() -> time_t {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		return mydefaults.integer(forKey: PREF_NAME_LAST_SERVER_IMPORT_TIME)
+	}
+
 	//
 	// Set methods
 	//
@@ -844,7 +850,12 @@ class Preferences {
 		let mydefaults: UserDefaults = UserDefaults.standard
 		mydefaults.set(value, forKey: PREF_NAME_LAST_SERVER_SYNC_TIME)
 	}
-	
+
+	static func setLastServerImportTime(value: time_t) {
+		let mydefaults: UserDefaults = UserDefaults.standard
+		mydefaults.set(value, forKey: PREF_NAME_LAST_SERVER_IMPORT_TIME)
+	}
+
 	//
 	// Methods for managing the list of accessories
 	//
