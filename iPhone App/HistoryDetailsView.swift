@@ -89,6 +89,7 @@ struct HistoryDetailsView: View {
 	@State private var selectedImage: UIImage = UIImage()
 	@ObservedObject private var apiClient = ApiClient.shared
 	@FocusState private var focusedField: Field?
+	@State private(set) var state = StoredActivityVM.State.empty
 
 	func hrFormatter(num: Double) -> String {
 		return String(format: "%0.0f", num)
@@ -112,12 +113,14 @@ struct HistoryDetailsView: View {
 
 	private func loadDetails() {
 		DispatchQueue.global(qos: .userInitiated).async {
+			self.state = StoredActivityVM.State.empty
 			self.activityVM.load()
+			self.state = StoredActivityVM.State.loaded
 		}
 	}
 
 	var body: some View {
-		switch self.activityVM.state {
+		switch self.state {
 		case StoredActivityVM.State.loaded:
 			VStack(alignment: .center) {
 				ScrollView() {

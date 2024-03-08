@@ -26,7 +26,6 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		case loaded
 	}
 	
-	@Published private(set) var state = State.empty
 	var source: ActivitySummary.Source = ActivitySummary.Source.database
 	var activityId: String = ""                     // Unique identifier for the activity
 	var userId: String = ""                         // Unique identifier for the activity owner
@@ -53,7 +52,6 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosListReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_LIST), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: nil)
 		
-		self.state = State.empty
 		self.source = activitySummary.source
 		self.activityId = activitySummary.id
 		self.userId = activitySummary.userId
@@ -64,12 +62,11 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	/// @brief Hashable overrides
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(self.activityId)
-		hasher.combine(self.state)
 	}
 	
 	/// @brief Equatable overrides
 	static func == (lhs: StoredActivityVM, rhs: StoredActivityVM) -> Bool {
-		return lhs.activityId == rhs.activityId && lhs.state == rhs.state
+		return lhs.activityId == rhs.activityId
 	}
 	
 	func load() {
@@ -89,12 +86,6 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		// Activity is from HealthKit.
 		else if self.source == ActivitySummary.Source.healthkit {
 			self.loadActivityFromHealthKit()
-		}
-		
-		DispatchQueue.main.async {
-			if self.state != State.loaded {
-				self.state = State.loaded
-			}
 		}
 	}
 	

@@ -12,10 +12,13 @@ struct HistoryDetailsView: View {
 	@Environment(\.dismiss) var dismiss
 	@StateObject var activityVM: StoredActivityVM
 	@State private var showingSyncSelection: Bool = false
+	@State private(set) var state = StoredActivityVM.State.empty
 
 	private func loadDetails() {
 		DispatchQueue.global(qos: .userInitiated).async {
+			self.state = StoredActivityVM.State.empty
 			self.activityVM.load()
+			self.state = StoredActivityVM.State.loaded
 		}
 	}
 	
@@ -40,7 +43,7 @@ struct HistoryDetailsView: View {
 	}
 
 	var body: some View {
-		switch self.activityVM.state {
+		switch self.state {
 		case StoredActivityVM.State.loaded:
 			ScrollView() {
 				VStack(alignment: .center) {
