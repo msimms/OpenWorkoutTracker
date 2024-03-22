@@ -572,7 +572,6 @@ WorkoutList RunPlanGenerator::GenerateWorkoutsForNextWeekEventGoal(std::map<std:
 	double totalIntensityWeek4 = inputs.at(WORKOUT_INPUT_TOTAL_INTENSITY_WEEK_4);
 	double avgRunDistance = inputs.at(WORKOUT_INPUT_AVG_RUNNING_DISTANCE_IN_FOUR_WEEKS);
 	double numRuns = inputs.at(WORKOUT_INPUT_NUM_RUNS_LAST_FOUR_WEEKS);
-	double expLevel = inputs.at(WORKOUT_INPUT_EXPERIENCE_LEVEL);
 
 	// Longest run in four weeks.
 	double longestRunInFourWeeks = std::max(std::max(longestRunWeek1, longestRunWeek2), std::max(longestRunWeek3, longestRunWeek4));
