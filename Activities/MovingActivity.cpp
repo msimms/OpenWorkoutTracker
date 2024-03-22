@@ -997,7 +997,7 @@ ActivityAttributeType MovingActivity::QueryActivityAttribute(const std::string& 
 			if (lapNum == 1)
 			{
 				if (m_laps.size() == 0)
-					result.value.timeVal = GetEndTimeSecs() - GetStartTimeSecs();
+					result.value.timeVal = ElapsedTimeInSeconds();
 				else
 					result.value.timeVal = (time_t)((m_laps.at(0).startTimeMs - GetStartTimeMs()) / 1000);
 				result.valid = true;

@@ -32,7 +32,7 @@ public:
 	/// @brief Returns a list of the activities that are supported by the current platform.
 	std::vector<std::string> ListSupportedActivityTypes();
 
-	Activity* CreateActivity(const std::string& name, Database& database);
+	Activity* CreateActivity(const std::string& name);
 	void CreateActivity(ActivitySummary& summary, Database& database);
 	
 private:

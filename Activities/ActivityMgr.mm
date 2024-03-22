@@ -2667,14 +2667,21 @@ extern "C" {
 	// This is useful if the activity was not ended properly (app crash, phone reboot, etc.)
 	void FixHistoricalActivityEndTime(const char* const activityId)
 	{
-		g_historicalActivityLock.lock();
-
 		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
 
 		if (ValidActivityIndex(activityIndex))
 		{
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
 
+			// Has the sensor data been loaded? We'll need it for fixing the activity end time.
+			if (g_pActivityFactory && !summary.pActivity)
+			{
+				CreateHistoricalActivityObject(activityId);
+				LoadHistoricalActivityLapData(summary.activityId.c_str());
+				LoadAllHistoricalActivitySensorData(summary.activityId.c_str());
+			}
+			
+			// If we haven't loaded the sensor data by now then give up.
 			if (summary.pActivity)
 			{
 				summary.pActivity->SetEndTimeFromSensorReadings();
@@ -2690,8 +2697,6 @@ extern "C" {
 				g_dbLock.unlock();
 			}
 		}
-
-		g_historicalActivityLock.unlock();
 	}
 
 	char* GetHistoricalActivityType(const char* const activityId)
@@ -3733,7 +3738,7 @@ extern "C" {
 		}
 		if (g_pActivityFactory)
 		{
-			g_pCurrentActivity = g_pActivityFactory->CreateActivity(activityType, *g_pDatabase);
+			g_pCurrentActivity = g_pActivityFactory->CreateActivity(activityType);
 		}
 	}
 
@@ -3746,11 +3751,10 @@ extern "C" {
 			if (!summary.pActivity)
 			{
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
-				g_pCurrentActivity = summary.pActivity;
-
 				LoadHistoricalActivityLapData(summary.activityId.c_str());
 				LoadAllHistoricalActivitySensorData(summary.activityId.c_str());
 				
+				g_pCurrentActivity = summary.pActivity;
 				summary.pActivity = NULL;
 			}
 		}

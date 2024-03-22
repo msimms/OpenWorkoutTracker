@@ -10,7 +10,6 @@
 
 #include <string>
 
-#include "Database.h"
 #include "GForceAnalyzer.h"
 #include "LiftingActivity.h"
 
@@ -22,8 +21,8 @@ public:
 	GForceAnalyzerFactory();
 	virtual ~GForceAnalyzerFactory();
 
-	static GForceAnalyzer* CreateAnalyzerForActivity(const std::string& type, Database& database);
-	static GForceAnalyzer* GetAnalyzerForActivity(const std::string& type, Database& database);
+	static GForceAnalyzer* CreateAnalyzerForActivity(const std::string& type);
+	static GForceAnalyzer* GetAnalyzerForActivity(const std::string& type);
 
 private:
 	static GForceAnalyzerMap m_analyzers;

@@ -70,18 +70,18 @@ std::vector<std::string> ActivityFactory::ListSupportedActivityTypes()
 	return types;
 }
 
-Activity* ActivityFactory::CreateActivity(const std::string& type, Database& database)
+Activity* ActivityFactory::CreateActivity(const std::string& type)
 {
 	Activity* pActivity = NULL;
 
 	if (type.compare(BenchPress::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type);
 		pActivity = new BenchPress(analyzer);
 	}
 	else if (type.compare(ChinUp::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type);
 		pActivity = new ChinUp(analyzer);
 	}
 	else if (type.compare(Cycling::Type()) == 0)
@@ -106,12 +106,12 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 	}
 	else if (type.compare(PullUp::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type);
 		pActivity = new PullUp(analyzer);
 	}
 	else if (type.compare(PushUp::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type);
 		pActivity = new PushUp(analyzer);
 	}
 	else if (type.compare(Run::Type()) == 0)
@@ -120,7 +120,7 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 	}
 	else if (type.compare(Squat::Type()) == 0)
 	{
-		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type, database);
+		GForceAnalyzer* analyzer = GForceAnalyzerFactory::GetAnalyzerForActivity(type);
 		pActivity = new Squat(analyzer);
 	}
 	else if (type.compare(StationaryCycling::Type()) == 0)
@@ -158,7 +158,7 @@ Activity* ActivityFactory::CreateActivity(const std::string& type, Database& dat
 
 void ActivityFactory::CreateActivity(ActivitySummary& summary, Database& database)
 {
-	summary.pActivity = CreateActivity(summary.type, database);
+	summary.pActivity = CreateActivity(summary.type);
 	if (summary.pActivity)
 	{
 		summary.pActivity->SetId(summary.activityId);

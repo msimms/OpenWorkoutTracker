@@ -27,7 +27,7 @@ GForceAnalyzerFactory::~GForceAnalyzerFactory()
 {	
 }
 
-GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::string& type, Database& database)
+GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::string& type)
 {
 	GForceAnalyzer* pAnalyzer = NULL;
 	
@@ -54,7 +54,7 @@ GForceAnalyzer* GForceAnalyzerFactory::CreateAnalyzerForActivity(const std::stri
 	return pAnalyzer;
 }
 
-GForceAnalyzer* GForceAnalyzerFactory::GetAnalyzerForActivity(const std::string& type, Database& database)
+GForceAnalyzer* GForceAnalyzerFactory::GetAnalyzerForActivity(const std::string& type)
 {
 	GForceAnalyzer* pAnalyzer = NULL;
 
@@ -64,7 +64,7 @@ GForceAnalyzer* GForceAnalyzerFactory::GetAnalyzerForActivity(const std::string&
 	}
 	catch (...)
 	{
-		pAnalyzer = CreateAnalyzerForActivity(type, database);
+		pAnalyzer = CreateAnalyzerForActivity(type);
 		GForceAnalyzerFactory::m_analyzers.insert(std::pair<std::string, GForceAnalyzer*>(type, pAnalyzer));
 	}
 	return pAnalyzer;
