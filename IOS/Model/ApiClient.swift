@@ -371,7 +371,7 @@ class ApiClient : ObservableObject {
 
 	func createTag(tag: String, activityId: String) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
-		postDict[PARAM_TAG] = tag
+		postDict[PARAM_TAG + "0"] = tag
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_TAG_URL)

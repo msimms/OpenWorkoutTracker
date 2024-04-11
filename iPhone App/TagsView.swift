@@ -11,45 +11,41 @@ struct TagsView: View {
 	@StateObject var activityVM: StoredActivityVM
 	@State private var newTag: String = ""
 	@State private var tagToDelete: String = ""
+	@State private var showingNewTagView: Bool = false
 	@State private var showingDeleteConfirmation: Bool = false
 
 	var body: some View {
 		ScrollView() {
 			GeometryReader { geometry in
-				VStack() {
-					let tags = self.activityVM.listTags()
-					self.generateTagCloud(in: geometry, items: tags, handler: { tag in
-						self.tagToDelete = tag
-						self.showingDeleteConfirmation = true
-					})
-					Text("Potential Tags")
-						.bold()
-						.padding()
-					let potentialTags = self.activityVM.listValidGearNames()
-					self.generateTagCloud(in: geometry, items: potentialTags, handler: { tag in
-						if self.activityVM.createTag(tag: tag) {
-							self.presentation.wrappedValue.dismiss()
-						}
-					})
-					Text("New Tag")
-						.bold()
-						.padding()
-					TextField("Tag", text: self.$newTag)
+				VStack(alignment: .center) {
+					Text("Existing Tags")
 						.foregroundColor(self.colorScheme == .dark ? .white : .black)
-						.background(self.colorScheme == .dark ? .black : .white)
-						.autocapitalization(.none)
-					Button {
-						if self.activityVM.createTag(tag: self.newTag) {
-							self.presentation.wrappedValue.dismiss()
-						}
-					} label: {
-						Text("Create a New Tag")
+						.bold()
+					let tags = self.activityVM.listTags()
+					if tags.count > 0 {
+						self.generateTagCloud(in: geometry, items: tags, handler: { tag in
+							self.tagToDelete = tag
+							self.showingDeleteConfirmation = true
+						})
 					}
-					.padding()
-					.background(Color.gray)
-					.foregroundColor(self.colorScheme == .dark ? .white : .black)
-					.cornerRadius(10)
-					.buttonStyle(PlainButtonStyle())
+					else {
+						Text("There are currently no tags associated with this activity.")
+					}
+
+					Text("Tags From Gear")
+						.foregroundColor(self.colorScheme == .dark ? .white : .black)
+						.bold()
+					let gearTags = self.activityVM.listValidGearNames()
+					if gearTags.count > 0 {
+						self.generateTagCloud(in: geometry, items: gearTags, handler: { tag in
+							if self.activityVM.createTag(tag: tag) {
+								self.presentation.wrappedValue.dismiss()
+							}
+						})
+					}
+					else {
+						Text("There is currently no gear to tag the activity with.")
+					}
 				}
 				.alert("Are you sure you want to delete this tag?", isPresented: self.$showingDeleteConfirmation) {
 					Button("Delete") {
@@ -65,6 +61,37 @@ struct TagsView: View {
 				}
 			}
 			.padding(10)
+			.toolbar {
+				ToolbarItem(placement: .bottomBar) {
+					Spacer()
+				}
+				ToolbarItem(placement: .bottomBar) {
+					HStack() {
+						Button {
+							self.showingNewTagView = true
+						} label: {
+							Text("+")
+								.foregroundColor(self.colorScheme == .dark ? .white : .black)
+						}
+						.help("Createa a new tag")
+						.alert("New Tag", isPresented: self.$showingNewTagView) {
+							VStack() {
+								TextField("Tag", text: self.$newTag)
+								HStack() {
+									Button("OK") {
+										if self.activityVM.createTag(tag: self.newTag) {
+										}
+									}
+									Button("Cancel") {
+									}
+								}
+							}
+						} message: {
+							Text("Create a New Tag")
+						}
+					}
+				}
+			}
 		}
 	}
 	
