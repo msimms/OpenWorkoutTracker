@@ -25,6 +25,14 @@ struct HistoryView: View {
 		}
 	}
 
+	private func delete(at offsets: IndexSet) {
+		for offset in offsets {
+			let item = self.historyVM.historicalActivities[offset]
+			let activityVM = StoredActivityVM(activitySummary: item)
+			let _ = activityVM.deleteActivity()
+		}
+	}
+
 	var body: some View {
 		ZStack() {
 			// The user has connected the app to the server, but we don't have a valid session, move to the login screen.
@@ -45,34 +53,37 @@ struct HistoryView: View {
 				// The list of stored activities.
 				VStack(alignment: .center) {
 					if self.historyVM.historicalActivities.count > 0 {
-						List(self.historyVM.historicalActivities, id: \.self) { item in
-							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
-								HStack() {
-									Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-										.frame(width: 32)
-									VStack(alignment: .leading) {
-										if item.name.count > 0 {
-											Text(item.name)
-												.bold()
-												.font(Font.headline)
+						List {
+							ForEach(self.historyVM.historicalActivities) { item in
+								NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
+									HStack() {
+										Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
+											.frame(width: 32)
+										VStack(alignment: .leading) {
+											if item.name.count > 0 {
+												Text(item.name)
+													.bold()
+													.font(Font.headline)
+											}
+											Text("\(self.dateFormatter.string(from: item.startTime))")
+											if item.source == ActivitySummary.Source.healthkit {
+												Text("HealthKit")
+													.bold()
+													.foregroundColor(.gray)
+													.font(Font.subheadline)
+											}
 										}
-										Text("\(self.dateFormatter.string(from: item.startTime))")
-										if item.source == ActivitySummary.Source.healthkit {
-											Text("HealthKit")
-												.bold()
-												.foregroundColor(.gray)
-												.font(Font.subheadline)
+										.onAppear() {
+											item.requestMetadata()
+											self.displayedDates.insert(item.startTime)
 										}
-									}
-									.onAppear() {
-										item.requestMetadata()
-										self.displayedDates.insert(item.startTime)
-									}
-									.onDisappear {
-										self.displayedDates.remove(item.startTime)
+										.onDisappear {
+											self.displayedDates.remove(item.startTime)
+										}
 									}
 								}
 							}
+							.onDelete(perform: delete)
 						}
 						.listStyle(.plain)
 						.gesture(

@@ -21,27 +21,38 @@ struct HistoryView: View {
 		}
 	}
 
+	private func delete(at offsets: IndexSet) {
+		for offset in offsets {
+			let item = self.historyVM.historicalActivities[offset]
+			let activityVM = StoredActivityVM(activitySummary: item)
+			let _ = activityVM.deleteActivity()
+		}
+	}
+
 	var body: some View {
 		switch self.historyVM.state {
 		case HistoryVM.VmState.loaded:
 			VStack(alignment: .leading) {
 				if self.historyVM.historicalActivities.count > 0 {
-					List(self.historyVM.historicalActivities, id: \.self) { item in
-						NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
-							VStack(alignment: .leading) {
-								if item.name.count > 0 {
-									Text(item.name)
-										.bold()
-								}
-								HStack() {
-									Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
-									Text(item.type)
-										.bold()
-									Spacer()
-									Text("\(self.dateFormatter.string(from: item.startTime))")
+					List {
+						ForEach(self.historyVM.historicalActivities) { item in
+							NavigationLink(destination: HistoryDetailsView(activityVM: StoredActivityVM(activitySummary: item))) {
+								VStack(alignment: .leading) {
+									if item.name.count > 0 {
+										Text(item.name)
+											.bold()
+									}
+									HStack() {
+										Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
+										Text(item.type)
+											.bold()
+										Spacer()
+										Text("\(self.dateFormatter.string(from: item.startTime))")
+									}
 								}
 							}
 						}
+						.onDelete(perform: delete)
 					}
 					.listStyle(.plain)
 				}
