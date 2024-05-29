@@ -135,11 +135,12 @@ class SensorMgr : ObservableObject {
 			self.firstCadenceUpdate = true
 		}
 	
-		if currentCrankTime >= self.lastCrankCountTime { // handle wrap-around
+		// Handle wrap-around
+		if currentCrankTime >= self.lastCrankCountTime { // normal case
 			elapsedSecs = Double(currentCrankTime - self.lastCrankCountTime) / 1024.0
 		}
 		else {
-			let temp: UInt32 = 0x0000ffff + UInt32(currentCrankTime)
+			let temp: UInt32 = 0x0000ffff + (UInt32(currentCrankTime) << 16)
 			elapsedSecs = Double(temp - UInt32(self.lastCrankCountTime)) / 1024.0
 		}
 		
