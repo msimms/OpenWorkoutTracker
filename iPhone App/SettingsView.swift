@@ -35,8 +35,8 @@ struct SettingsView: View {
 					.bold()
 				VStack(alignment: .center) {
 					Toggle("Metric", isOn: self.$preferMetric)
-						.onChange(of: self.preferMetric) { value in
-							Preferences.setPreferredUnitSystem(system: value ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
+						.onChange(of: self.preferMetric) {
+							Preferences.setPreferredUnitSystem(system: self.preferMetric ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
 							SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
 						}
 				}
@@ -47,11 +47,11 @@ struct SettingsView: View {
 					.bold()
 				VStack(alignment: .center) {
 					Toggle("Read Activities From HealthKit", isOn: self.$readActivitiesFromHealthKit)
-						.onChange(of: self.readActivitiesFromHealthKit) { value in
+						.onChange(of: self.readActivitiesFromHealthKit) {
 							Preferences.setWillIntegrateHealthKitActivities(value: self.readActivitiesFromHealthKit)
 						}
 					Toggle("Hide Duplicate Activities", isOn: self.$hideDuplicateActivities)
-						.onChange(of: self.hideDuplicateActivities) { value in
+						.onChange(of: self.hideDuplicateActivities) {
 							Preferences.setHideHealthKitDuplicates(value: self.hideDuplicateActivities)
 						}
 				}
@@ -62,7 +62,7 @@ struct SettingsView: View {
 					.bold()
 				VStack(alignment: .center) {
 					Toggle("Auto Save Files to iCloud Drive", isOn: self.$autoSaveActivitiesToICloudDrive)
-						.onChange(of: self.autoSaveActivitiesToICloudDrive) { value in
+						.onChange(of: self.autoSaveActivitiesToICloudDrive) {
 							Preferences.setAutoSaveToICloudDrive(value: self.autoSaveActivitiesToICloudDrive)
 						}
 				}
@@ -73,7 +73,7 @@ struct SettingsView: View {
 					.bold()
 				VStack(alignment: .center) {
 					Toggle("Enabled", isOn: self.$broadcastEnabled)
-						.onChange(of: self.broadcastEnabled) { value in
+						.onChange(of: self.broadcastEnabled) {
 							Preferences.setBroadcastToServer(value: self.broadcastEnabled)
 							let _ = self.apiClient.checkLoginStatus()
 						}
@@ -84,7 +84,7 @@ struct SettingsView: View {
 							.keyboardType(.decimalPad)
 							.multilineTextAlignment(.trailing)
 							.fixedSize()
-							.onChange(of: self.updateRate.value) { value in
+							.onChange(of: self.updateRate.value) {
 								if let value = Int(self.updateRate.value) {
 									Preferences.setBroadcastRate(value: value)
 								} else {
@@ -93,8 +93,8 @@ struct SettingsView: View {
 						Text(" seconds")
 					}
 					Toggle("Use HTTPS", isOn: self.$useHttps)
-						.onChange(of: self.useHttps) { value in
-							Preferences.setBroadcastProtocol(value: value ? "https" : "http")
+						.onChange(of: self.useHttps) {
+							Preferences.setBroadcastProtocol(value: self.useHttps ? "https" : "http")
 						}
 					HStack() {
 						Text("Broadcast Server")
@@ -102,12 +102,12 @@ struct SettingsView: View {
 						TextField("Server", text: self.$broadcastServer)
 							.keyboardType(.URL)
 							.multilineTextAlignment(.trailing)
-							.onChange(of: self.broadcastServer) { value in
+							.onChange(of: self.broadcastServer) {
 								Preferences.setBroadcastHostName(value: self.broadcastServer)
 							}
 					}
 					Toggle("Show Broadcast Icon", isOn: self.$showBroadcastIcon)
-						.onChange(of: self.showBroadcastIcon) { value in
+						.onChange(of: self.showBroadcastIcon) {
 							Preferences.setBroadcastShowIcon(value: self.showBroadcastIcon)
 						}
 				}

@@ -19,7 +19,7 @@ struct SensorsView: View {
 				.padding(INFO_INSETS)
 
 				Toggle("Scan for compatible sensors", isOn: self.$shouldScan)
-					.onChange(of: self.shouldScan) { value in
+					.onChange(of: self.shouldScan) {
 						Preferences.setScanForSensors(value: self.shouldScan)
 						if self.shouldScan {
 							SensorMgr.shared.startSensors(usableSensors: [])

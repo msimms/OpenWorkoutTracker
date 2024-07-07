@@ -400,9 +400,9 @@ struct ActivityView: View {
 		}
 		.focusable()
 		.digitalCrownRotation(self.$crownValue, from: MIN_CROWN_VALUE, through: MAX_CROWN_VALUE, by: -1, sensitivity: .low, isContinuous: true, isHapticFeedbackEnabled: true)
-		.onChange(of: self.crownValue) { output in
+		.onChange(of: self.crownValue) {
 			if Preferences.watchTurnCrownToStartStopActivity() {
-				if output >= MIN_CROWN_VALUE + 4.0 && output < MIN_CROWN_VALUE + 5.0 {
+				if self.crownValue >= MIN_CROWN_VALUE + 4.0 && self.crownValue < MIN_CROWN_VALUE + 5.0 {
 					self.handleStartStopPauseAction()
 				}
 			}

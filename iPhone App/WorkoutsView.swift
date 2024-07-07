@@ -120,7 +120,7 @@ struct WorkoutsView: View {
 				if self.showsDatePicker {
 					DatePicker("", selection: self.$goalDate, displayedComponents: .date)
 						.datePickerStyle(.graphical)
-						.onChange(of: self.goalDate) { value in
+						.onChange(of: self.goalDate) {
 							Preferences.setWorkoutGoalDate(value: time_t(self.goalDate.timeIntervalSince1970))
 						}
 				}
@@ -152,7 +152,7 @@ struct WorkoutsView: View {
 
 			// Other Preferences
 			Toggle("Cycling", isOn: self.$allowCyclingWorkouts)
-				.onChange(of: self.allowCyclingWorkouts) { value in
+				.onChange(of: self.allowCyclingWorkouts) {
 					// Save
 					Preferences.setWorkoutsCanIncludeBikeRides(value: self.allowCyclingWorkouts)
 
@@ -163,7 +163,7 @@ struct WorkoutsView: View {
 				.bold()
 				.padding(5)
 			Toggle("Pool Swims", isOn: self.$allowPoolSwimWorkouts)
-				.onChange(of: self.allowPoolSwimWorkouts) { value in
+				.onChange(of: self.allowPoolSwimWorkouts) {
 					// Save
 					Preferences.setWorkoutsCanIncludePoolSwims(value: self.allowPoolSwimWorkouts)
 
@@ -174,7 +174,7 @@ struct WorkoutsView: View {
 				.bold()
 				.padding(5)
 			Toggle("Open Water Swims", isOn: self.$allowOpenWaterSwims)
-				.onChange(of: self.allowOpenWaterSwims) { value in
+				.onChange(of: self.allowOpenWaterSwims) {
 					// Save
 					Preferences.setWorkoutsCanIncludeOpenWaterSwims(value: self.allowOpenWaterSwims)
 

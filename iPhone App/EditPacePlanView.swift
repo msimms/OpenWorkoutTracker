@@ -64,7 +64,7 @@ struct EditPacePlanView: View {
 					.font(.system(size: 24))
 					.bold()
 				TextField("Name", text: self.$tempName)
-					.onChange(of: self.tempName) { value in
+					.onChange(of: self.tempName) {
 						self.tempPacePlan.name = tempName
 					}
 			}
@@ -76,7 +76,7 @@ struct EditPacePlanView: View {
 					.bold()
 				TextField("Description", text: self.$tempDescription, axis: .vertical)
 					.lineLimit(2...10)
-					.onChange(of: self.tempDescription) { value in
+					.onChange(of: self.tempDescription) {
 						self.tempPacePlan.description = tempDescription
 					}
 			}
@@ -92,7 +92,7 @@ struct EditPacePlanView: View {
 				HStack() {
 					TextField("Distance", text: self.$distanceEntry.value)
 						.keyboardType(.decimalPad)
-						.onChange(of: self.distanceEntry.value) { value in
+						.onChange(of: self.distanceEntry.value) {
 							if let value = Double(self.distanceEntry.value) {
 								self.tempPacePlan.distance = value
 							}
@@ -123,7 +123,7 @@ struct EditPacePlanView: View {
 						.bold()
 					HStack() {
 						TextField("Time (hh:mm:ss)", text: self.$timeStr)
-							.onChange(of: self.timeStr) { value in
+							.onChange(of: self.timeStr) {
 								var hours: Int = 0
 								var mins: Int = 0
 								var secs: Int = 0

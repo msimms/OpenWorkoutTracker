@@ -47,8 +47,8 @@ struct EditIntervalSessionView: View {
 					.font(.system(size: 24))
 					.bold()
 				TextField("Name", text: self.$tempName)
-					.onChange(of: self.tempName) { value in
-						self.tempSession.name = value
+					.onChange(of: self.tempName) {
+						self.tempSession.name = self.tempName
 					}
 			}
 			.padding(SIDE_INSETS)
@@ -79,8 +79,8 @@ struct EditIntervalSessionView: View {
 					.bold()
 				TextField("Description", text: self.$tempDescription, axis: .vertical)
 					.lineLimit(2...10)
-					.onChange(of: self.tempDescription) { value in
-						self.tempSession.description = value
+					.onChange(of: self.tempDescription) {
+						self.tempSession.description = self.tempDescription
 					}
 			}
 			.padding(SIDE_INSETS)

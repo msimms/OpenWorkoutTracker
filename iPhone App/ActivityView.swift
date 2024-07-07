@@ -389,7 +389,7 @@ struct ActivityView: View {
 										.keyboardType(.decimalPad)
 										.multilineTextAlignment(.trailing)
 										.fixedSize()
-										.onChange(of: self.additionalWeight.value) { value in
+										.onChange(of: self.additionalWeight.value) {
 										}
 
 									HStack() {

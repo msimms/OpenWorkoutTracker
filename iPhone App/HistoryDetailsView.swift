@@ -142,7 +142,7 @@ struct HistoryDetailsView: View {
 					// Name
 					HStack() {
 						TextField("Name", text: self.$activityVM.name)
-							.onChange(of: self.activityVM.name) { value in
+							.onChange(of: self.activityVM.name) {
 								self.showingUpdateNameError = !self.activityVM.updateActivityName()
 							}
 							.lineLimit(2...4)
@@ -156,7 +156,7 @@ struct HistoryDetailsView: View {
 					// Description
 					HStack() {
 						TextField("Description", text: self.$activityVM.description, axis: .vertical)
-							.onChange(of: self.activityVM.description) { value in
+							.onChange(of: self.activityVM.description) {
 								self.showingUpdateDescriptionError = !self.activityVM.updateActivityDescription()
 							}
 							.lineLimit(2...10)

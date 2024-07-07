@@ -67,7 +67,7 @@ struct ProfileView: View {
 				if self.showsDatePicker {
 					DatePicker("", selection: self.$birthdate, displayedComponents: .date)
 						.datePickerStyle(.graphical)
-						.onChange(of: self.birthdate) { value in
+						.onChange(of: self.birthdate) {
 							Preferences.setBirthDate(value: time_t(self.birthdate.timeIntervalSince1970))
 							CommonApp.shared.updateUserProfile()
 							self.showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date())
@@ -84,7 +84,7 @@ struct ProfileView: View {
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: self.height.value) { value in
+						.onChange(of: self.height.value) {
 							if let value = Double(self.height.value) {
 								ProfileVM.setHeight(height: value)
 								self.showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
@@ -108,7 +108,7 @@ struct ProfileView: View {
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: self.weight.value) { value in
+						.onChange(of: self.weight.value) {
 							if let value = Double(self.weight.value) {
 								ProfileVM.setWeight(weight: value)
 								self.showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())

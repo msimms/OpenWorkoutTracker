@@ -55,20 +55,20 @@ struct ActivityPreferencesView: View {
 				Text("Default Layout")
 					.bold()
 				Toggle("Screen Auto-Locking", isOn: self.$screenAutoLocking)
-					.onChange(of: screenAutoLocking) { value in
-						ActivityPreferences.setScreenAutoLocking(activityType: self.activityType, value: value)
+					.onChange(of: screenAutoLocking) {
+						ActivityPreferences.setScreenAutoLocking(activityType: self.activityType, value: self.screenAutoLocking)
 					}
 				Toggle("Allow Screen Presses During Activity", isOn: self.$allowScreenPresses)
-					.onChange(of: allowScreenPresses) { value in
-						ActivityPreferences.setAllowScreenPressesDuringActivity(activityType: self.activityType, value: value)
+					.onChange(of: allowScreenPresses) {
+						ActivityPreferences.setAllowScreenPressesDuringActivity(activityType: self.activityType, value: self.allowScreenPresses)
 					}
 				Toggle("Countdown Timer", isOn: self.$countdownTimer)
-					.onChange(of: countdownTimer) { value in
-						ActivityPreferences.setCountdown(activityType: self.activityType, value: value)
+					.onChange(of: countdownTimer) {
+						ActivityPreferences.setCountdown(activityType: self.activityType, value: self.countdownTimer)
 					}
 				Toggle("Show Heart Rate as Percentage", isOn: self.$showHeartRateAsPercentage)
-					.onChange(of: showHeartRateAsPercentage) { value in
-						ActivityPreferences.setShowHeartRatePercent(activityType: self.activityType, value: value)
+					.onChange(of: showHeartRateAsPercentage) {
+						ActivityPreferences.setShowHeartRatePercent(activityType: self.activityType, value: self.showHeartRateAsPercentage)
 					}
 			}
 			Group() {
@@ -124,12 +124,12 @@ struct ActivityPreferencesView: View {
 				Text("Sounds")
 					.bold()
 				Toggle("Start/Stop Beep", isOn: self.$startStopBeep)
-					.onChange(of: startStopBeep) { value in
-						ActivityPreferences.setStartStopBeepEnabled(activityType: self.activityType, value: value)
+					.onChange(of: self.startStopBeep) {
+						ActivityPreferences.setStartStopBeepEnabled(activityType: self.activityType, value: self.startStopBeep)
 					}
 				Toggle("Split Beep", isOn: self.$splitBeep)
-					.onChange(of: splitBeep) { value in
-						ActivityPreferences.setSplitBeepEnabled(activityType: self.activityType, value: value)
+					.onChange(of: splitBeep) {
+						ActivityPreferences.setSplitBeepEnabled(activityType: self.activityType, value: self.splitBeep)
 					}
 			}
 			Group() {
@@ -142,7 +142,7 @@ struct ActivityPreferencesView: View {
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: self.horizontalAccuracy.value) { value in
+						.onChange(of: self.horizontalAccuracy.value) {
 						}
 					Text("Meters")
 				}
@@ -153,7 +153,7 @@ struct ActivityPreferencesView: View {
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
-						.onChange(of: self.verticalAccuracy.value) { value in
+						.onChange(of: self.verticalAccuracy.value) {
 						}
 					Text("Meters")
 				}
