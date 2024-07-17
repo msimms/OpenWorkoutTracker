@@ -486,8 +486,9 @@ struct ActivityView: View {
 				}
 			}
 		}
-		.navigationTitle(self.activityType)
 		.navigationBarBackButtonHidden(self.activityVM.isInProgress)
+		.navigationTitle(self.activityType)
+		.navigationBarTitleDisplayMode(.inline)
 		.opacity(self.activityVM.isPaused ? 0.5 : 1)
 		.onAppear() {
 			if self.activityVM.isStopped {
