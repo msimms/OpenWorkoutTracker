@@ -180,6 +180,8 @@ class LiveActivityVM : ObservableObject {
 		}
 
 		// Timer to periodically refresh the view.
+		let startStopBeepEnabled = ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse)
+		let splitBeepEnabled = ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse)
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
 
 			// Clear the message display?
@@ -245,13 +247,13 @@ class LiveActivityVM : ObservableObject {
 				}
 #else
 				// Start beep
-				if !playedStartBeep && ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse) {
+				if !playedStartBeep && startStopBeepEnabled {
 					self.playBeepSound()
 					playedStartBeep = true
 				}
 				
 				// Split beep
-				if newSplit && ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse) {
+				if newSplit && splitBeepEnabled {
 					self.playPingSound()
 				}
 #endif
