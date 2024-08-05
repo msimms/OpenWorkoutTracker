@@ -1254,6 +1254,10 @@ extern "C" {
 			{
 				free((void*)bikeName);
 			}
+			if (description)
+			{
+				free((void*)description);
+			}
 		}
 
 		g_dbLock.unlock();
