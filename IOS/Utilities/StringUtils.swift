@@ -104,7 +104,7 @@ class StringUtils {
 		}
 		return String(format: "%02d:%02d", minutes, seconds)
 	}
-
+	
 	static func formatDistanceInUserUnits(meters: Double) -> String {
 		var attr: ActivityAttributeType = ActivityAttributeType()
 		attr.value.doubleVal = meters / 1000.0
@@ -115,7 +115,7 @@ class StringUtils {
 		ConvertToPreferredUnits(&attr)
 		return String(format: "%0.2f", attr.value.doubleVal)
 	}
-
+	
 	/// @brief Utility function for converting an activity attribute structure to something human readable.
 	static func formatActivityValue(attribute: ActivityAttributeType) -> String {
 		if attribute.valid {
@@ -159,16 +159,15 @@ class StringUtils {
 			return VALUE_NOT_SET_STR
 		}
 	}
-
+	
 	/// @brief Utility function for formatting unit strings.
-	static func formatActivityMeasureType(measureType: ActivityAttributeMeasureType) -> String {
+	static func formatActivityMeasureTypeWithUnitSystem(measureType: ActivityAttributeMeasureType, preferredUnits: UnitSystem) -> String {
 		switch measureType {
 		case MEASURE_NOT_SET:
 			return ""
 		case MEASURE_TIME:
 			return ""
 		case MEASURE_PACE:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "mins/km"
 			}
@@ -177,7 +176,6 @@ class StringUtils {
 			}
 			return ""
 		case MEASURE_SPEED:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "kph"
 			}
@@ -186,7 +184,6 @@ class StringUtils {
 			}
 			return ""
 		case MEASURE_DISTANCE:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "kms"
 			}
@@ -195,7 +192,6 @@ class StringUtils {
 			}
 			return ""
 		case MEASURE_POOL_DISTANCE:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "meters"
 			}
@@ -204,7 +200,6 @@ class StringUtils {
 			}
 			return ""
 		case MEASURE_WEIGHT:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "kgs"
 			}
@@ -213,7 +208,6 @@ class StringUtils {
 			}
 			return ""
 		case MEASURE_HEIGHT:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "cm"
 			}
@@ -222,7 +216,6 @@ class StringUtils {
 			}
 			return ""
 		case MEASURE_ALTITUDE:
-			let preferredUnits = Preferences.preferredUnitSystem()
 			if preferredUnits == UNIT_SYSTEM_METRIC {
 				return "meters"
 			}
@@ -257,5 +250,11 @@ class StringUtils {
 		default:
 			return ""
 		}
+	}
+
+	/// @brief Utility function for formatting unit strings.
+	static func formatActivityMeasureType(measureType: ActivityAttributeMeasureType) -> String {
+		let preferredUnits = Preferences.preferredUnitSystem()
+		return formatActivityMeasureTypeWithUnitSystem(measureType: measureType, preferredUnits: preferredUnits);
 	}
 }

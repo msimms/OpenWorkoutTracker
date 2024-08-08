@@ -19,6 +19,13 @@ struct SensorTypeCallbackType {
 	var types: Array<SensorType>
 }
 
+@Observable
+class RenderedActivityAttribute {
+	var title: String = ""
+	var value: String = ""
+	var units: String = ""
+}
+
 func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let attributeName = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
 	let typedPointer = context!.bindMemory(to: AttributeNameCallbackType.self, capacity: 1)
@@ -34,37 +41,17 @@ class LiveActivityVM : ObservableObject {
 	static var shared: LiveActivityVM? = nil
 
 	@Published var currentMessage: String = ""
-	
-	@Published var title1: String = ""
-	@Published var title2: String = ""
-	@Published var title3: String = ""
-	@Published var title4: String = ""
-	@Published var title5: String = ""
-	@Published var title6: String = ""
-	@Published var title7: String = ""
-	@Published var title8: String = ""
-	@Published var title9: String = ""
-	
-	@Published var value1: String = ""
-	@Published var value2: String = ""
-	@Published var value3: String = ""
-	@Published var value4: String = ""
-	@Published var value5: String = ""
-	@Published var value6: String = ""
-	@Published var value7: String = ""
-	@Published var value8: String = ""
-	@Published var value9: String = ""
-	
-	@Published var units1: String = ""
-	@Published var units2: String = ""
-	@Published var units3: String = ""
-	@Published var units4: String = ""
-	@Published var units5: String = ""
-	@Published var units6: String = ""
-	@Published var units7: String = ""
-	@Published var units8: String = ""
-	@Published var units9: String = ""
-	
+
+	@Published var attr1: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr2: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr3: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr4: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr5: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr6: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr7: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr8: RenderedActivityAttribute = RenderedActivityAttribute()
+	@Published var attr9: RenderedActivityAttribute = RenderedActivityAttribute()
+
 	@Published var viewType: ActivityViewType = ACTIVITY_VIEW_COMPLEX
 	
 	var isInProgress: Bool = false
@@ -182,6 +169,7 @@ class LiveActivityVM : ObservableObject {
 		// Timer to periodically refresh the view.
 		let startStopBeepEnabled = ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse)
 		let splitBeepEnabled = ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse)
+		let preferredUnits = Preferences.preferredUnitSystem()
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
 
 			// Clear the message display?
@@ -344,7 +332,7 @@ class LiveActivityVM : ObservableObject {
 				}
 				
 				let valueStr = StringUtils.formatActivityValue(attribute: attr)
-				var measureStr = StringUtils.formatActivityMeasureType(measureType: attr.measureType)
+				var measureStr = StringUtils.formatActivityMeasureTypeWithUnitSystem(measureType: attr.measureType, preferredUnits: preferredUnits)
 				
 				// To keep the spacing even if the unit string is empty then add something so the spacing stays even on the UI
 				if measureStr.count == 0 {
@@ -353,49 +341,49 @@ class LiveActivityVM : ObservableObject {
 				
 				switch index {
 				case 0:
-					self.title1 = activityAttribute
-					self.value1 = valueStr
-					self.units1 = measureStr
+					self.attr1.title = activityAttribute
+					self.attr1.value = valueStr
+					self.attr1.units = measureStr
 					break
 				case 1:
-					self.title2 = activityAttribute
-					self.value2 = valueStr
-					self.units2 = measureStr
+					self.attr2.title = activityAttribute
+					self.attr2.value = valueStr
+					self.attr2.units = measureStr
 					break
 				case 2:
-					self.title3 = activityAttribute
-					self.value3 = valueStr
-					self.units3 = measureStr
+					self.attr3.title = activityAttribute
+					self.attr3.value = valueStr
+					self.attr3.units = measureStr
 					break
 				case 3:
-					self.title4 = activityAttribute
-					self.value4 = valueStr
-					self.units4 = measureStr
+					self.attr4.title = activityAttribute
+					self.attr4.value = valueStr
+					self.attr4.units = measureStr
 					break
 				case 4:
-					self.title5 = activityAttribute
-					self.value5 = valueStr
-					self.units5 = measureStr
+					self.attr5.title = activityAttribute
+					self.attr5.value = valueStr
+					self.attr5.units = measureStr
 					break
 				case 5:
-					self.title6 = activityAttribute
-					self.value6 = valueStr
-					self.units6 = measureStr
+					self.attr6.title = activityAttribute
+					self.attr6.value = valueStr
+					self.attr6.units = measureStr
 					break
 				case 6:
-					self.title7 = activityAttribute
-					self.value7 = valueStr
-					self.units7 = measureStr
+					self.attr7.title = activityAttribute
+					self.attr7.value = valueStr
+					self.attr7.units = measureStr
 					break
 				case 7:
-					self.title8 = activityAttribute
-					self.value8 = valueStr
-					self.units8 = measureStr
+					self.attr8.title = activityAttribute
+					self.attr8.value = valueStr
+					self.attr8.units = measureStr
 					break
 				case 8:
-					self.title9 = activityAttribute
-					self.value9 = valueStr
-					self.units9 = measureStr
+					self.attr9.title = activityAttribute
+					self.attr9.value = valueStr
+					self.attr9.units = measureStr
 					break
 				default:
 					break

@@ -116,8 +116,8 @@ struct ActivityView: View {
 				.opacity(self.stopping ? 1 : 0)
 
 				VStack(alignment: .center) {
-					Text(self.activityVM.title1).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-					Text(self.activityVM.value1).font(.system(size: 48))
+					Text(self.activityVM.attr1.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+					Text(self.activityVM.attr1.value).font(.system(size: 48))
 						.onTapGesture {
 							self.showingActivityAttributeSelection1 = self.canShowAttributeMenu()
 						}
@@ -128,9 +128,9 @@ struct ActivityView: View {
 							self.selectAttributeToDisplay(position: 0)
 						}
 						.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection1, titleVisibility: .visible) {
-							self.selectColorToUse(attributeName: self.activityVM.title1)
+							self.selectColorToUse(attributeName: self.activityVM.attr1.title)
 						}
-						.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title1))
+						.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr1.title))
 						.allowsTightening(true)
 						.lineLimit(1)
 						.minimumScaleFactor(0.75)
@@ -152,8 +152,8 @@ struct ActivityView: View {
 					// Screen 1
 					if self.crownValue >= MIN_CROWN_VALUE && self.crownValue < MIN_CROWN_VALUE + 1.0 {
 						VStack(alignment: .center) {
-							Text(self.activityVM.title2).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-							Text(self.activityVM.value2).font(.system(size: 24))
+							Text(self.activityVM.attr2.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+							Text(self.activityVM.attr2.value).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection2 = self.canShowAttributeMenu()
 								}
@@ -164,17 +164,17 @@ struct ActivityView: View {
 									self.selectAttributeToDisplay(position: 1)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection2, titleVisibility: .visible) {
-									self.selectColorToUse(attributeName: self.activityVM.title2)
+									self.selectColorToUse(attributeName: self.activityVM.attr2.title)
 								}
-								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title2))
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr2.title))
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units2).font(.system(size: MINOR_FONT_SIZE))
+							Text(self.activityVM.attr2.units).font(.system(size: MINOR_FONT_SIZE))
 						}
 						VStack(alignment: .center) {
-							Text(self.activityVM.title3).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-							Text(self.activityVM.value3).font(.system(size: 24))
+							Text(self.activityVM.attr3.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+							Text(self.activityVM.attr3.value).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection3 = self.canShowAttributeMenu()
 								}
@@ -185,21 +185,21 @@ struct ActivityView: View {
 									self.selectAttributeToDisplay(position: 2)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection3, titleVisibility: .visible) {
-									self.selectColorToUse(attributeName: self.activityVM.title3)
+									self.selectColorToUse(attributeName: self.activityVM.attr3.title)
 								}
-								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title3))
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr3.title))
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units3).font(.system(size: MINOR_FONT_SIZE))
+							Text(self.activityVM.attr3.units).font(.system(size: MINOR_FONT_SIZE))
 						}
 					}
 
 					// Screen 2
 					else if self.crownValue >= MIN_CROWN_VALUE + 1.0 && self.crownValue < MIN_CROWN_VALUE + 2.0 {
 						VStack(alignment: .center) {
-							Text(self.activityVM.title4).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-							Text(self.activityVM.value4).font(.system(size: 24))
+							Text(self.activityVM.attr4.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+							Text(self.activityVM.attr4.value).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection4 = self.canShowAttributeMenu()
 								}
@@ -210,17 +210,17 @@ struct ActivityView: View {
 									self.selectAttributeToDisplay(position: 3)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection4, titleVisibility: .visible) {
-									self.selectColorToUse(attributeName: self.activityVM.title4)
+									self.selectColorToUse(attributeName: self.activityVM.attr4.title)
 								}
-								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title4))
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr4.title))
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units4).font(.system(size: MINOR_FONT_SIZE))
+							Text(self.activityVM.attr4.units).font(.system(size: MINOR_FONT_SIZE))
 						}
 						VStack(alignment: .center) {
-							Text(self.activityVM.title5).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-							Text(self.activityVM.value5).font(.system(size: 24))
+							Text(self.activityVM.attr5.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+							Text(self.activityVM.attr5.value).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection5 = self.canShowAttributeMenu()
 								}
@@ -231,21 +231,21 @@ struct ActivityView: View {
 									self.selectAttributeToDisplay(position: 4)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection5, titleVisibility: .visible) {
-									self.selectColorToUse(attributeName: self.activityVM.title5)
+									self.selectColorToUse(attributeName: self.activityVM.attr5.title)
 								}
-								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title5))
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr5.title))
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units5).font(.system(size: MINOR_FONT_SIZE))
+							Text(self.activityVM.attr5.units).font(.system(size: MINOR_FONT_SIZE))
 						}
 					}
 
 					// Screen 3
 					else if self.crownValue >= MIN_CROWN_VALUE + 2.0 && self.crownValue < MIN_CROWN_VALUE + 3.0 {
 						VStack(alignment: .center) {
-							Text(self.activityVM.title6).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-							Text(self.activityVM.value6).font(.system(size: 24))
+							Text(self.activityVM.attr6.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+							Text(self.activityVM.attr6.value).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection6 = self.canShowAttributeMenu()
 								}
@@ -256,17 +256,17 @@ struct ActivityView: View {
 									self.selectAttributeToDisplay(position: 5)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection6, titleVisibility: .visible) {
-									self.selectColorToUse(attributeName: self.activityVM.title6)
+									self.selectColorToUse(attributeName: self.activityVM.attr6.title)
 								}
-								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title6))
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr6.title))
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units6).font(.system(size: MINOR_FONT_SIZE))
+							Text(self.activityVM.attr6.units).font(.system(size: MINOR_FONT_SIZE))
 						}
 						VStack(alignment: .center) {
-							Text(self.activityVM.title7).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
-							Text(self.activityVM.value7).font(.system(size: 24))
+							Text(self.activityVM.attr7.title).font(.system(size: MINOR_FONT_SIZE)).multilineTextAlignment(.center)
+							Text(self.activityVM.attr7.value).font(.system(size: 24))
 								.onTapGesture {
 									self.showingActivityAttributeSelection7 = self.canShowAttributeMenu()
 								}
@@ -277,13 +277,13 @@ struct ActivityView: View {
 									self.selectAttributeToDisplay(position: 6)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection7, titleVisibility: .visible) {
-									self.selectColorToUse(attributeName: self.activityVM.title5)
+									self.selectColorToUse(attributeName: self.activityVM.attr7.title)
 								}
-								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.title7))
+								.foregroundColor(self.getColorToUse(attributeName: self.activityVM.attr7.title))
 								.allowsTightening(true)
 								.lineLimit(1)
 								.minimumScaleFactor(0.75)
-							Text(self.activityVM.units7).font(.system(size: MINOR_FONT_SIZE))
+							Text(self.activityVM.attr7.units).font(.system(size: MINOR_FONT_SIZE))
 						}
 					}
 					

@@ -88,12 +88,12 @@ struct ActivityView: View {
 		return storedActivityVM
 	}
 	
-	func renderItem(position: Int, title: String, value: String, units: String, labelColor: Color, textColor: Color) -> some View {
+	func renderItem(position: Int, attr: RenderedActivityAttribute, labelColor: Color, textColor: Color) -> some View {
 		VStack(alignment: .center) {
-			Text(title)
+			Text(attr.title)
 				.font(.system(size: 16))
 				.foregroundColor(labelColor)
-			Text(value)
+			Text(attr.value)
 				.font(.custom(self.font, fixedSize: 28))
 				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 				.onTapGesture {
@@ -106,18 +106,18 @@ struct ActivityView: View {
 				.lineLimit(1)
 				.minimumScaleFactor(0.75)
 				.padding(1)
-			Text(units)
+			Text(attr.units)
 				.font(.system(size: 16))
 				.foregroundColor(labelColor)
 		}
 	}
 
-	func renderLargeItem(position: Int, title: String, value: String, units: String, labelColor: Color, textColor: Color) -> some View {
+	func renderLargeItem(position: Int, attr: RenderedActivityAttribute, labelColor: Color, textColor: Color) -> some View {
 		VStack(alignment: .center) {
-			Text(title)
+			Text(attr.title)
 				.font(.system(size: 16))
 				.foregroundColor(labelColor)
-			Text(value)
+			Text(attr.value)
 				.font(.custom(self.font, fixedSize: 72))
 				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 				.onTapGesture {
@@ -130,7 +130,7 @@ struct ActivityView: View {
 				.lineLimit(1)
 				.minimumScaleFactor(0.75)
 				.padding(1)
-			Text(units)
+			Text(attr.units)
 				.font(.system(size: 16))
 				.foregroundColor(labelColor)
 		}
@@ -175,7 +175,7 @@ struct ActivityView: View {
 							
 							// Main value
 							VStack(alignment: .center) {
-								self.renderLargeItem(position: 0, title: self.activityVM.title1, value: self.activityVM.value1, units: self.activityVM.units1, labelColor: labelColor, textColor: textColor)
+								self.renderLargeItem(position: 0, attr: self.activityVM.attr1, labelColor: labelColor, textColor: textColor)
 							}
 							.padding(20)
 							
@@ -190,14 +190,14 @@ struct ActivityView: View {
 							else if self.activityVM.viewType == ACTIVITY_VIEW_COMPLEX {
 								ScrollView(.vertical, showsIndicators: false) {
 									LazyVGrid(columns: self.items, spacing: 20) {
-										self.renderItem(position: 1, title: self.activityVM.title2, value: self.activityVM.value2, units: self.activityVM.units2, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 2, title: self.activityVM.title3, value: self.activityVM.value3, units: self.activityVM.units3, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 3, title: self.activityVM.title4, value: self.activityVM.value4, units: self.activityVM.units4, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 4, title: self.activityVM.title5, value: self.activityVM.value5, units: self.activityVM.units5, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 5, title: self.activityVM.title6, value: self.activityVM.value6, units: self.activityVM.units6, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 6, title: self.activityVM.title7, value: self.activityVM.value7, units: self.activityVM.units7, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 7, title: self.activityVM.title8, value: self.activityVM.value8, units: self.activityVM.units8, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 8, title: self.activityVM.title9, value: self.activityVM.value9, units: self.activityVM.units9, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 1, attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 2, attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 3, attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 4, attr: self.activityVM.attr5, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 5, attr: self.activityVM.attr6, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 6, attr: self.activityVM.attr7, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 7, attr: self.activityVM.attr8, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 8, attr: self.activityVM.attr9, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 								}
@@ -207,9 +207,9 @@ struct ActivityView: View {
 							else if self.activityVM.viewType == ACTIVITY_VIEW_SIMPLE {
 								ScrollView(.vertical, showsIndicators: false) {
 									VStack(alignment: .center) {
-										self.renderLargeItem(position: 1, title: self.activityVM.title2, value: self.activityVM.value2, units: self.activityVM.units2, labelColor: labelColor, textColor: textColor)
-										self.renderLargeItem(position: 2, title: self.activityVM.title3, value: self.activityVM.value3, units: self.activityVM.units3, labelColor: labelColor, textColor: textColor)
-										self.renderLargeItem(position: 3, title: self.activityVM.title4, value: self.activityVM.value4, units: self.activityVM.units4, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(position: 1, attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(position: 2, attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(position: 3, attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 									Spacer()
@@ -220,10 +220,10 @@ struct ActivityView: View {
 							else if self.activityVM.viewType == ACTIVITY_VIEW_MAPPED {
 								ScrollView(.vertical, showsIndicators: false) {
 									LazyVGrid(columns: self.items, spacing: 20) {
-										self.renderItem(position: 1, title: self.activityVM.title2, value: self.activityVM.value2, units: self.activityVM.units2, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 2, title: self.activityVM.title3, value: self.activityVM.value3, units: self.activityVM.units3, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 3, title: self.activityVM.title4, value: self.activityVM.value4, units: self.activityVM.units4, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 4, title: self.activityVM.title5, value: self.activityVM.value5, units: self.activityVM.units5, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 1, attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 2, attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 3, attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
+										self.renderItem(position: 4, attr: self.activityVM.attr5, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 									Spacer()
