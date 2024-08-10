@@ -59,6 +59,7 @@ class LiveActivityVM : ObservableObject {
 	var isStopped: Bool = false // Has been stopped (after being started)
 	var autoStartEnabled: Bool = false
 	var isMovingActivity: Bool = false
+	var needsFullScreenRefresh: Bool = true
 	var countdownSecsRemaining: UInt = 0
 	
 #if !os(watchOS)
@@ -167,6 +168,7 @@ class LiveActivityVM : ObservableObject {
 		}
 
 		// Timer to periodically refresh the view.
+		self.needsFullScreenRefresh = true
 		let startStopBeepEnabled = ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse)
 		let splitBeepEnabled = ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse)
 		let preferredUnits = Preferences.preferredUnitSystem()
@@ -341,54 +343,74 @@ class LiveActivityVM : ObservableObject {
 				
 				switch index {
 				case 0:
-					self.attr1.title = activityAttribute
 					self.attr1.value = valueStr
-					self.attr1.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr1.title = activityAttribute
+						self.attr1.units = measureStr
+					}
 					break
 				case 1:
-					self.attr2.title = activityAttribute
 					self.attr2.value = valueStr
-					self.attr2.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr2.title = activityAttribute
+						self.attr2.units = measureStr
+					}
 					break
 				case 2:
-					self.attr3.title = activityAttribute
 					self.attr3.value = valueStr
-					self.attr3.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr3.title = activityAttribute
+						self.attr3.units = measureStr
+					}
 					break
 				case 3:
-					self.attr4.title = activityAttribute
 					self.attr4.value = valueStr
-					self.attr4.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr4.title = activityAttribute
+						self.attr4.units = measureStr
+					}
 					break
 				case 4:
-					self.attr5.title = activityAttribute
 					self.attr5.value = valueStr
-					self.attr5.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr5.title = activityAttribute
+						self.attr5.units = measureStr
+					}
 					break
 				case 5:
-					self.attr6.title = activityAttribute
 					self.attr6.value = valueStr
-					self.attr6.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr6.title = activityAttribute
+						self.attr6.units = measureStr
+					}
 					break
 				case 6:
-					self.attr7.title = activityAttribute
 					self.attr7.value = valueStr
-					self.attr7.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr7.title = activityAttribute
+						self.attr7.units = measureStr
+					}
 					break
 				case 7:
-					self.attr8.title = activityAttribute
 					self.attr8.value = valueStr
-					self.attr8.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr8.title = activityAttribute
+						self.attr8.units = measureStr
+					}
 					break
 				case 8:
-					self.attr9.title = activityAttribute
 					self.attr9.value = valueStr
-					self.attr9.units = measureStr
+					if self.needsFullScreenRefresh {
+						self.attr9.title = activityAttribute
+						self.attr9.units = measureStr
+					}
 					break
 				default:
 					break
 				}
 			}
+
+			self.needsFullScreenRefresh = false
 		}
 	}
 	
@@ -600,6 +622,7 @@ class LiveActivityVM : ObservableObject {
 	func setDisplayedActivityAttributeName(position: Int, attributeName: String) {
 		self.activityAttributePrefs.remove(at: position)
 		self.activityAttributePrefs.insert(attributeName, at: position)
+		self.needsFullScreenRefresh = true
 		
 		ActivityPreferences.setActivityLayout(activityType: self.activityType, layout: self.activityAttributePrefs)
 	}
