@@ -7,6 +7,7 @@ import SwiftUI
 import MapKit
 
 let MAX_THREAT_DISTANCE_METERS = 160.0
+var selectedItem: Int = 0
 
 struct ActivityIndicator: UIViewRepresentable {
 	typealias UIView = UIActivityIndicatorView
@@ -51,6 +52,7 @@ struct ActivityView: View {
 	@State private var showingStartError: Bool = false
 	@State private var showingExtraWeightAlert: Bool = false
 	@State private var additionalWeight: NumbersOnly = NumbersOnly(initialDoubleValue: 0.0)
+	@State private var tappedAttr: RenderedActivityAttribute = RenderedActivityAttribute()
 	var sensorMgr = SensorMgr.shared
 	var broadcastMgr = BroadcastManager.shared
 	var activityType: String = ""
@@ -60,26 +62,25 @@ struct ActivityView: View {
 		Array(repeating: .init(.adaptive(minimum: 120)), count: 2)
 	}
 
-	func selectAttributeToDisplay(position: Int) -> some View {
-		return VStack() {
-			Button("Cancel") {}
+	func selectAttributeToDisplay() -> some View {
+		return VStack(content: {
 			ForEach(self.activityVM.getActivityAttributeNames(), id: \.self) { item in
-				Button {
-					self.activityVM.setDisplayedActivityAttributeName(position: position, attributeName: item)
-				} label: {
+				Button(action: {
+					self.activityVM.setDisplayedActivityAttributeName(position: self.tappedAttr.position, attributeName: item)
+				}) {
 					Text(item)
 				}
 			}
-		}
+		})
 	}
-	
+
 	func canShowAttributeMenu() -> Bool {
 		if !IsActivityInProgress() {
 			return true
 		}
 		return ActivityPreferences.getAllowScreenPressesDuringActivity(activityType: self.activityType)
 	}
-	
+
 	func stop() -> StoredActivityVM {
 		self.stopping = true
 		let summary = self.activityVM.stop()
@@ -87,8 +88,8 @@ struct ActivityView: View {
 		storedActivityVM.load()
 		return storedActivityVM
 	}
-	
-	func renderItem(position: Int, attr: RenderedActivityAttribute, labelColor: Color, textColor: Color) -> some View {
+
+	func renderItem(attr: RenderedActivityAttribute, labelColor: Color, textColor: Color) -> some View {
 		VStack(alignment: .center) {
 			Text(attr.title)
 				.font(.system(size: 16))
@@ -98,9 +99,10 @@ struct ActivityView: View {
 				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 				.onTapGesture {
 					self.showingActivityAttributeSelection = self.canShowAttributeMenu()
+					self.tappedAttr = attr
 				}
 				.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection, titleVisibility: .visible) {
-					selectAttributeToDisplay(position: position)
+					self.selectAttributeToDisplay()
 				}
 				.allowsTightening(true)
 				.lineLimit(1)
@@ -112,8 +114,8 @@ struct ActivityView: View {
 		}
 	}
 
-	func renderLargeItem(position: Int, attr: RenderedActivityAttribute, labelColor: Color, textColor: Color) -> some View {
-		VStack(alignment: .center) {
+	func renderLargeItem(attr: RenderedActivityAttribute, labelColor: Color, textColor: Color) -> some View {
+		VStack(alignment: .center, content: {
 			Text(attr.title)
 				.font(.system(size: 16))
 				.foregroundColor(labelColor)
@@ -122,10 +124,11 @@ struct ActivityView: View {
 				.foregroundColor(self.colorScheme == .dark ? .white : textColor)
 				.onTapGesture {
 					self.showingActivityAttributeSelection = self.canShowAttributeMenu()
+					self.tappedAttr = attr
 				}
-				.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection, titleVisibility: .visible) {
-					selectAttributeToDisplay(position: position)
-				}
+				.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection, titleVisibility: .visible, actions: {
+					self.selectAttributeToDisplay()
+				})
 				.allowsTightening(true)
 				.lineLimit(1)
 				.minimumScaleFactor(0.75)
@@ -133,7 +136,7 @@ struct ActivityView: View {
 			Text(attr.units)
 				.font(.system(size: 16))
 				.foregroundColor(labelColor)
-		}
+		})
 	}
 
 	var body: some View {
@@ -175,7 +178,7 @@ struct ActivityView: View {
 							
 							// Main value
 							VStack(alignment: .center) {
-								self.renderLargeItem(position: 0, attr: self.activityVM.attr1, labelColor: labelColor, textColor: textColor)
+								self.renderLargeItem(attr: self.activityVM.attr1, labelColor: labelColor, textColor: textColor)
 							}
 							.padding(20)
 							
@@ -190,14 +193,14 @@ struct ActivityView: View {
 							else if self.activityVM.viewType == ACTIVITY_VIEW_COMPLEX {
 								ScrollView(.vertical, showsIndicators: false) {
 									LazyVGrid(columns: self.items, spacing: 20) {
-										self.renderItem(position: 1, attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 2, attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 3, attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 4, attr: self.activityVM.attr5, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 5, attr: self.activityVM.attr6, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 6, attr: self.activityVM.attr7, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 7, attr: self.activityVM.attr8, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 8, attr: self.activityVM.attr9, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr5, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr6, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr7, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr8, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr9, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 								}
@@ -207,9 +210,9 @@ struct ActivityView: View {
 							else if self.activityVM.viewType == ACTIVITY_VIEW_SIMPLE {
 								ScrollView(.vertical, showsIndicators: false) {
 									VStack(alignment: .center) {
-										self.renderLargeItem(position: 1, attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
-										self.renderLargeItem(position: 2, attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
-										self.renderLargeItem(position: 3, attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
+										self.renderLargeItem(attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 									Spacer()
@@ -220,10 +223,10 @@ struct ActivityView: View {
 							else if self.activityVM.viewType == ACTIVITY_VIEW_MAPPED {
 								ScrollView(.vertical, showsIndicators: false) {
 									LazyVGrid(columns: self.items, spacing: 20) {
-										self.renderItem(position: 1, attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 2, attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 3, attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
-										self.renderItem(position: 4, attr: self.activityVM.attr5, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr2, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr3, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr4, labelColor: labelColor, textColor: textColor)
+										self.renderItem(attr: self.activityVM.attr5, labelColor: labelColor, textColor: textColor)
 									}
 									.padding(.horizontal)
 									Spacer()

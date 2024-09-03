@@ -24,6 +24,7 @@ class RenderedActivityAttribute {
 	var title: String = ""
 	var value: String = ""
 	var units: String = ""
+	var position: Int = 0;
 }
 
 func attributeNameCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
@@ -54,6 +55,7 @@ class LiveActivityVM : ObservableObject {
 
 	@Published var viewType: ActivityViewType = ACTIVITY_VIEW_COMPLEX
 	
+	var activityTypeToUse: String = ""
 	var isInProgress: Bool = false
 	var isPaused: Bool = false
 	var isStopped: Bool = false // Has been stopped (after being started)
@@ -86,8 +88,8 @@ class LiveActivityVM : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.messageReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_PRINT_MESSAGE), object: nil)
 
 		self.activityType = activityType
+		self.activityTypeToUse = activityType
 
-		var activityTypeToUse = activityType
 		var orphanedActivityIndex: size_t = 0
 		var isNewActivity: Bool = true
 
@@ -105,7 +107,7 @@ class LiveActivityVM : ObservableObject {
 
 			let orphanedActivityType = String(cString: orphanedActivityTypePtr!.assumingMemoryBound(to: CChar.self))
 			if orphanedActivityType.count > 0 {
-				activityTypeToUse = orphanedActivityType
+				self.activityTypeToUse = orphanedActivityType
 
 				if recreateOrphanedActivities {
 					ReCreateOrphanedActivity(orphanedActivityIndex)
@@ -124,7 +126,7 @@ class LiveActivityVM : ObservableObject {
 
 		// Create the backend structures needed to do the activity.
 		if isNewActivity == true {
-			CreateActivityObject(activityTypeToUse)
+			CreateActivityObject(self.activityTypeToUse)
 
 			// Generate a unique identifier for this activity.
 			self.activityId = NSUUID().uuidString
@@ -132,17 +134,17 @@ class LiveActivityVM : ObservableObject {
 
 		// Which attributes does the user wish to display when doing this activity?
 		let activityPrefs = ActivityPreferences()
-		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: activityTypeToUse)
+		self.activityAttributePrefs = activityPrefs.getActivityLayout(activityType: self.activityTypeToUse)
 
 		// Preferred view layout.
-		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: activityTypeToUse)
+		self.viewType = ActivityPreferences.getDefaultViewForActivityType(activityType: self.activityTypeToUse)
 
 		// Which sensors are useful?
 		let sensorTypes = getUsableSensorTypes()
 
 		// Configure the location accuracy parameters.
-		SensorMgr.shared.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: activityTypeToUse))
-		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: activityTypeToUse))
+		SensorMgr.shared.location.minAllowedHorizontalAccuracy = Double(ActivityPreferences.getMinLocationHorizontalAccuracy(activityType: self.activityTypeToUse))
+		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: self.activityTypeToUse))
 
 		// Start the sensors.
 		SensorMgr.shared.startSensors(usableSensors: sensorTypes)
@@ -169,8 +171,8 @@ class LiveActivityVM : ObservableObject {
 
 		// Timer to periodically refresh the view.
 		self.needsFullScreenRefresh = true
-		let startStopBeepEnabled = ActivityPreferences.getStartStopBeepEnabled(activityType: activityTypeToUse)
-		let splitBeepEnabled = ActivityPreferences.getSplitBeepEnabled(activityType: activityTypeToUse)
+		let startStopBeepEnabled = ActivityPreferences.getStartStopBeepEnabled(activityType: self.activityTypeToUse)
+		let splitBeepEnabled = ActivityPreferences.getSplitBeepEnabled(activityType: self.activityTypeToUse)
 		let preferredUnits = Preferences.preferredUnitSystem()
 		self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { tempTimer in
 
@@ -347,6 +349,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr1.title = activityAttribute
 						self.attr1.units = measureStr
+						self.attr1.position = index
 					}
 					break
 				case 1:
@@ -354,6 +357,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr2.title = activityAttribute
 						self.attr2.units = measureStr
+						self.attr2.position = index
 					}
 					break
 				case 2:
@@ -361,6 +365,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr3.title = activityAttribute
 						self.attr3.units = measureStr
+						self.attr3.position = index
 					}
 					break
 				case 3:
@@ -368,6 +373,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr4.title = activityAttribute
 						self.attr4.units = measureStr
+						self.attr4.position = index
 					}
 					break
 				case 4:
@@ -375,6 +381,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr5.title = activityAttribute
 						self.attr5.units = measureStr
+						self.attr5.position = index
 					}
 					break
 				case 5:
@@ -382,6 +389,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr6.title = activityAttribute
 						self.attr6.units = measureStr
+						self.attr6.position = index
 					}
 					break
 				case 6:
@@ -389,6 +397,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr7.title = activityAttribute
 						self.attr7.units = measureStr
+						self.attr7.position = index
 					}
 					break
 				case 7:
@@ -396,6 +405,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr8.title = activityAttribute
 						self.attr8.units = measureStr
+						self.attr8.position = index
 					}
 					break
 				case 8:
@@ -403,6 +413,7 @@ class LiveActivityVM : ObservableObject {
 					if self.needsFullScreenRefresh {
 						self.attr9.title = activityAttribute
 						self.attr9.units = measureStr
+						self.attr9.position = index
 					}
 					break
 				default:
@@ -623,8 +634,8 @@ class LiveActivityVM : ObservableObject {
 		self.activityAttributePrefs.remove(at: position)
 		self.activityAttributePrefs.insert(attributeName, at: position)
 		self.needsFullScreenRefresh = true
-		
-		ActivityPreferences.setActivityLayout(activityType: self.activityType, layout: self.activityAttributePrefs)
+
+		ActivityPreferences.setActivityLayout(activityType: self.activityTypeToUse, layout: self.activityAttributePrefs)
 	}
 	
 	func setWatchActivityAttributeColor(attributeName: String, colorName: String) {

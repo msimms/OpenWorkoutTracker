@@ -125,7 +125,7 @@ struct ActivityView: View {
 							self.showingActivityColorSelection1 = self.canShowAttributeMenu()
 						}
 						.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection1, titleVisibility: .visible) {
-							self.selectAttributeToDisplay(position: 0)
+							self.selectAttributeToDisplay(position: self.activityVM.attr1.position)
 						}
 						.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection1, titleVisibility: .visible) {
 							self.selectColorToUse(attributeName: self.activityVM.attr1.title)
@@ -161,7 +161,7 @@ struct ActivityView: View {
 									self.showingActivityColorSelection2 = self.canShowAttributeMenu()
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection2, titleVisibility: .visible) {
-									self.selectAttributeToDisplay(position: 1)
+									self.selectAttributeToDisplay(position: self.activityVM.attr2.position)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection2, titleVisibility: .visible) {
 									self.selectColorToUse(attributeName: self.activityVM.attr2.title)
@@ -182,7 +182,7 @@ struct ActivityView: View {
 									self.showingActivityColorSelection3 = self.canShowAttributeMenu()
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection3, titleVisibility: .visible) {
-									self.selectAttributeToDisplay(position: 2)
+									self.selectAttributeToDisplay(position: self.activityVM.attr3.position)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection3, titleVisibility: .visible) {
 									self.selectColorToUse(attributeName: self.activityVM.attr3.title)
@@ -207,7 +207,7 @@ struct ActivityView: View {
 									self.showingActivityColorSelection4 = self.canShowAttributeMenu()
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection4, titleVisibility: .visible) {
-									self.selectAttributeToDisplay(position: 3)
+									self.selectAttributeToDisplay(position: self.activityVM.attr4.position)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection4, titleVisibility: .visible) {
 									self.selectColorToUse(attributeName: self.activityVM.attr4.title)
@@ -228,7 +228,7 @@ struct ActivityView: View {
 									self.showingActivityColorSelection5 = self.canShowAttributeMenu()
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection5, titleVisibility: .visible) {
-									self.selectAttributeToDisplay(position: 4)
+									self.selectAttributeToDisplay(position: self.activityVM.attr5.position)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection5, titleVisibility: .visible) {
 									self.selectColorToUse(attributeName: self.activityVM.attr5.title)
@@ -253,7 +253,7 @@ struct ActivityView: View {
 									self.showingActivityColorSelection6 = self.canShowAttributeMenu()
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection6, titleVisibility: .visible) {
-									self.selectAttributeToDisplay(position: 5)
+									self.selectAttributeToDisplay(position: self.activityVM.attr6.position)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection6, titleVisibility: .visible) {
 									self.selectColorToUse(attributeName: self.activityVM.attr6.title)
@@ -274,7 +274,7 @@ struct ActivityView: View {
 									self.showingActivityColorSelection7 = self.canShowAttributeMenu()
 								}
 								.confirmationDialog("Select the attribute to display", isPresented: self.$showingActivityAttributeSelection7, titleVisibility: .visible) {
-									self.selectAttributeToDisplay(position: 6)
+									self.selectAttributeToDisplay(position: self.activityVM.attr7.position)
 								}
 								.confirmationDialog("Select the color to use", isPresented: self.$showingActivityColorSelection7, titleVisibility: .visible) {
 									self.selectColorToUse(attributeName: self.activityVM.attr7.title)
