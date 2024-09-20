@@ -11,32 +11,49 @@ struct ContentView: View {
 	var body: some View {
 		NavigationStack() {
 			ScrollView() {
-				// Start button
-				Button("Start") {
-					self.showingActivitySelection = true
-				}
-				.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivitySelection, titleVisibility: .visible) {
-					ForEach(CommonApp.activityTypes, id: \.self) { item in
-						NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item, recreateOrphanedActivities: false), activityType: item))
-					}
-				}
-
-				// History button
-				NavigationLink("History", destination: HistoryView())
-
-				// Settings and About buttons
-				HStack() {
-					NavigationLink(destination: SettingsView()) {
-						ZStack {
-							Image(systemName: "gear")
+				Group() {
+					// Start button
+					Button(action: {
+						self.showingActivitySelection = true
+					}) {
+						HStack {
+							Text("Start")
+							Image(systemName: "play")
 						}
 					}
-					NavigationLink(destination: AboutView()) {
-						ZStack {
-							Image(systemName: "questionmark.circle")
+					.confirmationDialog("Select the workout to perform", isPresented: self.$showingActivitySelection, titleVisibility: .visible) {
+						ForEach(CommonApp.activityTypes, id: \.self) { item in
+							NavigationLink(item, destination: ActivityView(activityVM: LiveActivityVM(activityType: item, recreateOrphanedActivities: false), activityType: item))
 						}
 					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					
+					// History button
+					NavigationLink(destination: HistoryView()) {
+						HStack {
+							Text("History")
+							Image(systemName: "list.bullet.clipboard")
+						}
+					}
+					.frame(minWidth: 0, maxWidth: .infinity)
+					
+					// Settings and About buttons
+					HStack() {
+						NavigationLink(destination: SettingsView()) {
+							ZStack {
+								Image(systemName: "gear")
+							}
+						}
+						.frame(minWidth: 0, maxWidth: .infinity)
+						NavigationLink(destination: AboutView()) {
+							ZStack {
+								Image(systemName: "questionmark.circle")
+							}
+						}
+						.frame(minWidth: 0, maxWidth: .infinity)
+					}
 				}
+				.padding(.horizontal)
 
 				// iPhone connectivity status
 				Image(systemName: "iphone")
