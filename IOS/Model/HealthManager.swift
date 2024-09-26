@@ -24,9 +24,12 @@ func exportNextCoordinate(activityId: Optional<UnsafePointer<Int8>>, coordinate:
 
 class HealthManager {
 	static let shared = HealthManager()
-	
+
 	private var authorized = false
+
 	private let healthStore = HKHealthStore();
+	private var workoutBuilder: HKWorkoutBuilder?
+	private var routeBuilder: HKWorkoutRouteBuilder?
 
 	public var workouts: Dictionary<String, HKWorkout> = [:] // Summaries of workouts stored in the health store, key is the activity ID which is generated automatically
 	public var currentHeartRate: Double = 0.0 // Most recent heart rate reading (Apple Watch)
@@ -54,7 +57,8 @@ class HealthManager {
 	private init() {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
 	}
-	
+
+	/// @brief Called when the application is started to verify that we have authorization for the things we need.
 	func requestAuthorization() {
 		
 		// Check for HealthKit availability.
@@ -102,13 +106,17 @@ class HealthManager {
 		}
 
 		// Request authorization for all the things we need from HealthKit.
-		healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { result, error in
+		self.healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { result, error in
+
+			// Read the user's age.
 			do {
 				try self.getAge()
 			}
 			catch {
 				NSLog("Failed to read the user's age from HealthKit.")
 			}
+
+			// Read the user's height and weight.
 			do {
 				try self.getHeight()
 				try self.getWeight()
@@ -116,6 +124,8 @@ class HealthManager {
 			catch {
 				NSLog("Failed to read the user's height and weight from HealthKit.")
 			}
+			
+			// Read the user's resting heart rate and then estimate their maximum heart rate.
 			do {
 				try self.getRestingHr()
 #if !os(watchOS)
@@ -125,12 +135,15 @@ class HealthManager {
 			catch {
 				NSLog("Failed to read heart rate information from HealthKit.")
 			}
+
+			// Read the user's VO2Max.
 			do {
 				try self.getVO2Max()
 			}
 			catch {
 				NSLog("Failed to read the VO2Max from HealthKit.")
 			}
+
 			do {
 #if !os(watchOS)
 				try self.getBestRecent5KEffort()
@@ -139,6 +152,7 @@ class HealthManager {
 			catch {
 				NSLog("Failed to read the workout history from HealthKit.")
 			}
+
 			do {
 				try self.getFtp()
 #if !os(watchOS)
@@ -151,6 +165,7 @@ class HealthManager {
 		}
 	}
 
+	/// @brief Returns the most recent entry in the health store for the specified quantity type (example: getting the most recent resting heart rate value).
 	func mostRecentQuantitySampleOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
 		
 		// Since we are interested in retrieving the user's latest sample, we sort the samples in descending
@@ -174,12 +189,13 @@ class HealthManager {
 		self.healthStore.execute(query)
 	}
 
+	/// @brief Returns the last year's health store entries for the specified quantity type (example: getting the most recent N heart rate samples).
 	func recentQuantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
 		
 		let oneYear = (365.25 * 24.0 * 60.0 * 60.0)
-		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - oneYear)
-		let endDate = Date()
-		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [.strictStartDate])
+		let startTime = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - oneYear)
+		let endTime = Date()
+		let predicate = HKQuery.predicateForSamples(withStart: startTime, end: endTime, options: [.strictStartDate])
 		
 		let query = HKSampleQuery.init(sampleType: quantityType, predicate: predicate, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { query, results, error in
 			
@@ -203,7 +219,7 @@ class HealthManager {
 
 	func quantitySamplesOfType(quantityType: HKQuantityType, callback: @escaping (HKQuantitySample?, Error?) -> ()) {
 		
-		// We are not filtering the data, and so the predicate is set to nil.
+		// We are not filtering the data, so the predicate is set to nil.
 		let query = HKSampleQuery.init(sampleType: quantityType, predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil, resultsHandler: { query, results, error in
 			
 			// Error case: Call the callback handler, passing nil for the results.
@@ -383,7 +399,6 @@ class HealthManager {
 		let vo2MaxSample = HKQuantitySample.init(type: vo2MaxType, quantity: vo2MaxQuantity, start: now, end: now)
 		
 		self.healthStore.save(vo2MaxSample, withCompletion: {_,_ in })
-
 	}
 
 	/// @brief Estimates the user's cycling FTP based on cycling power data in HealthKit. Uses 95% of the best recent 20 minute effort.
@@ -460,7 +475,7 @@ class HealthManager {
 
 	/// @brief Gets the user's best 5K effort from the last six months of HealthKit data.
 	func getBestRecent5KEffort() throws {
-		let startDate = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - 86400.0 * 7.0 * 26.0)
+		let startTime = Date(timeIntervalSince1970: Date().timeIntervalSince1970 - 86400.0 * 7.0 * 26.0)
 		let predicate = HKQuery.predicateForWorkouts(with: HKWorkoutActivityType.running)
 		let sortDescriptor = NSSortDescriptor.init(key: HKSampleSortIdentifierStartDate, ascending: false)
 		let quantityType = HKWorkoutType.workoutType()
@@ -470,7 +485,7 @@ class HealthManager {
 			if samples != nil {
 				for sample in samples! {
 					if let workout = sample as? HKWorkout {
-						if workout.startDate.timeIntervalSince1970 >= startDate.timeIntervalSince1970 {
+						if workout.startDate.timeIntervalSince1970 >= startTime.timeIntervalSince1970 {
 							let distance = workout.totalDistance
 							
 							if distance != nil {
@@ -725,6 +740,7 @@ class HealthManager {
 		}
 	}
 
+	/// @brief Grabs the latest weight reading from HealthKit and adds it to the database.
 	func updateWeightHistoryFromHealthKit() {
 		let weightType = HKQuantityType.init(HKQuantityTypeIdentifier.bodyMass)
 
@@ -736,6 +752,7 @@ class HealthManager {
 		})
 	}
 
+	/// @brief Adds the height reading to HealthKit.
 	func saveHeightIntoHealthStore(height: Double, unitSystem: UnitSystem) {
 		var units = HKUnit.inch()
 		if unitSystem == UNIT_SYSTEM_METRIC {
@@ -748,6 +765,7 @@ class HealthManager {
 		self.healthStore.save(heightSample, withCompletion: {_,_ in })
 	}
 
+	/// @brief Adds the weight reading to HealthKit.
 	func saveWeightIntoHealthStore(weight: Double, unitSystem: UnitSystem) {
 		var units = HKUnit.inch()
 		if unitSystem == UNIT_SYSTEM_METRIC {
@@ -760,6 +778,7 @@ class HealthManager {
 		self.healthStore.save(weightSample, withCompletion: {_,_ in })
 	}
 
+	/// @brief Adds the heart rate reading reading to HealthKit.
 	func saveHeartRateIntoHealthStore(beats: Double) {
 		let now = Date()
 		let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
@@ -770,6 +789,7 @@ class HealthManager {
 		})
 	}
 
+	/// @brief Adds the cycling power reading to HealthKit.
 	func saveCyclingPowerIntoHealthStore(watts: Double) {
 		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
 			let now = Date()
@@ -777,57 +797,73 @@ class HealthManager {
 			let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
 			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingPower)
 			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
+
 			self.healthStore.save(powerSample, withCompletion: { result, error in
 			})
 		}
 	}
 
-	func saveRunningWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
-		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
-		let workout = HKWorkout(activityType: .running, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
-		self.healthStore.save(workout, withCompletion: {_,_ in
-			
-			// Append the route
-			self.saveWorkoutRouteIntoHealthStore(workout: workout, locations: locations)
-		})
+	func endWorkout(endTime: Date, endRoute: Bool) {
+		guard let builder = self.workoutBuilder else {
+			return
+		}
+
+		builder.endCollection(withEnd: endTime) { (success, error) in
+			if let error = error {
+				NSLog("Error ending workout collection: \(error.localizedDescription)")
+				return
+			}
+
+			builder.finishWorkout(completion: { (workout, error) in
+				if let error = error {
+					NSLog("Error finishing workout: \(error.localizedDescription)")
+					return
+				}
+				else if let workout = workout {
+					if endRoute {
+						self.endWorkoutRoute(workout: workout)
+					}
+				}
+			})
+		}
 	}
 
-	func saveWalkingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
-		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
-		let workout = HKWorkout(activityType: .walking, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
-		self.healthStore.save(workout, withCompletion: {_,_ in
-			
-			// Append the route
-			self.saveWorkoutRouteIntoHealthStore(workout: workout, locations: locations)
-		})
+	func addDistanceSample(distance: HKQuantity, startTime: Date, endTime: Date, distanceQuantityType: HKQuantityTypeIdentifier) {
+		guard let builder = self.workoutBuilder else {
+			return
+		}
+
+		guard let distanceType = HKQuantityType.quantityType(forIdentifier: distanceQuantityType) else { return }
+		let distanceSample = HKQuantitySample(type: distanceType, quantity: distance, start: startTime, end: endTime)
+		
+		builder.add([distanceSample]) { (success, error) in
+			if let error = error {
+				NSLog("Error adding distance sample: \(error.localizedDescription)")
+			}
+		}
 	}
 
-	func saveCyclingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date, locations: Array<CLLocationCoordinate2D>) {
-		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
-		let workout = HKWorkout(activityType: .cycling, start: startDate, end: endDate, workoutEvents: nil, totalEnergyBurned: nil, totalDistance: distanceQuantity, metadata: nil)
-		self.healthStore.save(workout, withCompletion: {_,_ in
-			
-			// Append the route
-			self.saveWorkoutRouteIntoHealthStore(workout: workout, locations: locations)
-		})
-	}
+	func addCaloriesBurnedSample(calories: Double, startTime: Date, endTime: Date) {
+		guard let builder = self.workoutBuilder else {
+			return
+		}
 
-	func saveSwimmingWorkoutIntoHealthStore(distance: Double, units: HKUnit, startDate: Date, endDate: Date) {
-		let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
-		let distanceType = HKQuantityType.init(HKQuantityTypeIdentifier.distanceSwimming)
-		let distanceSample = HKQuantitySample.init(type: distanceType, quantity: distanceQuantity, start: startDate, end: endDate)
-		self.healthStore.save(distanceSample, withCompletion: {_,_ in })
-	}
-
-	func saveCaloriesBurnedIntoHealthStore(calories: Double, startDate: Date, endDate: Date) {
 		let calorieUnit = HKUnit.kilocalorie()
 		let calorieQuantity = HKQuantity.init(unit: calorieUnit, doubleValue: calories)
 		let calorieType = HKQuantityType.init(HKQuantityTypeIdentifier.activeEnergyBurned)
-		let calorieSample = HKQuantitySample.init(type: calorieType, quantity: calorieQuantity, start: startDate, end: endDate)
-		self.healthStore.save(calorieSample, withCompletion: {_,_ in })
+		let calorieSample = HKQuantitySample.init(type: calorieType, quantity: calorieQuantity, start: startTime, end: endTime)
+
+		builder.add([calorieSample]) { (success, error) in
+			if let error = error {
+				NSLog("Error adding calorie sample: \(error.localizedDescription)")
+			}
+		}
 	}
 	
-	func saveWorkoutRouteIntoHealthStore(workout: HKWorkout, locations: Array<CLLocationCoordinate2D>) {
+	func saveWorkoutRoute(locations: Array<CLLocationCoordinate2D>) {
+		guard let builder = self.routeBuilder else {
+			return
+		}
 		guard locations.count > 0 else {
 			return
 		}
@@ -837,9 +873,21 @@ class HealthManager {
 			tempLocations.append(CLLocation(latitude: location.latitude, longitude: location.longitude))
 		}
 
-		let routeBuilder = HKWorkoutRouteBuilder(healthStore: self.healthStore, device: nil)
-		routeBuilder.insertRouteData(tempLocations) { (success, error) in
-			routeBuilder.finishRoute(with: workout, metadata: nil) { (newRoute, error) in
+		builder.insertRouteData(tempLocations) { (success, error) in
+			if let error = error {
+				NSLog("Error inserting route data: \(error.localizedDescription)")
+			}
+		}
+	}
+	
+	func endWorkoutRoute(workout: HKWorkout) {
+		guard let builder = self.routeBuilder else {
+			return
+		}
+
+		builder.finishRoute(with: workout, metadata: nil) { (newRoute, error) in
+			if let error = error {
+				NSLog("Error finishing route: \(error.localizedDescription)")
 			}
 		}
 	}
@@ -995,6 +1043,52 @@ class HealthManager {
 		return newFileName
 	}
 
+	/// @brief To be called when starting an activity.
+	func startActivity(activityType: String, startTime: Date) {
+		// Configure the workout
+		let configuration = HKWorkoutConfiguration()
+		configuration.activityType = HealthManager.activityTypeToHKWorkoutType(activityType: activityType)
+		configuration.locationType = HealthManager.activityTypeToHKWorkoutSessionLocationType(activityType: activityType)
+
+		// Swim-specifc configuration.
+		if configuration.activityType == HKWorkoutActivityType.swimming {
+			configuration.swimmingLocationType = HealthManager.activityTypeToHKWorkoutSwimmingLocationType(activityType: activityType)
+			if configuration.locationType == HKWorkoutSessionLocationType.indoor {
+				configuration.lapLength = HealthManager.poolLengthToHKQuantity()
+			}
+		}
+
+		// Initialize the workout builder
+		self.workoutBuilder = HKWorkoutBuilder(healthStore: self.healthStore, configuration: configuration, device: .local())
+
+		// Initialize the workout route builder.
+		self.routeBuilder = HKWorkoutRouteBuilder(healthStore: self.healthStore, device: nil)
+
+		// Start data collection
+		self.workoutBuilder?.beginCollection(withStart: startTime) { (success, error) in
+			if let error = error {
+				NSLog("Error starting workout collection: \(error.localizedDescription)")
+			}
+		}
+
+#if os(watchOS)
+		// Start the session in HealthKit. The app will get put into the background on the watch if we don't do this.
+		do {
+			self.workoutSession = try HKWorkoutSession(healthStore: self.healthStore, configuration: configuration)
+			if let session = self.workoutSession {
+				session.startActivity(with: startTime)
+			}
+		}
+		catch {
+		}
+
+		// Subscribe to heart rate updates.
+		if Preferences.useWatchHeartRate() {
+			self.subscribeToHeartRateUpdates()
+		}
+#endif
+	}
+
 	/// @brief This method is called in response to an activity stopped notification.
 	@objc func activityStopped(notification: NSNotification) {
 		
@@ -1006,29 +1100,24 @@ class HealthManager {
 				let distance = notificationData[KEY_NAME_DISTANCE] as? Double,
 				let calories = notificationData[KEY_NAME_CALORIES] as? Double,
 				let locations = notificationData[KEY_NAME_LOCATIONS] as? Array<CLLocationCoordinate2D> {
-				
+
 				let units = HealthManager.unitSystemToHKDistanceUnit(units: Preferences.preferredUnitSystem())
 
 				// HealthKit limitation: Cannot have activities lasting longer than four days.
 				if endTime.timeIntervalSince1970 - startTime.timeIntervalSince1970 < (86400 * 4) {
-					if activityType == ACTIVITY_TYPE_CYCLING || activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
-						self.saveCyclingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
+
+					if (distance > 0.01) {
+						let distanceQuantity = HKQuantity.init(unit: units, doubleValue: distance)
+						let distanceQuantityType = HealthManager.activityTypeToDistanceQuantityType(activityType: activityType)
+
+						self.addDistanceSample(distance: distanceQuantity, startTime: startTime, endTime: endTime, distanceQuantityType: distanceQuantityType)
+						self.saveWorkoutRoute(locations: locations)
 					}
-					else if activityType == ACTIVITY_TYPE_RUNNING {
-						self.saveRunningWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
-					}
-					else if activityType == ACTIVITY_TYPE_WALKING {
-						self.saveWalkingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime, locations: locations)
-					}
-					else if activityType == ACTIVITY_TYPE_POOL_SWIMMING {
-						self.saveSwimmingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
-					}
-					else if activityType == ACTIVITY_TYPE_OPEN_WATER_SWIMMING {
-						self.saveSwimmingWorkoutIntoHealthStore(distance: distance, units: units, startDate: startTime, endDate: endTime)
-					}
+
+					self.addCaloriesBurnedSample(calories: calories, startTime: startTime, endTime: endTime)
 				}
-				
-				self.saveCaloriesBurnedIntoHealthStore(calories: calories, startDate: startTime, endDate: endTime)
+
+				self.endWorkout(endTime: endTime, endRoute: locations.count > 0)
 			}
 		}
 	}
@@ -1058,42 +1147,6 @@ class HealthManager {
 
 		self.healthStore.stop(self.hrQuery!)
 		self.hrQuery = nil
-	}
-
-	func startWorkout(activityType: String, startTime: Date) {
-		let workoutConfig: HKWorkoutConfiguration = HKWorkoutConfiguration()
-
-		// Convert the activity strings we use internally to Apple's activity type enumeration.
-		workoutConfig.activityType = HealthManager.activityTypeToHKWorkoutType(activityType: activityType)
-
-		// From the activity type, infer the type of location (indoor, outdoor).
-		workoutConfig.locationType = HealthManager.activityTypeToHKWorkoutSessionLocationType(activityType: activityType)
-
-		// Swim specifc configuration.
-		if workoutConfig.activityType == HKWorkoutActivityType.swimming {
-			workoutConfig.swimmingLocationType = HealthManager.activityTypeToHKWorkoutSwimmingLocationType(activityType: activityType)
-			if workoutConfig.locationType == HKWorkoutSessionLocationType.indoor {
-				workoutConfig.lapLength = HealthManager.poolLengthToHKQuantity()
-			}
-		}
-
-#if os(watchOS)
-		// Start the session in HealthKit. The app will get put into the background on the watch if we don't do this.
-		do {
-			self.workoutSession = try HKWorkoutSession(healthStore: self.healthStore, configuration:workoutConfig)
-			if let session = self.workoutSession {
-				//session.delegate = self
-				session.startActivity(with: startTime)
-			}
-		}
-		catch {
-		}
-
-		// Subscribe to heart rate updates.
-		if Preferences.useWatchHeartRate() {
-			self.subscribeToHeartRateUpdates()
-		}
-#endif
 	}
 
 	func stopWorkout(endTime: Date) {
@@ -1126,6 +1179,41 @@ class HealthManager {
 		return HKUnit.mile()
 	}
 	
+	/// @brief Utility method for converting between the activity type strings used in this app and the distance quantity enums used by Apple.
+	static func activityTypeToDistanceQuantityType(activityType: String) -> HKQuantityTypeIdentifier {
+		if activityType == ACTIVITY_TYPE_CYCLING {
+			return .distanceCycling
+		}
+		else if activityType == ACTIVITY_TYPE_HIKING {
+			return .distanceWalkingRunning
+		}
+		else if activityType == ACTIVITY_TYPE_MOUNTAIN_BIKING {
+			return .distanceCycling
+		}
+		else if activityType == ACTIVITY_TYPE_RUNNING {
+			return .distanceWalkingRunning
+		}
+		else if activityType == ACTIVITY_TYPE_STATIONARY_CYCLING {
+			return .distanceCycling
+		}
+		else if activityType == ACTIVITY_TYPE_VIRTUAL_CYCLING {
+			return .distanceCycling
+		}
+		else if activityType == ACTIVITY_TYPE_TREADMILL {
+			return .distanceWalkingRunning
+		}
+		else if activityType == ACTIVITY_TYPE_WALKING {
+			return .distanceWalkingRunning
+		}
+		else if activityType == ACTIVITY_TYPE_OPEN_WATER_SWIMMING {
+			return .distanceSwimming
+		}
+		else if activityType == ACTIVITY_TYPE_POOL_SWIMMING {
+			return .distanceSwimming
+		}
+		return .distanceWalkingRunning
+	}
+
 	/// @brief Utility method for converting between the activity type strings used in this app and the workout enums used by Apple.
 	static func activityTypeToHKWorkoutType(activityType: String) -> HKWorkoutActivityType {
 		if activityType == ACTIVITY_TYPE_CHINUP {

@@ -489,7 +489,7 @@ class LiveActivityVM : ObservableObject {
 			self.autoStartEnabled = false
 			
 			// Start the activity in HealthKit.
-			HealthManager.shared.startWorkout(activityType: self.activityType, startTime: Date())
+			HealthManager.shared.startActivity(activityType: self.activityType, startTime: Date())
 
 			// Tell any subscribers that we've started an activity.
 			var notificationData: Dictionary<String, String> = [:]
