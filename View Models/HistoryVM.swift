@@ -89,11 +89,7 @@ class HistoryVM : ObservableObject {
 			
 			// Whenever we reload the history we should re-evaluate the user's recent performances.
 			ProfileVM.updateEstimations()
-			
-			// Minor performance optimization, since we know how many items will be in the list.
-			let numActivities = GetNumHistoricalActivities()
-			self.historicalActivities.reserveCapacity(numActivities)
-			
+
 			// Build our local summary cache.
 			var activityIndex = 0
 			var done = false
