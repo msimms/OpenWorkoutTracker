@@ -218,7 +218,7 @@ class GearVM : ObservableObject {
 		return shoes
 	}
 	
-	static func createBike(item: GearSummary) -> Bool {
+	static func createBike(item: GearSummary, updateRemote: Bool) -> Bool {
 		// Does this already exist?
 		if GetBikeIdFromName(item.name) == nil {
 
@@ -270,10 +270,12 @@ class GearVM : ObservableObject {
 				}
 
 				// Update the optional server.
-				do {
-					return try ApiClient.shared.updateGear(item: item)
+				if updateRemote {
+					do {
+						return try ApiClient.shared.updateGear(item: item)
+					}
+					catch { }
 				}
-				catch { }
 			}
 			else {
 				NSLog("Failed to update the bike profile.")
@@ -282,7 +284,7 @@ class GearVM : ObservableObject {
 		return false
 	}
 
-	static func createShoes(item: GearSummary) -> Bool {
+	static func createShoes(item: GearSummary, updateRemote: Bool) -> Bool {
 		// Does this already exist?
 		if GetShoeIdFromName(item.name) == nil {
 
@@ -315,10 +317,12 @@ class GearVM : ObservableObject {
 							 time_t(item.lastUpdatedTime.timeIntervalSince1970)) {
 
 			// Update the optional server.
-			do {
-				return try ApiClient.shared.updateGear(item: item)
+			if updateRemote {
+				do {
+					return try ApiClient.shared.updateGear(item: item)
+				}
+				catch { }
 			}
-			catch { }
 		}
 		else {
 			NSLog("Failed to update the shoe profile.")
@@ -364,10 +368,10 @@ class GearVM : ObservableObject {
 		
 		if let type = dict[PARAM_GEAR_TYPE] as? String {
 			if type == "bike" {
-				let _ = GearVM.createBike(item: summary)
+				let _ = GearVM.createBike(item: summary, updateRemote: false)
 			}
 			else if type == "shoes" {
-				let _ = GearVM.createShoes(item: summary)
+				let _ = GearVM.createShoes(item: summary, updateRemote: false)
 			}
 		}
 	}

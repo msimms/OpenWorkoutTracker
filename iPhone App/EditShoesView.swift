@@ -38,7 +38,7 @@ struct EditShoesView: View {
 			Group() {
 				Button(action: {
 					let item = GearSummary(gearId: self.gearId, name: self.name, description: self.description)
-					self.showingSaveError = !GearVM.createShoes(item: item)
+					self.showingSaveError = !GearVM.createShoes(item: item, updateRemote: true)
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)

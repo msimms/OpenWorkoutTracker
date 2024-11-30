@@ -355,6 +355,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief Callback in response to a gear list request.
 	@objc func gearListUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {

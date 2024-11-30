@@ -80,7 +80,7 @@ struct EditBikeView: View {
 
 				Button(action: {
 					let item = GearSummary(gearId: self.gearId, name: self.name, description: self.description)
-					self.showingSaveError = !GearVM.createBike(item: item)
+					self.showingSaveError = !GearVM.createBike(item: item, updateRemote: true)
 				}) {
 					Text("Save")
 						.frame(minWidth: 0, maxWidth: .infinity)
