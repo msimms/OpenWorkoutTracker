@@ -98,13 +98,14 @@ struct TagsView: View {
 	private func generateTagCloud(in g: GeometryProxy, items: Array<String>, handler: @escaping (_: String) -> ()) -> some View {
 		var width = CGFloat.zero
 		var height = CGFloat.zero
+		let geoProxyWidth = g.size.width
 		
 		return ZStack(alignment: .topLeading) {
 			ForEach(items, id: \.self) { item in
 				self.generateTag(for: item, handler: handler)
 					.padding([.horizontal, .vertical], 4)
 					.alignmentGuide(.leading, computeValue: { d in
-						if (abs(width - d.width) > g.size.width)
+						if (abs(width - d.width) > geoProxyWidth)
 						{
 							width = 0
 							height -= d.height

@@ -45,9 +45,11 @@ struct HistoryView: View {
 									HStack() {
 										Image(systemName: HistoryVM.imageNameForActivityType(activityType: item.type))
 										Text(item.type)
+											.font(.system(size: 16))
 											.bold()
 										Spacer()
 										Text("\(self.dateFormatter.string(from: item.startTime))")
+											.font(.system(size: 12))
 									}
 								}
 							}

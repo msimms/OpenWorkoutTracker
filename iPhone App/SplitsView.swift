@@ -20,24 +20,6 @@ struct SplitsView: View {
 	var body: some View {
 		ScrollView() {
 			VStack(alignment: .center) {
-				
-				HStack() {
-					Spacer()
-					VStack(alignment: .center) {
-						Text("Mile Splits")
-							.bold()
-						let mileSplits = self.activityVM.getMileSplits()
-						if mileSplits.count > 0 {
-							BarChartView(bars: makeSplitGraphBar(splits: mileSplits), color: Color.red, units: "", description: "")
-								.frame(height:256)
-						}
-						else {
-							Text("None")
-						}
-					}
-					Spacer()
-				}
-				.padding(10)
 
 				HStack() {
 					Spacer()
@@ -57,6 +39,24 @@ struct SplitsView: View {
 				}
 				.padding(10)
 				
+				HStack() {
+					Spacer()
+					VStack(alignment: .center) {
+						Text("Mile Splits")
+							.bold()
+						let mileSplits = self.activityVM.getMileSplits()
+						if mileSplits.count > 0 {
+							BarChartView(bars: makeSplitGraphBar(splits: mileSplits), color: Color.red, units: "", description: "")
+								.frame(height:256)
+						}
+						else {
+							Text("None")
+						}
+					}
+					Spacer()
+				}
+				.padding(10)
+
 				HStack() {
 					VStack(alignment: .center) {
 						Text("Lap Splits")

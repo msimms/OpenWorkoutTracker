@@ -276,6 +276,9 @@ struct HistoryDetailsView: View {
 							if kmSplits.count > 0 {
 								let fastestSplit = kmSplits.max()!
 								
+								Text("Kilometer Splits")
+									.bold()
+
 								ForEach(kmSplits.indices, id: \.self) { i in
 									let currentSplit = kmSplits[i]
 									let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
@@ -285,7 +288,7 @@ struct HistoryDetailsView: View {
 										let barHeight: Double = 0.9 * geometry.size.height
 										
 										HStack() {
-											Text("KM " + String(i+1) + " Split: " + StringUtils.formatSeconds(numSeconds: currentSplit))
+											Text("KM " + String(i+1) + " : " + StringUtils.formatSeconds(numSeconds: currentSplit))
 											Spacer()
 											Rectangle()
 												.frame(width: splitPercentage * barWidth, height: barHeight)
@@ -294,11 +297,16 @@ struct HistoryDetailsView: View {
 									}
 								}
 								.padding(INSET)
+
+								Spacer();
 							}
 							
 							if mileSplits.count > 0 {
 								let fastestSplit = mileSplits.max()!
 								
+								Text("Mile Splits")
+									.bold()
+
 								ForEach(mileSplits.indices, id: \.self) { i in
 									let currentSplit = mileSplits[i]
 									let splitPercentage: Double = Double(currentSplit) / Double(fastestSplit)
@@ -308,7 +316,7 @@ struct HistoryDetailsView: View {
 										let barHeight: Double = 0.9 * geometry.size.height
 										
 										HStack() {
-											Text("Mile " + String(i+1) + " Split: " + StringUtils.formatSeconds(numSeconds: currentSplit))
+											Text("Mile " + String(i+1) + " : " + StringUtils.formatSeconds(numSeconds: currentSplit))
 											Spacer()
 											Rectangle()
 												.frame(width: splitPercentage * barWidth, height: barHeight)
