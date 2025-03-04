@@ -29,7 +29,7 @@ struct ContentView: View {
 	@State private var showingEditSelection: Bool = false
 	@State private var isBusy: Bool = false
 	@State private var orientation = UIDevice.current.orientation
-	private var backgroundImageIndexPortrait: Int = Int.random(in: 1..<4)
+	private var backgroundImageIndexPortrait: Int = Int.random(in: 1..<6)
 	private var backgroundImageIndexLandscape: Int = Int.random(in: 4..<5)
 
 	var body: some View {
