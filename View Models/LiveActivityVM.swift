@@ -147,6 +147,8 @@ class LiveActivityVM : ObservableObject {
 		SensorMgr.shared.location.minAllowedVerticalAccuracy = Double(ActivityPreferences.getMinLocationVerticalAccuracy(activityType: self.activityTypeToUse))
 
 		// Start the sensors.
+		// This is intentionally done here when the activity is being created and before the activity is started so
+		// the user can see sensor values and debug any issues before starting the activity.
 		SensorMgr.shared.startSensors(usableSensors: sensorTypes)
 
 		// This won't change. Cache it.
@@ -474,13 +476,14 @@ class LiveActivityVM : ObservableObject {
 	
 	/// @brief Helper function for starting an activity..
 	func doStart() -> Bool {
-		// If this is a pool swimming activity then we want to set the pool length
+		// If this is a pool swimming activity then we want to set the pool length.
 		if self.activityType == ACTIVITY_TYPE_POOL_SWIMMING {
 			let poolLength = Preferences.poolLength()
 			let poolLengthUnits = Preferences.poolLengthUnits()
 			SetPoolLength(UInt16(poolLength), poolLengthUnits)
 		}
 
+		// Call the common start code, this takes care of creating the activity in the database, etc.
 		if StartActivity(self.activityId) {
 			
 			// Update state.
