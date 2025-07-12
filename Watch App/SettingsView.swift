@@ -24,7 +24,7 @@ struct SettingsView: View {
 					Text("Units")
 						.bold()
 					Toggle("Metric", isOn: self.$preferMetric)
-						.onChange(of: self.preferMetric) { value in
+						.onChange(of: self.preferMetric) { _, value in
 							Preferences.setPreferredUnitSystem(system: value ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
 							SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
 						}
@@ -35,7 +35,7 @@ struct SettingsView: View {
 					Text("Broadcast")
 						.bold()
 					Toggle("Broadcast", isOn: self.$broadcastEnabled)
-						.onChange(of: self.broadcastEnabled) { value in
+						.onChange(of: self.broadcastEnabled) { _, value in
 							Preferences.setBroadcastToServer(value: self.broadcastEnabled)
 						}
 						.padding(5)
@@ -45,7 +45,7 @@ struct SettingsView: View {
 					Text("Sensors")
 						.bold()
 					Toggle("Heart Rate", isOn: self.$heartRateEnabled)
-						.onChange(of: self.heartRateEnabled) { value in
+						.onChange(of: self.heartRateEnabled) { _, value in
 							Preferences.setUseWatchHeartRate(value: self.heartRateEnabled)
 							
 							// If we are currently subscribed to the heart rate query, then unsubscribe.
@@ -55,7 +55,7 @@ struct SettingsView: View {
 						}
 						.padding(5)
 					Toggle("Bluetooth Sensors", isOn: self.$btSensorsEnabled)
-						.onChange(of: self.btSensorsEnabled) { value in
+						.onChange(of: self.btSensorsEnabled) { _, value in
 							Preferences.setScanForSensors(value: self.btSensorsEnabled)
 							if self.btSensorsEnabled {
 								SensorMgr.shared.startSensors(usableSensors: [])
@@ -86,12 +86,12 @@ struct SettingsView: View {
 					Text("Sounds")
 						.bold()
 					Toggle("Run Split Beeps", isOn: self.$runSplitBeeps)
-						.onChange(of: self.runSplitBeeps) { value in
+						.onChange(of: self.runSplitBeeps) { _, value in
 							Preferences.setWatchRunSplitBeeps(value: self.runSplitBeeps)
 						}
 						.padding(5)
 					Toggle("Start Stop Beeps", isOn: self.$startStopBeeps)
-						.onChange(of: self.startStopBeeps) { value in
+						.onChange(of: self.startStopBeeps) { _, value in
 							Preferences.setWatchStartStopBeeps(value: self.startStopBeeps)
 						}
 						.padding(5)
@@ -101,12 +101,12 @@ struct SettingsView: View {
 					Text("Screen")
 						.bold()
 					Toggle("Allow Presses During Activity", isOn: self.$allowPressesDuringActivity)
-						.onChange(of: self.allowPressesDuringActivity) { value in
+						.onChange(of: self.allowPressesDuringActivity) { _, value in
 							Preferences.setWatchAllowPressesDuringActivity(value: self.allowPressesDuringActivity)
 						}
 						.padding(5)
 					Toggle("Turn Crown To Start / Stop Activity", isOn: self.$turnCrown)
-						.onChange(of: self.turnCrown) { value in
+						.onChange(of: self.turnCrown) { _, value in
 							Preferences.setWatchTurnCrownToStartStopActivity(value: self.turnCrown)
 						}
 						.padding(5)
