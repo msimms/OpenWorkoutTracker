@@ -366,7 +366,7 @@ struct ActivityView: View {
 									Button {
 										self.activityVM.lap()
 									} label: {
-										Label("Lap", systemImage: "stopwatch")
+										Label("Lap", systemImage: "point.forward.to.point.capsulepath")
 									}
 									.help("Lap")
 								}

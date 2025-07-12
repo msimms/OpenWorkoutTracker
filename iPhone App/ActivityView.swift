@@ -421,7 +421,7 @@ struct ActivityView: View {
 							self.activityVM.lap()
 							displayMessage(text: "New lap started")
 						} label: {
-							Label("Lap", systemImage: "stopwatch")
+							Label("Lap", systemImage: "point.forward.to.point.capsulepath")
 						}
 						.foregroundColor(self.colorScheme == .dark ? .white : .black)
 						.opacity(self.activityVM.isInProgress && !self.activityVM.isPaused ? 1 : 0)
