@@ -564,7 +564,11 @@ struct HistoryDetailsView: View {
 		case StoredActivityVM.State.empty:
 			VStack(alignment: .center) {
 				ProgressView("Loading...").onAppear(perform: self.loadDetails)
-					.progressViewStyle(CircularProgressViewStyle(tint: .gray))
+					.padding()
+					.progressViewStyle(CircularProgressViewStyle(tint: .white))
+					.zIndex(1)
+					.background(Color.gray.opacity(0.9))
+					.scaleEffect(x: 1.5, y: 1.5, anchor: .center)
 			}
 		}
 	}

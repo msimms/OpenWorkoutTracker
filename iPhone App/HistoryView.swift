@@ -46,10 +46,13 @@ struct HistoryView: View {
 				// If we're loading data then display the progress indicator.
 				if self.historyVM.state == HistoryVM.VmState.empty {
 					ProgressView("Loading...").onAppear(perform: self.loadHistory)
-						.progressViewStyle(CircularProgressViewStyle(tint: .gray))
+						.padding()
+						.progressViewStyle(CircularProgressViewStyle(tint: .white))
 						.zIndex(1)
+						.background(Color.gray.opacity(0.9))
+						.scaleEffect(x: 1.5, y: 1.5, anchor: .center)
 				}
-				
+
 				// The list of stored activities.
 				VStack(alignment: .center) {
 					if self.historyVM.historicalActivities.count > 0 {
