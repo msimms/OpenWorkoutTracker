@@ -239,6 +239,7 @@ struct ActivityView: View {
 										), trackUser: true, updates: true, overlays: [self.activityVM.trackLine, self.selectedRoute.trackLine])
 										.ignoresSafeArea()
 										.frame(height: 300)
+										.padding(.horizontal)
 									}
 								}
 								.padding(10)
