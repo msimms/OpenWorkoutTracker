@@ -87,7 +87,11 @@ class LocationSensor : NSObject, CLLocationManagerDelegate, ObservableObject {
 	}
 	
 	func start() {
-		if CLLocationManager.locationServicesEnabled() {
+		DispatchQueue.global(qos: .userInitiated).async {
+			guard CLLocationManager.locationServicesEnabled() else {
+				return
+			}
+			
 			switch self.locationManager.authorizationStatus {
 			case CLAuthorizationStatus.denied:
 				self.locationManager.requestAlwaysAuthorization()
