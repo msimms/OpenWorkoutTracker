@@ -274,7 +274,7 @@ class BroadcastManager {
 				
 				attr = QueryLiveActivityAttribute(ACTIVITY_ATTRIBUTE_THREAT_COUNT);
 				if attr.valid {
-					locationData[ACTIVITY_ATTRIBUTE_THREAT_COUNT] = attr.value.doubleVal as AnyObject?
+					locationData[ACTIVITY_ATTRIBUTE_THREAT_COUNT] = attr.value.intVal as AnyObject?
 				}
 				
 				let jsonData = try JSONSerialization.data(withJSONObject: locationData, options: [])
