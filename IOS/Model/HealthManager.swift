@@ -767,9 +767,9 @@ class HealthManager {
 
 	/// @brief Adds the weight reading to HealthKit.
 	func saveWeightIntoHealthStore(weight: Double, unitSystem: UnitSystem) {
-		var units = HKUnit.inch()
+		var units = HKUnit.pound()
 		if unitSystem == UNIT_SYSTEM_METRIC {
-			units = HKUnit.meterUnit(with: HKMetricPrefix.centi)
+			units = HKUnit.gramUnit(with: HKMetricPrefix.kilo)
 		}
 		let now = Date()
 		let weightQuantity = HKQuantity.init(unit: units, doubleValue: weight)
