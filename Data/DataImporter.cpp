@@ -284,7 +284,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 		{
 			SensorReading powerReading;
 
-			powerReading.type = SENSOR_TYPE_HEART_RATE;
+			powerReading.type = SENSOR_TYPE_POWER;
 			powerReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_POWER, power));
 			powerReading.time = time;
 			result = m_pDb->CreateSensorReading(m_activityId, powerReading);
@@ -293,7 +293,7 @@ bool DataImporter::NewLocation(double lat, double lon, double ele, double hr, do
 		{
 			SensorReading cadenceReading;
 
-			cadenceReading.type = SENSOR_TYPE_HEART_RATE;
+			cadenceReading.type = SENSOR_TYPE_CADENCE;
 			cadenceReading.reading.insert(SensorNameValuePair(ACTIVITY_ATTRIBUTE_CADENCE, cadence));
 			cadenceReading.time = time;
 			result = m_pDb->CreateSensorReading(m_activityId, cadenceReading);
