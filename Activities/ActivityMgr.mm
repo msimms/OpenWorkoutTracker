@@ -2675,14 +2675,19 @@ extern "C" {
 
 		if (ValidActivityIndex(activityIndex))
 		{
+			g_historicalActivityLock.lock();
 			ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+			g_historicalActivityLock.unlock();
 
 			// Has the sensor data been loaded? We'll need it for fixing the activity end time.
 			if (g_pActivityFactory && !summary.pActivity)
 			{
-				CreateHistoricalActivityObject(activityId);
-				LoadHistoricalActivityLapData(summary.activityId.c_str());
-				LoadAllHistoricalActivitySensorData(summary.activityId.c_str());
+				bool created = CreateHistoricalActivityObject(activityId);
+				if (created)
+				{
+					LoadHistoricalActivityLapData(summary.activityId.c_str());
+					LoadAllHistoricalActivitySensorData(summary.activityId.c_str());
+				}
 			}
 			
 			// If we haven't loaded the sensor data by now then give up.

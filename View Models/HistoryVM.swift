@@ -111,9 +111,15 @@ class HistoryVM : ObservableObject {
 					}
 					
 					defer {
-						activityTypePtr!.deallocate()
-						activityNamePtr!.deallocate()
-						activityDescPtr!.deallocate()
+						if activityTypePtr != nil {
+							activityTypePtr!.deallocate()
+						}
+						if activityNamePtr != nil {
+							activityNamePtr!.deallocate()
+						}
+						if activityDescPtr != nil {
+							activityDescPtr!.deallocate()
+						}
 					}
 					
 					if activityTypePtr == nil || activityNamePtr == nil || activityDescPtr == nil {
