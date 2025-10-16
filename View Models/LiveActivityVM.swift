@@ -59,7 +59,7 @@ class LiveActivityVM : ObservableObject {
 	var isInProgress: Bool = false
 	var isPaused: Bool = false
 	var isStopped: Bool = false // Has been stopped (after being started)
-	var autoStartEnabled: Bool = false
+	@Published var autoStartEnabled: Bool = false
 	var isMovingActivity: Bool = false
 	var needsFullScreenRefresh: Bool = true
 	var countdownSecsRemaining: UInt = 0
