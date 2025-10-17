@@ -87,6 +87,7 @@ struct HistoryView: View {
 								}
 							}
 							.onDelete(perform: delete)
+							.listRowSeparator(.hidden)
 						}
 						.listStyle(.plain)
 						.gesture(
