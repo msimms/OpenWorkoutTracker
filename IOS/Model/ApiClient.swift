@@ -166,7 +166,7 @@ class ApiClient : ObservableObject {
 							NotificationCenter.default.post(notification)
 						}
 						else if url.contains(REMOTE_API_EXPORT_ACTIVITY_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: downloadedData)
+							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY_RECEIVED), object: downloadedData)
 							NotificationCenter.default.post(notification)
 						}
 						else if url.contains(REMOTE_API_DELETE_ACTIVITY_URL) {

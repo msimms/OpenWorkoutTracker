@@ -779,24 +779,22 @@ class HealthManager {
 	}
 
 	/// @brief Adds the heart rate reading reading to HealthKit.
-	func saveHeartRateIntoHealthStore(beats: Double) {
-		let now = Date()
+	func saveHeartRateIntoHealthStore(beats: Double, timestamp: Date = Date()) {
 		let hrUnit: HKUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
 		let hrQuantity = HKQuantity.init(unit: hrUnit, doubleValue: beats)
 		let hrType = HKQuantityType.init(HKQuantityTypeIdentifier.heartRate)
-		let hrSample = HKQuantitySample.init(type: hrType, quantity: hrQuantity, start: now, end: now)
+		let hrSample = HKQuantitySample.init(type: hrType, quantity: hrQuantity, start: timestamp, end: timestamp)
 		self.healthStore.save(hrSample, withCompletion: { result, error in
 		})
 	}
 
 	/// @brief Adds the cycling power reading to HealthKit.
-	func saveCyclingPowerIntoHealthStore(watts: Double) {
+	func saveCyclingPowerIntoHealthStore(watts: Double, timestamp: Date = Date()) {
 		if #available(iOS 17.0, macOS 14.0, watchOS 10.0, *) {
-			let now = Date()
 			let powerUnit: HKUnit = HKUnit.watt()
 			let powerQuantity = HKQuantity.init(unit: powerUnit, doubleValue: watts)
 			let powerType = HKQuantityType.init(HKQuantityTypeIdentifier.cyclingPower)
-			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: now, end: now)
+			let powerSample = HKQuantitySample.init(type: powerType, quantity: powerQuantity, start: timestamp, end: timestamp)
 
 			self.healthStore.save(powerSample, withCompletion: { result, error in
 			})

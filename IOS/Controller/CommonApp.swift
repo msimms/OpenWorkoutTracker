@@ -7,6 +7,7 @@ import Foundation
 #if os(watchOS)
 import SwiftUI // for WKInterfaceDevice
 #endif
+import os
 
 func activityTypeCallback(name: Optional<UnsafePointer<Int8>>, context: Optional<UnsafeMutableRawPointer>) {
 	let activityType = String(cString: UnsafeRawPointer(name!).assumingMemoryBound(to: CChar.self))
@@ -21,7 +22,8 @@ class CommonApp : ObservableObject {
 	private var broadcastMgr = BroadcastManager.shared
 	private var healthMgr = HealthManager.shared
 	var watchSession = WatchSession()
-	
+	var stateLock = OSAllocatedUnfairLock()
+
 	/// Singleton constructor
 	private init() {
 		// Initialize the backend, including the database.
@@ -79,7 +81,7 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.friendsListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.requestToFollowResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.requestUserSettingsResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_USER_SETTINGS_RESULT), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.downloadedActivityReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.downloadedActivityReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY_RECEIVED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.gearListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.raceListUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_RACE_LIST_UPDATED), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.plannedWorkoutsUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: nil)
@@ -122,6 +124,7 @@ class CommonApp : ObservableObject {
 		return CreateActivitySync(activityId, SYNC_DEST_WATCH)
 	}
 	
+	/// @brief Sends an activity to the server.
 	func exportActivityToWeb(activityId: String) async throws {
 		let summary = ActivitySummary()
 		summary.id = activityId
@@ -137,7 +140,41 @@ class CommonApp : ObservableObject {
 		
 		try FileManager.default.removeItem(at: fileUrl!)
 	}
-	
+
+	/// @brief Called to add data to HealthKit from a newly imported activity.
+	func importActivityToHealthKit(activityId: String) {
+
+		// Add heart data to HealthKit.
+		let numHrReadings = GetNumHistoricalSensorReadings(activityId, SENSOR_TYPE_HEART_RATE);
+		if numHrReadings > 0 {
+			for hrIndex in 0...numHrReadings - 1 {
+				var timestamp: time_t = 0
+				var value: Double = 0.0
+
+				if GetHistoricalActivitySensorReading(activityId, SENSOR_TYPE_HEART_RATE, hrIndex, &timestamp, &value) {
+					HealthManager.shared.saveHeartRateIntoHealthStore(beats: value, timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
+				}
+			}
+		}
+
+		if IsCyclingActivity() {
+
+			// Add power data to HealthKit.
+			let numPowerReadings = GetNumHistoricalSensorReadings(activityId, SENSOR_TYPE_POWER);
+			if numPowerReadings > 0 {
+				for powerIndex in 0...numPowerReadings - 1 {
+					var timestamp: time_t = 0
+					var value: Double = 0.0
+
+					if GetHistoricalActivitySensorReading(activityId, SENSOR_TYPE_POWER, powerIndex, &timestamp, &value) {
+						HealthManager.shared.saveCyclingPowerIntoHealthStore(watts: value, timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
+					}
+				}
+			}
+		}
+	}
+
+	/// @brief This method is called when the server returns login status.
 	@objc func loginStatusUpdated(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -154,6 +191,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called when the server acknowledges a login.
 	@objc func loginProcessed(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -197,6 +235,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called when the server acknowledges a login creation.
 	@objc func createLoginProcessed(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -213,6 +252,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called when the server acknowledges a session logout.
 	@objc func logoutProcessed(notification: NSNotification) {
 		if let data = notification.object as? Dictionary<String, AnyObject> {
 			if let responseCode = data[KEY_NAME_RESPONSE_CODE] as? HTTPURLResponse {
@@ -223,6 +263,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called when the server returns an updated friends list.
 	@objc func friendsListUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -259,6 +300,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called when the server returns updated user settings.
 	@objc func requestUserSettingsResponse(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -284,15 +326,16 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief Called when the notification to import an activity is received.
 	@objc func downloadedActivityReceived(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
 				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data,
 				   let requestUrl = data[KEY_NAME_URL] as? URL {
-					
+
 					// Parse the URL.
 					let components = URLComponents(url: requestUrl, resolvingAgainstBaseURL: false)!
-					
+
 					if let queryItems = components.queryItems {
 						var activityId: String?
 						var exportFormat: String?
@@ -314,12 +357,24 @@ class CommonApp : ObservableObject {
 							
 							if fullUrl != nil {
 								try responseData.write(to: fullUrl!)
-								
+
+								// Only one thread should do this at a time.
+								self.stateLock.lock()
+
+								// Bring the file into the local database.
 								if ImportActivityFromFile(fullUrl?.absoluteString, "", activityId) {
+
+									// The activity is now in the database, load it up so we can do things.
+									CreateHistoricalActivityObject(activityId)
+									LoadHistoricalActivity(activityId)
+									LoadAllHistoricalActivitySensorData(activityId)
+
+									// Add relevant data to HealthKit.
+									importActivityToHealthKit(activityId: activityId!)
+
+									// Keep track of the most recently synched activity.
 									var startTime: time_t = 0
 									var endTime: time_t = 0
-									
-									LoadHistoricalActivity(activityId)
 									if GetHistoricalActivityStartAndEndTime(activityId, &startTime, &endTime) {
 										let lastSynchedActivityTime = Preferences.lastServerImportTime()
 										
@@ -327,10 +382,21 @@ class CommonApp : ObservableObject {
 											Preferences.setLastServerImportTime(value: startTime)
 										}
 									}
+									else {
+										NSLog("GetHistoricalActivityStartAndEndTime failed!")
+									}
+
+									// Delete any cached data.
+									FreeHistoricalActivityObject(activityId)
+									FreeHistoricalActivitySensorData(activityId)
 								}
 								else {
 									NSLog("Import failed!")
 								}
+
+								// Allow other threads to finish importing.
+								self.stateLock.unlock()
+
 								try FileManager.default.removeItem(at: fullUrl!)
 							}
 							else {
@@ -338,7 +404,7 @@ class CommonApp : ObservableObject {
 							}
 						}
 						else {
-							NSLog("Activity ID and Export Format not provided!")
+							NSLog("Activity ID and Format not provided!")
 						}
 					}
 					else {
@@ -376,6 +442,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called when the server returns an updated race list.
 	@objc func raceListUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -396,6 +463,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 
+	/// @brief This method is called when the server returns an updated workout.
 	@objc func plannedWorkoutsUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -425,6 +493,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 
+	/// @brief This method is called when the server returns interval sessions.
 	@objc func intervalSessionsUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -444,7 +513,8 @@ class CommonApp : ObservableObject {
 			NSLog(error.localizedDescription)
 		}
 	}
-	
+
+	/// @brief This method is called when the server returns pace plans.
 	@objc func pacePlansUpdated(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {
@@ -535,6 +605,7 @@ class CommonApp : ObservableObject {
 		}
 	}
 	
+	/// @brief This method is called in when the server returns activity metadata.
 	@objc func activityMetadataReceived(notification: NSNotification) {
 		do {
 			if let data = notification.object as? Dictionary<String, AnyObject> {

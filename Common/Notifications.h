@@ -20,7 +20,7 @@
 #define NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED       "CreateLoginProcessed"       // The (optional) server responded to an attempt to create a new login
 #define NOTIFICATION_NAME_LOGIN_CHECKED                "LoginChecked"               // The (optional) server is responding to a login request
 #define NOTIFICATION_NAME_LOGGED_OUT                   "LogoutProcessed"            // The (optional) server is responding to a logout request
-#define NOTIFICATION_NAME_DOWNLOADED_ACTIVITY          "DownloadedActivity"         // We've received an activity from the (optional) server
+#define NOTIFICATION_NAME_DOWNLOADED_ACTIVITY_RECEIVED "DownloadedActivityReceived" // We've received an activity from the (optional) server
 #define NOTIFICATION_NAME_PRINT_MESSAGE                "PrintMessage"               // Show a message on the activity screen
 #define NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE        "HasActivityResponse"        // The (optional) server responded to an activity existence check
 #define NOTIFICATION_NAME_ACTIVITY_METADATA            "ActivityMetadata"           // The (optional) server returned activity metadata
