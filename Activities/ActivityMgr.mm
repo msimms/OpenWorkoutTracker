@@ -2944,6 +2944,23 @@ extern "C" {
 		return false;
 	}
 
+	bool IsHistoricalActivityCyclingActivity(const char* const activityId)
+	{
+		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);
+
+		if (ValidActivityIndex(activityIndex))
+		{
+			const ActivitySummary& summary = g_historicalActivityList.at(activityIndex);
+
+			if (summary.pActivity)
+			{
+				Cycling* pCyclingActivity = dynamic_cast<Cycling*>(summary.pActivity);
+				return pCyclingActivity != NULL;
+			}
+		}
+		return false;
+	}
+
 	bool IsHistoricalActivityLiftingActivity(const char* const activityId)
 	{
 		size_t activityIndex = ConvertActivityIdToActivityIndex(activityId);

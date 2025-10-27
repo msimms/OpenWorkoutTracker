@@ -25,6 +25,7 @@
 #define NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE        "HasActivityResponse"        // The (optional) server responded to an activity existence check
 #define NOTIFICATION_NAME_ACTIVITY_METADATA            "ActivityMetadata"           // The (optional) server returned activity metadata
 #define NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED    "ActivityMetadataUpdated"    // New activity metadata was received and written to the database
+#define NOTIFICATION_NAME_EXPORT_TO_HEALTHKIT          "ExportToHealthKit"          // Export pertinent activity data to HealthKit
 
 // Parameters that are associated with the notifications
 #define KEY_NAME_ACTIVITY_ID                           "ActivityId"                 // The unique identifier for the activity

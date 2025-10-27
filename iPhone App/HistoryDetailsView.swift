@@ -76,6 +76,7 @@ struct HistoryDetailsView: View {
 	@State private var showingActivityTypeSelection: Bool = false
 	@State private var showingExportSelection: Bool = false
 	@State private var showingFormatSelection: Bool = false
+	@State private var showingExportToHealthKitConfirmation: Bool = false
 	@State private var showingUpdateNameError: Bool = false
 	@State private var showingUpdateDescriptionError: Bool = false
 	@State private var showingExportFailedError: Bool = false
@@ -483,6 +484,9 @@ struct HistoryDetailsView: View {
 									self.exportDestination = ExportDest.icloud
 									self.showingFormatSelection = true
 								}
+								Button("Save To HealthKit") {
+									self.showingExportToHealthKitConfirmation = true
+								}
 							}
 							.confirmationDialog("Export", isPresented: self.$showingFormatSelection, titleVisibility: .visible) {
 								if IsHistoricalActivityMovingActivity(self.activityVM.activityId) {
@@ -556,6 +560,14 @@ struct HistoryDetailsView: View {
 							.help("Export this activity")
 							.alert("Export failed!", isPresented: self.$showingExportFailedError) { }
 							.alert("Export succeeded!", isPresented: self.$showingExportSucceededError) { }
+							.alert("Do you want to copy this activity's data to HealthKit?", isPresented: self.$showingExportToHealthKitConfirmation) {
+								Button("Yes") {
+									let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_EXPORT_TO_HEALTHKIT), object: self.activityVM.activityId)
+									NotificationCenter.default.post(notification)
+								}
+								Button("No") {
+								}
+							}
 						}
 					}
 				}

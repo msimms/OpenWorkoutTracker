@@ -176,6 +176,7 @@ extern "C" {
 	void SetHistoricalActivityAttribute(const char* const activityId, const char* const attributeName, ActivityAttributeType attributeValue);
 	bool IsHistoricalActivityFootBased(const char* const activityId);
 	bool IsHistoricalActivityMovingActivity(const char* const activityId);
+	bool IsHistoricalActivityCyclingActivity(const char* const activityId);
 	bool IsHistoricalActivityLiftingActivity(const char* const activityId);
 
 	// Functions for accessing historical location data.

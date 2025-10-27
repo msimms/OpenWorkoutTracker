@@ -91,7 +91,8 @@ class CommonApp : ObservableObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.hasActivityResponse), name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityStopped), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_STOPPED), object: nil)
-		
+		NotificationCenter.default.addObserver(self, selector: #selector(self.exportActivityToHealthKitRequested), name: Notification.Name(rawValue: NOTIFICATION_NAME_EXPORT_TO_HEALTHKIT), object: nil)
+
 		// Sync with the server.
 		let _ = ApiClient.shared.syncWithServer()
 	}
@@ -142,7 +143,7 @@ class CommonApp : ObservableObject {
 	}
 
 	/// @brief Called to add data to HealthKit from a newly imported activity.
-	func importActivityToHealthKit(activityId: String) {
+	func exportActivityToHealthKit(activityId: String) {
 
 		// Add heart data to HealthKit.
 		let numHrReadings = GetNumHistoricalSensorReadings(activityId, SENSOR_TYPE_HEART_RATE);
@@ -152,12 +153,12 @@ class CommonApp : ObservableObject {
 				var value: Double = 0.0
 
 				if GetHistoricalActivitySensorReading(activityId, SENSOR_TYPE_HEART_RATE, hrIndex, &timestamp, &value) {
-					HealthManager.shared.saveHeartRateIntoHealthStore(beats: value, timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
+					HealthManager.shared.saveHeartRateIntoHealthStore(beats: value, timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp / 1000)))
 				}
 			}
 		}
 
-		if IsCyclingActivity() {
+		if IsHistoricalActivityCyclingActivity(activityId) {
 
 			// Add power data to HealthKit.
 			let numPowerReadings = GetNumHistoricalSensorReadings(activityId, SENSOR_TYPE_POWER);
@@ -167,10 +168,17 @@ class CommonApp : ObservableObject {
 					var value: Double = 0.0
 
 					if GetHistoricalActivitySensorReading(activityId, SENSOR_TYPE_POWER, powerIndex, &timestamp, &value) {
-						HealthManager.shared.saveCyclingPowerIntoHealthStore(watts: value, timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
+						HealthManager.shared.saveCyclingPowerIntoHealthStore(watts: value, timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp / 1000)))
 					}
 				}
 			}
+		}
+	}
+
+	/// @brief This method is called when a request to copy activity information into HealthKit is received.
+	@objc func exportActivityToHealthKitRequested(notification: NSNotification) {
+		if let activityId = notification.object as? String {
+			self.exportActivityToHealthKit(activityId: activityId);
 		}
 	}
 
@@ -370,7 +378,7 @@ class CommonApp : ObservableObject {
 									LoadAllHistoricalActivitySensorData(activityId)
 
 									// Add relevant data to HealthKit.
-									importActivityToHealthKit(activityId: activityId!)
+									self.exportActivityToHealthKit(activityId: activityId!)
 
 									// Keep track of the most recently synched activity.
 									var startTime: time_t = 0
