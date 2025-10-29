@@ -31,51 +31,96 @@
 extern "C" {
 #endif
 
-	// Functions for managing the database.
+	/** @name DatabaseGroup
+	 * @brief Functions for managing the database.
+	 * @retval True for success, False for failure
+	 */
+	///@{
 	bool Initialize(const char* const dbFileName);
 	bool DeleteActivityFromDatabase(const char* const activityId);
 	bool IsActivityInDatabase(const char* const activityId);
 	bool ResetDatabase(void);
 	bool CloseDatabase(void);
+	///@}
 
-	// Functions for managing the activity name.
+	/** @name ActivityNameGroup
+	 * @brief Functions for managing the activity name
+	 */
+	///@{
 	char* RetrieveActivityName(const char* const activityId);
 	bool UpdateActivityName(const char* const activityId, const char* const name);
+	///@}
 
-	// Functions for managing the activity type.
+	/** @name ActivityTypeGroup
+	 * @brief Functions for managing the activity type.
+	 * @retval True for success, False for failure
+	 */
+	///@{
 	bool UpdateActivityType(const char* const activityId, const char* const type);
+	///@}
 
-	// Functions for managing the activity description.
+	/** @name ActivityDescriptionGroup
+	 * @brief Functions for managing the activity description.
+	 * @retval True for success, False for failure
+	 */
+	///@{
 	bool UpdateActivityDescription(const char* const activityId, const char* const description);
+	///@}
 
-	// Functions for managing tags.
+	/** @name TagGroup
+	 * @brief Functions for managing the activity tags.
+	 * @retval True for success, False for failure
+	 */
+	///@{
 	bool CreateTag(const char* const activityId, const char* const tag);
 	bool RetrieveTags(const char* const activityId, TagCallback callback, void* context);
 	bool DeleteTag(const char* const activityId, const char* const tag);
 	bool HasTag(const char* const activityId, const char* const tag);
 	bool SearchForTags(const char* const searchStr);
+	///@}
 
-	// Functions for managing the activity hash.
+	/** @name HashGroup
+	 * @brief Functions for managing the activity hash
+	 */
+	///@{
 	bool CreateOrUpdateActivityHash(const char* const activityId, const char* const hash);
 	char* GetHashForActivityId(const char* const activityId);
+	///@}
 
-	// Methods for managing the activity sync status.
+	/** @name SyncGroup
+	 * @brief Functions for managing the activity sync status.
+	 * @retval True for success, False for failure
+	 */
+	///@{
 	bool IsActivitySynched(const char* const activityId, const char* const destination);
 	bool CreateActivitySync(const char* const activityId, const char* const destination);
 	bool RetrieveSyncDestinationsForActivityId(const char* const activityId, SyncCallback callback, void* context);
 	bool RetrieveActivityIdsNotSynchedToWeb(SyncCallback callback, void* context);
+	///@}
 
-	// Functions for controlling user preferences and profile data.
+	/** @name ProfileGroup
+	 * @brief Functions for controlling user preferences and profile data.
+	 */
+	///@{
 	void SetPreferredUnitSystem(UnitSystem system);
 	void SetUserProfile(ActivityLevel level, Gender gender, time_t bday, double weightKg, double heightCm,
 		double ftp, double restingHr, double maxHr, double vo2Max, uint32_t bestRecentRunPerfSecs, double bestRecentRunPerfMeters);
 	bool GetUsersWeightHistory(WeightCallback callback, void* context);
 	bool GetUsersCurrentWeight(time_t* timestamp, double* weightKg);
+	///@}
 
-	// For configuring a pool swimming session.
+	/** @name SwimGroup
+	 * @brief Functions relating exclusively to swim activities.
+	 */
+	///@{
+	//* Specifies the length of the pool */
 	void SetPoolLength(uint16_t poolLength, UnitSystem units);
+	///@}
 
-	// Functions for managing bike profiles.
+	/** @name BikeProfileGroup
+	 * @brief Functions for managing bike profiles.
+	 */
+	///@{
 	bool InitializeBikeProfileList(void);
 	bool CreateBikeProfile(const char* const gearId, const char* const name, const char* const description,
 		double weightKg, double wheelCircumferenceMm, time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
@@ -87,8 +132,12 @@ extern "C" {
 	const char* const GetBikeIdFromName(const char* const name);
 	const char* const GetBikeIdFromIndex(size_t index);
 	bool ComputeWheelCircumference(const char* const gearId);
+	///@}
 
-	// Functions for managing shoes.
+	/** @name ShoeGroup
+	 * @brief Functions for managing shoes.
+	 */
+	///@{
 	bool InitializeShoeProfileList(void);
 	bool CreateShoeProfile(const char* const gearId, const char* const name, const char* const description,
 		time_t timeAdded, time_t timeRetired, time_t lastUpdatedTime);
@@ -99,30 +148,50 @@ extern "C" {
 	bool DeleteShoeProfile(const char* const gearId);
 	const char* const GetShoeIdFromName(const char* const name);
 	const char* const GetShoeIdFromIndex(size_t index);
+	///@}
 
-	// Functions for managing gear service history.
+	/** @name ServiceHistoryGroup
+	 * @brief Functions for gear service history.
+	 */
+	///@{
 	bool CreateServiceHistory(const char* const gearId, const char* const serviceId, time_t timeServiced, const char* const description);
 	bool RetrieveServiceHistoryByIndex(const char* const gearId, size_t serviceIndex, char** const serviceId, time_t* timeServiced, char** const description);
 	bool UpdateServiceHistory(const char* const serviceId, time_t timeServiced, const char* const description);
 	bool DeleteServiceHistory(const char* const serviceId);
+	///@}
 
-	// Functions for managing the currently set interval session.
+	/** @name CurrentIntervalSessionGroup
+	 * @brief Functions for managing the currently set interval session.
+	 */
+	///@{
 	bool SetCurrentIntervalSession(const char* const sessionId);
 	bool CheckCurrentIntervalSession(void);
 	bool GetCurrentIntervalSessionSegment(IntervalSessionSegment* segment);
 	bool IsIntervalSessionComplete(void);
+	///@}
 
-	// Functions for managing interval sessions.
+	/** @name IntervalSessionGroup
+	 * @brief Functions for managing interval sessions.
+	 */
+	///@{
 	bool InitializeIntervalSessionList(void);
 	bool CreateNewIntervalSession(const char* const sessionId, const char* const sessionName, const char* const sport, const char* const description);
 	char* RetrieveIntervalSessionAsJSON(size_t sessionIndex);
 	bool DeleteIntervalSession(const char* const sessionId);
+	///@}
 
-	// Functions for managing interval session segments.
+	/** @name IntervalSegmentGroup
+	 * @brief Functions for managing session segments.
+	 */
+	///@{
 	bool CreateNewIntervalSessionSegment(const char* const sessionId, IntervalSessionSegment segment);
 	bool DeleteIntervalSessionSegment(const char* const sessionId, size_t segmentIndex);
+	///@}
 
-	// Functions for managing pace plans.
+	/** @name PacePlanGroup
+	 * @brief Functions for managing pace plans.
+	 */
+	///@{
 	bool InitializePacePlanList(void);
 	bool CreateNewPacePlan(const char* const planId, const char* const name);
 	char* RetrievePacePlanAsJSON(size_t planIndex);
@@ -130,18 +199,28 @@ extern "C" {
 		double targetDistance, time_t targetTime, time_t targetSplits,
 		UnitSystem targetDistanceUnits, UnitSystem targetSplitsUnits, time_t lastUpdatedTime);
 	bool DeletePacePlan(const char* planId);
-
-	// Functions for managing the currently set pace plan.
 	bool SetCurrentPacePlan(const char* const planId);
+	///@}
 
-	// Functions for merging historical activities.
+	/** @name MergeGroup
+	 * @brief Functions for merging historical activities.
+	 */
+	///@{
 	bool MergeActivities(const char* const activityId1, const char* const activityId2);
+	///@}
 
-	// Functions for accessing history (index to id conversions).
+	/** @name ActivityIndexGroup
+	 * @brief Functions for accessing history (index to id conversions).
+	 */
+	///@{
 	const char* const ConvertActivityIndexToActivityId(size_t activityIndex);
 	size_t ConvertActivityIdToActivityIndex(const char* const activityId);
+	///@}
 
-	// Functions for loading history.
+	/** @name LoadHistoryGroup
+	 * @brief Functions for loading historical data (activities and associated data).
+	 */
+	///@{
 	void InitializeHistoricalActivityList(void);
 	void LoadHistoricalActivity(const char* const activityId);
 	bool HistoricalActivityListIsInitialized(void);
@@ -152,15 +231,22 @@ extern "C" {
 	bool LoadAllHistoricalActivitySummaryData(void);
 	bool LoadHistoricalActivitySummaryData(const char* const activityId);
 	bool SaveHistoricalActivitySummaryData(const char* const activityId);
+	///@}
 
-	// Functions for unloading history.
+	/** @name UnloadHistoryGroup
+	 * @brief Functions for loading historical data (activities and associated data).
+	 */
+	///@{
 	void FreeHistoricalActivityList(void);
 	void FreeHistoricalActivityObject(const char* const activityId);
 	void FreeHistoricalActivitySensorData(const char* const activityId);
 	void FreeHistoricalActivitySummaryData(const char* const activityId);
+	///@}
 
-	// Functions for accessing historical data.
-	// These all assume the activity has already been loaded.
+	/** @name ViewHistoryGroup
+	 * @brief Functions for accessing historical data. These functions assume the activity has already been loaded.
+	 */
+	///@{
 	bool GetHistoricalActivityStartAndEndTimeByIndex(size_t activityIndex, time_t* const startTime, time_t* const endTime);
 	bool GetHistoricalActivityStartAndEndTime(const char* const activityId, time_t* const startTime, time_t* const endTime);
 	void FixHistoricalActivityEndTime(const char* const activityId);
@@ -178,46 +264,86 @@ extern "C" {
 	bool IsHistoricalActivityMovingActivity(const char* const activityId);
 	bool IsHistoricalActivityCyclingActivity(const char* const activityId);
 	bool IsHistoricalActivityLiftingActivity(const char* const activityId);
+	///@}
 
-	// Functions for accessing historical location data.
+	/** @name HistoricalLocationGroup
+	 * @brief Functions for accessing historical location data.
+	 */
+	///@{
 	size_t GetNumHistoricalActivityLocationPoints(const char* const activityId);
 	bool GetHistoricalActivityLocationPoint(const char* const activityId, size_t pointIndex, Coordinate* const coordinate);
+	///@}
 
-	// Functions for accessing historical sensor data.
+	/** @name HistoricalSensorGroup
+	 * @brief Functions for accessing historical sensor data.
+	 */
+	///@{
 	size_t GetNumHistoricalSensorReadings(const char* const activityId, SensorType sensorType);
 	bool GetHistoricalActivitySensorReading(const char* const activityId, SensorType sensorType, size_t readingIndex,
 		time_t* const readingTime, double* const readingValue);
 	bool GetHistoricalActivityAccelerometerReading(const char* const activityId, size_t readingIndex,
 		time_t* const readingTime, double* const xValue, double* const yValue, double* const zValue);
+	///@}
 
-	// Functions for modifying historical activity.
+	/** @name TrimGroup
+	 * @brief Functions for modifying historical activity.
+	 */
+	///@{
 	bool TrimActivityData(const char* const activityId, uint64_t newTime, bool fromStart);
+	///@}
 
-	// Functions for listing activity types.
+	/** @name TypesGroup
+	 * @brief Functions for listing activity types.
+	 */
+	///@{
 	void GetActivityTypes(ActivityTypeCallback callback, void* context, bool includeStrengthActivities, bool includeSwimActivities, bool includeTriathlonMode);
+	///@}
 
-	// Functions for listing attributes of the current activity.
+	/** @name NamesGroup
+	 * @brief Functions for listing attributes of the current activity.
+	 */
+	///@{
 	void GetActivityAttributeNames(AttributeNameCallback callback, void* context);
+	///@}
 
-	// Functions for listing sensors used by the current activity.
+	/** @name SensorTypesGroup
+	 * @brief Functions for listing sensors used by the current activity.
+	 */
+	///@{
 	void GetUsableSensorTypes(SensorTypeCallback callback, void* context);
+	///@}
 
-	// Functions for estimating the athlete's fitness.
+	/** @name PhysiologyGroup
+	 * @brief Functions for estimating the athlete's fitness.
+	 */
+	///@{
 	double EstimateFtp(void);
 	double EstimateMaxHr(void);
+	///@}
 
-	// Functions for querying training zones.
+	/** @name TrainingZonesGroup
+	 * @brief Functions for querying training zones.
+	 */
+	///@{
 	double GetHrZone(uint8_t zoneNum);
 	double GetPowerZone(uint8_t zoneNum);
 	double GetRunTrainingPace(TrainingPaceType pace);
+	///@}
 
-	// Functions for managing suggested workout generation.
+	/** @name SuggestedWorkoutCreationGroup
+	 * @brief Functions for managing suggested workout generation.
+	 */
+	///@{
 	void InsertAdditionalAttributesForWorkoutGeneration(const char* const activityId, const char* const activityType,
 		time_t startTime, time_t endTime, ActivityAttributeType distanceAttr);
 	char* GenerateWorkouts(Goal goal, GoalType goalType, time_t goalDate, DayType preferredLongRunDay,
 		bool hasSwimmingPoolAccess, bool hasOpenWaterSwimAccess, bool hasBicycle);
+	///@}
 
-	// Functions for managing suggested workout generation.
+	/** @name SuggestedWorkoutCreationGroup
+	 * @brief Functions for managing the suggested workout list.
+	 */
+	///@{
 	bool InitializeWorkoutList(void);
 	char* RetrieveWorkoutAsJSON(size_t workoutIndex);
 	bool CreateWorkout(const char* const workoutId, WorkoutType type, const char* activityType, double estimatedIntensityScore, time_t scheduledTime);
@@ -226,37 +352,61 @@ extern "C" {
 	char* ExportWorkout(const char* const workoutId, const char* pDirName);
 	const char* WorkoutTypeToString(WorkoutType workoutType);
 	WorkoutType WorkoutTypeStrToEnum(const char* const workoutTypeStr);
+	///@}
 
-	// Functions for converting units.
+	/** @name UnitConversionGrouop
+	 * @brief Functions for converting between units.
+	 */
+	///@{
 	void ConvertToMetric(ActivityAttributeType* value);
 	void ConvertToBroadcastUnits(ActivityAttributeType* value);
 	void ConvertToCustomaryUnits(ActivityAttributeType* value);
 	void ConvertToPreferredUnits(ActivityAttributeType* value);
+	///@}
 
-	// Functions for creating and destroying the current activity.
+	/** @name ActivityCreationGroup
+	 * @brief Functions for creating and destroying the current activity.
+	 */
+	///@{
 	void CreateActivityObject(const char* const activityType);
 	void ReCreateOrphanedActivity(size_t activityIndex);
 	void DestroyCurrentActivity(void);
 	char* GetCurrentActivityType(void);
 	const char* const GetCurrentActivityId(void);
+	///@}
 
-	// Functions for starting/stopping the current activity.
+	/** @name ActivityStartStopGroup
+	 * @brief Functions for starting/stopping the current activity.
+	 */
+	///@{
 	bool StartActivity(const char* const activityId);
 	bool StartActivityWithTimestamp(const char* const activityId, time_t startTime);
 	bool StopCurrentActivity(void);
 	bool PauseCurrentActivity(void);
 	bool SaveActivitySummaryData(void);
+	///@}
 
-	// Lap-related functions for the current activity.
+	/** @name LapGroup
+	 * @brief Lap-related functions for the current activity.
+	 */
+	///@{
 	bool StartNewLap(void);
 	bool MetaDataForLap(size_t lapNum, uint64_t* startTimeMs, uint64_t* elapsedTimeMs, double* startingDistanceMeters, double* startingCalorieCount);
 	size_t NumLaps(void);
+	///@}
 
-	// Functions for managing the autostart state.
+	/** @name AutoStartGroup
+	 * @brief Functions for managing the autostart state.
+	 */
+	///@{
 	bool IsAutoStartEnabled(void);
 	void SetAutoStart(bool value);
+	///@}
 
-	// Functions for querying the status of the current activity.
+	/** @name ActivityStatusGroup
+	 * @brief Functions for querying the status of the current activity.
+	 */
+	///@{
 	bool IsActivityCreated(void);
 	bool IsActivityInProgress(void);
 	bool IsActivityInProgressAndNotPaused(void);
@@ -267,15 +417,23 @@ extern "C" {
 	bool IsCyclingActivity(void);
 	bool IsFootBasedActivity(void);
 	bool IsSwimmingActivity(void);
+	///@}
 
-	// Functions for importing/exporting activities.
+	/** @name ImportExportGroup
+	 * @brief Functions for importing/exporting activities.
+	 */
+	///@{
 	bool ImportActivityFromFile(const char* const fileName, const char* const activityType, const char* const activityId);
 	char* ExportActivityFromDatabase(const char* const activityId, FileFormat format, const char* const dirName);
 	char* ExportActivityUsingCallbackData(const char* const activityId, FileFormat format, const char* const dirName, time_t startTime, const char* const sportType, NextCoordinateCallback nextCoordinateCallback, void* context);
 	char* ExportActivitySummary(const char* activityType, const char* const dirName);
 	const char* FileFormatToExtension(FileFormat format);
+	///@}
 
-	// Functions for processing sensor reads.
+	/** @name SensorReadGroup
+	 * @brief Functions for processing sensor reads.
+	 */
+	///@{
 	bool ProcessWeightReading(double weightKg, time_t timestamp);
 	bool ProcessAccelerometerReading(double x, double y, double z, uint64_t timestampMs);
 	bool ProcessLocationReading(double lat, double lon, double alt, double horizontalAccuracy, double verticalAccuracy, uint64_t locationTimestampMs);
@@ -286,32 +444,57 @@ extern "C" {
 	bool ProcessRunStrideLengthReading(double decimeters, uint64_t timestampMs);
 	bool ProcessRunDistanceReading(double decimeters, uint64_t timestampMs);
 	bool ProcessRadarReading(unsigned long threatCount, uint64_t timestampMs);
+	///@}
 
-	// Accessor functions for the most recent value of a particular attribute.
+	/** @name LiveAttributeGroup
+	 * @brief Accessor functions for the most recent value of a particular attribute.
+	 */
+	///@{
 	ActivityAttributeType QueryLiveActivityAttribute(const char* const attributeName);
 	void SetLiveActivityAttribute(const char* const attributeName, ActivityAttributeType attributeValue);
+	///@}
 
-	// Functions for getting the value of a particular attribute across all activities.
+	/** @name SummaryAttributeGroup
+	 * @brief Functions for getting the value of a particular attribute across all activities.
+	 */
+	///@{
 	ActivityAttributeType InitializeActivityAttribute(ActivityAttributeValueType valueType, ActivityAttributeMeasureType measureType, UnitSystem units);
 	ActivityAttributeType QueryActivityAttributeTotal(const char* const attributeName);
 	ActivityAttributeType QueryActivityAttributeTotalByActivityType(const char* const attributeName, const char* const activityType);
 	ActivityAttributeType QueryBestActivityAttributeByActivityType(const char* const attributeName, const char* const activityType, bool smallestIsBest, char** const pActivityId);
+	///@}
 
-	// Functions for importing ZWO workout files.
+	/** @name ZwoGroup
+	 * @brief Functions for importing ZWO workout files.
+	 */
+	///@{
 	bool ImportZwoFile(const char* const fileName, const char* const workoutId);
+	///@}
 
-	// Functions for managing routes.
+	/** @name RoutesGroup
+	 * @brief Functions for managing routes.
+	 */
+	///@{
 	bool InitializeRouteList(void);
 	bool ImportRouteFromFile(const char* const routeId, const char* const fileName);
 	char* RetrieveRouteInfoAsJSON(size_t routeIndex);
 	bool RetrieveRouteCoordinate(size_t routeIndex, size_t coordinateIndex, Coordinate* const coordinate);
 	bool DeleteRoute(const char* const routeId);
+	///@}
 
-	// Functions for creating a heat map.
+	/** @name HeatMapGroup
+	 * @brief Functions for creating a heat map.
+	 */
+	///@{
 	bool CreateHeatMap(HeatMapPointCallback callback, void* context);
+	///@}
 
-	// Functions for doing coordinate calculations.
+	/** @name CoordinatesGroup
+	 * @brief Functions for doing coordinate calculations.
+	 */
+	///@{
 	double DistanceBetweenCoordinates(const Coordinate c1, const Coordinate c2);
+	///@}
 
 #ifdef __cplusplus
 }

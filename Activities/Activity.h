@@ -30,7 +30,7 @@ typedef std::vector<double>        NumericList;
 /**
 * Base class for an activity
 *
-* All activity types (running, cycling, push-ups, etc.) inherit from this class. 
+* All activity types (running, cycling, push-ups, etc.) inherit, either directly or indirectly, from this class. 
 * An instantiation of any class that inherits from this class represents a specific activity performed by the user.
 * The ActivityFactory class creates objects of this type.
 */
