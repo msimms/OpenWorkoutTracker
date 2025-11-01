@@ -96,8 +96,9 @@ struct ContentView: View {
 						ToolbarItem(placement: .bottomBar) {
 							Image(systemName: "applewatch")
 								.opacity(CommonApp.shared.watchSession.isConnected ? 1 : 0)
+						}
+						.sharedBackgroundVisibility(.hidden)
 					}
-				}
 			}
 			.opacity(0.8)
 			.background(
