@@ -8,7 +8,7 @@ import SwiftUI
 struct AboutView: View {
     var body: some View {
 		ScrollView() {
-			Text("Copyright (c) 2015-2024, by Michael Simms. All rights reserved.\n")
+			Text("Copyright (c) 2015-2025, by Michael Simms. All rights reserved.\n")
 				.bold()
 			Text("Normalized Power® (NP®) is a registered trademarks of Peaksware, LLC.\n")
 			Text("End User License Agreement\n")

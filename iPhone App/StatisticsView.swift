@@ -27,7 +27,6 @@ struct StatisticsView: View {
 			Spacer()
 			Text(self.historyVM.getFormattedTotalActivityAttribute(activityType: activityType, attributeName: attributeName))
 		}
-		.padding(5)
 	}
 
 	private func getBestActivityAttribute(activityType: String, attributeName: String, smallestIsBest: Bool) -> some View {
@@ -36,7 +35,6 @@ struct StatisticsView: View {
 			Spacer()
 			Text(self.historyVM.getFormattedBestActivityAttribute(activityType: activityType, attributeName: attributeName, smallestIsBest: smallestIsBest))
 		}
-		.padding(5)
 	}
 
 	var body: some View {
@@ -51,8 +49,8 @@ struct StatisticsView: View {
 									Image(systemName: HistoryVM.imageNameForActivityType(activityType: activityType))
 										.frame(width: 48)
 									Text(activityType)
+										.font(.system(size: 24))
 										.bold()
-										.fontWeight(Font.Weight.heavy)
 								}
 								VStack(alignment: .center) {
 									HStack() {
@@ -60,6 +58,8 @@ struct StatisticsView: View {
 											.bold()
 										Spacer()
 									}
+									.background(Color(UIColor.lightGray))
+
 									self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED)
 									self.getTotalActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED)
 									
@@ -68,6 +68,8 @@ struct StatisticsView: View {
 											.bold()
 										Spacer()
 									}
+									.background(Color(UIColor.lightGray))
+
 									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, smallestIsBest: false)
 									self.getBestActivityAttribute(activityType: activityType, attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, smallestIsBest: false)
 									
