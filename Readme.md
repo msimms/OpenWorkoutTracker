@@ -48,10 +48,6 @@ As much as possible, the model layer is written in C/C++. This is so it can be c
 
 ![Architecture Diagram](https://github.com/msimms/OpenWorkoutTracker/blob/master/Docs/Architecture/Architecture.png?raw=true)
 
-## API
-
-[API Documentation](https://htmlpreview.github.io/?https://github.com/msimms/OpenWorkoutWeb/blob/master/api.html)
-
 ## Building
 
 This app is built using Apple XCode. Every attempt is made to stay up-to-date with the latest version of XCode and the latest versions of iOS and watchOS. In theory, if you have cloned the source code and initialized the submodules, then you should be able to open the project in XCode, build, and deploy.
