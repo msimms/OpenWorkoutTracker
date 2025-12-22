@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import os
 
 extension RandomAccessCollection where Element : Comparable {
 	func insertionIndex(of value: Element) -> Index {
@@ -29,7 +30,8 @@ class HistoryVM : ObservableObject {
 	
 	@Published var state = VmState.empty
 	@Published var historicalActivities: Array<ActivitySummary> = []
-	
+	var stateLock = OSAllocatedUnfairLock()
+
 	init() {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
 
@@ -83,10 +85,14 @@ class HistoryVM : ObservableObject {
 	
 	/// @brief Loads the activity list from our database.
 	private func loadActivitiesFromDatabase() {
+
+		// Only one thread should do this at a time.
+		self.stateLock.lock()
+
 		InitializeHistoricalActivityList()
-		
+
 		if LoadAllHistoricalActivitySummaryData() {
-			
+
 			// Whenever we reload the history we should re-evaluate the user's recent performances.
 			ProfileVM.updateEstimations()
 
@@ -153,6 +159,9 @@ class HistoryVM : ObservableObject {
 				}
 			}
 		}
+
+		// Allow other threads to do this.
+		self.stateLock.unlock()
 	}
 	
 	/// @brief Loads the activity list from our database as well as HealthKit (if enabled).
