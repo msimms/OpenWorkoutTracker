@@ -28,11 +28,14 @@ class HistoryVM : ObservableObject {
 		case loaded
 	}
 	
+	static let shared = HistoryVM()
+
 	@Published var state = VmState.empty
 	@Published var historicalActivities: Array<ActivitySummary> = []
 	var stateLock = OSAllocatedUnfairLock()
 
-	init() {
+	/// Singleton constructor
+	private init() {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
 
 		self.state = VmState.empty

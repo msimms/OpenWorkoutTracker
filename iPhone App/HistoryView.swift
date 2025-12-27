@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct HistoryView: View {
-	@ObservedObject private var historyVM = HistoryVM()
+	@ObservedObject private var historyVM = HistoryVM.shared
 	@State var displayedDates : Set<Date> = []
 
 	let dateFormatter: DateFormatter = {
