@@ -29,8 +29,8 @@ struct ContentView: View {
 	@State private var showingEditSelection: Bool = false
 	@State private var isBusy: Bool = false
 	@State private var orientation = UIDevice.current.orientation
-	private var backgroundImageIndexPortrait: Int = Int.random(in: 1..<6)
-	private var backgroundImageIndexLandscape: Int = Int.random(in: 4..<6)
+	private var backgroundImageIndexPortrait: Int = Int.random(in: 1..<7)
+	private var backgroundImageIndexLandscape: Int = Int.random(in: 4..<5)
 
 	var body: some View {
 		NavigationStack() {
@@ -52,9 +52,12 @@ struct ContentView: View {
 				}
 				.foregroundColor(.black)
 				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
+				.shadow(color: .white, radius: 1)
 				.padding(10)
 
-				Spacer()
+				if !self.orientation.isLandscape {
+					Spacer()
+				}
 
 				// View history and statistics button
 				Button("View") {
@@ -67,7 +70,8 @@ struct ContentView: View {
 					NavigationLink("Zones", destination: ZonesView())
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+				.shadow(color: .white, radius: 1)
 				.padding(10)
 
 				// Edit settings button
@@ -84,13 +88,15 @@ struct ContentView: View {
 					NavigationLink("Routes", destination: RoutesView())
 				}
 				.foregroundColor(.black)
-				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
+				.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+				.shadow(color: .white, radius: 1)
 				.padding(10)
 				
 				// About button
 				NavigationLink("About", destination: AboutView())
 					.foregroundColor(.black)
-					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 64))
+					.font(.custom("HelveticaNeue-CondensedBlack", fixedSize: 48))
+					.shadow(color: .white, radius: 1)
 					.padding(10)
 					.toolbar {
 						ToolbarItem(placement: .bottomBar) {
@@ -105,7 +111,7 @@ struct ContentView: View {
 				Image("Background" + String(self.orientation.isLandscape ? self.backgroundImageIndexLandscape :  self.backgroundImageIndexPortrait))
 					.resizable()
 					.edgesIgnoringSafeArea(.all)
-					.aspectRatio(contentMode: .fill)
+					.scaledToFill()
 					.opacity(0.7)
 					.onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
 					}
