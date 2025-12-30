@@ -425,7 +425,7 @@ struct ActivityView: View {
 							Label("Lap", systemImage: "point.forward.to.point.capsulepath")
 						}
 						.foregroundColor(self.colorScheme == .dark ? .white : .black)
-						.opacity(self.activityVM.isInProgress && !self.activityVM.isPaused ? 1 : 0)
+						.disabled(!(self.activityVM.isInProgress && !self.activityVM.isPaused))
 						.help("Lap")
 					}
 

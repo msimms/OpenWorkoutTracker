@@ -3777,9 +3777,10 @@ extern "C" {
 			if (!summary.pActivity)
 			{
 				g_pActivityFactory->CreateActivity(summary, *g_pDatabase);
+
 				LoadHistoricalActivityLapData(summary.activityId.c_str());
 				LoadAllHistoricalActivitySensorData(summary.activityId.c_str());
-				
+
 				g_pCurrentActivity = summary.pActivity;
 				summary.pActivity = NULL;
 			}
