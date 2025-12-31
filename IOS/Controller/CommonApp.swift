@@ -375,6 +375,7 @@ class CommonApp : ObservableObject {
 									// The activity is now in the database, load it up so we can do things.
 									CreateHistoricalActivityObject(activityId)
 									LoadHistoricalActivity(activityId)
+									LoadHistoricalActivityLapData(activityId);
 									LoadAllHistoricalActivitySensorData(activityId)
 
 									// Add relevant data to HealthKit.

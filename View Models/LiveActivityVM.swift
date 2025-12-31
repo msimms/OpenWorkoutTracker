@@ -437,6 +437,7 @@ class LiveActivityVM : ObservableObject {
 		
 		// Load all data.
 		LoadHistoricalActivitySummaryData(self.activityId)
+		LoadHistoricalActivityLapData(self.activityId);
 		if LoadAllHistoricalActivitySensorData(self.activityId) {
 			var startTime: time_t = 0
 			var endTime: time_t = 0
@@ -456,6 +457,12 @@ class LiveActivityVM : ObservableObject {
 					NSLog("Failed to load historical activity lap data.")
 				}
 			}
+			else {
+				NSLog("Failed to save historical activity summary data.")
+			}
+		}
+		else {
+			NSLog("Failed to load historical activity sensor data.")
 		}
 	}
 

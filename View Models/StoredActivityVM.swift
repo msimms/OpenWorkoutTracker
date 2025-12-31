@@ -127,9 +127,10 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		
 		if CreateHistoricalActivityObject(self.activityId) &&
 			LoadHistoricalActivityLapData(self.activityId) &&
+			LoadHistoricalActivitySummaryData(self.activityId) &&
 			LoadAllHistoricalActivitySensorData(self.activityId) {
-			
-			// Location points
+
+			// Location points.
 			self.locationTrack = []
 			self.pace = []
 			self.speed = []
