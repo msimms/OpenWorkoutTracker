@@ -149,7 +149,7 @@ protected:
 	time_t               m_msPreviouslySpentPaused;   // number of ms spent paused
 	SensorReading        m_lastAccelReading;          // the oldest accelerometer reading received
 	SensorReading        m_mostRecentSensorReading;   // the youngest sensor reading received
-	uint64_t             m_threatCount;               // threat count, from a radar unit, -1 for not set
+	uint64_t             m_threatCount;               // current threat count, from a radar unit, -1 for not set
 	uint64_t             m_totalThreatCount;          // sum of all threat counts, from a radar unit, -1 for not set
 };
 
