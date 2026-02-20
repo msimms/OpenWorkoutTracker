@@ -47,9 +47,13 @@ struct HistoryView: View {
 				if self.historyVM.state == HistoryVM.VmState.empty {
 					ProgressView("Loading...").onAppear(perform: self.loadHistory)
 						.padding()
-						.progressViewStyle(CircularProgressViewStyle(tint: .white))
+						.background(
+							RoundedRectangle(cornerRadius: 10)
+								.fill(Color.gray.opacity(0.85))
+								.overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 3))
+						)
+						.cornerRadius(10)
 						.zIndex(1)
-						.background(Color.gray.opacity(0.9))
 						.scaleEffect(x: 1.5, y: 1.5, anchor: .center)
 				}
 
