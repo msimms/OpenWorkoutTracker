@@ -6,6 +6,7 @@
 import SwiftUI
 import MapKit
 import MessageUI
+import UIKit
 
 extension Map {
 	func addOverlay(_ overlay: MKOverlay) -> some View {
@@ -15,7 +16,7 @@ extension Map {
 }
 
 enum ExportDest {
-	case email, icloud
+	case email, icloud, files
 }
 
 let INSET = EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 5)
@@ -58,6 +59,20 @@ class MailComposeViewController: UIViewController, MFMailComposeViewControllerDe
 	
 	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		controller.dismiss(animated: true, completion: nil)
+	}
+}
+
+class FileExportViewController: UIViewController {
+	func displayFileExporterSheet(fileName: String) {
+		let keyWindow = UIApplication.shared.connectedScenes
+			.filter({$0.activationState == .foregroundActive})
+			.compactMap({$0 as? UIWindowScene})
+			.first?.windows
+			.filter({$0.isKeyWindow}).first
+
+		let fileUrl = URL(fileURLWithPath: fileName)
+		let picker = UIDocumentPickerViewController(forExporting: [fileUrl], asCopy: true)
+		keyWindow?.rootViewController?.present(picker, animated: true)
 	}
 }
 
@@ -484,6 +499,10 @@ struct HistoryDetailsView: View {
 									self.exportDestination = ExportDest.icloud
 									self.showingFormatSelection = true
 								}
+								Button("Save to Files") {
+									self.exportDestination = ExportDest.files
+									self.showingFormatSelection = true
+								}
 								Button("Save To HealthKit") {
 									self.showingExportToHealthKitConfirmation = true
 								}
@@ -491,48 +510,63 @@ struct HistoryDetailsView: View {
 							.confirmationDialog("Export", isPresented: self.$showingFormatSelection, titleVisibility: .visible) {
 								if IsHistoricalActivityMovingActivity(self.activityVM.activityId) {
 									Button("GPX") {
-										do {
-											if self.exportDestination == ExportDest.icloud {
-												let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX)
-												self.showingExportSucceededError = true
-											}
-											else {
-												let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
-												let mailController = MailComposeViewController()
-												try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
-											}
+									do {
+										if self.exportDestination == ExportDest.icloud {
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_GPX)
+											self.showingExportSucceededError = true
+										}
+										else if self.exportDestination == ExportDest.files {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
+											let fileExportController = FileExportViewController()
+											fileExportController.displayFileExporterSheet(fileName: tempFileName)
+										}
+										else {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_GPX)
+											let mailController = MailComposeViewController()
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+										}
 										}
 										catch {
 											self.showingExportFailedError = true
 										}
 									}
 									Button("TCX") {
-										do {
-											if self.exportDestination == ExportDest.icloud {
-												let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX)
-												self.showingExportSucceededError = true
-											}
-											else {
-												let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_TCX)
-												let mailController = MailComposeViewController()
-												try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
-											}
+									do {
+										if self.exportDestination == ExportDest.icloud {
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_TCX)
+											self.showingExportSucceededError = true
+										}
+										else if self.exportDestination == ExportDest.files {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_TCX)
+											let fileExportController = FileExportViewController()
+											fileExportController.displayFileExporterSheet(fileName: tempFileName)
+										}
+										else {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_TCX)
+											let mailController = MailComposeViewController()
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "text/xml")
+										}
 										}
 										catch {
 											self.showingExportFailedError = true
 										}
 									}
 									Button("FIT") {
-										do {
-											if self.exportDestination == ExportDest.icloud {
-												let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT)
-												self.showingExportSucceededError = true
-											}
-											else {
-												let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_FIT)
-												let mailController = MailComposeViewController()
-												try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "application/octet-stream")
-											}
+									do {
+										if self.exportDestination == ExportDest.icloud {
+											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_FIT)
+											self.showingExportSucceededError = true
+										}
+										else if self.exportDestination == ExportDest.files {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_FIT)
+											let fileExportController = FileExportViewController()
+											fileExportController.displayFileExporterSheet(fileName: tempFileName)
+										}
+										else {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_FIT)
+											let mailController = MailComposeViewController()
+											try mailController.displayEmailComposerSheet(subjectStr: "", bodyStr: "", fileName: tempFileName, mimeType: "application/octet-stream")
+										}
 										}
 										catch {
 											self.showingExportFailedError = true
@@ -544,6 +578,11 @@ struct HistoryDetailsView: View {
 										if self.exportDestination == ExportDest.icloud {
 											let _ = try self.activityVM.exportActivityToICloudFile(fileFormat: FILE_CSV)
 											self.showingExportSucceededError = true
+										}
+										else if self.exportDestination == ExportDest.files {
+											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_CSV)
+											let fileExportController = FileExportViewController()
+											fileExportController.displayFileExporterSheet(fileName: tempFileName)
 										}
 										else {
 											let tempFileName = try self.activityVM.exportActivityToTempFile(fileFormat: FILE_CSV)
