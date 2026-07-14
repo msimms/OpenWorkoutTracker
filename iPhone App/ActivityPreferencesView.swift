@@ -53,6 +53,7 @@ struct ActivityPreferencesView: View {
 		VStack(alignment: .center) {
 			Group() {
 				Text("Default Layout")
+					.font(.system(size: 24))
 					.bold()
 				Toggle("Screen Auto-Locking", isOn: self.$screenAutoLocking)
 					.onChange(of: screenAutoLocking) {
@@ -73,6 +74,7 @@ struct ActivityPreferencesView: View {
 			}
 			Group() {
 				Text("Colors")
+					.font(.system(size: 24))
 					.bold()
 				HStack() {
 					Text("Background Color")
@@ -122,6 +124,7 @@ struct ActivityPreferencesView: View {
 			}
 			Group() {
 				Text("Sounds")
+					.font(.system(size: 24))
 					.bold()
 				Toggle("Start/Stop Beep", isOn: self.$startStopBeep)
 					.onChange(of: self.startStopBeep) {
@@ -134,6 +137,7 @@ struct ActivityPreferencesView: View {
 			}
 			Group() {
 				Text("Location")
+					.font(.system(size: 24))
 					.bold()
 				HStack() {
 					Text("Horizontal Accuracy")
