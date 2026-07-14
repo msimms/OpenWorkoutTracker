@@ -11,18 +11,18 @@ struct ActivityPreferencesView: View {
 	var activityType: String = ""
 	var colorNames: Array<String> = [COLOR_NAME_WHITE, COLOR_NAME_GRAY, COLOR_NAME_BLACK, COLOR_NAME_RED, COLOR_NAME_GREEN, COLOR_NAME_BLUE, COLOR_NAME_YELLOW]
 
-	@State private var screenAutoLocking: Bool
-	@State private var allowScreenPresses: Bool
-	@State private var countdownTimer: Bool
-	@State private var showHeartRateAsPercentage: Bool
+	@State private var screenAutoLocking: Bool = false
+	@State private var allowScreenPresses: Bool = false
+	@State private var countdownTimer: Bool = false
+	@State private var showHeartRateAsPercentage: Bool = false
 	@State private var backgroundColorName = ""
 	@State private var labelColorName = ""
 	@State private var textColorName = ""
-	@State private var startStopBeep: Bool
-	@State private var splitBeep: Bool
-	@State private var horizontalAccuracy: NumbersOnly
-	@State private var verticalAccuracy: NumbersOnly
-	@State private var showThreatSpeed: Bool
+	@State private var startStopBeep: Bool = false
+	@State private var splitBeep: Bool = false
+	@State private var horizontalAccuracy: NumbersOnly = NumbersOnly()
+	@State private var verticalAccuracy: NumbersOnly = NumbersOnly()
+	@State private var showThreatSpeed: Bool = false
 	@State private var showingBackgroundColorSelection: Bool = false
 	@State private var showingLabelColorSelection: Bool = false
 	@State private var showingTextColorSelection: Bool = false
