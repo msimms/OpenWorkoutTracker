@@ -990,14 +990,29 @@ class HealthManager {
 			attr.measureType = MEASURE_DEGREES
 		}
 		else if attributeName == ACTIVITY_ATTRIBUTE_CALORIES_BURNED {
-			if let energyBurned = workout.totalEnergyBurned {
-				attr.value.doubleVal = energyBurned.doubleValue(for: HKUnit.largeCalorie())
-				attr.valueType = TYPE_DOUBLE
-				attr.measureType = MEASURE_CALORIES
-				attr.valid = true
-			}
-			else {
-				attr.valid = false
+			// iOS 18 deprecation: HKWorkout.totalEnergyBurned is deprecated. Use statisticsForType.
+			if #available(iOS 18.0, macOS 15.0, watchOS 11.0, *) {
+				if let energyType = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned),
+				   let stats = workout.statistics(for: energyType),
+				   let sum = stats.sumQuantity() {
+					attr.value.doubleVal = sum.doubleValue(for: .kilocalorie())
+					attr.valueType = TYPE_DOUBLE
+					attr.measureType = MEASURE_CALORIES
+					attr.valid = true
+				} else {
+					attr.valid = false
+				}
+			} else {
+				// Fallback for older OS versions where totalEnergyBurned is not deprecated
+				if let energyBurned = workout.totalEnergyBurned {
+					// Use kilocalories to align with statistics path above
+					attr.value.doubleVal = energyBurned.doubleValue(for: HKUnit.kilocalorie())
+					attr.valueType = TYPE_DOUBLE
+					attr.measureType = MEASURE_CALORIES
+					attr.valid = true
+				} else {
+					attr.valid = false
+				}
 			}
 		}
 		return attr
