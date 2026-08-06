@@ -188,11 +188,11 @@ struct HistoryDetailsView: View {
 						ForEach(self.activityVM.photoIds, id: \.self) { item in
 							HStack() {
 								AsyncImage(
-									url:  URL(string: ApiClient.shared.buildPhotoRequestUrlStr(userId: self.activityVM.userId, photoId: item)),
+									url: URL(string: ApiClient.shared.buildPhotoRequestUrlStr(userId: self.activityVM.userId, photoId: item)),
 									content: { image in
 										image.resizable()
 											.aspectRatio(contentMode: .fit)
-											.frame(maxWidth: UIScreen.main.bounds.size.width - 10, maxHeight: 512)
+											.frame(maxHeight: 512)
 									},
 									placeholder: {
 										ProgressView()
