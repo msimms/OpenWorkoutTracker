@@ -554,13 +554,13 @@ class HealthManager {
 		self.readWorkoutsFromHealthStoreOfType(activityType: HKWorkoutActivityType.swimming)
 	}
 
-	func readAllActivitiesFromHealthStore() {
+	func readAllActivitiesFromHealthStore(callback: @escaping () -> Void) {
 		self.clearWorkoutsList()
 		self.readRunningWorkoutsFromHealthStore()
 		self.readWalkingWorkoutsFromHealthStore()
 		self.readCyclingWorkoutsFromHealthStore()
 		self.readSwimWorkoutsFromHealthStore()
-		self.waitForHealthKitQueries()
+		callback()
 	}
 
 	func calculateSpeedsFromDistances(distances: Array<Double>, activityId: String) {
@@ -624,7 +624,7 @@ class HealthManager {
 		self.healthStore.execute(query)
 	}
 
-	func readLocationPointsFromHealthStoreForWorkout(workout: HKWorkout, activityId: String) {
+	func readLocationPointsFromHealthStoreForWorkout(workout: HKWorkout, activityId: String, callback: @escaping () -> Void) {
 		let predicate = HKQuery.predicateForObjects(from: workout)
 		let sampleType = HKSeriesType.workoutRoute()
 		let query = HKAnchoredObjectQuery.init(type: sampleType, predicate: predicate, anchor: nil, limit: HKObjectQueryNoLimit, resultsHandler: { _, samples, _, _, error in
@@ -638,18 +638,18 @@ class HealthManager {
 			}
 
 			self.queryGroup.leave()
+			callback()
 		})
 
 		self.queryGroup.enter()
 		self.healthStore.execute(query)
-		self.waitForHealthKitQueries()
 	}
 
-	func readLocationPointsFromHealthStoreForActivityId(activityId: String) {
+	func readLocationPointsFromHealthStoreForActivityId(activityId: String, callback: @escaping () -> Void) {
 		guard let workout = self.workouts[activityId] else {
 			return
 		}
-		self.readLocationPointsFromHealthStoreForWorkout(workout: workout, activityId: activityId)
+		self.readLocationPointsFromHealthStoreForWorkout(workout: workout, activityId: activityId, callback: callback)
 	}
 
 	func getHistoricalActivityLocationPoint(activityId: String, coordinate: inout Coordinate, pointIndex: Int) -> Bool {

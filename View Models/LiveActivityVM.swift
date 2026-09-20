@@ -593,7 +593,8 @@ class LiveActivityVM : ObservableObject {
 			var startTimeMs: UInt64 = 0
 
 			if MetaDataForLap(NumLaps(), &startTimeMs, nil, nil, nil) {
-				let _ = ApiClient.shared.startNewLap(activityId: self.activityId, startTimeMs: startTimeMs)
+				let _ = ApiClient.shared.startNewLap(activityId: self.activityId, startTimeMs: startTimeMs, onResponse: { responseData, responseCode in
+				})
 			}
 		}
 	}

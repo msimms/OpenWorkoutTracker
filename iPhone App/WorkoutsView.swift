@@ -35,19 +35,7 @@ struct WorkoutsView: View {
 	}
 
 	func regenerateWorkouts() {
-		do {
-			try self.workoutsVM.regenerateWorkouts()
-		}
-		catch WorkoutException.runtimeError(let errorStr) {
-			self.showingWorkoutGenError = true
-			self.errorStr = errorStr
-			NSLog(self.errorStr)
-		}
-		catch {
-			self.showingWorkoutGenError = true
-			self.errorStr = error.localizedDescription
-			NSLog(self.errorStr)
-		}
+		self.workoutsVM.regenerateWorkouts()
 	}
 
 	var body: some View {

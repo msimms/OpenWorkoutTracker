@@ -31,7 +31,8 @@ struct LapIntent: AppIntent {
 				return .result(dialog: "Lap started!")
 			}
 			else {
-				let _ = ApiClient.shared.startNewLap(activityId: LiveActivityVM.shared!.activityId, startTimeMs: startTimeMs)
+				let _ = ApiClient.shared.startNewLap(activityId: LiveActivityVM.shared!.activityId, startTimeMs: startTimeMs, onResponse: { responseData, responseCode in
+				})
 
 				let elapsedTimeStr = StringUtils.formatSeconds(numSeconds: time_t(elapsedTimeMs / 1000))
 				return .result(dialog: "Lap started! Previous lap was \(elapsedTimeStr).")

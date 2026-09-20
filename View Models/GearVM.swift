@@ -243,7 +243,8 @@ class GearVM : ObservableObject {
 				}
 
 				do {
-					return try ApiClient.shared.createGear(item: item)
+					return try ApiClient.shared.createGear(item: item, onResponse: { responseData, responseCode in
+					})
 				}
 				catch { }
 			}
@@ -272,7 +273,8 @@ class GearVM : ObservableObject {
 				// Update the optional server.
 				if updateRemote {
 					do {
-						return try ApiClient.shared.updateGear(item: item)
+						return try ApiClient.shared.updateGear(item: item, onResponse: { responseData, responseCode in
+						})
 					}
 					catch { }
 				}
@@ -298,7 +300,8 @@ class GearVM : ObservableObject {
 
 				// Update the optional server.
 				do {
-					return try ApiClient.shared.createGear(item: item)
+					return try ApiClient.shared.createGear(item: item, onResponse: { responseData, responseCode in
+					})
 				}
 				catch { }
 			}
@@ -319,7 +322,8 @@ class GearVM : ObservableObject {
 			// Update the optional server.
 			if updateRemote {
 				do {
-					return try ApiClient.shared.updateGear(item: item)
+					return try ApiClient.shared.updateGear(item: item, onResponse: { responseData, responseCode in
+					})
 				}
 				catch { }
 			}
@@ -392,7 +396,8 @@ class GearVM : ObservableObject {
 
 			// Update the optional server.
 			do {
-				return try ApiClient.shared.updateGear(item: item)
+				return try ApiClient.shared.updateGear(item: item, onResponse: { responseData, responseCode in
+				})
 			}
 			catch { }
 		}
@@ -416,7 +421,8 @@ class GearVM : ObservableObject {
 
 			// Update the optional server.
 			do {
-				return try ApiClient.shared.updateGear(item: item)
+				return try ApiClient.shared.updateGear(item: item, onResponse: { responseData, responseCode in
+				})
 			}
 			catch { }
 		}
@@ -426,7 +432,8 @@ class GearVM : ObservableObject {
 	static func deleteBike(gearId: UUID) -> Bool {
 		// Delete from the database and then from the optional server.
 		if DeleteBikeProfile(gearId.uuidString) {
-			return ApiClient.shared.deleteGear(gearId: gearId)
+			return ApiClient.shared.deleteGear(gearId: gearId, onResponse: { responseData, responseCode in
+			})
 		}
 		else {
 			NSLog("Failed to delete the bike profile.")
@@ -437,7 +444,8 @@ class GearVM : ObservableObject {
 	static func deleteShoes(gearId: UUID) -> Bool {
 		// Delete from the database and then from the optional server.
 		if DeleteShoeProfile(gearId.uuidString) {
-			return ApiClient.shared.deleteGear(gearId: gearId)
+			return ApiClient.shared.deleteGear(gearId: gearId, onResponse: { responseData, responseCode in
+			})
 		}
 		else {
 			NSLog("Failed to delete the shoe profile.")

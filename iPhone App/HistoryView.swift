@@ -19,7 +19,9 @@ struct HistoryView: View {
 	private func loadHistory() {
 		DispatchQueue.global(qos: .userInitiated).async {
 			if let updatesSince = self.displayedDates.min() {
-				let _ = ApiClient.shared.requestUpdatesSince(timestamp: updatesSince)
+				let _ = ApiClient.shared.requestUpdatesSince(timestamp: updatesSince, onResponse: { updatesResponseData, updatesResponseCode in
+					CommonApp.shared.unsynchedActivitiesListReceived(responseData: updatesResponseData, responseCode: updatesResponseCode)
+				})
 			}
 			self.historyVM.buildHistoricalActivitiesList(createAllObjects: false)
 		}

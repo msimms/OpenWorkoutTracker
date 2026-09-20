@@ -52,7 +52,9 @@ class ActivitySummary : Codable, Identifiable, Hashable, Equatable, Comparable, 
 	/// @brief Requests the latest metadata from the server
 	func requestMetadata() {
 		if self.source == ActivitySummary.Source.database {
-			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.id)
+			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.id, onResponse: { responseData, responseCode in
+				CommonApp.shared.activityMetadataReceived(responseData: responseData, responseCode: responseCode)
+			})
 		}
 	}
 }

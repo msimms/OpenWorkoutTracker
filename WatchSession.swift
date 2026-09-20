@@ -42,7 +42,8 @@ class WatchSession : NSObject, WCSessionDelegate, ObservableObject {
 		}
 		else if msgType == WATCH_MSG_REGISTER_DEVICE {
 			if let deviceId = message[WATCH_MSG_PARAM_DEVICE_ID] as? String {
-				let _ = ApiClient.shared.claimDevice(deviceId: deviceId)
+				let _ = ApiClient.shared.claimDevice(deviceId: deviceId, onResponse: { responseData, responseCode in
+				})
 			}
 		}
 		else if msgType == WATCH_MSG_REQUEST_SESSION_KEY {

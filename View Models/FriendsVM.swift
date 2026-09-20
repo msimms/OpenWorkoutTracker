@@ -31,7 +31,8 @@ class FriendsVM : ObservableObject {
 	@Published var friends: Array<FriendSummary> = []
 	
 	init() {
-		let _ = ApiClient.shared.listFriends()
+		let _ = ApiClient.shared.listFriends(onResponse: { responseData, responseCode in
+		})
 	}
 	
 	func updateFriendFromDict(dict: Dictionary<String, AnyObject>) {

@@ -70,7 +70,8 @@ struct ProfileView: View {
 						.onChange(of: self.birthdate) {
 							Preferences.setBirthDate(value: time_t(self.birthdate.timeIntervalSince1970))
 							CommonApp.shared.updateUserProfile()
-							self.showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date())
+							self.showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date(), onResponse: { responseData, responseCode in
+							})
 						}
 						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 				}
@@ -87,7 +88,8 @@ struct ProfileView: View {
 						.onChange(of: self.height.value) {
 							if let value = Double(self.height.value) {
 								ProfileVM.setHeight(height: value)
-								self.showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date())
+								self.showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date(), onResponse: { responseData, responseCode in
+								})
 							} else {
 								self.showingHeightError = true
 							}
@@ -111,7 +113,8 @@ struct ProfileView: View {
 						.onChange(of: self.weight.value) {
 							if let value = Double(self.weight.value) {
 								ProfileVM.setWeight(weight: value)
-								self.showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date())
+								self.showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date(), onResponse: { responseData, responseCode in
+								})
 							} else {
 								self.showingWeightError = true
 							}

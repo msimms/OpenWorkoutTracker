@@ -148,7 +148,8 @@ class WorkoutsVM : ObservableObject {
 
 			workoutListJsonStr += "]"
 
-			let _ = ApiClient.shared.sendPlannedWorkouts(workoutsJson: workoutListJsonStr)
+			let _ = ApiClient.shared.sendPlannedWorkouts(workoutsJson: workoutListJsonStr, onResponse: { responseData, responseCode in
+			})
 		}
 	}
 
@@ -189,66 +190,67 @@ class WorkoutsVM : ObservableObject {
 		return DeleteAllWorkouts()
 	}
 
-	func regenerateWorkouts() throws {
+	func regenerateWorkouts() {
 		// Load activities from the database.
 		InitializeHistoricalActivityList()
 
 		// Add HealthKit activities as inputs to the workout generation algorithm.
 		// We'll de-dupe the list to make sure we're not double-counting anything.
 		let healthMgr = HealthManager.shared
-		healthMgr.readAllActivitiesFromHealthStore()
-		healthMgr.removeDuplicateActivities()
-		if healthMgr.workouts.count > 0 {
-			for i in 0...healthMgr.workouts.count - 1 {
-				let activityId = healthMgr.convertIndexToActivityId(index: i)
-				let activityType = healthMgr.getHistoricalActivityType(activityId: activityId)
-				let currentWorkout = healthMgr.workouts[activityId]
-				
-				if currentWorkout != nil {
-					let startTime: time_t = Int(currentWorkout!.startDate.timeIntervalSince1970)
-					let endTime: time_t = Int(currentWorkout!.endDate.timeIntervalSince1970)
-					
-					let distanceAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, activityId: activityId)
-					let elapsedTimeAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, activityId: activityId)
-					let movingTimeAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_MOVING_TIME, activityId: activityId)
-					let caloriesBurnedAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, activityId: activityId)
-					
-					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr)
-					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, elapsedTimeAttr)
-					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, movingTimeAttr)
-					InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, caloriesBurnedAttr)
+		healthMgr.readAllActivitiesFromHealthStore(callback: {
+			healthMgr.removeDuplicateActivities()
+			if healthMgr.workouts.count > 0 {
+				for i in 0...healthMgr.workouts.count - 1 {
+					let activityId = healthMgr.convertIndexToActivityId(index: i)
+					let activityType = healthMgr.getHistoricalActivityType(activityId: activityId)
+					let currentWorkout = healthMgr.workouts[activityId]
+
+					if currentWorkout != nil {
+						let startTime: time_t = Int(currentWorkout!.startDate.timeIntervalSince1970)
+						let endTime: time_t = Int(currentWorkout!.endDate.timeIntervalSince1970)
+
+						let distanceAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_DISTANCE_TRAVELED, activityId: activityId)
+						let elapsedTimeAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_ELAPSED_TIME, activityId: activityId)
+						let movingTimeAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_MOVING_TIME, activityId: activityId)
+						let caloriesBurnedAttr = healthMgr.getWorkoutAttribute(attributeName: ACTIVITY_ATTRIBUTE_CALORIES_BURNED, activityId: activityId)
+
+						InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, distanceAttr)
+						InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, elapsedTimeAttr)
+						InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, movingTimeAttr)
+						InsertAdditionalAttributesForWorkoutGeneration(activityId, activityType, startTime, endTime, caloriesBurnedAttr)
+					}
 				}
 			}
-		}
 
-		// This will remove existing workouts and generate new ones.
-		if let workoutGenResultsPtr = UnsafeRawPointer(GenerateWorkouts(Preferences.workoutGoal(),
-																		Preferences.workoutGoalType(),
-																		Preferences.workoutGoalDate(),
-																		Preferences.workoutLongRunDay(),
-																		Preferences.workoutsCanIncludePoolSwims(),
-																		Preferences.workoutsCanIncludeOpenWaterSwims(),
-																		Preferences.workoutsCanIncludeBikeRides())) {
-			let resultsJsonStr = String(cString: workoutGenResultsPtr.assumingMemoryBound(to: CChar.self))
-			if resultsJsonStr.count > 0 {
-				do {
-					self.inputs = try JSONSerialization.jsonObject(with: Data(resultsJsonStr.utf8), options: []) as! [String:Any]
-					self.buildWorkoutsList()
-					self.sendPlannedWorkoutsToServer()
+			// This will remove existing workouts and generate new ones.
+			if let workoutGenResultsPtr = UnsafeRawPointer(GenerateWorkouts(Preferences.workoutGoal(),
+																			Preferences.workoutGoalType(),
+																			Preferences.workoutGoalDate(),
+																			Preferences.workoutLongRunDay(),
+																			Preferences.workoutsCanIncludePoolSwims(),
+																			Preferences.workoutsCanIncludeOpenWaterSwims(),
+																			Preferences.workoutsCanIncludeBikeRides())) {
+				let resultsJsonStr = String(cString: workoutGenResultsPtr.assumingMemoryBound(to: CChar.self))
+				if resultsJsonStr.count > 0 {
+					do {
+						self.inputs = try JSONSerialization.jsonObject(with: Data(resultsJsonStr.utf8), options: []) as! [String:Any]
+						self.buildWorkoutsList()
+						self.sendPlannedWorkoutsToServer()
+					}
+					catch {
+						NSLog(resultsJsonStr)
+					}
 				}
-				catch {
-					throw WorkoutException.runtimeError(resultsJsonStr)
+				else {
+					NSLog("Unspecified error when generating workouts.")
 				}
+
+				workoutGenResultsPtr.deallocate()
 			}
 			else {
-				throw WorkoutException.runtimeError("Unspecified error when generating workouts.")
+				NSLog("Unspecified error when generating workouts.")
 			}
-
-			workoutGenResultsPtr.deallocate()
-		}
-		else {
-			throw WorkoutException.runtimeError("Unspecified error when generating workouts.")
-		}
+		})
 	}
 	
 	static func workoutGoalEnumToString(goal: Goal) -> String {

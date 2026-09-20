@@ -82,7 +82,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "278D92E528E38F18003B077C"
             BuildableName = "OpenWorkoutTracker Watch App.app"
-            BlueprintName = "OpenWorkoutTracker Watch App"
             ReferencedContainer = "container:OpenWorkoutTracker-Swift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -99,7 +98,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "278D92E528E38F18003B077C"
             BuildableName = "OpenWorkoutTracker Watch App.app"
-            BlueprintName = "OpenWorkoutTracker Watch App"
             ReferencedContainer = "container:OpenWorkoutTracker-Swift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

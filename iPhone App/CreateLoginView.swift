@@ -39,7 +39,9 @@ struct CreateLoginView: View {
 					.bold()
 				TextField("Name", text: self.$realname)
 					.onSubmit {
-						if ApiClient.shared.createLogin(username: self.email, password1: self.password1, password2: self.password2, realname: self.realname) {
+						if ApiClient.shared.createLogin(username: self.email, password1: self.password1, password2: self.password2, realname: self.realname, onResponse: { responseData, responseCode in
+							CommonApp.shared.createLoginProcessed(responseCode: responseCode)
+						}) {
 							self.presentation.wrappedValue.dismiss()
 						}
 					}
@@ -51,7 +53,9 @@ struct CreateLoginView: View {
 
 			Button {
 				Preferences.setBroadcastUserName(value: self.email)
-				if ApiClient.shared.createLogin(username: self.email, password1: self.password1, password2: self.password2, realname: self.realname) {
+				if ApiClient.shared.createLogin(username: self.email, password1: self.password1, password2: self.password2, realname: self.realname, onResponse: { responseData, responseCode in
+					CommonApp.shared.createLoginProcessed(responseCode: responseCode)
+				}) {
 					self.presentation.wrappedValue.dismiss()
 				}
 				else {

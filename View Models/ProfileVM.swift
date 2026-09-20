@@ -140,27 +140,31 @@ class ProfileVM {
 		Preferences.setUserDefinedFtp(value: ftp)
 		HealthManager.shared.setFtp(ftp: ftp)
 		CommonApp.shared.updateUserProfile()
-		return ApiClient.shared.sendUpdatedUserFtp(timestamp: Date())
+		return ApiClient.shared.sendUpdatedUserFtp(timestamp: Date(), onResponse: { responseData, responseCode in
+		})
 	}
 	
 	static func setRestingHr(hr: Double) -> Bool {
 		Preferences.setUserDefinedRestingHr(value: hr)
 		HealthManager.shared.setRestingHr(hr: hr)
 		CommonApp.shared.updateUserProfile()
-		return ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date())
+		return ApiClient.shared.sendUpdatedUserRestingHr(timestamp: Date(), onResponse: { responseData, responseCode in
+		})
 	}
 	
 	static func setMaxHr(hr: Double) -> Bool {
 		Preferences.setUserDefinedMaxHr(value: hr)
 		CommonApp.shared.updateUserProfile()
-		return ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date())
+		return ApiClient.shared.sendUpdatedUserMaxHr(timestamp: Date(), onResponse: { responseData, responseCode in
+		})
 	}
 	
 	static func setVO2Max(vo2Max: Double) -> Bool {
 		Preferences.setUserDefinedVO2Max(value: vo2Max)
 		HealthManager.shared.setVO2Max(vo2Max: vo2Max)
 		CommonApp.shared.updateUserProfile()
-		return ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date())
+		return ApiClient.shared.sendUpdatedUserVO2Max(timestamp: Date(), onResponse: { responseData, responseCode in
+		})
 	}
 	
 	static func updateEstimations() {

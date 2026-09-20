@@ -48,10 +48,6 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	@Published var photoIds: Array<String> = []     // Unique identifiers for any photos associated with this activity
 	
 	init(activitySummary: ActivitySummary) {
-		NotificationCenter.default.addObserver(self, selector: #selector(self.activityMetadataUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA_UPDATED), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosListReceived), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_LIST), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.activityPhotosUpdated), name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: nil)
-		
 		self.source = activitySummary.source
 		self.activityId = activitySummary.id
 		self.userId = activitySummary.userId
@@ -77,10 +73,14 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 			self.loadActivityFromDb()
 			
 			// Make sure we have the latest name, description, etc.
-			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId)
-			
+			let _ = ApiClient.shared.requestActivityMetadata(activityId: self.activityId, onResponse: { responseData, responseCode in
+				CommonApp.shared.activityMetadataReceived(responseData: responseData, responseCode: responseCode)
+			})
+
 			// Retrieve photo URLs.
-			let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
+			let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId, onResponse: { responseData, responseCode in
+				self.activityPhotosListReceived(responseData: responseData, responseCode: responseCode)
+			})
 		}
 		
 		// Activity is from HealthKit.
@@ -92,33 +92,33 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	/// @brief Loads sensor data (location, heart rate, power, etc.) for activities in HealthKit.
 	func loadActivityFromHealthKit() {
 		let healthKit = HealthManager.shared
-		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId)
-		
-		var currCoordinate: Coordinate = Coordinate()
-		var prevCoordinate: Coordinate = Coordinate()
-		var pointIndex: Int = 0
-		
-		self.locationTrack = []
-		
-		while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &currCoordinate, pointIndex: pointIndex) {
-			let currentCoordinate: Coordinate = Coordinate(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
-			
-			// Performance optimization. Don't add every point to the track.
-			let distance = DistanceBetweenCoordinates(currentCoordinate, prevCoordinate)
-			if distance > 10 {
-				self.locationTrack.append(CLLocationCoordinate2D(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude))
-				prevCoordinate = currCoordinate
+		healthKit.readLocationPointsFromHealthStoreForActivityId(activityId: self.activityId, callback: {
+			var currCoordinate: Coordinate = Coordinate()
+			var prevCoordinate: Coordinate = Coordinate()
+			var pointIndex: Int = 0
+
+			self.locationTrack = []
+
+			while healthKit.getHistoricalActivityLocationPoint(activityId: self.activityId, coordinate: &currCoordinate, pointIndex: pointIndex) {
+				let currentCoordinate: Coordinate = Coordinate(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude, altitude: 0.0, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, time: 0)
+
+				// Performance optimization. Don't add every point to the track.
+				let distance = DistanceBetweenCoordinates(currentCoordinate, prevCoordinate)
+				if distance > 10 {
+					self.locationTrack.append(CLLocationCoordinate2D(latitude: currCoordinate.latitude, longitude: currCoordinate.longitude))
+					prevCoordinate = currCoordinate
+				}
+				pointIndex += 1
 			}
-			pointIndex += 1
-		}
-		
-		if self.locationTrack.count > 0 {
-			self.startingLat = self.locationTrack[0].latitude
-			self.startingLon = self.locationTrack[0].longitude
+
+			if self.locationTrack.count > 0 {
+				self.startingLat = self.locationTrack[0].latitude
+				self.startingLon = self.locationTrack[0].longitude
 #if !os(watchOS)
-			self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
+				self.trackLine = MKPolyline(coordinates: self.locationTrack, count: self.locationTrack.count)
 #endif
-		}
+			}
+		})
 	}
 	
 	/// @brief Loads the activity and all associated data (location, heart rate, power, etc.) for activities in our own database.
@@ -486,7 +486,8 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		// Only applicable to activities in our own database.
 		if self.source == ActivitySummary.Source.database {
 			if UpdateActivityName(self.activityId, self.name) {
-				return ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name)
+				return ApiClient.shared.setActivityName(activityId: self.activityId, name: self.name, onResponse: { responseData, responseCode in
+				})
 			}
 		}
 		return false
@@ -497,7 +498,8 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		// Only applicable to activities in our own database.
 		if self.source == ActivitySummary.Source.database {
 			if UpdateActivityDescription(self.activityId, self.description) {
-				return ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description)
+				return ApiClient.shared.setActivityDescription(activityId: self.activityId, description: self.description, onResponse: { responseData, responseCode in
+				})
 			}
 		}
 		return false
@@ -508,7 +510,8 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		// Only applicable to activities in our own database.
 		if self.source == ActivitySummary.Source.database {
 			if DeleteActivityFromDatabase(self.activityId) {
-				return ApiClient.shared.deleteActivity(activityId: self.activityId)
+				return ApiClient.shared.deleteActivity(activityId: self.activityId, onResponse: { responseData, responseCode in
+				})
 			}
 			else {
 				NSLog("Delete activity failed.")
@@ -520,25 +523,29 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 	func uploadPhoto(image: UIImage) -> Bool {
 		let imageData = image.jpegData(compressionQuality: 0.5)
 		if imageData != nil {
-			return ApiClient.shared.uploadActivityPhoto(activityId: self.activityId, imageData: imageData!)
+			return ApiClient.shared.uploadActivityPhoto(activityId: self.activityId, imageData: imageData!, onResponse: { responseData, responseCode in
+			})
 		}
 		return false
 	}
 	
 	func deletePhoto(photoId: String) -> Bool {
-		return ApiClient.shared.deleteActivityPhoto(activityId: self.activityId, photoId: photoId)
+		return ApiClient.shared.deleteActivityPhoto(activityId: self.activityId, photoId: photoId, onResponse: { responseData, responseCode in
+		})
 	}
 
 	func createTag(tag: String) -> Bool {
 		if CreateTag(self.activityId, tag) {
-			return ApiClient.shared.createTag(tag: tag, activityId: self.activityId)
+			return ApiClient.shared.createTag(tag: tag, activityId: self.activityId, onResponse: { responseData, responseCode in
+			})
 		}
 		return false
 	}
 	
 	func deleteTag(tag: String) -> Bool {
 		if DeleteTag(self.activityId, tag) {
-			return ApiClient.shared.deleteTag(tag: tag, activityId: self.activityId)
+			return ApiClient.shared.deleteTag(tag: tag, activityId: self.activityId, onResponse: { responseData, responseCode in
+			})
 		}
 		return false
 	}
@@ -591,64 +598,51 @@ class StoredActivityVM : ObservableObject, Identifiable, Hashable, Equatable {
 		return names
 	}
 
-	@objc func activityMetadataUpdated(notification: NSNotification) {
-		if let data = notification.object as? Dictionary<String, AnyObject> {
-			let requestUrl = data[KEY_NAME_URL] as? URL
-			guard requestUrl != nil else {
-				return
-			}
-
-			let activityId = ApiClient.shared.extractActivityIdParamFromUrl(requestUrl: requestUrl!)
-			guard activityId != nil && activityId == self.activityId else {
-				return
-			}
-
-			let activityName = data[PARAM_ACTIVITY_NAME]
-			if activityName != nil {
-				DispatchQueue.main.async {
-					self.name = (activityName as? String)!
-				}
-			}
-
-			let activityDesc = data[PARAM_ACTIVITY_DESCRIPTION]
-			if activityDesc != nil {
-				DispatchQueue.main.async {
-					self.description = (activityDesc as? String)!
-				}
-			}
-		}
-	}
-
-	@objc func activityPhotosListReceived(notification: NSNotification) {
+	func activityMetadataUpdated(responseData: Data?, responseCode: HTTPURLResponse) {
 		do {
-			if let data = notification.object as? Dictionary<String, AnyObject> {
+			if let data = try JSONSerialization.jsonObject(with: responseData!, options: []) as? Dictionary<String, AnyObject> {
 				let requestUrl = data[KEY_NAME_URL] as? URL
 				guard requestUrl != nil else {
 					return
 				}
-				
+
 				let activityId = ApiClient.shared.extractActivityIdParamFromUrl(requestUrl: requestUrl!)
 				guard activityId != nil && activityId == self.activityId else {
 					return
 				}
 
-				if let responseData = data[KEY_NAME_RESPONSE_DATA] as? Data {
-					if let responseDict = try JSONSerialization.jsonObject(with: responseData, options: []) as? Dictionary<String, Any> {
-						if let photoIds = responseDict[PARAM_ACTIVITY_PHOTO_IDS] as? Array<String> {
-							DispatchQueue.main.async {
-								self.photoIds = photoIds
-							}
-						}
+				let activityName = data[PARAM_ACTIVITY_NAME]
+				if activityName != nil {
+					DispatchQueue.main.async {
+						self.name = (activityName as? String)!
+					}
+				}
+
+				let activityDesc = data[PARAM_ACTIVITY_DESCRIPTION]
+				if activityDesc != nil {
+					DispatchQueue.main.async {
+						self.description = (activityDesc as? String)!
 					}
 				}
 			}
 		}
 		catch {
+			NSLog(error.localizedDescription)
 		}
 	}
-	
-	@objc func activityPhotosUpdated(notification: NSNotification) {
-		// Retrieve photo URLs.
-		let _ = ApiClient.shared.requestActivityPhotos(activityId: self.activityId)
+
+	func activityPhotosListReceived(responseData: Data?, responseCode: HTTPURLResponse) {
+		do {
+			if let responseDict = try JSONSerialization.jsonObject(with: responseData!, options: []) as? Dictionary<String, AnyObject> {
+				if let photoIds = responseDict[PARAM_ACTIVITY_PHOTO_IDS] as? Array<String> {
+					DispatchQueue.main.async {
+						self.photoIds = photoIds
+					}
+				}
+			}
+		}
+		catch {
+			NSLog(error.localizedDescription)
+		}
 	}
 }

@@ -46,7 +46,7 @@ class ApiClient : ObservableObject {
 		return nil
 	}
 
-	func makeRequest(url: String, method: String, data: Dictionary<String, Any>) -> Bool {
+	func makeRequest(url: String, method: String, data: Dictionary<String, Any>, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 
 		guard Preferences.isFeatureEnabled(feature: FEATURE_BROADCAST) else {
 			return true
@@ -96,118 +96,74 @@ class ApiClient : ObservableObject {
 			
 			let session = URLSession.shared
 			let dataTask = session.dataTask(with: request) { responseData, responseCode, error in
-				if let httpResponse = responseCode as? HTTPURLResponse {
+				if let httpResponseCode = responseCode as? HTTPURLResponse {
 
-					var downloadedData: Dictionary<String, Any> = [:]
-					downloadedData[KEY_NAME_URL] = request.url
-					downloadedData[KEY_NAME_RESPONSE_CODE] = httpResponse
-					downloadedData[KEY_NAME_RESPONSE_DATA] = responseData
-
-					// Handle anything related to authorization. Trigger the notification no matter what so that
+					// Handle anything related to authorization. Trigger the callback no matter what so that
 					// we can display error messages, etc.
 					if url.contains(REMOTE_API_IS_LOGGED_IN_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_CHECKED), object: downloadedData)
-						NotificationCenter.default.post(notification)
+						onResponse(responseData, httpResponseCode)
 					}
 					else if url.contains(REMOTE_API_LOGIN_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGIN_PROCESSED), object: downloadedData)
-						NotificationCenter.default.post(notification)
+						onResponse(responseData, httpResponseCode)
 					}
 					else if url.contains(REMOTE_API_CREATE_LOGIN_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_CREATE_LOGIN_PROCESSED), object: downloadedData)
-						NotificationCenter.default.post(notification)
+						onResponse(responseData, httpResponseCode)
 					}
 					else if url.contains(REMOTE_API_LOGOUT_URL) {
-						let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_LOGGED_OUT), object: downloadedData)
-						NotificationCenter.default.post(notification)
+						onResponse(responseData, httpResponseCode)
 					}
 
-					// For non-auth checks, only call trigger the notifications if we get an HTTP Ok error code.
-					else if httpResponse.statusCode == 200 {
+					// For non-auth checks, only call trigger the callback if we get an HTTP Ok error code.
+					else if httpResponseCode.statusCode == 200 {
 
 						if url.contains(REMOTE_API_LIST_FRIENDS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_FRIENDS_LIST_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_GEAR_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_GEAR_LIST_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_RACES_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_RACE_LIST_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_PLANNED_WORKOUTS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PLANNED_WORKOUTS_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_INTERVAL_WORKOUTS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_INTERVAL_SESSIONS_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_PACE_PLANS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_PACE_PLANS_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_HAS_ACTIVITY_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_HAS_ACTIVITY_RESPONSE), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_REQUEST_ACTIVITY_METADATA_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_METADATA), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_REQUEST_TO_FOLLOW_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_TO_FOLLOW_RESULT), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_REQUEST_USER_SETTINGS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_REQUEST_USER_SETTINGS_RESULT), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_EXPORT_ACTIVITY_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_DOWNLOADED_ACTIVITY_RECEIVED), object: downloadedData)
-							NotificationCenter.default.post(notification)
-						}
-						else if url.contains(REMOTE_API_DELETE_ACTIVITY_URL) {
-						}
-						else if url.contains(REMOTE_API_CREATE_TAG_URL) {
-						}
-						else if url.contains(REMOTE_API_DELETE_TAG_URL) {
-						}
-						else if url.contains(REMOTE_API_CLAIM_DEVICE_URL) {
-						}
-						else if url.contains(REMOTE_API_UPDATE_ACTIVITY_METADATA_URL) {
-						}
-						else if url.contains(REMOTE_API_CREATE_NEW_LAP_URL) {
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_UNSYNCHED_ACTIVITIES_LIST), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_LIST_ACTIVITY_PHOTOS_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_LIST), object: downloadedData)
-							NotificationCenter.default.post(notification)
-						}
-						else if url.contains(REMOTE_API_UPLOAD_ACTIVITY_FILE_URL) {
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_UPLOAD_ACTIVITY_PHOTO_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
+							onResponse(responseData, httpResponseCode)
 						}
 						else if url.contains(REMOTE_API_DELETE_ACTIVITY_PHOTO_URL) {
-							let notification = Notification(name: Notification.Name(rawValue: NOTIFICATION_NAME_ACTIVITY_PHOTOS_UPDATED), object: downloadedData)
-							NotificationCenter.default.post(notification)
-						}
-						else if url.contains(REMOTE_API_CREATE_PLANNED_WORKOUTS_URL) {
-						}
-						else if url.contains(REMOTE_API_CREATE_INTERVAL_WORKOUT_URL) {
-						}
-						else if url.contains(REMOTE_API_CREATE_PACE_PLAN_URL) {
+							onResponse(responseData, httpResponseCode)
 						}
 					}
 					else {
-						NSLog("Error code \(httpResponse.statusCode) received from the server for \(url)")
+						NSLog("Error code \(httpResponseCode.statusCode) received from the server for \(url)")
 					}
 				}
 			}
@@ -228,17 +184,17 @@ class ApiClient : ObservableObject {
 		return String(format: "%@://%@/photos/%@/%@", Preferences.broadcastProtocol(), Preferences.broadcastHostName(), userId, photoId)
 	}
 
-	func login(username: String, password: String) -> Bool {
+	func login(username: String, password: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_USERNAME] = username
 		postDict[PARAM_PASSWORD] = password
 		postDict[PARAM_DEVICE] = Preferences.uuid()
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LOGIN_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func createLogin(username: String, password1: String, password2: String, realname: String) -> Bool {
+	func createLogin(username: String, password1: String, password2: String, realname: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_USERNAME] = username
 		postDict[PARAM_PASSWORD1] = password1
@@ -247,95 +203,95 @@ class ApiClient : ObservableObject {
 		postDict[PARAM_DEVICE] = Preferences.uuid()
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_LOGIN_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func checkLoginStatus() -> Bool {
+	func checkLoginStatus(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_IS_LOGGED_IN_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 	
-	func logout() -> Bool {
+	func logout(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LOGOUT_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: [:])
+		return self.makeRequest(url: urlStr, method: "POST", data: [:], onResponse: onResponse)
 	}
 	
-	func listFriends() -> Bool {
+	func listFriends(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_FRIENDS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 	
-	func listGear() -> Bool {
+	func listGear(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_GEAR_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 
-	func createGear(item: GearSummary) throws -> Bool {
+	func createGear(item: GearSummary, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) throws -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_GEAR_URL)
 		let jsonData = try JSONEncoder().encode(item)
 		guard let dictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] else {
 			return false
 		}
-		return self.makeRequest(url: urlStr, method: "POST", data: dictionary)
+		return self.makeRequest(url: urlStr, method: "POST", data: dictionary, onResponse: onResponse)
 	}
 
-	func updateGear(item: GearSummary) throws -> Bool {
+	func updateGear(item: GearSummary, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) throws -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_GEAR_URL)
 		let jsonData = try JSONEncoder().encode(item)
 		guard let dictionary = try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [String: Any] else {
 			return false
 		}
-		return self.makeRequest(url: urlStr, method: "POST", data: dictionary)
+		return self.makeRequest(url: urlStr, method: "POST", data: dictionary, onResponse: onResponse)
 	}
 
-	func deleteGear(gearId: UUID) -> Bool {
+	func deleteGear(gearId: UUID, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var deleteDict: Dictionary<String, String> = [:]
 		deleteDict[PARAM_GEAR_ID] = gearId.uuidString
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_GEAR_URL)
-		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict)
+		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict, onResponse: onResponse)
 	}
 	
-	func listRaces() -> Bool {
+	func listRaces(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_RACES_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 
-	func listPlannedWorkouts() -> Bool {
+	func listPlannedWorkouts(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_PLANNED_WORKOUTS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 	
-	func listIntervalSessions() -> Bool {
+	func listIntervalSessions(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_INTERVAL_WORKOUTS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 	
-	func listPacePlans() -> Bool {
+	func listPacePlans(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_PACE_PLANS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: [:])
+		return self.makeRequest(url: urlStr, method: "GET", data: [:], onResponse: onResponse)
 	}
 	
-	func requestActivityMetadata(activityId: String) -> Bool {
+	func requestActivityMetadata(activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		if Preferences.shouldBroadcastToServer() && self.isCurrentlyLoggedIn() {
 			var postDict: Dictionary<String, String> = [:]
 			postDict[PARAM_ACTIVITY_ID] = activityId
 			
 			let urlStr = self.buildApiUrlStr(request: REMOTE_API_REQUEST_ACTIVITY_METADATA_URL)
-			return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+			return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 		}
 		return false
 	}
 
-	func requestToFollow(target: String) -> Bool {
+	func requestToFollow(target: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TARGET_EMAIL] = target
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_REQUEST_TO_FOLLOW_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 	}
 
-	func requestUserSettings(settings: Array<String>) -> Bool {
+	func requestUserSettings(settings: Array<String>, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_SETTINGS] = ""
 		
@@ -349,113 +305,113 @@ class ApiClient : ObservableObject {
 		}
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_REQUEST_USER_SETTINGS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 	}
 	
-	func exportActivity(activityId: String) -> Bool {
+	func exportActivity(activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_EXPORT_FORMAT] = "tcx"
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_EXPORT_ACTIVITY_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 	}
 
-	func deleteActivity(activityId: String) -> Bool {
+	func deleteActivity(activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_ACTIVITY_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func createTag(tag: String, activityId: String) -> Bool {
+	func createTag(tag: String, activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TAG + "0"] = tag
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_TAG_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func deleteTag(tag: String, activityId: String) -> Bool {
+	func deleteTag(tag: String, activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TAG] = tag
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_TAG_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func claimDevice(deviceId: String) -> Bool {
+	func claimDevice(deviceId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_DEVICE_ID2] = deviceId
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CLAIM_DEVICE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func setActivityName(activityId: String, name: String) -> Bool {
+	func setActivityName(activityId: String, name: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_NAME] = name
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func startNewLap(activityId: String, startTimeMs: UInt64) -> Bool {
+	func startNewLap(activityId: String, startTimeMs: UInt64, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_LAP_START_TIME] = String(startTimeMs)
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_NEW_LAP_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func setActivityType(activityId: String, type: String) -> Bool {
+	func setActivityType(activityId: String, type: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_TYPE] = type
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func setActivityDescription(activityId: String, description: String) -> Bool {
+	func setActivityDescription(activityId: String, description: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_ACTIVITY_DESCRIPTION] = description
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_ACTIVITY_METADATA_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func requestUpdatesSince(timestamp: Date) -> Bool {
+	func requestUpdatesSince(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_TIMESTAMP] = String(UInt64(timestamp.timeIntervalSince1970))
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_UNSYNCHED_ACTIVITIES_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 	}
 	
-	func requestActivityPhotos(activityId: String) -> Bool {
+	func requestActivityPhotos(activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_LIST_ACTIVITY_PHOTOS_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 	}
 	
-	func hasActivity(activityId: String) -> Bool {
+	func hasActivity(activityId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_HAS_ACTIVITY_URL)
-		return self.makeRequest(url: urlStr, method: "GET", data: postDict)
+		return self.makeRequest(url: urlStr, method: "GET", data: postDict, onResponse: onResponse)
 	}
 	
-	func sendActivity(activityId: String, name: String, contents: Data) -> Bool {
+	func sendActivity(activityId: String, name: String, contents: Data, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let base64Encoded = contents.base64EncodedString()
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
@@ -463,45 +419,45 @@ class ApiClient : ObservableObject {
 		postDict[PARAM_UPLOADED_FILE_DATA] = base64Encoded
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPLOAD_ACTIVITY_FILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func uploadActivityPhoto(activityId: String, imageData: Data) -> Bool {
+	func uploadActivityPhoto(activityId: String, imageData: Data, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let base64Encoded = imageData.base64EncodedString()
 		var postDict: Dictionary<String, String> = [:]
 		postDict[PARAM_ACTIVITY_ID] = activityId
 		postDict[PARAM_UPLOADED_FILE_DATA] = base64Encoded
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPLOAD_ACTIVITY_PHOTO_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 	
-	func deleteActivityPhoto(activityId: String, photoId: String) -> Bool {
+	func deleteActivityPhoto(activityId: String, photoId: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var deleteDict: Dictionary<String, String> = [:]
 		deleteDict[PARAM_ACTIVITY_ID] = activityId
 		deleteDict[PARAM_ACTIVITY_PHOTO_ID] = photoId
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_DELETE_ACTIVITY_PHOTO_URL)
-		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict)
+		return self.makeRequest(url: urlStr, method: "DELETE", data: deleteDict, onResponse: onResponse)
 	}
 	
-	func sendPlannedWorkouts(workoutsJson: String) -> Bool {
+	func sendPlannedWorkouts(workoutsJson: String, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_PLANNED_WORKOUTS_URL)
 		let workoutsDict: Dictionary<String, String> = ["workouts": workoutsJson]
-		return self.makeRequest(url: urlStr, method: "POST", data: workoutsDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: workoutsDict, onResponse: onResponse)
 	}
 
-	func sendIntervalSession(description: Dictionary<String, String>) -> Bool {
+	func sendIntervalSession(description: Dictionary<String, String>, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_INTERVAL_WORKOUT_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: description)
+		return self.makeRequest(url: urlStr, method: "POST", data: description, onResponse: onResponse)
 	}
 	
-	func sendPacePlan(description: Dictionary<String, Any>) -> Bool {
+	func sendPacePlan(description: Dictionary<String, Any>, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_CREATE_PACE_PLAN_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: description)
+		return self.makeRequest(url: urlStr, method: "POST", data: description, onResponse: onResponse)
 	}
 	
-	func sendPacePlansToServer() -> Bool {
+	func sendPacePlansToServer(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		if InitializePacePlanList() {
 			
 			var pacePlanIndex = 0
@@ -514,7 +470,7 @@ class ApiClient : ObservableObject {
 					let pacePlanDesc = String(cString: pacePlanDescPtr.assumingMemoryBound(to: CChar.self))
 					let summaryDict = try! JSONSerialization.jsonObject(with: Data(pacePlanDesc.utf8), options: []) as! [String:Any]
 
-					result = result && self.sendPacePlan(description: summaryDict)
+					result = result && self.sendPacePlan(description: summaryDict, onResponse: onResponse)
 					pacePlanIndex += 1
 				}
 				else {
@@ -526,80 +482,80 @@ class ApiClient : ObservableObject {
 		return false
 	}
 
-	func sendUpdatedUserHeight(timestamp: Date) -> Bool {
+	func sendUpdatedUserHeight(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_HEIGHT] = String(format:"%f", Preferences.heightCm())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUpdatedUserWeight(timestamp: Date) -> Bool {
+	func sendUpdatedUserWeight(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_WEIGHT] = String(format:"%f", Preferences.weightKg())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUpdatedUserBirthDate(timestamp: Date) -> Bool {
+	func sendUpdatedUserBirthDate(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_WEIGHT] = String(format:"%llu", Preferences.birthDate())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUpdatedUserFtp(timestamp: Date) -> Bool {
+	func sendUpdatedUserFtp(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_FTP] = String(format:"%f", Preferences.ftp())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
 
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUpdatedUserRestingHr(timestamp: Date) -> Bool {
+	func sendUpdatedUserRestingHr(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_RESTING_HR] = String(format:"%f", Preferences.restingHr())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", timestamp.timeIntervalSince1970)
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUpdatedUserMaxHr(timestamp: Date) -> Bool {
+	func sendUpdatedUserMaxHr(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_MAX_HR] = String(format:"%f", Preferences.maxHr())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", time_t(timestamp.timeIntervalSince1970))
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUpdatedUserVO2Max(timestamp: Date) -> Bool {
+	func sendUpdatedUserVO2Max(timestamp: Date, onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var postDict: Dictionary<String,String> = [:]
 		postDict[PARAM_USER_VO2MAX] = String(format:"%f", Preferences.vo2Max())
 		postDict[PARAM_TIMESTAMP] = String(format:"%llu", timestamp.timeIntervalSince1970)
 		
 		let urlStr = self.buildApiUrlStr(request: REMOTE_API_UPDATE_PROFILE_URL)
-		return self.makeRequest(url: urlStr, method: "POST", data: postDict)
+		return self.makeRequest(url: urlStr, method: "POST", data: postDict, onResponse: onResponse)
 	}
 
-	func sendUserDetailsToServer() -> Bool {
+	func sendUserDetailsToServer(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		var timestamp: time_t = 0
 		var weightKg: Double = 0.0
 
 		if GetUsersCurrentWeight(&timestamp, &weightKg) {
-			return self.sendUpdatedUserWeight(timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)))
+			return self.sendUpdatedUserWeight(timestamp: Date(timeIntervalSince1970: TimeInterval(timestamp)), onResponse: onResponse)
 		}
 		return true // User may not have any weight data
 	}
 
-	func sendMissingActivitiesToServer() -> Bool {
+	func sendMissingActivitiesToServer(onResponse: @escaping (Data?, HTTPURLResponse) -> Void) -> Bool {
 		// List activities that haven't been synched to the server.
 		let pointer = UnsafeMutablePointer<UnsynchedActivitiesCallbackType>.allocate(capacity: 1)
 		
@@ -619,7 +575,7 @@ class ApiClient : ObservableObject {
 			for activityId in activityIds {
 
 				// Ask the server if it wants this activity. Response is handled by handleHasActivityResponse.
-				result = result && self.hasActivity(activityId: activityId)
+				result = result && self.hasActivity(activityId: activityId, onResponse: onResponse)
 			}
 			
 			return result
@@ -633,10 +589,6 @@ class ApiClient : ObservableObject {
 
 		if Preferences.shouldBroadcastToServer() && self.isCurrentlyLoggedIn() {
 
-/*			guard let _ = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, Preferences.broadcastHostName()) else {
-				return false
-			} */
-
 			// Rate limit the server synchronizations. Let's not be spammy.
 			let now = time(nil)
 			let lastServerSync = Preferences.lastServerSyncTime()
@@ -645,28 +597,45 @@ class ApiClient : ObservableObject {
 				if deviceId != nil {
 
 					// Associate this device with the user.
-					result = self.claimDevice(deviceId: deviceId!)
+					result = self.claimDevice(deviceId: deviceId!, onResponse: { responseData, responseCode in
+					})
 
 					// Get all the things.
 #if !os(watchOS)
-					result = result && self.listGear()
-					result = result && self.listRaces()
-					result = result && self.listPlannedWorkouts()
-					result = result && self.requestUserSettings(settings: [WORKOUT_INPUT_GOAL_TYPE])
+					result = result && self.listGear(onResponse: { responseData, responseCode in
+						CommonApp.shared.gearListUpdated(responseData: responseData, responseCode: responseCode)
+					})
+					result = result && self.listRaces(onResponse: { responseData, responseCode in
+						CommonApp.shared.raceListUpdated(responseData: responseData, responseCode: responseCode)
+					})
+					result = result && self.listPlannedWorkouts(onResponse: { responseData, responseCode in
+						CommonApp.shared.plannedWorkoutsUpdated(responseData: responseData, responseCode: responseCode)
+					})
+					result = result && self.requestUserSettings(settings: [WORKOUT_INPUT_GOAL_TYPE], onResponse: { responseData, responseCode in
+						CommonApp.shared.requestUserSettingsResponse(responseData: responseData, responseCode: responseCode)
+					})
 #endif
-					result = result && self.listIntervalSessions()
-					result = result && self.listPacePlans()
+					result = result && self.listIntervalSessions(onResponse: { responseData, responseCode in
+						CommonApp.shared.intervalSessionsUpdated(responseData: responseData, responseCode: responseCode)
+					})
+					result = result && self.listPacePlans(onResponse: { responseData, responseCode in
+						CommonApp.shared.pacePlansUpdated(responseData: responseData, responseCode: responseCode)
+					})
 
 					// Send all the things.
 #if !os(watchOS)
-					result = result && self.sendUserDetailsToServer()
-					result = result && self.sendMissingActivitiesToServer()
-					result = result && self.sendPacePlansToServer()
+					result = result && self.sendUserDetailsToServer(onResponse: { responseData, responseCode in
+					})
+					result = result && self.sendMissingActivitiesToServer(onResponse: { responseData, responseCode in
+					})
+					result = result && self.sendPacePlansToServer(onResponse: { responseData, responseCode in
+					})
 #endif
 					
 					// Ask for the server's activity list, from the time of the last activity received.
 					let lastServerImport = Preferences.lastServerImportTime()
-					result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerImport)))
+					result = result && self.requestUpdatesSince(timestamp: Date(timeIntervalSince1970: TimeInterval(lastServerImport)), onResponse: { responseData, responseCode in
+					})
 
 					Preferences.setLastServerSyncTime(value: now)
 				}

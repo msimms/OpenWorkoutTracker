@@ -15,17 +15,19 @@ struct LoginView: View {
 	var body: some View {
 		VStack(alignment: .center) {
 			Group() {
-				Text("Email")
-					.bold()
+				Label("Email", systemImage: "mail")
+					.font(.system(size: 24))
 				TextField("Email", text: self.$email)
 					.foregroundColor(self.colorScheme == .dark ? .white : .black)
 					.background(self.colorScheme == .dark ? .black : .white)
 					.autocapitalization(.none)
-				Text("Password")
-					.bold()
+				Label("Password", systemImage: "key.horizontal.fill")
+					.font(.system(size: 24))
 				SecureField("Password", text: self.$password)
 					.onSubmit {
-						if ApiClient.shared.login(username: self.email, password: self.password) {
+						if ApiClient.shared.login(username: self.email, password: self.password, onResponse: { responseData, responseCode in
+							CommonApp.shared.loginProcessed(responseData: responseData, responseCode: responseCode)
+						}) {
 							self.presentation.wrappedValue.dismiss()
 						}
 					}
@@ -37,7 +39,9 @@ struct LoginView: View {
 
 			Button {
 				Preferences.setBroadcastUserName(value: self.email)
-				if ApiClient.shared.login(username: self.email, password: self.password) {
+				if ApiClient.shared.login(username: self.email, password: self.password, onResponse: { responseData, responseCode in
+					CommonApp.shared.loginProcessed(responseData: responseData, responseCode: responseCode)
+				}) {
 					self.presentation.wrappedValue.dismiss()
 				}
 				else {

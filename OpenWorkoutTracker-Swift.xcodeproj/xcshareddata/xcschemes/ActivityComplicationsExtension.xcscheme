@@ -110,7 +110,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "27E60908292D13D900401901"
             BuildableName = "ActivityComplicationsExtension.appex"
-            BlueprintName = "ActivityComplicationsExtension"
             ReferencedContainer = "container:OpenWorkoutTracker-Swift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

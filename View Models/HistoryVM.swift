@@ -47,42 +47,43 @@ class HistoryVM : ObservableObject {
 		if Preferences.willIntegrateHealthKitActivities() {
 			
 			// Read all relevant activities from HealthKit.
-			HealthManager.shared.readAllActivitiesFromHealthStore()
-			
-			// De-duplicate the list against itself as well as the activities in our database.
-			if Preferences.hideHealthKitDuplicates() {
-				
-				// Remove duplicate activities from within the HealthKit list.
-				HealthManager.shared.removeDuplicateActivities()
-				
-				// Remove activities that overlap with ones in our database.
-				let numDbActivities = GetNumHistoricalActivities()
-				for activityIndex in 0..<numDbActivities {
-					var startTime: time_t = 0
-					var endTime: time_t = 0
-					
-					if GetHistoricalActivityStartAndEndTimeByIndex(activityIndex, &startTime, &endTime) {
-						HealthManager.shared.removeActivitiesThatOverlapWithStartTime(startTime: startTime, endTime:endTime)
+			HealthManager.shared.readAllActivitiesFromHealthStore(callback: {
+
+				// De-duplicate the list against itself as well as the activities in our database.
+				if Preferences.hideHealthKitDuplicates() {
+
+					// Remove duplicate activities from within the HealthKit list.
+					HealthManager.shared.removeDuplicateActivities()
+
+					// Remove activities that overlap with ones in our database.
+					let numDbActivities = GetNumHistoricalActivities()
+					for activityIndex in 0..<numDbActivities {
+						var startTime: time_t = 0
+						var endTime: time_t = 0
+
+						if GetHistoricalActivityStartAndEndTimeByIndex(activityIndex, &startTime, &endTime) {
+							HealthManager.shared.removeActivitiesThatOverlapWithStartTime(startTime: startTime, endTime:endTime)
+						}
 					}
 				}
-			}
-			
-			// Incorporate HealthKit's list into the master list of activities.
-			for workout in HealthManager.shared.workouts {
-				let summary = ActivitySummary()
 
-				summary.id = workout.key
-				summary.name = ""
-				summary.type = HealthManager.healthKitWorkoutToActivityType(workout: workout.value)
-				summary.startTime = workout.value.startDate
-				summary.endTime = workout.value.endDate
-				summary.source = ActivitySummary.Source.healthkit
-				
-				DispatchQueue.main.async {
-					let index = self.historicalActivities.insertionIndex(of: summary)
-					self.historicalActivities.insert(summary, at: index)
+				// Incorporate HealthKit's list into the master list of activities.
+				for workout in HealthManager.shared.workouts {
+					let summary = ActivitySummary()
+
+					summary.id = workout.key
+					summary.name = ""
+					summary.type = HealthManager.healthKitWorkoutToActivityType(workout: workout.value)
+					summary.startTime = workout.value.startDate
+					summary.endTime = workout.value.endDate
+					summary.source = ActivitySummary.Source.healthkit
+
+					DispatchQueue.main.async {
+						let index = self.historicalActivities.insertionIndex(of: summary)
+						self.historicalActivities.insert(summary, at: index)
+					}
 				}
-			}
+			})
 		}
 	}
 	
