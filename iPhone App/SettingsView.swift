@@ -28,24 +28,24 @@ struct SettingsView: View {
 					Image(systemName: "questionmark.circle")
 					Text("Preferences that affect how information is displayed and which features are enabled.")
 				}
-				.padding(INFO_INSETS)
-				
-				Text("Units")
-					.font(.system(size: 24))
-					.bold()
-				VStack(alignment: .center) {
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Units")
+						.font(.system(size: 24))
+						.bold()
 					Toggle("Metric", isOn: self.$preferMetric)
 						.onChange(of: self.preferMetric) {
 							Preferences.setPreferredUnitSystem(system: self.preferMetric ? UNIT_SYSTEM_METRIC : UNIT_SYSTEM_US_CUSTOMARY)
 							SetPreferredUnitSystem(Preferences.preferredUnitSystem()) // Update the backend
 						}
 				}
-				.padding(5)
-				
-				Text("HealthKit")
-					.font(.system(size: 24))
-					.bold()
-				VStack(alignment: .center) {
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("HealthKit")
+						.font(.system(size: 24))
+						.bold()
 					Toggle("Read Activities From HealthKit", isOn: self.$readActivitiesFromHealthKit)
 						.onChange(of: self.readActivitiesFromHealthKit) {
 							Preferences.setWillIntegrateHealthKitActivities(value: self.readActivitiesFromHealthKit)
@@ -55,23 +55,23 @@ struct SettingsView: View {
 							Preferences.setHideHealthKitDuplicates(value: self.hideDuplicateActivities)
 						}
 				}
-				.padding(5)
-				
-				Text("Cloud Services")
-					.font(.system(size: 24))
-					.bold()
-				VStack(alignment: .center) {
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Cloud Services")
+						.font(.system(size: 24))
+						.bold()
 					Toggle("Auto Save Files to iCloud Drive", isOn: self.$autoSaveActivitiesToICloudDrive)
 						.onChange(of: self.autoSaveActivitiesToICloudDrive) {
 							Preferences.setAutoSaveToICloudDrive(value: self.autoSaveActivitiesToICloudDrive)
 						}
 				}
-				.padding(5)
-				
-				Text("Broadcast")
-					.font(.system(size: 24))
-					.bold()
-				VStack(alignment: .center) {
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Broadcast")
+						.font(.system(size: 24))
+						.bold()
 					Toggle("Enabled", isOn: self.$broadcastEnabled)
 						.onChange(of: self.broadcastEnabled) {
 							Preferences.setBroadcastToServer(value: self.broadcastEnabled)
@@ -113,8 +113,8 @@ struct SettingsView: View {
 							Preferences.setBroadcastShowIcon(value: self.showBroadcastIcon)
 						}
 				}
-				.padding(5)
-				
+				.modifier(CommonStyle())
+
 				Spacer()
 				
 				HStack() {

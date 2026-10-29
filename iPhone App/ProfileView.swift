@@ -25,6 +25,7 @@ struct ProfileView: View {
 	@State private var showingHrError: Bool = false
 	@State private var showingVO2MaxError: Bool = false
 	@State private var showingApiError: Bool = false
+
 	@ObservedObject var height = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedHeight())
 	@ObservedObject var weight = NumbersOnly(initialDoubleValue: ProfileVM.getDisplayedWeight())
 	@ObservedObject var userDefinedFtp = NumbersOnly(initialDoubleValue: Preferences.ftp())
@@ -41,257 +42,258 @@ struct ProfileView: View {
 	}()
 
 	var body: some View {
-		VStack(alignment: .center) {
-			HStack() {
-				Image(systemName: "questionmark.circle")
-				Text("Information about the athlete, used for calorie calculations, etc.")
-			}
-			.padding(INFO_INSETS)
+		ScrollView() {
+			VStack(alignment: .center) {
+				HStack() {
+					Image(systemName: "questionmark.circle")
+					Text("Information about the athlete, used for calorie calculations, etc.")
+				}
+				.modifier(CommonStyle())
 
-			Group() {
-				Text("Biological Profile")
-					.font(.system(size: 24))
-					.bold()
-				
-				// How old is the user?
-				HStack(alignment: .center) {
-					Text("Birthdate")
+				VStack() {
+					Text("Biological Profile")
+						.font(.system(size: 24))
 						.bold()
-					Spacer()
-					Text("\(self.dateFormatter.string(from: self.birthdate))")
-						.onTapGesture {
-							self.showsDatePicker.toggle()
-						}
-				}
-				.padding(5)
-				if self.showsDatePicker {
-					DatePicker("", selection: self.$birthdate, displayedComponents: .date)
-						.datePickerStyle(.graphical)
-						.onChange(of: self.birthdate) {
-							Preferences.setBirthDate(value: time_t(self.birthdate.timeIntervalSince1970))
-							CommonApp.shared.updateUserProfile()
-							self.showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date(), onResponse: { responseData, responseCode in
-							})
-						}
-						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
-				}
-				
-				// User's height
-				HStack(alignment: .center) {
-					Text("Height")
-						.bold()
-					Spacer()
-					TextField("Height", text: self.$height.value)
-						.keyboardType(.decimalPad)
-						.multilineTextAlignment(.trailing)
-						.fixedSize()
-						.onChange(of: self.height.value) {
-							if let value = Double(self.height.value) {
-								ProfileVM.setHeight(height: value)
-								self.showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date(), onResponse: { responseData, responseCode in
+
+					// How old is the user?
+					HStack(alignment: .center) {
+						Text("Birthdate")
+							.bold()
+						Spacer()
+						Text("\(self.dateFormatter.string(from: self.birthdate))")
+							.onTapGesture {
+								self.showsDatePicker.toggle()
+							}
+					}
+					.padding(5)
+					if self.showsDatePicker {
+						DatePicker("", selection: self.$birthdate, displayedComponents: .date)
+							.datePickerStyle(.graphical)
+							.onChange(of: self.birthdate) {
+								Preferences.setBirthDate(value: time_t(self.birthdate.timeIntervalSince1970))
+								CommonApp.shared.updateUserProfile()
+								self.showingApiError = !ApiClient.shared.sendUpdatedUserBirthDate(timestamp: Date(), onResponse: { responseData, responseCode in
 								})
-							} else {
-								self.showingHeightError = true
 							}
-						}
-						.focused(self.$focusedField, equals: .height)
-					Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
-				}
-				.alert("Invalid value!", isPresented: self.$showingHeightError) { }
-				.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
-				.padding(5)
-				
-				// User's weight
-				HStack(alignment: .center) {
-					Text("Weight")
-						.bold()
-					Spacer()
-					TextField("Weight", text: self.$weight.value)
-						.keyboardType(.decimalPad)
-						.multilineTextAlignment(.trailing)
-						.fixedSize()
-						.onChange(of: self.weight.value) {
-							if let value = Double(self.weight.value) {
-								ProfileVM.setWeight(weight: value)
-								self.showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date(), onResponse: { responseData, responseCode in
-								})
-							} else {
-								self.showingWeightError = true
-							}
-						}
-						.focused(self.$focusedField, equals: .weight)
-					Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
-				}
-				.alert("Invalid value!", isPresented: self.$showingWeightError) { }
-				.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
-				.padding(5)
-				
-				// User's biological gender - needed for calorie estimations.
-				HStack(alignment: .center) {
-					Button("Biological Gender") {
-						self.showingGenderSelection = true
+							.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 					}
-					.confirmationDialog("Please enter your biological gender", isPresented: self.$showingGenderSelection, titleVisibility: .visible) {
-						ForEach([STR_MALE, STR_FEMALE], id: \.self) { item in
-							Button(item) {
-								let gender = ProfileVM.genderStringToType(genderStr: item)
-								ProfileVM.setBiologicalGender(gender: gender)
-							}
-						}
-					}
-					.bold()
-					Spacer()
-					Text(ProfileVM.genderToString(genderType: Preferences.biologicalGender()))
-				}
-				.padding(5)
-			}
 
-			Group() {
-				Text("Performance Profile")
-					.font(.system(size: 24))
-					.bold()
-
-				// How active is the user?
-				HStack(alignment: .center) {
-					Button("Activity Level") {
-						self.showingActivityLevelSelection = true
-					}
-					.confirmationDialog("Please describe your current activity level", isPresented: self.$showingActivityLevelSelection, titleVisibility: .visible) {
-						ForEach([STR_SEDENTARY, STR_LIGHT, STR_MODERATELY_ACTIVE, STR_HIGHLY_ACTIVE, STR_EXTREMELY_ACTIVE], id: \.self) { item in
-							Button(item) {
-								let activityLevel = ProfileVM.activityLevelStringToType(activityLevelStr: item)
-								ProfileVM.setActivityLevel(activityLevel: activityLevel)
-							}
-						}
-					}
-					.bold()
-					Spacer()
-					Text(ProfileVM.activityLevelToString(activityLevel: Preferences.activityLevel()))
-				}
-				.padding(5)
-
-				// User's FTP
-				HStack(alignment: .center) {
-					Text("Functional Threshold Power")
-						.bold()
-					Spacer()
-					TextField("Not set", text: Binding(
-						get: { self.userDefinedFtp.asDouble() < 1.0 ? "" : self.userDefinedFtp.value },
-						set: {(newValue) in
-							if newValue.count > 0 {
-								if let value = Double(newValue) {
-									self.userDefinedFtp.value = newValue
-									self.showingApiError = !ProfileVM.setFtp(ftp: value)
+					// User's height
+					HStack(alignment: .center) {
+						Text("Height")
+							.bold()
+						Spacer()
+						TextField("Height", text: self.$height.value)
+							.keyboardType(.decimalPad)
+							.multilineTextAlignment(.trailing)
+							.fixedSize()
+							.onChange(of: self.height.value) {
+								if let value = Double(self.height.value) {
+									ProfileVM.setHeight(height: value)
+									self.showingApiError = !ApiClient.shared.sendUpdatedUserHeight(timestamp: Date(), onResponse: { responseData, responseCode in
+									})
 								} else {
-									self.userDefinedMaxHr.value = ""
-									self.showingHrError = true
+									self.showingHeightError = true
 								}
 							}
-						}))
+							.focused(self.$focusedField, equals: .height)
+						Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "cm" : "inches")
+					}
+					.alert("Invalid value!", isPresented: self.$showingHeightError) { }
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+					.padding(5)
+
+					// User's weight
+					HStack(alignment: .center) {
+						Text("Weight")
+							.bold()
+						Spacer()
+						TextField("Weight", text: self.$weight.value)
+							.keyboardType(.decimalPad)
+							.multilineTextAlignment(.trailing)
+							.fixedSize()
+							.onChange(of: self.weight.value) {
+								if let value = Double(self.weight.value) {
+									ProfileVM.setWeight(weight: value)
+									self.showingApiError = !ApiClient.shared.sendUpdatedUserWeight(timestamp: Date(), onResponse: { responseData, responseCode in
+									})
+								} else {
+									self.showingWeightError = true
+								}
+							}
+							.focused(self.$focusedField, equals: .weight)
+						Text(Preferences.preferredUnitSystem() == UNIT_SYSTEM_METRIC ? "kg" : "pounds")
+					}
+					.alert("Invalid value!", isPresented: self.$showingWeightError) { }
+					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+					.padding(5)
+
+					// User's biological gender - needed for calorie estimations.
+					HStack(alignment: .center) {
+						Button("Biological Gender") {
+							self.showingGenderSelection = true
+						}
+						.confirmationDialog("Please enter your biological gender", isPresented: self.$showingGenderSelection, titleVisibility: .visible) {
+							ForEach([STR_MALE, STR_FEMALE], id: \.self) { item in
+								Button(item) {
+									let gender = ProfileVM.genderStringToType(genderStr: item)
+									ProfileVM.setBiologicalGender(gender: gender)
+								}
+							}
+						}
+						.bold()
+						Spacer()
+						Text(ProfileVM.genderToString(genderType: Preferences.biologicalGender()))
+					}
+					.padding(5)
+				}
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Performance Profile")
+						.font(.system(size: 24))
+						.bold()
+
+					// How active is the user?
+					HStack(alignment: .center) {
+						Button("Activity Level") {
+							self.showingActivityLevelSelection = true
+						}
+						.confirmationDialog("Please describe your current activity level", isPresented: self.$showingActivityLevelSelection, titleVisibility: .visible) {
+							ForEach([STR_SEDENTARY, STR_LIGHT, STR_MODERATELY_ACTIVE, STR_HIGHLY_ACTIVE, STR_EXTREMELY_ACTIVE], id: \.self) { item in
+								Button(item) {
+									let activityLevel = ProfileVM.activityLevelStringToType(activityLevelStr: item)
+									ProfileVM.setActivityLevel(activityLevel: activityLevel)
+								}
+							}
+						}
+						.bold()
+						Spacer()
+						Text(ProfileVM.activityLevelToString(activityLevel: Preferences.activityLevel()))
+					}
+					.padding(5)
+
+					// User's FTP
+					HStack(alignment: .center) {
+						Text("Functional Threshold Power")
+							.bold()
+						Spacer()
+						TextField("Not set", text: Binding(
+							get: { self.userDefinedFtp.asDouble() < 1.0 ? "" : self.userDefinedFtp.value },
+							set: {(newValue) in
+								if newValue.count > 0 {
+									if let value = Double(newValue) {
+										self.userDefinedFtp.value = newValue
+										self.showingApiError = !ProfileVM.setFtp(ftp: value)
+									} else {
+										self.userDefinedMaxHr.value = ""
+										self.showingHrError = true
+									}
+								}
+							}))
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
 						.alert("Invalid value!", isPresented: self.$showingFtpError) { }
 						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 						.focused(self.$focusedField, equals: .ftp)
-					Text(" watts")
-				}
-				.padding(5)
+						Text(" watts")
+					}
+					.padding(5)
 
-				// User's Resting Rate
-				HStack(alignment: .center) {
-					Text("Resting Heart Rate")
-						.bold()
-					Spacer()
-					TextField("Not set", text: Binding(
-						get: { self.userDefinedRestingHr.asDouble() < 1.0 ? "" : self.userDefinedRestingHr.value },
-						set: {(newValue) in
-							if newValue.count > 0 {
-								if let value = Double(newValue) {
-									self.userDefinedRestingHr.value = newValue
-									self.showingApiError = !ProfileVM.setRestingHr(hr: value)
-								} else {
-									self.userDefinedRestingHr.value = ""
-									self.showingHrError = true
+					// User's Resting Rate
+					HStack(alignment: .center) {
+						Text("Resting Heart Rate")
+							.bold()
+						Spacer()
+						TextField("Not set", text: Binding(
+							get: { self.userDefinedRestingHr.asDouble() < 1.0 ? "" : self.userDefinedRestingHr.value },
+							set: {(newValue) in
+								if newValue.count > 0 {
+									if let value = Double(newValue) {
+										self.userDefinedRestingHr.value = newValue
+										self.showingApiError = !ProfileVM.setRestingHr(hr: value)
+									} else {
+										self.userDefinedRestingHr.value = ""
+										self.showingHrError = true
+									}
 								}
-							}
-						}))
+							}))
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
 						.alert("Invalid value!", isPresented: self.$showingHrError) { }
 						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 						.focused(self.$focusedField, equals: .restingHr)
-					Text(" bpm")
-				}
-				.padding(5)
-				
-				// User's Max Heart Rate
-				HStack(alignment: .center) {
-					Text("Maximum Heart Rate")
-						.bold()
-					Spacer()
-					TextField("Not set", text: Binding(
-						get: { self.userDefinedMaxHr.asDouble() < 1.0 ? "" : self.userDefinedMaxHr.value },
-						set: {(newValue) in
-							if newValue.count > 0 {
-								if let value = Double(newValue) {
-									self.userDefinedMaxHr.value = newValue
-									self.showingApiError = !ProfileVM.setMaxHr(hr: value)
-								} else {
-									self.userDefinedMaxHr.value = ""
-									self.showingHrError = true
+						Text(" bpm")
+					}
+					.padding(5)
+
+					// User's Max Heart Rate
+					HStack(alignment: .center) {
+						Text("Maximum Heart Rate")
+							.bold()
+						Spacer()
+						TextField("Not set", text: Binding(
+							get: { self.userDefinedMaxHr.asDouble() < 1.0 ? "" : self.userDefinedMaxHr.value },
+							set: {(newValue) in
+								if newValue.count > 0 {
+									if let value = Double(newValue) {
+										self.userDefinedMaxHr.value = newValue
+										self.showingApiError = !ProfileVM.setMaxHr(hr: value)
+									} else {
+										self.userDefinedMaxHr.value = ""
+										self.showingHrError = true
+									}
 								}
-							}
-						}))
+							}))
 						.keyboardType(.decimalPad)
 						.multilineTextAlignment(.trailing)
 						.fixedSize()
 						.alert("Invalid value!", isPresented: self.$showingHrError) { }
 						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
 						.focused(self.$focusedField, equals: .maxHr)
-					Text(" bpm")
-				}
-				.padding(5)
-			}
+						Text(" bpm")
+					}
+					.padding(5)
 
-			// User's VO2Max
-			HStack(alignment: .center) {
-				Text("VO\u{00B2}Max")
-					.bold()
-				Spacer()
-				TextField("Not set", text: Binding(
-					get: { self.userDefinedVO2Max.asDouble() < 1.0 ? "" : self.userDefinedVO2Max.value },
-					set: {(newValue) in
-						if newValue.count > 0 {
-							if let value = Double(newValue) {
-								self.userDefinedVO2Max.value = newValue
-								self.showingApiError = !ProfileVM.setVO2Max(vo2Max: value)
-							} else {
-								self.userDefinedVO2Max.value = ""
-								self.showingVO2MaxError = true
-							}
-						}
-					}))
-					.keyboardType(.decimalPad)
-					.multilineTextAlignment(.trailing)
-					.fixedSize()
-					.alert("Invalid value!", isPresented: self.$showingVO2MaxError) { }
-					.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
-					.focused(self.$focusedField, equals: .vo2max)
-				Text(" ml/kg/min")
+					// User's VO2Max
+					HStack(alignment: .center) {
+						Text("VO\u{00B2}Max")
+							.bold()
+						Spacer()
+						TextField("Not set", text: Binding(
+							get: { self.userDefinedVO2Max.asDouble() < 1.0 ? "" : self.userDefinedVO2Max.value },
+							set: {(newValue) in
+								if newValue.count > 0 {
+									if let value = Double(newValue) {
+										self.userDefinedVO2Max.value = newValue
+										self.showingApiError = !ProfileVM.setVO2Max(vo2Max: value)
+									} else {
+										self.userDefinedVO2Max.value = ""
+										self.showingVO2MaxError = true
+									}
+								}
+							}))
+						.keyboardType(.decimalPad)
+						.multilineTextAlignment(.trailing)
+						.fixedSize()
+						.alert("Invalid value!", isPresented: self.$showingVO2MaxError) { }
+						.alert("Error storing the new value!", isPresented: self.$showingApiError) { }
+						.focused(self.$focusedField, equals: .vo2max)
+						Text(" ml/kg/min")
+					}
+					.padding(5)
+				}
+				.modifier(CommonStyle())
 			}
-			.padding(5)
-			
-			Spacer()
-		}
-		.toolbar {
-			ToolbarItem(placement: .keyboard) {
-				Button("Done") {
-					self.focusedField = nil
+			.toolbar {
+				ToolbarItem(placement: .keyboard) {
+					Button("Done") {
+						self.focusedField = nil
+					}
 				}
 			}
 		}
-		.padding(10)
     }
 }

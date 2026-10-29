@@ -16,19 +16,23 @@ struct SensorsView: View {
 					Image(systemName: "questionmark.circle")
 					Text("Bluetooth heart rate monitors, cycling power meters, and cadence sensors can all be connected.")
 				}
-				.padding(INFO_INSETS)
+				.modifier(CommonStyle())
 
-				Toggle("Scan for compatible sensors", isOn: self.$shouldScan)
-					.onChange(of: self.shouldScan) {
-						Preferences.setScanForSensors(value: self.shouldScan)
-						if self.shouldScan {
-							SensorMgr.shared.startSensors(usableSensors: [])
+				VStack() {
+					Toggle("Scan for compatible sensors", isOn: self.$shouldScan)
+						.onChange(of: self.shouldScan) {
+							Preferences.setScanForSensors(value: self.shouldScan)
+							if self.shouldScan {
+								SensorMgr.shared.startSensors(usableSensors: [])
+							}
+							else {
+								SensorMgr.shared.stopSensors()
+							}
 						}
-						else {
-							SensorMgr.shared.stopSensors()
-						}
-					}
-				Group() {
+				}
+				.modifier(CommonStyle())
+
+				VStack() {
 					Text("Sensors")
 						.font(.system(size: 24))
 						.bold()
@@ -54,6 +58,7 @@ struct SensorsView: View {
 						Text("No sensors found.")
 					}
 				}
+				.modifier(CommonStyle())
 			}
 			.padding(10)
 		}

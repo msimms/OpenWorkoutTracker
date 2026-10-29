@@ -17,30 +17,33 @@ struct PacePlansView: View {
 	}()
 
 	var body: some View {
-		VStack(alignment: .center) {
+		ScrollView() {
 			HStack() {
 				Image(systemName: "questionmark.circle")
 				Text("Create and manage pace plans. Set a target time and distance and know whether you are moving too fast or too slow.")
 			}
-			.padding(INFO_INSETS)
+			.modifier(CommonStyle())
 
-			if self.pacePlansVM.pacePlans.count > 0 {
-				List(self.pacePlansVM.pacePlans, id: \.self) { item in
-					NavigationLink(destination: EditPacePlanView(pacePlan: item)) {
-						VStack(alignment: .leading) {
-							Text(item.name)
-								.bold()
-							Text("Last Updated: \(self.dateFormatter.string(from: item.lastUpdatedTime))")
-								.italic()
+			VStack() {
+				if self.pacePlansVM.pacePlans.count > 0 {
+					List(self.pacePlansVM.pacePlans, id: \.self) { item in
+						NavigationLink(destination: EditPacePlanView(pacePlan: item)) {
+							VStack(alignment: .leading) {
+								Text(item.name)
+									.bold()
+								Text("Last Updated: \(self.dateFormatter.string(from: item.lastUpdatedTime))")
+									.italic()
+							}
 						}
 					}
+					.listStyle(.plain)
 				}
-				.listStyle(.plain)
+				else {
+					Text("No Pace Plans\n(Click the + sign to create one)")
+						.multilineTextAlignment(.center)
+				}
 			}
-			else {
-				Text("No Pace Plans\n(Click the + sign to create one)")
-					.multilineTextAlignment(.center)
-			}
+			.modifier(CommonStyle())
 		}
 		.padding(10)
 		.toolbar {

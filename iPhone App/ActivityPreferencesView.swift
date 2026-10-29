@@ -50,142 +50,143 @@ struct ActivityPreferencesView: View {
 	}
 
 	var body: some View {
-		VStack(alignment: .center) {
-			Group() {
-				Text("Default Layout")
-					.font(.system(size: 24))
-					.bold()
-				Toggle("Screen Auto-Locking", isOn: self.$screenAutoLocking)
-					.onChange(of: screenAutoLocking) {
-						ActivityPreferences.setScreenAutoLocking(activityType: self.activityType, value: self.screenAutoLocking)
+		ScrollView() {
+			VStack(alignment: .center) {
+				VStack() {
+					Text("Default Layout")
+						.font(.system(size: 24))
+						.bold()
+					Toggle("Screen Auto-Locking", isOn: self.$screenAutoLocking)
+						.onChange(of: screenAutoLocking) {
+							ActivityPreferences.setScreenAutoLocking(activityType: self.activityType, value: self.screenAutoLocking)
+						}
+					Toggle("Allow Screen Presses During Activity", isOn: self.$allowScreenPresses)
+						.onChange(of: allowScreenPresses) {
+							ActivityPreferences.setAllowScreenPressesDuringActivity(activityType: self.activityType, value: self.allowScreenPresses)
+						}
+					Toggle("Countdown Timer", isOn: self.$countdownTimer)
+						.onChange(of: countdownTimer) {
+							ActivityPreferences.setCountdown(activityType: self.activityType, value: self.countdownTimer)
+						}
+					Toggle("Show Heart Rate as Percentage", isOn: self.$showHeartRateAsPercentage)
+						.onChange(of: showHeartRateAsPercentage) {
+							ActivityPreferences.setShowHeartRatePercent(activityType: self.activityType, value: self.showHeartRateAsPercentage)
+						}
+				}
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Colors")
+						.font(.system(size: 24))
+						.bold()
+					HStack() {
+						Text("Background Color")
+						Spacer()
+						Button(ActivityPreferences.getBackgroundColorName(activityType: self.activityType)) {
+							self.showingBackgroundColorSelection = true
+						}
+						.confirmationDialog("Which color?", isPresented: self.$showingBackgroundColorSelection, titleVisibility: .visible) {
+							ForEach(self.colorNames, id: \.self) { item in
+								Button(item) {
+									ActivityPreferences.setBackgroundColor(activityType: self.activityType, colorName: item)
+								}
+							}
+						}
+						.padding(PREFS_INSET)
 					}
-				Toggle("Allow Screen Presses During Activity", isOn: self.$allowScreenPresses)
-					.onChange(of: allowScreenPresses) {
-						ActivityPreferences.setAllowScreenPressesDuringActivity(activityType: self.activityType, value: self.allowScreenPresses)
+					HStack() {
+						Text("Label Color")
+						Spacer()
+						Button(ActivityPreferences.getLabelColorName(activityType: self.activityType)) {
+							self.showingLabelColorSelection = true
+						}
+						.confirmationDialog("Which color?", isPresented: self.$showingLabelColorSelection, titleVisibility: .visible) {
+							ForEach(self.colorNames, id: \.self) { item in
+								Button(item) {
+									ActivityPreferences.setLabelColor(activityType: self.activityType, colorName: item)
+								}
+							}
+						}
+						.padding(PREFS_INSET)
 					}
-				Toggle("Countdown Timer", isOn: self.$countdownTimer)
-					.onChange(of: countdownTimer) {
-						ActivityPreferences.setCountdown(activityType: self.activityType, value: self.countdownTimer)
+					HStack() {
+						Text("Text Color")
+						Spacer()
+						Button(ActivityPreferences.getTextColorName(activityType: self.activityType)) {
+							self.showingTextColorSelection = true
+						}
+						.confirmationDialog("Which color?", isPresented: self.$showingTextColorSelection, titleVisibility: .visible) {
+							ForEach(self.colorNames, id: \.self) { item in
+								Button(item) {
+									ActivityPreferences.setTextColor(activityType: self.activityType, colorName: item)
+								}
+							}
+						}
+						.padding(PREFS_INSET)
 					}
-				Toggle("Show Heart Rate as Percentage", isOn: self.$showHeartRateAsPercentage)
-					.onChange(of: showHeartRateAsPercentage) {
-						ActivityPreferences.setShowHeartRatePercent(activityType: self.activityType, value: self.showHeartRateAsPercentage)
+				}
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Sounds")
+						.font(.system(size: 24))
+						.bold()
+					Toggle("Start/Stop Beep", isOn: self.$startStopBeep)
+						.onChange(of: self.startStopBeep) {
+							ActivityPreferences.setStartStopBeepEnabled(activityType: self.activityType, value: self.startStopBeep)
+						}
+					Toggle("Split Beep", isOn: self.$splitBeep)
+						.onChange(of: splitBeep) {
+							ActivityPreferences.setSplitBeepEnabled(activityType: self.activityType, value: self.splitBeep)
+						}
+				}
+				.modifier(CommonStyle())
+
+				VStack() {
+					Text("Location")
+						.font(.system(size: 24))
+						.bold()
+					HStack() {
+						Text("Horizontal Accuracy")
+						Spacer()
+						TextField("Distance", text: self.$horizontalAccuracy.value)
+							.keyboardType(.decimalPad)
+							.multilineTextAlignment(.trailing)
+							.fixedSize()
+							.onChange(of: self.horizontalAccuracy.value) {
+							}
+						Text("Meters")
 					}
-			}
-			Group() {
-				Text("Colors")
-					.font(.system(size: 24))
-					.bold()
-				HStack() {
-					Text("Background Color")
-					Spacer()
-					Button(ActivityPreferences.getBackgroundColorName(activityType: self.activityType)) {
-						self.showingBackgroundColorSelection = true
+					HStack() {
+						Text("Vertical Accuracy")
+						Spacer()
+						TextField("Distance", text: self.$verticalAccuracy.value)
+							.keyboardType(.decimalPad)
+							.multilineTextAlignment(.trailing)
+							.fixedSize()
+							.onChange(of: self.verticalAccuracy.value) {
+							}
+						Text("Meters")
 					}
-					.confirmationDialog("Which color?", isPresented: self.$showingBackgroundColorSelection, titleVisibility: .visible) {
-						ForEach(self.colorNames, id: \.self) { item in
-							Button(item) {
-								ActivityPreferences.setBackgroundColor(activityType: self.activityType, colorName: item)
+					HStack() {
+						Text("Bad Location Filter")
+						Spacer()
+						Button(ActivityPreferences.getLocationFilterOption(activityType: self.activityType) == LocationFilterOption.LOCATION_FILTER_WARN ? "Warn" : "Discard") {
+							self.showingBadLocationFilter = true
+						}
+						.confirmationDialog("What should be done with bad location points?", isPresented: $showingBadLocationFilter, titleVisibility: .visible) {
+							Button("Warn") {
+								ActivityPreferences.setLocationFilterOption(activityType: self.activityType, option: LocationFilterOption.LOCATION_FILTER_WARN)
+							}
+							Button("Discard") {
+								ActivityPreferences.setLocationFilterOption(activityType: self.activityType, option: LocationFilterOption.LOCATION_FILTER_DROP)
 							}
 						}
 					}
-					.padding(PREFS_INSET)
 				}
-				HStack() {
-					Text("Label Color")
-					Spacer()
-					Button(ActivityPreferences.getLabelColorName(activityType: self.activityType)) {
-						self.showingLabelColorSelection = true
-					}
-					.confirmationDialog("Which color?", isPresented: self.$showingLabelColorSelection, titleVisibility: .visible) {
-						ForEach(self.colorNames, id: \.self) { item in
-							Button(item) {
-								ActivityPreferences.setLabelColor(activityType: self.activityType, colorName: item)
-							}
-						}
-					}
-					.padding(PREFS_INSET)
-				}
-				HStack() {
-					Text("Text Color")
-					Spacer()
-					Button(ActivityPreferences.getTextColorName(activityType: self.activityType)) {
-						self.showingTextColorSelection = true
-					}
-					.confirmationDialog("Which color?", isPresented: self.$showingTextColorSelection, titleVisibility: .visible) {
-						ForEach(self.colorNames, id: \.self) { item in
-							Button(item) {
-								ActivityPreferences.setTextColor(activityType: self.activityType, colorName: item)
-							}
-						}
-					}
-					.padding(PREFS_INSET)
-				}
+				.modifier(CommonStyle())
 			}
-			Group() {
-				Text("Sounds")
-					.font(.system(size: 24))
-					.bold()
-				Toggle("Start/Stop Beep", isOn: self.$startStopBeep)
-					.onChange(of: self.startStopBeep) {
-						ActivityPreferences.setStartStopBeepEnabled(activityType: self.activityType, value: self.startStopBeep)
-					}
-				Toggle("Split Beep", isOn: self.$splitBeep)
-					.onChange(of: splitBeep) {
-						ActivityPreferences.setSplitBeepEnabled(activityType: self.activityType, value: self.splitBeep)
-					}
-			}
-			Group() {
-				Text("Location")
-					.font(.system(size: 24))
-					.bold()
-				HStack() {
-					Text("Horizontal Accuracy")
-					Spacer()
-					TextField("Distance", text: self.$horizontalAccuracy.value)
-						.keyboardType(.decimalPad)
-						.multilineTextAlignment(.trailing)
-						.fixedSize()
-						.onChange(of: self.horizontalAccuracy.value) {
-						}
-					Text("Meters")
-				}
-				HStack() {
-					Text("Vertical Accuracy")
-					Spacer()
-					TextField("Distance", text: self.$verticalAccuracy.value)
-						.keyboardType(.decimalPad)
-						.multilineTextAlignment(.trailing)
-						.fixedSize()
-						.onChange(of: self.verticalAccuracy.value) {
-						}
-					Text("Meters")
-				}
-				HStack() {
-					Text("Bad Location Filter")
-					Spacer()
-					Button(ActivityPreferences.getLocationFilterOption(activityType: self.activityType) == LocationFilterOption.LOCATION_FILTER_WARN ? "Warn" : "Discard") {
-						self.showingBadLocationFilter = true
-					}
-					.confirmationDialog("What should be done with bad location points?", isPresented: $showingBadLocationFilter, titleVisibility: .visible) {
-						Button("Warn") {
-							ActivityPreferences.setLocationFilterOption(activityType: self.activityType, option: LocationFilterOption.LOCATION_FILTER_WARN)
-						}
-						Button("Discard") {
-							ActivityPreferences.setLocationFilterOption(activityType: self.activityType, option: LocationFilterOption.LOCATION_FILTER_DROP)
-						}
-					}
-				}
-			}
-		/*	Group() {
-				Text("Radar")
-					.bold()
-				Toggle("Show Threat Speed", isOn: self.$showThreatSpeed)
-					.onChange(of: showThreatSpeed) { value in
-						ActivityPreferences.setShowThreatSpeed(activityType: self.activityType, value: value)
-					}
-			} */
+			.padding(10)
 		}
-		.padding(10)
     }
 }
