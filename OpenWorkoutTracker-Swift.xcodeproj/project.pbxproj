@@ -230,6 +230,7 @@
 		274AA6322A81736900F77F96 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274AA6312A81736900F77F96 /* PhotoPicker.swift */; };
 		276AB0C52B86759B00FA94DC /* VirtualCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */; };
 		276AB0C62B86759B00FA94DC /* VirtualCycling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */; };
+		276CF0353093DE43007A1DF4 /* CommonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276CF0343093DE40007A1DF4 /* CommonStyle.swift */; };
 		2775412E297F651500AE9B86 /* ZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2775412D297F651500AE9B86 /* ZonesView.swift */; };
 		27754131297FFC7600AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
 		27754132297FFC9800AE9B86 /* ZonesCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */; };
@@ -637,6 +638,7 @@
 		2752B645295E1B680050CCFC /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = IOS/Controller/Feature.h; sourceTree = "<group>"; };
 		276AB0C32B86759B00FA94DC /* VirtualCycling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VirtualCycling.h; path = Activities/VirtualCycling.h; sourceTree = "<group>"; };
 		276AB0C42B86759B00FA94DC /* VirtualCycling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VirtualCycling.cpp; path = Activities/VirtualCycling.cpp; sourceTree = "<group>"; };
+		276CF0343093DE40007A1DF4 /* CommonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonStyle.swift; sourceTree = "<group>"; };
 		2775412D297F651500AE9B86 /* ZonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZonesView.swift; sourceTree = "<group>"; };
 		2775412F297FFC7600AE9B86 /* ZonesCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZonesCalculator.cpp; path = Activities/ZonesCalculator.cpp; sourceTree = "<group>"; };
 		27754130297FFC7600AE9B86 /* ZonesCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZonesCalculator.h; path = Activities/ZonesCalculator.h; sourceTree = "<group>"; };
@@ -1193,6 +1195,7 @@
 				2704224428F84C6400FD02D4 /* ActivityPreferencesView.swift */,
 				2740DF5628E4600800293B71 /* ActivityView.swift */,
 				27091AC02A65BB9B0013AD48 /* BarChartView.swift */,
+				276CF0343093DE40007A1DF4 /* CommonStyle.swift */,
 				2782EA2A2B44BDD800016A16 /* CommonView.swift */,
 				278D92C528E38F17003B077C /* ContentView.swift */,
 				2704224E28FCDE1B00FD02D4 /* CreateLoginView.swift */,
@@ -1648,6 +1651,7 @@
 				2740DFDB28E460E200293B71 /* PullUp.cpp in Sources */,
 				2740DFE628E460E200293B71 /* BenchPress.cpp in Sources */,
 				2740DFF528E460E200293B71 /* SwimPlanGenerator.cpp in Sources */,
+				276CF0353093DE43007A1DF4 /* CommonStyle.swift in Sources */,
 				2740DFE728E460E200293B71 /* BenchPressAnalyzer.cpp in Sources */,
 				270422562902409C00FD02D4 /* TagsView.swift in Sources */,
 				2740DFD028E460E200293B71 /* PushUpAnalyzer.cpp in Sources */,
