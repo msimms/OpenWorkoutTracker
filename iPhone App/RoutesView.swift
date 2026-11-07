@@ -15,20 +15,21 @@ struct RoutesView: View {
 				Image(systemName: "questionmark.circle")
 				Text("Manage routes. Routes can be overlayed on the maps for bike rides, runs, hikes, etc.")
 			}
-			.padding(INFO_INSETS)
+			.modifier(CommonStyle())
 
-			if self.routesVM.routes.count > 0 {
+			VStack() {
+				Text("Routes")
+					.font(.system(size: 24))
+					.bold()
 				List(self.routesVM.routes, id: \.self) { item in
 					NavigationLink(destination: EditRouteView(route: item)) {
 						Text(item.name)
-							.bold()
+							.font(.system(size: 16))
 					}
 				}
 				.listStyle(.plain)
 			}
-			else {
-				Text("No Routes")
-			}
+			.modifier(CommonStyle())
 		}
 		.padding(10)
 		.toolbar {

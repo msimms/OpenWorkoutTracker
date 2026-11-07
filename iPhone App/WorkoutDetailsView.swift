@@ -47,17 +47,23 @@ struct WorkoutDetailsView: View {
 	}
 	
     var body: some View {
-		VStack(alignment: .center) {
-			ScrollView() {
+		ScrollView() {
+			VStack(alignment: .center) {
 				Text(self.workout.sportType)
 					.font(.largeTitle)
 					.bold()
-				Text(self.workout.workoutType)
-					.font(.title2)
-					.bold()
-				Text(self.workout.description)
-				Text(self.scheduledTime)
-					.bold()
+				VStack() {
+					Text(self.workout.workoutType)
+						.font(.title2)
+						.bold()
+					Text(self.workout.description)
+				}
+				.modifier(CommonStyle())
+				VStack() {
+					Text(self.scheduledTime)
+						.bold()
+				}
+				.modifier(CommonStyle())
 				Spacer()
 				BarChartView(bars: self.workoutToBarChart(), color: Color.blue, units: "", description: "")
 					.frame(height:256)

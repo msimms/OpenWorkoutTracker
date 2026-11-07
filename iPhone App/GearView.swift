@@ -16,16 +16,13 @@ struct GearView: View {
 				Image(systemName: "questionmark.circle")
 				Text("Keep track of your shoes and bicycles. Tag activities with the gear used.")
 			}
-			.padding(INFO_INSETS)
+			.modifier(CommonStyle())
 
-			let bikes = self.gearVM.listBikes()
-			let shoes = self.gearVM.listShoes()
-
-			Text("Bicycles")
-				.font(.system(size: 24))
-				.bold()
-			if bikes.count > 0 {
-				List(bikes, id: \.self) { item in
+			VStack() {
+				Text("Bicycles")
+					.font(.system(size: 24))
+					.bold()
+				List(self.gearVM.listBikes(), id: \.self) { item in
 					NavigationLink(destination: EditBikeView(gearId: item.gearId, name: item.name, description: item.description, serviceHistory: item.serviceHistory)) {
 						let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
 						Text(item.name)
@@ -34,18 +31,12 @@ struct GearView: View {
 				}
 				.listStyle(.plain)
 			}
-			else {
-				Text("No Bicycles")
-			}
+			.modifier(CommonStyle())
 
-			Spacer()
-				.frame(minHeight: 10, idealHeight: 40, maxHeight: 80)
-				.fixedSize()
-
-			Text("Shoes")
-				.font(.system(size: 24))
-				.bold()
-			if shoes.count > 0 {
+			VStack() {
+				Text("Shoes")
+					.font(.system(size: 24))
+					.bold()
 				List(self.gearVM.listShoes(), id: \.self) { item in
 					NavigationLink(destination: EditShoesView(gearId: item.gearId, name: item.name, description: item.description)) {
 						let textColor = item.timeRetired.timeIntervalSince1970 > 0 ? Color.gray : (self.colorScheme == .dark ? Color.white : Color.black)
@@ -55,9 +46,7 @@ struct GearView: View {
 				}
 				.listStyle(.plain)
 			}
-			else {
-				Text("No Shoes")
-			}
+			.modifier(CommonStyle())
 		}
 		.padding(10)
 		.toolbar {
@@ -79,5 +68,5 @@ struct GearView: View {
 				}
 			}
 		}
-    }
+	}
 }

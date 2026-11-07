@@ -17,7 +17,7 @@ struct IntervalSessionsView: View {
 	}()
 
 	var body: some View {
-		ScrollView() {
+		VStack(alignment: .center) {
 			HStack() {
 				Image(systemName: "questionmark.circle")
 				Text("This view is for managing interval sessions. You'll receive messages on the activity screen when it's time to perform the next interval.")
